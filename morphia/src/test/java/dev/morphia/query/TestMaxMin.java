@@ -26,7 +26,7 @@ public class TestMaxMin extends TestBase {
     @Before
     public void setUp() {
         super.setUp();
-        Mapper.map(IndexedEntity.class);
+        getMapper().map(IndexedEntity.class);
         getDs().ensureIndexes();
     }
 

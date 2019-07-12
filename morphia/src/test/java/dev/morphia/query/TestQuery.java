@@ -23,7 +23,6 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
@@ -77,7 +76,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void genericMultiKeyValueQueries() {
-        Mapper.map(GenericKeyValue.class);
+        getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
         final List<Object> keys = Arrays.<Object>asList("key1", "key2");
@@ -93,7 +92,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        Mapper.map(KeyValue.class);
+        getMapper().map(KeyValue.class);
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
         final List<Object> keys = Arrays.<Object>asList("key1", "key2");
@@ -250,7 +249,7 @@ public class TestQuery extends TestBase {
     public void testCollations() {
         checkMinServerVersion(3.4);
 
-        Mapper.map(ContainsRenamedFields.class);
+        getMapper().map(ContainsRenamedFields.class);
         getDs().save(asList(new ContainsRenamedFields("first", "last"),
             new ContainsRenamedFields("First", "Last")));
 
@@ -876,7 +875,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testMultipleConstraintsOnOneField() {
         checkMinServerVersion(3.0);
-        Mapper.map(ContainsPic.class);
+        getMapper().map(ContainsPic.class);
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
         query.field("size").greaterThanOrEq(10);
@@ -1033,7 +1032,7 @@ public class TestQuery extends TestBase {
                                                          .project("_id", true)
                                                          .project("first_name", true);
         Document fields = ((QueryImpl) project).getFieldsObject();
-        assertNull(fields.get(getMorphia().getMapper().getOptions().getDiscriminatorField()));
+        assertNull(fields.get(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -1258,7 +1257,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testReturnOnlyIndexedFields() {
-        Mapper.map(Pic.class);
+        getMapper().map(Pic.class);
         getDs().ensureIndexes(Pic.class);
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
@@ -1313,7 +1312,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testTailableCursors() {
-        Mapper.map(CappedPic.class);
+        getMapper().map(CappedPic.class);
         final Datastore ds = getDs();
         ds.ensureCaps();
 
@@ -1429,7 +1428,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testQueryUnmappedData() {
-        Mapper.map(Class1.class);
+        getMapper().map(Class1.class);
         getDs().ensureIndexes();
 
         getDs().getDatabase().getCollection("user").insertOne(
@@ -1488,7 +1487,7 @@ public class TestQuery extends TestBase {
         Assert.assertEquals(expected, ((QueryImpl) query).getQueryDocument());
     }
 
-    @Entity(value = "user", noClassnameStored = true)
+    @Entity(value = "user", useDiscriminator = false)
     private static class Class1 {
         @Id
         private ObjectId id;
@@ -1524,7 +1523,6 @@ public class TestQuery extends TestBase {
     public static class PhotoWithKeywords {
         @Id
         private ObjectId id;
-        @Embedded
         private List<Keyword> keywords = new ArrayList<>();
 
         PhotoWithKeywords() {
@@ -1542,7 +1540,7 @@ public class TestQuery extends TestBase {
         }
     }
 
-    @Embedded(concreteClass = Keyword.class)
+    @Embedded
     public static class Keyword {
         private String keyword;
         private Integer score;
@@ -1740,7 +1738,7 @@ public class TestQuery extends TestBase {
         }
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class ContainsRenamedFields {
         @Id
         private ObjectId id;
@@ -1783,7 +1781,6 @@ public class TestQuery extends TestBase {
         @Indexed(options = @IndexOptions(unique = true))
         private List<Object> key;
 
-        @Embedded
         private T value;
     }
 

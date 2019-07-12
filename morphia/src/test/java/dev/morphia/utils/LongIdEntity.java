@@ -34,7 +34,7 @@ public abstract class LongIdEntity {
      * @author skot
      */
 
-    @Entity(value = "ids", noClassnameStored = true)
+    @Entity(value = "ids", useDiscriminator = false)
     public static class StoredId {
         @Id
         private final String className;

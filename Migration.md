@@ -37,3 +37,5 @@ server defaulting to single document updates, Morphia defaults to single documen
 multiple documents.  See the [`update()`](https://docs.mongodb.com/manual/reference/method/db.collection.update/) documentation for details.
 * Iterable parameters have been changed to List.  Lists are easier to work with and `List.of()` makes creating them from arrays, e.g., 
 trivial
+* `@Embedded` is now only allowed on the embedded type.  If you wish to map a specific name to a field rather than using the field name, 
+use `@Property` on that field.

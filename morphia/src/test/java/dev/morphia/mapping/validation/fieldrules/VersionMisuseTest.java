@@ -16,22 +16,22 @@ public class VersionMisuseTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testInitedPrimitive() {
-        Mapper.map(Fail1.class);
+        getMapper().map(Fail1.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testInitedWrapper() {
-        Mapper.map(Fail2.class);
+        getMapper().map(Fail2.class);
     }
 
     @Test
     public void testPrimitive() {
-        Mapper.map(OK1.class);
+        getMapper().map(OK1.class);
     }
 
     @Test
     public void testWrapper() {
-        Mapper.map(OK2.class);
+        getMapper().map(OK2.class);
     }
 
     public static class Fail1 extends TestEntity {

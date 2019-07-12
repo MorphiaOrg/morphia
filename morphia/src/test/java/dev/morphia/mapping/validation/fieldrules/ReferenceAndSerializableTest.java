@@ -16,7 +16,7 @@ import dev.morphia.testutil.TestEntity;
 public class ReferenceAndSerializableTest extends TestBase {
     @Test(expected = ConstraintViolationException.class)
     public void testCheck() {
-        Mapper.map(E.class);
+        getMapper().map(E.class);
     }
 
     public static class R extends TestEntity {

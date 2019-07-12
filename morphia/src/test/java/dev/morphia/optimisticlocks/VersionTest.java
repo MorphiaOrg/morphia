@@ -30,7 +30,7 @@ public class VersionTest extends TestBase {
 
     @Test(expected = ConcurrentModificationException.class)
     public void testConcurrentModDetection() throws Exception {
-        Mapper.map(ALongPrimitive.class);
+        getMapper().map(ALongPrimitive.class);
 
         final ALongPrimitive a = new ALongPrimitive();
         Assert.assertEquals(0, a.version);
@@ -67,18 +67,18 @@ public class VersionTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidVersionUse() throws Exception {
-        Mapper.map(InvalidVersionUse.class);
+        getMapper().map(InvalidVersionUse.class);
     }
 
     @Test
     public void testVersionFieldNameContribution() throws Exception {
-        final MappedField mappedFieldByJavaField = getMorphia().getMapper().getMappedClass(ALong.class).getMappedFieldByJavaField("v");
+        final MappedField mappedFieldByJavaField = getMapper().getMappedClass(ALong.class).getMappedFieldByJavaField("v");
         Assert.assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getMappedFieldName());
     }
 
     @Test
     public void testVersionInHashcode() throws Exception {
-        Mapper.mapPackage("com.example");
+        getMapper().mapPackage("com.example");
 
         final VersionInHashcode model = new VersionInHashcode();
         model.data = "whatever";

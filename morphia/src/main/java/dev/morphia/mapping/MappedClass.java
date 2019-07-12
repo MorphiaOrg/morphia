@@ -92,7 +92,7 @@ public class MappedClass {
     /**
      * a list of the fields to map
      */
-    private final List<MappedField> persistenceFields = new ArrayList<>();
+    private final List<MappedField> fields = new ArrayList<>();
     /**
      * the type we are mapping to/from
      */
@@ -177,7 +177,6 @@ public class MappedClass {
     @SuppressWarnings("unchecked")
     public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
                                      final Mapper mapper) {
-        if(1==1) throw new UnsupportedOperationException();
         if (hasLifecycle(event) || mapper.hasInterceptors()) {
             final List<ClassMethodPair> methodPairs = lifecycleMethods.get(event);
             try {
@@ -332,10 +331,10 @@ public class MappedClass {
      * @return true if that mapped field name is found
      */
     public MappedField getMappedField(final String storedName) {
-        return persistenceFields.stream()
-                                .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName))
-                                .findFirst()
-                                .orElse(null);
+        return fields.stream()
+                     .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName))
+                     .findFirst()
+                     .orElse(null);
     }
 
     /**
@@ -345,7 +344,7 @@ public class MappedClass {
      * @return the MappedField for the named Java field
      */
     public MappedField getMappedFieldByJavaField(final String name) {
-        for (final MappedField mf : persistenceFields) {
+        for (final MappedField mf : fields) {
             if (name.equals(mf.getJavaFieldName())) {
                 return mf;
             }
@@ -355,25 +354,14 @@ public class MappedClass {
     }
 
     /**
-     * @return the ID field for the class
-     */
-    public MappedField getMappedIdField() {
-        List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
-        if(fields.isEmpty()) {
-            throw new MappingException(format("%s does not have an annotated ID field", classModel.getName()));
-        }
-        return fields.get(0);
-    }
-
-    /**
      * Returns fields annotated with the clazz
      *
      * @param clazz The Annotation to find.
      * @return the list of fields
      */
-    public List<MappedField> getFieldsAnnotatedWith(final Class<? extends Annotation> clazz) {
+    public List<MappedField> getFields(final Class<? extends Annotation> clazz) {
         final List<MappedField> results = new ArrayList<>();
-        for (final MappedField mf : persistenceFields) {
+        for (final MappedField mf : fields) {
             if (mf.hasAnnotation(clazz)) {
                 results.add(mf);
             }
@@ -384,16 +372,16 @@ public class MappedClass {
     /**
      * @return the ID field for the class
      */
-    public MappedField getMappedVersionField() {
-        List<MappedField> fields = getFieldsAnnotatedWith(Version.class);
+    public MappedField getVersionField() {
+        List<MappedField> fields = getFields(Version.class);
         return fields.isEmpty() ? null : fields.get(0);
     }
 
     /**
-     * @return the persistenceFields
+     * @return the fields
      */
-    public List<MappedField> getPersistenceFields() {
-        return persistenceFields;
+    public List<MappedField> getFields() {
+        return fields;
     }
 
     @Override
@@ -418,7 +406,7 @@ public class MappedClass {
 
     @Override
     public String toString() {
-        return format("%s[%s] : %s", getClazz().getSimpleName(), getCollectionName(), persistenceFields);
+        return format("%s[%s] : %s", getClazz().getSimpleName(), getCollectionName(), fields);
     }
 
     boolean isSubType(final MappedClass mc) {
@@ -431,7 +419,7 @@ public class MappedClass {
     public void update() {
         embeddedAn = getAnnotation(Embedded.class);
         entityAn = getAnnotation(Entity.class);
-        final List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
+        final List<MappedField> fields = getFields(Id.class);
         if (fields != null && !fields.isEmpty()) {
             idField = fields.get(0);
         }
@@ -500,10 +488,9 @@ public class MappedClass {
         mappedClass.classModel.getFieldModels().forEach(model -> {
             final MappedField field = new MappedField(this, model);
             if (!field.isTransient()) {
-                persistenceFields.add(field);
+                fields.add(field);
             } else {
-                LOG.warn("Ignoring (will not persist) field: %s.%s [type:%s]", type.getName(),
-                    field.getJavaFieldName(), field.getType().getName());
+                LOG.warn("Ignoring (will not persist) field: %s", field.getFullName());
             }
         });
     }

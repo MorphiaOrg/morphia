@@ -18,9 +18,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-/**
- * @author ScottHernandez
- */
 public class DefaultCreator implements ObjectFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultCreator.class);
@@ -96,10 +93,7 @@ public class DefaultCreator implements ObjectFactory {
     public Object createInstance(final Mapper mapper, final MappedField mf, final Document document) {
         Class c = getClass(document);
         if (c == null) {
-            c = mf.isSingleValue() ? mf.getConcreteType() : mf.getSubClass();
-            if (c.equals(Object.class)) {
-                c = mf.getConcreteType();
-            }
+            c = mf.getNormalizedType();
         }
         try {
             return createInstance(c, document);
@@ -131,19 +125,19 @@ public class DefaultCreator implements ObjectFactory {
     @Override
     @SuppressWarnings("unchecked")
     public List createList(final MappedField mf) {
-        return newInstance(mf != null ? mf.getCTor() : null, ArrayList.class);
+        return createInstance(ArrayList.class);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Map createMap(final MappedField mf) {
-        return newInstance(mf != null ? mf.getCTor() : null, HashMap.class);
+        return createInstance(HashMap.class);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Set createSet(final MappedField mf) {
-        return newInstance(mf != null ? mf.getCTor() : null, HashSet.class);
+        return createInstance(HashSet.class);
     }
 
     /**
@@ -160,7 +154,7 @@ public class DefaultCreator implements ObjectFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Class<T> getClass(final Document document) {
+    public <T> Class<T> getClass(final Document document) {
         // see if there is a className value
         Class c = null;
         if (document.containsKey(options.getDiscriminatorField())) {
@@ -184,21 +178,6 @@ public class DefaultCreator implements ObjectFactory {
             }
         }
         return c;
-    }
-
-    /**
-     * creates an instance of testType (if it isn't Object.class or null) or fallbackType
-     */
-    private <T> T newInstance(final Constructor<T> tryMe, final Class<T> fallbackType) {
-        if (tryMe != null) {
-            tryMe.setAccessible(true);
-            try {
-                return tryMe.newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return createInstance(fallbackType);
     }
 
 }

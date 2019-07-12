@@ -21,7 +21,7 @@ public class MultipleId implements ClassConstraint {
     @Override
     public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
 
-        final List<MappedField> idFields = mc.getFieldsAnnotatedWith(Id.class);
+        final List<MappedField> idFields = mc.getFields(Id.class);
 
         if (idFields.size() > 1) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(),

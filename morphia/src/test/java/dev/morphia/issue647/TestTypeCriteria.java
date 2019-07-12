@@ -19,14 +19,14 @@ public class TestTypeCriteria extends TestBase {
         entity.firstName = "first_name";
         getDs().save(entity);
 
-        Mapper.map(Class1.class);
+        getMapper().map(Class1.class);
 
         Query<Class1> query = getDs().find(Class1.class);
         query.criteria("first_name").type(Type.STRING);
         Assert.assertTrue(query.count() > 0);
     }
 
-    @Entity(value = "user", noClassnameStored = true)
+    @Entity(value = "user", useDiscriminator = false)
     public static class Class1 {
         @Id
         private ObjectId id;

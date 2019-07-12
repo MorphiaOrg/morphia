@@ -15,7 +15,6 @@
 package dev.morphia.testmodel;
 
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
@@ -24,22 +23,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 @Entity("shapeshifters")
 public class ShapeShifter extends TestEntity {
-    @Embedded
     private Shape mainShape;
 
     @Reference
     private Shape referencedShape;
 
-    @Embedded
     private Set<Shape> availableShapes;
 
     public ShapeShifter() {
-        availableShapes = new HashSet<Shape>();
+        availableShapes = new HashSet<>();
     }
 
     public Set<Shape> getAvailableShapes() {

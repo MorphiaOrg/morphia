@@ -17,10 +17,11 @@
 package dev.morphia.generics;
 
 import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -34,14 +35,17 @@ import static org.junit.Assert.assertNull;
 public class TestJavaLists extends TestBase {
     @Test
     public void emptyModel() {
-        getMapper().getOptions().setStoreEmpties(true);
-        getMapper().getOptions().setStoreNulls(false);
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                           .storeEmpties(true)
+                                           .storeNulls(false)
+                                           .build();
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
 
         TestEmptyModel model = new TestEmptyModel();
         model.text = "text";
         model.wrapped = new TestEmptyModel.Wrapped();
         model.wrapped.text = "textWrapper";
-        getDs().save(model);
+        datastore.save(model);
         TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
                                        .execute(new FindOptions().limit(1))
                                        .next();
@@ -51,19 +55,21 @@ public class TestJavaLists extends TestBase {
 
     @Test
     public void mapperTest() {
-        Mapper.map(Employee.class);
+        getMapper().map(Employee.class);
 
         for (boolean nulls : new boolean[]{true, false}) {
             for (boolean empties : new boolean[]{true, false}) {
-                getMapper().getOptions().setStoreNulls(nulls);
-                getMapper().getOptions().setStoreEmpties(empties);
-                empties();
+                MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                                     .storeNulls(nulls)
+                                                     .storeEmpties(empties)
+                                                     .build();
+                final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+                empties(datastore);
             }
         }
     }
 
-    private void empties() {
-        Datastore ds = getDs();
+    private void empties(final Datastore ds) {
         ds.delete(ds.find(Employee.class));
         Employee employee = new Employee();
         employee.byteList = asList((byte) 1, (byte) 2);

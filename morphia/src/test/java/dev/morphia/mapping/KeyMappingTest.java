@@ -16,7 +16,7 @@ import java.util.List;
 public class KeyMappingTest extends TestBase {
     @Test
     public void keyMapping() {
-        Mapper.map(User.class, Channel.class);
+        getMapper().map(User.class, Channel.class);
         insertData();
 
         final Datastore datastore = getDs();
@@ -61,7 +61,7 @@ public class KeyMappingTest extends TestBase {
         datastore.save(new User("Roberto", datastore.getKey(sportChannel), followedChannels));
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     static class User {
         @Id
         private ObjectId id;
@@ -87,7 +87,7 @@ public class KeyMappingTest extends TestBase {
         }
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     static class Channel {
 
         @Id

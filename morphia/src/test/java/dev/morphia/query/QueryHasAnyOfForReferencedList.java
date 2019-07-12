@@ -56,7 +56,7 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         assertEquals(2, count);
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     private static class Plan implements Serializable {
 
         @Id
@@ -65,7 +65,7 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         private String name;
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     private static class Org implements Serializable {
         @Id
         private ObjectId id;

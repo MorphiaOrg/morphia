@@ -4,9 +4,7 @@ package dev.morphia.query.internal;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
-import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.cache.EntityCache;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -21,28 +19,21 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
     private final MongoCursor wrapped;
     private final Mapper mapper;
     private final Class<T> clazz;
-    private final EntityCache cache;
-    private final Datastore datastore;
 
     /**
      * Creates a MorphiaCursor
      *
-     * @param datastore  the Datastore to use when fetching this reference
      * @param cursor     the Iterator to use
      * @param mapper     the Mapper to use
      * @param clazz      the original type being iterated
-     * @param cache      the EntityCache
      */
-    public MorphiaCursor(final Datastore datastore, final MongoCursor cursor, final Mapper mapper, final Class<T> clazz,
-                         final EntityCache cache) {
+    public MorphiaCursor(final MongoCursor cursor, final Mapper mapper, final Class<T> clazz) {
         wrapped = cursor;
         if(wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");
         }
         this.mapper = mapper;
         this.clazz = clazz;
-        this.cache = cache;
-        this.datastore = datastore;
     }
 
     /**
@@ -83,7 +74,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return mapper.fromDocument(datastore, clazz, getNext(), cache);
+        return mapper.fromDocument(clazz, getNext());
     }
 
     @Override

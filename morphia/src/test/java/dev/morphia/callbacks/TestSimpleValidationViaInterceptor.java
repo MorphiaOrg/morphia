@@ -1,7 +1,7 @@
 package dev.morphia.callbacks;
 
 
-import dev.morphia.AbstractEntityInterceptor;
+import dev.morphia.EntityInterceptor;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
@@ -28,15 +28,15 @@ import java.util.List;
 public class TestSimpleValidationViaInterceptor extends TestBase {
 
     static {
-        MappedField.addInterestingAnnotation(NonNull.class);
+//        MappedField.addInterestingAnnotation(NonNull.class);
     }
 
     @Test
     public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
 
-        getMorphia().getMapper().addInterceptor(new NonNullValidation());
-        Mapper.map(E.class);
-        Mapper.map(E2.class);
+        getMapper().addInterceptor(new NonNullValidation());
+        getMapper().map(E.class);
+        getMapper().map(E2.class);
 
         getDs().save(new E());
         try {
@@ -74,11 +74,11 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
         private String mustFailValidation;
     }
 
-    public static class NonNullValidation extends AbstractEntityInterceptor {
+    public static class NonNullValidation implements EntityInterceptor {
         @Override
         public void prePersist(final Object ent, final Document document, final Mapper mapper) {
             final MappedClass mc = mapper.getMappedClass(ent);
-            final List<MappedField> fieldsToTest = mc.getFieldsAnnotatedWith(NonNull.class);
+            final List<MappedField> fieldsToTest = mc.getFields(NonNull.class);
             for (final MappedField mf : fieldsToTest) {
                 if (mf.getFieldValue(ent) == null) {
                     throw new NonNullValidationException(mf);

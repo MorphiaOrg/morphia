@@ -19,7 +19,7 @@ public class TestGeoQueries extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        Mapper.map(Place.class);
+        getMapper().map(Place.class);
     }
 
     @Test

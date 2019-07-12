@@ -15,7 +15,7 @@ import java.util.List;
 public class DoubleMappingTest extends TestBase {
     @Test
     public void testMapping() throws Exception {
-        Mapper.map(Doubles.class);
+        getMapper().map(Doubles.class);
         final Doubles ent = new Doubles();
         ent.listWrapperArray.add(new Double[]{1.1, 2.2});
         ent.listPrimitiveArray.add(new double[]{2.0, 3.6, 12.4});

@@ -1,6 +1,9 @@
 package dev.morphia.generics;
 
+import dev.morphia.Morphia;
+import dev.morphia.annotations.Property;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,29 +25,31 @@ import static org.junit.Assert.assertNull;
 public class TestJavaMaps extends TestBase {
     @Test
     public void mapperTest() {
-        Mapper.map(Employee.class);
+        getMapper().map(Employee.class);
 
         for (boolean nulls : new boolean[]{true, false}) {
             for (boolean empties : new boolean[]{true, false}) {
-                getMorphia().getMapper().getOptions().setStoreNulls(nulls);
-                getMorphia().getMapper().getOptions().setStoreEmpties(empties);
-                empties();
+                MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                                     .storeNulls(nulls)
+                                                     .storeEmpties(empties)
+                                                     .build();
+                empties(Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options));
             }
         }
     }
 
-    private void empties() {
-        Datastore ds = getDs();
-        ds.delete(ds.find(Employee.class));
+
+    private void empties(final Datastore datastore) {
+        datastore.delete(datastore.find(Employee.class));
         Employee employee = new Employee();
         HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
         byteMap.put("b", (byte) 1);
         employee.byteMap = byteMap;
-        ds.save(employee);
+        datastore.save(employee);
 
-        Employee loaded = ds.find(Employee.class)
-                            .execute(new FindOptions().limit(1))
-                            .next();
+        Employee loaded = datastore.find(Employee.class)
+                                   .execute(new FindOptions().limit(1))
+                                   .next();
 
         assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
         assertNull(loaded.floatMap);
@@ -52,14 +57,17 @@ public class TestJavaMaps extends TestBase {
 
     @Test
     public void emptyModel() {
-        getMorphia().getMapper().getOptions().setStoreEmpties(true);
-        getMorphia().getMapper().getOptions().setStoreNulls(false);
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .storeEmpties(true)
+                                             .storeNulls(false)
+                                             .build();
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
 
         TestEmptyModel model = new TestEmptyModel();
         model.text = "text";
         model.wrapped = new TestEmptyModel.Wrapped();
         model.wrapped.text = "textWrapper";
-        getDs().save(model);
+        datastore.save(model);
         TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
                                        .execute(new FindOptions().limit(1))
                                        .next();
@@ -69,7 +77,7 @@ public class TestJavaMaps extends TestBase {
 
     @Test
     public void testKeyOrdering() {
-        Mapper.map(LinkedHashMapTestEntity.class);
+        getMapper().map(LinkedHashMapTestEntity.class);
         final LinkedHashMapTestEntity expectedEntity = new LinkedHashMapTestEntity();
         for (int i = 100; i >= 0; i--) {
             expectedEntity.getLinkedHashMap().put(i, "a" + i);
@@ -107,7 +115,7 @@ public class TestJavaMaps extends TestBase {
     @Entity
     static class LinkedHashMapTestEntity extends TestEntity {
 
-        @Embedded(concreteClass = java.util.LinkedHashMap.class)
+        @Property(concreteClass = java.util.LinkedHashMap.class)
         private final Map<Integer, String> linkedHashMap = new LinkedHashMap<Integer, String>();
         private Map<Integer, String> getLinkedHashMap() {
             return linkedHashMap;

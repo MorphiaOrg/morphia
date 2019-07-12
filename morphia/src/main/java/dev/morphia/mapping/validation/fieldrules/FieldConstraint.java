@@ -16,7 +16,7 @@ import java.util.Set;
 public abstract class FieldConstraint implements ClassConstraint {
     @Override
     public final void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
-        for (final MappedField mf : mc.getPersistenceFields()) {
+        for (final MappedField mf : mc.getFields()) {
             check(mapper, mc, mf, ve);
         }
     }

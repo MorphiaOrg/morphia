@@ -25,8 +25,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.DefaultCreator;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.cache.DefaultEntityCache;
 import dev.morphia.query.FindOptions;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Article;
@@ -43,6 +43,7 @@ import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.print.Doc;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -59,16 +60,14 @@ import java.util.Vector;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- * @author Scott Hernandez
- */
+@SuppressWarnings("unchecked")
 public class TestMapping extends TestBase {
 
     @Test
@@ -92,42 +91,42 @@ public class TestMapping extends TestBase {
     @Test
     public void testBadMappings() {
         try {
-            Mapper.map(MissingId.class);
+            getMapper().map(MissingId.class);
             fail("Validation: Missing @Id field not caught");
         } catch (MappingException e) {
             // good
         }
 
         try {
-            Mapper.map(IdOnEmbedded.class);
+            getMapper().map(IdOnEmbedded.class);
             fail("Validation: @Id field on @Embedded not caught");
         } catch (MappingException e) {
             // good
         }
 
         try {
-            Mapper.map(RenamedEmbedded.class);
+            getMapper().map(RenamedEmbedded.class);
             fail("Validation: @Embedded(\"name\") not caught on Class");
         } catch (MappingException e) {
             // good
         }
 
         try {
-            Mapper.map(MissingIdStill.class);
+            getMapper().map(MissingIdStill.class);
             fail("Validation: Missing @Id field not not caught");
         } catch (MappingException e) {
             // good
         }
 
         try {
-            Mapper.map(MissingIdRenamed.class);
+            getMapper().map(MissingIdRenamed.class);
             fail("Validation: Missing @Id field not not caught");
         } catch (MappingException e) {
             // good
         }
 
         try {
-            Mapper.map(NonStaticInnerClass.class);
+            getMapper().map(NonStaticInnerClass.class);
             fail("Validation: Non-static inner class allowed");
         } catch (MappingException e) {
             // good
@@ -136,32 +135,32 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testBaseEntityValidity() {
-        Mapper.map(UsesBaseEntity.class);
+        getMapper().map(UsesBaseEntity.class);
     }
 
     @Test
     public void testBasicMapping() {
-        performBasicMappingTest();
-        final DefaultCreator objectFactory = (DefaultCreator) getMorphia().getMapper().getOptions().getObjectFactory();
+        performBasicMappingTest(getDs());
+        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getObjectFactory();
         assertTrue(objectFactory.getClassNameCache().isEmpty());
     }
 
     @Test
     public void testBasicMappingWithCachedClasses() {
-        getMorphia().getMapper().getOptions().setCacheClassLookups(true);
-        try {
-            performBasicMappingTest();
-            final DefaultCreator objectFactory = (DefaultCreator) getMorphia().getMapper().getOptions().getObjectFactory();
-            assertTrue(objectFactory.getClassNameCache().containsKey(Hotel.class.getName()));
-            assertTrue(objectFactory.getClassNameCache().containsKey(TravelAgency.class.getName()));
-        } finally {
-            getMorphia().getMapper().getOptions().setCacheClassLookups(false);
-        }
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .cacheClassLookups(true)
+                                             .build();
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+        performBasicMappingTest(datastore);
+
+        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getObjectFactory();
+        assertTrue(objectFactory.getClassNameCache().containsKey(Hotel.class.getName()));
+        assertTrue(objectFactory.getClassNameCache().containsKey(TravelAgency.class.getName()));
     }
 
     @Test
     public void testByteArrayMapping() {
-        Mapper.map(ContainsByteArray.class);
+        getMapper().map(ContainsByteArray.class);
         final Key<ContainsByteArray> savedKey = getDs().save(new ContainsByteArray());
         final ContainsByteArray loaded = getDs().find(ContainsByteArray.class).filter("_id", savedKey.getId()).first();
         assertEquals(new String((new ContainsByteArray()).bytes), new String(loaded.bytes));
@@ -170,7 +169,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testCollectionMapping() {
-        Mapper.map(ContainsCollection.class);
+        getMapper().map(ContainsCollection.class);
         final Key<ContainsCollection> savedKey = getDs().save(new ContainsCollection());
         final ContainsCollection loaded = getDs().find(ContainsCollection.class).filter("_id", savedKey.getId()).first();
         assertEquals(loaded.coll, (new ContainsCollection()).coll);
@@ -179,24 +178,21 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testDbRefMapping() {
-        Mapper.map(Rectangle.class);
+        getMapper().map(Rectangle.class);
         final MongoCollection<Document> stuff = getDatabase().getCollection("stuff");
         final MongoCollection<Document> rectangles = getDatabase().getCollection("rectangles");
 
-        assertTrue("'ne' field should not be persisted!", !getMorphia().getMapper().getMCMap().get(ContainsRef.class.getName())
-                                                                       .containsJavaFieldName("ne"));
-
         final Rectangle r = new Rectangle(1, 1);
-        final Document rDocument = TestBase.toDocument(r);
+        final Document rDocument = getMapper().toDocument(r);
         rDocument.put("_ns", rectangles.getNamespace().getCollectionName());
         rectangles.insertOne(rDocument);
 
         final ContainsRef cRef = new ContainsRef();
         cRef.rect = new DBRef((String) rDocument.get("_ns"), rDocument.get("_id"));
-        final Document cRefDocument = TestBase.toDocument(cRef);
+        final Document cRefDocument = getMapper().toDocument(cRef);
         stuff.insertOne(cRefDocument);
         final Document cRefDocumentLoaded = (Document) stuff.find(new Document("_id", cRefDocument.get("_id")));
-        final ContainsRef cRefLoaded = TestBase.fromDocument(getDs(), ContainsRef.class, cRefDocumentLoaded, new DefaultEntityCache());
+        final ContainsRef cRefLoaded = getMapper().fromDocument(ContainsRef.class, cRefDocumentLoaded);
         assertNotNull(cRefLoaded);
         assertNotNull(cRefLoaded.rect);
         assertNotNull(cRefLoaded.rect.getId());
@@ -207,17 +203,18 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testEmbeddedArrayElementHasNoClassname() {
-        Mapper.map(ContainsEmbeddedArray.class);
+        getMapper().map(ContainsEmbeddedArray.class);
         final ContainsEmbeddedArray cea = new ContainsEmbeddedArray();
         cea.res = new RenamedEmbedded[]{new RenamedEmbedded()};
 
-        final Document document = TestBase.toDocument(cea);
-        assertTrue(!((Document) ((List) document.get("res")).get(0)).containsKey(getMapper().getOptions().getDiscriminatorField()));
+        final Document document = getMapper().toDocument(cea);
+        List<Document> res = (List<Document>) document.get("res");
+        assertFalse(res.get(0).containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
     public void testEmbeddedDocument() {
-        Mapper.map(ContainsDocument.class);
+        getMapper().map(ContainsDocument.class);
         getDs().save(new ContainsDocument());
         assertNotNull(getDs().find(ContainsDocument.class)
                              .execute(new FindOptions().limit(1))
@@ -226,7 +223,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testEmbeddedEntity() {
-        Mapper.map(ContainsEmbeddedEntity.class);
+        getMapper().map(ContainsEmbeddedEntity.class);
         getDs().save(new ContainsEmbeddedEntity());
         final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
                                                         .execute(new FindOptions().limit(1))
@@ -240,12 +237,12 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testEmbeddedEntityDocumentHasNoClassname() {
-        Mapper.map(ContainsEmbeddedEntity.class);
+        getMapper().map(ContainsEmbeddedEntity.class);
         final ContainsEmbeddedEntity cee = new ContainsEmbeddedEntity();
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
-        final Document document = TestBase.toDocument(cee);
-        assertTrue(!((Document) document.get("cil")).containsKey(getMapper().getOptions().getDiscriminatorField()));
+        final Document document = getMapper().toDocument(cee);
+        assertFalse(((Document) document.get("cil")).containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -271,7 +268,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalField() {
-        Mapper.map(ContainsFinalField.class);
+        getMapper().map(ContainsFinalField.class);
         final Key<ContainsFinalField> savedKey = getDs().save(new ContainsFinalField("blah"));
         final ContainsFinalField loaded = getDs().find(ContainsFinalField.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded);
@@ -281,10 +278,14 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalFieldNotPersisted() {
-        getMorphia().getMapper().getOptions().setIgnoreFinals(true);
-        Mapper.map(ContainsFinalField.class);
-        final Key<ContainsFinalField> savedKey = getDs().save(new ContainsFinalField("blah"));
-        final ContainsFinalField loaded = getDs().find(ContainsFinalField.class).filter("_id", savedKey.getId()).first();
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .ignoreFinals(true)
+                                             .build();
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+
+        getMapper().map(ContainsFinalField.class);
+        final Key<ContainsFinalField> savedKey = datastore.save(new ContainsFinalField("blah"));
+        final ContainsFinalField loaded = datastore.find(ContainsFinalField.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded);
         assertNotNull(loaded.name);
         assertEquals("foo", loaded.name);
@@ -292,7 +293,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalIdField() {
-        Mapper.map(HasFinalFieldId.class);
+        getMapper().map(HasFinalFieldId.class);
         final Key<HasFinalFieldId> savedKey = getDs().save(new HasFinalFieldId(12));
         final HasFinalFieldId loaded = getDs().find(HasFinalFieldId.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded);
@@ -320,7 +321,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testIdFieldWithUnderscore() {
-        Mapper.map(StrangelyNamedIdField.class);
+        getMapper().map(StrangelyNamedIdField.class);
     }
 
     @Test
@@ -398,7 +399,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testLongArrayMapping() {
-        Mapper.map(ContainsLongAndStringArray.class);
+        getMapper().map(ContainsLongAndStringArray.class);
         getDs().save(new ContainsLongAndStringArray());
         ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class)
                                                    .execute(new FindOptions().limit(1))
@@ -454,15 +455,14 @@ public class TestMapping extends TestBase {
     @Test
     public void testMaps() {
         final MongoCollection<Document> articles = getDatabase().getCollection("articles");
-        Mapper.map(Circle.class);
+        getMapper().map(Circle.class);
 
         final Article related = new Article();
-        final Document relatedDocument = (Document) TestBase.toDocument(related);
+        final Document relatedDocument = getMapper().toDocument(related);
         articles.insertOne(relatedDocument);
 
-        final Article relatedLoaded = TestBase.fromDocument(getDs(), Article.class,
-            articles.find(new Document("_id", relatedDocument.get("_id"))).first(),
-            new DefaultEntityCache());
+        final Article relatedLoaded = getMapper().fromDocument(Article.class,
+            articles.find(new Document("_id", relatedDocument.get("_id"))).first());
 
         final Article article = new Article();
         article.setTranslation("en", new Translation("Hello World", "Just a test"));
@@ -474,12 +474,11 @@ public class TestMapping extends TestBase {
 
         article.putRelated("test", relatedLoaded);
 
-        final Document articleDocument = (Document) TestBase.toDocument(article);
+        final Document articleDocument = getMapper().toDocument(article);
         articles.insertOne(articleDocument);
 
-        final Article articleLoaded = TestBase.fromDocument(getDs(), Article.class,
-            articles.find(new Document("_id", articleDocument.get("_id"))).first(),
-            new DefaultEntityCache());
+        final Article articleLoaded = getMapper().fromDocument(Article.class,
+            articles.find(new Document("_id", articleDocument.get("_id"))).first());
 
         assertEquals(article.getTranslations().size(), articleLoaded.getTranslations().size());
         assertEquals(article.getTranslation("en").getTitle(), articleLoaded.getTranslation("en").getTitle());
@@ -494,7 +493,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testObjectIdKeyedMap() {
-        Mapper.map(ContainsObjectIdKeyMap.class);
+        getMapper().map(ContainsObjectIdKeyMap.class);
         final ContainsObjectIdKeyMap map = new ContainsObjectIdKeyMap();
         final ObjectId o1 = new ObjectId("111111111111111111111111");
         final ObjectId o2 = new ObjectId("222222222222222222222222");
@@ -556,36 +555,32 @@ public class TestMapping extends TestBase {
     public void testRecursiveReference() {
         final MongoCollection<Document> stuff = getDatabase().getCollection("stuff");
 
-        Mapper.map(RecursiveChild.class);
+        getMapper().map(RecursiveChild.class);
 
         final RecursiveParent parent = new RecursiveParent();
-        final Document parentDocument = TestBase.toDocument(parent);
+        final Document parentDocument = getMapper().toDocument(parent);
         stuff.insertOne(parentDocument);
 
         final RecursiveChild child = new RecursiveChild();
-        final Document childDocument = TestBase.toDocument(child);
+        final Document childDocument = getMapper().toDocument(child);
         stuff.insertOne(childDocument);
 
-        final RecursiveParent parentLoaded = TestBase.fromDocument(getDs(), RecursiveParent.class,
-            stuff.find(new Document("_id", parentDocument.get("_id"))).first(),
-            new DefaultEntityCache());
-        final RecursiveChild childLoaded = TestBase.fromDocument(getDs(), RecursiveChild.class,
-            stuff.find(new Document("_id", childDocument.get("_id"))).first(),
-            new DefaultEntityCache());
+        final RecursiveParent parentLoaded = getMapper().fromDocument(RecursiveParent.class,
+            stuff.find(new Document("_id", parentDocument.get("_id"))).first());
+        final RecursiveChild childLoaded = getMapper().fromDocument(RecursiveChild.class,
+            stuff.find(new Document("_id", childDocument.get("_id"))).first());
 
         parentLoaded.setChild(childLoaded);
         childLoaded.setParent(parentLoaded);
 
-        stuff.insertOne(TestBase.toDocument(parentLoaded));
-        stuff.insertOne(TestBase.toDocument(childLoaded));
+        stuff.insertOne(getMapper().toDocument(parentLoaded));
+        stuff.insertOne(getMapper().toDocument(childLoaded));
 
-        final RecursiveParent finalParentLoaded = TestBase.fromDocument(getDs(), RecursiveParent.class,
+        final RecursiveParent finalParentLoaded = getMapper().fromDocument(RecursiveParent.class,
             stuff.find(new Document("_id", parentDocument.get("_id")))
-                 .first(),
-            new DefaultEntityCache());
-        final RecursiveChild finalChildLoaded = TestBase.fromDocument(getDs(), RecursiveChild.class,
-            stuff.find(new Document("_id", childDocument.get("_id"))).first(),
-            new DefaultEntityCache());
+                 .first());
+        final RecursiveChild finalChildLoaded = getMapper().fromDocument(RecursiveChild.class,
+            stuff.find(new Document("_id", childDocument.get("_id"))).first());
 
         assertNotNull(finalParentLoaded.getChild());
         assertNotNull(finalChildLoaded.getParent());
@@ -603,7 +598,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testSerializedMapping() {
-        Mapper.map(ContainsSerializedData.class);
+        getMapper().map(ContainsSerializedData.class);
         final Key<ContainsSerializedData> savedKey = getDs().save(new ContainsSerializedData());
         final ContainsSerializedData loaded = getDs().find(ContainsSerializedData.class).filter("_id", savedKey.getId()).first();
         assertNotNull(loaded.data);
@@ -613,7 +608,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testTimestampMapping() {
-        Mapper.map(ContainsTimestamp.class);
+        getMapper().map(ContainsTimestamp.class);
         final ContainsTimestamp cts = new ContainsTimestamp();
         final Key<ContainsTimestamp> savedKey = getDs().save(cts);
         final ContainsTimestamp loaded = getDs().find(ContainsTimestamp.class).filter("_id", savedKey.getId()).first();
@@ -639,7 +634,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testUuidId() {
-        Mapper.map(ContainsUuidId.class);
+        getMapper().map(ContainsUuidId.class);
         final ContainsUuidId uuidId = new ContainsUuidId();
         final UUID before = uuidId.id;
         getDs().save(uuidId);
@@ -649,12 +644,14 @@ public class TestMapping extends TestBase {
         assertEquals(before, loaded.id);
     }
 
-    private void performBasicMappingTest() {
+    @SuppressWarnings("unchecked")
+    private void performBasicMappingTest(final Datastore datastore) {
         final MongoCollection<Document> hotels = getDatabase().getCollection("hotels");
         final MongoCollection<Document> agencies = getDatabase().getCollection("agencies");
 
-        Mapper.map(Hotel.class);
-        Mapper.map(TravelAgency.class);
+        Mapper mapper = datastore.getMapper();
+        mapper.map(Hotel.class);
+        mapper.map(TravelAgency.class);
 
         final Hotel borg = new Hotel();
         borg.setName("Hotel Borg");
@@ -673,14 +670,15 @@ public class TestMapping extends TestBase {
         address.setPostCode("101");
         borg.setAddress(address);
 
-        Document hotelDocument = (Document) TestBase.toDocument(borg);
-        assertTrue(!(((Document) ((List) hotelDocument.get("phoneNumbers")).get(0)).containsKey(
-            getMorphia().getMapper().getOptions().getDiscriminatorField())));
+        Document hotelDocument = mapper.toDocument(borg);
+        List<Document> numbers = (List<Document>) hotelDocument.get("phoneNumbers");
+        assertFalse(numbers.get(0).containsKey(
+            mapper.getOptions().getDiscriminatorField()));
 
 
         hotels.insertOne(hotelDocument);
 
-        Hotel borgLoaded = TestBase.fromDocument(getDs(), Hotel.class, hotelDocument, new DefaultEntityCache());
+        Hotel borgLoaded = mapper.fromDocument(Hotel.class, hotelDocument);
 
         assertEquals(borg.getName(), borgLoaded.getName());
         assertEquals(borg.getStars(), borgLoaded.getStars());
@@ -699,12 +697,11 @@ public class TestMapping extends TestBase {
         agency.setName("Lastminute.com");
         agency.getHotels().add(borgLoaded);
 
-        final Document agencyDocument = (Document) TestBase.toDocument(agency);
+        final Document agencyDocument = mapper.toDocument(agency);
         agencies.insertOne(agencyDocument);
 
-        final TravelAgency agencyLoaded = TestBase.fromDocument(getDs(), TravelAgency.class,
-            agencies.find(new Document("_id", agencyDocument.get("_id"))).first(),
-            new DefaultEntityCache());
+        final TravelAgency agencyLoaded = mapper.fromDocument(TravelAgency.class,
+            agencies.find(new Document("_id", agencyDocument.get("_id"))).first());
 
         assertEquals(agency.getName(), agencyLoaded.getName());
         assertEquals(1, agency.getHotels().size());
@@ -715,12 +712,12 @@ public class TestMapping extends TestBase {
         borgLoaded.getPhoneNumbers().clear();
         borgLoaded.setName(null);
 
-        hotelDocument = (Document) TestBase.toDocument(borgLoaded);
+        hotelDocument = mapper.toDocument(borgLoaded);
         hotels.insertOne(hotelDocument);
 
         hotelDocument = (Document) hotels.find(new Document("_id", hotelDocument.get("_id")));
 
-        borgLoaded = TestBase.fromDocument(getDs(), Hotel.class, hotelDocument, new DefaultEntityCache());
+        borgLoaded = mapper.fromDocument(Hotel.class, hotelDocument);
         assertNull(borgLoaded.getAddress());
         assertEquals(0, borgLoaded.getPhoneNumbers().size());
         assertNull(borgLoaded.getName());
@@ -872,7 +869,6 @@ public class TestMapping extends TestBase {
     }
 
     private static class ContainsPrimitiveMap {
-        @Embedded
         private final Map<String, Long> embeddedValues = new HashMap<>();
         private final Map<String, Long> values = new HashMap<>();
         @Id
@@ -888,7 +884,6 @@ public class TestMapping extends TestBase {
     }
 
     private static class ContainsMapWithEmbeddedInterface {
-        @Embedded
         private final Map<String, Foo> embeddedValues = new HashMap<>();
         @Id
         private ObjectId id;
@@ -897,18 +892,17 @@ public class TestMapping extends TestBase {
     private static class ContainsEmbeddedEntity {
         @Id
         private final ObjectId id = new ObjectId();
-        @Embedded
         private ContainsIntegerList cil = new ContainsIntegerList();
     }
 
-    @Entity(value = "cil", noClassnameStored = true)
+    @Entity(value = "cil", useDiscriminator = false)
     private static class ContainsIntegerList {
         @Id
         private ObjectId id;
         private List<Integer> intList = new ArrayList<>();
     }
 
-    @Entity(value = "cil", noClassnameStored = true)
+    @Entity(value = "cil", useDiscriminator = false)
     private static class ContainsIntegerListNew {
         @AlsoLoad("intList")
         private final List<Integer> integers = new ArrayList<>();
@@ -916,14 +910,14 @@ public class TestMapping extends TestBase {
         private ObjectId id;
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     private static class ContainsUUID {
         private final UUID uuid = UUID.randomUUID();
         @Id
         private ObjectId id;
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     private static class ContainsUuidId {
         @Id
         private final UUID id = UUID.randomUUID();
@@ -931,7 +925,6 @@ public class TestMapping extends TestBase {
 
     private static class ContainsEnum1KeyMap {
         private final Map<Enum1, String> values = new HashMap<>();
-        @Embedded
         private final Map<Enum1, String> embeddedValues = new HashMap<>();
         @Id
         private ObjectId id;
@@ -944,7 +937,6 @@ public class TestMapping extends TestBase {
     }
 
     private static class ContainsIntKeySetStringMap {
-        @Embedded
         private final Map<Integer, Set<String>> values = new HashMap<>();
         @Id
         private ObjectId id;

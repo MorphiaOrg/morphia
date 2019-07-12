@@ -15,6 +15,7 @@
 package dev.morphia.ext;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,9 +41,9 @@ public class NewAnnotationTest extends TestBase {
 
     @Test
     public void testIt() {
-        MappedField.addInterestingAnnotation(Lowercase.class);
-        getMorphia().getMapper().addInterceptor(new ToLowercaseHelper());
-        Mapper.map(User.class);
+//        MappedField.addInterestingAnnotation(Lowercase.class);
+        getMapper().addInterceptor(new ToLowercaseHelper());
+        getMapper().map(User.class);
         final User u = new User();
         u.email = "ScottHernandez@gmail.com";
 
@@ -59,6 +60,7 @@ public class NewAnnotationTest extends TestBase {
     @interface Lowercase {
     }
 
+    @Entity
     private static class User {
         @Id
         private String id;
@@ -82,7 +84,7 @@ public class NewAnnotationTest extends TestBase {
         @Override
         public void prePersist(final Object ent, final Document document, final Mapper mapper) {
             final MappedClass mc = mapper.getMappedClass(ent);
-            final List<MappedField> toLowercase = mc.getFieldsAnnotatedWith(Lowercase.class);
+            final List<MappedField> toLowercase = mc.getFields(Lowercase.class);
             for (final MappedField mf : toLowercase) {
                 try {
                     final Object fieldValue = mf.getFieldValue(ent);

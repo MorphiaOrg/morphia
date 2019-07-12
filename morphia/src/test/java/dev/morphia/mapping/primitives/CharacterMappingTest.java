@@ -47,7 +47,7 @@ public class CharacterMappingTest extends TestBase {
 
     @Test
     public void mapping() {
-        Mapper.map(Characters.class);
+        getMapper().map(Characters.class);
         final Characters entity = new Characters();
         entity.listWrapperArray.add(new Character[]{'1', 'g', '#'});
         entity.listPrimitiveArray.add(new char[]{'1', 'd', 'z'});
@@ -128,7 +128,7 @@ public class CharacterMappingTest extends TestBase {
     }
 
     private Characters testMapping(final String field, final String value) {
-        Mapper.map(Characters.class);
+        getMapper().map(Characters.class);
 
         final MongoCollection<Document> collection = getDs().getCollection(Characters.class);
         collection.insertOne(new Document(field, value));

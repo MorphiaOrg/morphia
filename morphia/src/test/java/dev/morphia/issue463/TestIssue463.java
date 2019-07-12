@@ -14,7 +14,7 @@ import org.junit.Test;
 public class TestIssue463 extends TestBase {
     @Test
     public void save() {
-        Mapper.map(Class1.class, Class2.class);
+        getMapper().map(Class1.class, Class2.class);
 
         final Class2 class2 = new Class2();
         class2.setId(new ObjectId());
@@ -26,7 +26,7 @@ public class TestIssue463 extends TestBase {
         Assert.assertNotNull(getDs().getCollection(Class2.class).find(query).first());
     }
 
-    @Entity(value = "class1", noClassnameStored = true)
+    @Entity(value = "class1", useDiscriminator = false)
     public static class Class1 {
         @Id
         private ObjectId id;
@@ -49,7 +49,7 @@ public class TestIssue463 extends TestBase {
         }
     }
 
-    @Entity(value = "class2", noClassnameStored = true)
+    @Entity(value = "class2", useDiscriminator = false)
     public static class Class2 extends Class1 {
 
     }

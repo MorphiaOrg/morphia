@@ -28,9 +28,9 @@ public class State {
     private ObjectId id;
     @Property("state")
     private String state;
-    @Embedded("biggestCity")
+    @Property("biggestCity")
     private CityPopulation biggest;
-    @Embedded("smallestCity")
+    @Property("smallestCity")
     private CityPopulation smallest;
 
     public CityPopulation getBiggest() {

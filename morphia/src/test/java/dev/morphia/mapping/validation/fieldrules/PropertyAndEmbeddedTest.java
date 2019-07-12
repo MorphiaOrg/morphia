@@ -26,11 +26,11 @@ public class PropertyAndEmbeddedTest extends TestBase {
 
         Assert.assertTrue(e.document.contains("myFunkyR"));
 
-        Mapper.map(E2.class);
+        getMapper().map(E2.class);
     }
 
     public static class E extends TestEntity {
-        @Embedded("myFunkyR")
+        @Property("myFunkyR")
         private R r = new R();
         @Transient
         private String document;
@@ -42,11 +42,11 @@ public class PropertyAndEmbeddedTest extends TestBase {
     }
 
     public static class E2 extends TestEntity {
-        @Embedded
         @Property("myFunkyR")
         private String s;
     }
 
+    @Embedded
     public static class R {
         private String foo = "bar";
     }

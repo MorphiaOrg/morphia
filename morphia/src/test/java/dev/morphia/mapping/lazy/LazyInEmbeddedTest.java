@@ -1,9 +1,6 @@
 package dev.morphia.mapping.lazy;
 
 
-import dev.morphia.mapping.Mapper;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -12,6 +9,8 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.testutil.TestEntity;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,8 +30,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        Mapper.map(ContainerWithRefInField.class);
-        Mapper.map(OtherEntity.class);
+        getMapper().map(ContainerWithRefInField.class);
+        getMapper().map(OtherEntity.class);
 
         OtherEntity otherEntity = new OtherEntity();
         ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
@@ -62,8 +61,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        Mapper.map(ContainerWithRefList.class);
-        Mapper.map(OtherEntity.class);
+        getMapper().map(ContainerWithRefList.class);
+        getMapper().map(OtherEntity.class);
 
         OtherEntity otherEntity = new OtherEntity();
         ContainerWithRefList containerWithRefInList = new ContainerWithRefList();
@@ -97,8 +96,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        Mapper.map(ContainerWithRefInField.class);
-        Mapper.map(OtherEntityChild.class);
+        getMapper().map(ContainerWithRefInField.class);
+        getMapper().map(OtherEntityChild.class);
 
         OtherEntityChild otherEntity = new OtherEntityChild();
         ContainerWithRefInField containerWithRefInField = new ContainerWithRefInField();
@@ -128,8 +127,8 @@ public class LazyInEmbeddedTest extends TestBase {
             return;
         }
 
-        Mapper.map(ContainerWithRefList.class);
-        Mapper.map(OtherEntityChild.class);
+        getMapper().map(ContainerWithRefList.class);
+        getMapper().map(OtherEntityChild.class);
 
         OtherEntityChild otherEntity = new OtherEntityChild();
         ContainerWithRefList containerWithRefInList = new ContainerWithRefList();
@@ -164,14 +163,12 @@ public class LazyInEmbeddedTest extends TestBase {
 
     @Entity
     public static class ContainerWithRefInField extends TestEntity {
-        @Embedded
         private EmbedWithRef embedWithRef;
     }
 
     @Entity
     public static class ContainerWithRefList extends TestEntity {
-        @Embedded
-        private final List<EmbedWithRef> embedWithRef = new ArrayList<EmbedWithRef>();
+        private final List<EmbedWithRef> embedWithRef = new ArrayList<>();
     }
 
     @Entity
@@ -198,6 +195,7 @@ public class LazyInEmbeddedTest extends TestBase {
         }
     }
 
+    @Embedded
     public static class EmbedWithRef implements Serializable {
 
         @Reference(lazy = true)

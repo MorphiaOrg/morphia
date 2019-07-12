@@ -31,7 +31,7 @@ public class TransientMappingTest extends TestBase {
 
     @Test
     public void mapClassWithTransientFields() {
-        Mapper.map(HasTransientFields.class);
+        getMapper().map(HasTransientFields.class);
         final HasTransientFields entity = new HasTransientFields();
         entity.javaTransientString = "should not be persisted";
         entity.morphiaTransientString = "should not be persisted";

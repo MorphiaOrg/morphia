@@ -35,12 +35,12 @@ public class GenericsMappingTest extends TestBase {
 
     @Test
     public void testBoundGenerics() {
-        Mapper.map(Element.class, AudioElement.class);
+        getMapper().map(Element.class, AudioElement.class);
     }
 
     @Test
     public void testIt() {
-        Mapper.map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
+        getMapper().map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
         final ContainsThings ct = new ContainsThings();
         final HoldsAnInteger hai = new HoldsAnInteger();
         hai.setThing(7);

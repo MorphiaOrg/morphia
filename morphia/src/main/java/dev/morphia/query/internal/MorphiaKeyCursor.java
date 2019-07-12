@@ -3,7 +3,6 @@ package dev.morphia.query.internal;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
-import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
@@ -22,20 +21,16 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     private final Mapper mapper;
     private final Class<T> clazz;
     private final String collection;
-    private final Datastore datastore;
 
 
     /**
      * Create
-     * @param datastore  the Datastore to use when fetching this reference
      * @param cursor     the cursor to use
      * @param mapper     the Mapper to use
      * @param clazz      the original type being iterated
      * @param collection the mongodb collection
      */
-    public MorphiaKeyCursor(final Datastore datastore, final MongoCursor cursor, final Mapper mapper,
-                            final Class<T> clazz, final String collection) {
-        this.datastore = datastore;
+    public MorphiaKeyCursor(final MongoCursor<Document> cursor, final Mapper mapper, final Class<T> clazz, final String collection) {
         this.wrapped = cursor;
         if(wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");
@@ -110,12 +105,10 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         wrapped.remove();
     }
 
-    @SuppressWarnings("unchecked")
     private Key<T> convertItem(final Document dbObj) {
         Object id = dbObj.get("_id");
         if (id instanceof Document) {
-            Class type = mapper.getMappedClass(clazz).getMappedIdField().getType();
-            id = mapper.fromDocument(datastore, type, (Document) id, mapper.createEntityCache());
+            id = mapper.fromDocument(clazz, (Document) id);
         }
         return new Key<>(clazz, collection, id);
     }

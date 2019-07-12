@@ -15,7 +15,7 @@ public class TestCapped extends TestBase {
     @Test
     public void testCappedEntity() {
         // given
-        Mapper.map(CurrentStatus.class);
+        getMapper().map(CurrentStatus.class);
         getDs().ensureCaps();
 
         // when-then

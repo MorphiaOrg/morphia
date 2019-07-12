@@ -1,8 +1,5 @@
 package dev.morphia.query;
 
-import org.bson.types.ObjectId;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -10,22 +7,18 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.query.validation.ValidationFailure;
+import org.bson.types.ObjectId;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static dev.morphia.query.FilterOperator.EQUAL;
 import static dev.morphia.query.FilterOperator.SIZE;
 import static dev.morphia.query.QueryValidator.isCompatibleForOperator;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-/**
- * For issue #615.
- *
- * @author jbyler
- */
 public class QueryForSubtypeTest extends TestBase {
 
     private MappedClass jobMappedClass;
@@ -34,7 +27,8 @@ public class QueryForSubtypeTest extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        jobMappedClass = new Mapper().getMappedClass(Job.class);
+        getMapper().map(Job.class);
+        jobMappedClass = getMapper().getMappedClass(Job.class);
     }
 
     @Test
@@ -46,7 +40,7 @@ public class QueryForSubtypeTest extends TestBase {
                                                      User.class,
                                                      EQUAL,
                                                      new UserImpl(),
-                                                     new ArrayList<ValidationFailure>());
+            new ArrayList<>());
 
         assertThat(compatible, is(true));
     }
@@ -60,7 +54,7 @@ public class QueryForSubtypeTest extends TestBase {
                                                      ArrayList.class,
                                                      SIZE,
                                                      2,
-                                                     new ArrayList<ValidationFailure>());
+            new ArrayList<>());
 
         assertThat(compatible, is(true));
     }
@@ -68,7 +62,7 @@ public class QueryForSubtypeTest extends TestBase {
     @Test
     public void testSubclassOfKeyShouldBeCompatibleWithFieldUser() {
         MappedField user = jobMappedClass.getMappedField("owner");
-        Key<User> anonymousKeySubclass = new Key<User>(User.class, "User", 212L) {
+        Key<User> anonymousKeySubclass = new Key<>(User.class, "User", 212L) {
         };
 
         boolean compatible = isCompatibleForOperator(jobMappedClass,
@@ -76,7 +70,7 @@ public class QueryForSubtypeTest extends TestBase {
                                                      User.class,
                                                      EQUAL,
                                                      anonymousKeySubclass,
-                                                     new ArrayList<ValidationFailure>());
+            new ArrayList<>());
 
         assertThat(compatible, is(true));
     }

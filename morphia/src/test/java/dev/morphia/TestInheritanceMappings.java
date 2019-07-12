@@ -46,12 +46,12 @@ public class TestInheritanceMappings extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        Mapper.map(FlyingCar.class);
+        getMapper().map(FlyingCar.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testMapEntity() {
-        Mapper.map(MapLike.class);
+        getMapper().map(MapLike.class);
         MapLike m = new MapLike();
         m.put("Name", "Scott");
         getDs().save(m);
@@ -69,7 +69,7 @@ public class TestInheritanceMappings extends TestBase {
 
     @Test
     public void testParamEntity() {
-        Mapper.map(ParameterizedEntity.class);
+        getMapper().map(ParameterizedEntity.class);
         ParameterizedEntity c = new ParameterizedEntity();
         c.setId("foo");
         c.b = "eh";
@@ -88,7 +88,7 @@ public class TestInheritanceMappings extends TestBase {
 
     @Test
     public void testParamIdEntity() {
-        Mapper.map(ParameterizedIdEntity.class);
+        getMapper().map(ParameterizedIdEntity.class);
         ParameterizedIdEntity c = new ParameterizedIdEntity();
         c.setId("foo");
         getDs().save(c);
@@ -101,7 +101,7 @@ public class TestInheritanceMappings extends TestBase {
 
     @Test
     public void testParamIdEntity2() {
-        Mapper.map(ParameterizedIdEntity2.class);
+        getMapper().map(ParameterizedIdEntity2.class);
         ParameterizedIdEntity2 c = new ParameterizedIdEntity2();
         c.setId("foo");
         getDs().save(c);
@@ -225,7 +225,7 @@ public class TestInheritanceMappings extends TestBase {
     private static class ParameterizedIdEntity extends GenericId<String> {
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class MapLike implements MapPlusIterableStringString {
         private final HashMap<String, String> realMap = new HashMap<String, String>();
         @Id

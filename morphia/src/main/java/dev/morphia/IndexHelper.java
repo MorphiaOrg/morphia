@@ -97,7 +97,7 @@ final class IndexHelper {
 
     private List<Index> collectFieldIndexes(final MappedClass mc) {
         List<Index> list = new ArrayList<Index>();
-        for (final MappedField mf : mc.getPersistenceFields()) {
+        for (final MappedField mf : mc.getFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 list.add(convert(mf.getAnnotation(Indexed.class), mf.getMappedFieldName()));
             } else if (mf.hasAnnotation(Text.class)) {

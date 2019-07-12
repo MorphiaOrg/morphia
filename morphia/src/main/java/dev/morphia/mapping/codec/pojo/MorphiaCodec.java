@@ -56,7 +56,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     private Mapper mapper;
     private MappedClass mappedClass;
 
-    MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
+    public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
                  final CodecRegistry registry, final List<PropertyCodecProvider> propertyCodecProviders,
                  final DiscriminatorLookup discriminatorLookup) {
         super(classModel, registry, propertyCodecProviders, discriminatorLookup);
@@ -64,7 +64,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         this.mappedClass = mappedClass;
     }
 
-    private MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
+    public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
                  final CodecRegistry registry, final PropertyCodecRegistry propertyCodecRegistry,
                  final DiscriminatorLookup discriminatorLookup, final boolean specialized) {
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized);
@@ -75,7 +75,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     @Override
     public T generateIdIfAbsentFromDocument(final T document) {
         if (!documentHasId(document)) {
-            final MappedField mappedIdField = mappedClass.getMappedIdField();
+            final MappedField mappedIdField = mappedClass.getIdField();
             mappedIdField.setFieldValue(document, convert(new ObjectId(), mappedIdField.getType()));
         }
         return document;
@@ -83,13 +83,13 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
 
     @Override
     public boolean documentHasId(final T document) {
-        return mappedClass.getMappedIdField().getFieldValue(document) != null;
+        return mappedClass.getIdField().getFieldValue(document) != null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public BsonValue getDocumentId(final T document) {
-        final Object id = mappedClass.getMappedIdField().getFieldValue(document);
+        final Object id = mappedClass.getIdField().getFieldValue(document);
         final DocumentWriter writer = new DocumentWriter();
         ((Codec) getRegistry().get(id.getClass()))
             .encode(writer, id, EncoderContext.builder().build());

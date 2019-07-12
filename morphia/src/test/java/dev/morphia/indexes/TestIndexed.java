@@ -56,13 +56,13 @@ public class TestIndexed extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        Mapper.map(UniqueIndexOnValue.class, IndexOnValue.class, NamedIndexOnValue.class);
+        getMapper().map(UniqueIndexOnValue.class, IndexOnValue.class, NamedIndexOnValue.class);
     }
 
     @Test
     public void shouldNotCreateAnIndexWhenAnIndexedEntityIsMarkedAsNotSaved() {
         // given
-        Mapper.map(IndexOnValue.class, NoIndexes.class);
+        getMapper().map(IndexOnValue.class, NoIndexes.class);
         Datastore ds = getDs();
 
         // when
@@ -77,7 +77,7 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void shouldThrowExceptionWhenAddingADuplicateValueForAUniqueIndex() {
-        Mapper.map(UniqueIndexOnValue.class);
+        getMapper().map(UniqueIndexOnValue.class);
         getDs().ensureIndexes();
         long value = 7L;
 
@@ -116,7 +116,7 @@ public class TestIndexed extends TestBase {
     @Test
     public void testCanCreate2dSphereIndexes() {
         // given
-        Mapper.map(Place.class);
+        getMapper().map(Place.class);
 
         // when
         getDs().ensureIndexes();
@@ -130,7 +130,7 @@ public class TestIndexed extends TestBase {
     @Test
     public void testCanCreate2dSphereIndexesOnLegacyCoordinatePairs() {
         // given
-        Mapper.map(LegacyPlace.class);
+        getMapper().map(LegacyPlace.class);
 
         // when
         getDs().ensureIndexes();
@@ -152,14 +152,14 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testIndexedRecursiveEntity() throws Exception {
-        final MappedClass mc = getMorphia().getMapper().getMappedClass(CircularEmbeddedEntity.class);
+        final MappedClass mc = getMapper().getMappedClass(CircularEmbeddedEntity.class);
         getDs().ensureIndexes();
         assertThat(getIndexInfo(CircularEmbeddedEntity.class), hasIndexNamed("a_1"));
     }
 
     @Test
     public void testIndexes() {
-        final MappedClass mc = getMorphia().getMapper().addMappedClass(Ad2.class);
+        final MappedClass mc = getMapper().addMappedClass(Ad2.class);
 
         assertThat(getIndexInfo(Ad2.class), doesNotHaveIndexNamed("active_1_lastMod_-1"));
         getDs().ensureIndexes(Ad2.class);
@@ -185,7 +185,7 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testDefaults() {
-        Mapper.map(NewIndexed.class);
+        getMapper().map(NewIndexed.class);
         getDs().ensureIndexes();
     }
 

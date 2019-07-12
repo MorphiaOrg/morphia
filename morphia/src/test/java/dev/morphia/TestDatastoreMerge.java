@@ -74,7 +74,7 @@ public class TestDatastoreMerge extends TestBase {
         private int position;
     }
 
-    @Entity(value = "test", noClassnameStored = true)
+    @Entity(value = "test", useDiscriminator = false)
     static class Test1 {
         @Id
         ObjectId id;
@@ -83,7 +83,7 @@ public class TestDatastoreMerge extends TestBase {
         long version;
     }
 
-    @Entity(value = "test", noClassnameStored = true)
+    @Entity(value = "test", useDiscriminator = false)
     static class Test2 {
         @Id
         ObjectId id;

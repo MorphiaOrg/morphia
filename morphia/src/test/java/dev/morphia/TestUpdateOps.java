@@ -19,10 +19,9 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryImpl.Update;
+import dev.morphia.query.Update;
 import dev.morphia.query.Sort;
 import dev.morphia.query.TestQuery.ContainsPic;
 import dev.morphia.query.TestQuery.Pic;
@@ -174,7 +173,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testAddAll() {
-        Mapper.map(EntityLogs.class, EntityLog.class);
+        getMapper().map(EntityLogs.class, EntityLog.class);
         String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
 
         EntityLogs logs = new EntityLogs();
@@ -207,7 +206,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testMultiUpdates() {
-        Mapper.map(ContainsPic.class);
+        getMapper().map(ContainsPic.class);
         Query<ContainsPic> finder = getDs().find(ContainsPic.class);
 
         createContainsPic(0);
@@ -891,13 +890,12 @@ public class TestUpdateOps extends TestBase {
         private List<Key<Pic>> keys;
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class EntityLogs {
         @Id
         private ObjectId id;
         @Indexed
         private String uuid;
-        @Embedded
         private List<EntityLog> logs = new ArrayList<>();
         private Document raw;
 
@@ -952,12 +950,12 @@ public class TestUpdateOps extends TestBase {
     }
 
     private static final class Parent {
-        @Embedded
         private final Set<Child> children = new HashSet<>();
         @Id
         private ObjectId id;
     }
 
+    @Embedded
     private static final class Child {
         private String first;
         private String last;

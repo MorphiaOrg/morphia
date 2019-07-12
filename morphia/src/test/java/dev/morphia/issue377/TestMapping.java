@@ -7,7 +7,6 @@ import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.cache.DefaultEntityCache;
 import org.bson.Document;
 import org.junit.Test;
 
@@ -27,14 +26,13 @@ public class TestMapping extends TestBase {
     @Test
     public void testCanMapSerializableObject() {
         // given
-        Mapper mapper = new Mapper();
         User user = new User();
         user.id = 1;
         user.userObject = new SerializableObject();
 
         // when
-        Document dbObject = mapper.toDocument(user);
-        User object = mapper.fromDocument(getDs(), User.class, dbObject, new DefaultEntityCache());
+        Document document = getMapper().toDocument(user);
+        User object = getMapper().fromDocument(User.class, document);
 
         // then
         assertThat(object.userObject, is(user.userObject));
@@ -43,39 +41,35 @@ public class TestMapping extends TestBase {
     @Test
     public void testToMongoObjectCorrectlyMapsSerializableFieldForIssue591() {
         // given
-        Mapper mapper = new Mapper();
-
         User user = new User();
         user.id = 1;
         user.userObject = new SerializableObject();
 
-        MappedClass mc = new MappedClass(User.class, mapper);
+        MappedClass mc = getMappedClass(User.class);
         MappedField mf = mc.getMappedField("userObject");
 
         // when
-        Object dbValue = mapper.toMongoObject(mf, null, user.userObject);
+        Object dbValue = getMapper().toMongoObject(mf, null, user.userObject);
         Class<byte[]> byteArrayClass = byte[].class;
 
         // then
         assertThat(dbValue, is(instanceOf(byteArrayClass)));
     }
 
+
     @Test
     public void testToMongoObjectCorrectlyMapsSerializableListOfObjectsForIssue591() {
-        // given
-        Mapper mapper = new Mapper();
-
         ListEntity user = new ListEntity();
         user.id = 1;
         List<Object> list = new ArrayList<>();
         list.add("value");
         user.list = list;
 
-        MappedClass mc = new MappedClass(ListEntity.class, mapper);
+        MappedClass mc = getMappedClass(ListEntity.class);
         MappedField mf = mc.getMappedField("list");
 
         // when
-        Object dbValue = mapper.toMongoObject(mf, null, user.list);
+        Object dbValue = getMapper().toMongoObject(mf, null, user.list);
         Class<byte[]> byteArrayClass = byte[].class;
 
         // then

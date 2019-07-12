@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
 public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
     @Test
     public void interfaces() {
-        Mapper.map(InterfaceA.class, InterfaceB.class, ClassA.class, B1.class, B2.class);
+        getMapper().map(InterfaceA.class, InterfaceB.class, ClassA.class, B1.class, B2.class);
 
         final B1 b1 = new B1("Sandor Clegane");
 

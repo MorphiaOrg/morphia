@@ -22,9 +22,6 @@ import dev.morphia.annotations.Transient;
 import java.io.Serializable;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 @Embedded
 public class Address implements Serializable {
 

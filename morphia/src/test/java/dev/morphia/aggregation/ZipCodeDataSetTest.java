@@ -74,7 +74,7 @@ public class ZipCodeDataSetTest extends TestBase {
                 }
             }
             MongoCollection<Document> zips = getDatabase().getCollection("zips");
-            if (zips.countDocuments() == 0) {
+            if (zips.count() == 0) {
                 new ProcessExecutor().command(MONGO_IMPORT,
                     "--db", getDatabase().getName(),
                     "--collection", "zipcodes",
@@ -108,7 +108,7 @@ public class ZipCodeDataSetTest extends TestBase {
     public void smallestAndLargestCities() {
         Assume.assumeTrue(new File(MONGO_IMPORT).exists());
         installSampleData();
-        Mapper.mapPackage(getClass().getPackage().getName());
+        getMapper().mapPackage(getClass().getPackage().getName());
         AggregationPipeline pipeline = getDs().createAggregation(City.class)
 
                                               .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))

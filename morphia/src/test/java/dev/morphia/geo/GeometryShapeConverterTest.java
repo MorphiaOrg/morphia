@@ -13,13 +13,13 @@ public class GeometryShapeConverterTest extends TestBase {
     public void shouldConvertAnEntityWithAPolygonGeoJsonType() {
         // given
         GeometryShapeConverter.PolygonConverter converter = new GeometryShapeConverter.PolygonConverter();
-        converter.setMapper(getMorphia().getMapper());
+//        converter.setMapper(getMapper());
         Polygon polygon = GeoJson.polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
                                           lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
                                           lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8), point(2.2, 2.1)));
 
         // when
-        Object encodedPolygon = converter.encode(polygon);
+        Object encodedPolygon = converter.encode(polygon, null);
 
         // then
         assertThat(encodedPolygon.toString(), JSONMatcher.jsonEqual("  {"
@@ -49,7 +49,7 @@ public class GeometryShapeConverterTest extends TestBase {
     public void shouldCorrectlyEncodePointsIntoEntityDocument() {
         // given
         GeometryShapeConverter.PointConverter pointConverter = new GeometryShapeConverter.PointConverter();
-        pointConverter.setMapper(getMorphia().getMapper());
+//        pointConverter.setMapper(getMapper());
 
         Point point = point(3.0, 7.0);
 
@@ -68,7 +68,7 @@ public class GeometryShapeConverterTest extends TestBase {
     public void shouldEncodeAnEntityWithAMultiLineStringGeoJsonType() {
         // given
         GeometryShapeConverter.MultiLineStringConverter converter = new GeometryShapeConverter.MultiLineStringConverter();
-        converter.setMapper(getMorphia().getMapper());
+//        converter.setMapper(getMapper());
         MultiLineString multiLineString = GeoJson.multiLineString(lineString(point(1, 2), point(3, 5), point(19, 13)),
                                                                   lineString(point(1.5, 2.0),
                                                                              point(1.9, 2.0),
@@ -76,7 +76,7 @@ public class GeometryShapeConverterTest extends TestBase {
                                                                              point(1.5, 2.0)));
 
         // when
-        Object encoded = converter.encode(multiLineString);
+        Object encoded = converter.encode(multiLineString, null);
 
         // then
         assertThat(encoded.toString(), JSONMatcher.jsonEqual("  {"
@@ -99,7 +99,7 @@ public class GeometryShapeConverterTest extends TestBase {
     public void shouldEncodeAnEntityWithAMultiPolygonGeoJsonType() {
         // given
         GeometryShapeConverter.MultiPolygonConverter converter = new GeometryShapeConverter.MultiPolygonConverter();
-        converter.setMapper(getMorphia().getMapper());
+//        converter.setMapper(getMapper());
         Polygon polygonWithHoles = GeoJson.polygon(lineString(point(1.1, 2.0), point(2.3, 3.5), point(3.7, 1.0), point(1.1, 2.0)),
                                                    lineString(point(1.5, 2.0), point(1.9, 2.0), point(1.9, 1.8), point(1.5, 2.0)),
                                                    lineString(point(2.2, 2.1), point(2.4, 1.9), point(2.4, 1.7), point(2.1, 1.8),
@@ -111,7 +111,7 @@ public class GeometryShapeConverterTest extends TestBase {
                                                          polygonWithHoles);
 
         // when
-        Object encoded = converter.encode(multiPolygon);
+        Object encoded = converter.encode(multiPolygon, null);
 
         // then
         assertThat(encoded.toString(), JSONMatcher.jsonEqual("  {"
@@ -147,11 +147,11 @@ public class GeometryShapeConverterTest extends TestBase {
     public void shouldSaveAnEntityWithALineStringGeoJsonType() {
         // given
         GeometryShapeConverter.LineStringConverter converter = new GeometryShapeConverter.LineStringConverter();
-        converter.setMapper(getMorphia().getMapper());
+//        converter.setMapper(getMapper());
         LineString lineString = lineString(point(1, 2), point(3, 5), point(19, 13));
 
         // when
-        Object encodedLineString = converter.encode(lineString);
+        Object encodedLineString = converter.encode(lineString, null);
 
         // then
         assertThat(encodedLineString.toString(), JSONMatcher.jsonEqual("  {"

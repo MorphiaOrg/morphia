@@ -32,14 +32,14 @@ public class TestTextIndexing extends TestBase {
     @Test(expected = MongoCommandException.class)
     public void shouldNotAllowMultipleTextIndexes() {
         Class<MultipleTextIndexes> clazz = MultipleTextIndexes.class;
-        Mapper.map(clazz);
+        getMapper().map(clazz);
         getDs().getCollection(clazz).drop();
         getDs().ensureIndexes();
     }
 
     @Test
     public void testIndexAll() {
-        Mapper.map(TextIndexAll.class);
+        getMapper().map(TextIndexAll.class);
         getDs().ensureIndexes();
 
         List<Document> indexInfo = getIndexInfo(TextIndexAll.class);
@@ -55,7 +55,7 @@ public class TestTextIndexing extends TestBase {
 
     @Test
     public void testSingleAnnotation() {
-        Mapper.map(CompoundTextIndex.class);
+        getMapper().map(CompoundTextIndex.class);
         getDs().getCollection(CompoundTextIndex.class).drop();
         getDs().ensureIndexes();
 
@@ -79,7 +79,7 @@ public class TestTextIndexing extends TestBase {
     public void testTextAnnotation() {
         Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
 
-        Mapper.map(clazz);
+        getMapper().map(clazz);
         getDs().getCollection(clazz).drop();
         getDs().ensureIndexes();
 

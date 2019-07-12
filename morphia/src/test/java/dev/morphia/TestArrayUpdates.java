@@ -22,7 +22,7 @@ import static java.util.Collections.singletonMap;
 public class TestArrayUpdates extends TestBase {
     @Test
     public void testStudents() {
-        Mapper.map(Student.class);
+        getMapper().map(Student.class);
         final Datastore datastore = getDs();
         datastore.ensureIndexes();
 
@@ -51,7 +51,7 @@ public class TestArrayUpdates extends TestBase {
 
     @Test
     public void testUpdatesWithArrayIndexPosition() {
-        Mapper.map(Student.class);
+        getMapper().map(Student.class);
         final Datastore datastore = getDs();
         datastore.ensureIndexes();
 
@@ -123,7 +123,6 @@ public class TestArrayUpdates extends TestBase {
 
         @Id
         private ObjectId id;
-        @Embedded
         private List<Files> files = new ArrayList<Files>();
 
         @Override

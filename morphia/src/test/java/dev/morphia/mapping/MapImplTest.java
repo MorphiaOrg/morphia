@@ -25,7 +25,7 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMap() throws Exception {
-        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
         cmoeg.values.put("first", g1);
@@ -37,12 +37,12 @@ public class MapImplTest extends TestBase {
                                                            .first()
                                                            .get("values"))
                                             .get("first");
-        assertFalse(goo.containsKey(getMorphia().getMapper().getOptions().getDiscriminatorField()));
+        assertFalse(goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
     public void testEmbeddedMapUpdateOperations() {
-        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 
@@ -61,12 +61,12 @@ public class MapImplTest extends TestBase {
                                                            .get("values")).get(
             "second");
         assertFalse("className should not be here.", goo.containsKey(
-            getMorphia().getMapper().getOptions().getDiscriminatorField()));
+            getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
     public void testEmbeddedMapUpdateOperationsOnInterfaceValue() throws Exception {
-        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 
@@ -85,12 +85,12 @@ public class MapImplTest extends TestBase {
                                                            .first()
                                                            .get("values"))
                                             .get("second");
-        assertTrue("className should be here.", goo.containsKey(getMorphia().getMapper().getOptions().getDiscriminatorField()));
+        assertTrue("className should be here.", goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
     public void testEmbeddedMapWithValueInterface() throws Exception {
-        Mapper.map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
 
         final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
@@ -102,7 +102,7 @@ public class MapImplTest extends TestBase {
                                                            .first()
                                                            .get("values"))
                                             .get("first");
-        assertTrue(goo.containsKey(getMorphia().getMapper().getOptions().getDiscriminatorField()));
+        assertTrue(goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -119,7 +119,6 @@ public class MapImplTest extends TestBase {
     }
 
     private static class ContainsMapOfEmbeddedInterfaces {
-        @Embedded
         private final Map<String, Serializable> values = new HashMap<String, Serializable>();
         @Id
         private ObjectId id;
@@ -144,12 +143,12 @@ public class MapImplTest extends TestBase {
     }
 
     private static class E {
-        @Embedded
         private final MyMap mymap = new MyMap();
         @Id
         private ObjectId id;
     }
 
+    @Embedded
     private static class MyMap extends HashMap<String, String> {
     }
 }

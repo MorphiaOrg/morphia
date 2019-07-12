@@ -1,7 +1,6 @@
 package dev.morphia.testmodel;
 
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -11,23 +10,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 @Entity("articles")
 @SuppressWarnings("unchecked")
 public class Article extends TestEntity {
-    @Embedded
     private Map<String, Translation> translations;
     @Property
-    private Map attributes;
+    private Map<String, Object> attributes;
     @Reference
     private Map<String, Article> related;
 
     public Article() {
-        translations = new HashMap<String, Translation>();
-        attributes = new HashMap<String, Object>();
-        related = new HashMap<String, Article>();
+        translations = new HashMap<>();
+        attributes = new HashMap<>();
+        related = new HashMap<>();
     }
 
     public Object getAttribute(final String name) {

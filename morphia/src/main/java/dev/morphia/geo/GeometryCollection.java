@@ -17,14 +17,14 @@ import java.util.List;
  * @see dev.morphia.geo.GeoJson
  */
 @Embedded
-@Entity(noClassnameStored = true)
+@Entity
 public class GeometryCollection {
     private final String type = "GeometryCollection";
     private final List<Geometry> geometries;
 
     @SuppressWarnings("UnusedDeclaration") // needed by morphia
     private GeometryCollection() {
-        geometries = new ArrayList<Geometry>();
+        geometries = new ArrayList<>();
     }
 
     GeometryCollection(final List<Geometry> geometries) {

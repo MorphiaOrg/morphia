@@ -50,7 +50,7 @@ public class CompoundIdTest extends TestBase {
 
     @Test
     public void testReference() {
-        Mapper.map(CompoundIdEntity.class, CompoundId.class);
+        getMapper().map(CompoundIdEntity.class, CompoundId.class);
 
         final CompoundIdEntity sibling = new CompoundIdEntity();
         sibling.id = new CompoundId("sibling ID");
@@ -176,7 +176,7 @@ public class CompoundIdTest extends TestBase {
         }
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class ConfigEntry {
         @Id
         private ConfigKey key;

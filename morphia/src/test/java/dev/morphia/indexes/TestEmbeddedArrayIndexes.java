@@ -38,7 +38,7 @@ import static org.junit.Assert.assertNotNull;
 public class TestEmbeddedArrayIndexes extends TestBase {
     @Test
     public void testParamEntity() {
-        final MappedClass mc = getMorphia().getMapper().getMappedClass(A.class);
+        final MappedClass mc = getMapper().getMappedClass(A.class);
         assertNotNull(mc);
 
         assertEquals(1, mc.getAnnotations(Indexes.class).size());

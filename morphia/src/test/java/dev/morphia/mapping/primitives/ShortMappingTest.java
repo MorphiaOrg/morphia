@@ -16,7 +16,7 @@ import java.util.List;
 public class ShortMappingTest extends TestBase {
     @Test
     public void testMapping() throws Exception {
-        Mapper.map(Shorts.class);
+        getMapper().map(Shorts.class);
         final Shorts ent = new Shorts();
         ent.listWrapperArray.add(new Short[]{1, 2});
         ent.listPrimitiveArray.add(new short[]{2, 3, 12});

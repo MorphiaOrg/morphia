@@ -101,7 +101,7 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void embeddedIndexPartialFilters() {
-        Mapper.map(FeedEvent.class, InboxEvent.class);
+        getMapper().map(FeedEvent.class, InboxEvent.class);
         getDs().ensureIndexes();
         final MongoCollection<Document> inboxEvent = getDatabase().getCollection("InboxEvent");
         for (final Document index : inboxEvent.listIndexes()) {
@@ -115,9 +115,9 @@ public class TestIndexes extends TestBase {
         // check the logging is disabled
         inboxEvent.drop();
         final Builder builder = MapperOptions
-                                    .builder(getMorphia().getMapper().getOptions())
+                                    .builder(getMapper().getOptions())
                                     .disableEmbeddedIndexes(true);
-        getMorphia().getMapper().setOptions(builder.build());
+        getMapper().setOptions(builder.build());
         getDs().ensureIndexes();
         Assert.assertNull("No indexes should be generated for InboxEvent", inboxEvent.listIndexes().iterator().tryNext());
     }
@@ -149,7 +149,7 @@ public class TestIndexes extends TestBase {
         }
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     @Indexes({@Index(options = @IndexOptions(name = "collated",
         partialFilter = "{ name : { $exists : true } }",
         collation = @Collation(locale = "en_US", alternate = SHIFTED, backwards = true,
@@ -162,7 +162,7 @@ public class TestIndexes extends TestBase {
 
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     @Indexes({@Index(options = @IndexOptions(background = true),
         fields = @Field("name"))})
     public static class TestWithDeprecatedIndex {
@@ -170,7 +170,7 @@ public class TestIndexes extends TestBase {
 
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     @Indexes({@Index(options = @IndexOptions(), fields = {@Field(value = "hashedValue", type = IndexType.HASHED)})})
     public static class TestWithHashedIndex {
         private String hashedValue;
@@ -190,7 +190,6 @@ public class TestIndexes extends TestBase {
     public static class InboxEvent {
         @Id
         private ObjectId id;
-        @Embedded
         private FeedEvent feedEvent;
     }
 }

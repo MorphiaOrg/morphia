@@ -15,15 +15,15 @@ import static dev.morphia.utils.ReflectionUtils.iterToList;
 import static java.util.Collections.singletonList;
 
 @SuppressWarnings("unchecked")
-abstract class UpdatesImpl<Updater extends Updates> implements Updates<Updater>  {
+abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Updater>  {
 
     protected Datastore datastore;
     protected final Mapper mapper;
-    protected final Class clazz;
+    protected final Class<T> clazz;
     private Map<String, Object> ops = new HashMap<>();
     private boolean validateNames = true;
 
-    UpdatesImpl(final Datastore datastore, final Mapper mapper, final Class clazz) {
+    UpdatesImpl(final Datastore datastore, final Mapper mapper, final Class<T> clazz) {
         this.datastore = datastore;
         this.mapper = mapper;
         this.clazz = clazz;

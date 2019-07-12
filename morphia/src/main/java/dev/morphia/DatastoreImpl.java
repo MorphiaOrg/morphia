@@ -325,7 +325,7 @@ class DatastoreImpl implements AdvancedDatastore {
     public <T> Key<T> merge(final T entity, final WriteConcern wc) {
         T unwrapped = entity;
         final LinkedHashMap<Object, Document> involvedObjects = new LinkedHashMap<>();
-        final Document dbObj = mapper.toDocument(unwrapped, involvedObjects);
+        final Document dbObj = mapper.toDocument(unwrapped);
         final Key<T> key = getKey(unwrapped);
         unwrapped = ProxyHelper.unwrap(unwrapped);
         final Object id = mapper.getId(unwrapped);
@@ -378,10 +378,10 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final InsertOptions options) {
+    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final InsertManyOptions options) {
         final List<Key<T>> savedKeys = new ArrayList<>();
         for (final T ent : entities) {
-            savedKeys.add(save(ent, options));
+//            savedKeys.add(save(ent, options));
         }
         return savedKeys;
 
@@ -389,17 +389,17 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> save(final T entity) {
-        return save(entity, new InsertOptions());
+        return save(entity, new InsertOneOptions());
     }
 
     @Override
-    public <T> Key<T> save(final T entity, final InsertOptions options) {
+    public <T> Key<T> save(final T entity, final InsertOneOptions options) {
         if (entity == null) {
             throw new UpdateException("Can not persist a null entity");
         }
 
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(getCollection(unwrapped), unwrapped, options.toInsertOneOptions());
+        return save(getCollection(unwrapped), unwrapped, options);
     }
 
     @Override
@@ -601,11 +601,11 @@ class DatastoreImpl implements AdvancedDatastore {
     private <T> UpdateResult tryVersionedUpdate(final MongoCollection collection, final T entity, final Document document,
                                                 final Object idValue, final InsertOneOptions options, final MappedClass mc) {
         UpdateResult updateResult = null;
-        if (mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
+        if (mc.getFields(Version.class).isEmpty()) {
             return null;
         }
 
-        final MappedField mfVersion = mc.getMappedVersionField();
+        final MappedField mfVersion = mc.getVersionField();
         final String versionKeyName = mfVersion.getMappedFieldName();
 
         Long oldVersion = (Long) mfVersion.getFieldValue(entity);
@@ -652,7 +652,9 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     private Document entityToDocument(final Object entity, final Map<Object, Document> involvedObjects) {
-        return mapper.toDocument(ProxyHelper.unwrap(entity), involvedObjects);
+        Document document = mapper.toDocument(ProxyHelper.unwrap(entity));
+        involvedObjects.put(entity, document);
+        return document;
     }
 
     private <T> Iterable<Key<T>> insert(final MongoCollection collection, final List<T> entities, final InsertManyOptions options) {
@@ -703,16 +705,16 @@ class DatastoreImpl implements AdvancedDatastore {
                                                 final boolean fetchKeys, final String collectionName) {
         List<Key<T>> keys = new ArrayList<>();
         for (final T entity : entities) {
-            final Document dbObj = involvedObjects.remove(entity);
+            final Document document = involvedObjects.remove(entity);
 
             if (fetchKeys) {
-                if (dbObj.get("_id") == null) {
+                if (document.get("_id") == null) {
                     throw new MappingException(format("Missing _id after save on %s", entity.getClass().getName()));
                 }
-                mapper.updateKeyAndVersionInfo(this, dbObj, createCache(), entity);
+                mapper.updateKeyAndVersionInfo(this, document, createCache(), entity);
                 keys.add(new Key<>((Class<? extends T>) entity.getClass(), collectionName, mapper.getId(entity)));
             }
-            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, dbObj, mapper);
+            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, document, mapper);
         }
 
         for (Entry<Object, Document> entry : involvedObjects.entrySet()) {
@@ -738,7 +740,7 @@ class DatastoreImpl implements AdvancedDatastore {
                 mc.getClazz().getName()));
         }
         Document document = entityToDocument(ent, involvedObjects);
-        List<MappedField> versionFields = mc.getFieldsAnnotatedWith(Version.class);
+        List<MappedField> versionFields = mc.getFields(Version.class);
         for (MappedField mappedField : versionFields) {
             String name = mappedField.getMappedFieldName();
             if (document.get(name) == null) {

@@ -16,7 +16,7 @@ import java.util.List;
 public class BooleanMappingTest extends TestBase {
     @Test
     public void testMapping() {
-        Mapper.map(Booleans.class);
+        getMapper().map(Booleans.class);
         final Booleans ent = new Booleans();
         ent.booleans.add(new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE});
         ent.list.addAll(Arrays.asList(Boolean.TRUE, Boolean.TRUE));

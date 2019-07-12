@@ -135,7 +135,7 @@ public final class GeoNear {
 
     Object getNearAsDBObject(final GeometryShapeConverter.PointConverter pointConverter) {
         if (nearGeoJson != null) {
-            return pointConverter.encode(nearGeoJson);
+            return pointConverter.encode(nearGeoJson, null);
         } else {
             return getNear();
         }

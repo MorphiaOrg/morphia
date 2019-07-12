@@ -38,7 +38,7 @@ import java.util.Map;
 public class EmbeddedMappingTest extends TestBase {
     @Test
     public void mapGenericEmbeds() {
-        Mapper.map(AuditEntry.class, Delta.class);
+        getMapper().map(AuditEntry.class, Delta.class);
 
         final AuditEntry<String> entry = new AuditEntry<>();
 
@@ -60,7 +60,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void testNestedInterfaces() {
-        Mapper.map(WithNested.class, NestedImpl.class);
+        getMapper().map(WithNested.class, NestedImpl.class);
         getDs().ensureIndexes();
 
         final List<Document> indexInfo = getIndexInfo(WithNested.class);
@@ -100,7 +100,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Test
     public void validateNestedInterfaces() {
-        Mapper.map(WithNestedValidated.class, Nested.class, NestedImpl.class, AnotherNested.class);
+        getMapper().map(WithNestedValidated.class, Nested.class, NestedImpl.class, AnotherNested.class);
         try {
             getDs().ensureIndexes();
         } catch (MappingException e) {
@@ -119,12 +119,11 @@ public class EmbeddedMappingTest extends TestBase {
     public interface Nested {
     }
 
-    @Entity(value = "audit", noClassnameStored = true)
+    @Entity(value = "audit", useDiscriminator = false)
     public static class AuditEntry<T> {
         @Id
         private ObjectId id;
 
-        @Embedded
         private Delta<T> delta;
 
         @Override

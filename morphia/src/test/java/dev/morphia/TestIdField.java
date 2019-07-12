@@ -59,7 +59,7 @@ public class TestIdField extends TestBase {
     @Test
     public void testIdFieldNameMapping() {
         final Rectangle r = new Rectangle(1, 12);
-        final Document document = TestBase.toDocument(r);
+        final Document document = getMapper().toDocument(r);
         assertFalse(document.containsKey("id"));
         assertTrue(document.containsKey("_id"));
         assertEquals(4, document.size()); //_id, h, w, className
@@ -67,7 +67,7 @@ public class TestIdField extends TestBase {
 
     @Test
     public void testKeyAsId() {
-        Mapper.map(KeyAsId.class);
+        getMapper().map(KeyAsId.class);
 
         final Rectangle r = new Rectangle(1, 1);
         //        Rectangle r2 = new Rectangle(11,11);
@@ -83,7 +83,7 @@ public class TestIdField extends TestBase {
 
     @Test
     public void testMapAsId() {
-        Mapper.map(MapAsId.class);
+        getMapper().map(MapAsId.class);
 
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");
@@ -112,7 +112,7 @@ public class TestIdField extends TestBase {
         private final Map<String, String> id = new HashMap<String, String>();
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class EmbeddedId {
 
         @Id

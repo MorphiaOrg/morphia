@@ -86,11 +86,14 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline geoNear(final GeoNear geoNear) {
-        Document geo = new Document();
-        GeometryShapeConverter.PointConverter pointConverter = new GeometryShapeConverter.PointConverter();
-        pointConverter.setMapper(mapper);
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
 
-        putIfNull(geo, "near", geoNear.getNearAsDBObject(pointConverter));
+        Document geo = new Document();
+
+//        putIfNull(geo, "near", geoNear.getNearAsDBObject(pointConverter));
         putIfNull(geo, "distanceField", geoNear.getDistanceField());
         putIfNull(geo, "limit", geoNear.getLimit());
         putIfNull(geo, "num", geoNear.getMaxDocuments());

@@ -16,6 +16,7 @@ import java.util.List;
  * Options to control mapping behavior.
  */
 public class MapperOptions {
+    public static final MapperOptions DEFAULT = MapperOptions.builder().build();
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
     private final List<Class<? extends Annotation>> propertyHandlers;
     private final boolean ignoreFinals; //ignore final fields.

@@ -1,6 +1,7 @@
 package dev.morphia.callbacks;
 
 
+import dev.morphia.EntityInterceptor;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -12,15 +13,12 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
 
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class TestEntityInterceptorMoment extends TestBase {
 
     @Test
     public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
-        Mapper.map(E.class);
-        getMorphia().getMapper().addInterceptor(new Interceptor());
+        getMapper().map(E.class);
+        getMapper().addInterceptor(new Interceptor());
 
         getDs().save(new E());
     }
@@ -37,27 +35,10 @@ public class TestEntityInterceptorMoment extends TestBase {
         }
     }
 
-    public static class Interceptor extends AbstractEntityInterceptor {
-        @Override
-        public void postLoad(final Object ent, final Document document, final Mapper mapper) {
-        }
-
-        @Override
-        public void postPersist(final Object ent, final Document document, final Mapper mapper) {
-        }
-
-        @Override
-        public void preLoad(final Object ent, final Document document, final Mapper mapper) {
-        }
-
+    public static class Interceptor implements EntityInterceptor {
         @Override
         public void prePersist(final Object ent, final Document document, final Mapper mapper) {
             Assert.assertTrue(((E) ent).called);
         }
-
-        @Override
-        public void preSave(final Object ent, final Document document, final Mapper mapper) {
-        }
-
     }
 }

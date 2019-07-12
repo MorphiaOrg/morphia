@@ -19,10 +19,10 @@ public class GeometryCollectionTest extends TestBase {
         // given
         LineString lineString = lineString(point(1, 2), point(3, 5), point(19, 13));
         GeometryCollection geometryCollection = GeoJson.geometryCollection(lineString);
-        getMorphia().getMapper().addMappedClass(Point.class);
+        getMapper().addMappedClass(Point.class);
 
         // when
-        Document dbObject = TestBase.toDocument(geometryCollection);
+        Document dbObject = getMapper().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -46,7 +46,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(multiPoint);
 
         // when
-        Document dbObject = TestBase.toDocument(geometryCollection);
+        Document dbObject = getMapper().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -73,7 +73,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(multiPolygon);
 
         // when
-        Document dbObject = TestBase.toDocument(geometryCollection);
+        Document dbObject = getMapper().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
@@ -112,7 +112,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(point);
 
         // when
-        Document dbObject = TestBase.toDocument(geometryCollection);
+        Document dbObject = getMapper().toDocument(geometryCollection);
 
         // then use the underlying driver to ensure it was persisted correctly to the database
         assertThat(dbObject, is(notNullValue()));
@@ -138,7 +138,7 @@ public class GeometryCollectionTest extends TestBase {
         GeometryCollection geometryCollection = GeoJson.geometryCollection(polygonWithHoles);
 
         // when
-        Document dbObject = TestBase.toDocument(geometryCollection);
+        Document dbObject = getMapper().toDocument(geometryCollection);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"

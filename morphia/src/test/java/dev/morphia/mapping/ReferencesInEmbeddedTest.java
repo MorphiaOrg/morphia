@@ -32,8 +32,8 @@ public class ReferencesInEmbeddedTest extends TestBase {
 
     @Test
     public void testMapping() throws Exception {
-        Mapper.map(Container.class);
-        Mapper.map(ReferencedEntity.class);
+        getMapper().map(Container.class);
+        getMapper().map(ReferencedEntity.class);
     }
 
     @Test
@@ -55,10 +55,10 @@ public class ReferencesInEmbeddedTest extends TestBase {
     @Entity
     private static class Container extends TestEntity {
         private String name;
-        @Embedded
         private EmbedContainingReference embed;
     }
 
+    @Embedded
     private static class EmbedContainingReference {
         private String name;
         @Reference

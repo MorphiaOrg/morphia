@@ -1,7 +1,5 @@
 package dev.morphia.geo;
 
-import dev.morphia.converters.SimpleValueConverter;
-import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
 import org.bson.Document;
 
@@ -12,18 +10,18 @@ import org.bson.Document;
  * Only implements the decode method as the concrete classes can encode themselves without needing a converter. It's when they come out of
  * the database that there's not enough information for Morphia to automatically create Geometry instances.
  */
-public class GeometryConverter extends TypeConverter implements SimpleValueConverter {
-    /**
-     * Sets up this converter to work with things that implement the Geometry interface
-     */
-    public GeometryConverter() {
-        super(Geometry.class);
-    }
+public class GeometryConverter  {
 
-    @Override
     public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
+
         Document dbObject = (Document) fromDocument;
         String type = (String) dbObject.get("type");
-        return getMapper().getConverters().decode(GeoJsonType.fromString(type).getTypeClass(), fromDocument, optionalExtraInfo);
+//        return getMapper().getConverters().decode(GeoJsonType.fromString(type).getTypeClass(), fromDocument, optionalExtraInfo);
+
+        return null;
     }
 }

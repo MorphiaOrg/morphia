@@ -5,7 +5,6 @@ import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.cache.EntityCache;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -49,16 +48,14 @@ public abstract class TestBase {
      * @param datastore   the Datastore to use when fetching this reference
      * @param entityClass type to create
      * @param document    the object state to use
-     * @param cache       the EntityCache to use to prevent multiple loads of the same entities over and over
      * @return the newly created and populated entity
      */
-    public <T> T fromDocument(final Datastore datastore, final Class<T> entityClass, final Document document,
-                                   final EntityCache cache) {
+    public <T> T fromDocument(final Datastore datastore, final Class<T> entityClass, final Document document) {
         if (!entityClass.isInterface() && !datastore.getMapper().isMapped(entityClass)) {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {
-            return mapper.fromDocument(datastore, entityClass, document, cache);
+            return mapper.fromDocument(, document);
         } catch (Exception e) {
             throw new MappingException("Could not map entity from Document", e);
         }

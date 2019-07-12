@@ -10,9 +10,7 @@ import static dev.morphia.query.FilterOperator.SIZE;
 import static dev.morphia.query.validation.ValueClassValidator.valueIsClassOrSubclassOf;
 
 /**
- * Checks if the value can have the {@code FilterOperator.ALL} operator applied to it.  Since this class does not need state, and the
- * methods can't be static because it implements an interface, it seems to be one of the few places where the Singleton pattern seems
- * appropriate.
+ * Checks if the value can have the {@code FilterOperator.ALL} operator applied to it.
  */
 public final class SizeOperationValidator extends OperationValidator {
     private static final SizeOperationValidator INSTANCE = new SizeOperationValidator();

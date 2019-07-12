@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Property;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,9 +10,6 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
     @Test
@@ -32,14 +30,14 @@ public class ConcreteClassEmbeddedOverrideTest extends TestBase {
     }
 
     public static class E {
-        @Embedded
         private final A a1 = new A();
-        @Embedded(concreteClass = B.class)
+        @Property(concreteClass = B.class)
         private final A a2 = new A();
         @Id
         private ObjectId id;
     }
 
+    @Embedded
     public static class A {
         private String s = "A";
 

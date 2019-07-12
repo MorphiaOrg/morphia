@@ -16,7 +16,7 @@ import static dev.morphia.query.Sort.ascending;
 public class TestModOperator extends TestBase {
     @Test
     public void mod() {
-        Mapper.map(Inventory.class);
+        getMapper().map(Inventory.class);
         getDs().save(new Inventory("Flowers", 8));
         getDs().save(new Inventory("Candy", 2));
         getDs().save(new Inventory("Basketballs", 12));

@@ -319,7 +319,7 @@ public class AggregationTest extends TestBase {
                                             .group("author", grouping("books", push("title")))
                                             .out(Author.class, options)
                                             .iterator();
-        Assert.assertEquals(2, getDs().getCollection(Author.class).countDocuments());
+        Assert.assertEquals(2, getDs().getCollection(Author.class).count());
         Author author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
         Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
@@ -328,7 +328,7 @@ public class AggregationTest extends TestBase {
                .group("author", grouping("books", push("title")))
                .out("different", Author.class);
 
-        Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
+        Assert.assertEquals(2, getDatabase().getCollection("different").count());
     }
 
     @Test
@@ -747,7 +747,7 @@ public class AggregationTest extends TestBase {
         private String string;
     }
 
-    @Entity(value = "books", noClassnameStored = true)
+    @Entity(value = "books", useDiscriminator = false)
     public static final class Book {
         @Id
         private ObjectId id;
@@ -936,7 +936,6 @@ public class AggregationTest extends TestBase {
         private String item;
         private int price;
         private int quantity;
-        @Embedded()
         private List<Inventory> inventoryDocs;
 
         private Order() {
@@ -1028,7 +1027,7 @@ public class AggregationTest extends TestBase {
 
     }
 
-    @Entity(value = "inventory", noClassnameStored = true)
+    @Entity(value = "inventory", useDiscriminator = false)
     public static class Inventory {
         @Id
         private int id;

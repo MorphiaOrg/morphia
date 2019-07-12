@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
+import dev.morphia.Morphia;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -140,12 +141,19 @@ public class ReferenceTest extends ProxyTestBase {
         container.mapRef = null;
         container.lazyMapRef = null;
 
-        getMorphia().getMapper().getOptions().setStoreNulls(true);
-        getDs().save(container);
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .storeNulls(true)
+                                             .build();
+        Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+
+        datastore.save(container);
         allNull(container);
 
-        getMorphia().getMapper().getOptions().setStoreNulls(false);
-        getDs().save(container);
+        options = MapperOptions.builder(getMapper().getOptions())
+                               .storeNulls(true)
+                               .build();
+        datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+        datastore.save(container);
         allNull(container);
     }
 
@@ -175,7 +183,7 @@ public class ReferenceTest extends ProxyTestBase {
 
         // reset Datastore to reset internal Mapper cache, so Child class
         // already cached by previous save is cleared
-        Datastore localDs = getMorphia().createDatastore(getMongoClient(), new Mapper(), getDatabase().getName());
+        Datastore localDs = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
 
         parentList = localDs.find(Parent.class).execute().toList();
         Assert.assertEquals(1, parentList.size());
@@ -374,14 +382,14 @@ public class ReferenceTest extends ProxyTestBase {
         }
     }
 
-    @Entity(value = "children", noClassnameStored = true)
+    @Entity(value = "children", useDiscriminator = false)
     static class Child {
         @Id
         private ObjectId id;
 
     }
 
-    @Entity(value = "parents", noClassnameStored = true)
+    @Entity(value = "parents", useDiscriminator = false)
     private static class Parent {
 
         @Id
@@ -473,7 +481,6 @@ public class ReferenceTest extends ProxyTestBase {
     @Entity("complex")
     public static class Complex {
         @Id
-        @Embedded
         private ChildId id;
 
         private String value;

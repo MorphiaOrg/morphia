@@ -6,6 +6,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.junit.After;
@@ -19,8 +20,6 @@ import java.util.List;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private final MongoClient mongoClient;
-    private final Morphia morphia = new Morphia();
-    private final DB db;
     private final MongoDatabase database;
     private final Datastore ds;
 
@@ -30,9 +29,8 @@ public abstract class TestBase {
 
     protected TestBase(final MongoClient mongoClient) {
         this.mongoClient = mongoClient;
-        this.db = getMongoClient().getDB(TEST_DB_NAME);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
-        this.ds = getMorphia().createDatastore(getMongoClient(), db.getName());
+        this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
     }
 
     protected static String getMongoURI() {
@@ -55,12 +53,8 @@ public abstract class TestBase {
         return mongoClient;
     }
 
-    public Morphia getMorphia() {
-        return morphia;
-    }
-
     public Mapper getMapper() {
-        return getMorphia().getMapper();
+        return getDs().getMapper();
     }
 
     public boolean isReplicaSet() {
@@ -118,6 +112,13 @@ public abstract class TestBase {
     protected List<Document> getIndexInfo(final Class<?> clazz) {
         throw new UnsupportedOperationException();
 //        return getDs().getCollection(clazz).getIndexInfo();
+    }
+
+    protected MappedClass getMappedClass(final Class<?> aClass) {
+        Mapper mapper = getMapper();
+        mapper.map(aClass);
+
+        return mapper.getMappedClass(aClass);
     }
 
     private double getServerVersion() {

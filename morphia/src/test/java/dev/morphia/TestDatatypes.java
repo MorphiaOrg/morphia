@@ -34,7 +34,7 @@ public class TestDatatypes extends TestBase {
     @Override
     public void setUp() {
         super.setUp();
-        Mapper.map(ContainsByte.class, ContainsDouble.class, ContainsFloat.class, ContainsShort.class);
+        getMapper().map(ContainsByte.class, ContainsDouble.class, ContainsFloat.class, ContainsShort.class);
     }
 
     @Test

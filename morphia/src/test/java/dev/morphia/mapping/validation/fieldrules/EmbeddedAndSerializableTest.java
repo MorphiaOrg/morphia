@@ -26,7 +26,7 @@ import java.util.List;
 public class EmbeddedAndSerializableTest extends TestBase {
     @Test
     public void embedded() {
-        Mapper.map(Project.class, Period.class);
+        getMapper().map(Project.class, Period.class);
 
         Project project = new Project();
         project.period = new Period();
@@ -47,7 +47,7 @@ public class EmbeddedAndSerializableTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testCheck() {
-        Mapper.map(E.class);
+        getMapper().map(E.class);
     }
 
     private void compare(final Period original, final Period loaded) {
@@ -56,11 +56,11 @@ public class EmbeddedAndSerializableTest extends TestBase {
     }
 
     public static class E extends TestEntity {
-        @Embedded
         @Serialized
         private R r;
     }
 
+    @Embedded
     public static class R {
     }
 
@@ -68,10 +68,8 @@ public class EmbeddedAndSerializableTest extends TestBase {
     public static class Project {
         @Id
         private ObjectId id;
-        @Embedded
         private Period period;
 
-        @Embedded
         private List<Period> periods = new ArrayList<Period>();
     }
 

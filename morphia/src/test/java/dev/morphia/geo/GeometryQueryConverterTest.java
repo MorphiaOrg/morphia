@@ -11,13 +11,13 @@ public class GeometryQueryConverterTest extends TestBase {
     @Test
     public void shouldCorrectlyEncodePointsIntoQueryDocument() {
         // given
-        GeometryQueryConverter geometryConverter = new GeometryQueryConverter(getMorphia().getMapper());
-        geometryConverter.setMapper(getMorphia().getMapper());
+        GeometryQueryConverter geometryConverter = new GeometryQueryConverter(getMapper());
+//        geometryConverter.setMapper(getMapper());
 
         Point point = point(3.0, 7.0);
 
         // when
-        Object dbObject = geometryConverter.encode(point);
+        Object dbObject = geometryConverter.encode(point, null);
 
 
         // then

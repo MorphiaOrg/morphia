@@ -22,7 +22,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
     @Before
     public void setUp() {
         super.setUp();
-        Mapper.map(E.class);
+        getMapper().map(E.class);
         documentsNb = 1000;
         for (int i = 0; i < documentsNb; i++) {
             getDs().save(new E(i));

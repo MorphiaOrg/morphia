@@ -1,21 +1,20 @@
 package dev.morphia.ext.guice;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
-import org.junit.After;
-import org.junit.Before;
-import dev.morphia.AdvancedDatastore;
+import com.mongodb.client.MongoDatabase;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.Mapper;
+import org.junit.After;
+import org.junit.Before;
 
 public abstract class TestBase {
     private final MongoClient mongoClient;
-    private final Morphia morphia = new Morphia();
 
-    private DB db;
+    private MongoDatabase db;
     private Datastore ds;
-    private AdvancedDatastore ads;
+    private Mapper mapper;
 
     protected TestBase() {
         try {
@@ -25,27 +24,19 @@ public abstract class TestBase {
         }
     }
 
-    public AdvancedDatastore getAds() {
-        return ads;
-    }
-
-    public DB getDb() {
-        return db;
-    }
-
     public Datastore getDs() {
         return ds;
     }
 
-    public Morphia getMorphia() {
-        return morphia;
+    public Mapper getMapper() {
+        return mapper;
     }
 
     @Before
     public void setUp() {
-        db = mongoClient.getDB("morphia_test");
-        ds = morphia.createDatastore(this.mongoClient, this.db.getName());
-        ads = (AdvancedDatastore) this.ds;
+        db = mongoClient.getDatabase("morphia_test");
+        ds = Morphia.createDatastore(this.mongoClient, this.db.getName());
+        mapper = ds.getMapper();
     }
 
     @After
@@ -55,7 +46,7 @@ public abstract class TestBase {
 
     protected void dropDB() {
         // this.mongoClient.dropDatabase("morphia_test");
-        for (final MappedClass mc : morphia.getMapper().getMappedClasses()) {
+        for (final MappedClass mc : mapper.getMappedClasses()) {
             // if( mc.getEntityAnnotation() != null )
             db.getCollection(mc.getCollectionName()).drop();
         }

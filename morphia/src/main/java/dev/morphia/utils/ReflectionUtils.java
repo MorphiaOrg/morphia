@@ -80,7 +80,7 @@ public final class ReflectionUtils {
      * @return an array of all declared and inherited fields
      */
     public static Field[] getDeclaredAndInheritedFields(final Class type, final boolean returnFinalFields) {
-        final List<Field> allFields = new ArrayList<Field>();
+        final List<Field> allFields = new ArrayList<>();
         allFields.addAll(getValidFields(type.getDeclaredFields(), returnFinalFields));
         Class parent = type.getSuperclass();
         while ((parent != null) && (parent != Object.class)) {
@@ -98,7 +98,7 @@ public final class ReflectionUtils {
      * @return the valid fields
      */
     public static List<Field> getValidFields(final Field[] fields, final boolean returnFinalFields) {
-        final List<Field> validFields = new ArrayList<Field>();
+        final List<Field> validFields = new ArrayList<>();
         // we ignore static and final fields
         for (final Field field : fields) {
             if (!Modifier.isStatic(field.getModifiers()) && (returnFinalFields || !Modifier.isFinal(field.getModifiers()))) {
@@ -115,24 +115,21 @@ public final class ReflectionUtils {
      * @return an array of all declared and inherited fields
      */
     public static List<Method> getDeclaredAndInheritedMethods(final Class type) {
-        return getDeclaredAndInheritedMethods(type, new ArrayList<Method>());
-    }
-
-    private static List<Method> getDeclaredAndInheritedMethods(final Class type, final List<Method> methods) {
+        final List<Method> methods = new ArrayList<>();
         if ((type == null) || (type == Object.class)) {
             return methods;
         }
 
         final Class parent = type.getSuperclass();
-        final List<Method> list = getDeclaredAndInheritedMethods(parent, methods == null ? new ArrayList<Method>() : methods);
+        methods.addAll(getDeclaredAndInheritedMethods(parent));
 
         for (final Method m : type.getDeclaredMethods()) {
             if (!Modifier.isStatic(m.getModifiers())) {
-                list.add(m);
+                methods.add(m);
             }
         }
 
-        return list;
+        return methods;
     }
 
     //    public static boolean implementsAnyInterface(final Class type, final Class... interfaceClasses)
@@ -156,22 +153,6 @@ public final class ReflectionUtils {
     public static boolean isIntegerType(final Class type) {
         return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class,
             byte.class).contains(type);
-    }
-
-    /**
-     * Check if the class supplied represents a valid property type.
-     *
-     * @param type the class we want to check
-     * @return true if the class represents a valid property type
-     */
-    public static boolean isPropertyType(final Type type) {
-        if (type instanceof GenericArrayType) {
-            return isPropertyType(((GenericArrayType) type).getGenericComponentType());
-        }
-        if (type instanceof ParameterizedType) {
-            return isPropertyType(((ParameterizedType) type).getRawType());
-        }
-        return type instanceof Class && isPropertyType((Class) type);
     }
 
     /**
@@ -225,52 +206,6 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Returns the parameterized type for a field
-     *
-     * @param field the field to examine
-     * @param index the location of the parameter to return
-     * @return the type
-     */
-    public static Type getParameterizedType(final Field field, final int index) {
-        if (field != null) {
-            if (field.getGenericType() instanceof ParameterizedType) {
-                final ParameterizedType type = (ParameterizedType) field.getGenericType();
-                if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length <= index)) {
-                    return null;
-                }
-                final Type paramType = type.getActualTypeArguments()[index];
-                if (paramType instanceof GenericArrayType) {
-                    return paramType; //((GenericArrayType) paramType).getGenericComponentType();
-                } else {
-                    if (paramType instanceof ParameterizedType) {
-                        return paramType;
-                    } else {
-                        if (paramType instanceof TypeVariable) {
-                            // TODO: Figure out what to do... Walk back up the to
-                            // the parent class and try to get the variable type
-                            // from the T/V/X
-                            // throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable)
-                            // paramType).getName() + "> = " + ((TypeVariable) paramType).getBounds()[0]);
-                            return paramType;
-                        } else if (paramType instanceof WildcardType) {
-                            return paramType;
-                        } else if (paramType instanceof Class) {
-                            return paramType;
-                        } else {
-                            throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
-                        }
-                    }
-                }
-            }
-
-            // Not defined on field, but may be on class or super class...
-            return getParameterizedClass(field.getType());
-        }
-
-        return null;
-    }
-
-    /**
      * Returns the parameterized type of a Class
      *
      * @param c the class to examine
@@ -317,30 +252,6 @@ public final class ReflectionUtils {
                 return null;
             }
         }
-    }
-
-    /**
-     * Check if a field is parameterized with a specific class.
-     *
-     * @param field the field
-     * @param c     the class to check against
-     * @return true if the field is parameterized and c is the class that parameterizes the field, or is an interface that the parameterized
-     * class implements, else false
-     * @deprecated this class is unused in morphia and will be removed in a future release
-     */
-    public static boolean isFieldParameterizedWithClass(final Field field, final Class c) {
-        if (field.getGenericType() instanceof ParameterizedType) {
-            final ParameterizedType genericType = (ParameterizedType) field.getGenericType();
-            for (final Type type : genericType.getActualTypeArguments()) {
-                if (type == c) {
-                    return true;
-                }
-                if (c.isInterface() && implementsInterface((Class) type, c)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -440,7 +351,7 @@ public final class ReflectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> getAnnotations(final Class c, final Class<T> annotation) {
-        final List<T> found = new ArrayList<T>();
+        final List<T> found = new ArrayList<>();
         // TODO isn't that actually breaking the contract of @Inherited?
         if (c.isAnnotationPresent(annotation)) {
             found.add((T) c.getAnnotation(annotation));
@@ -494,7 +405,7 @@ public final class ReflectionUtils {
      */
     public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
         throws IOException, ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        final Set<Class<?>> classes = new HashSet<>();
         final String path = packageName.replace('.', '/');
         final Enumeration<URL> resources = loader.getResources(path);
         if (resources != null) {
@@ -544,7 +455,7 @@ public final class ReflectionUtils {
                                                      final String jarPath,
                                                      final String packageName,
                                                      final boolean mapSubPackages) throws IOException, ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        final Set<Class<?>> classes = new HashSet<>();
         final JarFile jarFile = new JarFile(new File(jarPath.substring(0, jarPath.indexOf("!"))));
         final InputStream inputStream = jarFile.getInputStream(jarFile.getEntry(
             jarPath.substring(jarPath.indexOf("!") + 2)));
@@ -587,7 +498,7 @@ public final class ReflectionUtils {
     public static Set<Class<?>> getFromJarFile(final ClassLoader loader, final String jar, final String packageName, final boolean
                                                                                                                          mapSubPackages)
         throws IOException, ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        final Set<Class<?>> classes = new HashSet<>();
         final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
         try {
             JarEntry jarEntry;
@@ -622,7 +533,7 @@ public final class ReflectionUtils {
      */
     public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName,
                                                  final boolean mapSubPackages) throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        final Set<Class<?>> classes = new HashSet<>();
         if (directory.exists()) {
             for (final String file : getFileNames(directory, packageName, mapSubPackages)) {
                 if (file.endsWith(".class")) {
@@ -636,7 +547,7 @@ public final class ReflectionUtils {
     }
 
     private static Set<String> getFileNames(final File directory, final String packageName, final boolean mapSubPackages) {
-        Set<String> fileNames = new HashSet<String>();
+        Set<String> fileNames = new HashSet<>();
         final File[] files = directory.listFiles();
         if (files != null) {
             for (File file : files) {
@@ -681,7 +592,7 @@ public final class ReflectionUtils {
             return null;
         }
 
-        final List<T> ar = new ArrayList<T>();
+        final List<T> ar = new ArrayList<>();
         for (final T o : it) {
             ar.add(o);
         }
@@ -743,7 +654,7 @@ public final class ReflectionUtils {
      * @deprecated this class is unused in morphia and will be removed in a future release
      */
     public static <T> List<Class<?>> getTypeArguments(final Class<T> baseClass, final Class<? extends T> childClass) {
-        final Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
+        final Map<Type, Type> resolvedTypes = new HashMap<>();
         Type type = childClass;
         // start walking up the inheritance hierarchy until we hit baseClass
         while (!getClass(type).equals(baseClass)) {
@@ -776,7 +687,7 @@ public final class ReflectionUtils {
         } else {
             actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
         }
-        final List<Class<?>> typeArgumentsAsClasses = new ArrayList<Class<?>>();
+        final List<Class<?>> typeArgumentsAsClasses = new ArrayList<>();
         // resolve types by chasing down type variables.
         for (Type baseType : actualTypeArguments) {
             while (resolvedTypes.containsKey(baseType)) {
@@ -796,7 +707,7 @@ public final class ReflectionUtils {
      * @return the Class type
      */
     public static <T> Class<?> getTypeArgument(final Class<? extends T> clazz, final TypeVariable<? extends GenericDeclaration> tv) {
-        final Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
+        final Map<Type, Type> resolvedTypes = new HashMap<>();
         Type type = clazz;
         // start walking up the inheritance hierarchy until we hit the end
         while (type != null && !Object.class.equals(getClass(type))) {

@@ -16,8 +16,8 @@ public class MultipleVersionsTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testCheck() {
-        Mapper.map(OK1.class);
-        Mapper.map(Fail1.class);
+        getMapper().map(OK1.class);
+        getMapper().map(Fail1.class);
     }
 
     public static class Fail1 extends TestEntity {

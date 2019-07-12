@@ -1,14 +1,13 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
-import dev.morphia.mapping.Mapper;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.testutil.TestEntity;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -22,17 +21,17 @@ public class MapKeyDifferentFromStringTest extends TestBase {
 
     @Test
     public void testCheck() {
-        Mapper.map(MapWithWrongKeyType1.class);
+        getMapper().map(MapWithWrongKeyType1.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidKeyType() {
-        Mapper.map(MapWithWrongKeyType3.class);
+        getMapper().map(MapWithWrongKeyType3.class);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidReferenceType() {
-        Mapper.map(MapWithWrongKeyType2.class);
+        getMapper().map(MapWithWrongKeyType2.class);
     }
 
     public static class MapWithWrongKeyType1 extends TestEntity {
@@ -48,7 +47,6 @@ public class MapKeyDifferentFromStringTest extends TestBase {
     }
 
     public static class MapWithWrongKeyType3 extends TestEntity {
-        @Embedded
         private Map<BigDecimal, Integer> shouldBeOk = new HashMap<BigDecimal, Integer>();
 
     }

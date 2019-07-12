@@ -19,7 +19,8 @@ public interface EntityInterceptor {
      * @param mapper the Mapper being used
      * @see PostLoad
      */
-    void postLoad(Object ent, Document dbObj, Mapper mapper);
+    default void postLoad(Object ent, Document dbObj, Mapper mapper) {
+    }
 
     /**
      * @param ent    the entity being processed
@@ -27,7 +28,8 @@ public interface EntityInterceptor {
      * @param mapper the Mapper being used
      * @see PostPersist
      */
-    void postPersist(Object ent, Document dbObj, Mapper mapper);
+    default void postPersist(Object ent, Document dbObj, Mapper mapper) {
+    }
 
     /**
      * @param ent    the entity being processed
@@ -35,7 +37,8 @@ public interface EntityInterceptor {
      * @param mapper the Mapper being used
      * @see PreLoad
      */
-    void preLoad(Object ent, Document dbObj, Mapper mapper);
+    default void preLoad(Object ent, Document dbObj, Mapper mapper) {
+    }
 
     /**
      * @param ent    the entity being processed
@@ -43,7 +46,8 @@ public interface EntityInterceptor {
      * @param mapper the Mapper being used
      * @see PostPersist
      */
-    void prePersist(Object ent, Document dbObj, Mapper mapper);
+    default void prePersist(Object ent, Document dbObj, Mapper mapper) {
+    }
 
     /**
      * @param ent    the entity being processed
@@ -51,5 +55,6 @@ public interface EntityInterceptor {
      * @param mapper the Mapper being used
      * @see PreSave
      */
-    void preSave(Object ent, Document dbObj, Mapper mapper);
+    default void preSave(Object ent, Document dbObj, Mapper mapper) {
+    }
 }

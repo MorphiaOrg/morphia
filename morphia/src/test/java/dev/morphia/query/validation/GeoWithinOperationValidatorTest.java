@@ -1,8 +1,8 @@
 package dev.morphia.query.validation;
 
+import dev.morphia.TestBase;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
-import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.junit.Test;
 
@@ -15,12 +15,12 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class GeoWithinOperationValidatorTest {
+public class GeoWithinOperationValidatorTest extends TestBase {
     @Test
     public void shouldAllowGeoWithinOperatorForGeoEntityWithListOfIntegers() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<>();
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedClass mappedClass = getMappedClass(GeoEntity.class);
         MappedField mappedField = mappedClass.getMappedField("list");
         assertThat(GeoWithinOperationValidator.getInstance().apply(mappedField, GEO_WITHIN, new Document("$box", 1),
                                                                    validationFailures), is(true));
@@ -30,7 +30,7 @@ public class GeoWithinOperationValidatorTest {
     public void shouldAllowGeoWithinOperatorWithAllAppropriateTrimmings() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<>();
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedClass mappedClass = getMappedClass(GeoEntity.class);
         MappedField mappedField = mappedClass.getMappedField("array");
 
         // when
@@ -55,7 +55,7 @@ public class GeoWithinOperationValidatorTest {
     public void shouldRejectGeoWithinOperatorWhenMappedFieldIsArrayThatDoesNotContainNumbers() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<>();
-        MappedClass mappedClass = new MappedClass(InvalidGeoEntity.class, new Mapper());
+        MappedClass mappedClass = getMappedClass(InvalidGeoEntity.class);
         MappedField mappedField = mappedClass.getMappedField("arrayOfStrings");
 
         // when
@@ -72,7 +72,7 @@ public class GeoWithinOperationValidatorTest {
     public void shouldRejectGeoWithinOperatorWhenMappedFieldIsListThatDoesNotContainNumbers() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<>();
-        MappedClass mappedClass = new MappedClass(InvalidGeoEntity.class, new Mapper());
+        MappedClass mappedClass = getMappedClass(InvalidGeoEntity.class);
         MappedField mappedField = mappedClass.getMappedField("listOfStrings");
 
         // when
@@ -91,7 +91,7 @@ public class GeoWithinOperationValidatorTest {
     public void shouldRejectGeoWithinWhenValueDoesNotContainKeyword() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<>();
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedClass mappedClass = getMappedClass(GeoEntity.class);
         MappedField mappedField = mappedClass.getMappedField("array");
 
         // when
@@ -111,7 +111,7 @@ public class GeoWithinOperationValidatorTest {
     public void shouldRejectGeoWithinWhenValueIsNotADBObject() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<>();
-        MappedClass mappedClass = new MappedClass(GeoEntity.class, new Mapper());
+        MappedClass mappedClass = getMappedClass(GeoEntity.class);
         MappedField mappedField = mappedClass.getMappedField("array");
 
         // when

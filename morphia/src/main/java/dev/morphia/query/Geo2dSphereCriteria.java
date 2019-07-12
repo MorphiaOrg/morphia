@@ -74,7 +74,8 @@ final class Geo2dSphereCriteria extends FieldCriteria {
             case INTERSECTS:
                 query = new Document(operator.val(), geometryAsDBObject);
                 if (crs != null) {
-                    ((Document) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs));
+                    ((Document) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs,
+                     null   ));
                 }
                 break;
             default:

@@ -39,8 +39,8 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void simpleResolution() {
-        Mapper.map(ParentType.class, EmbeddedType.class);
-        Mapper mapper = getMorphia().getMapper();
+        getMapper().map(ParentType.class, EmbeddedType.class);
+        Mapper mapper = getMapper();
         MappedClass mappedClass = mapper.getMappedClass(ParentType.class);
 
         PathTarget pathTarget = new PathTarget(mapper, mappedClass, "name");
@@ -54,8 +54,8 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void dottedPath() {
-        Mapper.map(ParentType.class, EmbeddedType.class);
-        Mapper mapper = getMorphia().getMapper();
+        getMapper().map(ParentType.class, EmbeddedType.class);
+        Mapper mapper = getMapper();
 
         PathTarget pathTarget = new PathTarget(mapper, ParentType.class, "embedded.number");
         Assert.assertEquals("embedded.number", pathTarget.translatedPath());
@@ -64,8 +64,8 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void subClasses() {
-        Mapper.map(ParentType.class, EmbeddedType.class, EmbeddedSubtype.class);
-        Mapper mapper = getMorphia().getMapper();
+        getMapper().map(ParentType.class, EmbeddedType.class, EmbeddedSubtype.class);
+        Mapper mapper = getMapper();
 
         PathTarget pathTarget = new PathTarget(mapper, ParentType.class, "embedded.flag");
         Assert.assertEquals("embedded.flag", pathTarget.translatedPath());
@@ -74,8 +74,8 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void arrays() {
-        Mapper.map(EntityWithListsAndArrays.class, EmbeddedType.class, Student.class);
-        Mapper mapper = getMorphia().getMapper();
+        getMapper().map(EntityWithListsAndArrays.class, EmbeddedType.class, Student.class);
+        Mapper mapper = getMapper();
         MappedClass mappedClass = mapper.getMappedClass(EntityWithListsAndArrays.class);
 
         PathTarget pathTarget = new PathTarget(mapper, mappedClass, "listEmbeddedType.1.number");
@@ -88,8 +88,8 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void maps() {
-        Mapper.map(Student.class, Article.class);
-        Mapper mapper = getMorphia().getMapper();
+        getMapper().map(Student.class, Article.class);
+        Mapper mapper = getMapper();
         MappedClass mappedClass = mapper.getMappedClass(Student.class);
 
         PathTarget pathTarget = new PathTarget(mapper, mappedClass, "grades.$.data.name");
@@ -106,8 +106,8 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void interfaces() {
-        Mapper.map(WithNested.class, Nested.class, NestedImpl.class, AnotherNested.class);
-        Mapper mapper = getMorphia().getMapper();
+        getMapper().map(WithNested.class, Nested.class, NestedImpl.class, AnotherNested.class);
+        Mapper mapper = getMapper();
         MappedClass mappedClass = mapper.getMappedClass(WithNested.class);
 
         PathTarget pathTarget = new PathTarget(mapper, mappedClass, "nested.value");
@@ -121,8 +121,8 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void disableValidation() {
-        Mapper.map(WithNested.class, Nested.class, NestedImpl.class, AnotherNested.class);
-        Mapper mapper = getMorphia().getMapper();
+        getMapper().map(WithNested.class, Nested.class, NestedImpl.class, AnotherNested.class);
+        Mapper mapper = getMapper();
 
         final PathTarget pathTarget = new PathTarget(mapper, WithNested.class, "nested.field.fail", false);
         Assert.assertEquals("nested.field.fail", pathTarget.translatedPath());

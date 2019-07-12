@@ -54,7 +54,7 @@ public class TestNotSaved extends TestBase {
         Assert.assertEquals("never", notSaved.name);
     }
 
-    @Entity(value = "Normal", noClassnameStored = true)
+    @Entity(value = "Normal", useDiscriminator = false)
     static class Normal {
         @Id
         private ObjectId id = new ObjectId();
@@ -68,7 +68,7 @@ public class TestNotSaved extends TestBase {
         }
     }
 
-    @Entity(value = "Normal", noClassnameStored = true)
+    @Entity(value = "Normal", useDiscriminator = false)
     private static class NormalWithNotSaved {
         @NotSaved
         private final String name = "never";

@@ -15,7 +15,17 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(final String dbName) {
-        return createDatastore(new MongoClient(), dbName);
+        return createDatastore(dbName, MapperOptions.DEFAULT);
+    }
+
+    /**
+     * Creates a Datastore
+     *
+     * @param dbName      the name of the database
+     * @return a Datastore that you can use to interact with MongoDB
+     */
+    public static Datastore createDatastore(final String dbName, final MapperOptions options) {
+        return createDatastore(new MongoClient(), dbName, options);
     }
 
     /**
@@ -25,7 +35,7 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(final MongoClient mongoClient, final String dbName) {
-        return new DatastoreImpl(mongoClient, MapperOptions.builder().build(), dbName);
+        return new DatastoreImpl(mongoClient, MapperOptions.DEFAULT, dbName);
     }
 
     /**
@@ -34,7 +44,9 @@ public final class Morphia {
      * @param dbName      the name of the database
      * @return a Datastore that you can use to interact with MongoDB
      */
-    public static Datastore createDatastore(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
+    public static Datastore createDatastore(final MongoClient mongoClient,
+                                            final String dbName,
+                                            final MapperOptions options) {
         return new DatastoreImpl(mongoClient, options, dbName);
     }
 }

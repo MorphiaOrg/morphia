@@ -27,11 +27,10 @@ import com.mongodb.client.model.ValidationOptions;
 import dev.morphia.annotations.Validation;
 import dev.morphia.entities.DocumentValidation;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryImpl.Update;
+import dev.morphia.query.Update;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.junit.Assert;
@@ -56,7 +55,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void createValidation() {
-        Mapper.map(DocumentValidation.class);
+        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
         assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
@@ -87,7 +86,7 @@ public class TestDocumentValidation extends TestBase {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
 
-        Mapper.map(DocumentValidation.class);
+        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
         assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
@@ -119,8 +118,8 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void validationDocuments() {
         Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
-        Mapper.map(DocumentValidation.class);
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(DocumentValidation.class);
+        getMapper().map(DocumentValidation.class);
+        MappedClass mappedClass = getMapper().getMappedClass(DocumentValidation.class);
 
         for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
             for (ValidationAction action : EnumSet.allOf(ValidationAction.class)) {
@@ -131,7 +130,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void findAndModify() {
-        Mapper.map(DocumentValidation.class);
+        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
@@ -157,7 +156,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void update() {
-        Mapper.map(DocumentValidation.class);
+        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
@@ -183,7 +182,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void save() {
-        Mapper.map(DocumentValidation.class);
+        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         try {
@@ -220,7 +219,7 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void testBypassDocumentValidation() {
         checkMinServerVersion(3.2);
-        Mapper.map(User.class);
+        getMapper().map(User.class);
         getDs().enableDocumentValidation();
 
         final User user = new User("Jim Halpert", new Date());
@@ -239,7 +238,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void insert() {
-        Mapper.map(DocumentValidation.class);
+        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         try {

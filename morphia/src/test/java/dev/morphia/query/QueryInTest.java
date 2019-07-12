@@ -104,7 +104,7 @@ public class QueryInTest extends TestBase {
             final ReferencedEntity re = new ReferencedEntity("" + x);
             getDs().save(re);
             refs.add(new Key<ReferencedEntity>(ReferencedEntity.class,
-                                               getMorphia().getMapper().getCollectionName(ReferencedEntity.class),
+                                               getMapper().getCollectionName(ReferencedEntity.class),
                                                re.getId()));
         }
         hr.ref = refs.get(0);
@@ -122,8 +122,8 @@ public class QueryInTest extends TestBase {
 
     @Test
     public void testMapping() {
-        Mapper.map(HasRefs.class);
-        Mapper.map(ReferencedEntity.class);
+        getMapper().map(HasRefs.class);
+        getMapper().map(ReferencedEntity.class);
     }
 
     @Test
@@ -174,7 +174,7 @@ public class QueryInTest extends TestBase {
         }
     }
 
-    @Entity(value = "as", noClassnameStored = true)
+    @Entity(value = "as", useDiscriminator = false)
     private static class HasIdOnly {
         @Id
         private ObjectId id;

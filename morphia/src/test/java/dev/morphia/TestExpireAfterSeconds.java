@@ -21,7 +21,7 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Test
     public void testClassAnnotation() {
-        Mapper.map(ClassAnnotation.class);
+        getMapper().map(ClassAnnotation.class);
         getDs().ensureIndexes();
 
         getDs().save(new ClassAnnotation());
@@ -43,7 +43,7 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Test
     public void testIndexedField() {
-        Mapper.map(HasExpiryField.class);
+        getMapper().map(HasExpiryField.class);
         getDs().ensureIndexes();
 
         getDs().save(new HasExpiryField());

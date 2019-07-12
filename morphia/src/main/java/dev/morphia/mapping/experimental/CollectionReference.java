@@ -147,6 +147,12 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                                              final Class paramType,
                                              final Document document) {
         MorphiaReference reference = null;
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
+
+/*
         final List dbVal = (List) mappedField.getDocumentValue(document);
         if (dbVal != null) {
             final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
@@ -158,6 +164,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 reference = new ListReference(datastore, mappedClass, dbVal);
             }
         }
+*/
 
         return reference;
     }

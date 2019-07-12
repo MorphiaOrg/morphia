@@ -17,7 +17,7 @@ import java.util.List;
 public class ListOfStringArrayMappingTest extends TestBase {
     @Test
     public void testMapping() throws Exception {
-        Mapper.map(ContainsListStringArray.class);
+        getMapper().map(ContainsListStringArray.class);
         final ContainsListStringArray ent = new ContainsListStringArray();
         ent.listOfStrings.add(new String[]{"a", "b"});
         ent.arrayOfStrings = new String[]{"only", "the", "lonely"};

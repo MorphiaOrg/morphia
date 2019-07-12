@@ -1,6 +1,7 @@
 package dev.morphia;
 
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import org.junit.Test;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.testmappackage.SimpleEntity;
@@ -20,11 +21,10 @@ public class MorphiaTest extends TestBase {
     @Test
     public void shouldOnlyMapEntitiesInTheGivenPackage() {
         // when
-        final Morphia morphia = new Morphia();
-        Mapper.mapPackage("dev.morphia.testmappackage");
+        getMapper().mapPackage("dev.morphia.testmappackage");
 
         // then
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
         assertThat(mappedClasses.size(), is(1));
         assertEquals(mappedClasses.iterator().next().getClazz(), SimpleEntity.class);
     }
@@ -32,12 +32,16 @@ public class MorphiaTest extends TestBase {
     @Test
     public void testSubPackagesMapping() {
         // when
-        final Morphia morphia = new Morphia();
-        morphia.getMapper().getOptions().setMapSubPackages(true);
-        Mapper.mapPackage("dev.morphia.testmappackage");
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .mapSubPackages(true)
+                                             .build();
+        Datastore datastore = Morphia.createDatastore(TEST_DB_NAME, options);
+
+        Mapper mapper = datastore.getMapper();
+        mapper.mapPackage("dev.morphia.testmappackage");
 
         // then
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        Collection<MappedClass> mappedClasses = mapper.getMappedClasses();
         assertThat(mappedClasses.size(), is(3));
         Collection<Class<?>> classes = new ArrayList<Class<?>>();
         for (MappedClass mappedClass : mappedClasses) {

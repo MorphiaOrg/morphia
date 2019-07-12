@@ -17,8 +17,6 @@
 
 package dev.morphia.annotations;
 
-import dev.morphia.converters.TypeConverter;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -35,9 +33,10 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
+@Deprecated(since = "2.0", forRemoval = true)
 public @interface Converters {
     /**
      * @return The Converters to apply to a field.
      */
-    Class<? extends TypeConverter>[] value();
+    Class<?>[] value();
 }

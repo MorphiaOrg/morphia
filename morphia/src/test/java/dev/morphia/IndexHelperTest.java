@@ -59,16 +59,16 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class IndexHelperTest extends TestBase {
-    private final IndexHelper indexHelper = new IndexHelper(getMorphia().getMapper(), getDatabase());
+    private final IndexHelper indexHelper = new IndexHelper(getMapper(), getDatabase());
 
     @Before
     public void before() {
-        Mapper.map(AbstractParent.class, IndexedClass.class, NestedClass.class, NestedClassImpl.class);
+        getMapper().map(AbstractParent.class, IndexedClass.class, NestedClass.class, NestedClassImpl.class);
     }
 
     @Test
     public void calculateBadKeys() {
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
         IndexBuilder index = new IndexBuilder()
             .fields(new FieldBuilder()
                         .value("texting")
@@ -90,7 +90,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void calculateKeys() {
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
         BsonDocument keys = indexHelper.calculateKeys(mappedClass, new IndexBuilder()
             .fields(new FieldBuilder()
                         .value("text")
@@ -110,7 +110,7 @@ public class IndexHelperTest extends TestBase {
         checkMinServerVersion(3.4);
         String collectionName = getDs().getCollection(IndexedClass.class).getNamespace().getCollectionName();
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
-        Mapper mapper = getMorphia().getMapper();
+        Mapper mapper = getMapper();
 
         indexHelper.createIndex(collection, mapper.getMappedClass(IndexedClass.class));
         List<Document> indexInfo = getIndexInfo(IndexedClass.class);
@@ -143,7 +143,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void findField() {
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         assertEquals("indexName", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("indexName")));
         assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nested", "name")));
@@ -164,7 +164,7 @@ public class IndexHelperTest extends TestBase {
     public void index() {
         checkMinServerVersion(3.4);
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         indexes.drop();
         Index index = new IndexBuilder()
@@ -280,7 +280,7 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void wildcardTextIndex() {
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         IndexBuilder index = new IndexBuilder()
             .fields(new FieldBuilder()
@@ -300,7 +300,7 @@ public class IndexHelperTest extends TestBase {
     @Test(expected = MappingException.class)
     public void weightsOnNonTextIndex() {
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         IndexBuilder index = new IndexBuilder()
             .fields(new FieldBuilder()
@@ -313,7 +313,7 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void indexPartialFilters() {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         Index index = new IndexBuilder()
             .fields(new FieldBuilder().value("text"))
@@ -326,7 +326,7 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void indexedPartialFilters() {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         Indexed indexed = new IndexedBuilder()
             .options(new IndexOptionsBuilder()
@@ -339,7 +339,7 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void textPartialFilters() {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
+        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         Text text = new TextBuilder()
             .value(4)
@@ -404,7 +404,6 @@ public class IndexHelperTest extends TestBase {
         @Text(value = 10, options = @IndexOptions(name = "searchme"))
         private String text;
         private double latitude;
-        @Embedded("nest")
         private NestedClass nested;
     }
 

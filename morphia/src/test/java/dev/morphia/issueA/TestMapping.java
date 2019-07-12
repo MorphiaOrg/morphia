@@ -19,11 +19,11 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testMapping() {
-        Mapper.map(ClassLevelThree.class);
+        getMapper().map(ClassLevelThree.class);
         final ClassLevelThree sp = new ClassLevelThree();
 
         //Old way
-        final Document wrapObj = TestBase.toDocument(sp);  //the error points here from the user
+        final Document wrapObj = getMapper().toDocument(sp);  //the error points here from the user
         getDs().getDatabase().getCollection("testColl").insertOne(wrapObj);
 
 
@@ -45,6 +45,7 @@ public class TestMapping extends TestBase {
         }
     }
 
+    @Embedded
     private static class ClassLevelTwo extends ClassLevelOne<String> {
 
     }
@@ -55,7 +56,6 @@ public class TestMapping extends TestBase {
 
         private String name;
 
-        @Embedded
         private ClassLevelTwo value;
     }
 

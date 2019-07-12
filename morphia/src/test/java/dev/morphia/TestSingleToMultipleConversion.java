@@ -65,14 +65,14 @@ public class TestSingleToMultipleConversion extends TestBase {
         private String s = "foo";
     }
 
-    @Entity(value = "B", noClassnameStored = true)
+    @Entity(value = "B", useDiscriminator = false)
     private static class HasEmbeddedStringy {
         @Id
         private ObjectId id;
         private HasString hs = new HasString();
     }
 
-    @Entity(value = "B", noClassnameStored = true)
+    @Entity(value = "B", useDiscriminator = false)
     private static class HasEmbeddedStringyArray {
         @Id
         private ObjectId id;
@@ -80,7 +80,7 @@ public class TestSingleToMultipleConversion extends TestBase {
         private HasString[] hss;
     }
 
-    @Entity(value = "B", noClassnameStored = true)
+    @Entity(value = "B", useDiscriminator = false)
     private static class HasEmbeddedStringySet {
         @Id
         private ObjectId id;
@@ -88,14 +88,14 @@ public class TestSingleToMultipleConversion extends TestBase {
         private Set<HasString> hss;
     }
 
-    @Entity(value = "A", noClassnameStored = true)
+    @Entity(value = "A", useDiscriminator = false)
     private static class HasSingleString {
         @Id
         private ObjectId id;
         private String s = "foo";
     }
 
-    @Entity(value = "A", noClassnameStored = true)
+    @Entity(value = "A", useDiscriminator = false)
     private static class HasManyStringsArray {
         @Id
         private ObjectId id;
@@ -103,7 +103,7 @@ public class TestSingleToMultipleConversion extends TestBase {
         private String[] strings;
     }
 
-    @Entity(value = "A", noClassnameStored = true)
+    @Entity(value = "A", useDiscriminator = false)
     private static class HasManyStringsList {
         @Id
         private ObjectId id;

@@ -42,7 +42,7 @@ public class TestEmbeddedValidation extends TestBase {
     @Test
     @SuppressWarnings("unchecked")
     public void testCreateEntityWithBasicDBList() {
-        Mapper.map(TestEntity.class);
+        getMapper().map(TestEntity.class);
         TestEntity entity = new TestEntity();
 
         Map<String, Object> map = mapOf("type", "text");

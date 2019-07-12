@@ -3,7 +3,6 @@ package dev.morphia.mapping;
 
 import com.mongodb.BasicDBList;
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.Document;
@@ -25,7 +24,7 @@ public class CollectionOfValuesTest extends TestBase {
 
     @Test
     public void testCity() {
-        Mapper.map(City.class);
+        getMapper().map(City.class);
 
         City city = new City();
         city.name = "My city";
@@ -66,7 +65,7 @@ public class CollectionOfValuesTest extends TestBase {
 
     @Test
     public void testListOfListMapping() {
-        Mapper.map(ContainsListOfList.class);
+        getMapper().map(ContainsListOfList.class);
         getDs().find(ContainsListOfList.class).delete();
         final ContainsListOfList entity = new ContainsListOfList();
 
@@ -95,7 +94,7 @@ public class CollectionOfValuesTest extends TestBase {
 
     @Test
     public void testTwoDimensionalArrayMapping() {
-        Mapper.map(ContainsTwoDimensionalArray.class);
+        getMapper().map(ContainsTwoDimensionalArray.class);
         final ContainsTwoDimensionalArray entity = new ContainsTwoDimensionalArray();
         entity.oneDimArray = "Joseph".getBytes();
         entity.twoDimArray = new byte[][]{"Joseph".getBytes(), "uwe".getBytes()};
@@ -178,12 +177,11 @@ public class CollectionOfValuesTest extends TestBase {
         private byte[][] twoDimArray;
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class City {
         @Id
         private ObjectId id;
         private String name;
-        @Embedded
         private byte[] array;
         private int[][] cells = new int[2][2];
     }

@@ -11,7 +11,7 @@ public class TestIdTwice extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public final void shouldThrowExceptionIfThereIsMoreThanOneId() {
-        Mapper.map(A.class);
+        getMapper().map(A.class);
     }
 
     public static class A extends TestEntity {

@@ -38,10 +38,8 @@ public class TestIndexInheritance extends TestBase {
 
     @Test
     public void testClassIndexInherit() throws Exception {
-        Mapper
-                    .map(Shape.class);
-        final MappedClass mc = getMorphia().getMapper()
-                                           .getMappedClass(Circle.class);
+        getMapper().map(Shape.class);
+        final MappedClass mc = getMapper().getMappedClass(Circle.class);
         assertNotNull(mc);
 
         assertEquals(2, mc.getAnnotations(Indexes.class)
@@ -58,10 +56,8 @@ public class TestIndexInheritance extends TestBase {
 
     @Test
     public void testInheritedFieldIndex() throws Exception {
-        Mapper
-                    .map(Shape.class);
-        getMorphia().getMapper()
-                    .getMappedClass(Circle.class);
+        getMapper().map(Shape.class);
+        getMapper().getMappedClass(Circle.class);
 
         getDs().ensureIndexes();
         final MongoCollection<Document> coll = getDs().getCollection(Circle.class);

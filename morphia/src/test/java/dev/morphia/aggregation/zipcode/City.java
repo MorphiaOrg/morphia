@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 import static java.lang.String.format;
 
-@Entity(value = "zipcodes", noClassnameStored = true)
+@Entity(value = "zipcodes", useDiscriminator = false)
 public final class City {
     @Id
     private String id;

@@ -32,7 +32,7 @@ public class TestEmbeddedClassname extends TestBase {
         Document aRaw = r.singleA.raw;
 
         // Test that singleA does not contain the class name
-        final String discriminatorField = getMorphia().getMapper().getOptions().getDiscriminatorField();
+        final String discriminatorField = getMapper().getOptions().getDiscriminatorField();
         Assert.assertFalse(aRaw.containsKey(discriminatorField));
 
         // Test that aList does not contain the class name
@@ -65,15 +65,12 @@ public class TestEmbeddedClassname extends TestBase {
         Assert.assertTrue(bRaw2.containsKey(discriminatorField));
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     private static class Root {
-        @Embedded
         private final List<A> aList = new ArrayList<>();
-        @Embedded
         private final List<B> bList = new ArrayList<>();
         @Id
         private String id = "id";
-        @Embedded
         private A singleA;
     }
 

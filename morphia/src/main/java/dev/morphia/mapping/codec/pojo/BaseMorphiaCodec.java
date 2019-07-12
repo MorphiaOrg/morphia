@@ -41,7 +41,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  *
  * @param <T>
  */
-public class BaseMorphiaCodec<T> extends PojoCodec<T> {
+public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
     private static final Logger LOGGER = Loggers.getLogger("BaseMorphiaCodec");
     private final ClassModel<T> classModel;
     private final CodecRegistry registry;
@@ -276,9 +276,7 @@ public class BaseMorphiaCodec<T> extends PojoCodec<T> {
         return codec;
     }
 
-    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized) {
-        return new LazyMorphiaCodec<>(specialized, registry, propertyCodecRegistry, discriminatorLookup, codecCache);
-    }
+    protected abstract <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized);
 
     @SuppressWarnings({"rawtypes"})
     private <S, V> ClassModel<S> getSpecializedClassModel(final ClassModel<S> clazzModel,

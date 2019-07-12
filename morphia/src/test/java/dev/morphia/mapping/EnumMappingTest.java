@@ -1,5 +1,7 @@
 package dev.morphia.mapping;
 
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +27,7 @@ public class EnumMappingTest extends TestBase {
         entity.getMap().put("key", Foo.BAR);
         getDs().save(entity);
 
-        Mapper.map(Class1.class);
+        getMapper().map(Class1.class);
 
         entity = getDs().find(Class1.class).execute(new FindOptions().limit(1)).tryNext();
         final Map<String, Foo> map = entity.getMap();
@@ -46,18 +48,23 @@ public class EnumMappingTest extends TestBase {
 
     @Test
     public void testCustomerWithArrayList() {
-        getMorphia().getMapper().getOptions().setStoreEmpties(true);
-        getMorphia().getMapper().getOptions().setStoreNulls(true);
-        Mapper.map(CustomerWithArrayList.class);
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .storeEmpties(true)
+                                             .storeNulls(true)
+                                             .build();
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+
+        Mapper mapper = datastore.getMapper();
+        mapper.map(CustomerWithArrayList.class);
 
         CustomerWithArrayList customer = new CustomerWithArrayList();
 
-        List<WebTemplate> templates1 = new ArrayList<WebTemplate>();
+        List<WebTemplate> templates1 = new ArrayList<>();
         templates1.add(new WebTemplate("template #1.1"));
         templates1.add(new WebTemplate("template #1.2"));
         customer.add(WebTemplateType.CrewContract, templates1);
 
-        List<WebTemplate> templates2 = new ArrayList<WebTemplate>();
+        List<WebTemplate> templates2 = new ArrayList<>();
         templates1.add(new WebTemplate("template #2.1"));
         templates1.add(new WebTemplate("template #2.2"));
         customer.add(WebTemplateType.CrewContractHeader, templates2);
@@ -70,17 +77,23 @@ public class EnumMappingTest extends TestBase {
 
     @Test
     public void testCustomerWithList() {
-        getMorphia().getMapper().getOptions().setStoreEmpties(true);
-        getMorphia().getMapper().getOptions().setStoreNulls(true);
-        Mapper.map(CustomerWithArrayList.class);
+
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .storeEmpties(true)
+                                             .storeNulls(true)
+                                             .build();
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+        Mapper mapper = datastore.getMapper();
+
+        mapper.map(CustomerWithArrayList.class);
         CustomerWithList customer = new CustomerWithList();
 
-        List<WebTemplate> templates1 = new ArrayList<WebTemplate>();
+        List<WebTemplate> templates1 = new ArrayList<>();
         templates1.add(new WebTemplate("template #1.1"));
         templates1.add(new WebTemplate("template #1.2"));
         customer.add(WebTemplateType.CrewContract, templates1);
 
-        List<WebTemplate> templates2 = new ArrayList<WebTemplate>();
+        List<WebTemplate> templates2 = new ArrayList<>();
         templates1.add(new WebTemplate("template #2.1"));
         templates1.add(new WebTemplate("template #2.2"));
         customer.add(WebTemplateType.CrewContractHeader, templates2);
@@ -95,7 +108,7 @@ public class EnumMappingTest extends TestBase {
     public void testEnumMapping() {
         getDs().getDatabase().drop();
 
-        Mapper.map(ContainsEnum.class);
+        getMapper().map(ContainsEnum.class);
 
         getDs().save(new ContainsEnum());
         Assert.assertEquals(1, getDs().find(ContainsEnum.class).field("foo").equal(Foo.BAR)
@@ -131,7 +144,7 @@ public class EnumMappingTest extends TestBase {
     public static class Class1 {
         @Id
         private ObjectId id;
-        private Map<String, Foo> map = new HashMap<String, Foo>();
+        private Map<String, Foo> map = new HashMap<>();
 
         public Map<String, Foo> getMap() {
             return map;
@@ -196,9 +209,9 @@ public class EnumMappingTest extends TestBase {
         }
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class Customer {
-        private final Map<WebTemplateType, WebTemplate> map = new HashMap<WebTemplateType, WebTemplate>();
+        private final Map<WebTemplateType, WebTemplate> map = new HashMap<>();
         @Id
         private ObjectId id;
 
@@ -208,9 +221,9 @@ public class EnumMappingTest extends TestBase {
 
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class CustomerWithList {
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<WebTemplateType, List<WebTemplate>>();
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
         @Id
         private ObjectId id;
 
@@ -219,10 +232,10 @@ public class EnumMappingTest extends TestBase {
         }
     }
 
-    @Entity(noClassnameStored = true)
+    @Entity(useDiscriminator = false)
     public static class CustomerWithArrayList {
         private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
-            = new HashMap<WebTemplateType, List<WebTemplate>>();
+            = new HashMap<>();
         @Id
         private ObjectId id;
 

@@ -49,12 +49,12 @@ public class MapWithDotInKeyTest extends TestBase {
     }
 
     private static class E {
-        @Embedded
         private final MyMap mymap = new MyMap();
         @Id
         private ObjectId id;
     }
 
+    @Embedded
     private static class MyMap extends BasicDBObject {
     }
 }

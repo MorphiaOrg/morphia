@@ -24,7 +24,7 @@ public class GeoEntitiesTest extends TestBase {
         City city = new City("New City", point(3.0, 7.0));
 
         // when
-        Document dbObject = TestBase.toDocument(city);
+        Document dbObject = getMapper().toDocument(city);
 
         assertThat(dbObject, is(notNullValue()));
         assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"

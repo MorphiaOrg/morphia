@@ -1,27 +1,13 @@
-/*
- * Copyright (C) 2010 Olafur Gauti Gudmundsson
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
- * obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
- * and limitations under the License.
- */
-
 package dev.morphia;
 
-import dev.morphia.mapping.Mapper;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.entities.version.AbstractVersionedBase;
 import dev.morphia.entities.version.Versioned;
 import dev.morphia.entities.version.VersionedChildEntity;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class TestVersionAnnotation extends TestBase {
 
@@ -71,11 +56,11 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
-        Morphia morphia = Mapper.mapPackage("dev.morphia.entities.version");
+        getMapper().mapPackage("dev.morphia.entities.version");
 
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
         assertThat(mappedClasses.size(), is(2));
-        List<Class<?>> list = new ArrayList<Class<?>>();
+        List<Class<?>> list = new ArrayList<>();
         for (MappedClass mappedClass : mappedClasses) {
             list.add(mappedClass.getClazz());
         }
@@ -85,11 +70,11 @@ public class TestVersionAnnotation extends TestBase {
 
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        Morphia morphia = Mapper.map(VersionedChildEntity.class);
+        getMapper().map(VersionedChildEntity.class);
 
-        Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
+        Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
         assertThat(mappedClasses.size(), is(2));
-        List<Class<?>> list = new ArrayList<Class<?>>();
+        List<Class<?>> list = new ArrayList<>();
         for (MappedClass mappedClass : mappedClasses) {
             list.add(mappedClass.getClazz());
         }
@@ -103,7 +88,7 @@ public class TestVersionAnnotation extends TestBase {
         version1.setCount(0);
         getDs().save(version1);
 
-        assertEquals(new Long(1), version1.getVersion());
+        assertEquals(Long.valueOf(1), version1.getVersion());
         assertEquals(0, version1.getCount());
 
         Query<Versioned> query = getDs().find(Versioned.class);
@@ -115,12 +100,12 @@ public class TestVersionAnnotation extends TestBase {
 
         final Versioned version2 = getDs().find(Versioned.class).filter("_id", version1.getId()).first();
 
-        assertEquals(new Long(2), version2.getVersion());
+        assertEquals(Long.valueOf(2), version2.getVersion());
         assertEquals(1, version2.getCount());
     }
 
     @Test(expected = ConcurrentModificationException.class)
-    public void testThrowsExceptionWhenTryingToSaveAnOldVersion() throws Exception {
+    public void testThrowsExceptionWhenTryingToSaveAnOldVersion() {
         // given
         final Versioned version1 = new Versioned();
         getDs().save(version1);
@@ -148,14 +133,14 @@ public class TestVersionAnnotation extends TestBase {
     }
 
     @Test
-    public void testVersionNumbersIncrementWithEachSave() throws Exception {
+    public void testVersionNumbersIncrementWithEachSave() {
         final Versioned version1 = new Versioned();
         getDs().save(version1);
-        assertEquals(new Long(1), version1.getVersion());
+        assertEquals(Long.valueOf(1), version1.getVersion());
 
         final Versioned version2 = getDs().find(Versioned.class).filter("_id", version1.getId()).first();
         getDs().save(version2);
-        assertEquals(new Long(2), version2.getVersion());
+        assertEquals(Long.valueOf(2), version2.getVersion());
     }
 
     @Test

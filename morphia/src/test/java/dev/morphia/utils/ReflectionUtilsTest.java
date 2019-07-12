@@ -49,7 +49,7 @@ public class ReflectionUtilsTest extends TestBase {
 
     @Test
     public void shouldSupportGenericArrays() {
-        Mapper.map(MyEntity.class);
+        getMapper().map(MyEntity.class);
     }
 
     /**

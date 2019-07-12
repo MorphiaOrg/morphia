@@ -18,7 +18,7 @@ public class Geo2dSphereCriteriaTest extends TestBase {
         double longitude = 5.7;
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
-        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMorphia().getMapper(), stubQuery, "location", NEAR, pointBuilder()
+        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMapper(), stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
                                                                                                           .build())
@@ -48,7 +48,7 @@ public class Geo2dSphereCriteriaTest extends TestBase {
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
 
-        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMorphia().getMapper(), stubQuery, "location", NEAR, pointBuilder()
+        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMapper(), stubQuery, "location", NEAR, pointBuilder()
                                                                                                           .latitude(latitude)
                                                                                                           .longitude(longitude)
                                                                                                           .build());

@@ -15,8 +15,8 @@
 package dev.morphia.testmodel;
 
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 import dev.morphia.testutil.TestEntity;
 
@@ -27,9 +27,6 @@ import java.util.Set;
 import java.util.Vector;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 @Entity("hotels")
 public class Hotel extends TestEntity {
     private String name;
@@ -40,14 +37,13 @@ public class Hotel extends TestEntity {
     private Set<String> tags;
     @Transient
     private String temp;
-    @Embedded
     private Address address;
-    @Embedded(concreteClass = Vector.class)
+    @Property(concreteClass = Vector.class)
     private List<PhoneNumber> phoneNumbers;
 
     public Hotel() {
-        tags = new HashSet<String>();
-        phoneNumbers = new Vector<PhoneNumber>();
+        tags = new HashSet<>();
+        phoneNumbers = new Vector<>();
     }
 
     public Address getAddress() {

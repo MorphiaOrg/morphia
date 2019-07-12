@@ -16,7 +16,7 @@ public class LazyReferenceOnArrayTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testLazyRefOnArray() {
-        Mapper.map(LazyOnArray.class);
+        getMapper().map(LazyOnArray.class);
     }
 
     public static class R extends TestEntity {

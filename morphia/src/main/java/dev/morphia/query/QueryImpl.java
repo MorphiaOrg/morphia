@@ -1,25 +1,19 @@
 package dev.morphia.query;
 
 
-import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.FindAndModifyOptions;
 import dev.morphia.Key;
-import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Version;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.Document;
@@ -28,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -42,13 +35,13 @@ import static java.lang.String.format;
  *
  * @param <T> The type we will be querying for, and returning.
  */
+@SuppressWarnings("removal")
 public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
     final Datastore ds;
     final MongoCollection<T> collection;
     final Class<T> clazz;
     final Mapper mapper;
-    private EntityCache cache;
     private boolean validateName = true;
     private boolean validateType = true;
     private Document baseQuery;
@@ -73,10 +66,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         this.ds = ds;
         collection = coll;
         mapper = this.ds.getMapper();
-        cache = mapper.createEntityCache();
 
-        final MappedClass mc = mapper.getMappedClass(clazz);
-        final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
     }
 
@@ -90,7 +80,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         QueryImpl<T> cloned = cloneQuery();
         options.projection().include("_id");
 
-        return new MorphiaKeyCursor<>(ds, cloned.prepareCursor(options), ds.getMapper(),
+        return new MorphiaKeyCursor<>(cloned.prepareCursor(options), ds.getMapper(),
             clazz, collection.getNamespace().getCollectionName());
     }
 
@@ -112,7 +102,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public MorphiaCursor<T> execute(final FindOptions options) {
         MongoCursor mongoCursor = prepareCursor(options);
-        return new MorphiaCursor<>(ds, mongoCursor, ds.getMapper(), clazz, cache);
+        return new MorphiaCursor<>(mongoCursor, ds.getMapper(), clazz);
     }
 
     @Override
@@ -146,7 +136,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      */
     QueryImpl<T> cloneQuery() {
         final QueryImpl<T> n = new QueryImpl<>(clazz, collection, ds);
-        n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.validateName = validateName;
         n.validateType = validateType;
         n.baseQuery = copy(baseQuery);
@@ -375,14 +364,12 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T delete(final FindAndModifyOptions options) {
-        FindAndDeleteOptions deleteOptions = (FindAndDeleteOptions) new FindAndDeleteOptions()
-                                                 .writeConcern(options.getWriteConcern())
-                                                 .collation(options.getCollation())
-                                                 .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-                                                 .sort(options.getSort())
-                                                 .projection(options.getProjection());
-
-        return delete(deleteOptions);
+        return delete(new FindAndDeleteOptions()
+                          .writeConcern(options.getWriteConcern())
+                          .collation(options.getCollation())
+                          .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+                          .sort(options.getSort())
+                          .projection(options.getProjection()));
     }
 
     public T delete(final FindAndDeleteOptions options) {
@@ -405,21 +392,21 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Modify<T> modify(final UpdateOperations<T> operations) {
-        Modify modify = modify();
+        Modify<T> modify = modify();
         modify.setOps(((UpdateOpsImpl) operations).getOps());
 
         return modify;
     }
 
     @Override
-    public Update update() {
-        return new Update(ds, mapper, clazz, collection, getQueryDocument());
+    public Update<T> update() {
+        return new Update<>(ds, mapper, clazz, collection, getQueryDocument());
     }
 
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
-    public Update update(UpdateOperations operations) {
-        final Update updates = update();
+    public Update<T> update(UpdateOperations operations) {
+        final Update<T> updates = update();
         updates.setOps(((UpdateOpsImpl) operations).getOps());
 
         return updates;
@@ -427,8 +414,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
-    public Update update(Document document) {
-        final Update updates = update();
+    public Update<T> update(Document document) {
+        final Update<T> updates = update();
         updates.setOps(document);
 
         return updates;
@@ -444,10 +431,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      */
     public boolean isValidatingNames() {
         return validateName;
-    }
-
-    private MongoCursor prepareCursor() {
-        return prepareCursor(getOptions());
     }
 
     private MongoCursor prepareCursor(final FindOptions findOptions) {
@@ -575,37 +558,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
 
         return wc;
-    }
-
-
-    public static class Update extends UpdatesImpl<Update> {
-        private Document queryObject;
-        private MongoCollection collection;
-
-        Update(final Datastore datastore, final Mapper mapper, final Class clazz, final MongoCollection collection,
-               final Document queryObject) {
-            super(datastore, mapper, clazz);
-            this.collection = collection;
-            this.queryObject = queryObject;
-        }
-
-        public UpdateResult execute() {
-            return execute(new UpdateOptions());
-        }
-
-        public UpdateResult execute(final UpdateOptions options) {
-
-            final List<MappedField> fields = mapper.getMappedClass(clazz)
-                                                   .getFieldsAnnotatedWith(Version.class);
-            if (!fields.isEmpty()) {
-                inc(fields.get(0).getMappedFieldName(), 1);
-            }
-            MongoCollection mongoCollection = datastore.enforceWriteConcern(collection, clazz, options.getWriteConcern());
-            return options.isMulti()
-                   ? mongoCollection.updateMany(queryObject, getOps(), options)
-                   : mongoCollection.updateOne(queryObject, getOps(), options);
-        }
-
     }
 
 }

@@ -16,6 +16,7 @@
 
 package dev.morphia.mapping;
 
+import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
@@ -29,6 +30,7 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.PropertyHandler;
+import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.FieldModel;
 import org.bson.codecs.pojo.InstanceCreator;
@@ -42,9 +44,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -111,6 +115,27 @@ public class MappedField {
     public Field getField() {
         return property.getField();
     }
+
+    /**
+     * @param document the DBObject get the value from
+     * @return the value from best mapping of this field
+     */
+    public Object getDocumentValue(final Document document) {
+        return document.get(getFirstFieldName(document));
+    }
+
+    private String getFirstFieldName(final Document document) {
+        List<String> names = List.of(getMappedFieldName());
+        names.addAll(getLoadNames());
+        List<String> list = names.stream()
+                                    .filter(name -> document.containsKey(name))
+                                    .collect(Collectors.toList());
+        if(list.size() > 1) {
+            throw new MappingException(format("Found more than one field mapping for ", getFullName()));
+        }
+        return list.get(0);
+    }
+
     /**
      * Gets the value of the field mapped on the instance given.
      *
@@ -274,7 +299,7 @@ public class MappedField {
     /**
      * @return the name of the field's (key)name for mongodb
      */
-    private String getMappedFieldName() {
+    public String getMappedFieldName() {
         if (hasAnnotation(Id.class)) {
             return "_id";
         } else if (hasAnnotation(Property.class)) {

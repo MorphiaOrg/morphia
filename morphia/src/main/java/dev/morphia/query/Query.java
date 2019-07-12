@@ -5,7 +5,6 @@ import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
 import dev.morphia.FindAndModifyOptions;
 import dev.morphia.Key;
-import dev.morphia.query.QueryImpl.Update;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.Document;
@@ -363,14 +362,14 @@ public interface Query<T> {
 
     DeleteResult remove(DeleteOptions options);
 
-    Update update();
+    Update<T> update();
 
     /**
      * @morphia.internal
      * @param document
      * @return
      */
-    Update update(Document document);
+    Update<T> update(Document document);
 
     /**
      * @morphia.internal
@@ -380,5 +379,5 @@ public interface Query<T> {
      * @deprecated
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Update update(UpdateOperations operations);
+    Update<T> update(UpdateOperations operations);
 }

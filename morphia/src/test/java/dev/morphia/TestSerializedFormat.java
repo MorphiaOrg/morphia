@@ -26,7 +26,6 @@ import dev.morphia.query.QueryImpl;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -39,7 +38,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static dev.morphia.converters.DefaultConverters.JAVA_8;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
@@ -47,9 +45,8 @@ import static org.junit.Assert.assertTrue;
 public class TestSerializedFormat extends TestBase {
     @Test
     public void testQueryFormat() {
-        Assume.assumeTrue("This test requires Java 8", JAVA_8);
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
-                                            .field("id").equal(new ObjectId(0, 0))
+                                            .field("id").equal(ObjectId.createFromLegacyFormat(0, 0, 0))
                                             .field("referenceType").equal(new ReferenceType(2, "far"))
                                             .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
 
@@ -89,7 +86,7 @@ public class TestSerializedFormat extends TestBase {
     }
 
     private void verifyCoverage(final Document document) {
-        for (MappedField field : getMorphia().getMapper().getMappedClass(ReferenceType.class).getPersistenceFields()) {
+        for (MappedField field : getMapper().getMappedClass(ReferenceType.class).getFields()) {
             String name = field.getMappedFieldName();
             boolean found = document.containsKey(name);
             if (!found) {
@@ -104,8 +101,6 @@ public class TestSerializedFormat extends TestBase {
 
     @Test
     public void testSavedEntityFormat() {
-        Assume.assumeTrue("This test requires Java 8", JAVA_8);
-
         ReferenceType entity = new ReferenceType(1, "I'm a field value");
 
         entity.setReferenceType(new ReferenceType(42, "reference"));

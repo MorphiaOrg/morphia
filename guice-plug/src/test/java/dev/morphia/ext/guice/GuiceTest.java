@@ -36,9 +36,9 @@ public class GuiceTest extends TestBase {
                 bind(Foo.class).toInstance(new Bar());
             }
         });
-        new GuiceExtension(getMorphia(), i);
-        Mapper.map(E1.class);
-        Mapper.map(E2.class);
+        new GuiceExtension(getMapper(), i);
+        getMapper().map(E1.class);
+        getMapper().map(E2.class);
     }
 
     @Test

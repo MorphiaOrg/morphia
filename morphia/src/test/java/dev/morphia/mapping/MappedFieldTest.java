@@ -6,12 +6,12 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.cache.DefaultEntityCache;
 import org.bson.Document;
+import org.bson.codecs.pojo.TypeData;
 import org.bson.types.ObjectId;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +23,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MappedFieldTest extends TestBase {
+
+    private MappedClass mappedClass;
+
+    @Before
+    public void mapping() {
+        getMapper().map(TestEntity.class);
+        mappedClass = getMapper().getMappedClass(TestEntity.class);
+    }
     @Test
     public void arrayFieldMapping() {
-        final MappedField field = new MappedField(getField(TestEntity.class, "arrayOfInt"), TestEntity.class, getMorphia().getMapper());
+        final MappedField field = getMappedField("arrayOfInt");
 
-        assertFalse(field.isSingleValue());
+        assertFalse(field.isScalarValue());
         assertTrue(field.isMultipleValues());
         assertTrue(field.isArray());
         assertTrue(field.getType().isArray());
@@ -35,11 +43,15 @@ public class MappedFieldTest extends TestBase {
         assertEquals("arrayOfInt", field.getMappedFieldName());
     }
 
+    private MappedField getMappedField(final String name) {
+        return mappedClass.getMappedField(name);
+    }
+
     @Test
     public void basicFieldMapping() {
-        final MappedField field = new MappedField(getField(TestEntity.class, "name"), TestEntity.class, getMorphia().getMapper());
+        final MappedField field = getMappedField("name");
 
-        assertTrue(field.isSingleValue());
+        assertTrue(field.isScalarValue());
         assertTrue(String.class == field.getType());
         assertEquals("name", field.getJavaFieldName());
         assertEquals("n", field.getMappedFieldName());
@@ -47,22 +59,22 @@ public class MappedFieldTest extends TestBase {
 
     @Test
     public void collectionFieldMapping() {
-        final MappedField field = new MappedField(getField(TestEntity.class, "listOfString"), TestEntity.class, getMorphia().getMapper());
+        final MappedField field = getMappedField("listOfString");
 
-        assertFalse(field.isSingleValue());
+        assertFalse(field.isScalarValue());
         assertTrue(field.isMultipleValues());
         assertFalse(field.isArray());
         assertTrue(List.class == field.getType());
-        assertTrue(String.class == field.getSubType());
+        assertTrue(String.class == field.getNormalizedType());
         assertEquals("listOfString", field.getJavaFieldName());
         assertEquals("listOfString", field.getMappedFieldName());
     }
 
     @Test
     public void idFieldMapping() {
-        final MappedField field = new MappedField(getField(TestEntity.class, "id"), TestEntity.class, getMorphia().getMapper());
+        final MappedField field = getMappedField("id");
 
-        assertTrue(field.isSingleValue());
+        assertTrue(field.isScalarValue());
         assertTrue(ObjectId.class == field.getType());
         assertEquals("id", field.getJavaFieldName());
         assertEquals("_id", field.getMappedFieldName());
@@ -70,31 +82,25 @@ public class MappedFieldTest extends TestBase {
 
     @Test
     public void nestedCollectionsMapping() {
-        final MappedField field = new MappedField(getField(TestEntity.class, "listOfListOfString"),
-                                                  TestEntity.class,
-                                                  getMorphia().getMapper());
+        final MappedField field = getMappedField("listOfListOfString");
 
-        assertFalse(field.isSingleValue());
+        assertFalse(field.isScalarValue());
         assertTrue(field.isMultipleValues());
         assertFalse(field.isArray());
         assertTrue(List.class == field.getType());
 
-        final List<MappedField> level1Types = field.getTypeParameters();
-        final MappedField typeParameter = level1Types.get(0);
-        assertTrue(List.class == typeParameter.getConcreteType());
+        final TypeData<?> typeData = field.getTypeData();
+        final Class<?> typeParameter = typeData.getType();
+        assertTrue(List.class == typeData.getType());
 
-        final List<MappedField> level2Types = typeParameter.getTypeParameters();
-        final MappedField nested = level2Types.get(0);
-        assertTrue(String.class == nested.getConcreteType());
+        assertTrue(String.class == typeData.getTypeParameters().get(0).getType());
         assertEquals("listOfListOfString", field.getJavaFieldName());
         assertEquals("listOfListOfString", field.getMappedFieldName());
 
         final BasicDBList list = new BasicDBList();
         list.add(dbList("a", "b", "c"));
         list.add(dbList("d", "e", "f"));
-        final TestEntity entity = getMorphia().getMapper()
-                                              .fromDocument(getDs(), TestEntity.class, new Document("listOfListOfString", list),
-                                                  new DefaultEntityCache());
+        final TestEntity entity = getMapper().fromDocument(TestEntity.class, new Document("listOfListOfString", list));
         final List<String> strings = asList("a", "b", "c");
         final List<String> strings1 = asList("d", "e", "f");
         final List<List<String>> expected = new ArrayList<>();
@@ -107,14 +113,6 @@ public class MappedFieldTest extends TestBase {
         final BasicDBList list = new BasicDBList();
         Collections.addAll(list, values);
         return list;
-    }
-
-    private Field getField(final Class c, final String field) {
-        try {
-            return c.getDeclaredField(field);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     @Entity

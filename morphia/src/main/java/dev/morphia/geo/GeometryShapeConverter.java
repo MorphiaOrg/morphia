@@ -1,7 +1,5 @@
 package dev.morphia.geo;
 
-import dev.morphia.converters.SimpleValueConverter;
-import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.MappedField;
 import org.bson.Document;
 
@@ -23,22 +21,19 @@ import static dev.morphia.geo.GeoJsonType.POLYGON;
  * <p/>
  * Overridden by subclasses to define exact behaviour for specific Geometry concrete classes.
  */
-public class GeometryShapeConverter extends TypeConverter implements SimpleValueConverter {
+public class GeometryShapeConverter  {
     private final GeoJsonType geoJsonType;
     private final List<GeometryFactory> factories;
 
     GeometryShapeConverter(final GeoJsonType... geoJsonTypes) {
-        super(geoJsonTypes[0].getTypeClass());
         geoJsonType = geoJsonTypes[0];
         this.factories = Arrays.asList(geoJsonTypes);
     }
 
-    @Override
     public Geometry decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
         return decodeObject((List) ((Document) fromDocument).get("coordinates"), factories);
     }
 
-    @Override
     public Object encode(final Object value, final MappedField optionalExtraInfo) {
         if (value != null) {
             Object encodedObjects = encodeObjects(((Geometry) value).getCoordinates());
@@ -76,7 +71,7 @@ public class GeometryShapeConverter extends TypeConverter implements SimpleValue
                 //iterate through the list of geometry objects recursively until you find the lowest-level
                 encodedObjects.add(encodeObjects(((Geometry) object).getCoordinates()));
             } else {
-                encodedObjects.add(getMapper().getConverters().encode(object));
+//                encodedObjects.add(getMapper().getConverters().encode(object));
             }
         }
         return encodedObjects;

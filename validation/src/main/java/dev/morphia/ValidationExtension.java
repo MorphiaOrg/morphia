@@ -10,22 +10,19 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 
-/**
- * @author us@thomas-daily.de
- */
-public class ValidationExtension extends AbstractEntityInterceptor {
+public class ValidationExtension implements EntityInterceptor {
     private ValidatorFactory validationFactory;
 
     /**
      * Creates a ValidationExtension
      *
-     * @param m the Morphia instance to use
+     * @param mapper the Mapper instance to use
      */
-    public ValidationExtension(final Morphia m) {
+    public ValidationExtension(final Mapper mapper) {
         final Configuration<?> configuration = Validation.byDefaultProvider().configure();
         validationFactory = configuration.buildValidatorFactory();
 
-        m.getMapper().addInterceptor(this);
+        mapper.addInterceptor(this);
     }
 
     /**

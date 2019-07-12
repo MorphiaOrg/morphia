@@ -40,7 +40,7 @@ public final class EntityTypeAndIdValueValidator implements Validator {
                          final List<ValidationFailure> validationFailures) {
         if (appliesTo(mappedClass, mappedField)) {
             Class classOfValue = value.getClass();
-            Class classOfIdFieldForType = mappedClass.getMappedIdField().getType();
+            Class classOfIdFieldForType = mappedClass.getIdField().getType();
             if (!mappedField.getType().equals(classOfValue) && !classOfValue.equals(classOfIdFieldForType)) {
                 validationFailures.add(new ValidationFailure(format("The value class needs to match the type of ID for the field. "
                                                                     + "Value was %s and was a %s and the ID of the type was %s",
@@ -52,6 +52,6 @@ public final class EntityTypeAndIdValueValidator implements Validator {
     }
 
     private boolean appliesTo(final MappedClass mappedClass, final MappedField mappedField) {
-        return mappedField != null && mappedField.equals(mappedClass.getMappedIdField());
+        return mappedField != null && mappedField.equals(mappedClass.getIdField());
     }
 }

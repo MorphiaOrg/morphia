@@ -3,6 +3,7 @@ package dev.morphia.ext.guice;
 
 import com.google.inject.Injector;
 import dev.morphia.Morphia;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.utils.Assert;
 
@@ -18,10 +19,9 @@ public class GuiceExtension {
      * @param morphia  the Morphia instance to update
      * @param injector the Guice Injector to use when instantiating Entities
      */
-    public GuiceExtension(final Morphia morphia, final Injector injector) {
-        Assert.parameterNotNull("morphia", morphia);
-        final MapperOptions options = morphia.getMapper()
-                                             .getOptions();
-        options.setObjectFactory(new GuiceObjectFactory(options.getObjectFactory(), injector));
+    public GuiceExtension(final Mapper mapper, final Injector injector) {
+        Assert.parameterNotNull("mapper", mapper);
+        final MapperOptions options = mapper.getOptions();
+//        options.setObjectFactory(new GuiceObjectFactory(options.getObjectFactory(), injector));
     }
 }

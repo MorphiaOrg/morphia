@@ -6,7 +6,7 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
 import org.bson.Document;
 
-public class Modify<T> extends UpdatesImpl<Modify<T>> {
+public class Modify<T> extends UpdatesImpl<T, Modify<T>> {
     private final QueryImpl<T> query;
     private final MongoCollection<T> collection;
     private final Document queryObject;
@@ -28,15 +28,15 @@ public class Modify<T> extends UpdatesImpl<Modify<T>> {
         versionUpdate();
         Document res = (Document) collection.findOneAndUpdate(queryObject, getOps(), options);
 
-        return mapper.fromDocument(datastore, query.getEntityClass(), res, mapper.createEntityCache());
+        return mapper.fromDocument(clazz, res);
 
     }
 
     private void versionUpdate() {
         final MappedClass mc = mapper.getMappedClass(clazz);
 
-        if (!mc.getFieldsAnnotatedWith(Version.class).isEmpty()) {
-            inc(mc.getMappedVersionField().getMappedFieldName());
+        if (!mc.getFields(Version.class).isEmpty()) {
+            inc(mc.getVersionField().getMappedFieldName());
         }
 
     }
