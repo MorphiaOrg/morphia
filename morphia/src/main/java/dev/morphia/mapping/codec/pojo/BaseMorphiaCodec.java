@@ -29,6 +29,8 @@ import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.DiscriminatorLookup;
 import org.bson.codecs.pojo.IdPropertyModelHolder;
 import org.bson.codecs.pojo.InstanceCreator;
+import org.bson.codecs.pojo.LazyMissingCodec;
+import org.bson.codecs.pojo.LazyPojoCodec;
 import org.bson.codecs.pojo.PojoCodec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
