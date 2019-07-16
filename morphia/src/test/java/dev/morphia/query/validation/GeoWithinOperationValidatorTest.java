@@ -1,6 +1,7 @@
 package dev.morphia.query.validation;
 
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import org.bson.Document;
@@ -127,12 +128,14 @@ public class GeoWithinOperationValidatorTest extends TestBase {
                    containsString("For a $geoWithin operation, the value should be a valid geo query"));
     }
 
+    @Entity
     @SuppressWarnings("unused")
     private static class GeoEntity {
         private final int[] array = {1};
         private final List<Integer> list = List.of(1);
     }
 
+    @Entity
     @SuppressWarnings("unused")
     private static class InvalidGeoEntity {
         private final String[] arrayOfStrings = {"1"};

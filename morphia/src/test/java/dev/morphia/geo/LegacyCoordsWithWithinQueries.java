@@ -1,9 +1,11 @@
 package dev.morphia.geo;
 
-import org.junit.Test;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Shape;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when - search with circle that does not cover the only point
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
-                                                   .within(Shape.center(new Shape.Point(2, 2), 0.5))
+                                                   .within(Shape.center(new Point(new Position(2, 2)), 0.5))
                                                    .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
@@ -52,7 +54,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when - search with a box that does not cover the point
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
-                                                   .within(Shape.box(new Shape.Point(0, 0), new Shape.Point(0.5, 0.5)))
+                                                   .within(Shape.box(new Point(new Position(0, 0)), new Point(new Position(0.5, 0.5))))
                                                    .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
@@ -71,10 +73,10 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when - search with polygon that's nowhere near the given point
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
-                                                   .within(Shape.polygon(new Shape.Point(0, 0),
-                                                                         new Shape.Point(0, 5),
-                                                                         new Shape.Point(2, 3),
-                                                                         new Shape.Point(1, 0)))
+                                                   .within(Shape.polygon(new Point(new Position(0, 0)),
+                                                                         new Point(new Position(0, 5)),
+                                                                         new Point(new Position(2, 3)),
+                                                                         new Point(new Position(1, 0))))
                                                    .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
@@ -93,10 +95,10 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when - search with polygon that contains expected point
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
-                                                   .within(Shape.polygon(new Shape.Point(0, 0),
-                                                                         new Shape.Point(0, 5),
-                                                                         new Shape.Point(2, 3),
-                                                                         new Shape.Point(1, 0)))
+                                                   .within(Shape.polygon(new Point(new Position(0, 0)),
+                                                                         new Point(new Position(0, 5)),
+                                                                         new Point(new Position(2, 3)),
+                                                                         new Point(new Position(1, 0))))
                                                    .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
@@ -117,7 +119,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when
         final List<PlaceWithLegacyCoords> found = getDs().find(PlaceWithLegacyCoords.class)
                                                          .field("location")
-                                                         .within(Shape.center(new Shape.Point(1, 2), 1.1))
+                                                         .within(Shape.center(new Point(new Position(1, 2)), 1.1))
                                                          .execute().toList();
 
         // then
@@ -137,7 +139,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when - search with circle with an edge that exactly covers the point
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
-                                                   .within(Shape.center(new Shape.Point(0, 1), 1))
+                                                   .within(Shape.center(new Point(new Position(0, 1)), 1))
                                                    .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
@@ -156,7 +158,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when - search with circle with an edge that exactly covers the point
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
-                                                   .within(Shape.centerSphere(new Shape.Point(0, 1), 1))
+                                                   .within(Shape.centerSphere(new Point(new Position(0, 1)), 1))
                                                    .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then
@@ -175,7 +177,9 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
         // when - search with a box that covers the whole point
         final PlaceWithLegacyCoords found = getDs().find(PlaceWithLegacyCoords.class)
                                                    .field("location")
-                                                   .within(Shape.box(new Shape.Point(0, 0), new Shape.Point(2, 2)))
+                                                   .within(Shape.box(
+                                                       new Point(new Position(0, 0)),
+                                                       new Point(new Position(2, 2))))
                                                    .execute(new FindOptions().limit(1))
                                                    .tryNext();
         // then

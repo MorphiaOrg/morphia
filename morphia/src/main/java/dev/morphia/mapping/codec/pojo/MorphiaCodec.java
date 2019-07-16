@@ -41,6 +41,7 @@ import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.DiscriminatorLookup;
 import org.bson.codecs.pojo.InstanceCreator;
 import org.bson.codecs.pojo.PojoCodec;
+import org.bson.codecs.pojo.PojoCodecImpl;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.codecs.pojo.PropertyModel;
@@ -52,7 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static dev.morphia.mapping.codec.Conversions.convert;
 
 
-public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleCodec<T> {
+public class MorphiaCodec<T> extends PojoCodecImpl<T> implements CollectibleCodec<T> {
     private Mapper mapper;
     private MappedClass mappedClass;
 

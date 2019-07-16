@@ -1,13 +1,16 @@
 package dev.morphia.entities;
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+@Entity
 @SuppressWarnings("unused")
 public class EntityWithListsAndArrays {
     @Id
@@ -113,7 +116,7 @@ public class EntityWithListsAndArrays {
 
         final EntityWithListsAndArrays that = (EntityWithListsAndArrays) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) {
+        if (!Objects.equals(id, that.id)) {
             return false;
         }
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
@@ -123,25 +126,25 @@ public class EntityWithListsAndArrays {
         if (!Arrays.equals(arrayOfInts, that.arrayOfInts)) {
             return false;
         }
-        if (listOfStrings != null ? !listOfStrings.equals(that.listOfStrings) : that.listOfStrings != null) {
+        if (!Objects.equals(listOfStrings, that.listOfStrings)) {
             return false;
         }
-        if (listOfIntegers != null ? !listOfIntegers.equals(that.listOfIntegers) : that.listOfIntegers != null) {
+        if (!Objects.equals(listOfIntegers, that.listOfIntegers)) {
             return false;
         }
-        if (arrayListOfStrings != null ? !arrayListOfStrings.equals(that.arrayListOfStrings) : that.arrayListOfStrings != null) {
+        if (!Objects.equals(arrayListOfStrings, that.arrayListOfStrings)) {
             return false;
         }
-        if (arrayListOfIntegers != null ? !arrayListOfIntegers.equals(that.arrayListOfIntegers) : that.arrayListOfIntegers != null) {
+        if (!Objects.equals(arrayListOfIntegers, that.arrayListOfIntegers)) {
             return false;
         }
-        if (listEmbeddedType != null ? !listEmbeddedType.equals(that.listEmbeddedType) : that.listEmbeddedType != null) {
+        if (!Objects.equals(listEmbeddedType, that.listEmbeddedType)) {
             return false;
         }
-        if (setOfIntegers != null ? !setOfIntegers.equals(that.setOfIntegers) : that.setOfIntegers != null) {
+        if (!Objects.equals(setOfIntegers, that.setOfIntegers)) {
             return false;
         }
-        return notAnArrayOrList != null ? notAnArrayOrList.equals(that.notAnArrayOrList) : that.notAnArrayOrList == null;
+        return Objects.equals(notAnArrayOrList, that.notAnArrayOrList);
 
     }
 

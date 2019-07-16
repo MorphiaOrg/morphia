@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import com.mongodb.BasicDBList;
+import com.mongodb.client.model.geojson.Point;
 import org.bson.Document;
 
 /**
@@ -81,56 +82,10 @@ public class Shape {
         return copy(points);
     }
 
-    /**
-     * Creates a Document from this Shape
-     *
-     * @return the Document
-     */
-    public Document toDocument() {
-        final BasicDBList list = new BasicDBList();
-        for (final Point point : points) {
-            list.add(point.toDocument());
-        }
-
-        return new Document(geometry, list);
-    }
-
     private Point[] copy(final Point[] array) {
         Point[] copy = new Point[array.length];
         System.arraycopy(array, 0, copy, 0, array.length);
         return copy;
-    }
-
-    /**
-     * Defines a Point
-     */
-    public static class Point {
-        private final double longitude;
-        private final double latitude;
-
-        /**
-         * Creates a point using longitude and latitude values
-         *
-         * @param longitude the longitude
-         * @param latitude  the latitude
-         */
-        public Point(final double longitude, final double latitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        /**
-         * Creates a Document from this Point
-         *
-         * @return the Document
-         */
-        public Document toDocument() {
-            throw new UnsupportedOperationException();
-//            final BasicDBList list = new BasicDBList();
-//            list.add(longitude);
-//            list.add(latitude);
-//            return list;
-        }
     }
 
     private static class Center extends Shape {
@@ -141,15 +96,6 @@ public class Shape {
             super(geometry);
             this.center = center;
             this.radius = radius;
-        }
-
-        @Override
-        public Document toDocument() {
-            final BasicDBList list = new BasicDBList();
-            list.add(center.toDocument());
-            list.add(radius);
-
-            return new Document(this.getGeometry(), list);
         }
     }
 }

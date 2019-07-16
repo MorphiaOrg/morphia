@@ -280,7 +280,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T within(final Shape shape) {
         Assert.parametersNotNull("shape", shape);
-        return addCriteria(GEO_WITHIN, shape.toDocument());
+        return addCriteria(GEO_WITHIN, shape);
     }
 
     @Override

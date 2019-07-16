@@ -13,6 +13,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
 import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
@@ -69,10 +70,10 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(-87.99822, 42.08563, 2, true);
 
         // then
-        assertThat(((QueryImpl) query).getQueryDocument().toJson(),
-                   jsonEqual("{ \"location\" : "
+        assertEquals(Document.parse("{ \"location\" : "
                              + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
-                             + "\"$maxDistance\" : 2.0}}"));
+                             + "\"$maxDistance\" : 2.0}}"),
+                   ((QueryImpl) query).getQueryDocument());
     }
 
     @Test
@@ -83,10 +84,10 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(-87.99822, 42.08563, 2);
 
         // then
-        assertThat(((QueryImpl) query).getQueryDocument().toJson(),
-                   jsonEqual("{ \"location\" : "
+        assertEquals(Document.parse("{ \"location\" : "
                              + "{ \"$near\" : [ 42.08563 , -87.99822] , "
-                             + "\"$maxDistance\" : 2.0}}"));
+                             + "\"$maxDistance\" : 2.0}}"),
+                   ((QueryImpl) query).getQueryDocument());
 
     }
 

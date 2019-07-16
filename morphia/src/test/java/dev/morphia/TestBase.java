@@ -3,6 +3,7 @@ package dev.morphia;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -13,6 +14,7 @@ import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -110,8 +112,7 @@ public abstract class TestBase {
     }
 
     protected List<Document> getIndexInfo(final Class<?> clazz) {
-        throw new UnsupportedOperationException();
-//        return getDs().getCollection(clazz).getIndexInfo();
+        return getDs().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
 
     protected MappedClass getMappedClass(final Class<?> aClass) {

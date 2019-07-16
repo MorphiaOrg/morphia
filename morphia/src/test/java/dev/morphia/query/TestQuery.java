@@ -1513,6 +1513,7 @@ public class TestQuery extends TestBase {
         }
     }
 
+    @Entity
     public static class PhotoWithKeywords {
         @Id
         private ObjectId id;
@@ -1581,6 +1582,7 @@ public class TestQuery extends TestBase {
 
     }
 
+    @Entity
     private static class ContainsPhotoKey {
         @Id
         private ObjectId id;
@@ -1794,6 +1796,7 @@ public class TestQuery extends TestBase {
         private ObjectId value;
     }
 
+    @Entity
     static class ReferenceKey {
         @Id
         private ObjectId id;
@@ -1835,6 +1838,7 @@ public class TestQuery extends TestBase {
         }
     }
 
+    @Entity
     static class IntVector {
         @Id
         private ObjectId id;

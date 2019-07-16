@@ -1,3 +1,18 @@
+/*
+ * Copyright 2008-present MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package dev.morphia.mapping.codec.pojo;
 
 import org.bson.BsonInvalidOperationException;
@@ -95,13 +110,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
         if (specialized) {
             codecCache.put(classModel, this);
             for (PropertyModel<?> propertyModel : classModel.getPropertyModels()) {
-                try {
                     addToCache(propertyModel);
-                } catch (Exception e) {
-                    throw new CodecConfigurationException(format("Could not create a MorphiaCodec for '%s'."
-                                                                 + " Property '%s' errored with: %s", classModel.getName(),
-                        propertyModel.getName(), e.getMessage()), e);
-                }
             }
         }
     }
@@ -116,10 +125,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
         }
         if (areEquivalentTypes(value.getClass(), classModel.getType())) {
             writer.writeStartDocument();
-            PropertyModel<?> idPropertyModel = classModel.getIdPropertyModel();
-            if (idPropertyModel != null) {
-                encodeProperty(writer, value, encoderContext, idPropertyModel);
-            }
+            encodeIdProperty(writer, value, encoderContext, classModel.getIdPropertyModelHolder());
 
             if (classModel.useDiscriminator()) {
                 writer.writeString(classModel.getDiscriminatorKey(), classModel.getDiscriminator());
@@ -152,7 +158,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
             final ClassModel<?> clazzModel = tCodec.getClassModel();
             final ClassModel<?>
                 newModel = new ClassModel(clazzModel.getType(), clazzModel.getPropertyNameToTypeParameterMap(),
-                clazzModel.getInstanceCreatorFactory(), true, clazzModel.getDiscriminatorKey(),
+                clazzModel.getInstanceCreatorFactory(), getClassModel().useDiscriminator(), clazzModel.getDiscriminatorKey(),
                 clazzModel.getDiscriminator(), clazzModel.getIdPropertyModelHolder(), clazzModel.getAnnotations(), clazzModel.getFieldModels(),
                 clazzModel.getPropertyModels());
             codec = tCodec.getSpecializedCodec(newModel);
@@ -192,23 +198,55 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
         return classModel;
     }
 
+    private <S> void encodeIdProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
+                                      final IdPropertyModelHolder<S> propertyModelHolder) {
+        if (propertyModelHolder.getPropertyModel() != null) {
+            if (propertyModelHolder.getIdGenerator() == null) {
+                encodeProperty(writer, instance, encoderContext, propertyModelHolder.getPropertyModel());
+            } else {
+                S id = propertyModelHolder.getPropertyModel().getPropertyAccessor().get(instance);
+                if (id == null && encoderContext.isEncodingCollectibleDocument()) {
+                    id = propertyModelHolder.getIdGenerator().generate();
+                    try {
+                        propertyModelHolder.getPropertyModel().getPropertyAccessor().set(instance, id);
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                }
+                encodeValue(writer, encoderContext, propertyModelHolder.getPropertyModel(), id);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     protected <S> void encodeProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
                                       final PropertyModel<S> propertyModel) {
-        if (propertyModel.isReadable()) {
+        if (propertyModel != null && propertyModel.isReadable()) {
             S propertyValue = propertyModel.getPropertyAccessor().get(instance);
+            encodeValue(writer, encoderContext, propertyModel, propertyValue);
+        }
+    }
+
+    private <S> void encodeValue(final BsonWriter writer,  final EncoderContext encoderContext, final PropertyModel<S> propertyModel,
+                                 final S propertyValue) {
             if (propertyModel.shouldSerialize(propertyValue)) {
                 writer.writeName(propertyModel.getReadName());
                 if (propertyValue == null) {
                     writer.writeNull();
                 } else {
-                    propertyModel.getCachedCodec().encode(writer, propertyValue, encoderContext);
+                try {
+                    encoderContext.encodeWithChildContext(propertyModel.getCachedCodec(), writer, propertyValue);
+                } catch (CodecConfigurationException e) {
+                    throw new CodecConfigurationException(format("Failed to encode '%s'. Encoding '%s' errored with: %s",
+                            classModel.getName(), propertyModel.getReadName(), e.getMessage()), e);
                 }
             }
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void decodeProperties(final BsonReader reader, final DecoderContext decoderContext,
-                                    final org.bson.codecs.pojo.InstanceCreator<T> instanceCreator) {
+                                    final InstanceCreator<T> instanceCreator) {
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
@@ -221,6 +259,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
         reader.readEndDocument();
     }
 
+    @SuppressWarnings("unchecked")
     protected <S> void decodePropertyModel(final BsonReader reader, final DecoderContext decoderContext,
                                            final InstanceCreator<T> instanceCreator, final String name,
                                            final PropertyModel<S> propertyModel) {
@@ -230,12 +269,20 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
                 } else {
-                    value = decoderContext.decodeWithChildContext(propertyModel.getCachedCodec(), reader);
+                    final DecoderContext propertyContext
+                            = DecoderContext.builder(decoderContext)
+                            .checkedDiscriminator(decoderContext.hasCheckedDiscriminator() || propertyModel.useDiscriminator())
+                            .metaData("discriminatorKey", classModel.getDiscriminatorKey())
+                            .build();
+                    value = propertyModel.getCachedCodec().decode(reader, propertyContext);
                 }
                 if (propertyModel.isWritable()) {
                     instanceCreator.set(value, propertyModel);
                 }
-            } catch (BsonInvalidOperationException | CodecConfigurationException e) {
+            } catch (BsonInvalidOperationException e) {
+                throw new CodecConfigurationException(format("Failed to decode '%s'. Decoding '%s' errored with: %s",
+                        classModel.getName(), name, e.getMessage()), e);
+            } catch (CodecConfigurationException e) {
                 throw new CodecConfigurationException(format("Failed to decode '%s'. Decoding '%s' errored with: %s",
                     classModel.getName(), name, e.getMessage()), e);
             }
@@ -248,9 +295,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
     }
 
     private <S> void addToCache(final PropertyModel<S> propertyModel) {
-        Codec<S> codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
-                                                          : specializeMorphiaCodec(propertyModel,
-                                                              propertyCodecRegistry.get(propertyModel.getTypeData()));
+        Codec<S> codec = propertyModel.getCodec() != null ? propertyModel.getCodec() : specializePojoCodec(propertyModel);
         propertyModel.cachedCodec(codec);
     }
 
@@ -259,15 +304,18 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
             return true;
         } else if (Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)) {
             return true;
-        } else return Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
+        } else if (Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2)) {
+            return true;
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
-    protected <S> Codec<S> specializeMorphiaCodec(final PropertyModel<S> propertyModel, final Codec<S> defaultCodec) {
-        Codec<S> codec = defaultCodec;
+    protected  <S> Codec<S> specializePojoCodec(final PropertyModel<S> propertyModel) {
+        Codec<S> codec = getCodecFromPropertyRegistry(propertyModel);
         if (codec instanceof PojoCodec) {
-            PojoCodec<S> morphiaCodec = (PojoCodec<S>) codec;
-            ClassModel<S> specialized = getSpecializedClassModel(morphiaCodec.getClassModel(), propertyModel);
+            PojoCodec<S> pojoCodec = (PojoCodec<S>) codec;
+            ClassModel<S> specialized = getSpecializedClassModel(pojoCodec.getClassModel(), propertyModel);
             if (codecCache.containsKey(specialized)) {
                 codec = (Codec<S>) codecCache.get(specialized);
             } else {
@@ -277,9 +325,19 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
         return codec;
     }
 
-    protected abstract <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized);
+    private <S> Codec<S> getCodecFromPropertyRegistry(final PropertyModel<S> propertyModel) {
+        try {
+            return propertyCodecRegistry.get(propertyModel.getTypeData());
+        } catch (CodecConfigurationException e) {
+            return new LazyMissingCodec<S>(propertyModel.getTypeData().getType(), e);
+        }
+    }
 
-    @SuppressWarnings({"rawtypes"})
+    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized) {
+        return new LazyPojoCodec<S>(specialized, registry, propertyCodecRegistry, discriminatorLookup, codecCache);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private <S, V> ClassModel<S> getSpecializedClassModel(final ClassModel<S> clazzModel,
                                                                                final PropertyModel<V> propertyModel) {
         boolean useDiscriminator = propertyModel.useDiscriminator() == null ? clazzModel.useDiscriminator()
@@ -291,7 +349,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
             return clazzModel;
         }
 
-        List<PropertyModel<?>> concretePropertyModels = new ArrayList<>(clazzModel.getPropertyModels());
+        ArrayList<PropertyModel<?>> concretePropertyModels = new ArrayList<PropertyModel<?>>(clazzModel.getPropertyModels());
         PropertyModel<?> concreteIdProperty = clazzModel.getIdPropertyModel();
 
         List<TypeData<?>> propertyTypeParameters = propertyModel.getTypeData().getTypeParameters();

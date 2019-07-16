@@ -2,17 +2,16 @@ package dev.morphia.query;
 
 
 import com.mongodb.MongoQueryException;
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
-
-import static dev.morphia.query.Shape.Point;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 public class TestGeoQueries extends TestBase {
@@ -30,7 +29,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.box(new Point(0, 0), new Point(2, 2)))
+                                   .within(Shape.box(new Point(new Position(0, 0)), new Point(new Position(2, 2))))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -44,7 +43,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
+                                   .within(Shape.box(new Point(new Position(0, 0)), new Point(new Position(.4, .5))))
                                    .execute(new FindOptions().limit(1))
                                    .tryNext();
         Assert.assertNull(found);
@@ -58,7 +57,11 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
+                                   .within(Shape.polygon(
+                                       new Point(new Position(0, 0)),
+                                       new Point(new Position(0, 5)),
+                                       new Point(new Position(2, 3)),
+                                       new Point(new Position(2, 0))))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -72,7 +75,11 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.polygon(new Point(0, 0), new Point(0, 5), new Point(2, 3), new Point(2, 0)))
+                                   .within(Shape.polygon(
+                                       new Point(new Position(0, 0)),
+                                       new Point(new Position(0, 5)),
+                                       new Point(new Position(2, 3)),
+                                       new Point(new Position(2, 0))))
                                    .execute(new FindOptions().limit(1))
                                    .tryNext();
         Assert.assertNull(found);
@@ -86,7 +93,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.center(new Point(0, 1), 1.1))
+                                   .within(Shape.center(new Point(new Position(0, 1)), 1.1))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -100,7 +107,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.center(new Point(0.5, 0.5), 0.77))
+                                   .within(Shape.center(new Point(new Position(0.5, 0.5)), 0.77))
 
                                    .execute(new FindOptions().limit(1))
                                    .next();
@@ -115,7 +122,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.centerSphere(new Point(0, 1), 1))
+                                   .within(Shape.centerSphere(new Point(new Position(0, 1)), 1))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -176,7 +183,9 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.box(new Point(0, 0), new Point(2, 2)))
+                                   .within(Shape.box(
+                                       new Point(new Position(0, 0)),
+                                       new Point(new Position(2, 2))))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -190,7 +199,9 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.box(new Point(0, 0), new Point(.4, .5)))
+                                   .within(Shape.box(
+                                       new Point(new Position(0, 0)),
+                                       new Point(new Position(.4, .5))))
                                    .execute(new FindOptions().limit(1))
                                    .tryNext();
         Assert.assertNull(found);
@@ -204,7 +215,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.center(new Point(2, 2), .4))
+                                   .within(Shape.center(new Point(new Position(2, 2)), .4))
                                    .execute(new FindOptions().limit(1))
                                    .tryNext();
         Assert.assertNull(found);
@@ -218,7 +229,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.center(new Point(0, 1), 1.1))
+                                   .within(Shape.center(new Point(new Position(0, 1)), 1.1))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -232,7 +243,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.center(new Point(0.5, 0.5), 0.77))
+                                   .within(Shape.center(new Point(new Position(0.5, 0.5)), 0.77))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -246,7 +257,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
                                    .field("loc")
-                                   .within(Shape.centerSphere(new Point(0, 1), 1))
+                                   .within(Shape.centerSphere(new Point(new Position(0, 1)), 1))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);

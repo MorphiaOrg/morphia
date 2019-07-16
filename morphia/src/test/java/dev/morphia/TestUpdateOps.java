@@ -19,6 +19,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
+import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
@@ -33,7 +34,13 @@ import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
+import org.bson.BsonDocument;
+import org.bson.BsonDocumentReader;
+import org.bson.BsonDocumentWrapper;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -552,6 +559,28 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+    public void morphiaCodec() {
+        getMapper().map(EntityLogs.class);
+        Codec<EntityLogs> codec = getMapper().getCodecRegistry().get(EntityLogs.class);
+        Codec<Document> docCodec = getMapper().getCodecRegistry().get(Document.class);
+
+        EntityLogs logs = new EntityLogs();
+        Date date = new Date();
+        logs.logs.addAll(asList(
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date),
+            new EntityLog("log1", date),
+            new EntityLog("log2", date),
+            new EntityLog("log3", date)));
+
+        DocumentWriter writer = new DocumentWriter();
+        codec.encode(writer, logs, EncoderContext.builder().build());
+        Document root = writer.getRoot();
+
+        codec.decode(new BsonDocumentReader(new BsonDocumentWrapper<>(root, docCodec)), DecoderContext.builder().build());
+    }
+    @Test
     public void testRemoveAllList() {
         EntityLogs logs = new EntityLogs();
         Date date = new Date();
@@ -572,7 +601,9 @@ public class TestUpdateOps extends TestBase {
 
         assertEquals(1, results.getModifiedCount());
         EntityLogs updated = ds.find(EntityLogs.class)
-                               .execute(new FindOptions().limit(1))
+                               .execute(new FindOptions()
+                                   .comment("morphia test query")
+                                            .limit(1))
                                .next();
         assertEquals(4, updated.logs.size());
         for (int i = 0; i < 4; i++) {
