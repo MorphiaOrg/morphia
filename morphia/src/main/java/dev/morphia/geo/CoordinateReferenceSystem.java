@@ -4,7 +4,9 @@ package dev.morphia.geo;
  * Defines the coordinate reference system to be used in certain geo queries.
  *
  * @mongodb.driver.manual reference/operator/query/geometry $geometry
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public abstract class CoordinateReferenceSystem {
 
     /**

@@ -164,6 +164,7 @@ public class VersionTest extends TestBase {
         }
     }
 
+    @Entity
     public static class ALongPrimitive extends TestEntity {
 
         @Version

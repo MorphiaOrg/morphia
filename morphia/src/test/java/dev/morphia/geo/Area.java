@@ -1,9 +1,16 @@
 package dev.morphia.geo;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
+import org.bson.types.ObjectId;
+import com.mongodb.client.model.geojson.Polygon;
 
+@Entity
 public final class Area {
+    @Id
+    private ObjectId id;
     private String name;
 
     @Indexed(IndexDirection.GEO2DSPHERE)

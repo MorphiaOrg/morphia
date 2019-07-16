@@ -1,12 +1,14 @@
 package dev.morphia.query;
 
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.testutil.JSONMatcher;
 import org.bson.Document;
 import org.junit.Test;
 
-import static dev.morphia.geo.PointBuilder.pointBuilder;
 import static dev.morphia.query.FilterOperator.NEAR;
+import static dev.morphia.query.Geo2dSphereCriteria.geo;
 import static org.junit.Assert.assertThat;
 
 public class Geo2dSphereCriteriaTest extends TestBase {
@@ -18,11 +20,8 @@ public class Geo2dSphereCriteriaTest extends TestBase {
         double longitude = 5.7;
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
-        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMapper(), stubQuery, "location", NEAR, pointBuilder()
-                                                                                                          .latitude(latitude)
-                                                                                                          .longitude(longitude)
-                                                                                                          .build())
-                                                          .maxDistance(maxDistanceMeters);
+        Geo2dSphereCriteria criteria = geo(getMapper(), stubQuery, "location", NEAR, new Point(new Position(latitude, longitude)))
+                                           .maxDistance(maxDistanceMeters);
 
         // when
         Document queryDocument = criteria.toDocument();
@@ -48,10 +47,7 @@ public class Geo2dSphereCriteriaTest extends TestBase {
         QueryImpl<Object> stubQuery = (QueryImpl<Object>) getDs().find(Object.class);
         stubQuery.disableValidation();
 
-        Geo2dSphereCriteria criteria = Geo2dSphereCriteria.geo(getMapper(), stubQuery, "location", NEAR, pointBuilder()
-                                                                                                          .latitude(latitude)
-                                                                                                          .longitude(longitude)
-                                                                                                          .build());
+        Geo2dSphereCriteria criteria = geo(getMapper(), stubQuery, "location", NEAR, new Point(new Position(latitude, longitude)));
 
         // when
         Document queryDocument = criteria.toDocument();

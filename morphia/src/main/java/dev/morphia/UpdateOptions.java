@@ -17,6 +17,7 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import org.bson.conversions.Bson;
 
@@ -106,5 +107,9 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
     public UpdateOptions upsert(final boolean upsert) {
         super.upsert(upsert);
         return this;
+    }
+
+    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
+        return collection.withWriteConcern(writeConcern);
     }
 }

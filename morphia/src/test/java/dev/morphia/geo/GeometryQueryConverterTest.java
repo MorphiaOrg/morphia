@@ -1,20 +1,21 @@
 package dev.morphia.geo;
 
-import org.junit.Test;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.testutil.JSONMatcher;
+import org.junit.Test;
 
 import static org.junit.Assert.assertThat;
-import static dev.morphia.geo.GeoJson.point;
 
 public class GeometryQueryConverterTest extends TestBase {
     @Test
     public void shouldCorrectlyEncodePointsIntoQueryDocument() {
         // given
         GeometryQueryConverter geometryConverter = new GeometryQueryConverter(getMapper());
-//        geometryConverter.setMapper(getMapper());
+        //        geometryConverter.setMapper(getMapper());
 
-        Point point = point(3.0, 7.0);
+        Point point = new Point(new Position(3.0, 7.0));
 
         // when
         Object dbObject = geometryConverter.encode(point, null);

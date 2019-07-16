@@ -6,7 +6,6 @@ import dev.morphia.geo.Geometry;
 import dev.morphia.geo.MultiPolygon;
 import dev.morphia.geo.Point;
 import dev.morphia.geo.Polygon;
-import dev.morphia.mapping.MapperOptions;
 
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
@@ -131,19 +130,6 @@ public interface FieldEnd<T> {
     T hasNoneOf(Iterable<?> values);
 
     /**
-     * Checks that a field has the value listed.  The options to store null/empty values apply here so to do partial matches on embedded
-     * objects, pass a reference to a partially populated instance with only the values of interest set to the values to check.
-     *
-     * @param val the value to check against
-     * @return T
-     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
-     * @see MapperOptions
-     * @deprecated use {@link #elemMatch(Query)} instead
-     */
-    @Deprecated
-    T hasThisElement(Object val);
-
-    /**
      * Checks that a field matches the provided query definition
      *
      * @param query the query to find certain field values
@@ -151,19 +137,6 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
      */
     T elemMatch(Query query);
-
-    /**
-     * Checks that a field does not have the value listed.  The options to store null/empty values apply here so to do partial matches on
-     * embedded objects, pass a reference to a partially populated instance with only the values of interest set to the values to check.
-     *
-     * @param val the value to check against
-     * @return T
-     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
-     * @deprecated use {@link #elemMatch(Query)} instead
-     * @see MapperOptions
-     */
-    @Deprecated
-    T doesNotHaveThisElement(Object val);
 
     /**
      * Checks that a field has the value listed.
@@ -191,8 +164,24 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoIntersects/ $geoIntersects
      * @mongodb.server.release 2.4
+     * @deprecated use the driver provided geo types instead
      */
-    T intersects(Geometry geometry);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T intersects(Geometry geometry) {
+        return intersects(geometry.convert());
+    }
+
+    /**
+     * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
+     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     *
+     * @param geometry the shape to use to query for any stored shapes that intersect
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/geoIntersects/ $geoIntersects
+     * @mongodb.server.release 2.4
+     * @since 2.0
+     */
+    T intersects(com.mongodb.client.model.geojson.Geometry geometry);
 
     /**
      * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
@@ -203,8 +192,25 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geometry $geometry
      * @mongodb.server.release 2.4
+     * @deprecated Use the driver supplied geo types instead
      */
-    T intersects(Geometry geometry, final CoordinateReferenceSystem crs);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T intersects(Geometry geometry, final CoordinateReferenceSystem crs) {
+        return intersects(geometry.convert(), crs.convert());
+    }
+
+    /**
+     * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
+     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     *
+     * @param geometry the shape to use to query for any stored shapes that intersect
+     * @param crs      the coordinate reference system to use with the query
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/geometry $geometry
+     * @mongodb.server.release 2.4
+     * @since 2.0
+     */
+    T intersects(com.mongodb.client.model.geojson.Geometry geometry, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
 
     /**
      * Checks that a field is less than the value given
@@ -285,14 +291,15 @@ public interface FieldEnd<T> {
      * This runs a $near query to check for documents geographically close to the given Point - this Point represents a GeoJSON point type.
      * These queries are only supported by MongoDB version 2.4 or greater.
      *
-     * @param point       the point to find results close to
-     * @param maxDistance the radius, in meters, to find the results inside
+     * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated use {@link #near(Point, Double, Double)}
+     * @deprecated Use the driver supplied geo types instead
      */
-    @Deprecated
-    T near(Point point, int maxDistance);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T near(Point point) {
+        return near(point.convert());
+    }
 
     /**
      * This runs a $near query to check for documents geographically close to the given Point - this Point represents a GeoJSON point type.
@@ -301,8 +308,9 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @since 2.0
      */
-    T near(Point point);
+    T near(com.mongodb.client.model.geojson.Point point);
 
     /**
      * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
@@ -313,8 +321,24 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
      * @since 1.5
+     * @deprecated Use the driver supplied geo types instead
      */
-    T near(Point point, Double maxDistance, Double minDistance);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T near(Point point, Double maxDistance, Double minDistance) {
+        return near(point.convert(), maxDistance, minDistance);
+    }
+
+    /**
+     * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
+     *
+     * @param point       the point to find results close to
+     * @param maxDistance the maximum distance in meters from the point
+     * @param minDistance the minimum distance in meters from the point
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @since 2.0
+     */
+    T near(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance);
 
     /**
      * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
@@ -323,8 +347,22 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
      * @since 1.5
+     * @deprecated Use the driver supplied geo types instead
      */
-    T nearSphere(Point point);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T nearSphere(Point point) {
+        return nearSphere(point.convert());
+    }
+
+    /**
+     * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
+     *
+     * @param point the point to find results close to
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @since 2.0
+     */
+    T nearSphere(com.mongodb.client.model.geojson.Point point);
 
     /**
      * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
@@ -335,8 +373,24 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
      * @since 1.5
+     * @deprecated Use the driver supplied geo types instead
      */
-    T nearSphere(Point point, Double maxDistance, Double minDistance);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T nearSphere(Point point, Double maxDistance, Double minDistance) {
+        return nearSphere(point.convert(), maxDistance, minDistance);
+    }
+
+    /**
+     * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
+     *
+     * @param point       the point to find results close to
+     * @param maxDistance the maximum distance in meters from the point
+     * @param minDistance the minimum distance in meters from the point
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @since 2.0
+     */
+    T nearSphere(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance);
 
     /**
      * Negates the criteria applied to the field
@@ -416,8 +470,24 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
+     * @deprecated Use the driver supplied geo types instead
      */
-    T within(Polygon boundary);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T within(Polygon boundary) {
+        return within(boundary.convert());
+    }
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundary. When determining
+     * inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point numbers.
+     *
+     * @param boundary a polygon describing the boundary to search within.
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @mongodb.server.release 2.4
+     * @since 2.0
+     */
+    T within(com.mongodb.client.model.geojson.Polygon boundary);
 
     /**
      * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
@@ -428,8 +498,25 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.6
+     * @deprecated Use the driver supplied geo types instead
      */
-    T within(MultiPolygon boundaries);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T within(MultiPolygon boundaries) {
+        return within(boundaries.convert());
+    }
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
+     * determining inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point
+     * numbers.
+     *
+     * @param boundaries a multi-polygon describing the areas to search within.
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @mongodb.server.release 2.6
+     * @since 2.0
+     */
+    T within(com.mongodb.client.model.geojson.MultiPolygon boundaries);
 
     /**
      * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundary. When determining
@@ -440,8 +527,44 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
+     * @deprecated Use the driver supplied geo types instead
      */
-    T within(Polygon boundary, CoordinateReferenceSystem crs);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T within(Polygon boundary, CoordinateReferenceSystem crs) {
+        return within(boundary.convert(), crs.convert());
+    }
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundary. When determining
+     * inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point numbers.
+     *
+     * @param boundary a polygon describing the boundary to search within.
+     * @param crs      the coordinate reference system to use
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @mongodb.server.release 2.4
+     * @since 2.0
+     */
+    T within(com.mongodb.client.model.geojson.Polygon boundary, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
+
+    /**
+     * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
+     * determining inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point
+     * numbers.
+     * <p/>
+     * These queries are only compatible with MongoDB 2.6 or greater.
+     *
+     * @param boundaries a multi-polygon describing the areas to search within.
+     * @param crs        the coordinate reference system to use
+     * @return T
+     * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @mongodb.server.release 2.6
+     * @deprecated Use the driver supplied geo types instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T within(MultiPolygon boundaries, CoordinateReferenceSystem crs) {
+        return within(boundaries.convert(), crs.convert());
+    }
 
     /**
      * This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
@@ -455,6 +578,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.6
+     * @since 2.0
      */
-    T within(MultiPolygon boundaries, CoordinateReferenceSystem crs);
+    T within(com.mongodb.client.model.geojson.MultiPolygon boundaries, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
 }

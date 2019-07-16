@@ -21,9 +21,6 @@ import dev.morphia.testutil.TestEntity;
 import static java.lang.String.format;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 public class Rectangle extends TestEntity implements Shape {
     @Property("h")
     private double height;

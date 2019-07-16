@@ -66,7 +66,7 @@ public class LegacyCoordsTest extends TestBase {
         // when
         Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
                                                     .field("location")
-                                                    .near(42.08563, -87.99822, 2, true);
+                                                    .near(-87.99822, 42.08563, 2, true);
 
         // then
         assertThat(((QueryImpl) query).getQueryDocument().toString(),
@@ -80,7 +80,7 @@ public class LegacyCoordsTest extends TestBase {
         // when
         Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
                                                     .field("location")
-                                                    .near(42.08563, -87.99822, 2);
+                                                    .near(-87.99822, 42.08563, 2);
 
         // then
         assertThat(((QueryImpl) query).getQueryDocument().toString(),

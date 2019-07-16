@@ -17,6 +17,8 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 
 /**
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
@@ -70,5 +72,9 @@ public class InsertOneOptions {
 
     public com.mongodb.client.model.InsertOneOptions getOptions() {
         return options;
+    }
+
+    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
+        return writeConcern != null ? collection.withWriteConcern(writeConcern) : collection;
     }
 }

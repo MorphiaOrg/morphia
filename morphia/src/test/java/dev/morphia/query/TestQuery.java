@@ -79,7 +79,7 @@ public class TestQuery extends TestBase {
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
-        final List<Object> keys = Arrays.<Object>asList("key1", "key2");
+        final List<Object> keys = Arrays.asList("key1", "key2");
         value.key = keys;
         getDs().save(value);
 
@@ -95,7 +95,7 @@ public class TestQuery extends TestBase {
         getMapper().map(KeyValue.class);
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
-        final List<Object> keys = Arrays.<Object>asList("key1", "key2");
+        final List<Object> keys = Arrays.asList("key1", "key2");
         value.key = keys;
         getDs().save(value);
 
@@ -477,7 +477,9 @@ public class TestQuery extends TestBase {
             new Rectangle(10, 10)));
 
         assertEquals(5, getDs().find(Rectangle.class).count());
-        getDs().delete(getDs().find(Rectangle.class).filter("height", 1D));
+        getDs().find(Rectangle.class)
+               .filter("height", 1D)
+               .delete();
         assertEquals(2, getDs().find(Rectangle.class).count());
     }
 
@@ -972,7 +974,7 @@ public class TestQuery extends TestBase {
                            .tryNext());
 
         getDs().find(ContainsPic.class)
-               .field("pic").hasThisElement(queryPic);
+               .field("pic").elemMatch(query);
         assertFalse(queryPic.isPrePersist());
     }
 
@@ -1362,20 +1364,11 @@ public class TestQuery extends TestBase {
         // NOT:
         // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
         assertNotNull(getDs().find(PhotoWithKeywords.class)
-                             .field("keywords")
-                             .hasThisElement(new Keyword("Scott"))
-                             .execute(new FindOptions().limit(1))
-                             .tryNext());
-        assertNotNull(getDs().find(PhotoWithKeywords.class)
                              .field("keywords").elemMatch(getDs().find(Keyword.class)
                                                                  .filter("keyword", "Scott"))
                              .execute(new FindOptions().limit(1))
                              .tryNext());
 
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                          .field("keywords").hasThisElement(new Keyword("Randy"))
-                          .execute(new FindOptions().limit(1))
-                          .tryNext());
         assertNull(getDs().find(PhotoWithKeywords.class)
                           .field("keywords").elemMatch(getDs().find(Keyword.class)
                                                               .filter("keyword", "Randy"))
@@ -1437,7 +1430,7 @@ public class TestQuery extends TestBase {
                 .append("value1", "foo")
                 .append("someMap", new Document("someKey", "value")));
 
-        Query<Class1> query = getDs().createQuery(Class1.class);
+        Query<Class1> query = getDs().find(Class1.class);
         query.disableValidation().criteria("someMap.someKey").equal("value");
         Class1 retrievedValue = query.execute(new FindOptions().limit(1)).next();
         Assert.assertNotNull(retrievedValue);
@@ -1446,7 +1439,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCriteriaContainers() {
-        final Query<User> query = getDs().createQuery(User.class)
+        final Query<User> query = getDs().find(User.class)
                                          .disableValidation();
 
         query.field("version").equal("latest")
@@ -1473,7 +1466,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testSimpleOr() {
-        Query<Object> query = getDs().createQuery(Object.class).disableValidation();
+        Query<Object> query = getDs().find(Object.class).disableValidation();
 
         query.field("version").equal("latest");
 

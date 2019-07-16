@@ -39,3 +39,6 @@ multiple documents.  See the [`update()`](https://docs.mongodb.com/manual/refere
 trivial
 * `@Embedded` is now only allowed on the embedded type.  If you wish to map a specific name to a field rather than using the field name, 
 use `@Property` on that field.
+* Morphia's geojson objects have been deprecated.  Any use via the API will be transparently converted to the driver's native types but 
+applications should be updated to use those types directly.  Any use of those types as fields on entities will break as there will be no 
+codecs defined for those types.

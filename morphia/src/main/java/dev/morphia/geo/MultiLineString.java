@@ -1,5 +1,9 @@
 package dev.morphia.geo;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,8 +16,12 @@ import java.util.List;
  * The factory for creating a MultiLineString is the {@code GeoJson.multiLineString} method.
  *
  * @see dev.morphia.geo.GeoJson#multiLineString(LineString...)
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class MultiLineString implements Geometry {
+    @Id
+    private ObjectId id;
     private final List<LineString> coordinates;
 
     @SuppressWarnings("UnusedDeclaration") // needed for Morphia

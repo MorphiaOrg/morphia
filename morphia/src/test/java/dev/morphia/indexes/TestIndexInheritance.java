@@ -15,10 +15,6 @@
 package dev.morphia.indexes;
 
 import com.mongodb.client.MongoCollection;
-import dev.morphia.mapping.Mapper;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -26,6 +22,9 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.mapping.MappedClass;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,7 +36,7 @@ import static org.junit.Assert.fail;
 public class TestIndexInheritance extends TestBase {
 
     @Test
-    public void testClassIndexInherit() throws Exception {
+    public void testClassIndexInherit() {
         getMapper().map(Shape.class);
         final MappedClass mc = getMapper().getMappedClass(Circle.class);
         assertNotNull(mc);
@@ -46,7 +45,7 @@ public class TestIndexInheritance extends TestBase {
                           .size());
 
         getDs().ensureIndexes();
-        final MongoCollection<Document> coll = getDs().getCollection(Circle.class);
+        final MongoCollection<Document> coll = getDatabase().getCollection(Circle.class.getSimpleName());
 
         Document listIndexes = getDatabase().runCommand(new Document("listIndexes", coll.getNamespace().getCollectionName()));
         fail("listIndexes = " + listIndexes);
@@ -55,12 +54,12 @@ public class TestIndexInheritance extends TestBase {
     }
 
     @Test
-    public void testInheritedFieldIndex() throws Exception {
+    public void testInheritedFieldIndex() {
         getMapper().map(Shape.class);
         getMapper().getMappedClass(Circle.class);
 
         getDs().ensureIndexes();
-        final MongoCollection<Document> coll = getDs().getCollection(Circle.class);
+        final MongoCollection<Document> coll = getDatabase().getCollection(Circle.class.getSimpleName());
 
         Document listIndexes = getDatabase().runCommand(new Document("listIndexes", coll.getNamespace().getCollectionName()));
         fail("listIndexes = " + listIndexes);

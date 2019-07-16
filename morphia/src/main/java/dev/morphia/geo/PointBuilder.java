@@ -7,7 +7,9 @@ package dev.morphia.geo;
  * Supported by server versions 2.4 and above.
  *
  * @see dev.morphia.geo.Point
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class PointBuilder {
     private double longitude;
     private double latitude;

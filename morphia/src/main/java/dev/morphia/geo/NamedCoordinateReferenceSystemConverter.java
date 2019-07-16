@@ -9,7 +9,9 @@ import org.bson.Document;
  * <p/>
  * Only implements the decode method as the concrete classes can encode themselves without needing a converter. It's when they come out of
  * the database that there's not enough information for Morphia to automatically create Geometry instances.
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class NamedCoordinateReferenceSystemConverter {
     public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
         throw new UnsupportedOperationException("We should never need to decode these");

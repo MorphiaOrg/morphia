@@ -1,5 +1,6 @@
 package dev.morphia.geo;
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
@@ -7,7 +8,7 @@ import dev.morphia.utils.IndexDirection;
 
 import java.util.Arrays;
 
-@SuppressWarnings("unused")
+@Entity
 public class PlaceWithLegacyCoords {
     @Id
     private ObjectId id;

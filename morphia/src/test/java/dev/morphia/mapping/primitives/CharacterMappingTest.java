@@ -3,8 +3,8 @@ package dev.morphia.mapping.primitives;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindOptions;
 import org.bson.Document;
@@ -130,12 +130,13 @@ public class CharacterMappingTest extends TestBase {
     private Characters testMapping(final String field, final String value) {
         getMapper().map(Characters.class);
 
-        final MongoCollection<Document> collection = getDs().getCollection(Characters.class);
+        final MongoCollection<Document> collection = getDatabase().getCollection(Characters.class.getSimpleName());
         collection.insertOne(new Document(field, value));
 
         return getDs().find(Characters.class).execute(new FindOptions().limit(1)).tryNext();
     }
 
+    @Entity
     public static class Characters {
         @Id
         private ObjectId id;

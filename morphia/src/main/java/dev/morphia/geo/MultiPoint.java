@@ -1,5 +1,9 @@
 package dev.morphia.geo;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,8 +15,12 @@ import java.util.List;
  * The factory for creating a MultiPoint is the {@code GeoJson.multiPoint} method.
  *
  * @see dev.morphia.geo.GeoJson#multiPoint(Point...)
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class MultiPoint implements Geometry {
+    @Id
+    private ObjectId id;
     private final List<Point> coordinates;
 
     @SuppressWarnings("UnusedDeclaration") // used by Morphia

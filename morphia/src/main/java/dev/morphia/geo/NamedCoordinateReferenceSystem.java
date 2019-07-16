@@ -20,7 +20,9 @@ import static java.lang.String.format;
 
 /**
  * A GeoJSON named Coordinate Reference System.
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSystem {
 
     /**

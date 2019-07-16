@@ -1,40 +1,42 @@
 package dev.morphia.query;
 
-import org.junit.Before;
-import org.junit.Test;
+import com.mongodb.client.model.geojson.GeometryCollection;
+import com.mongodb.client.model.geojson.LineString;
+import com.mongodb.client.model.geojson.MultiPoint;
+import com.mongodb.client.model.geojson.MultiPolygon;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Polygon;
+import com.mongodb.client.model.geojson.PolygonCoordinates;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.geo.AllTheThings;
 import dev.morphia.geo.Area;
 import dev.morphia.geo.City;
-import dev.morphia.geo.MultiPolygon;
-import dev.morphia.geo.Polygon;
 import dev.morphia.geo.Regions;
 import dev.morphia.geo.Route;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.List.of;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
-import static dev.morphia.geo.GeoJson.geometryCollection;
-import static dev.morphia.geo.GeoJson.lineString;
-import static dev.morphia.geo.GeoJson.multiPoint;
-import static dev.morphia.geo.GeoJson.multiPolygon;
-import static dev.morphia.geo.GeoJson.point;
-import static dev.morphia.geo.GeoJson.polygon;
-import static dev.morphia.geo.PointBuilder.pointBuilder;
 
+@SuppressWarnings("unchecked")
 public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
-    private final Polygon uk = polygon(point(49.78, -10.5),
-                                       point(49.78, 1.78),
-                                       point(59, 1.78),
-                                       point(59, -10.5),
-                                       point(49.78, -10.5));
-    private final Polygon spain = polygon(point(43.40, -10.24),
-                                          point(43.40, 3.19),
-                                          point(35.45, 3.19),
-                                          point(35.45, -10.24),
-                                          point(43.40, -10.24));
+    private final PolygonCoordinates uk = new PolygonCoordinates(of(new Position(49.78, -10.5),
+        new Position(49.78, 1.78),
+        new Position((double) 59, 1.78),
+        new Position((double) 59, -10.5),
+        new Position(49.78, -10.5)));
+    private final PolygonCoordinates spain = new PolygonCoordinates(of(new Position(43.40, -10.24),
+        new Position(43.40, 3.19),
+        new Position(35.45, 3.19),
+        new Position(35.45, -10.24),
+        new Position(43.40, -10.24)));
+    private final MultiPolygon europeanCountries = new MultiPolygon(of(uk, spain));
 
     @Override
     @Before
@@ -46,37 +48,34 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
     @Test
     public void shouldFindAreasCompletelyWithinRequiredEuropeanCountries() {
-        // given
-        MultiPolygon requiredEuropeanCountries = multiPolygon(uk, spain);
-        Area sevilla = new Area("Spain", polygon(pointBuilder().latitude(37.40759155713022).longitude(-5.964911067858338).build(),
-                                                 pointBuilder().latitude(37.40341208875179).longitude(-5.9643941558897495).build(),
-                                                 pointBuilder().latitude(37.40297396667302).longitude(-5.970452763140202).build(),
-                                                 pointBuilder().latitude(37.40759155713022).longitude(-5.964911067858338).build())
-        );
+        Area sevilla = new Area("Spain", new Polygon(of(new Position(37.40759155713022, -5.964911067858338),
+                                                 new Position(37.40341208875179,-5.9643941558897495),
+                                                 new Position(37.40297396667302,-5.970452763140202),
+                                                 new Position(37.40759155713022,-5.964911067858338))));
         getDs().save(sevilla);
-        Area newYork = new Area("New York", polygon(pointBuilder().latitude(40.75981395319104).longitude(-73.98302106186748).build(),
-                                                    pointBuilder().latitude(40.7636824529618).longitude(-73.98049869574606).build(),
-                                                    pointBuilder().latitude(40.76962974853814).longitude(-73.97964206524193).build(),
-                                                    pointBuilder().latitude(40.75981395319104).longitude(-73.98302106186748).build()));
+        Area newYork = new Area("New York", new Polygon(of(new Position(40.75981395319104,-73.98302106186748),
+                                                    new Position(40.7636824529618,-73.98049869574606),
+                                                    new Position(40.76962974853814,-73.97964206524193),
+                                                    new Position(40.75981395319104,-73.98302106186748))));
         getDs().save(newYork);
-        Area london = new Area("London", polygon(pointBuilder().latitude(51.507780365645885).longitude(-0.21786745637655258).build(),
-                                                 pointBuilder().latitude(51.50802478194237).longitude(-0.21474729292094707).build(),
-                                                 pointBuilder().latitude(51.5086863655597).longitude(-0.20895397290587425).build(),
-                                                 pointBuilder().latitude(51.507780365645885).longitude(-0.21786745637655258).build()));
+        Area london = new Area("London", new Polygon(of(new Position(51.507780365645885,-0.21786745637655258),
+                                                 new Position(51.50802478194237,-0.21474729292094707),
+                                                 new Position(51.5086863655597,-0.20895397290587425),
+                                                 new Position(51.507780365645885,-0.21786745637655258))));
         getDs().save(london);
-        Area ukAndSomeOfEurope = new Area("Europe", polygon(
-                                                               pointBuilder().latitude(58.0).longitude(-10.0).build(),
-                                                               pointBuilder().latitude(58.0).longitude(3).build(),
-                                                               pointBuilder().latitude(48.858859).longitude(3).build(),
-                                                               pointBuilder().latitude(48.858859).longitude(-10).build(),
-                                                               pointBuilder().latitude(58.0).longitude(-10.0).build()));
+        Area ukAndSomeOfEurope = new Area("Europe", new Polygon(of(
+                                                               new Position(58.0,-10.0),
+                                                               new Position(58.0,3),
+                                                               new Position(48.858859,3),
+                                                               new Position(48.858859,-10),
+                                                               new Position(58.0,-10.0))));
         getDs().save(ukAndSomeOfEurope);
         getDs().ensureIndexes();
 
         // when
         List<Area> areasInTheUK = getDs().find(Area.class)
                                          .field("area")
-                                         .within(requiredEuropeanCountries)
+                                         .within(europeanCountries)
                                          .execute().toList();
 
         // then
@@ -86,16 +85,13 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
     @Test
     public void shouldFindCitiesInEurope() {
-        // given
-        MultiPolygon europeanCountries = multiPolygon(uk, spain);
-
-        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
+        City manchester = new City("Manchester", new Point(new Position(53.4722454, -2.2235922)));
         getDs().save(manchester);
-        City london = new City("London", point(51.5286416, -0.1015987));
+        City london = new City("London", new Point(new Position(51.5286416, -0.1015987)));
         getDs().save(london);
-        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
+        City sevilla = new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
         getDs().save(sevilla);
-        City newYork = new City("New York", point(40.75981395319104, -73.98302106186748));
+        City newYork = new City("New York", new Point(new Position(40.75981395319104, -73.98302106186748)));
         getDs().save(newYork);
 
         getDs().ensureIndexes();
@@ -109,48 +105,53 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
         // then
         assertThat(citiesInTheUK.size(), is(3));
-        assertThat(citiesInTheUK, containsInAnyOrder(london, manchester,
-                                                     sevilla));
+        assertThat(citiesInTheUK, containsInAnyOrder(london, manchester, sevilla));
     }
 
     @Test
     public void shouldFindGeometryCollectionsWithinEurope() {
-        // given
-        MultiPolygon europeanCountries = multiPolygon(uk, spain);
-
-        AllTheThings sevilla = new AllTheThings("Spain", geometryCollection(multiPoint(point(37.40759155713022, -5.964911067858338),
-                                                                                       point(37.40341208875179, -5.9643941558897495),
-                                                                                       point(37.40297396667302, -5.970452763140202)),
-                                                                            polygon(point(37.40759155713022, -5.964911067858338),
-                                                                                    point(37.40341208875179, -5.9643941558897495),
-                                                                                    point(37.40297396667302, -5.970452763140202),
-                                                                                    point(37.40759155713022, -5.964911067858338)),
-                                                                            polygon(point(37.38744598813355, -6.001141928136349),
-                                                                                    point(37.385990973562, -6.002588979899883),
-                                                                                    point(37.386126928031445, -6.002463921904564),
-                                                                                    point(37.38744598813355, -6.001141928136349))));
+        AllTheThings sevilla = new AllTheThings("Spain", new GeometryCollection(of(new MultiPoint(
+            of(
+                new Position(37.40759155713022, -5.964911067858338),
+                new Position(37.40341208875179, -5.9643941558897495),
+                new Position(37.40297396667302, -5.970452763140202))),
+            new Polygon(of(
+                new Position(37.40759155713022, -5.964911067858338),
+                new Position(37.40341208875179, -5.9643941558897495),
+                new Position(37.40297396667302, -5.970452763140202),
+                new Position(37.40759155713022, -5.964911067858338))),
+            new Polygon(of(
+                new Position(37.38744598813355, -6.001141928136349),
+                new Position(37.385990973562, -6.002588979899883),
+                new Position(37.386126928031445, -6.002463921904564),
+                new Position(37.38744598813355, -6.001141928136349))))));
         getDs().save(sevilla);
 
         // insert something that's not a geocollection
-        Regions usa = new Regions("US", multiPolygon(polygon(point(40.75981395319104, -73.98302106186748),
-                                                             point(40.7636824529618, -73.98049869574606),
-                                                             point(40.76962974853814, -73.97964206524193),
-                                                             point(40.75981395319104, -73.98302106186748)),
-                                                     polygon(point(28.326568258926272, -81.60542246885598),
-                                                             point(28.327541397884488, -81.6022228449583),
-                                                             point(28.32950334995985, -81.60564735531807),
-                                                             point(28.326568258926272, -81.60542246885598))));
+        Regions usa = new Regions("US", new MultiPolygon(of(
+            new PolygonCoordinates(of(
+                new Position(40.75981395319104, -73.98302106186748),
+                new Position(40.7636824529618, -73.98049869574606),
+                new Position(40.76962974853814, -73.97964206524193),
+                new Position(40.75981395319104, -73.98302106186748))),
+            new PolygonCoordinates(of(
+                new Position(28.326568258926272, -81.60542246885598),
+                new Position(28.327541397884488, -81.6022228449583),
+                new Position(28.32950334995985, -81.60564735531807),
+                new Position(28.326568258926272, -81.60542246885598))))));
         getDs().save(usa);
 
-        AllTheThings london = new AllTheThings("London", geometryCollection(point(53.4722454, -2.2235922),
-                                                                            lineString(point(51.507780365645885, -0.21786745637655258),
-                                                                                       point(51.50802478194237, -0.21474729292094707),
-                                                                                       point(51.5086863655597, -0.20895397290587425)),
-                                                                            polygon(point(51.498216362670064, 0.0074849557131528854),
-                                                                                    point(51.49176875129342, 0.01821178011596203),
-                                                                                    point(51.492886897176504, 0.05523204803466797),
-                                                                                    point(51.49393044412136, 0.06663135252892971),
-                                                                                    point(51.498216362670064, 0.0074849557131528854))));
+        AllTheThings london = new AllTheThings("London", new GeometryCollection(of(
+            new LineString(of(
+                new Position(51.507780365645885, -0.21786745637655258),
+                new Position(51.50802478194237, -0.21474729292094707),
+                new Position(51.5086863655597, -0.20895397290587425))),
+            new Polygon(of(
+                new Position(51.498216362670064, 0.0074849557131528854),
+                new Position(51.49176875129342, 0.01821178011596203),
+                new Position(51.492886897176504, 0.05523204803466797),
+                new Position(51.49393044412136, 0.06663135252892971),
+                new Position(51.498216362670064, 0.0074849557131528854))))));
         getDs().save(london);
         getDs().ensureIndexes();
 
@@ -167,37 +168,44 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
     @Test
     public void shouldFindRegionsWithinEurope() {
-        // given
-        MultiPolygon europeanCountries = multiPolygon(uk, spain);
-        Regions sevilla = new Regions("Spain", multiPolygon(polygon(point(37.40759155713022, -5.964911067858338),
-                                                                    point(37.40341208875179, -5.9643941558897495),
-                                                                    point(37.40297396667302, -5.970452763140202),
-                                                                    point(37.40759155713022, -5.964911067858338)),
-                                                            polygon(point(37.38744598813355, -6.001141928136349),
-                                                                    point(37.385990973562, -6.002588979899883),
-                                                                    point(37.386126928031445, -6.002463921904564),
-                                                                    point(37.38744598813355, -6.001141928136349))));
+        Regions sevilla = new Regions("Spain", new MultiPolygon(of(
+            new PolygonCoordinates(of(
+                new Position(37.40759155713022, -5.964911067858338),
+                new Position(37.40341208875179, -5.9643941558897495),
+                new Position(37.40297396667302, -5.970452763140202),
+                new Position(37.40759155713022, -5.964911067858338))),
+            new PolygonCoordinates(of(
+                new Position(37.38744598813355, -6.001141928136349),
+                new Position(37.385990973562, -6.002588979899883),
+                new Position(37.386126928031445, -6.002463921904564),
+                new Position(37.38744598813355, -6.001141928136349))))));
         getDs().save(sevilla);
 
-        Regions usa = new Regions("US", multiPolygon(polygon(point(40.75981395319104, -73.98302106186748),
-                                                             point(40.7636824529618, -73.98049869574606),
-                                                             point(40.76962974853814, -73.97964206524193),
-                                                             point(40.75981395319104, -73.98302106186748)),
-                                                     polygon(point(28.326568258926272, -81.60542246885598),
-                                                             point(28.327541397884488, -81.6022228449583),
-                                                             point(28.32950334995985, -81.60564735531807),
-                                                             point(28.326568258926272, -81.60542246885598))));
+        Regions usa = new Regions("US", new MultiPolygon(of(
+            new PolygonCoordinates(of(
+                new Position(40.75981395319104, -73.98302106186748),
+                new Position(40.7636824529618, -73.98049869574606),
+                new Position(40.76962974853814, -73.97964206524193),
+                new Position(40.75981395319104, -73.98302106186748))),
+            new PolygonCoordinates(of(
+                new Position(28.326568258926272, -81.60542246885598),
+                new Position(28.327541397884488, -81.6022228449583),
+                new Position(28.32950334995985, -81.60564735531807),
+                new Position(28.326568258926272, -81.60542246885598))))));
         getDs().save(usa);
 
-        Regions london = new Regions("London", multiPolygon(polygon(point(51.507780365645885, -0.21786745637655258),
-                                                                    point(51.50802478194237, -0.21474729292094707),
-                                                                    point(51.5086863655597, -0.20895397290587425),
-                                                                    point(51.507780365645885, -0.21786745637655258)),
-                                                            polygon(point(51.498216362670064, 0.0074849557131528854),
-                                                                    point(51.49176875129342, 0.01821178011596203),
-                                                                    point(51.492886897176504, 0.05523204803466797),
-                                                                    point(51.49393044412136, 0.06663135252892971),
-                                                                    point(51.498216362670064, 0.0074849557131528854))));
+        Regions london = new Regions("London", new MultiPolygon(of(
+            new PolygonCoordinates(of(
+                new Position(51.507780365645885, -0.21786745637655258),
+                new Position(51.50802478194237, -0.21474729292094707),
+                new Position(51.5086863655597, -0.20895397290587425),
+                new Position(51.507780365645885, -0.21786745637655258))),
+            new PolygonCoordinates(of(
+                new Position(51.498216362670064, 0.0074849557131528854),
+                new Position(51.49176875129342, 0.01821178011596203),
+                new Position(51.492886897176504, 0.05523204803466797),
+                new Position(51.49393044412136, 0.06663135252892971),
+                new Position(51.498216362670064, 0.0074849557131528854))))));
         getDs().save(london);
         getDs().ensureIndexes();
 
@@ -205,7 +213,8 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
                                               .field("regions")
                                               .within(europeanCountries)
-                                              .execute().toList();
+                                              .execute()
+                                              .toList();
 
         // then
         assertThat(regionsInTheUK.size(), is(2));
@@ -214,30 +223,33 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
     @Test
     public void shouldFindRoutesCompletelyWithinRequiredEuropeCountries() {
-        // given
-        MultiPolygon requiredEuropeanCountries = multiPolygon(uk, spain);
-        Route sevilla = new Route("Spain", lineString(pointBuilder().latitude(37.40759155713022).longitude(-5.964911067858338).build(),
-                                                      pointBuilder().latitude(37.40341208875179).longitude(-5.9643941558897495).build(),
-                                                      pointBuilder().latitude(37.40297396667302).longitude(-5.970452763140202).build()));
+        Route sevilla = new Route("Spain", new LineString(of(
+            new Position(37.40759155713022, -5.964911067858338),
+            new Position(37.40341208875179, -5.9643941558897495),
+            new Position(37.40297396667302, -5.970452763140202))));
         getDs().save(sevilla);
-        Route newYork = new Route("New York", lineString(pointBuilder().latitude(40.75981395319104).longitude(-73.98302106186748).build(),
-                                                         pointBuilder().latitude(40.7636824529618).longitude(-73.98049869574606).build(),
-                                                         pointBuilder().latitude(40.76962974853814).longitude(-73.97964206524193).build()));
+        Route newYork = new Route("New York", new LineString(of(
+            new Position(40.75981395319104, -73.98302106186748),
+            new Position(40.7636824529618, -73.98049869574606),
+            new Position(40.76962974853814, -73.97964206524193))));
         getDs().save(newYork);
-        Route london = new Route("London", lineString(pointBuilder().latitude(51.507780365645885).longitude(-0.21786745637655258).build(),
-                                                      pointBuilder().latitude(51.50802478194237).longitude(-0.21474729292094707).build(),
-                                                      pointBuilder().latitude(51.5086863655597).longitude(-0.20895397290587425).build()));
+        Route london = new Route("London", new LineString(of(
+            new Position(51.507780365645885, -0.21786745637655258),
+            new Position(51.50802478194237, -0.21474729292094707),
+            new Position(51.5086863655597, -0.20895397290587425))));
         getDs().save(london);
-        Route londonToParis = new Route("London To Paris", lineString(pointBuilder().latitude(51.5286416).longitude(-0.1015987).build(),
-                                                                      pointBuilder().latitude(48.858859).longitude(2.3470599).build()));
+        Route londonToParis = new Route("London To Paris", new LineString(of(
+            new Position(51.5286416, -0.1015987),
+            new Position(48.858859, 2.3470599))));
         getDs().save(londonToParis);
         getDs().ensureIndexes();
 
         // when
         List<Route> routesInTheUK = getDs().find(Route.class)
                                            .field("route")
-                                           .within(requiredEuropeanCountries)
-                                           .execute().toList();
+                                           .within(europeanCountries)
+                                           .execute()
+                                           .toList();
 
         // then
         assertThat(routesInTheUK.size(), is(2));

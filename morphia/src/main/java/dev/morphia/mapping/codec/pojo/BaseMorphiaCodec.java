@@ -12,6 +12,7 @@ import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.DiscriminatorLookup;
+import org.bson.codecs.pojo.IdPropertyModelHolder;
 import org.bson.codecs.pojo.InstanceCreator;
 import org.bson.codecs.pojo.PojoCodec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
@@ -152,7 +153,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
             final ClassModel<?>
                 newModel = new ClassModel(clazzModel.getType(), clazzModel.getPropertyNameToTypeParameterMap(),
                 clazzModel.getInstanceCreatorFactory(), true, clazzModel.getDiscriminatorKey(),
-                clazzModel.getDiscriminator(), clazzModel.getIdPropertyModel(), clazzModel.getAnnotations(), clazzModel.getFieldModels(),
+                clazzModel.getDiscriminator(), clazzModel.getIdPropertyModelHolder(), clazzModel.getAnnotations(), clazzModel.getFieldModels(),
                 clazzModel.getPropertyModels());
             codec = tCodec.getSpecializedCodec(newModel);
         }
@@ -290,7 +291,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
             return clazzModel;
         }
 
-        ArrayList<PropertyModel<?>> concretePropertyModels = new ArrayList<>(clazzModel.getPropertyModels());
+        List<PropertyModel<?>> concretePropertyModels = new ArrayList<>(clazzModel.getPropertyModels());
         PropertyModel<?> concreteIdProperty = clazzModel.getIdPropertyModel();
 
         List<TypeData<?>> propertyTypeParameters = propertyModel.getTypeData().getTypeParameters();
@@ -310,7 +311,7 @@ public abstract class BaseMorphiaCodec<T> extends PojoCodec<T> {
         boolean discriminatorEnabled = changeTheDiscriminator ? propertyModel.useDiscriminator() : clazzModel.useDiscriminator();
         return new ClassModel<>(clazzModel.getType(), clazzModel.getPropertyNameToTypeParameterMap(),
             clazzModel.getInstanceCreatorFactory(), discriminatorEnabled, clazzModel.getDiscriminatorKey(),
-            clazzModel.getDiscriminator(), concreteIdProperty, clazzModel.getAnnotations(), clazzModel.getFieldModels(),
+            clazzModel.getDiscriminator(), IdPropertyModelHolder.create(clazzModel, concreteIdProperty), clazzModel.getAnnotations(), clazzModel.getFieldModels(),
             concretePropertyModels);
     }
 

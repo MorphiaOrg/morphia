@@ -16,8 +16,7 @@
 
 package dev.morphia.aggregation;
 
-import dev.morphia.geo.Geometry;
-import dev.morphia.geo.GeometryShapeConverter;
+import dev.morphia.geo.GeometryShapeConverter.PointCodec;
 import dev.morphia.geo.Point;
 import dev.morphia.query.Query;
 
@@ -28,7 +27,7 @@ import dev.morphia.query.Query;
  */
 public final class GeoNear {
     private final double[] nearLegacy;
-    private final Geometry nearGeoJson;
+    private final com.mongodb.client.model.geojson.Geometry nearGeoJson;
     private final String distanceField;
     private final Long limit;
     private final Long maxDocuments;
@@ -133,9 +132,9 @@ public final class GeoNear {
         return copy;
     }
 
-    Object getNearAsDBObject(final GeometryShapeConverter.PointConverter pointConverter) {
+    Object getNearAsDBObject(final PointCodec pointCodec) {
         if (nearGeoJson != null) {
-            return pointConverter.encode(nearGeoJson, null);
+            return pointCodec.encode(nearGeoJson, null);
         } else {
             return getNear();
         }
@@ -193,7 +192,7 @@ public final class GeoNear {
         private String includeLocations;
         private Boolean uniqueDocuments;
         private double[] nearLegacy;
-        private Geometry nearGeoJson;
+        private com.mongodb.client.model.geojson.Geometry nearGeoJson;
 
         /**
          * @param distanceField The output field that contains the calculated distance. To specify a field within a subdocument, use dot
@@ -291,8 +290,20 @@ public final class GeoNear {
          *
          * @param point a GeoJSON single point location.
          * @return this
+         * @deprecated use the driver-provided types instead
          */
+        @Deprecated(since = "2.0", forRemoval = true)
         public GeoNearBuilder setNear(final Point point) {
+            return setNear(point.convert());
+        }
+
+        /**
+         * Sets the point for which to find the closest documents.
+         *
+         * @param point a GeoJSON single point location.
+         * @return this
+         */
+        public GeoNearBuilder setNear(final com.mongodb.client.model.geojson.Point point) {
             this.nearGeoJson = point;
             return this;
         }

@@ -102,7 +102,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public MorphiaCursor<T> execute(final FindOptions options) {
         MongoCursor mongoCursor = prepareCursor(options);
-        return new MorphiaCursor<>(mongoCursor, ds.getMapper(), clazz);
+        return new MorphiaCursor<>(mongoCursor);
     }
 
     @Override

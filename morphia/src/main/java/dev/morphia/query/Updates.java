@@ -198,6 +198,8 @@ public interface Updates<Updater extends Updates> {
      */
     Updater set(String field, Object value);
 
+    Updater set(Object entity);
+
     /**
      * sets the field on insert.
      *

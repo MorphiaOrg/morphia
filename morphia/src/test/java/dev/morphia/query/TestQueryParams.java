@@ -51,11 +51,6 @@ public class TestQueryParams extends TestBase {
     }
 
     @Test(expected = Assert.AssertionFailedException.class)
-    public void testHasThisNullElement() {
-        e.hasThisElement(null);
-    }
-
-    @Test(expected = Assert.AssertionFailedException.class)
     public void testLessThanNull() {
         e.lessThan(null);
     }

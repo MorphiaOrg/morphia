@@ -9,24 +9,11 @@ import java.util.List;
  * Factory class for creating GeoJSON types.  See <a href="http://docs.mongodb
  * .org/manual/applications/geospatial-indexes/#geojson-objects">the
  * documentation</a> for all the types.
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public final class GeoJson {
     private GeoJson() {
-    }
-
-    /**
-     * Create a new Point representing a GeoJSON point type.  For a safer way to create points with latitude and longitude coordinates
-     * without mixing up the order, {@link PointBuilder}.
-     *
-     * @param latitude  the point's latitude coordinate
-     * @param longitude the point's longitude coordinate
-     * @return a Point instance representing a single location point defined by the given latitude and longitude
-     * @mongodb.server.release 2.4
-     * @see dev.morphia.geo.PointBuilder
-     * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
-     */
-    public static Point point(final double latitude, final double longitude) {
-        return new Point(latitude, longitude);
     }
 
     /**

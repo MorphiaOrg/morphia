@@ -270,7 +270,7 @@ public interface Datastore {
      * @return the mapped collection for the collection
      * @morphia.internal
      */
-    MongoCollection<Document> getCollection(Class<?> clazz);
+    <T> MongoCollection<T> getCollection(Class<T> clazz);
 
 
     /**

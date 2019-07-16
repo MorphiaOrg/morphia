@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class MapImplTest extends TestBase {
 
     @Test
-    public void testEmbeddedMap() throws Exception {
+    public void testEmbeddedMap() {
         getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
@@ -32,11 +32,12 @@ public class MapImplTest extends TestBase {
         getDs().save(cmoeg);
         //check className in the map values.
 
-        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
-                                                           .find()
-                                                           .first()
-                                                           .get("values"))
-                                            .get("first");
+        Document first = (Document) getDatabase().getCollection(ContainsMapOfEmbeddedInterfaces.class.getSimpleName())
+                                                 .find()
+                                                 .first()
+                                                 .get("values");
+        final Document goo = (Document) first.get("first");
+
         assertFalse(goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
@@ -55,7 +56,7 @@ public class MapImplTest extends TestBase {
                .set("values.second", g2)
                .execute();
 
-        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
+        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsMapOfEmbeddedGoos.class.getSimpleName())
                                                            .find()
                                                            .first()
                                                            .get("values")).get(
@@ -65,7 +66,7 @@ public class MapImplTest extends TestBase {
     }
 
     @Test
-    public void testEmbeddedMapUpdateOperationsOnInterfaceValue() throws Exception {
+    public void testEmbeddedMapUpdateOperationsOnInterfaceValue() {
         getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
@@ -80,7 +81,7 @@ public class MapImplTest extends TestBase {
                .execute();
 
         //check className in the map values.
-        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
+        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsMapOfEmbeddedInterfaces.class.getSimpleName())
                                                            .find()
                                                            .first()
                                                            .get("values"))
@@ -89,7 +90,7 @@ public class MapImplTest extends TestBase {
     }
 
     @Test
-    public void testEmbeddedMapWithValueInterface() throws Exception {
+    public void testEmbeddedMapWithValueInterface() {
         getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
         final Goo g1 = new Goo("Scott");
 
@@ -97,7 +98,7 @@ public class MapImplTest extends TestBase {
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
         //check className in the map values.
-        final Document goo = (Document) ((Document) getDs().getCollection(ContainsMapOfEmbeddedInterfaces.class)
+        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsMapOfEmbeddedInterfaces.class.getSimpleName())
                                                            .find()
                                                            .first()
                                                            .get("values"))
@@ -106,7 +107,7 @@ public class MapImplTest extends TestBase {
     }
 
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         E e = new E();
         e.mymap.put("1", "a");
         e.mymap.put("2", "b");
@@ -119,13 +120,13 @@ public class MapImplTest extends TestBase {
     }
 
     private static class ContainsMapOfEmbeddedInterfaces {
-        private final Map<String, Serializable> values = new HashMap<String, Serializable>();
+        private final Map<String, Serializable> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
     private static class ContainsMapOfEmbeddedGoos {
-        private final Map<String, Goo> values = new HashMap<String, Goo>();
+        private final Map<String, Goo> values = new HashMap<>();
         @Id
         private ObjectId id;
     }

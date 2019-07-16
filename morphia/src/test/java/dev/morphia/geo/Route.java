@@ -1,9 +1,16 @@
 package dev.morphia.geo;
 
+import com.mongodb.client.model.geojson.LineString;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
+import org.bson.types.ObjectId;
 
+@Entity
 public final class Route {
+    @Id
+    private ObjectId id;
     private String name;
 
     @Indexed(IndexDirection.GEO2DSPHERE)

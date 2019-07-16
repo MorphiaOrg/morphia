@@ -2,6 +2,8 @@ package dev.morphia.geo;
 
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +18,10 @@ import java.util.List;
  *
  * @see dev.morphia.geo.GeoJson
  */
-@Embedded
 @Entity
 public class GeometryCollection {
+    @Id
+    private ObjectId id;
     private final String type = "GeometryCollection";
     private final List<Geometry> geometries;
 

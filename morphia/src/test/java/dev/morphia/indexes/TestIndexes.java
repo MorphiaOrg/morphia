@@ -54,15 +54,15 @@ public class TestIndexes extends TestBase {
         final Datastore datastore = getDs();
         datastore.delete(datastore.find(TestWithIndexOption.class));
 
-        final MongoCollection<Document> indexOptionColl = getDs().getCollection(TestWithIndexOption.class);
+        final MongoCollection<Document> indexOptionColl = getDatabase().getCollection(TestWithIndexOption.class.getSimpleName());
         indexOptionColl.drop();
         assertEquals(0, getIndexInfo(TestWithIndexOption.class).size());
 
-        final MongoCollection<Document> depIndexColl = getDs().getCollection(TestWithDeprecatedIndex.class);
+        final MongoCollection<Document> depIndexColl = getDatabase().getCollection(TestWithDeprecatedIndex.class.getSimpleName());
         depIndexColl.drop();
         assertEquals(0, getIndexInfo(TestWithDeprecatedIndex.class).size());
 
-        final MongoCollection<Document> hashIndexColl = getDs().getCollection(TestWithHashedIndex.class);
+        final MongoCollection<Document> hashIndexColl = getDatabase().getCollection(TestWithHashedIndex.class.getSimpleName());
         hashIndexColl.drop();
         assertEquals(0, getIndexInfo(TestWithHashedIndex.class).size());
 

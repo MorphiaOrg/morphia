@@ -12,9 +12,9 @@ import java.util.List;
  * <p/>
  * The builder for creating a Point is the {@code GeoJson.pointBuilder} method, or the helper {@code GeoJson.point} factory method.
  *
- * @see dev.morphia.geo.GeoJson#point(double, double)
+ * @deprecated use the driver-provided types instead
  */
-@Embedded
+@Deprecated(since = "2.0", forRemoval = true)
 public class Point implements Geometry {
     private final List<Double> coordinates = new ArrayList<Double>();
 

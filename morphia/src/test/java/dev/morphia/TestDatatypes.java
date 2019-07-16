@@ -15,6 +15,7 @@
 package dev.morphia;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -70,6 +71,7 @@ public class TestDatatypes extends TestBase {
         assertTrue(loaded.val1.equals(cs.val1));
     }
 
+    @Entity
     public static class ContainsFloat {
         private final float val0 = 1.1F;
         private final Float val1 = 1.1F;
@@ -77,6 +79,7 @@ public class TestDatatypes extends TestBase {
         private ObjectId id;
     }
 
+    @Entity
     public static class ContainsDouble {
         @Id
         private ObjectId id;
@@ -84,6 +87,7 @@ public class TestDatatypes extends TestBase {
         private Double val1 = 1.1D;
     }
 
+    @Entity
     public static class ContainsShort {
         private final short val0 = 1;
         private final Short val1 = 1;
@@ -91,6 +95,7 @@ public class TestDatatypes extends TestBase {
         private ObjectId id;
     }
 
+    @Entity
     public static class ContainsByte {
         private final byte val0 = 1;
         private final Byte val1 = 1;

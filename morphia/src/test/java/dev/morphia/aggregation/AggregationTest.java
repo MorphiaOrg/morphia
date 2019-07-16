@@ -21,14 +21,14 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.UnwindOptions;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.geo.City;
 import dev.morphia.geo.PlaceWithLegacyCoords;
-import dev.morphia.geo.Point;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
 import dev.morphia.query.Query;
@@ -41,7 +41,6 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -58,11 +57,11 @@ import static dev.morphia.aggregation.Projection.divide;
 import static dev.morphia.aggregation.Projection.expression;
 import static dev.morphia.aggregation.Projection.projection;
 import static dev.morphia.aggregation.Projection.size;
-import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.query.Sort.ascending;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -166,12 +165,12 @@ public class AggregationTest extends TestBase {
     @Test
     public void testGeoNearWithGeoJson() {
         // given
-        Point londonPoint = point(51.5286416, -0.1015987);
+        Point londonPoint = new Point(new Position(51.5286416, -0.1015987));
         City london = new City("London", londonPoint);
         getDs().save(london);
-        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
+        City manchester = new City("Manchester", new Point(new Position(53.4722454, -2.2235922)));
         getDs().save(manchester);
-        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
+        City sevilla = new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
         getDs().save(sevilla);
 
         getDs().ensureIndexes();
@@ -229,11 +228,11 @@ public class AggregationTest extends TestBase {
         // given
         double latitude = 51.5286416;
         double longitude = -0.1015987;
-        City london = new City("London", point(latitude, longitude));
+        City london = new City("London", new Point(new Position(latitude, longitude)));
         getDs().save(london);
-        City manchester = new City("Manchester", point(53.4722454, -2.2235922));
+        City manchester = new City("Manchester", new Point(new Position(53.4722454, -2.2235922)));
         getDs().save(manchester);
-        City sevilla = new City("Sevilla", point(37.3753708, -5.9550582));
+        City sevilla = new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
         getDs().save(sevilla);
 
         getDs().ensureIndexes();

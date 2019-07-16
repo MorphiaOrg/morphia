@@ -646,6 +646,7 @@ public class TestDatastore extends TestBase {
     }
 
     @SuppressWarnings("UnusedDeclaration")
+    @Entity
     @EntityListeners(LifecycleListener.class)
     public static class LifecycleTestObj {
         @Id

@@ -4,8 +4,6 @@ package dev.morphia.query.internal;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
-import dev.morphia.mapping.Mapper;
-import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,24 +14,18 @@ import java.util.NoSuchElementException;
  * @param <T> the original type being iterated
  */
 public class MorphiaCursor<T> implements MongoCursor<T> {
-    private final MongoCursor wrapped;
-    private final Mapper mapper;
-    private final Class<T> clazz;
+    private final MongoCursor<T> wrapped;
 
     /**
      * Creates a MorphiaCursor
      *
      * @param cursor     the Iterator to use
-     * @param mapper     the Mapper to use
-     * @param clazz      the original type being iterated
      */
-    public MorphiaCursor(final MongoCursor cursor, final Mapper mapper, final Class<T> clazz) {
+    public MorphiaCursor(final MongoCursor<T> cursor) {
         wrapped = cursor;
         if(wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");
         }
-        this.mapper = mapper;
-        this.clazz = clazz;
     }
 
     /**
@@ -74,7 +66,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return mapper.fromDocument(clazz, getNext());
+        return wrapped.next();
     }
 
     @Override
@@ -101,7 +93,4 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
         wrapped.remove();
     }
 
-    protected Document getNext() {
-        return (Document) wrapped.next();
-    }
 }

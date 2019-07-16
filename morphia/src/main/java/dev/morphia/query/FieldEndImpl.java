@@ -1,11 +1,6 @@
 package dev.morphia.query;
 
 
-import dev.morphia.geo.CoordinateReferenceSystem;
-import dev.morphia.geo.Geometry;
-import dev.morphia.geo.MultiPolygon;
-import dev.morphia.geo.Point;
-import dev.morphia.geo.Polygon;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.utils.Assert;
 import org.slf4j.Logger;
@@ -148,20 +143,6 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    @Deprecated
-    public T doesNotHaveThisElement(final Object val) {
-        Assert.parametersNotNull("val", val);
-        return addCriteria(ELEMENT_MATCH, val, true);
-    }
-
-    @Override
-    @Deprecated
-    public T hasThisElement(final Object val) {
-        Assert.parametersNotNull("val", val);
-        return addCriteria(ELEMENT_MATCH, val, not);
-    }
-
-    @Override
     public T elemMatch(final Query query) {
         Assert.parametersNotNull("query", query);
         return addCriteria(ELEMENT_MATCH, query, not);
@@ -178,13 +159,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T intersects(final Geometry geometry) {
+    public T intersects(final com.mongodb.client.model.geojson.Geometry geometry) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, INTERSECTS, geometry));
         return target;
     }
 
     @Override
-    public T intersects(final Geometry geometry, final CoordinateReferenceSystem crs) {
+    public T intersects(final com.mongodb.client.model.geojson.Geometry geometry, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, INTERSECTS, geometry)
                                       .addCoordinateReferenceSystem(crs));
         return target;
@@ -230,18 +211,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T near(final Point point, final int maxDistance) {
-        return near(point, (double) maxDistance, null);
-    }
-
-    @Override
-    public T near(final Point point) {
+    public T near(final com.mongodb.client.model.geojson.Point point) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, NEAR, point));
         return target;
     }
 
     @Override
-    public T near(final Point point, final Double maxDistance, final Double minDistance) {
+    public T near(final com.mongodb.client.model.geojson.Point point, final Double maxDistance, final Double minDistance) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, NEAR, point)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
@@ -249,12 +225,12 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T nearSphere(final Point point) {
+    public T nearSphere(final com.mongodb.client.model.geojson.Point point) {
         return nearSphere(point, null, null);
     }
 
     @Override
-    public T nearSphere(final Point point, final Double maxDistance, final Double minDistance) {
+    public T nearSphere(final com.mongodb.client.model.geojson.Point point, final Double maxDistance, final Double minDistance) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, NEAR_SPHERE, point)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
@@ -308,26 +284,26 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T within(final Polygon boundary) {
+    public T within(final com.mongodb.client.model.geojson.Polygon boundary) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundary));
         return target;
     }
 
     @Override
-    public T within(final MultiPolygon boundaries) {
+    public T within(final com.mongodb.client.model.geojson.MultiPolygon boundaries) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundaries));
         return target;
     }
 
     @Override
-    public T within(final Polygon boundary, final CoordinateReferenceSystem crs) {
+    public T within(final com.mongodb.client.model.geojson.Polygon boundary, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundary)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
 
     @Override
-    public T within(final MultiPolygon boundaries, final CoordinateReferenceSystem crs) {
+    public T within(final com.mongodb.client.model.geojson.MultiPolygon boundaries, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundaries)
                                       .addCoordinateReferenceSystem(crs));
         return target;

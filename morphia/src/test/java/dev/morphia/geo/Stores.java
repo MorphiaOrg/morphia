@@ -1,7 +1,14 @@
 package dev.morphia.geo;
 
-@SuppressWarnings("UnusedDeclaration")
+import com.mongodb.client.model.geojson.MultiPoint;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
+
+@Entity
 public final class Stores {
+    @Id
+    private ObjectId id;
     private String name;
     private MultiPoint locations;
 

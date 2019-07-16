@@ -2,11 +2,9 @@ package dev.morphia.query;
 
 import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +33,7 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
             throw new QueryException("Value cannot be null.");
         }
 
-        add(UpdateOperator.ADD_TO_SET, field, value, true);
+        add(UpdateOperator.ADD_TO_SET, field, value);
         return (Updater)this;
     }
 
@@ -45,7 +43,7 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
             throw new UpdateException("Values cannot be null or empty.");
         }
 
-        add(UpdateOperator.ADD_TO_SET_EACH, field, values, true);
+        add(UpdateOperator.ADD_TO_SET_EACH, field, values);
         return (Updater)this;
     }
 
@@ -123,19 +121,19 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
         if (value == null) {
             throw new QueryException("Value cannot be null.");
         }
-        add(UpdateOperator.INC, field, value, false);
+        add(UpdateOperator.INC, field, value);
         return (Updater)this;
     }
 
     @Override
     public Updater max(final String field, final Number value) {
-        add(UpdateOperator.MAX, field, value, false);
+        add(UpdateOperator.MAX, field, value);
         return (Updater)this;
     }
 
     @Override
     public Updater min(final String field, final Number value) {
-        add(UpdateOperator.MIN, field, value, false);
+        add(UpdateOperator.MIN, field, value);
         return (Updater)this;
     }
 
@@ -144,7 +142,7 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
         if (value == null) {
             throw new QueryException("Value cannot be null.");
         }
-        add(UpdateOperator.PULL, field, value, true);
+        add(UpdateOperator.PULL, field, value);
         return (Updater)this;
     }
 
@@ -154,7 +152,7 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
             throw new QueryException("Value cannot be null or empty.");
         }
 
-        add(UpdateOperator.PULL_ALL, field, values, true);
+        add(UpdateOperator.PULL_ALL, field, values);
         return (Updater)this;
     }
 
@@ -174,8 +172,18 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
             throw new QueryException("Value for field [" + field + "] cannot be null.");
         }
 
-        add(UpdateOperator.SET, field, value, true);
+        add(UpdateOperator.SET, field, value);
         return (Updater)this;
+    }
+
+    @Override
+    public Updater set(final Object entity) {
+        if (entity == null) {
+            throw new QueryException("Entity value cannot be null.");
+        }
+
+        ops.put(UpdateOperator.SET.val(), entity);
+        return (Updater) this;
     }
 
     @Override
@@ -184,13 +192,13 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
             throw new QueryException("Value cannot be null.");
         }
 
-        add(UpdateOperator.SET_ON_INSERT, field, value, true);
+        add(UpdateOperator.SET_ON_INSERT, field, value);
         return (Updater)this;
     }
 
     @Override
     public Updater unset(final String field) {
-        add(UpdateOperator.UNSET, field, 1, false);
+        add(UpdateOperator.UNSET, field, 1);
         return (Updater)this;
     }
 
@@ -211,49 +219,23 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
         this.ops = ops;
     }
 
-    //TODO Clean this up a little.
-    private void add(final UpdateOperator op, final String f, final Object value, final boolean convert) {
+    private void add(final UpdateOperator op, final String f, final Object value) {
         if (value == null) {
             throw new QueryException("Val cannot be null");
         }
 
-        Object val = value;
         PathTarget pathTarget = new PathTarget(mapper, clazz, f, validateNames);
-        MappedField mf = pathTarget.getTarget();
-
-        if (convert) {
-            if (UpdateOperator.PULL_ALL.equals(op) && value instanceof List) {
-                val = toDBObjList(mf, (List<?>) value);
-            } else {
-                val = mapper.toMongoObject(mf, null, value);
-            }
-        }
-
-
-        if (UpdateOperator.ADD_TO_SET_EACH.equals(op)) {
-            val = new Document(UpdateOperator.EACH.val(), val);
-        }
-
-        addOperation(op, pathTarget.translatedPath(), val);
+        addOperation(op, pathTarget.translatedPath(), value);
     }
 
     protected Updater remove(final String fieldExpr, final boolean firstNotLast) {
-        add(UpdateOperator.POP, fieldExpr, (firstNotLast) ? -1 : 1, false);
+        add(UpdateOperator.POP, fieldExpr, (firstNotLast) ? -1 : 1);
         return (Updater)this;
     }
 
     @Override
     public String toString() {
         return getOps().toString();
-    }
-
-    protected List<Object> toDBObjList(final MappedField mf, final List<?> values) {
-        final List<Object> list = new ArrayList<>(values.size());
-        for (final Object obj : values) {
-            list.add(mapper.toMongoObject(mf, null, obj));
-        }
-
-        return list;
     }
 
     private void addOperation(final UpdateOperator op, final String fieldName, final Object val) {

@@ -15,18 +15,14 @@
 package dev.morphia.testutil;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import dev.morphia.annotations.Id;
 
 import java.io.Serializable;
 
 
-/**
- * Example for a base class to all entities.
- *
- * @author Olafur Gauti Gudmundsson
- */
-
+@Entity
 public class TestEntity implements Serializable {
     @Id
     private ObjectId id = new ObjectId();

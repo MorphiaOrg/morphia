@@ -14,7 +14,9 @@ import java.util.List;
  * The factory for creating a MultiPolygon is the {@code GeoJson.multiPolygon} method.
  *
  * @see dev.morphia.geo.GeoJson#multiPolygon(Polygon...)
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class MultiPolygon implements Geometry {
     private final List<Polygon> coordinates;
 

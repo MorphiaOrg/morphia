@@ -1,7 +1,12 @@
 package dev.morphia.geo;
 
 import dev.morphia.mapping.MappedField;
+import org.bson.BsonReader;
+import org.bson.BsonWriter;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +26,7 @@ import static dev.morphia.geo.GeoJsonType.POLYGON;
  * <p/>
  * Overridden by subclasses to define exact behaviour for specific Geometry concrete classes.
  */
-public class GeometryShapeConverter  {
+public class GeometryShapeConverter<T> implements Codec<T> {
     private final GeoJsonType geoJsonType;
     private final List<GeometryFactory> factories;
 
@@ -42,6 +47,21 @@ public class GeometryShapeConverter  {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+        return null;
+    }
+
+    @Override
+    public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
+
+    }
+
+    @Override
+    public Class<T> getEncoderClass() {
+        return null;
     }
 
     /*
@@ -147,15 +167,15 @@ public class GeometryShapeConverter  {
     }
 
     /**
-     * Defines a new PointConverter. This extends and therefore configures GeometryShapeConverter to provide the specific configuration
+     * Defines a new PointCodec. This extends and therefore configures GeometryShapeConverter to provide the specific configuration
      * for converting Point objects to and from <a href="http://geojson.org/geojson-spec.html#id3">MongoDB representations</a> of the
      * GeoJson.
      */
-    public static class PointConverter extends GeometryShapeConverter {
+    public static class PointCodec extends GeometryShapeConverter {
         /**
-         * Creates a new PointConverter.
+         * Creates a new PointCodec.
          */
-        public PointConverter() {
+        public PointCodec() {
             super(POINT);
         }
     }

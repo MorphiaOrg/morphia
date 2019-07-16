@@ -7,7 +7,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.UnwindOptions;
 import dev.morphia.Datastore;
-import dev.morphia.geo.GeometryShapeConverter;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.BucketAutoOptions;
@@ -106,8 +105,9 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         putIfNull(geo, "includeLocs", geoNear.getIncludeLocations());
         putIfNull(geo, "uniqueDocs", geoNear.getUniqueDocuments());
         stages.add(new Document("$geoNear", geo));
+        throw new UnsupportedOperationException();
 
-        return this;
+//        return this;
     }
 
     @Override

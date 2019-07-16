@@ -1,15 +1,17 @@
 package dev.morphia.geo;
 
-import org.junit.Test;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
+import org.junit.Test;
 
 public class GeoJsonIndexTest extends TestBase {
     @Test(expected = Exception.class)
     public void shouldErrorWhenCreatingA2dIndexOnGeoJson() {
         // given
-        Place pointB = new Place(GeoJson.point(3.1, 7.5), "Point B");
+        Place pointB = new Place(new Point(new Position(3.1, 7.5)), "Point B");
         getDs().save(pointB);
 
         // when

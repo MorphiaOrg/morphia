@@ -2,6 +2,9 @@ package dev.morphia.geo;
 
 import com.mongodb.client.model.geojson.PolygonCoordinates;
 import com.mongodb.client.model.geojson.Position;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +21,12 @@ import java.util.List;
  *
  * @see dev.morphia.geo.GeoJson#polygon(LineString, LineString...)
  * @see dev.morphia.geo.GeoJson#polygon(Point...)
+ * @deprecated use the driver-provided types instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class Polygon implements Geometry {
+    @Id
+    private ObjectId id;
     private final LineString exteriorBoundary;
     private final List<LineString> interiorBoundaries;
 

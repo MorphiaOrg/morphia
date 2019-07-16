@@ -731,6 +731,7 @@ public class TestMapping extends TestBase {
     private interface Foo {
     }
 
+    @Entity
     public abstract static class BaseEntity implements Serializable {
         @Id
         private ObjectId id;
@@ -749,6 +750,7 @@ public class TestMapping extends TestBase {
         private String id;
     }
 
+    @Entity
     private static class MissingIdStill {
         private String id;
     }
@@ -769,6 +771,7 @@ public class TestMapping extends TestBase {
         private String name;
     }
 
+    @Entity
     private static class StrangelyNamedIdField {
         //CHECKSTYLE:OFF
         @Id
@@ -776,6 +779,7 @@ public class TestMapping extends TestBase {
         //CHECKSTYLE:ON
     }
 
+    @Entity
     private static class ContainsEmbeddedArray {
         @Id
         private ObjectId id = new ObjectId();
@@ -790,12 +794,14 @@ public class TestMapping extends TestBase {
         private final String someString = "hi, from the ether.";
     }
 
+    @Entity
     private static class ContainsRef {
         @Id
         private ObjectId id;
         private DBRef rect;
     }
 
+    @Entity
     private static class HasFinalFieldId {
         @Id
         private final long id;
@@ -811,6 +817,7 @@ public class TestMapping extends TestBase {
         }
     }
 
+    @Entity
     private static class ContainsFinalField {
         private final String name;
         @Id
@@ -825,24 +832,28 @@ public class TestMapping extends TestBase {
         }
     }
 
+    @Entity
     private static class ContainsTimestamp {
         private final Timestamp ts = new Timestamp(System.currentTimeMillis());
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsDocument {
         @Id
         private ObjectId id;
         private Document document = new Document("field", "val");
     }
 
+    @Entity
     private static class ContainsByteArray {
         private final byte[] bytes = "Scott".getBytes();
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsSerializedData {
         @Serialized
         private final SerializableClass data = new SerializableClass();
@@ -850,6 +861,7 @@ public class TestMapping extends TestBase {
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsLongAndStringArray {
         @Id
         private ObjectId id;
@@ -857,6 +869,7 @@ public class TestMapping extends TestBase {
         private String[] strings = {"Scott", "Rocks"};
     }
 
+    @Entity
     private static final class ContainsCollection {
         private final Collection<String> coll = new ArrayList<>();
         @Id
@@ -868,6 +881,7 @@ public class TestMapping extends TestBase {
         }
     }
 
+    @Entity
     private static class ContainsPrimitiveMap {
         private final Map<String, Long> embeddedValues = new HashMap<>();
         private final Map<String, Long> values = new HashMap<>();
@@ -883,12 +897,14 @@ public class TestMapping extends TestBase {
         private int i;
     }
 
+    @Entity
     private static class ContainsMapWithEmbeddedInterface {
         private final Map<String, Foo> embeddedValues = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsEmbeddedEntity {
         @Id
         private final ObjectId id = new ObjectId();
@@ -923,6 +939,7 @@ public class TestMapping extends TestBase {
         private final UUID id = UUID.randomUUID();
     }
 
+    @Entity
     private static class ContainsEnum1KeyMap {
         private final Map<Enum1, String> values = new HashMap<>();
         private final Map<Enum1, String> embeddedValues = new HashMap<>();
@@ -930,30 +947,35 @@ public class TestMapping extends TestBase {
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsIntKeyMap {
         private final Map<Integer, String> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsIntKeySetStringMap {
         private final Map<Integer, Set<String>> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsObjectIdKeyMap {
         private final Map<ObjectId, String> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsXKeyMap<T> {
         private final Map<T, String> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private static class ContainsMapLike {
         private final MapLike m = new MapLike();
         @Id
@@ -965,11 +987,13 @@ public class TestMapping extends TestBase {
 
     }
 
+    @Entity
     private static class MapSubclass extends LinkedHashMap<String, Object> {
         @Id
         private ObjectId id;
     }
 
+    @Entity
     private class NonStaticInnerClass {
         @Id
         private long id = 1;

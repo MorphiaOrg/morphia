@@ -1,7 +1,7 @@
 package dev.morphia.query;
 
-import dev.morphia.geo.CoordinateReferenceSystem;
-import dev.morphia.geo.Geometry;
+import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
+import com.mongodb.client.model.geojson.Geometry;
 import dev.morphia.geo.GeometryQueryConverter;
 import dev.morphia.geo.NamedCoordinateReferenceSystemConverter;
 import dev.morphia.mapping.Mapper;
@@ -25,7 +25,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     }
 
     static Geo2dSphereCriteria geo(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator operator,
-                                   final Geometry value) {
+                                   final com.mongodb.client.model.geojson.Geometry value) {
         return new Geo2dSphereCriteria(mapper, query, field, operator, value);
     }
 
@@ -57,6 +57,11 @@ final class Geo2dSphereCriteria extends FieldCriteria {
 
     @Override
     public Document toDocument() {
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException("the codecs should take care of all this");
+        }
+
         Document query;
         FilterOperator operator = getOperator();
         GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(getMapper());
@@ -75,7 +80,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
                 query = new Document(operator.val(), geometryAsDBObject);
                 if (crs != null) {
                     ((Document) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs,
-                     null   ));
+                     null));
                 }
                 break;
             default:

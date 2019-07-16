@@ -26,6 +26,9 @@ public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> 
                 noArgsConstructor.setAccessible(true);
             }
         }
+        if(noArgsConstructor == null) {
+            throw new MappingException("Can not find a no arg constructor for " + builder.getType());
+        }
     }
 
     @Override

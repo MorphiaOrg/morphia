@@ -1,9 +1,16 @@
 package dev.morphia.geo;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
+import org.bson.types.ObjectId;
+import com.mongodb.client.model.geojson.Point ;
 
+@Entity
 public class City {
+    @Id
+    private ObjectId id;
     @Indexed(IndexDirection.GEO2DSPHERE)
     private Point location;
     private String name;
