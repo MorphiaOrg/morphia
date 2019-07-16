@@ -69,7 +69,7 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(-87.99822, 42.08563, 2, true);
 
         // then
-        assertThat(((QueryImpl) query).getQueryDocument().toString(),
+        assertThat(((QueryImpl) query).getQueryDocument().toJson(),
                    jsonEqual("{ \"location\" : "
                              + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
                              + "\"$maxDistance\" : 2.0}}"));
@@ -83,7 +83,7 @@ public class LegacyCoordsTest extends TestBase {
                                                     .near(-87.99822, 42.08563, 2);
 
         // then
-        assertThat(((QueryImpl) query).getQueryDocument().toString(),
+        assertThat(((QueryImpl) query).getQueryDocument().toJson(),
                    jsonEqual("{ \"location\" : "
                              + "{ \"$near\" : [ 42.08563 , -87.99822] , "
                              + "\"$maxDistance\" : 2.0}}"));

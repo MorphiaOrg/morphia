@@ -16,6 +16,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.JSONMatcher;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import static java.util.List.of;
@@ -31,13 +32,13 @@ public class GeoEntitiesTest extends TestBase {
     @Test
     public void shouldConvertPointCorrectlyToDBObject() {
         // given
-        City city = new City("New City", new Point(new Position(3.0, 7.0)));
+        City city = new City("New City", new Point(new Position(7.0, 3.0)));
 
         // when
         Document dbObject = getMapper().toDocument(city);
 
         assertThat(dbObject, is(notNullValue()));
-        assertThat(dbObject.toString(), JSONMatcher.jsonEqual("  {"
+        assertThat(dbObject.toJson(), JSONMatcher.jsonEqual("  {"
                                                               + " name: 'New City',"
                                                               + " className: 'dev.morphia.geo.City',"
                                                               + " location:  "
@@ -282,7 +283,7 @@ public class GeoEntitiesTest extends TestBase {
     public void shouldSaveAnEntityWithAGeoCollectionType() {
         // given
         String name = "What, everything?";
-        Point point = new Point(new Position(3.0, 7.0));
+        Point point = new Point(new Position(7.0, 3.0));
 
         LineString lineString = new LineString(
             of(
@@ -358,87 +359,88 @@ public class GeoEntitiesTest extends TestBase {
                                      .projection(new Document("_id", 0).append("className", 0))
                                      .first();
         assertThat(storedArea, is(notNullValue()));
-        assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
-                                                                + " name: '" + name + "',"
-                                                                + " everything: "
-                                                                + " {"
-                                                                + "  type: 'GeometryCollection', "
-                                                                + "  geometries: "
-                                                                + "  ["
-                                                                + "    {"
-                                                                + "     type: 'Point', "
-                                                                + "     coordinates: [7.0, 3.0]"
-                                                                + "    }, "
-                                                                + "    {"
-                                                                + "     type: 'LineString', "
-                                                                + "     coordinates: [ [ 2.0,  1.0],"
-                                                                + "                    [ 5.0,  3.0],"
-                                                                + "                    [13.0, 19.0] ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'Polygon', "
-                                                                + "     coordinates: "
-                                                                + "       [ [ [ 2.0, 1.1],"
-                                                                + "           [ 3.5, 2.3],"
-                                                                + "           [ 1.0, 3.7],"
-                                                                + "           [ 2.0, 1.1] "
-                                                                + "         ],"
-                                                                + "         [ [ 2.0, 1.5],"
-                                                                + "           [ 2.0, 1.9],"
-                                                                + "           [ 1.8, 1.9],"
-                                                                + "           [ 2.0, 1.5] "
-                                                                + "         ],"
-                                                                + "         [ [ 2.1, 2.2],"
-                                                                + "           [ 1.9, 2.4],"
-                                                                + "           [ 1.7, 2.4],"
-                                                                + "           [ 1.8, 2.1],"
-                                                                + "           [ 2.1, 2.2] "
-                                                                + "         ]"
-                                                                + "       ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'MultiPoint', "
-                                                                + "     coordinates: [ [ 2.0,  1.0],"
-                                                                + "                    [ 5.0,  3.0],"
-                                                                + "                    [13.0, 19.0] ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'MultiLineString', "
-                                                                + "     coordinates: "
-                                                                + "        [ [ [ 2.0,  1.0],"
-                                                                + "            [ 5.0,  3.0],"
-                                                                + "            [13.0, 19.0] "
-                                                                + "          ], "
-                                                                + "          [ [ 2.0, 1.5],"
-                                                                + "            [ 2.0, 1.9],"
-                                                                + "            [ 1.8, 1.9],"
-                                                                + "            [ 2.0, 1.5] "
-                                                                + "          ]"
-                                                                + "        ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'MultiPolygon', "
-                                                                + "     coordinates: [ [ [ [ 2.0, 1.1],"
-                                                                + "                        [ 3.5, 2.3],"
-                                                                + "                        [ 1.0, 3.7],"
-                                                                + "                        [ 2.0, 1.1],"
-                                                                + "                      ]"
-                                                                + "                    ],"
-                                                                + "                    [ [ [ 3.0, 1.2],"
-                                                                + "                        [ 4.5, 2.5],"
-                                                                + "                        [ 1.9, 6.7],"
-                                                                + "                        [ 3.0, 1.2] "
-                                                                + "                      ],"
-                                                                + "                      [ [ 2.4, 3.5],"
-                                                                + "                        [ 2.8, 1.7],"
-                                                                + "                        [ 2.4, 3.5] "
-                                                                + "                      ],"
-                                                                + "                    ]"
-                                                                + "                  ]"
-                                                                + "    }"
-                                                                + "  ]"
-                                                                + " }"
-                                                                + "}"));
+        assertThat(storedArea.toJson(), JSONMatcher.jsonEqual("  {"
+                                                              + " name: '" + name + "',"
+                                                              + " everything: "
+                                                              + " {"
+                                                              + "  type: 'GeometryCollection', "
+                                                              + "  geometries: "
+                                                              + "  ["
+                                                              + "    {"
+                                                              + "     type: 'Point', "
+                                                              + "     coordinates: [7.0, 3.0]"
+                                                              + "    }, "
+                                                              + "    {"
+                                                              + "     type: 'LineString', "
+                                                              + "     coordinates: [ [ 2.0,  1.0],"
+                                                              + "                    [ 5.0,  3.0],"
+                                                              + "                    [13.0, 19.0] ]"
+                                                              + "    },"
+                                                              + "    {"
+                                                              + "     type: 'Polygon', "
+                                                              + "     coordinates: "
+                                                              + "       [ [ [ 2.0, 1.1],"
+                                                              + "           [ 3.5, 2.3],"
+                                                              + "           [ 1.0, 3.7],"
+                                                              + "           [ 2.0, 1.1] "
+                                                              + "         ],"
+                                                              + "         [ [ 2.0, 1.5],"
+                                                              + "           [ 2.0, 1.9],"
+                                                              + "           [ 1.8, 1.9],"
+                                                              + "           [ 2.0, 1.5] "
+                                                              + "         ],"
+                                                              + "         [ [ 2.1, 2.2],"
+                                                              + "           [ 1.9, 2.4],"
+                                                              + "           [ 1.7, 2.4],"
+                                                              + "           [ 1.8, 2.1],"
+                                                              + "           [ 2.1, 2.2] "
+                                                              + "         ]"
+                                                              + "       ]"
+                                                              + "    },"
+                                                              + "    {"
+                                                              + "     type: 'MultiPoint', "
+                                                              + "     coordinates: [ [ 2.0,  1.0],"
+                                                              + "                    [ 5.0,  3.0],"
+                                                              + "                    [13.0, 19.0] ]"
+                                                              + "    },"
+                                                              + "    {"
+                                                              + "     type: 'MultiLineString', "
+                                                              + "     coordinates: "
+                                                              + "        [ [ [ 2.0,  1.0],"
+                                                              + "            [ 5.0,  3.0],"
+                                                              + "            [13.0, 19.0] "
+                                                              + "          ], "
+                                                              + "          [ [ 2.0, 1.5],"
+                                                              + "            [ 2.0, 1.9],"
+                                                              + "            [ 1.8, 1.9],"
+                                                              + "            [ 2.0, 1.5] "
+                                                              + "          ]"
+                                                              + "        ]"
+                                                              + "    },"
+                                                              + "    {"
+                                                              + "     type: 'MultiPolygon', "
+                                                              + "     coordinates: [ [ [ [ 2.0, 1.1],"
+                                                              + "                        [ 3.5, 2.3],"
+                                                              + "                        [ 1.0, 3.7],"
+                                                              + "                        [ 2.0, 1.1]"
+                                                              + "                      ]"
+                                                              + "                    ],"
+                                                              + "                    [ [ [ 3.0, 1.2],"
+                                                              + "                        [ 4.5, 2.5],"
+                                                              + "                        [ 1.9, 6.7],"
+                                                              + "                        [ 3.0, 1.2] "
+                                                              + "                      ],"
+                                                              + "                      [ [ 2.4, 3.5],"
+                                                              + "                        [ 2.8, 1.7],"
+                                                              + "                        [ 3.0, 2.5],"
+                                                              + "                        [ 2.4, 3.5] "
+                                                              + "                      ]"
+                                                              + "                    ]"
+                                                              + "                  ]"
+                                                              + "    }"
+                                                              + "  ]"
+                                                              + " }"
+                                                              + "}"));
     }
 
     @Test
@@ -446,9 +448,9 @@ public class GeoEntitiesTest extends TestBase {
         // given
         Route route = new Route("My Route", new LineString(
             of(
-                new Position(1, 2),
-                new Position(3, 5),
-                new Position(19, 13))));
+                new Position(2, 1),
+                new Position(5, 3),
+                new Position(13, 19))));
 
         // when
         getDs().save(route);
@@ -459,7 +461,7 @@ public class GeoEntitiesTest extends TestBase {
                                       .first();
         assertThat(storedRoute, is(notNullValue()));
         // lat/long is always long/lat on the server
-        assertThat(storedRoute.toString(), JSONMatcher.jsonEqual("  {"
+        assertThat(storedRoute.toJson(), JSONMatcher.jsonEqual("  {"
                                                                  + " name: 'My Route',"
                                                                  + " route:"
                                                                  + " {"
@@ -530,14 +532,14 @@ public class GeoEntitiesTest extends TestBase {
         String name = "Many Paths";
         Paths paths = new Paths(name, new MultiLineString(of(
             of(
-                new Position(1.0, 2.0),
-                new Position(3.0, 5.0),
-                new Position(19.0, 13.0)),
+                new Position(2.0, 1.0),
+                new Position(5.0, 3.0),
+                new Position(13.0, 19.0)),
             of(
-                new Position(1.5, 2.0),
-                new Position(1.9, 2.0),
-                new Position(1.9, 1.8),
-                new Position(1.5, 2.0)))));
+                new Position(2.0, 1.5),
+                new Position(2.0, 1.9),
+                new Position(1.8, 1.9),
+                new Position(2.0, 1.5)))));
 
         // when
         getDs().save(paths);
@@ -548,7 +550,7 @@ public class GeoEntitiesTest extends TestBase {
                                       .first();
         assertThat(storedPaths, is(notNullValue()));
         // lat/long is always long/lat on the server
-        assertThat(storedPaths.toString(), JSONMatcher.jsonEqual("  {"
+        assertThat(storedPaths.toJson(), JSONMatcher.jsonEqual("  {"
                                                                  + " name: '" + name + "',"
                                                                  + " paths:"
                                                                  + " {"
@@ -575,29 +577,29 @@ public class GeoEntitiesTest extends TestBase {
         PolygonCoordinates
             polygonWithHoles = new PolygonCoordinates(
             of(
-                new Position(1.1, 2.0),
-                new Position(2.3, 3.5),
-                new Position(3.7, 1.0),
-                new Position(1.1, 2.0)),
+                new Position(2.0, 1.1),
+                new Position(3.5, 2.3),
+                new Position(1.0, 3.7),
+                new Position(2.0, 1.1)),
             of(
-                new Position(1.5, 2.0),
-                new Position(1.9, 2.0),
-                new Position(1.9, 1.8),
-                new Position(1.5, 2.0)),
+                new Position(2.0, 1.5),
+                new Position(2.0, 1.9),
+                new Position(1.8, 1.9),
+                new Position(2.0, 1.5)),
             of(
-                new Position(2.2, 2.1),
-                new Position(2.4, 1.9),
-                new Position(2.4, 1.7),
-                new Position(2.1, 1.8),
-                new Position(2.2, 2.1)));
+                new Position(2.1, 2.2),
+                new Position(1.9, 2.4),
+                new Position(1.7, 2.4),
+                new Position(1.8, 2.1),
+                new Position(2.1, 2.2)));
 
         Regions regions = new Regions(name, new MultiPolygon(of(
             new PolygonCoordinates(
                 of(
-                    new Position(1.1, 2.0),
-                    new Position(2.3, 3.5),
-                    new Position(3.7, 1.0),
-                    new Position(1.1, 2.0))),
+                    new Position(2.0, 1.1),
+                    new Position(3.5, 2.3),
+                    new Position(1.0, 3.7),
+                    new Position(2.0, 1.1))),
             polygonWithHoles)));
 
         // when
@@ -608,7 +610,7 @@ public class GeoEntitiesTest extends TestBase {
                                               .projection(new Document("_id", 0).append("className", 0))
                                               .first();
         assertThat(storedRegions, is(notNullValue()));
-        assertThat(storedRegions.toString(), JSONMatcher.jsonEqual("  {"
+        assertThat(storedRegions.toJson(), JSONMatcher.jsonEqual("  {"
                                                                    + " name: '" + name + "',"
                                                                    + " regions:  "
                                                                    + " {"
