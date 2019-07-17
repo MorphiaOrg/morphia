@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
+import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.TestDatastore.FacebookUser;
@@ -38,6 +39,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -478,8 +480,9 @@ public class TestQuery extends TestBase {
 
         assertEquals(5, getDs().find(Rectangle.class).count());
         getDs().find(Rectangle.class)
-               .filter("height", 1D)
-               .delete();
+               .filter("height", 1)
+               .remove(new DeleteOptions()
+                      .multi(true));
         assertEquals(2, getDs().find(Rectangle.class).count());
     }
 
@@ -1279,8 +1282,9 @@ public class TestQuery extends TestBase {
         getDs().ensureIndexes();
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        Rectangle r1 = getDs().find(Rectangle.class)
-                              .order(ascending("width"))
+        Query<Rectangle> query = getDs().find(Rectangle.class)
+                                        .order(ascending("width"));
+        Rectangle r1 = query
                               .execute(new FindOptions().limit(1))
                               .next();
         assertNotNull(r1);
@@ -1299,7 +1303,9 @@ public class TestQuery extends TestBase {
         final Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
                                                          .field("keywords")
                                                          .sizeEq(3);
-        assertEquals(new Document("keywords", new Document("$size", 3)), ((QueryImpl) query).getQueryDocument());
+        Document expected = new Document("keywords", new HashMap<>(new Document("$size", 3)));
+        Document queryDocument = ((QueryImpl) query).getQueryDocument();
+        assertEquals(expected, queryDocument);
     }
 
     @Test

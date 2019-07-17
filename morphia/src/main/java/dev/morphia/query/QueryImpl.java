@@ -12,7 +12,6 @@ import dev.morphia.FindAndModifyOptions;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -227,18 +226,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public Document getFieldsObject() {
         Projection projection = getOptions().getProjection();
 
-        Document document = projection.map(mapper, clazz);
-        if(document != null) {
-            final MappedClass mc = ds.getMapper().getMappedClass(clazz);
-
-            Entity entityAnnotation = mc.getEntityAnnotation();
-
-            if (projection.isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
-                document.put(ds.getMapper().getOptions().getDiscriminatorField(), 1);
-            }
-        }
-
-        return document;
+        return projection != null ? projection.map(mapper, clazz) : null;
     }
 
     /**
@@ -446,13 +434,15 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
         FindIterable<T> iterable = collection.find(query);
 
-        return findOptions.apply(iterable).iterator();
+        return findOptions
+                   .apply(this, iterable, mapper, clazz)
+                   .iterator();
     }
 
     @Override
     public String toString() {
         return getOptions().getProjection() == null ? getQueryDocument().toString()
-                                                    : format("{ %s,  %s }", getQueryDocument(), getFieldsObject());
+                                                    : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
     }
 
     /**

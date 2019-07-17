@@ -8,7 +8,7 @@ import org.bson.conversions.Bson;
 import java.util.concurrent.TimeUnit;
 
 public class FindAndDeleteOptions extends FindOneAndDeleteOptions {
-    private WriteConcern writeConcern;
+    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
 
     public WriteConcern getWriteConcern() {
         return writeConcern;

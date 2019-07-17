@@ -22,6 +22,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
 import java.util.concurrent.TimeUnit;
@@ -50,7 +51,6 @@ public final class FindOptions {
     private Document hint;
     private Document max;
     private Document min;
-    private long maxScan;
     private boolean returnKey;
     private boolean showRecordId;
     private boolean snapshot;
@@ -78,7 +78,6 @@ public final class FindOptions {
         this.hint = original.hint;
         this.max = original.max;
         this.min = original.min;
-        this.maxScan = original.maxScan;
         this.returnKey = original.returnKey;
         this.showRecordId = original.showRecordId;
         this.snapshot = original.snapshot;
@@ -126,17 +125,8 @@ public final class FindOptions {
         return this;
     }
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public FindOptions modifiers(Document modifiers) {
-        this.modifiers = modifiers;
-        return this;
-    }
-
     public Projection projection() {
-        if (projection != null) {
+        if (projection == null) {
             projection = new Projection(this);
         }
         return projection;
@@ -212,7 +202,48 @@ public final class FindOptions {
         return this;
     }
 
-    public <T> FindIterable<T> apply(final FindIterable<T> iterable) {
+    /**
+     * @morphia.internal
+     * @param query
+     * @param iterable
+     * @param mapper
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public <T> FindIterable<T> apply(final QueryImpl query, final FindIterable<T> iterable, final Mapper mapper, final Class clazz) {
+        Document fieldsObject = query.getFieldsObject();
+        if(fieldsObject != null) {
+            iterable.projection(fieldsObject);
+        } else if(projection != null) {
+            iterable.projection(projection.map(mapper, clazz));
+        }
+
+        iterable.batchSize(batchSize);
+        iterable.collation(collation);
+        iterable.comment(comment);
+        if(cursorType != null) {
+            iterable.cursorType(cursorType);
+        }
+        iterable.hint(hint);
+        iterable.limit(limit);
+        iterable.max(max);
+        iterable.maxAwaitTime(maxAwaitTimeMS, TimeUnit.MILLISECONDS);
+        iterable.maxTime(maxTimeMS, TimeUnit.MILLISECONDS);
+        iterable.min(min);
+        iterable.modifiers(modifiers);
+        iterable.noCursorTimeout(noCursorTimeout);
+        iterable.oplogReplay(oplogReplay);
+        iterable.partial(partial);
+        iterable.returnKey(returnKey);
+        iterable.showRecordId(showRecordId);
+        iterable.skip(skip);
+        Document querySort = query.getSort();
+        if(querySort != null) {
+            iterable.sort(querySort);
+        } else if(sort != null) {
+            iterable.sort(sort);
+        }
         return iterable;
     }
 
@@ -234,7 +265,6 @@ public final class FindOptions {
         result = 31 * result + (getHint() != null ? getHint().hashCode() : 0);
         result = 31 * result + (getMax() != null ? getMax().hashCode() : 0);
         result = 31 * result + (getMin() != null ? getMin().hashCode() : 0);
-        result = 31 * result + (int) (maxScan ^ (maxScan >>> 32));
         result = 31 * result + (isReturnKey() ? 1 : 0);
         result = 31 * result + (isShowRecordId() ? 1 : 0);
         result = 31 * result + (snapshot ? 1 : 0);
@@ -277,9 +307,6 @@ public final class FindOptions {
             return false;
         }
         if (isPartial() != that.isPartial()) {
-            return false;
-        }
-        if (maxScan != that.maxScan) {
             return false;
         }
         if (isReturnKey() != that.isReturnKey()) {
@@ -415,7 +442,6 @@ public final class FindOptions {
                ", limit=" + limit +
                ", max=" + max +
                ", maxAwaitTimeMS=" + maxAwaitTimeMS +
-               ", maxScan=" + maxScan +
                ", maxTimeMS=" + maxTimeMS +
                ", min=" + min +
                ", modifiers=" + modifiers +

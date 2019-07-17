@@ -330,6 +330,10 @@ public interface Query<T> {
     @Deprecated
     Key<T> getKey(FindOptions options);
 
+    /**
+     * Deletes an entity from the database and returns it.
+     * @return the deleted entity
+     */
     T delete();
 
     /**
@@ -342,6 +346,12 @@ public interface Query<T> {
     @Deprecated(since = "2.0", forRemoval = true)
     T delete(FindAndModifyOptions options);
 
+    /**
+     * Deletes an entity from the database and returns it.
+
+     * @param options the options to apply
+     * @return the deleted entity
+     */
     T delete(FindAndDeleteOptions options);
 
     Modify<T> modify();
@@ -360,6 +370,11 @@ public interface Query<T> {
         return remove(new DeleteOptions());
     }
 
+    /**
+     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
+     * @param options the options to apply
+     * @return the results
+     */
     DeleteResult remove(DeleteOptions options);
 
     Update<T> update();

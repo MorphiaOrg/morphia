@@ -1,6 +1,8 @@
 package dev.morphia.query;
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
@@ -108,6 +110,17 @@ public class Projection {
         Document projection = new Document();
         iterate(mapper, projection, clazz, includes, 1);
         iterate(mapper, projection, clazz, excludes, 0);
+
+        if(projection != null) {
+            final MappedClass mc = mapper.getMappedClass(clazz);
+
+            Entity entityAnnotation = mc.getEntityAnnotation();
+
+            if (isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
+                projection.put(mapper.getOptions().getDiscriminatorField(), 1);
+            }
+        }
+
         return projection;
     }
 
