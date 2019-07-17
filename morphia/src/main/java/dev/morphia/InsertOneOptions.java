@@ -27,7 +27,7 @@ import org.bson.Document;
  */
 public class InsertOneOptions {
     com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
-    private WriteConcern writeConcern;
+    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
 
     /**
      * Set the write concern to use for the insert.

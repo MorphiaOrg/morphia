@@ -56,7 +56,7 @@ public class MorphiaCodecProvider implements CodecProvider {
                     propertyCodecProviders, discriminatorLookup);
             }
 
-            return (Codec<T>) codec;
+            return codec;
         }
         return null;
     }

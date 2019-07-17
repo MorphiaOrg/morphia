@@ -2,9 +2,11 @@ package dev.morphia.query.validation;
 
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -131,6 +133,8 @@ public class GeoWithinOperationValidatorTest extends TestBase {
     @Entity
     @SuppressWarnings("unused")
     private static class GeoEntity {
+        @Id
+        private ObjectId id;
         private final int[] array = {1};
         private final List<Integer> list = List.of(1);
     }
@@ -138,6 +142,8 @@ public class GeoWithinOperationValidatorTest extends TestBase {
     @Entity
     @SuppressWarnings("unused")
     private static class InvalidGeoEntity {
+        @Id
+        private ObjectId id;
         private final String[] arrayOfStrings = {"1"};
         private final List<String> listOfStrings = List.of("1");
     }

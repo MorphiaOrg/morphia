@@ -32,7 +32,7 @@ import java.util.List;
  * @since 1.3
  */
 public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
-    private WriteConcern writeConcern;
+    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private boolean multi;
 
     /**

@@ -67,7 +67,7 @@ public class MorphiaConvention implements Convention {
             classModelBuilder.removeProperty(name);
         }
 
-        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(datastore, classModelBuilder);
+        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(datastore, classModelBuilder.getType());
         Iterator<FieldModelBuilder<?>> iterator = classModelBuilder.getFieldModelBuilders().iterator();
         while (iterator.hasNext()) {
             final FieldModelBuilder<?> builder = iterator.next();

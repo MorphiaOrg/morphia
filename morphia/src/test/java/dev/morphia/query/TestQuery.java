@@ -1275,6 +1275,8 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testSimpleSort() {
+        getMapper().map(Rectangle.class);
+        getDs().ensureIndexes();
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class)

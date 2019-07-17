@@ -89,14 +89,14 @@ public class Mapper {
      */
     public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions opts) {
         this.opts = opts;
-        final MorphiaCodecProvider codecProvider = new MorphiaCodecProvider(datastore, this,
-            List.of(new MorphiaConvention(datastore, opts)), Set.of(""));
-        final MorphiaTypesCodecProvider typesCodecProvider = new MorphiaTypesCodecProvider(this);
-
-        this.codecRegistry = fromRegistries(fromProviders(new MorphiaShortCutProvider(this, codecProvider)),
+        this.codecRegistry = fromRegistries(
             new PrimitiveCodecProvider(codecRegistry),
             codecRegistry,
-            fromProviders(new EnumCodecProvider(), typesCodecProvider, codecProvider));
+            fromProviders(
+                new EnumCodecProvider(),
+                new MorphiaTypesCodecProvider(this),
+                new MorphiaCodecProvider(datastore, this,
+                    List.of(new MorphiaConvention(datastore, opts)), Set.of(""))));
     }
 
     /**

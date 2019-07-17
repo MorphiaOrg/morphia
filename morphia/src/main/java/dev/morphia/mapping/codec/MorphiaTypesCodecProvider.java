@@ -25,6 +25,8 @@ public class MorphiaTypesCodecProvider extends ValueCodecProvider {
         addCodec(new StringArrayCodec(mapper));
         addCodec(new HashMapCodec());
         addCodec(new URICodec());
+        addCodec(new CenterCodec());
+        addCodec(new ShapeCodec());
         addCodec(new ObjectCodec(mapper));
         arrayCodec = new ArrayCodec(mapper);
     }

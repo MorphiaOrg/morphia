@@ -47,12 +47,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.bson.Document.parse;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -362,23 +360,21 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        Iterator<T> iterator = entities.iterator();
-        return !iterator.hasNext()
-               ? Collections.emptyList()
-               : save(entities, getWriteConcern(iterator.next()));
-    }
-
-    private <T> Iterable<Key<T>> save(final Iterable<T> entities, final WriteConcern wc) {
-        return save(entities, new InsertOptions().writeConcern(wc));
+        return save(entities, new InsertManyOptions());
     }
 
     @Override
     public <T> Iterable<Key<T>> save(final Iterable<T> entities, final InsertManyOptions options) {
         final List<Key<T>> savedKeys = new ArrayList<>();
+        InsertOneOptions insertOneOptions = new InsertOneOptions()
+                                                .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                .writeConcern(options.getWriteConcern());
         for (final T ent : entities) {
-//            savedKeys.add(save(ent, options));
+            savedKeys.add(save(ent, insertOneOptions));
         }
         return savedKeys;
+
+
 
     }
 
@@ -559,6 +555,7 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 */
 
+    @Deprecated
     private <T> MappedClass validateSave(final T entity) {
         if (entity == null) {
             throw new UpdateException("Can not persist a null entity");

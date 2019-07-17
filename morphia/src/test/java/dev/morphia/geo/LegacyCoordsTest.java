@@ -63,35 +63,6 @@ public class LegacyCoordsTest extends TestBase {
     }
 
     @Test
-    public void shouldGenerateCorrectQueryForNearSphereWithRadius() {
-        // when
-        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
-                                                    .field("location")
-                                                    .near(-87.99822, 42.08563, 2, true);
-
-        // then
-        assertEquals(Document.parse("{ \"location\" : "
-                             + "{ \"$nearSphere\" : [ 42.08563 , -87.99822] , "
-                             + "\"$maxDistance\" : 2.0}}"),
-                   ((QueryImpl) query).getQueryDocument());
-    }
-
-    @Test
-    public void shouldGenerateCorrectQueryForNearWithMaxDistance() {
-        // when
-        Query<PlaceWithLegacyCoords> query = getDs().find(PlaceWithLegacyCoords.class)
-                                                    .field("location")
-                                                    .near(-87.99822, 42.08563, 2);
-
-        // then
-        assertEquals(Document.parse("{ \"location\" : "
-                             + "{ \"$near\" : [ 42.08563 , -87.99822] , "
-                             + "\"$maxDistance\" : 2.0}}"),
-                   ((QueryImpl) query).getQueryDocument());
-
-    }
-
-    @Test
     public void shouldNotReturnAnyResultsIfNoLocationsWithinGivenRadius() {
         // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");

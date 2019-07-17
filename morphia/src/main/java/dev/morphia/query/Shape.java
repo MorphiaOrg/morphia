@@ -1,9 +1,7 @@
 package dev.morphia.query;
 
 
-import com.mongodb.BasicDBList;
 import com.mongodb.client.model.geojson.Point;
-import org.bson.Document;
 
 /**
  * This encapsulates the data necessary to define a shape for queries.
@@ -88,7 +86,10 @@ public class Shape {
         return copy;
     }
 
-    private static class Center extends Shape {
+    /**
+     * @morphia.internal
+     */
+    public static class Center extends Shape {
         private final Point center;
         private final double radius;
 
@@ -96,6 +97,14 @@ public class Shape {
             super(geometry);
             this.center = center;
             this.radius = radius;
+        }
+
+        public Point getCenter() {
+            return center;
+        }
+
+        public double getRadius() {
+            return radius;
         }
     }
 }

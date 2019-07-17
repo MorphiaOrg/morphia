@@ -28,7 +28,7 @@ import com.mongodb.client.model.FindOneAndDeleteOptions;
  */
 public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions{
     private boolean multi;
-    private WriteConcern writeConcern;
+    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
 
     public boolean isMulti() {
         return multi;

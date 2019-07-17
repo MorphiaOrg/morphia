@@ -25,7 +25,7 @@ import com.mongodb.WriteConcern;
  */
 public class InsertManyOptions {
     private com.mongodb.client.model.InsertManyOptions options = new com.mongodb.client.model.InsertManyOptions();
-    private WriteConcern writeConcern;
+    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
 
     /**
      * Set the write concern to use for the insert.
