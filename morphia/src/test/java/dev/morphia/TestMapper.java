@@ -1,6 +1,7 @@
 package dev.morphia;
 
 
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -12,23 +13,28 @@ import dev.morphia.mapping.EmbeddedMappingTest.NestedImpl;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
+import dev.morphia.testmodel.Rectangle;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 
 
-/**
- * Tests mapper functions; this is tied to some of the internals.
- *
- * @author scotthernandez
- */
 public class TestMapper extends TestBase {
 
+    @Test
+    public void annotations() {
+        List<MappedClass> classes = getMapper().map(Set.of(Rectangle.class));
+        MappedClass mappedClass = classes.get(0);
+        List<Entity> annotations = mappedClass.getAnnotations(Entity.class);
+        Assert.assertEquals("Rectangle", mappedClass.getCollectionName());
+        Assert.assertEquals(annotations.toString(), annotations.size(), 2);
+    }
     @Test
     public void serializableId() {
         final CustomId cId = new CustomId();
@@ -90,6 +96,7 @@ public class TestMapper extends TestBase {
         Assert.assertTrue(subTypes.contains(mapper.getMappedClass(AnotherNested.class)));
     }
 
+    @Entity
     public static class A {
         private static int loadCount;
         @Id
@@ -131,6 +138,7 @@ public class TestMapper extends TestBase {
         private A a3;
     }
 
+    @Embedded
     public static class CustomId implements Serializable {
 
         @Property("v")
@@ -207,6 +215,7 @@ public class TestMapper extends TestBase {
         }
     }
 
+    @Entity
     public static class UsesCustomIdObject {
         @Id
         private CustomId id;

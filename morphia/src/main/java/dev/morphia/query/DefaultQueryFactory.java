@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import org.bson.Document;
 
@@ -10,9 +9,9 @@ import org.bson.Document;
 public class DefaultQueryFactory extends AbstractQueryFactory {
 
     @Override
-    public <T> Query<T> createQuery(final Datastore datastore, final MongoCollection collection, final Class<T> type, final Document query) {
+    public <T> Query<T> createQuery(final Datastore datastore, final Class<T> type, final Document query) {
 
-        final QueryImpl<T> item = new QueryImpl<T>(type, collection, datastore);
+        final QueryImpl<T> item = new QueryImpl<>(type, datastore);
 
         if (query != null) {
             item.setQueryObject(query);

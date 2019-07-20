@@ -27,6 +27,7 @@
                         <configuration>
                             <sources>
                                 <source>src/driver/java</source>
+                                <source>target/generated-sources/sofia</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -156,6 +157,24 @@
                 <configuration>
                     <input>../config/revapi-input.json</input>
                     <output>../config/revapi.json</output>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.antwerkz.sofia</groupId>
+                <artifactId>sofia-maven</artifactId>
+                <version>${sofia.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <loggingType>slf4j</loggingType>
+                    <outputType>java</outputType>
+                    <packageName>dev.morphia.sofia</packageName>
                 </configuration>
             </plugin>
         </plugins>

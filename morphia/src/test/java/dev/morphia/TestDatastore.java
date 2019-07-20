@@ -45,6 +45,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static com.mongodb.WriteConcern.ACKNOWLEDGED;
 import static com.mongodb.WriteConcern.MAJORITY;
@@ -83,7 +84,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testCollectionNames() {
-        assertEquals("facebook_users", getMapper().getCollectionName(FacebookUser.class));
+        assertEquals("facebook_users", getMapper().getMappedClass(FacebookUser.class).getCollectionName());
     }
 
     @Test
@@ -164,7 +165,7 @@ public class TestDatastore extends TestBase {
     @Test
     public void testLifecycle() {
         final LifecycleTestObj life1 = new LifecycleTestObj();
-        getMapper().addMappedClass(LifecycleTestObj.class);
+        getMapper().map(Set.of(LifecycleTestObj.class));
         getDs().save(life1);
         assertTrue(life1.prePersist);
         assertTrue(life1.prePersistWithParam);
@@ -187,7 +188,7 @@ public class TestDatastore extends TestBase {
     @Test
     public void testLifecycleListeners() {
         final LifecycleTestObj life1 = new LifecycleTestObj();
-        getMapper().addMappedClass(LifecycleTestObj.class);
+        getMapper().map(Set.of(LifecycleTestObj.class));
         getDs().save(life1);
         assertTrue(LifecycleListener.prePersist);
         assertTrue(LifecycleListener.prePersistWithEntity);
@@ -200,7 +201,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testMultipleDatabasesSingleThreaded() {
-        getMapper().map(FacebookUser.class);
+        getMapper().map(Set.of(FacebookUser.class));
 
         final Datastore ds1 = Morphia.createDatastore(getMongoClient(), "db1");
         final Datastore ds2 = Morphia.createDatastore(getMongoClient(), "db2");
@@ -750,6 +751,7 @@ public class TestDatastore extends TestBase {
         }
     }
 
+    @Entity
     @SuppressWarnings("UnusedDeclaration")
     public static class KeysKeysKeys {
         @Id

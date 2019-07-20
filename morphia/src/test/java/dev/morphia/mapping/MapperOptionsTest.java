@@ -109,14 +109,14 @@ public class MapperOptionsTest extends TestBase {
     public void lowercaseDefaultCollection() {
         DummyEntity entity = new DummyEntity();
 
-        String collectionName = getMapper().getCollectionName(entity);
+        String collectionName = getMapper().getMappedClass(entity.getClass()).getCollectionName();
         Assert.assertEquals("uppercase", "DummyEntity", collectionName);
 
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
             builder.useLowerCaseCollectionNames(true).build());
 
-        collectionName = datastore.getMapper().getCollectionName(entity);
+        collectionName = datastore.getMapper().getMappedClass(entity.getClass()).getCollectionName();
         Assert.assertEquals("lowercase", "dummyentity", collectionName);
     }
 

@@ -56,7 +56,6 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class MappedClass {
     private static final Logger LOG = LoggerFactory.getLogger(MappedClass.class);
-    private static final List<Class<? extends Annotation>> INTERESTING_ANNOTATIONS = new ArrayList<>();
     /**
      * Annotations interesting for life-cycle events
      */
@@ -67,23 +66,6 @@ public class MappedClass {
                                                                                           PostPersist.class,
                                                                                           PostLoad.class);
 
-    static {
-        INTERESTING_ANNOTATIONS.add(Embedded.class);
-        INTERESTING_ANNOTATIONS.add(Entity.class);
-        INTERESTING_ANNOTATIONS.add(EntityListeners.class);
-        INTERESTING_ANNOTATIONS.add(Version.class);
-        INTERESTING_ANNOTATIONS.add(Converters.class);
-        INTERESTING_ANNOTATIONS.add(Indexes.class);
-        INTERESTING_ANNOTATIONS.add(Validation.class);
-        INTERESTING_ANNOTATIONS.add(Field.class);
-        INTERESTING_ANNOTATIONS.add(IndexOptions.class);
-    }
-
-    /**
-     * Annotations we were interested in, and found.
-     */
-    private final Map<Class<? extends Annotation>, List<Annotation>> foundAnnotations =
-        new HashMap<>();
     /**
      * Methods which are life-cycle events
      */
@@ -146,6 +128,20 @@ public class MappedClass {
      */
     public MappedClass getSuperClass() {
         return superClass;
+    }
+
+    public boolean isMappable() {
+        return hasAnnotation(type, Entity.class, Embedded.class);
+    }
+
+    private <T> boolean hasAnnotation(final Class<T> clazz, final Class<? extends Annotation>... annotations) {
+        for (Class<? extends Annotation> annotation : annotations) {
+            if(clazz.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -297,10 +293,13 @@ public class MappedClass {
      * @return the collName
      */
     public String getCollectionName() {
-        if (entityAn == null || entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
+        if(entityAn == null) {
+            return null;
+        } else if (entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
             return mapperOptions.isUseLowerCaseCollectionNames() ? type.getSimpleName().toLowerCase() : type.getSimpleName();
+        } else{
+            return entityAn.value();
         }
-        return entityAn.value();
     }
 
     /**

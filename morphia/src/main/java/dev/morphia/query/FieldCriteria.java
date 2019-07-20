@@ -33,15 +33,12 @@ class FieldCriteria extends AbstractCriteria {
     @SuppressWarnings("deprecation")
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value, final boolean not) {
         this.mapper = mapper;
-        //validate might modify prop string to translate java field name to db field name
-        final StringBuilder sb = new StringBuilder(fieldName);
-
         final PathTarget pathTarget = new PathTarget(mapper,  mapper.getMappedClass(query.getEntityClass()),
             fieldName, query.isValidatingNames());
         final MappedField mappedField = pathTarget.getTarget();
 
         Object mappedValue = value;
-        if (mapper.isMappable(value.getClass()) && mappedField != null) {
+        if (value != null && mapper.getMappedClass(value.getClass()) != null && mappedField != null) {
             PropertyHandler handler = mappedField.getHandler();
             if(handler != null) {
                 mappedValue = handler.encodeValue(value);
@@ -64,17 +61,6 @@ class FieldCriteria extends AbstractCriteria {
         this.operator = op;
         this.value = mappedValue;
         this.not = not;
-    }
-
-    private boolean isMappable(final Object value, final Mapper mapper) {
-        boolean mappable;
-        if(value instanceof Iterable) {
-            Iterator iterator = ((Iterable)value).iterator();
-            mappable = iterator.hasNext() && isMappable(iterator.next(), mapper);
-        } else {
-            mappable = mapper.isMappable(value.getClass());
-        }
-        return mappable;
     }
 
     @Override

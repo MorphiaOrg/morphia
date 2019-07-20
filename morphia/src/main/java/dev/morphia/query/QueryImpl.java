@@ -38,7 +38,6 @@ import static java.lang.String.format;
 public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
     final Datastore ds;
-    final MongoCollection<T> collection;
     final Class<T> clazz;
     final Mapper mapper;
     private boolean validateName = true;
@@ -46,6 +45,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private Document baseQuery;
     private FindOptions options;
     private CriteriaContainer compoundContainer;
+    private String collectionName;
+    private MongoCollection<T> collection;
 
     FindOptions getOptions() {
         if (options == null) {
@@ -56,14 +57,13 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     /**
      * Creates a Query for the given type and collection
-     *  @param clazz the type to return
-     * @param coll  the collection to query
+     *
+     * @param clazz the type to return
      * @param ds    the Datastore to use
      */
-    public QueryImpl(final Class<T> clazz, final MongoCollection<T> coll, final Datastore ds) {
+    public QueryImpl(final Class<T> clazz, final Datastore ds) {
         this.clazz = clazz;
         this.ds = ds;
-        collection = coll;
         mapper = this.ds.getMapper();
 
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
@@ -76,21 +76,23 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public MorphiaKeyCursor<T> keys(final FindOptions options) {
-        QueryImpl<T> cloned = cloneQuery();
-        options.projection().include("_id");
+        FindOptions returnKey = new FindOptions(options)
+            .projection()
+            .include("_id");
 
-        return new MorphiaKeyCursor<>(cloned.prepareCursor(options), ds.getMapper(),
-            clazz, collection.getNamespace().getCollectionName());
+        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
+            mapper.getDatastore().getDatabase().getCollection(getCollectionName())), ds.getMapper(),
+            clazz, getCollectionName());
     }
 
     @Override
     public long count() {
-        return collection.count(getQueryDocument());
+        return getCollection().countDocuments(getQueryDocument());
     }
 
     @Override
     public long count(final CountOptions options) {
-        return collection.count(getQueryDocument(), options);
+        return getCollection().countDocuments(getQueryDocument(), options);
     }
 
     @Override
@@ -100,8 +102,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public MorphiaCursor<T> execute(final FindOptions options) {
-        MongoCursor mongoCursor = prepareCursor(options);
-        return new MorphiaCursor<>(mongoCursor);
+        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
 
     @Override
@@ -134,7 +135,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      * @morphia.internal
      */
     QueryImpl<T> cloneQuery() {
-        final QueryImpl<T> n = new QueryImpl<>(clazz, collection, ds);
+        final QueryImpl<T> n = new QueryImpl<>(clazz, ds);
         n.validateName = validateName;
         n.validateType = validateType;
         n.baseQuery = copy(baseQuery);
@@ -178,7 +179,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public Map<String, Object> explain(final FindOptions options) {
         return new LinkedHashMap<>(ds.getDatabase()
                                      .runCommand(new Document("explain",
-                                         new Document("find", collection.getNamespace().getCollectionName())
+                                         new Document("find", getCollection().getNamespace().getCollectionName())
                                              .append("filter", getQueryDocument()))));
     }
 
@@ -203,11 +204,21 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return this;
     }
 
+    private String getCollectionName() {
+        if(collectionName == null) {
+            collectionName = getCollection().getNamespace().getCollectionName();
+        }
+        return collectionName;
+    }
+
     /**
      * @return the collection this query targets
      * @morphia.internal
      */
-    public MongoCollection getCollection() {
+    public MongoCollection<T> getCollection() {
+        if(collection == null) {
+            collection = mapper.getCollection(clazz);
+        }
         return collection;
     }
 
@@ -361,7 +372,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     public T delete(final FindAndDeleteOptions options) {
-        return ds.enforceWriteConcern(collection, clazz, options.getWriteConcern())
+        return ds.enforceWriteConcern(getCollection(), clazz, options.getWriteConcern())
                    .findOneAndDelete(getQueryDocument(), options);
     }
 
@@ -388,7 +399,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Update<T> update() {
-        return new Update<>(ds, mapper, clazz, collection, getQueryDocument());
+        return new Update<>(ds, mapper, clazz, getCollection(), getQueryDocument());
     }
 
     @Override
@@ -421,18 +432,19 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return validateName;
     }
 
-    private MongoCursor prepareCursor(final FindOptions findOptions) {
+    private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
         final Document query = getQueryDocument();
 
         if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Running query(%s) : %s, options: %s,", collection.getNamespace().getCollectionName(), query, findOptions));
+            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
         }
 
         if (findOptions.getCursorType() != NonTailable && (findOptions.getSort() != null)) {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
-        FindIterable<T> iterable = collection.find(query);
+        FindIterable<E> iterable = collection
+                                         .find(query);
 
         return findOptions
                    .apply(this, iterable, mapper, clazz)
@@ -535,14 +547,14 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         if (concern == null) {
             concern = getWriteConcern(klass);
         }
-        return concern == null ? collection : collection.withWriteConcern(concern);
+        return concern == null ? getCollection() : getCollection().withWriteConcern(concern);
     }
 
-    WriteConcern getWriteConcern(final Object clazzOrEntity) {
-        WriteConcern wc = ds.getMongo().getWriteConcern();
-        if (clazzOrEntity != null) {
-            final Entity entityAnn = mapper.getMappedClass(clazzOrEntity).getEntityAnnotation();
-            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
+    WriteConcern getWriteConcern(final Class clazz) {
+        WriteConcern wc = null;
+        if (clazz != null) {
+            final Entity entityAnn = mapper.getMappedClass(clazz).getEntityAnnotation();
+            if (!entityAnn.concern().isEmpty()) {
                 wc = WriteConcern.valueOf(entityAnn.concern());
             }
         }

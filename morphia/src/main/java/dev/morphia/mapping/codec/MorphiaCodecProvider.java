@@ -47,8 +47,7 @@ public class MorphiaCodecProvider implements CodecProvider {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
-        if (mapper.isMappable(clazz)) {
-            PojoCodec<T> codec = (PojoCodec<T>) codecs.get(clazz);
+        MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(clazz);
             if (codec == null) {
                 ClassModel<T> classModel = createClassModel(clazz, conventions);
                 discriminatorLookup.addClassModel(classModel);
@@ -56,9 +55,7 @@ public class MorphiaCodecProvider implements CodecProvider {
                     propertyCodecProviders, discriminatorLookup);
             }
 
-            return codec;
-        }
-        return null;
+        return codec; //.getMappedClass().isMappable() ? codec : null;
     }
 
     /**

@@ -2,6 +2,8 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.DBRef;
+import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
@@ -19,12 +21,14 @@ import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl;
+import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.ReflectionUtils;
 import org.bson.BsonDocumentReader;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +45,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
@@ -76,6 +81,7 @@ public class Mapper {
     //A general cache of instances of classes; used by MappedClass for EntityListener(s)
     private final Map<Class, Object> instanceCache = new ConcurrentHashMap();
     private CodecRegistry codecRegistry;
+    private Datastore datastore;
     private final MapperOptions opts;
 
     // TODO:  unify with DefaultCreator if it survives the Codec switchover
@@ -88,6 +94,7 @@ public class Mapper {
      * @param opts the options to use
      */
     public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions opts) {
+        this.datastore = datastore;
         this.opts = opts;
         this.codecRegistry = fromRegistries(
             new PrimitiveCodecProvider(codecRegistry),
@@ -99,66 +106,49 @@ public class Mapper {
                     List.of(new MorphiaConvention(datastore, opts)), Set.of(""))));
     }
 
-    /**
-     * Maps a set of classes
-     *
-     * @param entityClasses the classes to map
-     */
-    public synchronized void map(final Class... entityClasses) {
-        if (entityClasses != null && entityClasses.length > 0) {
-            for (final Class entityClass : entityClasses) {
-                if (!isMapped(entityClass)) {
-                    addMappedClass(entityClass);
-                }
-            }
-        }
+    public Datastore getDatastore() {
+        return datastore;
     }
 
     /**
      * Maps a set of classes
      *
      * @param entityClasses the classes to map
+     * @return
+     * @deprecated use {@link #map(Set)}
      */
-    public synchronized void map(final Set<Class> entityClasses) {
-        if (entityClasses != null && !entityClasses.isEmpty()) {
-            for (final Class entityClass : entityClasses) {
-                if (!isMapped(entityClass)) {
-                    addMappedClass(entityClass);
-                }
-            }
-        }
+    @Deprecated(since = "2.0", forRemoval = true)
+    public List<MappedClass> map(final Class... entityClasses) {
+        return map(Set.of(entityClasses));
     }
 
     /**
-     * Tries to map all classes in the package specified. Fails if one of the classes is not valid for mapping.
+     * Maps a set of classes
      *
-     * @param packageName the name of the package to process
+     * @param classes the classes to map
+     * @return the list of mapped classes
      */
-    public synchronized void mapPackage(final String packageName) {
-        mapPackage(packageName, false);
+    public List<MappedClass> map(final Set<Class> classes) {
+        return classes.stream()
+                      .map(c -> getMappedClass(c))
+                      .filter(mc -> mc != null)
+                      .collect(Collectors.toList());
     }
 
     /**
      * Tries to map all classes in the package specified.
      *
-     * @param packageName          the name of the package to process
-     * @param ignoreInvalidClasses specifies whether to ignore classes in the package that cannot be mapped
+     * @param packageName the name of the package to process
      */
-    public synchronized void mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
+    public synchronized void mapPackage(final String packageName) {
         try {
             for (final Class clazz : ReflectionUtils.getClasses(getClass().getClassLoader(), packageName,
                 getOptions().isMapSubPackages())) {
-                try {
-                    final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);
-                    final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(clazz);
-                    final boolean isAbstract = Modifier.isAbstract(clazz.getModifiers());
-                    if ((entityAnn != null || embeddedAnn != null) && !isAbstract) {
-                        map(clazz);
-                    }
-                } catch (final MappingException ex) {
-                    if (!ignoreInvalidClasses) {
-                        throw ex;
-                    }
+                final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);
+                final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(clazz);
+                final boolean isAbstract = Modifier.isAbstract(clazz.getModifiers());
+                if ((entityAnn != null || embeddedAnn != null) && !isAbstract) {
+                    map(clazz);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -172,7 +162,7 @@ public class Mapper {
      * @param clazz the class to use when trying to find others to map
      */
     public void mapPackageFromClass(final Class clazz) {
-        mapPackage(clazz.getPackage().getName(), false);
+        mapPackage(clazz.getPackage().getName());
     }
 
     /**
@@ -194,30 +184,31 @@ public class Mapper {
      * @param c the Class to map
      * @return the MappedClass for the given Class
      */
-    public MappedClass addMappedClass(final Class c) {
+    private MappedClass addMappedClass(final Class c) {
         MappedClass mappedClass = mappedClasses.get(c);
         if (mappedClass == null) {
-            //            try {
-            final Codec codec1 = codecRegistry.get(c);
-            if (codec1 instanceof MorphiaCodec) {
-                return addMappedClass(((MorphiaCodec) codec1).getMappedClass());
+            try {
+                final Codec codec1 = codecRegistry.get(c);
+                if (codec1 instanceof MorphiaCodec) {
+                    return addMappedClass(((MorphiaCodec) codec1).getMappedClass());
+                }
+            } catch (CodecConfigurationException e) {
+               // unmappable type
             }
-            //            } catch (CodecConfigurationException e) {
-            //                LOG.error(e.getMessage(), e);
-            //                return null;
-            //            }
         }
         return mappedClass;
     }
 
     private MappedClass addMappedClass(final MappedClass mc) {
+        mappedClasses.put(mc.getClazz(), mc);
+        if(mc.getEntityAnnotation() != null) {
+            mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                                     .add(mc);
+        }
+
         if (!mc.isInterface()) {
             mc.validate(this);
         }
-
-        mappedClasses.put(mc.getClazz(), mc);
-        mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                 .add(mc);
 
         return mc;
     }
@@ -249,22 +240,8 @@ public class Mapper {
         return subtypes;
     }
 
-    public <T> boolean isMappable(final Class<T> clazz) {
-        return hasAnnotation(clazz, Entity.class, Embedded.class);
-    }
-
     public CodecRegistry getCodecRegistry() {
         return codecRegistry;
-    }
-
-    private <T> boolean hasAnnotation(final Class<T> clazz, final Class<? extends Annotation>... annotations) {
-        for (Class<? extends Annotation> annotation : annotations) {
-            if(clazz.getAnnotation(annotation) != null) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -402,20 +379,16 @@ public class Mapper {
      * @param <T> the class type
      * @return the Class mapped to this collection name
      * @morphia.internal
-     * @deprecated no replacement is planned
      */
-    @Deprecated
     public <T> Class<T> getClassFromCollection(final String collection) {
-        final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
-        if (mcs == null || mcs.isEmpty()) {
-            throw new MappingException(format("The collection '%s' is not mapped to a java class.", collection));
+        final List<MappedClass> classes = getClassesMappedToCollection(collection);
+        if (classes.size() > 1) {
+                Sofia.logMoreThanOneMapper(collection,
+                    classes.stream()
+                           .map(c-> c.getClazz().getName())
+                               .collect(Collectors.joining(", ")));
         }
-        if (mcs.size() > 1) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info(format("Found more than one class mapped to collection '%s'%s", collection, mcs));
-            }
-        }
-        return (Class<T>) mcs.iterator().next().getClazz();
+        return (Class<T>) classes.get(0).getClazz();
     }
 
     /**
@@ -426,25 +399,51 @@ public class Mapper {
     public List<MappedClass> getClassesMappedToCollection(final String collection) {
         final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
         if (mcs == null || mcs.isEmpty()) {
-            throw new MappingException(format("The collection '%s' is not mapped to a java class.", collection));
+            throw new MappingException(Sofia.collectionNotMapped(collection));
         }
         return new ArrayList<>(mcs);
     }
 
-    /**
-     * Gets the mapped collection for an object instance or Class reference.
-     *
-     * @param object the object to process
-     * @return the collection name
-     * @morphia.internal
-     */
-    public String getCollectionName(final Object object) {
-        if (object == null) {
-            throw new IllegalArgumentException();
+    public <T> MongoCollection<T> getCollection(final Class<T> clazz) {
+        MappedClass mappedClass = getMappedClass(clazz);
+        if (mappedClass == null) {
+            throw new IllegalArgumentException(Sofia.notMappable(clazz.getName()));
+        }
+        if (mappedClass.getCollectionName() == null) {
+            throw new MappingException(Sofia.noMappedCollection(clazz.getName()));
         }
 
-        final MappedClass mc = getMappedClass(object);
-        return mc.getCollectionName();
+        MongoCollection<T> collection = null;
+        if (mappedClass.getEntityAnnotation() != null) {
+            collection = datastore.getDatabase().getCollection(mappedClass.getCollectionName(), clazz);
+            collection = enforceWriteConcern(collection, clazz);
+        }
+        return collection;
+    }
+
+    public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass) {
+        WriteConcern applied = getWriteConcern(klass);
+        return applied != null
+               ? collection.withWriteConcern(applied)
+               : collection;
+    }
+
+    /**
+     * Gets the write concern for entity or returns the default write concern for this datastore
+     *
+     * @param clazz the class to use when looking up the WriteConcern
+     * @morphia.internal
+     */
+    public WriteConcern getWriteConcern(final Class clazz) {
+        WriteConcern wc = null;
+        if (clazz != null) {
+            final Entity entityAnn = getMappedClass(clazz).getEntityAnnotation();
+            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
+                wc = WriteConcern.valueOf(entityAnn.concern());
+            }
+        }
+
+        return wc;
     }
 
     /**
@@ -512,7 +511,7 @@ public class Mapper {
 
         final Object id = getId(unwrapped);
         final Class<T> aClass = (Class<T>) unwrapped.getClass();
-        return id == null ? null : new Key<>(aClass, getCollectionName(aClass), id);
+        return id == null ? null : new Key<>(aClass, getMappedClass(aClass).getCollectionName(), id);
     }
 
     /**
@@ -549,7 +548,7 @@ public class Mapper {
      * @return the list of Keys
      */
     public <T> List<Key<T>> getKeysByManualRefs(final Class<T> clazz, final List<Object> refs) {
-        final String collection = getCollectionName(clazz);
+        final String collection = getMappedClass(clazz).getCollectionName();
         final List<Key<T>> keys = new ArrayList<>(refs.size());
         for (final Object ref : refs) {
             keys.add(this.manualRefToKey(collection, ref));
@@ -584,23 +583,17 @@ public class Mapper {
     /**
      * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
      *
-     * @param obj the object to process
+     * @param type the type to process
      * @return the MappedClass for the object given
      */
-    public MappedClass getMappedClass(final Object obj) {
-        if (obj == null) {
+    public MappedClass getMappedClass(final Class type) {
+        if (type == null) {
             return null;
         }
 
-        Class type = (obj instanceof Class) ? (Class) obj : obj.getClass();
-
-        MappedClass mc = null;
-        if (isMappable(type)) {
-
-            mc = mappedClasses.get(type);
-            if (mc == null) {
-                mc = addMappedClass(type);
-            }
+        MappedClass mc = mappedClasses.get(type);
+        if (mc == null) {
+            mc = addMappedClass(type);
         }
         return mc;
     }
@@ -623,10 +616,11 @@ public class Mapper {
      * Sets the options this Mapper should use
      *
      * @param options the options to use
+     * @deprecated no longer used
      */
+    @SuppressWarnings("unused")
+    @Deprecated(since = "2.0", forRemoval = true)
     public void setOptions(final MapperOptions options) {
-        throw new UnsupportedOperationException();
-//        opts = options;
     }
 
     /**
@@ -653,7 +647,7 @@ public class Mapper {
             throw new IllegalStateException("How can it be missing both?");
         }
         if (key.getCollection() == null) {
-            key.setCollection(getCollectionName(key.getType()));
+            key.setCollection(getMappedClass(key.getType()).getCollectionName());
         }
 
         Object id = key.getId();
@@ -672,7 +666,7 @@ public class Mapper {
      * @return the Key
      */
     public <T> Key<T> manualRefToKey(final Class<T> type, final Object id) {
-        return id == null ? null : new Key<>(type, getCollectionName(type), id);
+        return id == null ? null : new Key<>(type, getMappedClass(type).getCollectionName(), id);
     }
 
     /**
@@ -748,7 +742,7 @@ public class Mapper {
      * @param entity    The object to update
      */
     public void updateKeyAndVersionInfo(final Datastore datastore, final Document dbObj, final EntityCache cache, final Object entity) {
-        final MappedClass mc = getMappedClass(entity);
+        final MappedClass mc = getMappedClass(entity.getClass());
 
         // update id field, if there.
         if ((mc.getIdField() != null) && (dbObj != null) && (dbObj.get("_id") != null)) {
@@ -951,7 +945,7 @@ public class Mapper {
 
     <T> Document toDocument(final T entity, final boolean lifecycle) {
 
-        final MappedClass mc = getMappedClass(entity);
+        final MappedClass mc = getMappedClass(entity.getClass());
 
         DocumentWriter writer = new DocumentWriter();
         Codec<T> codec = (Codec<T>) getCodecRegistry().get(mc.getClazz());

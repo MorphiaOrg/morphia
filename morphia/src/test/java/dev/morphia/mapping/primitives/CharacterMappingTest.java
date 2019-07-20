@@ -133,7 +133,9 @@ public class CharacterMappingTest extends TestBase {
         final MongoCollection<Document> collection = getDatabase().getCollection(Characters.class.getSimpleName());
         collection.insertOne(new Document(field, value));
 
-        return getDs().find(Characters.class).execute(new FindOptions().limit(1)).tryNext();
+        return getDs().find(Characters.class)
+                      .execute(new FindOptions().limit(1))
+                      .tryNext();
     }
 
     @Entity

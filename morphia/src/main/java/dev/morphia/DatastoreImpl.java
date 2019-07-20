@@ -12,7 +12,6 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
-import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.NotSaved;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.Validation;
@@ -41,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,17 +98,17 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Query<T> createQuery(final String collection, final Class<T> type) {
-        return newQuery(type, getDatabase().getCollection(collection));
+        return newQuery(type);
     }
 
     @Override
     public <T> Query<T> createQuery(final Class<T> clazz, final Document q) {
-        return newQuery(clazz, getCollection(clazz), q);
+        return newQuery(clazz, q);
     }
 
     @Override
     public <T> DeleteResult delete(final T entity) {
-        return delete(entity, new DeleteOptions().writeConcern(getWriteConcern(entity)));
+        return delete(entity, new DeleteOptions().writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
     /**
@@ -135,7 +133,7 @@ class DatastoreImpl implements AdvancedDatastore {
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
                 final CappedAt cap = mc.getEntityAnnotation().cap();
-                final String collName = mapper.getCollectionName(mc.getClazz());
+                final String collName = mc.getCollectionName();
                 final CreateCollectionOptions dbCapOpts = new CreateCollectionOptions()
                                                               .capped(true);
                 if (cap.value() > 0) {
@@ -197,12 +195,12 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Query<T> find(final Class<T> clazz) {
-        return newQuery(clazz, getCollection(clazz));
+        return newQuery(clazz);
     }
 
     @Override
     public <T> Query<T> find(final String collection) {
-        return newQuery(mapper.getClassFromCollection(collection), getDatabase().getCollection(collection));
+        return newQuery(mapper.getClassFromCollection(collection));
     }
 
     @Override
@@ -212,7 +210,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
-        final String collectionName = mapper.getCollectionName(clazz);
+        final String collectionName = mapper.getMappedClass(clazz).getCollectionName();
         final String keyCollection = mapper.updateCollection(key);
         if (!collectionName.equals(keyCollection)) {
             throw new RuntimeException("collection names don't match for key and class: " + collectionName + " != " + keyCollection);
@@ -263,28 +261,6 @@ class DatastoreImpl implements AdvancedDatastore {
         return getByKeys(null, keys);
     }
 
-    private MongoCollection<?> getCollection(final Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        return getCollection(obj instanceof Class ? (Class) obj : obj.getClass());
-    }
-
-    @Override
-    public <T> MongoCollection<T> getCollection(final Class<T> clazz) {
-        final String collName = mapper.getCollectionName(clazz);
-        return getDatabase().getCollection(collName, clazz);
-    }
-
-    private <T> MongoCollection<T> getMongoCollection(final Class<T> clazz) {
-        return getMongoCollection(mapper.getCollectionName(clazz), clazz);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> MongoCollection<T> getMongoCollection(final String name, final Class<T> clazz) {
-        final MongoCollection<T> collection = database.getCollection(name, clazz);
-        return enforceWriteConcern(collection, clazz);
-    }
 
     @Override
     public MongoDatabase getDatabase() {
@@ -315,7 +291,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Key<T> merge(final T entity) {
-        return merge(entity, getWriteConcern(entity));
+        return merge(entity, mapper.getWriteConcern(entity.getClass()));
     }
 
     @Override
@@ -329,11 +305,10 @@ class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
         }
 
-        final Object idValue = document.get("_id");
         document.remove("_id");
 
-        final MappedClass mc = mapper.getMappedClass(unwrapped);
-        final MongoCollection collection = getCollection(unwrapped);
+        final MappedClass mc = mapper.getMappedClass(unwrapped.getClass());
+        final MongoCollection collection = mapper.getCollection(unwrapped.getClass());
 
         Key<T> key = tryVersionedUpdate(collection, unwrapped, new InsertOneOptions().writeConcern(wc), mc);
 
@@ -355,7 +330,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Query<T> queryByExample(final T ex) {
-        return queryByExample(getCollection(ex), ex);
+        return queryByExample(mapper.getCollection(ex.getClass()), ex);
     }
 
     @Override
@@ -390,7 +365,7 @@ class DatastoreImpl implements AdvancedDatastore {
         }
 
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(getCollection(unwrapped), unwrapped, options);
+        return save(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
     }
 
     @Override
@@ -398,7 +373,7 @@ class DatastoreImpl implements AdvancedDatastore {
         return query.update(operations).execute(new UpdateOptions()
                                                     .upsert(false)
                                                     .multi(true)
-                                                    .writeConcern(getWriteConcern(((QueryImpl) query).getEntityClass())));
+                                                    .writeConcern(mapper.getWriteConcern(((QueryImpl) query).getEntityClass())));
     }
 
     @Override
@@ -429,18 +404,20 @@ class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureIndexes() {
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            indexHelper.createIndex(getMongoCollection(mc.getClazz()), mc);
+            if(mc.getEntityAnnotation() != null) {
+                indexHelper.createIndex(mapper.getCollection(mc.getClazz()), mc);
+            }
         }
     }
 
     @Override
     public <T> void ensureIndexes(final Class<T> clazz) {
-        indexHelper.createIndex(getMongoCollection(clazz), mapper.getMappedClass(clazz));
+        indexHelper.createIndex(mapper.getCollection(clazz), mapper.getMappedClass(clazz));
     }
 
     @Override
     public <T> Key<T> insert(final T entity) {
-        return insert(entity, getWriteConcern(entity));
+        return insert(entity, mapper.getWriteConcern(entity.getClass()));
     }
 
     private <T> Key<T> insert(final T entity, final WriteConcern wc) {
@@ -450,14 +427,14 @@ class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> Key<T> insert(final T entity, final InsertOneOptions options) {
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return insert(getCollection(unwrapped), unwrapped, options);
+        return insert(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
     }
 
     @Override
     public <T> Iterable<Key<T>> insert(final List<T> entities, final InsertManyOptions options) {
         return entities.isEmpty()
                ? Collections.emptyList()
-               : insert(getCollection(entities.get(0)), entities, options);
+               : insert(mapper.getCollection(entities.get(0).getClass()), entities, options);
     }
 
     @Override
@@ -491,14 +468,8 @@ class DatastoreImpl implements AdvancedDatastore {
      * @return the key of entity
      */
     public <T> Key<T> insert(final String collection, final T entity, final WriteConcern wc) {
-        return insert(getCollection(collection), ProxyHelper.unwrap(entity), new InsertOneOptions().writeConcern(wc));
-    }
-
-    private MongoCollection getCollection(final String kind) {
-        if (kind == null) {
-            return null;
-        }
-        return getDatabase().getCollection(kind);
+        return insert(database.getCollection(collection, entity.getClass()), ProxyHelper.unwrap(entity),
+            new InsertOneOptions().writeConcern(wc));
     }
 
     @Deprecated
@@ -508,7 +479,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     protected <T> Key<T> insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
         final LinkedHashMap<Object, Document> involvedObjects = new LinkedHashMap<>();
-        enforceWriteConcern(collection, entity.getClass())
+        mapper.enforceWriteConcern(collection, entity.getClass())
             .insertOne(singletonList(entityToDocument(entity)), options.getOptions());
 
         return postSaveOperations(singletonList(entity), involvedObjects, collection.getNamespace().getCollectionName()).get(0);
@@ -518,7 +489,7 @@ class DatastoreImpl implements AdvancedDatastore {
         final MappedClass mc = validateSave(entity);
 
         Key<T> key;
-        if (getMapper().getMappedClass(entity).getVersionField() != null) {
+        if (getMapper().getMappedClass(entity.getClass()).getVersionField() != null) {
             key = tryVersionedUpdate(collection, entity, options, mc);
         } else {
             key = saveDocument(entity, collection, options);
@@ -561,7 +532,7 @@ class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException("Can not persist a null entity");
         }
 
-        final MappedClass mc = mapper.getMappedClass(entity);
+        final MappedClass mc = mapper.getMappedClass(entity.getClass());
         if (mc.getAnnotation(NotSaved.class) != null) {
             throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
                 mc.getClazz().getName()));
@@ -572,7 +543,7 @@ class DatastoreImpl implements AdvancedDatastore {
     private <T> Key<T> saveDocument(final T entity,
                                     final MongoCollection<T> collection,
                                     final InsertOneOptions options) {
-        Object id = mapper.getMappedClass(entity).getIdField().getFieldValue(entity);
+        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
         if (id == null) {
             options.apply(collection)
                    .insertOne(entity, options.getOptions());
@@ -667,17 +638,17 @@ class DatastoreImpl implements AdvancedDatastore {
     /**
      * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
      */
-    private <T> Query<T> newQuery(final Class<T> type, final MongoCollection collection, final Document query) {
-        return getQueryFactory().createQuery(this, collection, type, query);
+    private <T> Query<T> newQuery(final Class<T> type, final Document query) {
+        return getQueryFactory().createQuery(this, type, query);
     }
 
     /**
      * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
      *
-     * @see QueryFactory#createQuery(Datastore, MongoCollection, Class)
+     * @see QueryFactory#createQuery(Datastore, Class)
      */
-    private <T> Query<T> newQuery(final Class<T> type, final MongoCollection collection) {
-        return getQueryFactory().createQuery(this, collection, type);
+    private <T> Query<T> newQuery(final Class<T> type) {
+        return getQueryFactory().createQuery(this, type);
     }
 
     private <T> List<Key<T>> postSaveOperations(final Iterable<T> entities,
@@ -700,12 +671,12 @@ class DatastoreImpl implements AdvancedDatastore {
                 mapper.updateKeyAndVersionInfo(this, document, createCache(), entity);
                 keys.add(new Key<>((Class<? extends T>) entity.getClass(), collectionName, mapper.getId(entity)));
             }
-            mapper.getMappedClass(entity).callLifecycleMethods(PostPersist.class, entity, document, mapper);
+            mapper.getMappedClass(entity.getClass()).callLifecycleMethods(PostPersist.class, entity, document, mapper);
         }
 
         for (Entry<Object, Document> entry : involvedObjects.entrySet()) {
             final Object key = entry.getKey();
-            mapper.getMappedClass(key).callLifecycleMethods(PostPersist.class, key, entry.getValue(), mapper);
+            mapper.getMappedClass(key.getClass()).callLifecycleMethods(PostPersist.class, key, entry.getValue(), mapper);
 
         }
         return keys;
@@ -716,11 +687,11 @@ class DatastoreImpl implements AdvancedDatastore {
         // TODO: think about remove className from baseQuery param below.
         final Class<T> type = (Class<T>) example.getClass();
         final Document query = entityToDocument(example);
-        return newQuery(type, coll, query);
+        return newQuery(type, query);
     }
 
     private <T> Document toDocument(final T ent) {
-        final MappedClass mc = mapper.getMappedClass(ent);
+        final MappedClass mc = mapper.getMappedClass(ent.getClass());
         if (mc.getAnnotation(NotSaved.class) != null) {
             throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
                 mc.getClazz().getName()));
@@ -783,35 +754,10 @@ class DatastoreImpl implements AdvancedDatastore {
 
 
     public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass, WriteConcern option) {
-        WriteConcern applied = option != null ? option : getWriteConcern(klass);
+        WriteConcern applied = option != null ? option : mapper.getWriteConcern(klass);
         return applied != null
                ? collection.withWriteConcern(applied)
                : collection;
-    }
-
-    private MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass) {
-        WriteConcern applied = getWriteConcern(klass);
-        return applied != null
-               ? collection.withWriteConcern(applied)
-               : collection;
-    }
-
-
-    /**
-     * Gets the write concern for entity or returns the default write concern for this datastore
-     *
-     * @param clazzOrEntity the class or entity to use when looking up the WriteConcern
-     */
-    private WriteConcern getWriteConcern(final Object clazzOrEntity) {
-        WriteConcern wc = getMongo().getWriteConcern();
-        if (clazzOrEntity != null) {
-            final Entity entityAnn = getMapper().getMappedClass(clazzOrEntity).getEntityAnnotation();
-            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
-                wc = WriteConcern.valueOf(entityAnn.concern());
-            }
-        }
-
-        return wc;
     }
 
     private static class MockedUpdateResult extends UpdateResult {

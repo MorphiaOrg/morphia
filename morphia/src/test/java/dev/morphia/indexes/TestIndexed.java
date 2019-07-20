@@ -41,6 +41,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
 import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
@@ -141,7 +142,7 @@ public class TestIndexed extends TestBase {
     }
 
     @Test
-    public void testIndexedEntity() throws Exception {
+    public void testIndexedEntity() {
         getDs().ensureIndexes();
         assertThat(getIndexInfo(IndexOnValue.class), hasIndexNamed("value_1"));
 
@@ -151,7 +152,7 @@ public class TestIndexed extends TestBase {
     }
 
     @Test
-    public void testIndexedRecursiveEntity() throws Exception {
+    public void testIndexedRecursiveEntity() {
         final MappedClass mc = getMapper().getMappedClass(CircularEmbeddedEntity.class);
         getDs().ensureIndexes();
         assertThat(getIndexInfo(CircularEmbeddedEntity.class), hasIndexNamed("a_1"));
@@ -159,7 +160,7 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testIndexes() {
-        final MappedClass mc = getMapper().addMappedClass(Ad2.class);
+        final MappedClass mc = getMapper().getMappedClass(Ad2.class);
 
         assertThat(getIndexInfo(Ad2.class), doesNotHaveIndexNamed("active_1_lastMod_-1"));
         getDs().ensureIndexes(Ad2.class);
@@ -167,14 +168,14 @@ public class TestIndexed extends TestBase {
     }
 
     @Test
-    public void testNamedIndexEntity() throws Exception {
+    public void testNamedIndexEntity() {
         getDs().ensureIndexes();
 
         assertThat(getIndexInfo(NamedIndexOnValue.class), hasIndexNamed("value_ascending"));
     }
 
     @Test(expected = DuplicateKeyException.class)
-    public void testUniqueIndexedEntity() throws Exception {
+    public void testUniqueIndexedEntity() {
         getDs().ensureIndexes();
         assertThat(getIndexInfo(UniqueIndexOnValue.class), hasIndexNamed("l_ascending"));
         getDs().save(new UniqueIndexOnValue("a"));
@@ -185,7 +186,7 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testDefaults() {
-        getMapper().map(NewIndexed.class);
+        getMapper().map(Set.of(NewIndexed.class));
         getDs().ensureIndexes();
     }
 
@@ -206,6 +207,7 @@ public class TestIndexed extends TestBase {
         private Object location;
     }
 
+    @Entity
     @SuppressWarnings("unused")
     private static class LegacyPlace {
         @Id
@@ -215,6 +217,7 @@ public class TestIndexed extends TestBase {
         private double[] location;
     }
 
+    @Entity
     private static class Ad {
         @Id
         private long id;
@@ -227,6 +230,7 @@ public class TestIndexed extends TestBase {
         private boolean active;
     }
 
+    @Entity
     @Indexes(@Index(fields = {@Field("active"), @Field(value = "lastModified", type = IndexType.DESC)},
                        options = @IndexOptions(unique = true)))
     private static class Ad2 {
@@ -247,12 +251,14 @@ public class TestIndexed extends TestBase {
         private String name;
     }
 
+    @Entity
     private static class ContainsIndexedEmbed {
         @Id
         private ObjectId id;
         private IndexedEmbed e;
     }
 
+    @Entity
     private static class CircularEmbeddedEntity {
         @Id
         private ObjectId id = new ObjectId();

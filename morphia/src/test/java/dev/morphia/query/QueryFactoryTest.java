@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import org.bson.Document;
@@ -29,11 +28,11 @@ public class QueryFactoryTest extends TestBase {
 
         final QueryFactory queryFactory = new DefaultQueryFactory() {
             @Override
-            public <T> Query<T> createQuery(final Datastore datastore, final MongoCollection collection, final Class<T> type,
+            public <T> Query<T> createQuery(final Datastore datastore, final Class<T> type,
                                             final Document query) {
 
                 counter.incrementAndGet();
-                return super.createQuery(datastore, collection, type, query);
+                return super.createQuery(datastore, type, query);
             }
         };
 

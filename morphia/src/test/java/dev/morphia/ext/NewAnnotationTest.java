@@ -83,7 +83,7 @@ public class NewAnnotationTest extends TestBase {
 
         @Override
         public void prePersist(final Object ent, final Document document, final Mapper mapper) {
-            final MappedClass mc = mapper.getMappedClass(ent);
+            final MappedClass mc = mapper.getMappedClass(ent.getClass());
             final List<MappedField> toLowercase = mc.getFields(Lowercase.class);
             for (final MappedField mf : toLowercase) {
                 try {

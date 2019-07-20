@@ -38,6 +38,7 @@
         <json.assert.version>1.2.3</json.assert.version>
         <maven.version>3.6.1</maven.version>
         <slf4j.version>1.8.0-beta2</slf4j.version>
+        <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M3</surefire.version>
         <zt.exec.version>1.10</zt.exec.version>
         <revapi-java.version>0.18.1</revapi-java.version>

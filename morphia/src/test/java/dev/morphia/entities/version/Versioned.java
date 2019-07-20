@@ -1,9 +1,11 @@
 package dev.morphia.entities.version;
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 
+@Entity
 public class Versioned {
     @Id
     private ObjectId id;

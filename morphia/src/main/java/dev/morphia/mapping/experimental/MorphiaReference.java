@@ -31,9 +31,9 @@ public abstract class MorphiaReference<T> {
 
     static Object wrapId(final Mapper mapper, final MappedField field, final Object entity) {
         Object id = mapper.getId(entity);
-        Object encoded = mapper.toMongoObject(field, mapper.getMappedClass(entity), id);
+        Object encoded = mapper.toMongoObject(field, mapper.getMappedClass(entity.getClass()), id);
         if (!entity.getClass().equals(field.getType())) {
-            encoded = new DBRef(mapper.getCollectionName(entity), encoded);
+            encoded = new DBRef(mapper.getMappedClass(entity.getClass()).getCollectionName(), encoded);
         }
 
         return encoded;
@@ -84,13 +84,13 @@ public abstract class MorphiaReference<T> {
     @SuppressWarnings("unchecked")
     public static <V> MorphiaReference<V> wrap(final V value) {
         if (value instanceof List) {
-            return (MorphiaReference<V>) new ListReference<V>((List<V>) value);
+            return (MorphiaReference<V>) new ListReference<>((List<V>) value);
         } else if (value instanceof Set) {
-            return (MorphiaReference<V>) new SetReference<V>((Set<V>) value);
+            return (MorphiaReference<V>) new SetReference<>((Set<V>) value);
         } else if (value instanceof Map) {
-            return (MorphiaReference<V>) new MapReference<V>((Map<String, V>) value);
+            return (MorphiaReference<V>) new MapReference<>((Map<String, V>) value);
         } else {
-            return new SingleReference<V>(value);
+            return new SingleReference<>(value);
         }
     }
 }

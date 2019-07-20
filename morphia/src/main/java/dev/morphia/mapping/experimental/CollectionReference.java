@@ -51,7 +51,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             collectionName = dbRef.getCollectionName();
             id = dbRef.getId();
         } else {
-            collectionName = datastore.getMapper().getCollectionName(o);
+            collectionName = datastore.getMapper().getMappedClass(o.getClass()).getCollectionName();
             id = o;
         }
 
@@ -59,12 +59,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     static List register(final Map<String, List<Object>> collections, final String name) {
-        List<Object> list = collections.get(name);
-        if (list == null) {
-            list = new ArrayList<>();
-            collections.put(name, list);
-        }
-        return list;
+        return collections.computeIfAbsent(name, k -> new ArrayList<>());
     }
 
     /**
@@ -96,11 +91,10 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
     void query(final String collection, final List<Object> collectionIds, final List<Object> values) {
 
-        final MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection)
-                                                                          .disableValidation()
-                                                                          .filter("_id in ", collectionIds)
-                                                                          .execute();
-        try {
+        try (MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection)
+                                                                         .disableValidation()
+                                                                         .filter("_id in ", collectionIds)
+                                                                         .execute()) {
             final Map<Object, Object> idMap = new HashMap<>();
             while (cursor.hasNext()) {
                 final Object entity = cursor.next();
@@ -114,8 +108,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                     values.set(i, value);
                 }
             }
-        } finally {
-            cursor.close();
         }
     }
 

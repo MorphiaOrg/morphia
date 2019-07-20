@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -94,7 +95,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        getMapper().map(KeyValue.class);
+        getMapper().map(Set.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
         final List<Object> keys = Arrays.asList("key1", "key2");
@@ -102,7 +103,8 @@ public class TestQuery extends TestBase {
         getDs().save(value);
 
         final Query<KeyValue> query = getDs().find(KeyValue.class).field("key").hasAnyOf(keys);
-        Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
+        String s = query.toString().replaceAll("\\s", "");
+        Assert.assertTrue(s, s.contains("{\"$in\":[\"key1\",\"key2\"]"));
         assertEquals(query.execute(new FindOptions().limit(1))
                           .tryNext()
                          .id, value.id);
@@ -303,7 +305,7 @@ public class TestQuery extends TestBase {
                .toList();
 
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
-        assertNotEquals(0, profileCollection.count());
+        assertNotEquals(0, profileCollection.countDocuments());
 
         Document query = new Document("op", "query")
                               .append("ns", getDs().getCollection(Pic.class).getNamespace().getFullName());
@@ -414,8 +416,8 @@ public class TestQuery extends TestBase {
                                              .find(PhotoWithKeywords.class)
                                              .field("keywords").not().sizeEq(3);
 
-        assertEquals(new Document("keywords", new Document("$not", new Document("$size", 3))),
-            ((QueryImpl) query).getQueryDocument());
+        assertEquals("{\"keywords\": {\"$not\": {\"$size\": 3}}}",
+            ((QueryImpl) query).getQueryDocument().toJson());
     }
 
     @Test
@@ -448,13 +450,16 @@ public class TestQuery extends TestBase {
     @Test
     public void testDeepQueryWithBadArgs() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", 1)
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .filter("keywords.keyword", 1)
                           .execute(new FindOptions().limit(1))
                           .tryNext());
-        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", "california".getBytes())
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .filter("keywords.keyword", "california".getBytes())
                           .execute(new FindOptions().limit(1))
                           .tryNext());
-        assertNull(getDs().find(PhotoWithKeywords.class).filter("keywords.keyword", null)
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .filter("keywords.keyword", null)
                           .execute(new FindOptions().limit(1))
                           .tryNext());
     }
@@ -743,7 +748,11 @@ public class TestQuery extends TestBase {
         final Key<KeysKeysKeys> k1Key = getDs().save(k1);
         assertEquals(k1.getId(), k1Key.getId());
 
-        final KeysKeysKeys k1Loaded = getDs().get(k1);
+        final Datastore datastore = getDs();
+
+        final KeysKeysKeys k1Loaded = datastore.find(KeysKeysKeys.class)
+                                               .filter("_id", k1.getId())
+                                               .first();
         for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
             assertNotNull(key.getId());
         }
@@ -842,7 +851,8 @@ public class TestQuery extends TestBase {
         try {
             getDs().find(ContainsRenamedFields.class)
                    .project("first_name", true)
-                   .project("last_name", false);
+                   .project("last_name", false)
+                   .execute();
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -852,7 +862,8 @@ public class TestQuery extends TestBase {
             getDs().find(ContainsRenamedFields.class)
                    .project("first_name", true)
                    .project("last_name", true)
-                   .project("_id", false);
+                   .project("_id", false)
+                   .execute();
         } catch (ValidationException e) {
             fail("An exception should not have been thrown indication a mixed projection because _id suppression is a special case");
         }
@@ -861,7 +872,8 @@ public class TestQuery extends TestBase {
             getDs().find(ContainsRenamedFields.class)
                    .project("first_name", false)
                    .project("last_name", false)
-                   .project("_id", true);
+                   .project("_id", true)
+                   .execute();
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -870,7 +882,8 @@ public class TestQuery extends TestBase {
         try {
             getDs().find(IntVector.class)
                    .project("name", false)
-                   .project("scalars", new ArraySlice(5));
+                   .project("scalars", new ArraySlice(5))
+                   .execute();
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -999,8 +1012,8 @@ public class TestQuery extends TestBase {
         query.criteria("score")
              .not()
              .greaterThan(7);
-        assertEquals(new Document("score", new Document("$not", new Document("$gt", 7))),
-            ((QueryImpl) query).getQueryDocument());
+        assertEquals(Document.parse("{score: {$not: {$gt:7}}}").toJson(),
+            ((QueryImpl) query).getQueryDocument().toJson());
     }
 
     @Test
@@ -1174,10 +1187,10 @@ public class TestQuery extends TestBase {
 
         assertNotNull(getDs().find(ContainsPhotoKey.class).filter("photo", p)
                              .execute(new FindOptions().limit(1))
-                             .next());
+                             .tryNext());
         assertNotNull(getDs().find(ContainsPhotoKey.class).filter("photo", cpk.photo)
                              .execute(new FindOptions().limit(1))
-                             .next());
+                             .tryNext());
         assertNull(getDs().find(ContainsPhotoKey.class).filter("photo", 1)
                           .execute(new FindOptions().limit(1))
                           .tryNext());
@@ -1474,7 +1487,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testSimpleOr() {
-        Query<Object> query = getDs().find(Object.class).disableValidation();
+        Query<Rectangle> query = getDs().find(Rectangle.class).disableValidation();
 
         query.field("version").equal("latest");
 

@@ -29,7 +29,7 @@ public class KeyCodec implements Codec<Key> {
         writer.writeStartDocument();
         String collection = value.getCollection();
         if(collection == null) {
-            collection = mapper.getCollectionName(value.getType());
+            collection = mapper.getMappedClass(value.getType()).getCollectionName();
         }
         writer.writeString("$ref", collection);
         writer.writeName("$id");

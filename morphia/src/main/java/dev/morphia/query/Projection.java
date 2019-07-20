@@ -4,6 +4,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class Projection {
             excludes = new ArrayList<>();
         }
         excludes.addAll(List.of(fields));
+        validateProjections();
         return options;
     }
 
@@ -51,6 +53,7 @@ public class Projection {
             includes = new ArrayList<>();
         }
         includes.addAll(List.of(fields));
+        validateProjections();
         return options;
     }
 
@@ -66,6 +69,7 @@ public class Projection {
     FindOptions project(String field, ArraySlice slice) {
         this.arrayField = field;
         this.slice = slice;
+        validateProjections();
         return options;
     }
 
@@ -79,6 +83,7 @@ public class Projection {
      */
     FindOptions project(Meta meta) {
         this.meta = meta;
+        validateProjections();
         return options;
     }
 
@@ -92,7 +97,6 @@ public class Projection {
     }
 
     public Document map(final Mapper mapper, final Class clazz) {
-        validateProjections();
         if (includes != null || excludes != null) {
             return project(mapper, clazz);
         } else if (arrayField != null && slice != null) {
@@ -111,14 +115,11 @@ public class Projection {
         iterate(mapper, projection, clazz, includes, 1);
         iterate(mapper, projection, clazz, excludes, 0);
 
-        if(projection != null) {
-            final MappedClass mc = mapper.getMappedClass(clazz);
+        final MappedClass mc = mapper.getMappedClass(clazz);
+        Entity entityAnnotation = mc.getEntityAnnotation();
 
-            Entity entityAnnotation = mc.getEntityAnnotation();
-
-            if (isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
-                projection.put(mapper.getOptions().getDiscriminatorField(), 1);
-            }
+        if (isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
+            projection.put(mapper.getOptions().getDiscriminatorField(), 1);
         }
 
         return projection;
@@ -143,9 +144,18 @@ public class Projection {
     }
 
     private void validateProjections() {
+        if((includes != null || excludes != null)&& ( slice != null || meta != null)) {
+            throw new ValidationException(Sofia.mixedModeProjections());
+        }
+        if(slice != null && (includes != null || excludes != null || meta != null)) {
+            throw new ValidationException(Sofia.mixedModeProjections());
+        }
+        if(meta != null && (includes != null || excludes != null || slice != null)) {
+            throw new ValidationException(Sofia.mixedModeProjections());
+        }
         if (includes != null && excludes != null) {
             if (excludes.size() > 1 || !"_id".equals(excludes.get(0))) {
-                throw new QueryException("You cannot mix included and excluded fields together");
+                throw new ValidationException(Sofia.mixedProjections());
             }
         }
     }
