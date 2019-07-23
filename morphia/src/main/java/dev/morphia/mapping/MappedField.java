@@ -36,6 +36,7 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.utils.ReflectionUtils;
+import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -651,6 +652,8 @@ public class MappedField {
             return (Class) ((ParameterizedType) t).getRawType();
         } else if (t instanceof WildcardType) {
             return (Class) ((WildcardType) t).getUpperBounds()[0];
+        } else if (t instanceof TypeVariableImpl) {
+            return (Class) ((TypeVariableImpl) t).getBounds()[0];
         }
 
         throw new RuntimeException("Generic TypeVariable not supported!");
