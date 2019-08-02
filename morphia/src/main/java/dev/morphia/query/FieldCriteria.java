@@ -25,6 +25,7 @@ class FieldCriteria extends AbstractCriteria {
     private final Object value;
     private final boolean not;
     private Mapper mapper;
+    private MappedField mappedField;
 
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator op, final Object value) {
         this(mapper, query, field, op, value, false);
@@ -35,7 +36,7 @@ class FieldCriteria extends AbstractCriteria {
         this.mapper = mapper;
         final PathTarget pathTarget = new PathTarget(mapper,  mapper.getMappedClass(query.getEntityClass()),
             fieldName, query.isValidatingNames());
-        final MappedField mappedField = pathTarget.getTarget();
+        mappedField = pathTarget.getTarget();
 
         Object mappedValue = value;
         if (value != null && mapper.getMappedClass(value.getClass()) != null && mappedField != null) {

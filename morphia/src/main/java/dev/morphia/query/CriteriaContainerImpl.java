@@ -16,6 +16,7 @@ import static dev.morphia.query.CriteriaJoin.AND;
  * Defines a container of Criteria and a join method.
  *
  * @see CriteriaJoin
+ * @morphia.internal
  */
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
     private CriteriaJoin joinMethod;
@@ -36,6 +37,14 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
             c.attach(this);
             children.add(c);
         }
+    }
+
+    public CriteriaJoin getJoinMethod() {
+        return joinMethod;
+    }
+
+    public List<Criteria> getChildren() {
+        return children;
     }
 
     @Override

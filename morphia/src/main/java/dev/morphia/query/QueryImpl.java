@@ -15,7 +15,10 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
 import org.bson.types.CodeWScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -446,13 +449,32 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         FindIterable<E> iterable = collection
                                          .find(query);
 
-        return findOptions
-                   .apply(this, iterable, mapper, clazz)
-                   .iterator();
+        Document oldProfile = null;
+        if(findOptions.isLogQuery()) {
+            oldProfile = // ds.getDatabase().runCommand(new Document("profile", 2));
+                ds.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
+        }
+        try {
+            return findOptions
+                       .apply(this, iterable, mapper, clazz)
+                       .iterator();
+        } finally {
+            if(findOptions.isLogQuery()) {
+                ds.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
+                                      .append("slowms", oldProfile.get("slowms"))
+                                      .append("sampleRate", oldProfile.get("sampleRate")));
+            }
+
+        }
     }
 
     @Override
     public String toString() {
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
+
         return getOptions().getProjection() == null ? getQueryDocument().toString()
                                                     : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
     }
@@ -562,5 +584,33 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return wc;
     }
 
+    public String getLoggedQuery(FindOptions options) {
+        Document first = mapper.getDatastore().getDatabase()
+                               .getCollection("system.profile")
+                               .find(new Document("command.comment", "logged query: " + options.getQueryLogId()), Document.class)
+                               .projection(new Document("command.filter", 1))
+                               .first();
+        Document command = (Document) first.get("command");
+        return ((Document) command.get("filter")).toJson(mapper.getCodecRegistry().get(Document.class));
+    }
+
+    public class QueryDocument implements Bson {
+
+        public QueryDocument() {
+        }
+
+        @Override
+        public <TDocument> BsonDocument toBsonDocument(final Class<TDocument> tDocumentClass, final CodecRegistry codecRegistry) {
+            final Document obj = new Document();
+
+            if (baseQuery != null) {
+                obj.putAll(baseQuery);
+            }
+
+            obj.putAll(toDocument());
+
+            return obj.toBsonDocument(Document.class, codecRegistry);
+        }
+    }
 }
 

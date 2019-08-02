@@ -27,6 +27,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
+import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
@@ -71,9 +72,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
-/**
- * @author Scott Hernandez
- */
 @SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
 
@@ -102,9 +100,13 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        final Query<KeyValue> query = getDs().find(KeyValue.class).field("key").hasAnyOf(keys);
-        String s = query.toString().replaceAll("\\s", "");
-        Assert.assertTrue(s, s.contains("{\"$in\":[\"key1\",\"key2\"]"));
+        FindOptions options = new FindOptions().logQuery();
+        final Query<KeyValue> query = getDs().find(KeyValue.class)
+                                             .field("key")
+                                             .hasAnyOf(keys);
+        query.execute(options);
+        String loggedQuery = query.getLoggedQuery(options);
+        Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
         assertEquals(query.execute(new FindOptions().limit(1))
                           .tryNext()
                          .id, value.id);
@@ -123,13 +125,6 @@ public class TestQuery extends TestBase {
 
         final ReferenceKeyValue byKey = getDs().getByKey(ReferenceKeyValue.class, key);
         assertEquals(value.id, byKey.id);
-    }
-
-    @Override
-    @After
-    public void tearDown() {
-        turnOffProfilingAndDropProfileCollection();
-        super.tearDown();
     }
 
     @Test
@@ -312,8 +307,6 @@ public class TestQuery extends TestBase {
         Document profileRecord = profileCollection.find(query).first();
 
         assertEquals(profileRecord.toString(), expectedComment, getCommentFromProfileRecord(profileRecord));
-
-        turnOffProfilingAndDropProfileCollection();
     }
 
     @Test
@@ -1185,18 +1178,31 @@ public class TestQuery extends TestBase {
         cpk.photo = getDs().save(p);
         getDs().save(cpk);
 
-        assertNotNull(getDs().find(ContainsPhotoKey.class).filter("photo", p)
-                             .execute(new FindOptions().limit(1))
+        Query<ContainsPhotoKey> query = getDs().find(ContainsPhotoKey.class)
+                                               .filter("photo", p);
+        FindOptions options = new FindOptions()
+                                .logQuery()
+                                .limit(1);
+        ContainsPhotoKey photoKey = query
+                                      .execute(options)
+                                      .tryNext();
+
+        assertNotNull(query.getLoggedQuery(options), photoKey);
+        assertNotNull(getDs().find(ContainsPhotoKey.class)
+                             .filter("photo", cpk.photo)
+                             .execute(new FindOptions()
+                                          .limit(1))
                              .tryNext());
-        assertNotNull(getDs().find(ContainsPhotoKey.class).filter("photo", cpk.photo)
-                             .execute(new FindOptions().limit(1))
-                             .tryNext());
-        assertNull(getDs().find(ContainsPhotoKey.class).filter("photo", 1)
-                          .execute(new FindOptions().limit(1))
+        assertNull(getDs().find(ContainsPhotoKey.class)
+                          .filter("photo", 1)
+                          .execute(new FindOptions()
+                                       .limit(1))
                           .tryNext());
 
-        getDs().find(ContainsPhotoKey.class).filter("photo.keywords", "foo")
-               .execute(new FindOptions().limit(1))
+        getDs().find(ContainsPhotoKey.class)
+               .filter("photo.keywords", "foo")
+               .execute(new FindOptions()
+                            .limit(1))
                .next();
     }
 
@@ -1514,8 +1520,15 @@ public class TestQuery extends TestBase {
         return copyOfRange(array, start, start + count);
     }
 
-    private void turnOffProfilingAndDropProfileCollection() {
-        getDatabase().runCommand(new Document("profile", 0));
+    private void turnOnProfiling() {
+        getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
+    }
+
+    private void turnOffProfiling() {
+        getDatabase().runCommand(new Document("profile", 0).append("slowms", 100));
+    }
+
+    private void dropProfileCollection() {
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
         profileCollection.drop();
     }

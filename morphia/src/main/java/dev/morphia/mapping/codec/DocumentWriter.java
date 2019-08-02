@@ -11,6 +11,9 @@ import org.bson.BsonTimestamp;
 import org.bson.BsonUndefined;
 import org.bson.BsonWriter;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
@@ -29,6 +32,14 @@ public class DocumentWriter implements BsonWriter {
 
     public <T> T getRoot() {
         return (T) root;
+    }
+
+    public DocumentWriter encode(final CodecRegistry codecRegistry, final Object value, final EncoderContext encoderContext) {
+        ((Codec) codecRegistry
+                     .get(value.getClass()))
+            .encode(this, value, encoderContext);
+
+        return this;
     }
 
     private void push(final Object o) {

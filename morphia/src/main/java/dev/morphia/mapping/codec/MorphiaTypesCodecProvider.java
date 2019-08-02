@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.CriteriaContainerCodec;
+import dev.morphia.query.FieldCriteriaCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.MapCodec;
 import org.bson.codecs.ValueCodecProvider;
@@ -29,6 +31,8 @@ public class MorphiaTypesCodecProvider extends ValueCodecProvider {
         addCodec(new ShapeCodec());
         addCodec(new ObjectCodec(mapper));
         addCodec(new QueryCodec(mapper));
+        addCodec(new FieldCriteriaCodec(mapper));
+        addCodec(new CriteriaContainerCodec(mapper));
         arrayCodec = new ArrayCodec(mapper);
     }
 

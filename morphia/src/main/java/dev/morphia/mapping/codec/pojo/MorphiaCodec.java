@@ -23,6 +23,7 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.BaseMorphiaCodec;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.PropertyHandler;
 import org.bson.BsonDocumentReader;
@@ -41,7 +42,6 @@ import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.DiscriminatorLookup;
 import org.bson.codecs.pojo.InstanceCreator;
 import org.bson.codecs.pojo.PojoCodec;
-import org.bson.codecs.pojo.PojoCodecImpl;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.codecs.pojo.PropertyModel;
@@ -49,11 +49,15 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 
-
-public class MorphiaCodec<T> extends PojoCodecImpl<T> implements CollectibleCodec<T> {
+/**
+ * @morphia.internal
+ * @param <T>
+ */
+public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleCodec<T> {
     private Mapper mapper;
     private MappedClass mappedClass;
 
@@ -71,6 +75,36 @@ public class MorphiaCodec<T> extends PojoCodecImpl<T> implements CollectibleCode
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized);
         this.mapper = mapper;
         this.mappedClass = mappedClass;
+    }
+
+    @Override
+    public Class<T> getEncoderClass() {
+        return super.getEncoderClass();
+    }
+
+    @Override
+    public ClassModel<T> getClassModel() {
+        return super.getClassModel();
+    }
+
+    @Override
+    protected CodecRegistry getRegistry() {
+        return super.getRegistry();
+    }
+
+    @Override
+    protected PropertyCodecRegistry getPropertyCodecRegistry() {
+        return super.getPropertyCodecRegistry();
+    }
+
+    @Override
+    protected DiscriminatorLookup getDiscriminatorLookup() {
+        return super.getDiscriminatorLookup();
+    }
+
+    @Override
+    protected ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
+        return super.getCodecCache();
     }
 
     @Override
@@ -189,6 +223,13 @@ public class MorphiaCodec<T> extends PojoCodecImpl<T> implements CollectibleCode
         return field != null ?  field : mappedClass.getMappedFieldByJavaField(propertyModel.getName());
     }
 
+    Mapper getMapper() {
+        return mapper;
+    }
+
+    /**
+     * @return
+     */
     public MappedClass getMappedClass() {
         return mappedClass;
     }
@@ -198,44 +239,4 @@ public class MorphiaCodec<T> extends PojoCodecImpl<T> implements CollectibleCode
         return new SpecializedMorphiaCodec(this, specialized);
     }
 
-    private static class SpecializedMorphiaCodec<T> extends PojoCodec<T> {
-
-        private final MorphiaCodec morphiaCodec;
-        private final ClassModel<T> classModel;
-        private PojoCodec<T> specialized;
-
-        SpecializedMorphiaCodec(final MorphiaCodec morphiaCodec, final ClassModel<T> classModel) {
-            this.morphiaCodec = morphiaCodec;
-            this.classModel = classModel;
-        }
-
-        @Override
-        public ClassModel<T> getClassModel() {
-            return classModel;
-        }
-
-        @Override
-        public T decode(final BsonReader reader, final DecoderContext decoderContext) {
-            return getSpecialized().decode(reader, decoderContext);
-        }
-
-        private PojoCodec<T> getSpecialized() {
-            if (specialized == null) {
-                specialized = new MorphiaCodec<>(morphiaCodec.mapper, morphiaCodec.mappedClass, classModel, morphiaCodec.getRegistry(),
-                    morphiaCodec.getPropertyCodecRegistry(),
-                    morphiaCodec.getDiscriminatorLookup(), true);
-            }
-            return specialized;
-        }
-
-        @Override
-        public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
-            getSpecialized().encode(writer, value, encoderContext);
-        }
-
-        @Override
-        public Class<T> getEncoderClass() {
-            return classModel.getType();
-        }
-    }
 }

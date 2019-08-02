@@ -395,4 +395,12 @@ public interface Query<T> {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     Update<T> update(UpdateOperations operations);
+
+    /**
+     * @morphia.internal
+     * @return
+     * @since 2.0
+     * @param options
+     */
+    String getLoggedQuery(final FindOptions options);
 }

@@ -20,17 +20,29 @@ public class ReferenceCodec {
     private final PropertyModel propertyModel;
     private final MappedField field;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
-    private final MappedField idField;
-    private final MappedClass mappedClass;
+    private MappedField idField;
+    private MappedClass mappedClass;
 
     public ReferenceCodec(final Mapper mapper, final PropertyModel propertyModel, final MappedField field) {
         this.mapper = mapper;
         this.propertyModel = propertyModel;
         this.field = field;
-        final MorphiaCodec codec = (MorphiaCodec) mapper.getCodecRegistry().get(field.getType());
-        mappedClass = codec.getMappedClass();
+    }
 
-        idField = mappedClass.getIdField();
+    private MappedClass getMappedClass() {
+        if (mappedClass == null) {
+            mappedClass = ((MorphiaCodec) mapper.getCodecRegistry()
+                                                .get(field.getType()))
+                              .getMappedClass();
+        }
+        return mappedClass;
+    }
+
+    private MappedField getIdField() {
+        if(idField == null) {
+            idField = getMappedClass().getIdField();
+        }
+        return idField;
     }
 
     public <S> S decode(final BsonReader reader, final DecoderContext decoderContext) {
@@ -44,9 +56,9 @@ public class ReferenceCodec {
             writer.writeNull(propertyModel.getReadName());
         } else {
             writer.writeName(propertyModel.getReadName());
-            Object idValue = idField.getFieldValue(value);
+            Object idValue = getIdField().getFieldValue(value);
             if(!field.getAnnotation(Reference.class).idOnly()) {
-                idValue = new DBRef(mappedClass.getCollectionName(), idValue);
+                idValue = new DBRef(getMappedClass().getCollectionName(), idValue);
             }
 
             final Codec codec = mapper.getCodecRegistry().get(idValue.getClass());

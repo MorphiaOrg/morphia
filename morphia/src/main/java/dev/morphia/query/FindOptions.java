@@ -23,7 +23,9 @@ import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +59,7 @@ public final class FindOptions {
     private ReadPreference readPreference;
     private WriteConcern writeConcern;
     private Projection projection;
+    private String queryLogId;
 
     public FindOptions() {
     }
@@ -461,5 +464,32 @@ public final class FindOptions {
 
     public FindOptions copy() {
         return new FindOptions(this);
+    }
+
+    /**
+     * This is an experimental method.  It's implementation and presence are subject to change.
+     *
+     * @morphia.internal
+     * @return
+     */
+    public FindOptions logQuery() {
+        Sofia.logTestFeatureOnly();
+        queryLogId = new ObjectId().toString();
+        comment(Sofia.loggedQuery(queryLogId));
+        return this;
+    }
+
+    /**
+     * This is an experimental method.  It's implementation and presence are subject to change.
+     *
+     * @morphia.internal
+     * @return
+     */
+    public boolean isLogQuery() {
+        return queryLogId != null;
+    }
+
+    public String getQueryLogId() {
+        return queryLogId;
     }
 }
