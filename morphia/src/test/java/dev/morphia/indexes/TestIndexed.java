@@ -14,6 +14,7 @@
 package dev.morphia.indexes;
 
 import com.mongodb.DuplicateKeyException;
+import com.mongodb.MongoWriteException;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Collation;
@@ -174,7 +175,7 @@ public class TestIndexed extends TestBase {
         assertThat(getIndexInfo(NamedIndexOnValue.class), hasIndexNamed("value_ascending"));
     }
 
-    @Test(expected = DuplicateKeyException.class)
+    @Test(expected = MongoWriteException.class)
     public void testUniqueIndexedEntity() {
         getDs().ensureIndexes();
         assertThat(getIndexInfo(UniqueIndexOnValue.class), hasIndexNamed("l_ascending"));
@@ -198,6 +199,7 @@ public class TestIndexed extends TestBase {
         String name;
     }
 
+    @Entity
     @SuppressWarnings("unused")
     private static class Place {
         @Id

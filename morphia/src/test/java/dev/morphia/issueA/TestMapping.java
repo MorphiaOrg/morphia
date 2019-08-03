@@ -3,6 +3,7 @@ package dev.morphia.issueA;
 
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
@@ -36,6 +37,7 @@ public class TestMapping extends TestBase {
         K getK();
     }
 
+    @Embedded
     private static class ClassLevelOne<K> implements InterfaceOne<K>, Serializable {
         private K k;
 
@@ -50,6 +52,7 @@ public class TestMapping extends TestBase {
 
     }
 
+    @Entity
     private static class ClassLevelThree {
         @Id
         private ObjectId id;

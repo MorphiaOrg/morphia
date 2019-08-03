@@ -82,11 +82,11 @@ public class ReflectionUtilsTest extends TestBase {
     public void testGetFromJarFileWithUnicodePath() throws Exception {
         //we need a jar to test with so use JUnit since it will always be there
         String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        final Path input = Paths.get(rootPath);
+        final File input = new File(rootPath);
         final Path output = Paths.get("/tmp/我的路径/something.jar");
         output.toFile().delete();
         output.getParent().toFile().mkdirs();
-        final Path jar = Files.copy(input, output);
+        final Path jar = Files.copy(input.toPath(), output);
         final URLClassLoader classLoader = new URLClassLoader(new URL[]{jar.toUri().toURL()});
         Set<Class<?>> result = ReflectionUtils.getFromJarFile(classLoader, jar.toString(),
             "org/junit", true);

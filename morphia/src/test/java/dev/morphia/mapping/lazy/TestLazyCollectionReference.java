@@ -7,12 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import dev.morphia.testutil.TestEntity;
 
 
+@Ignore("references need work")
 public class TestLazyCollectionReference extends ProxyTestBase {
     @Test(expected = LazyReferenceFetchingException.class)
     public final void testCreateProxy() {

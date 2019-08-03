@@ -2,6 +2,8 @@ package dev.morphia.query;
 
 import dev.morphia.Key;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Serialized;
 import dev.morphia.entities.EntityWithListsAndArrays;
@@ -489,7 +491,10 @@ public class QueryValidatorTest extends TestBase {
         new PathTarget(getMapper(), WithSerializedField.class, "serialized.name").getTarget();
     }
 
+    @Entity
     private static class GeoEntity {
+        @Id
+        private ObjectId id;
         private final int[] array = {1};
     }
 

@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,6 +24,7 @@ public class QueryImplCloneTest extends TestBase {
         Assert.assertEquals(q, q.cloneQuery());
     }
 
+    @Entity
     static class E1 {
         @Id
         private ObjectId id;

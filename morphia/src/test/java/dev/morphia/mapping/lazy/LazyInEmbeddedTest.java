@@ -10,6 +10,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -19,9 +20,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 
-/**
- * @author josephpachod
- */
+@Ignore("references need work")
 public class LazyInEmbeddedTest extends TestBase {
     @Test
     public void testLoadingOfRefInField() {

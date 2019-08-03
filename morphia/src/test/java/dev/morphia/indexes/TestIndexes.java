@@ -158,6 +158,8 @@ public class TestIndexes extends TestBase {
         background = true),
         fields = {@Field(value = "name")})})
     public static class TestWithIndexOption {
+        @Id
+        private ObjectId id;
         private String name;
 
     }
@@ -166,6 +168,8 @@ public class TestIndexes extends TestBase {
     @Indexes({@Index(options = @IndexOptions(background = true),
         fields = @Field("name"))})
     public static class TestWithDeprecatedIndex {
+        @Id
+        private ObjectId id;
         private String name;
 
     }
@@ -173,6 +177,8 @@ public class TestIndexes extends TestBase {
     @Entity(useDiscriminator = false)
     @Indexes({@Index(options = @IndexOptions(), fields = {@Field(value = "hashedValue", type = IndexType.HASHED)})})
     public static class TestWithHashedIndex {
+        @Id
+        private ObjectId id;
         private String hashedValue;
 
     }

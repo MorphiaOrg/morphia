@@ -28,12 +28,6 @@ public abstract class LongIdEntity {
         return myLongId;
     }
 
-    /**
-     * Used to store counters for other entities.
-     *
-     * @author skot
-     */
-
     @Entity(value = "ids", useDiscriminator = false)
     public static class StoredId {
         @Id

@@ -1,6 +1,7 @@
 package dev.morphia.utils;
 
 
+import dev.morphia.annotations.Entity;
 import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
@@ -22,6 +23,7 @@ public class LongIdEntityTest extends TestBase {
         assertEquals(2L, ent.getMyLongId(), 0);
     }
 
+    @Entity
     static class MyEntity extends LongIdEntity {
         protected MyEntity() {
             super(null);
