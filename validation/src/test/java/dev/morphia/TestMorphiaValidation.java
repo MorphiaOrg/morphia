@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.Email;
 import org.junit.Assert;
@@ -14,6 +15,7 @@ import javax.validation.ValidationException;
  */
 public class TestMorphiaValidation extends TestBase {
 
+    @Entity
     public static class E {
         @Id
         private ObjectId id;

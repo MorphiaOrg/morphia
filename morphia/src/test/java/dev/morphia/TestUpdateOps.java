@@ -878,12 +878,14 @@ public class TestUpdateOps extends TestBase {
         }
     }
 
+    @Entity
     private static class ContainsIntArray {
-        private final Integer[] values = {1, 2, 3};
         @Id
         private ObjectId id;
+        private final Integer[] values = {1, 2, 3};
     }
 
+    @Entity
     private static class ContainsInt {
         @Id
         private ObjectId id;
@@ -958,10 +960,11 @@ public class TestUpdateOps extends TestBase {
         }
     }
 
+    @Entity
     private static final class Parent {
-        private final Set<Child> children = new HashSet<>();
         @Id
         private ObjectId id;
+        private final Set<Child> children = new HashSet<>();
     }
 
     @Embedded

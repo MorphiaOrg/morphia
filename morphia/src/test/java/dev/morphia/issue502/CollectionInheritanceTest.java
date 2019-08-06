@@ -1,6 +1,7 @@
 package dev.morphia.issue502;
 
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
@@ -64,6 +65,7 @@ public class CollectionInheritanceTest extends TestBase {
     private static class Authors extends HashSet<Author> {
     }
 
+    @Entity
     private static class Book {
         @Id
         private ObjectId id;

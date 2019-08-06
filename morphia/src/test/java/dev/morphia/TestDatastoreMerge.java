@@ -66,6 +66,7 @@ public class TestDatastoreMerge extends TestBase {
         assertNotNull(test1.name);//fails
     }
 
+    @Entity
     private static class Merger {
         @Id
         private ObjectId id;

@@ -740,6 +740,7 @@ public class AggregationTest extends TestBase {
         return current;
     }
 
+    @Entity
     private static class StringDates {
         @Id
         private ObjectId id;
@@ -821,6 +822,7 @@ public class AggregationTest extends TestBase {
         }
     }
 
+    @Entity
     public static class BucketAutoResult {
 
         @Id
@@ -881,6 +883,7 @@ public class AggregationTest extends TestBase {
         }
     }
 
+    @Entity
     public static class SortByCountResult {
         @Id
         private String id;

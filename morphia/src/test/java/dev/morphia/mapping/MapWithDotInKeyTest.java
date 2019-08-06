@@ -2,6 +2,7 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.BasicDBObject;
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,6 +36,7 @@ public class MapWithDotInKeyTest extends TestBase {
         Assert.assertEquals("b", e.mymap.get("c.e.g"));
     }
 
+    @Entity
     private static class Goo implements Serializable {
         @Id
         private ObjectId id = new ObjectId();
@@ -48,10 +50,11 @@ public class MapWithDotInKeyTest extends TestBase {
         }
     }
 
+    @Entity
     private static class E {
-        private final MyMap mymap = new MyMap();
         @Id
         private ObjectId id;
+        private final MyMap mymap = new MyMap();
     }
 
     @Embedded

@@ -16,6 +16,7 @@ package dev.morphia.indexes;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
@@ -68,6 +69,7 @@ public class TestIndexInheritance extends TestBase {
 //                            .size());
     }
 
+    @Entity
     @Indexes(@Index(fields = @Field("description")))
     public abstract static class Shape {
         @Id

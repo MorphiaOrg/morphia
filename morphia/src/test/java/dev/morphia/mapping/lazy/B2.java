@@ -1,8 +1,10 @@
 package dev.morphia.mapping.lazy;
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
+@Entity
 public class B2 implements InterfaceB {
     @Id
     ObjectId id;

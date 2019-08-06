@@ -158,11 +158,11 @@ public class NestedMapsAndListsTest extends TestBase {
     }
     @Entity
     private static class ListOfMap {
+        @Id
+        private long id;
         @Property
         private final List<Map<String, String>> listOfMap = new ArrayList<>();
 
-        @Id
-        private long id;
 
         @Override
         public int hashCode() {
@@ -200,11 +200,11 @@ public class NestedMapsAndListsTest extends TestBase {
     }
     @Entity
     private static class ListOfList {
+        @Id
+        private long id;
         @Property
         private final List<List<String>> list = new ArrayList<>();
 
-        @Id
-        private long id;
 
         @Override
         public String toString() {
@@ -235,10 +235,9 @@ public class NestedMapsAndListsTest extends TestBase {
     }
     @Entity
     private static class ListListPerson {
-        private final List<List<Person>> list = new ArrayList<>();
-
         @Id
         private long id;
+        private final List<List<Person>> list = new ArrayList<>();
 
         @Override
         public String toString() {
@@ -348,21 +347,25 @@ public class NestedMapsAndListsTest extends TestBase {
 
     @Embedded
     private static class HashMapOfMap {
+        @Id
+        private ObjectId id;
         private final Map<String, Map<String, String>> mom = new HashMap<>();
-        @Id
-        private ObjectId id;
 
     }
+
+    @Entity
     private static class HashMapOfList {
-        private final Map<String, List<String>> mol = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<String, List<String>> mol = new HashMap<>();
 
     }
+
+    @Entity
     private static class HashMapOfListOfMapMap {
-        private final Map<String, List<HashMapOfMap>> mol = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<String, List<HashMapOfMap>> mol = new HashMap<>();
 
     }
 

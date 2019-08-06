@@ -234,6 +234,7 @@ public class MapperOptionsTest extends TestBase {
                               .properties);
     }
 
+    @Entity
     private static class HasList implements Serializable {
         @Id
         private ObjectId id = new ObjectId();
@@ -243,6 +244,7 @@ public class MapperOptionsTest extends TestBase {
         }
     }
 
+    @Entity
     private static class HasMap implements Serializable {
         @Id
         private ObjectId id = new ObjectId();
@@ -252,6 +254,7 @@ public class MapperOptionsTest extends TestBase {
         }
     }
 
+    @Entity
     private static class HasCollectionValuedMap implements Serializable {
         @Id
         private ObjectId id = new ObjectId();
@@ -261,6 +264,7 @@ public class MapperOptionsTest extends TestBase {
         }
     }
 
+    @Entity
     private static class HasComplexObjectValuedMap implements Serializable {
         @Id
         private ObjectId id = new ObjectId();

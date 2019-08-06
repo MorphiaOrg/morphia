@@ -73,10 +73,10 @@ public class TestDatatypes extends TestBase {
 
     @Entity
     public static class ContainsFloat {
-        private final float val0 = 1.1F;
-        private final Float val1 = 1.1F;
         @Id
         private ObjectId id;
+        private final float val0 = 1.1F;
+        private final Float val1 = 1.1F;
     }
 
     @Entity
@@ -89,17 +89,17 @@ public class TestDatatypes extends TestBase {
 
     @Entity
     public static class ContainsShort {
-        private final short val0 = 1;
-        private final Short val1 = 1;
         @Id
         private ObjectId id;
+        private final short val0 = 1;
+        private final Short val1 = 1;
     }
 
     @Entity
     public static class ContainsByte {
-        private final byte val0 = 1;
-        private final Byte val1 = 1;
         @Id
         private ObjectId id;
+        private final byte val0 = 1;
+        private final Byte val1 = 1;
     }
 }

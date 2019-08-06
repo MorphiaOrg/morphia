@@ -35,10 +35,11 @@ public class TestPostPersist extends TestBase {
         Assert.assertTrue(p.i.innerCalled);
     }
 
+    @Entity
     public static class ProblematicPostPersistEntity {
-        private final Inner i = new Inner();
         @Id
         private ObjectId id;
+        private final Inner i = new Inner();
         private boolean called;
 
         static class Inner {
@@ -59,9 +60,9 @@ public class TestPostPersist extends TestBase {
     @Entity
     public static class TestObject {
 
-        private final String value;
         @Id
         private ObjectId id;
+        private final String value;
         private String one;
 
         public TestObject(final String value) {

@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,15 +46,17 @@ public class URIMappingTest extends TestBase {
 
     }
 
+    @Entity
     private static class ContainsURI {
         @Id
         private ObjectId id;
         private URI uri;
     }
 
+    @Entity
     private static class ContainsURIKeyedMap {
-        private final Map<URI, String> uris = new HashMap<URI, String>();
         @Id
         private ObjectId id;
+        private final Map<URI, String> uris = new HashMap<URI, String>();
     }
 }

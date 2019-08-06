@@ -1,5 +1,6 @@
 package dev.morphia.issue50;
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -14,6 +15,7 @@ public class TestIdTwice extends TestBase {
         getMapper().map(A.class);
     }
 
+    @Entity
     public static class A extends TestEntity {
         @Id
         private String extraId;

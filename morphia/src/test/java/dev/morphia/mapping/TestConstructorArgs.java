@@ -15,6 +15,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,13 +42,15 @@ public class TestConstructorArgs extends TestBase {
         Assert.assertEquals(acId, n.ac.id);
     }
 
+    @Entity
     private static class Normal {
-        @ConstructorArgs("_id")
-        private final ArgsConstructor ac = new ArgsConstructor(new ObjectId());
         @Id
         private ObjectId id = new ObjectId();
+        @ConstructorArgs("_id")
+        private final ArgsConstructor ac = new ArgsConstructor(new ObjectId());
     }
 
+    @Entity
     private static final class ArgsConstructor {
         @Id
         private final ObjectId id;

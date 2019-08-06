@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -40,6 +41,7 @@ public class UpdateRetainsClassInfoTest extends TestBase {
                .next();
     }
 
+    @Entity
     public abstract static class E {
         @Id
         private ObjectId id = new ObjectId();
@@ -53,10 +55,11 @@ public class UpdateRetainsClassInfoTest extends TestBase {
         private String bar;
     }
 
+    @Entity
     public static class X {
-        private final Map<String, E> map = new HashMap<String, E>();
         @Id
         private ObjectId id;
+        private final Map<String, E> map = new HashMap<String, E>();
 
     }
 }

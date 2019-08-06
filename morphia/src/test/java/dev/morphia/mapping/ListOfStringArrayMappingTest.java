@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,10 +32,11 @@ public class ListOfStringArrayMappingTest extends TestBase {
         Assert.assertEquals(ent.string, loaded.string);
     }
 
+    @Entity
     private static class ContainsListStringArray {
-        private final List<String[]> listOfStrings = new ArrayList<String[]>();
         @Id
         private ObjectId id;
+        private final List<String[]> listOfStrings = new ArrayList<String[]>();
         private String[] arrayOfStrings;
         private String string;
     }

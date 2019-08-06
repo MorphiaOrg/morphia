@@ -1,6 +1,7 @@
 package dev.morphia.callbacks;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,6 +26,7 @@ public class TestMultipleCallbacksPerMethod extends TestBase {
         Assert.assertTrue(reloaded.isPersistent());
     }
 
+    @Entity
     abstract static class CallbackAbstractEntity {
         @Id
         private final String id = new ObjectId().toHexString();

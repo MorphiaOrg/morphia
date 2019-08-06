@@ -1,9 +1,7 @@
 package dev.morphia;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -15,7 +13,6 @@ import org.junit.Assume;
 import org.junit.Before;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
@@ -120,6 +117,10 @@ public abstract class TestBase {
         mapper.map(aClass);
 
         return mapper.getMappedClass(aClass);
+    }
+
+    protected String toString(final Document document) {
+        return document.toJson(getMapper().getCodecRegistry().get(Document.class));
     }
 
     private double getServerVersion() {

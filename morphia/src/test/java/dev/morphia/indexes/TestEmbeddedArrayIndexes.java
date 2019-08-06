@@ -13,9 +13,9 @@
 
 package dev.morphia.indexes;
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
@@ -50,6 +50,7 @@ public class TestEmbeddedArrayIndexes extends TestBase {
 
     }
 
+    @Entity
     @Indexes({@Index(fields = {@Field("b.bar"), @Field("b.car")})})
     private static class A {
         @Id

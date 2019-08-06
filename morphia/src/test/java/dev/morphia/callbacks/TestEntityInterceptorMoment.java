@@ -2,6 +2,7 @@ package dev.morphia.callbacks;
 
 
 import dev.morphia.EntityInterceptor;
+import dev.morphia.annotations.Entity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -23,6 +24,7 @@ public class TestEntityInterceptorMoment extends TestBase {
         getDs().save(new E());
     }
 
+    @Entity
     static class E {
         @Id
         private final ObjectId id = new ObjectId();

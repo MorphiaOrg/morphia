@@ -106,6 +106,7 @@ public class TestJavaLists extends TestBase {
     }
 }
 
+@Entity
 class JsonList {
     @Id
     private ObjectId id;

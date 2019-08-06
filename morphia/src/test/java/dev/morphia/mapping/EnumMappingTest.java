@@ -151,6 +151,7 @@ public class EnumMappingTest extends TestBase {
         }
     }
 
+    @Entity
     public static class ContainsEnum {
         @Id
         private ObjectId id;
@@ -223,9 +224,9 @@ public class EnumMappingTest extends TestBase {
 
     @Entity(useDiscriminator = false)
     public static class CustomerWithList {
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
 
         public void add(final WebTemplateType type, final List<WebTemplate> templates) {
             mapWithList.put(type, templates);
@@ -234,10 +235,10 @@ public class EnumMappingTest extends TestBase {
 
     @Entity(useDiscriminator = false)
     public static class CustomerWithArrayList {
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
-            = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
+            = new HashMap<>();
 
         public void add(final WebTemplateType type, final List<WebTemplate> templates) {
             mapWithArrayList.put(type, templates);

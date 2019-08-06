@@ -416,6 +416,7 @@ public class IndexHelperTest extends TestBase {
         private String name;
     }
 
+    @Entity
     @Indexes(@Index(fields = @Field("indexName")))
     private abstract static class AbstractParent {
         @Id

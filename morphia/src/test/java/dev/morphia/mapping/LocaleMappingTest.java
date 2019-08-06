@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,6 +42,7 @@ public class LocaleMappingTest extends TestBase {
 
     }
 
+    @Entity
     public static class E {
         @Id
         private ObjectId id;

@@ -93,6 +93,7 @@ public class GenericsMappingTest extends TestBase {
         private HoldsAnInteger integerThing;
     }
 
+    @Entity
     public abstract static class Element<T extends Number> {
         @Id
         private ObjectId id;

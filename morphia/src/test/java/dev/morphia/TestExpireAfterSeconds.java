@@ -64,17 +64,17 @@ public class TestExpireAfterSeconds extends TestBase {
 
     @Entity
     public static class HasExpiryField {
-        @Indexed(options = @IndexOptions(expireAfterSeconds = 5))
-        private final Date offerExpiresAt = new Date();
         @Id
         private ObjectId id;
+        @Indexed(options = @IndexOptions(expireAfterSeconds = 5))
+        private final Date offerExpiresAt = new Date();
     }
 
     @Entity
     @Indexes(@Index(fields = @Field("offerExpiresAt"), options = @IndexOptions(expireAfterSeconds = 5)))
     public static class ClassAnnotation {
-        private final Date offerExpiresAt = new Date();
         @Id
         private ObjectId id;
+        private final Date offerExpiresAt = new Date();
     }
 }

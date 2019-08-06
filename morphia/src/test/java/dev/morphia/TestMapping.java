@@ -807,9 +807,9 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsFinalField {
-        private final String name;
         @Id
         private ObjectId id;
+        private final String name;
 
         protected ContainsFinalField() {
             name = "foo";
@@ -822,9 +822,9 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsTimestamp {
-        private final Timestamp ts = new Timestamp(System.currentTimeMillis());
         @Id
         private ObjectId id;
+        private final Timestamp ts = new Timestamp(System.currentTimeMillis());
     }
 
     @Entity
@@ -836,9 +836,9 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsByteArray {
-        private final byte[] bytes = "Scott".getBytes();
         @Id
         private ObjectId id;
+        private final byte[] bytes = "Scott".getBytes();
     }
 
     @Entity
@@ -851,9 +851,9 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static final class ContainsCollection {
-        private final Collection<String> coll = new ArrayList<>();
         @Id
         private ObjectId id;
+        private final Collection<String> coll = new ArrayList<>();
 
         private ContainsCollection() {
             coll.add("hi");
@@ -863,10 +863,10 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsPrimitiveMap {
-        private final Map<String, Long> embeddedValues = new HashMap<>();
-        private final Map<String, Long> values = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<String, Long> embeddedValues = new HashMap<>();
+        private final Map<String, Long> values = new HashMap<>();
     }
 
     private static class Foo1 implements Foo {
@@ -879,9 +879,9 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsMapWithEmbeddedInterface {
-        private final Map<String, Foo> embeddedValues = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<String, Foo> embeddedValues = new HashMap<>();
     }
 
     @Entity
@@ -900,17 +900,17 @@ public class TestMapping extends TestBase {
 
     @Entity(value = "cil", useDiscriminator = false)
     private static class ContainsIntegerListNew {
-        @AlsoLoad("intList")
-        private final List<Integer> integers = new ArrayList<>();
         @Id
         private ObjectId id;
+        @AlsoLoad("intList")
+        private final List<Integer> integers = new ArrayList<>();
     }
 
     @Entity(useDiscriminator = false)
     private static class ContainsUUID {
-        private final UUID uuid = UUID.randomUUID();
         @Id
         private ObjectId id;
+        private final UUID uuid = UUID.randomUUID();
     }
 
     @Entity(useDiscriminator = false)
@@ -921,45 +921,45 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsEnum1KeyMap {
-        private final Map<Enum1, String> values = new HashMap<>();
-        private final Map<Enum1, String> embeddedValues = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<Enum1, String> values = new HashMap<>();
+        private final Map<Enum1, String> embeddedValues = new HashMap<>();
     }
 
     @Entity
     private static class ContainsIntKeyMap {
-        private final Map<Integer, String> values = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<Integer, String> values = new HashMap<>();
     }
 
     @Entity
     private static class ContainsIntKeySetStringMap {
-        private final Map<Integer, Set<String>> values = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<Integer, Set<String>> values = new HashMap<>();
     }
 
     @Entity
     private static class ContainsObjectIdKeyMap {
-        private final Map<ObjectId, String> values = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<ObjectId, String> values = new HashMap<>();
     }
 
     @Entity
     private static class ContainsXKeyMap<T> {
-        private final Map<T, String> values = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<T, String> values = new HashMap<>();
     }
 
     @Entity
     private static class ContainsMapLike {
-        private final MapLike m = new MapLike();
         @Id
         private ObjectId id;
+        private final MapLike m = new MapLike();
     }
 
     @Entity

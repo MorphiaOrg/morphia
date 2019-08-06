@@ -70,9 +70,9 @@ public class TestNotSaved extends TestBase {
 
     @Entity(value = "Normal", useDiscriminator = false)
     private static class NormalWithNotSaved {
-        @NotSaved
-        private final String name = "never";
         @Id
         private ObjectId id = new ObjectId();
+        @NotSaved
+        private final String name = "never";
     }
 }

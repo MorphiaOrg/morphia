@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -119,16 +120,18 @@ public class MapImplTest extends TestBase {
         Assert.assertEquals("b", e.mymap.get("2"));
     }
 
+    @Entity
     private static class ContainsMapOfEmbeddedInterfaces {
-        private final Map<String, Serializable> values = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<String, Serializable> values = new HashMap<>();
     }
 
+    @Entity
     private static class ContainsMapOfEmbeddedGoos {
-        private final Map<String, Goo> values = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<String, Goo> values = new HashMap<>();
     }
 
     @Embedded
@@ -143,10 +146,11 @@ public class MapImplTest extends TestBase {
         }
     }
 
+    @Entity
     private static class E {
-        private final MyMap mymap = new MyMap();
         @Id
         private ObjectId id;
+        private final MyMap mymap = new MyMap();
     }
 
     @Embedded

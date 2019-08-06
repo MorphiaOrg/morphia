@@ -3,6 +3,7 @@ package dev.morphia.callbacks;
 
 import dev.morphia.EntityInterceptor;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.callbacks.TestSimpleValidationViaInterceptor.NonNullValidation.NonNullValidationException;
@@ -53,6 +54,7 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
     public @interface NonNull {
     }
 
+    @Entity
     static class E {
         @Id
         private final ObjectId id = new ObjectId();
@@ -66,6 +68,7 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
         }
     }
 
+    @Entity
     static class E2 {
         @Id
         private final ObjectId id = new ObjectId();

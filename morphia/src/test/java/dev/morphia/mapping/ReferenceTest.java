@@ -233,6 +233,7 @@ public class ReferenceTest extends ProxyTestBase {
         Assert.assertNull(container.mapRef);
     }
 
+    @Entity
     public static class Container {
         @Id
         private ObjectId id;
@@ -398,6 +399,7 @@ public class ReferenceTest extends ProxyTestBase {
 
     }
 
+    @Entity
     private static class ComplexParent {
         @Id
         private ObjectId id;

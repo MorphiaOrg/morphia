@@ -110,9 +110,9 @@ public class TestCallbackEscalation extends TestBase {
 
     @Entity
     static class A extends Callbacks {
-        private final List<B> bs = new LinkedList<B>();
         @Id
         private ObjectId id;
+        private final List<B> bs = new LinkedList<B>();
         private B b;
     }
 

@@ -229,6 +229,7 @@ public class EmbeddedMappingTest extends TestBase {
         private Long value;
     }
 
+    @Entity
     @Indexes({
         @Index(fields = {@Field("nested.field.fail")},
             options = @IndexOptions(disableValidation = true, sparse = true))
@@ -264,6 +265,7 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
+    @Entity
     @Indexes(@Index(fields = {@Field("nested.field.fail")}))
     public static class WithNestedValidated {
         @Id

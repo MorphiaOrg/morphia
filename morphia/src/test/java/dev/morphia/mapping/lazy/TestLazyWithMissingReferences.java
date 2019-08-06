@@ -1,6 +1,7 @@
 package dev.morphia.mapping.lazy;
 
 
+import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -48,6 +49,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         }
     }
 
+    @Entity
     static class Source {
         @Id
         private ObjectId id = new ObjectId();
@@ -83,6 +85,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         }
     }
 
+    @Entity
     static class Target {
         @Id
         private ObjectId id = new ObjectId();

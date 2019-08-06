@@ -10,11 +10,12 @@ import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 
 
+@Entity
 public abstract class LongIdEntity {
-    @Transient
-    private final Datastore ds;
     @Id
     private Long myLongId;
+    @Transient
+    private final Datastore ds;
 
     protected LongIdEntity(final Datastore ds) {
         this.ds = ds;

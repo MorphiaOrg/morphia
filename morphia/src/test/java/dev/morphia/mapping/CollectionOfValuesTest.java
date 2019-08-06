@@ -163,6 +163,7 @@ public class CollectionOfValuesTest extends TestBase {
         }
     }
 
+    @Entity
     public static class ContainsListOfList {
         @Id
         private ObjectId id;
@@ -170,6 +171,7 @@ public class CollectionOfValuesTest extends TestBase {
         private List<List<Integer>> integers;
     }
 
+    @Entity
     public static class ContainsTwoDimensionalArray {
         @Id
         private ObjectId id;

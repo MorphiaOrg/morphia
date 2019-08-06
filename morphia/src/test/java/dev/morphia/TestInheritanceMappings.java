@@ -177,6 +177,7 @@ public class TestInheritanceMappings extends TestBase {
         }
     }
 
+    @Entity
     public static class GenericIdPlus<T, K> {
         @Id
         private T id;
@@ -203,6 +204,7 @@ public class TestInheritanceMappings extends TestBase {
         private String b;
     }
 
+    @Entity
     private static class GenericId<T> {
         @Id
         private T id;
