@@ -2,7 +2,6 @@ package dev.morphia.mapping.validation.fieldrules;
 
 
 import org.bson.types.ObjectId;
-import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -21,7 +20,7 @@ public class MapKeyDifferentFromString extends FieldConstraint {
 
     @Override
     protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
-        if (mf.isMap() && (!mf.hasAnnotation(Serialized.class))) {
+        if (mf.isMap()) {
             final Class<?> aClass = ReflectionUtils.getParameterizedClass(mf.getField(), 0);
             // WARN if not parameterized : null or Object...
             if (aClass == null || Object.class.equals(aClass)) {

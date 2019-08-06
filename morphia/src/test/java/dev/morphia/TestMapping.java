@@ -22,7 +22,6 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.DefaultCreator;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
@@ -43,7 +42,6 @@ import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.print.Doc;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -597,16 +595,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void testSerializedMapping() {
-        getMapper().map(ContainsSerializedData.class);
-        final Key<ContainsSerializedData> savedKey = getDs().save(new ContainsSerializedData());
-        final ContainsSerializedData loaded = getDs().find(ContainsSerializedData.class).filter("_id", savedKey.getId()).first();
-        assertNotNull(loaded.data);
-        assertEquals(loaded.data.someString, (new ContainsSerializedData()).data.someString);
-        assertNotNull(loaded.id);
-    }
-
-    @Test
     public void testTimestampMapping() {
         getMapper().map(ContainsTimestamp.class);
         final ContainsTimestamp cts = new ContainsTimestamp();
@@ -849,14 +837,6 @@ public class TestMapping extends TestBase {
     @Entity
     private static class ContainsByteArray {
         private final byte[] bytes = "Scott".getBytes();
-        @Id
-        private ObjectId id;
-    }
-
-    @Entity
-    private static class ContainsSerializedData {
-        @Serialized
-        private final SerializableClass data = new SerializableClass();
         @Id
         private ObjectId id;
     }

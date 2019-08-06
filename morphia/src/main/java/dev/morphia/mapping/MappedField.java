@@ -16,7 +16,6 @@
 
 package dev.morphia.mapping;
 
-import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
@@ -24,7 +23,6 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Serialized;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.Conversions;
@@ -44,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -314,11 +311,6 @@ public class MappedField {
             }
         } else if (hasAnnotation(Embedded.class)) {
             final Embedded me = (Embedded) annotations.get(Embedded.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        } else if (hasAnnotation(Serialized.class)) {
-            final Serialized me = (Serialized) annotations.get(Serialized.class);
             if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
                 return me.value();
             }

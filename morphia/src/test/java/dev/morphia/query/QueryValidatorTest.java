@@ -5,13 +5,11 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Serialized;
 import dev.morphia.entities.EntityWithListsAndArrays;
 import dev.morphia.entities.SimpleEntity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
-import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Rule;
@@ -483,14 +481,6 @@ public class QueryValidatorTest extends TestBase {
         new PathTarget(getMapper(), WithReference.class, "reference.name").getTarget();
     }
 
-    @Test
-    public void shouldReferToMappedClassInExceptionWhenQueryingPastSerializedField() {
-        thrown.expect(ValidationException.class);
-        thrown.expectMessage("Could not resolve path 'serialized.name' against "
-                             + "'dev.morphia.query.QueryValidatorTest$WithSerializedField'");
-        new PathTarget(getMapper(), WithSerializedField.class, "serialized.name").getTarget();
-    }
-
     @Entity
     private static class GeoEntity {
         @Id
@@ -513,11 +503,4 @@ public class QueryValidatorTest extends TestBase {
         private String name;
     }
 
-    @Entity
-    private static class WithSerializedField {
-        @Id
-        private ObjectId id;
-        @Serialized
-        private SerializableClass serialized;
-    }
 }

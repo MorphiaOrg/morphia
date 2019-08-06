@@ -7,7 +7,6 @@ import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Serialized;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
@@ -208,11 +207,6 @@ public class MorphiaConvention implements Convention {
             }
         } else if (field.hasAnnotation(Embedded.class)) {
             final Embedded me = field.getAnnotation(Embedded.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        } else if (field.hasAnnotation(Serialized.class)) {
-            final Serialized me = field.getAnnotation(Serialized.class);
             if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
                 return me.value();
             }

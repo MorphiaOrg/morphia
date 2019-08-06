@@ -16,7 +16,6 @@
 
 package dev.morphia.internal;
 
-import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -25,9 +24,9 @@ import dev.morphia.query.ValidationException;
 import java.util.Iterator;
 import java.util.List;
 
+import static dev.morphia.internal.MorphiaUtils.join;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static dev.morphia.internal.MorphiaUtils.join;
 
 /**
  * @since 1.3
@@ -125,7 +124,7 @@ public class PathTarget {
             field = resolveField(segment);
 
             if (field != null) {
-                if (hasNext() && (field.isReference() || field.hasAnnotation(Serialized.class))) {
+                if (hasNext() && field.isReference()) {
                     failValidation();
                 }
                 translate(field.getMappedFieldName());

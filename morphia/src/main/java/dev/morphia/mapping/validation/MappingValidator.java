@@ -6,7 +6,6 @@ import dev.morphia.ObjectFactory;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Serialized;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
@@ -22,7 +21,6 @@ import dev.morphia.mapping.validation.fieldrules.ContradictingFieldAnnotation;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceMissingDependencies;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
 import dev.morphia.mapping.validation.fieldrules.MapKeyDifferentFromString;
-import dev.morphia.mapping.validation.fieldrules.MapNotSerializable;
 import dev.morphia.mapping.validation.fieldrules.ReferenceToUnidentifiable;
 import dev.morphia.mapping.validation.fieldrules.VersionMisuse;
 
@@ -128,17 +126,12 @@ public class MappingValidator {
         constraints.add(new LazyReferenceMissingDependencies());
         constraints.add(new LazyReferenceOnArray());
         constraints.add(new MapKeyDifferentFromString());
-        constraints.add(new MapNotSerializable());
         constraints.add(new VersionMisuse(creator));
-        //
-        constraints.add(new ContradictingFieldAnnotation(Reference.class, Serialized.class));
+
         constraints.add(new ContradictingFieldAnnotation(Reference.class, Property.class));
         constraints.add(new ContradictingFieldAnnotation(Reference.class, Embedded.class));
-        //
-        constraints.add(new ContradictingFieldAnnotation(Embedded.class, Serialized.class));
+
         constraints.add(new ContradictingFieldAnnotation(Embedded.class, Property.class));
-        //
-        constraints.add(new ContradictingFieldAnnotation(Property.class, Serialized.class));
 
         return constraints;
     }
