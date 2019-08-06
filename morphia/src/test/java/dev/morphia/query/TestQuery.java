@@ -1172,6 +1172,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test(expected = ValidationException.class)
+    @Ignore("references need work")
     public void testReferenceQuery() {
         final Photo p = new Photo();
         final ContainsPhotoKey cpk = new ContainsPhotoKey();
@@ -1503,8 +1504,8 @@ public class TestQuery extends TestBase {
             query.criteria("mods.id").equal("5cb5fa6f8d7bd65e8276cd48"));
 
 
-        Document expected = parse("{\"version\": \"latest\", \"$or\": [{\"adds.id\": \"5cb5fa6f8d7bd65e8276cd48\"}, {\"deletes.id\": "
-                                  + "\"5cb5fa6f8d7bd65e8276cd48\"}, {\"mods.id\": \"5cb5fa6f8d7bd65e8276cd48\"}]}");
+        Document expected = parse("{\"version\": \"latest\", \"$or\": [{\"adds._id\": \"5cb5fa6f8d7bd65e8276cd48\"}, {\"deletes._id\": "
+                                  + "\"5cb5fa6f8d7bd65e8276cd48\"}, {\"mods._id\": \"5cb5fa6f8d7bd65e8276cd48\"}]}");
         Assert.assertEquals(expected, ((QueryImpl) query).getQueryDocument());
     }
 

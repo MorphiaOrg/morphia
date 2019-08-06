@@ -1,13 +1,9 @@
 package dev.morphia.mapping.primitives;
 
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.MappingException;
-import dev.morphia.query.FindOptions;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,35 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class CharacterMappingTest extends TestBase {
-    @Test
-    public void emptyStringToPrimitive() {
-        final Characters characters = testMapping("singlePrimitive", "");
-        Assert.assertEquals(0, characters.singlePrimitive);
-    }
-
-    @Test
-    public void emptyStringToPrimitiveArray() {
-        final Characters characters = testMapping("primitiveArray", "");
-        Assert.assertArrayEquals("".toCharArray(), characters.primitiveArray);
-    }
-
-    @Test
-    public void emptyStringToWrapper() {
-        final Characters characters = testMapping("singleWrapper", "");
-        Assert.assertEquals(Character.valueOf((char) 0), characters.singleWrapper);
-    }
-
-    @Test
-    public void emptyStringToWrapperArray() {
-        final Characters characters = testMapping("wrapperArray", "");
-        compare("", characters.wrapperArray);
-    }
-
     @Test
     public void mapping() {
         getMapper().map(Characters.class);
@@ -71,71 +39,6 @@ public class CharacterMappingTest extends TestBase {
         Assert.assertArrayEquals(entity.wrapperArray, loaded.wrapperArray);
         Assert.assertArrayEquals(entity.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
         Assert.assertArrayEquals(entity.nestedWrapperArray, loaded.nestedWrapperArray);
-    }
-
-    @Test
-    public void singleCharToPrimitive() {
-        final Characters characters = testMapping("singlePrimitive", "a");
-        Assert.assertEquals('a', characters.singlePrimitive);
-    }
-
-    @Test
-    public void singleCharToPrimitiveArray() {
-        final Characters characters = testMapping("primitiveArray", "a");
-        Assert.assertArrayEquals("a".toCharArray(), characters.primitiveArray);
-        getDs().save(characters);
-    }
-
-    @Test
-    public void singleCharToWrapper() {
-        final Characters characters = testMapping("singleWrapper", "a");
-        Assert.assertEquals(Character.valueOf('a'), characters.singleWrapper);
-    }
-
-    @Test
-    public void singleCharToWrapperArray() {
-        final Characters characters = testMapping("wrapperArray", "a");
-        compare("a", characters.wrapperArray);
-    }
-
-    @Test(expected = MappingException.class)
-    public void stringToPrimitive() {
-        testMapping("singlePrimitive", "ab");
-    }
-
-    @Test
-    public void stringToPrimitiveArray() {
-        final Characters characters = testMapping("primitiveArray", "abc");
-        Assert.assertArrayEquals("abc".toCharArray(), characters.primitiveArray);
-    }
-
-    @Test(expected = MappingException.class)
-    public void stringToWrapper() {
-        testMapping("singleWrapper", "ab");
-    }
-
-    @Test
-    public void stringToWrapperArray() {
-        final Characters characters = testMapping("wrapperArray", "abc");
-        compare("abc", characters.wrapperArray);
-    }
-
-    private void compare(final String abc, final Character[] wrapperArray) {
-        Assert.assertEquals(abc.length(), wrapperArray.length);
-        for (int i = 0; i < wrapperArray.length; i++) {
-            Assert.assertEquals(abc.charAt(i), wrapperArray[i].charValue());
-        }
-    }
-
-    private Characters testMapping(final String field, final String value) {
-        getMapper().map(Characters.class);
-
-        final MongoCollection<Document> collection = getDatabase().getCollection(Characters.class.getSimpleName());
-        collection.insertOne(new Document(field, value));
-
-        return getDs().find(Characters.class)
-                      .execute(new FindOptions().limit(1))
-                      .tryNext();
     }
 
     @Entity

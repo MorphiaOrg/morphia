@@ -16,6 +16,7 @@ import dev.morphia.query.Query;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -35,9 +36,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * @author Gene Trog, (eternal0@github.com)
- */
+@Ignore("references need work")
 public class ReferenceTest extends ProxyTestBase {
     @Test
     public void testComplexIds() {

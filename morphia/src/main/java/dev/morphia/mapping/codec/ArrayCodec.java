@@ -11,22 +11,25 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class ArrayCodec implements Codec<Object[]> {
+class ArrayCodec implements Codec<Object> {
 
     private Mapper mapper;
+    private final Class type;
     private BsonTypeCodecMap bsonTypeCodecMap;
 
-    ArrayCodec(final Mapper mapper) {
+    public <T> ArrayCodec(final Mapper mapper, final Class type) {
         this.mapper = mapper;
+        this.type = type;
     }
 
     @Override
-    public Class<Object[]> getEncoderClass() {
-        return Object[].class;
+    public Class<Object> getEncoderClass() {
+        return null;
     }
 
     private BsonTypeCodecMap getBsonTypeCodecMap() {
@@ -38,13 +41,19 @@ class ArrayCodec implements Codec<Object[]> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void encode(final BsonWriter writer, final Object[] value, final EncoderContext encoderContext) {
-        writer.writeStartArray();
-        for (final Object cur : value) {
-            final Codec codec = mapper.getCodecRegistry().get(cur.getClass());
-            codec.encode(writer, cur, encoderContext);
+    public void encode(final BsonWriter writer, final Object value, final EncoderContext encoderContext) {
+        try {
+            writer.writeStartArray();
+            int length = Array.getLength(value);
+            for (int i = 0; i < length; i++) {
+                Object element = Array.get(value, i);
+                Codec codec = mapper.getCodecRegistry().get(element.getClass());
+                codec.encode(writer, element, encoderContext);
+            }
+            writer.writeEndArray();
+        } catch (ClassCastException e) {
+            e.printStackTrace();
         }
-        writer.writeEndArray();
     }
 
     @Override
@@ -69,7 +78,7 @@ class ArrayCodec implements Codec<Object[]> {
         } else if (bsonType == BsonType.BINARY && BsonBinarySubType.isUuid(reader.peekBinarySubType()) && reader.peekBinarySize() == 16) {
             return mapper.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
         }
-        return getBsonTypeCodecMap().get(bsonType).decode(reader, decoderContext);
+        return mapper.getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
     }
 
 }

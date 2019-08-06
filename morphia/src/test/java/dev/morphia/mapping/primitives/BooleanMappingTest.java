@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -62,12 +63,13 @@ public class BooleanMappingTest extends TestBase {
         }
     }
 
+    @Entity
     private static class Booleans {
+        @Id
+        private ObjectId id;
         private final List<Boolean[]> booleans = new ArrayList<Boolean[]>();
         private final List<boolean[]> booleanPrimitives = new ArrayList<boolean[]>();
         private final List<Boolean> list = new ArrayList<Boolean>();
-        @Id
-        private ObjectId id;
         private boolean singlePrimitive;
         private Boolean singleWrapper;
         private boolean[] primitiveArray;

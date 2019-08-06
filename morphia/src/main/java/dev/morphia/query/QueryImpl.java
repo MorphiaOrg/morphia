@@ -134,23 +134,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    /**
-     * @morphia.internal
-     */
-    QueryImpl<T> cloneQuery() {
-        final QueryImpl<T> n = new QueryImpl<>(clazz, ds);
-        n.validateName = validateName;
-        n.validateType = validateType;
-        n.baseQuery = copy(baseQuery);
-        n.options = options != null ? options.copy() : null;
-        n.compoundContainer = compoundContainer;
-        return n;
-    }
-
-    private Document copy(final Document document) {
-        return document == null ? null : new Document(document);
-    }
-
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
@@ -470,10 +453,10 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public String toString() {
-        if (1 == 1) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        }
+//        if (1 == 1) {
+//            //TODO:  implement this
+//            throw new UnsupportedOperationException();
+//        }
 
         return getOptions().getProjection() == null ? getQueryDocument().toString()
                                                     : format("{ %s, %s }", getQueryDocument(), getFieldsObject());

@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -45,12 +46,13 @@ public class FloatMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
+    @Entity
     private static class Floats {
+        @Id
+        private ObjectId id;
         private final List<Float[]> listWrapperArray = new ArrayList<Float[]>();
         private final List<float[]> listPrimitiveArray = new ArrayList<float[]>();
         private final List<Float> listWrapper = new ArrayList<Float>();
-        @Id
-        private ObjectId id;
         private float singlePrimitive;
         private Float singleWrapper;
         private float[] primitiveArray;

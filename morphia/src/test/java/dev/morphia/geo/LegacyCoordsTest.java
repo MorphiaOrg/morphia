@@ -3,6 +3,7 @@ package dev.morphia.geo;
 import com.mongodb.MongoException;
 import dev.morphia.query.QueryImpl;
 import org.bson.Document;
+import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
@@ -28,6 +29,7 @@ import static dev.morphia.testutil.JSONMatcher.jsonEqual;
  * <p/>
  * This set of tests should run on all server versions.
  */
+@Ignore("geo need work")
 public class LegacyCoordsTest extends TestBase {
     @Test
     public void shouldCreateA2dIndexOnAnEntityWithArrayOfCoordinates() {
@@ -63,6 +65,7 @@ public class LegacyCoordsTest extends TestBase {
     }
 
     @Test
+    @Ignore("geo need work")
     public void shouldNotReturnAnyResultsIfNoLocationsWithinGivenRadius() {
         // given
         final PlaceWithLegacyCoords nearbyPlace = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Nearby Place");

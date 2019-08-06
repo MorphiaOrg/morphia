@@ -12,6 +12,7 @@ public class PrimitiveCodecProvider implements CodecRegistry {
 
     public PrimitiveCodecProvider(final CodecRegistry codecRegistry) {
         primitiveCodecs.put(byte.class, codecRegistry.get(Byte.class));
+        primitiveCodecs.put(char.class, codecRegistry.get(Character.class));
         primitiveCodecs.put(short.class, codecRegistry.get(Short.class));
         primitiveCodecs.put(int.class, codecRegistry.get(Integer.class));
         primitiveCodecs.put(long.class, codecRegistry.get(Long.class));

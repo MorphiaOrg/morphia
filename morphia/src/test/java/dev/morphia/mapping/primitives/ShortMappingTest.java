@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -44,12 +45,13 @@ public class ShortMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
+    @Entity
     private static class Shorts {
+        @Id
+        private ObjectId id;
         private final List<Short[]> listWrapperArray = new ArrayList<Short[]>();
         private final List<short[]> listPrimitiveArray = new ArrayList<short[]>();
         private final List<Short> listWrapper = new ArrayList<Short>();
-        @Id
-        private ObjectId id;
         private short singlePrimitive;
         private Short singleWrapper;
         private short[] primitiveArray;

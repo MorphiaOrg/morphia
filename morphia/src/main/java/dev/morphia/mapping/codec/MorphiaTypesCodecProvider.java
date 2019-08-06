@@ -9,22 +9,18 @@ import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class MorphiaTypesCodecProvider extends ValueCodecProvider {
-    private final Codec<?> arrayCodec;
+//    private final Codec<?> arrayCodec;
+    private Mapper mapper;
 
     public MorphiaTypesCodecProvider(final Mapper mapper) {
+        this.mapper = mapper;
         addCodec(new KeyCodec(mapper));
         addCodec(new ClassCodec());
-        addCodec(new BooleanArrayCodec(mapper));
-        addCodec(new ShortArrayCodec(mapper));
-        addCodec(new IntArrayCodec(mapper));
-        addCodec(new LongArrayCodec(mapper));
-        addCodec(new FloatArrayCodec(mapper));
-        addCodec(new DoubleArrayCodec(mapper));
-        addCodec(new StringArrayCodec(mapper));
         addCodec(new HashMapCodec());
         addCodec(new URICodec());
         addCodec(new CenterCodec());
@@ -33,7 +29,17 @@ public class MorphiaTypesCodecProvider extends ValueCodecProvider {
         addCodec(new QueryCodec(mapper));
         addCodec(new FieldCriteriaCodec(mapper));
         addCodec(new CriteriaContainerCodec(mapper));
-        arrayCodec = new ArrayCodec(mapper);
+
+        List.of(boolean.class, Boolean.class,
+            byte.class, Byte.class,
+            char.class, Character.class,
+            double.class, Double.class,
+            float.class, Float.class,
+            int.class, Integer.class,
+            long.class, Long.class,
+            short.class, Short.class).forEach(c -> {
+            addCodec(new TypedArrayCodec(c, mapper));
+        });
     }
 
     @Override
@@ -42,7 +48,7 @@ public class MorphiaTypesCodecProvider extends ValueCodecProvider {
         if (codec != null) {
             return codec;
         } else if (clazz.isArray() && !clazz.getComponentType().equals(byte.class)) {
-            return (Codec<T>) arrayCodec;
+            return (Codec<T>) new ArrayCodec(mapper, clazz);
         } else {
             return null;
         }
@@ -54,4 +60,5 @@ public class MorphiaTypesCodecProvider extends ValueCodecProvider {
             return (Class<Map<String, Object>>) ((Class) HashMap.class);
         }
     }
+
 }

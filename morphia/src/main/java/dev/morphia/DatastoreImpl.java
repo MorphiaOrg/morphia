@@ -31,6 +31,7 @@ import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -403,6 +404,9 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public void ensureIndexes() {
+        if(mapper.getMappedClasses().isEmpty()) {
+            Sofia.logNoMappedClasses();
+        }
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if(mc.getEntityAnnotation() != null) {
                 indexHelper.createIndex(mapper.getCollection(mc.getClazz()), mc);

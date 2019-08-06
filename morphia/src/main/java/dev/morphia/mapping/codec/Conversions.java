@@ -21,6 +21,15 @@ public final class Conversions {
 
     static {
         register(String.class, ObjectId.class, ObjectId::new);
+        register(String.class, Character.class, s -> {
+            if (s.length() == 1) {
+                return s.charAt(0);
+            } else if (s.isEmpty()){
+                return (char)0;
+            } else {
+                throw new MappingException("Could not convert String to char: " + s);
+            }
+        });
         register(String.class, Boolean.class, Boolean::parseBoolean);
         register(String.class, Byte.class, Byte::parseByte);
         register(String.class, Double.class, Double::parseDouble);
@@ -30,8 +39,10 @@ public final class Conversions {
         register(String.class, Short.class, Short::parseShort);
 
         register(Binary.class, byte[].class, Binary::getData);
+        register(Integer.class, Byte.class, Integer::byteValue);
 
         register(Double.class, Long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
+        register(Double.class, Float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
         register(Long.class, Double.class, Long::doubleValue);
 
         register(Float.class, Long.class, Float::longValue, "Converting a float value to a long.  Possible loss of precision.");

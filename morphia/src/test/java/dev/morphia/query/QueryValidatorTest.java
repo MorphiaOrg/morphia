@@ -501,7 +501,10 @@ public class QueryValidatorTest extends TestBase {
     private static class NullClass {
     }
 
+    @Entity
     private static class WithReference {
+        @Id
+        private ObjectId id;
         @Reference
         private SimpleEntity reference;
     }
@@ -510,7 +513,10 @@ public class QueryValidatorTest extends TestBase {
         private String name;
     }
 
+    @Entity
     private static class WithSerializedField {
+        @Id
+        private ObjectId id;
         @Serialized
         private SerializableClass serialized;
     }

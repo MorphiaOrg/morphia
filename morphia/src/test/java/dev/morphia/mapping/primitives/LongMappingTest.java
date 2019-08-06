@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -44,12 +45,13 @@ public class LongMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
+    @Entity
     private static class Longs {
+        @Id
+        private ObjectId id;
         private final List<Long[]> listWrapperArray = new ArrayList<Long[]>();
         private final List<long[]> listPrimitiveArray = new ArrayList<long[]>();
         private final List<Long> listWrapper = new ArrayList<Long>();
-        @Id
-        private ObjectId id;
         private long singlePrimitive;
         private Long singleWrapper;
         private long[] primitiveArray;

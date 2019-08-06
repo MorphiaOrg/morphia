@@ -17,6 +17,8 @@
 package dev.morphia.mapping.lazy;
 
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.Mapper;
@@ -53,6 +55,7 @@ public class TransientMappingTest extends TestBase {
         Assert.assertFalse("javaTransientSerializable", document.containsKey("javaTransientSerializable"));
     }
 
+    @Entity
     private static class HasTransientFields {
         @Id
         private ObjectId id;
@@ -69,6 +72,7 @@ public class TransientMappingTest extends TestBase {
 
     }
 
+    @Embedded
     private static class SerializableClass implements Serializable {
         private String value;
     }

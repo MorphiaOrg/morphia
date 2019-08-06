@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -44,12 +45,13 @@ public class DoubleMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
+    @Entity
     private static class Doubles {
+        @Id
+        private ObjectId id;
         private final List<Double[]> listWrapperArray = new ArrayList<Double[]>();
         private final List<double[]> listPrimitiveArray = new ArrayList<double[]>();
         private final List<Double> listWrapper = new ArrayList<Double>();
-        @Id
-        private ObjectId id;
         private double singlePrimitive;
         private Double singleWrapper;
         private double[] primitiveArray;

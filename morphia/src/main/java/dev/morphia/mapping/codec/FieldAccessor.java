@@ -5,11 +5,18 @@ import org.bson.codecs.pojo.PropertyAccessor;
 
 import java.lang.reflect.Field;
 
+/**
+ * @morphia.internal
+ */
 public class FieldAccessor implements PropertyAccessor {
     private final Field field;
 
     public FieldAccessor(final Field field) {
         this.field = field;
+    }
+
+    protected Field getField() {
+        return field;
     }
 
     @Override
@@ -25,6 +32,8 @@ public class FieldAccessor implements PropertyAccessor {
     public void set(final Object instance, final Object value) {
         try {
             field.set(instance, value);
+        } catch (IllegalArgumentException e) {
+            throw new MappingException(e.getMessage(), e);
         } catch (IllegalAccessException e) {
             throw new MappingException(e.getMessage(), e);
         }

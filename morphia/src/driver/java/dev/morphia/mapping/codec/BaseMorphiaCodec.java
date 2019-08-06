@@ -100,6 +100,7 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
                 } else {
+/*
                     final DecoderContext propertyContext
                         = DecoderContext.builder(decoderContext)
                                         .checkedDiscriminator(decoderContext.hasCheckedDiscriminator() ||
@@ -107,11 +108,13 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
                                         .metaData("discriminatorKey", getClassModel().getDiscriminatorKey())
                                         .build();
                     value = propertyModel.getCachedCodec().decode(reader, propertyContext);
+*/
+                    value = decoderContext.decodeWithChildContext(propertyModel.getCachedCodec(), reader);
                 }
                 if (propertyModel.isWritable()) {
                     instanceCreator.set(value, propertyModel);
                 }
-            } catch (BsonInvalidOperationException | CodecConfigurationException e) {
+            } catch (IllegalArgumentException | BsonInvalidOperationException | CodecConfigurationException e) {
                 throw new CodecConfigurationException(format("Failed to decode '%s'. Decoding '%s' errored with: %s",
                     getClassModel().getName(), name, e.getMessage()), e);
             }

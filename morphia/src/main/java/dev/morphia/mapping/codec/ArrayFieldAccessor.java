@@ -6,6 +6,11 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static java.lang.String.format;
+
+/**
+ * @morphia.internal
+ */
 public class ArrayFieldAccessor extends FieldAccessor {
 
     private TypeData typeData;
@@ -29,7 +34,8 @@ public class ArrayFieldAccessor extends FieldAccessor {
     private Object convert(final Object[] value) {
         final Object newArray = Array.newInstance(componentType, value.length);
         for (int i = 0; i < value.length; i++) {
-            Array.set(newArray, i, convert(value[i], componentType));
+            Object convert = convert(value[i], componentType);
+            Array.set(newArray, i, convert);
         }
         return newArray;
     }
@@ -37,7 +43,12 @@ public class ArrayFieldAccessor extends FieldAccessor {
     private Object convert(final List value) {
         final Object newArray = Array.newInstance(componentType, value.size());
         for (int i = 0; i < value.size(); i++) {
-            Array.set(newArray, i, convert(value.get(i), componentType));
+            Object converted = convert(value.get(i), componentType);
+            try {
+                Array.set(newArray, i, converted);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(format("Can't set %s with a value type of %s", getField(), converted.getClass()));
+            }
         }
         return newArray;
     }
@@ -48,7 +59,12 @@ public class ArrayFieldAccessor extends FieldAccessor {
             List list = (List) o;
             final Object newArray = Array.newInstance(type.getComponentType(), list.size());
             for (int i = 0; i < list.size(); i++) {
-                Array.set(newArray, i, convert(list.get(i), type.getComponentType()));
+                Object converted = convert(list.get(i), type.getComponentType());
+                try {
+                    Array.set(newArray, i, converted);
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException(format("Can't set %s with a value type of %s", getField(), converted.getClass()));
+                }
             }
 
             return newArray;

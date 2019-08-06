@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -47,12 +48,13 @@ public class IntegerMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
+    @Entity
     private static class Integers {
+        @Id
+        private ObjectId id;
         private final List<Integer[]> listWrapperArray = new ArrayList<Integer[]>();
         private final List<int[]> listPrimitiveArray = new ArrayList<int[]>();
         private final List<Integer> listWrapper = new ArrayList<Integer>();
-        @Id
-        private ObjectId id;
         private int singlePrimitive;
         private Integer singleWrapper;
         private int[] primitiveArray;

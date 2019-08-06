@@ -2,6 +2,7 @@ package dev.morphia.issue45;
 
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
@@ -17,6 +18,7 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class TestEmptyEntityMapping extends TestBase {
     @Test
+    @Ignore("Questionable test.  Probably to be delete")
     public void testEmptyEmbeddedNotNullAfterReload() {
         A a = new A();
         a.b = new B();

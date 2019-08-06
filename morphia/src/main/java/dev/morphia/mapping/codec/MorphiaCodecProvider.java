@@ -40,8 +40,8 @@ public class MorphiaCodecProvider implements CodecProvider {
         this.mapper = mapper;
         this.conventions = conventions;
         this.discriminatorLookup = new DiscriminatorLookup(this.classModels, packages);
-        propertyCodecProviders.add(new MapPropertyCodecProvider());
-        propertyCodecProviders.add(new CollectionPropertyCodecProvider());
+        propertyCodecProviders.add(new MorphiaMapPropertyCodecProvider());
+        propertyCodecProviders.add(new MorphiaCollectionPropertyCodecProvider());
     }
 
     @Override
@@ -56,16 +56,6 @@ public class MorphiaCodecProvider implements CodecProvider {
             }
 
         return codec; //.getMappedClass().isMappable() ? codec : null;
-    }
-
-    /**
-     * Registers codec providers that receive the type parameters of properties for instances encoded and decoded
-     * by a {@link PojoCodec} handled by this provider.
-     *
-     * @param providers property codec providers to register
-     */
-    public void register(final PropertyCodecProvider... providers) {
-        propertyCodecProviders.addAll(asList(notNull("providers", providers)));
     }
 
     private static <T> ClassModel<T> createClassModel(final Class<T> clazz, final List<Convention> conventions) {

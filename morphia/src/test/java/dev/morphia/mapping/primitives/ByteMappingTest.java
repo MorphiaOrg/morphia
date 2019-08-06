@@ -1,7 +1,8 @@
 package dev.morphia.mapping.primitives;
 
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
+import dev.morphia.annotations.Entity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -39,7 +40,9 @@ public class ByteMappingTest extends TestBase {
         ent.nestedPrimitiveArray = new byte[][]{{1, 2}, {3, 4}};
         ent.nestedWrapperArray = new Byte[][]{{1, 2}, {3, 4}};
         getDs().save(ent);
-        final Bytes loaded = getDs().get(ent);
+        final Datastore datastore = getDs();
+
+        final Bytes loaded = datastore.find(Bytes.class).filter("_id", ent.id).first();
 
         Assert.assertNotNull(loaded.id);
 
@@ -56,11 +59,12 @@ public class ByteMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
+    @Entity
     private static class Bytes {
-        private final List<Byte[]> listWrapperArray = new ArrayList<Byte[]>();
-        private final List<byte[]> listPrimitiveArray = new ArrayList<byte[]>();
         @Id
         private ObjectId id;
+        private final List<Byte[]> listWrapperArray = new ArrayList<Byte[]>();
+        private final List<byte[]> listPrimitiveArray = new ArrayList<byte[]>();
         private List<Byte> listWrapper = new ArrayList<Byte>();
         private byte singlePrimitive;
         private Byte singleWrapper;
@@ -68,10 +72,5 @@ public class ByteMappingTest extends TestBase {
         private Byte[] wrapperArray;
         private byte[][] nestedPrimitiveArray;
         private Byte[][] nestedWrapperArray;
-    }
-
-    private static class MbbDocument {
-        @Id
-        private ObjectId id;
     }
 }

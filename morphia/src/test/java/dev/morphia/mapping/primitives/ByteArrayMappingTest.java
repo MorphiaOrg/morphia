@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -29,6 +30,7 @@ public class ByteArrayMappingTest extends TestBase {
         Assert.assertNotNull(loaded.id);
     }
 
+    @Entity
     private static class ContainsByteArray {
         @Id
         private ObjectId id;
