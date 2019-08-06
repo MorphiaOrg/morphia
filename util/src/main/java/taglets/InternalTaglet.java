@@ -1,14 +1,21 @@
 package taglets;
 
-import com.sun.javadoc.Tag;
-import com.sun.tools.doclets.Taglet;
+import com.sun.source.doctree.DocTree;
 
-import java.util.Map;
+import javax.lang.model.element.Element;
+import java.util.List;
+import java.util.Set;
+
+import static jdk.javadoc.doclet.Taglet.Location.CONSTRUCTOR;
+import static jdk.javadoc.doclet.Taglet.Location.FIELD;
+import static jdk.javadoc.doclet.Taglet.Location.METHOD;
+import static jdk.javadoc.doclet.Taglet.Location.PACKAGE;
+import static jdk.javadoc.doclet.Taglet.Location.TYPE;
 
 public class InternalTaglet extends DocTaglet {
-    public static void register(Map<String, Taglet> tagletMap) {
-        InternalTaglet tag = new InternalTaglet();
-        tagletMap.put(tag.getName(), tag);
+    @Override
+    public Set<Location> getAllowedLocations() {
+        return Set.of(METHOD, TYPE, PACKAGE, CONSTRUCTOR, FIELD);
     }
 
     @Override
@@ -17,13 +24,13 @@ public class InternalTaglet extends DocTaglet {
     }
 
     @Override
-    public String toString(final Tag[] tags) {
-        if (tags.length == 0) {
+    public String toString(final List<? extends DocTree> tags, final Element element) {
+        if (tags.isEmpty()) {
             return null;
         }
 
         String text = "<div class=\"block\"><span class=\"deprecatedLabel\">%s.</span>&nbsp;<span "
-                   + "class=\"deprecationComment\">%s</span></div>";
+                      + "class=\"deprecationComment\">%s</span></div>";
 
         return String.format(text, getHeader(), getMessage());
     }

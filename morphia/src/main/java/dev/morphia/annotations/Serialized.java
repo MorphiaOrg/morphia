@@ -28,10 +28,12 @@ import java.lang.annotation.Target;
  * Marker for fields that should be (java) serialized
  *
  * @author Scott Hernandez
+ * @deprecated if this feature is needed, do the serialization manually in a lifecycle event
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Deprecated
 public @interface Serialized {
 
     /**

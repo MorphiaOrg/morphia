@@ -16,8 +16,12 @@
 
 package taglets;
 
-import com.sun.javadoc.Tag;
-import com.sun.tools.doclets.Taglet;
+import com.sun.source.doctree.DocTree;
+import jdk.javadoc.doclet.Taglet;
+
+import javax.lang.model.element.Element;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Provides a general base class for Morphia taglets
@@ -25,58 +29,26 @@ import com.sun.tools.doclets.Taglet;
 public abstract class DocTaglet implements Taglet {
 
     @Override
-    public boolean inConstructor() {
-        return true;
-    }
-
-    @Override
-    public boolean inField() {
-        return true;
-    }
-
-    @Override
-    public boolean inMethod() {
-        return true;
-    }
-
-    @Override
-    public boolean inOverview() {
-        return true;
-    }
-
-    @Override
-    public boolean inPackage() {
-        return true;
-    }
-
-    @Override
-    public boolean inType() {
-        return true;
-    }
-
-    @Override
     public boolean isInlineTag() {
         return false;
     }
 
     @Override
-    public String toString(final Tag[] tags) {
-        if (tags.length == 0) {
+    public Set<Location> getAllowedLocations() {
+        return Set.of(Location.TYPE, Location.METHOD, Location.FIELD);
+    }
+
+    @Override
+    public String toString(final List<? extends DocTree> tags, final Element element) {
+        if (tags.isEmpty()) {
             return null;
         }
 
         StringBuilder buf = new StringBuilder(String.format("\n<dl><dt><span class=\"strong\">%s</span></dt>\n", getHeader()));
-        for (Tag t : tags) {
-            buf.append("   <dd>").append(genLink(t.text())).append("</dd>\n");
+        for (DocTree t : tags) {
+            buf.append("   <dd>").append(genLink(t.toString())).append("</dd>\n");
         }
         return buf.toString();
-    }
-
-    protected abstract String getHeader();
-
-    @Override
-    public String toString(final Tag tag) {
-        return toString(new Tag[]{tag});
     }
 
     protected String genLink(final String text) {
@@ -86,11 +58,13 @@ public abstract class DocTaglet implements Taglet {
         int firstSpace = text.indexOf(' ');
         if (firstSpace != -1) {
             relativePath = text.substring(0, firstSpace);
-            display = text.substring(firstSpace, text.length()).trim();
+            display = text.substring(firstSpace).trim();
         }
 
         return String.format("<a href='%s%s'>%s</a>", getBaseDocURI(), relativePath, display);
     }
+
+    protected abstract String getHeader();
 
     protected abstract String getBaseDocURI();
 }

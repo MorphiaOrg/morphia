@@ -1,19 +1,18 @@
 package taglets;
 
-import com.sun.javadoc.Tag;
-import com.sun.tools.doclets.Taglet;
+import com.sun.source.doctree.DocTree;
 
-import java.util.Map;
+import javax.lang.model.element.Element;
+import java.util.List;
+import java.util.Set;
+
+import static jdk.javadoc.doclet.Taglet.Location.METHOD;
 
 public class InlineTaglet extends DocTaglet {
-    /**
-     * Register this Taglet.
-     *
-     * @param tagletMap the map to register this tag to.
-     */
-    public static void register(Map<String, Taglet> tagletMap) {
-        InlineTaglet tag = new InlineTaglet();
-        tagletMap.put(tag.getName(), tag);
+
+    @Override
+    public Set<Location> getAllowedLocations() {
+        return Set.of(METHOD);
     }
 
     @Override
@@ -22,8 +21,8 @@ public class InlineTaglet extends DocTaglet {
     }
 
     @Override
-    public String toString(final Tag[] tags) {
-        if (tags.length == 0) {
+    public String toString(final List<? extends DocTree> tags, final Element element) {
+        if (tags.isEmpty()) {
             return null;
         }
 

@@ -16,9 +16,7 @@
 
 package taglets;
 
-import com.sun.tools.doclets.Taglet;
-
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides a taglet for linking to the MongoDB manual pages
@@ -26,16 +24,6 @@ import java.util.Map;
  * @see <a href="http://docs.mongodb.org/manual/">the MongoDB manual</a>
  */
 public class ManualTaglet extends DocTaglet {
-
-    /**
-     * Registers this taglet with the javadoc runtime
-     *
-     * @param tagletMap the map of taglets
-     */
-    public static void register(final Map<String, Taglet> tagletMap) {
-        ManualTaglet t = new ManualTaglet();
-        tagletMap.put(t.getName(), t);
-    }
 
     @Override
     public String getName() {
