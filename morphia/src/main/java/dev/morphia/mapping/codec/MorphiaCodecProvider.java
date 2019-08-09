@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
@@ -16,6 +18,7 @@ import org.bson.codecs.pojo.MapPropertyCodecProvider;
 import org.bson.codecs.pojo.PojoCodec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,17 +49,33 @@ public class MorphiaCodecProvider implements CodecProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
-        MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(clazz);
-            if (codec == null) {
-                ClassModel<T> classModel = createClassModel(clazz, conventions);
+    public <T> Codec<T> get(final Class<T> type, final CodecRegistry registry) {
+        MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
+            if (codec == null && isMappable(type)) {
+                ClassModel<T> classModel = createClassModel(type, conventions);
                 discriminatorLookup.addClassModel(classModel);
                 codec = new MorphiaCodec<>(mapper, new MappedClass(classModel, mapper), classModel, registry,
                     propertyCodecProviders, discriminatorLookup);
             }
 
-        return codec; //.getMappedClass().isMappable() ? codec : null;
+        return codec;
     }
+
+    private <T> boolean isMappable(final Class<T> type) {
+        return hasAnnotation(type, Entity.class, Embedded.class);
+    }
+
+    private <T> boolean hasAnnotation(final Class<T> clazz, final Class<? extends Annotation>... annotations) {
+        for (Class<? extends Annotation> annotation : annotations) {
+            if(clazz.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 
     private static <T> ClassModel<T> createClassModel(final Class<T> clazz, final List<Convention> conventions) {
         ClassModelBuilder<T> builder = ClassModel.builder(clazz);

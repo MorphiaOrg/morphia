@@ -123,21 +123,6 @@ public class MappedClass {
         return superClass;
     }
 
-    public boolean isMappable() {
-        return hasAnnotation(type, Entity.class, Embedded.class);
-    }
-
-    private <T> boolean hasAnnotation(final Class<T> clazz, final Class<? extends Annotation>... annotations) {
-        for (Class<? extends Annotation> annotation : annotations) {
-            if(clazz.getAnnotation(annotation) != null) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
     /**
      * @return true if the MappedClass is an interface
      */
