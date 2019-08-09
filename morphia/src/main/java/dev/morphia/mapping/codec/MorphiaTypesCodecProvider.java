@@ -14,21 +14,21 @@ import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class MorphiaTypesCodecProvider extends ValueCodecProvider {
-//    private final Codec<?> arrayCodec;
     private Mapper mapper;
 
     public MorphiaTypesCodecProvider(final Mapper mapper) {
         this.mapper = mapper;
-        addCodec(new KeyCodec(mapper));
         addCodec(new ClassCodec());
-        addCodec(new HashMapCodec());
-        addCodec(new URICodec());
-        addCodec(new CenterCodec());
-        addCodec(new ShapeCodec());
-        addCodec(new ObjectCodec(mapper));
-        addCodec(new QueryCodec(mapper));
-        addCodec(new FieldCriteriaCodec(mapper));
         addCodec(new CriteriaContainerCodec(mapper));
+        addCodec(new FieldCriteriaCodec(mapper));
+        addCodec(new CenterCodec());
+        addCodec(new HashMapCodec());
+        addCodec(new KeyCodec(mapper));
+        addCodec(new LocaleCodec());
+        addCodec(new ObjectCodec(mapper));
+        addCodec(new ShapeCodec());
+        addCodec(new QueryCodec(mapper));
+        addCodec(new URICodec());
 
         List.of(boolean.class, Boolean.class,
             byte.class, Byte.class,
