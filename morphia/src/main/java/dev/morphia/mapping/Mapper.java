@@ -78,8 +78,6 @@ public class Mapper {
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
 
-    //A general cache of instances of classes; used by MappedClass for EntityListener(s)
-    private final Map<Class, Object> instanceCache = new ConcurrentHashMap();
     private CodecRegistry codecRegistry;
     private Datastore datastore;
     private final MapperOptions opts;
@@ -200,7 +198,7 @@ public class Mapper {
     }
 
     private MappedClass addMappedClass(final MappedClass mc) {
-        mappedClasses.put(mc.getClazz(), mc);
+        mappedClasses.put(mc.getType(), mc);
         if(mc.getEntityAnnotation() != null) {
             mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                                      .add(mc);
@@ -385,10 +383,10 @@ public class Mapper {
         if (classes.size() > 1) {
                 Sofia.logMoreThanOneMapper(collection,
                     classes.stream()
-                           .map(c-> c.getClazz().getName())
+                           .map(c-> c.getType().getName())
                                .collect(Collectors.joining(", ")));
         }
-        return (Class<T>) classes.get(0).getClazz();
+        return (Class<T>) classes.get(0).getType();
     }
 
     /**
@@ -470,15 +468,6 @@ public class Mapper {
             LOG.error(e.getMessage(), e);
         }
         return null;
-    }
-
-    /**
-     * @return the cache of instances
-     * @morphia.internal
-     * @deprecated no replacement is planned
-     */
-    public Map<Class, Object> getInstanceCache() {
-        return instanceCache;
     }
 
     /**
@@ -790,7 +779,7 @@ public class Mapper {
             mc.validate(this);
         }
 
-        mappedClasses.put(mc.getClazz(), mc);
+        mappedClasses.put(mc.getType(), mc);
 
         Set<MappedClass> mcs = mappedClassesByCollection.get(mc.getCollectionName());
         if (mcs == null) {
@@ -948,7 +937,7 @@ public class Mapper {
         final MappedClass mc = getMappedClass(entity.getClass());
 
         DocumentWriter writer = new DocumentWriter();
-        Codec<T> codec = (Codec<T>) getCodecRegistry().get(mc.getClazz());
+        Codec<T> codec = (Codec<T>) getCodecRegistry().get(mc.getType());
         codec.encode(writer, entity,
             EncoderContext.builder()
                           .isEncodingCollectibleDocument(lifecycle)

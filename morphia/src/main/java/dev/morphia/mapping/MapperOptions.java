@@ -1,10 +1,10 @@
 package dev.morphia.mapping;
 
 
-import dev.morphia.ObjectFactory;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.cache.DefaultEntityCacheFactory;
 import dev.morphia.mapping.cache.EntityCacheFactory;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ public class MapperOptions {
     private final boolean mapSubPackages;
     private final EntityCacheFactory cacheFactory;
     private final DateStorage dateStorage ;
-    private final ObjectFactory objectFactory;
+    private final MorphiaInstanceCreator creator;
 
     private MapperOptions(final Builder builder) {
         ignoreFinals = builder.ignoreFinals;
@@ -36,7 +36,7 @@ public class MapperOptions {
         useLowerCaseCollectionNames = builder.useLowerCaseCollectionNames;
         cacheClassLookups = builder.cacheClassLookups;
         mapSubPackages = builder.mapSubPackages;
-        objectFactory = builder.objectFactory;
+        creator = builder.creator;
         cacheFactory = builder.cacheFactory;
         dateStorage = builder.dateStorage;
         propertyHandlers = builder.propertyHandlers;
@@ -52,8 +52,8 @@ public class MapperOptions {
     /**
      * @return the factory to use when creating new instances
      */
-    public ObjectFactory getObjectFactory() {
-        return objectFactory;
+    public MorphiaInstanceCreator getCreator() {
+        return creator;
     }
 
     public List<Class<? extends Annotation>> getPropertyHandlers() {
@@ -135,7 +135,7 @@ public class MapperOptions {
         builder.useLowerCaseCollectionNames = original.isUseLowerCaseCollectionNames();
         builder.cacheClassLookups = original.isCacheClassLookups();
         builder.mapSubPackages = original.isMapSubPackages();
-        builder.objectFactory = original.getObjectFactory();
+        builder.creator = original.getCreator();
         builder.cacheFactory = original.getCacheFactory();
         return builder;
     }
@@ -153,7 +153,7 @@ public class MapperOptions {
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private DateStorage dateStorage = DateStorage.UTC;
-        private ObjectFactory objectFactory;
+        private MorphiaInstanceCreator creator;
         private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
         private final List<Class<? extends Annotation>> propertyHandlers = new ArrayList<>();
 
@@ -242,11 +242,11 @@ public class MapperOptions {
         }
 
         /**
-         * @param objectFactory the object factory to use when creating instances
+         * @param creator the object factory to use when creating instances
          * @return this
          */
-        public Builder objectFactory(final ObjectFactory objectFactory) {
-            this.objectFactory = objectFactory;
+        public Builder objectFactory(final MorphiaInstanceCreator creator) {
+            this.creator = creator;
             return this;
         }
 

@@ -1,6 +1,8 @@
 package dev.morphia.query;
 
 
+import dev.morphia.mapping.DefaultCreator;
+import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import dev.morphia.TestBase;
@@ -68,6 +70,9 @@ public class TestQueryParams extends TestBase {
 
     @Test
     public void testNullAcceptance() {
+
+//        new DefaultCreator().createInstance(BaseEntity.class);
+//        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(getMapper().getDatastore(), BaseEntity.class);
 
         // have to succeed:
         e.equal(null);

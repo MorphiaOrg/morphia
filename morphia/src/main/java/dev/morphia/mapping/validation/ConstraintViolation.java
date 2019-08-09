@@ -58,7 +58,7 @@ public class ConstraintViolation {
      */
     public String getPrefix() {
         final String fn = (field != null) ? field.getJavaFieldName() : "";
-        return clazz.getClazz().getName() + "." + fn;
+        return clazz.getType().getName() + "." + fn;
     }
 
     /**

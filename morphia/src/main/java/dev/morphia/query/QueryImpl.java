@@ -15,6 +15,7 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -50,6 +51,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private CriteriaContainer compoundContainer;
     private String collectionName;
     private MongoCollection<T> collection;
+    private FindOptions previousOptions;
 
     FindOptions getOptions() {
         if (options == null) {
@@ -105,6 +107,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public MorphiaCursor<T> execute(final FindOptions options) {
+        previousOptions = options;
         return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
 
@@ -567,14 +570,18 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return wc;
     }
 
-    public String getLoggedQuery(FindOptions options) {
-        Document first = mapper.getDatastore().getDatabase()
-                               .getCollection("system.profile")
-                               .find(new Document("command.comment", "logged query: " + options.getQueryLogId()), Document.class)
-                               .projection(new Document("command.filter", 1))
-                               .first();
-        Document command = (Document) first.get("command");
-        return ((Document) command.get("filter")).toJson(mapper.getCodecRegistry().get(Document.class));
+    public String getLoggedQuery() {
+        if(previousOptions != null && previousOptions.isLogQuery()) {
+            Document first = mapper.getDatastore().getDatabase()
+                                   .getCollection("system.profile")
+                                   .find(new Document("command.comment", "logged query: " + previousOptions.getQueryLogId()), Document.class)
+                                   .projection(new Document("command.filter", 1))
+                                   .first();
+            Document command = (Document) first.get("command");
+            return ((Document) command.get("filter")).toJson(mapper.getCodecRegistry().get(Document.class));
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
+        }
     }
 
     public class QueryDocument implements Bson {

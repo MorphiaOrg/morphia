@@ -66,7 +66,7 @@ public class ReferenceHandler extends PropertyHandler {
             for (Object o : (List) value) {
                 ids.add(extractId(o));
             }
-            final MongoCollection<S> collection = datastore.getCollection((Class<S>) getFieldMappedClass().getClazz());
+            final MongoCollection<S> collection = datastore.getCollection((Class<S>) getFieldMappedClass().getType());
             final List<S> entities = collection.find(Filters.in("_id", ids)).into(new ArrayList<>());
             for (final S entity : entities) {
                 entityCache.putIfAbsent(getIdField().getFieldValue(entity), entity);

@@ -20,6 +20,7 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.ValidationException;
+import dev.morphia.sofia.Sofia;
 
 import java.util.Iterator;
 import java.util.List;
@@ -112,7 +113,7 @@ public class PathTarget {
         context = this.root;
         position = 0;
         MappedField field = null;
-        while (context != null && hasNext()) {
+        while (hasNext()) {
             String segment = next();
 
             if ("$".equals(segment) || segment.matches("[0-9]+")) {  // array operator
@@ -142,8 +143,7 @@ public class PathTarget {
     }
 
     private void failValidation() {
-        throw new ValidationException(format("Could not resolve path '%s' against '%s'.", join(segments, '.'),
-                                             root.getClazz().getName()));
+        throw new ValidationException(Sofia.invalidPathTarget(join(segments, '.'), root.getType().getName()));
     }
 
     private void translate(final String nameToStore) {
@@ -151,6 +151,9 @@ public class PathTarget {
     }
 
     private MappedField resolveField(final String segment) {
+        if(context == null) {
+            failValidation();
+        }
         MappedField mf = context.getMappedField(segment);
         if (mf == null) {
             mf = context.getMappedFieldByJavaField(segment);
@@ -171,6 +174,6 @@ public class PathTarget {
 
     @Override
     public String toString() {
-        return String.format("PathTarget{root=%s, segments=%s, target=%s}", root.getClazz().getSimpleName(), segments, target);
+        return String.format("PathTarget{root=%s, segments=%s, target=%s}", root.getType().getSimpleName(), segments, target);
     }
 }

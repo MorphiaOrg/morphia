@@ -5,6 +5,7 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.testutil.TestEntity;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ public class MapKeyDifferentFromStringTest extends TestBase {
         getMapper().map(MapWithWrongKeyType3.class);
     }
 
+    @Ignore("references need work")
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidReferenceType() {
         getMapper().map(MapWithWrongKeyType2.class);

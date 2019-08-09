@@ -26,7 +26,7 @@ public class MorphiaTest extends TestBase {
         // then
         Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
         assertThat(mappedClasses.size(), is(1));
-        assertEquals(mappedClasses.iterator().next().getClazz(), SimpleEntity.class);
+        assertEquals(mappedClasses.iterator().next().getType(), SimpleEntity.class);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class MorphiaTest extends TestBase {
         assertThat(mappedClasses.size(), is(3));
         Collection<Class<?>> classes = new ArrayList<Class<?>>();
         for (MappedClass mappedClass : mappedClasses) {
-            classes.add(mappedClass.getClazz());
+            classes.add(mappedClass.getType());
         }
         assertTrue(classes.contains(SimpleEntity.class));
         assertTrue(classes.contains(SimpleEntityInSubPackage.class));

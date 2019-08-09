@@ -139,7 +139,7 @@ public class TestMapping extends TestBase {
     @Test
     public void testBasicMapping() {
         performBasicMappingTest(getDs());
-        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getObjectFactory();
+        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getCreator();
         assertTrue(objectFactory.getClassNameCache().isEmpty());
     }
 
@@ -151,7 +151,7 @@ public class TestMapping extends TestBase {
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
         performBasicMappingTest(datastore);
 
-        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getObjectFactory();
+        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getCreator();
         assertTrue(objectFactory.getClassNameCache().containsKey(Hotel.class.getName()));
         assertTrue(objectFactory.getClassNameCache().containsKey(TravelAgency.class.getName()));
     }
@@ -720,7 +720,7 @@ public class TestMapping extends TestBase {
     }
 
     @Entity
-    public abstract static class BaseEntity implements Serializable {
+    public abstract static class BaseEntity {
         @Id
         private ObjectId id;
 

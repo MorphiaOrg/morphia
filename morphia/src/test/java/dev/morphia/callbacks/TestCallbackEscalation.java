@@ -12,7 +12,6 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.annotations.PreSave;
 import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindOptions;
 
@@ -58,11 +57,8 @@ public class TestCallbackEscalation extends TestBase {
 
         getDs().save(a);
 
-        Assert.assertTrue(a.isPreSave());
         Assert.assertTrue(a.isPostPersist());
-        Assert.assertTrue(a.b.isPreSave());
         Assert.assertTrue(a.b.isPostPersist()); //PostPersist in not only called on entities
-        Assert.assertTrue(a.bs.get(0).isPreSave());
         Assert.assertTrue(a.bs.get(0).isPostPersist()); //PostPersist is not only called on entities
     }
 
@@ -133,8 +129,6 @@ public class TestCallbackEscalation extends TestBase {
         private boolean preLoad;
         @Transient
         private boolean postLoad;
-        @Transient
-        private boolean preSave;
 
         @PrePersist
         void prePersist() {
@@ -156,11 +150,6 @@ public class TestCallbackEscalation extends TestBase {
             postLoad = true;
         }
 
-        @PreSave
-        void preSave() {
-            preSave = true;
-        }
-
         boolean isPostLoad() {
             return postLoad;
         }
@@ -175,10 +164,6 @@ public class TestCallbackEscalation extends TestBase {
 
         boolean isPrePersist() {
             return prePersist;
-        }
-
-        boolean isPreSave() {
-            return preSave;
         }
     }
 }

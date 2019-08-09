@@ -94,9 +94,5 @@ public class NewAnnotationTest extends TestBase {
                 }
             }
         }
-
-        @Override
-        public void preSave(final Object ent, final Document document, final Mapper mapper) {
-        }
     }
 }

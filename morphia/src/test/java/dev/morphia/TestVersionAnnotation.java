@@ -62,7 +62,7 @@ public class TestVersionAnnotation extends TestBase {
         assertThat(mappedClasses.size(), is(2));
         List<Class<?>> list = new ArrayList<>();
         for (MappedClass mappedClass : mappedClasses) {
-            list.add(mappedClass.getClazz());
+            list.add(mappedClass.getType());
         }
         assertTrue(list.contains(VersionedChildEntity.class));
         assertTrue(list.contains(AbstractVersionedBase.class));
@@ -76,7 +76,7 @@ public class TestVersionAnnotation extends TestBase {
         assertThat(mappedClasses.size(), is(2));
         List<Class<?>> list = new ArrayList<>();
         for (MappedClass mappedClass : mappedClasses) {
-            list.add(mappedClass.getClazz());
+            list.add(mappedClass.getType());
         }
         assertTrue(list.contains(VersionedChildEntity.class));
         assertTrue(list.contains(AbstractVersionedBase.class));

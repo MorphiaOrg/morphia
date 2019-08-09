@@ -71,6 +71,6 @@ public class KeyCodec implements Codec<Key> {
             throw new MappingException("Could not map the Key to a type.");
         }
         reader.readEndDocument();
-        return new Key<>(mappedClass.getClazz(), ref, idValue);
+        return new Key<>(mappedClass.getType(), ref, idValue);
     }
 }

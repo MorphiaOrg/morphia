@@ -19,8 +19,8 @@ public class EntityCannotBeMapOrIterable implements ClassConstraint {
     @Override
     public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
 
-        if (mc.getEntityAnnotation() != null && (Map.class.isAssignableFrom(mc.getClazz())
-                                                 || Iterable.class.isAssignableFrom(mc.getClazz()))) {
+        if (mc.getEntityAnnotation() != null && (Map.class.isAssignableFrom(mc.getType())
+                                                 || Iterable.class.isAssignableFrom(mc.getType()))) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(), "Entities cannot implement Map/Iterable"));
         }
 

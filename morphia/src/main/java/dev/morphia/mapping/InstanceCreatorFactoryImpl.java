@@ -18,11 +18,9 @@ public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> 
     private Constructor<T> noArgsConstructor;
     private Datastore datastore;
     private Map<String, PropertyHandler> handlers = new HashMap<>();
-    private final MapperOptions options;
 
     public InstanceCreatorFactoryImpl(final Datastore datastore, final Class type) {
         this.datastore = datastore;
-        options = datastore.getMapper().getOptions();
         for (Constructor<?> constructor : type.getDeclaredConstructors()) {
             if (constructor.getParameterTypes().length == 0) {
                 noArgsConstructor = (Constructor<T>) constructor;

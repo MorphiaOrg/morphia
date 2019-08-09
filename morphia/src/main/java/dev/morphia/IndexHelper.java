@@ -144,7 +144,7 @@ final class IndexHelper {
     }
 
     private MappingException pathFail(final MappedClass mc, final List<String> path) {
-        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getClazz().getName()));
+        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getType().getName()));
     }
 
     private Index replaceFields(final Index original, final List<Field> list) {
@@ -171,7 +171,7 @@ final class IndexHelper {
             } catch (Exception e) {
                 path = field.value();
                 String message = format("The path '%s' can not be validated against '%s' and may represent an invalid index",
-                    path, mc.getClazz().getName());
+                    path, mc.getType().getName());
                 if (!index.options().disableValidation()) {
                     throw new MappingException(message);
                 }

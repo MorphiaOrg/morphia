@@ -1,5 +1,6 @@
 package dev.morphia.mapping.validation;
 
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import dev.morphia.ObjectFactory;
@@ -41,14 +42,14 @@ import static java.util.Collections.sort;
 public class MappingValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);
-    private ObjectFactory creator;
+    private MorphiaInstanceCreator creator;
 
     /**
      * Creates a mapping validator
      *
      * @param objectFactory the object factory to be used when creating throw away instances to use in validation
      */
-    public MappingValidator(final ObjectFactory objectFactory) {
+    public MappingValidator(final MorphiaInstanceCreator objectFactory) {
         creator = objectFactory;
     }
 

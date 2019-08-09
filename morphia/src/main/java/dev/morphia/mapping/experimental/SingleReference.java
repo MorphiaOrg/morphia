@@ -49,7 +49,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
             query = ((AdvancedDatastore) getDatastore()).find(clazz)
                                                         .filter("_id", ((DBRef) id).getId());
         } else {
-            query = ((AdvancedDatastore) getDatastore()).find(getMappedClass().getClazz())
+            query = ((AdvancedDatastore) getDatastore()).find(getMappedClass().getType())
                                                         .filter("_id", id);
         }
         return query;

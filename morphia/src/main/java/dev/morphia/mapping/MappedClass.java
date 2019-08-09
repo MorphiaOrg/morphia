@@ -16,20 +16,14 @@
 package dev.morphia.mapping;
 
 import dev.morphia.EntityInterceptor;
-import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
-import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.annotations.PreSave;
-import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.validation.MappingValidator;
 import org.bson.Document;
@@ -61,7 +55,6 @@ public class MappedClass {
      */
     @SuppressWarnings("unchecked")
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
-                                                                                          PreSave.class,
                                                                                           PreLoad.class,
                                                                                           PostPersist.class,
                                                                                           PostLoad.class);
@@ -224,19 +217,8 @@ public class MappedClass {
     }
 
     private Object getOrCreateInstance(final Class<?> clazz, final Mapper mapper) {
-        if (mapper.getInstanceCache().containsKey(clazz)) {
-            return mapper.getInstanceCache().get(clazz);
-        }
-
-        final Object o = mapper.getOptions().getObjectFactory().createInstance(clazz);
-        final Object nullO = mapper.getInstanceCache().put(clazz, o);
-        if (nullO != null) {
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Race-condition, created duplicate class: " + clazz);
-            }
-        }
-
-        return o;
+        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(mapper.getDatastore(), clazz);
+        return creatorFactory.create().getInstance();
 
     }
 
@@ -285,7 +267,7 @@ public class MappedClass {
     /**
      * @return the clazz
      */
-    public Class<?> getClazz() {
+    public Class<?> getType() {
         return type;
     }
 
@@ -405,7 +387,7 @@ public class MappedClass {
 
     @Override
     public String toString() {
-        return format("%s[%s] : %s", getClazz().getSimpleName(), getCollectionName(), fields);
+        return format("%s[%s] : %s", getType().getSimpleName(), getCollectionName(), fields);
     }
 
     boolean isSubType(final MappedClass mc) {
@@ -431,7 +413,8 @@ public class MappedClass {
      */
     @SuppressWarnings("deprecation")
     public void validate(final Mapper mapper) {
-        new MappingValidator(mapper.getOptions().getObjectFactory()).validate(mapper, this);
+        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(mapper.getDatastore(), getType());
+        new MappingValidator(creatorFactory.create()).validate(mapper, this);
     }
 
     /**

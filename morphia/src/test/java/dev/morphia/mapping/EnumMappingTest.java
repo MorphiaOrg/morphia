@@ -9,7 +9,6 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PreSave;
 import dev.morphia.query.FindOptions;
 
 import java.util.ArrayList;
@@ -156,11 +155,6 @@ public class EnumMappingTest extends TestBase {
         @Id
         private ObjectId id;
         private Foo foo = Foo.BAR;
-
-        @PreSave
-        void testMapping() {
-
-        }
     }
 
     @Embedded

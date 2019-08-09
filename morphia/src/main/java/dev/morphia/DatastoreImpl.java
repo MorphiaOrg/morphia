@@ -409,7 +409,7 @@ class DatastoreImpl implements AdvancedDatastore {
         }
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if(mc.getEntityAnnotation() != null) {
-                indexHelper.createIndex(mapper.getCollection(mc.getClazz()), mc);
+                indexHelper.createIndex(mapper.getCollection(mc.getType()), mc);
             }
         }
     }
@@ -539,7 +539,7 @@ class DatastoreImpl implements AdvancedDatastore {
         final MappedClass mc = mapper.getMappedClass(entity.getClass());
         if (mc.getAnnotation(NotSaved.class) != null) {
             throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
-                mc.getClazz().getName()));
+                mc.getType().getName()));
         }
         return mc;
     }
@@ -698,7 +698,7 @@ class DatastoreImpl implements AdvancedDatastore {
         final MappedClass mc = mapper.getMappedClass(ent.getClass());
         if (mc.getAnnotation(NotSaved.class) != null) {
             throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
-                mc.getClazz().getName()));
+                mc.getType().getName()));
         }
         Document document = entityToDocument(ent);
         List<MappedField> versionFields = mc.getFields(Version.class);

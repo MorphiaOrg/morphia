@@ -41,13 +41,30 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, codecCache, specialized);
     }
 
+    @Override
+    protected <T1> boolean shouldSpecialize(final ClassModel<T1> classModel) {
+        return true;
+    }
+
+
+/* @Override
+    protected void specialize() {
+        ClassModel<T> classModel = getClassModel();
+        getCodecCache().put(classModel, this);
+        for (PropertyModel<?> propertyModel : classModel.getPropertyModels()) {
+            addToCache(propertyModel);
+        }
+    }*/
+
     @SuppressWarnings("unchecked")
     @Override
     public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
+/*
         if (!isSpecialized()) {
             throw new CodecConfigurationException(format("%s contains generic types that have not been specialised.%n"
                                                          + "Top level classes with generic types are not supported by the PojoCodec.", getClassModel().getName()));
         }
+*/
 
         if (areEquivalentTypes(value.getClass(), getClassModel().getType())) {
             writer.writeStartDocument();

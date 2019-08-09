@@ -400,7 +400,6 @@ public interface Query<T> {
      * @morphia.internal
      * @return
      * @since 2.0
-     * @param options
      */
-    String getLoggedQuery(final FindOptions options);
+    String getLoggedQuery();
 }

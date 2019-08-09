@@ -25,7 +25,7 @@ public class ContainsEmbeddedWithId implements ClassConstraint {
     @Override
     public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
         final Set<Class<?>> classesToInspect = new HashSet<Class<?>>();
-        for (final Field field : ReflectionUtils.getDeclaredAndInheritedFields(mc.getClazz(), true)) {
+        for (final Field field : ReflectionUtils.getDeclaredAndInheritedFields(mc.getType(), true)) {
             if (isFieldToInspect(field) && !field.isAnnotationPresent(Id.class)) {
                 classesToInspect.add(field.getType());
             }

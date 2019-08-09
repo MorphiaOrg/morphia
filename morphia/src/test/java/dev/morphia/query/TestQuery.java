@@ -32,7 +32,6 @@ import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -84,11 +83,15 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        final Query<GenericKeyValue> query = getDs().find(GenericKeyValue.class).field("key").hasAnyOf(keys);
-        Assert.assertTrue(query.toString().replaceAll("\\s", "").contains("{\"$in\":[\"key1\",\"key2\"]"));
-        assertEquals(query.execute(new FindOptions().limit(1))
-                          .tryNext()
-                         .id, value.id);
+        Query<GenericKeyValue> query = getDs()
+                                         .find(GenericKeyValue.class)
+                                         .field("key").hasAnyOf(keys);
+        final GenericKeyValue found = query
+            .execute(new FindOptions()
+                    .logQuery())
+            .tryNext();
+        Assert.assertTrue(query.getLoggedQuery(), query.getLoggedQuery().contains("{\"$in\": [\"key1\", \"key2\"]"));
+        assertEquals(found.id, value.id);
     }
 
     @Test
@@ -105,7 +108,7 @@ public class TestQuery extends TestBase {
                                              .field("key")
                                              .hasAnyOf(keys);
         query.execute(options);
-        String loggedQuery = query.getLoggedQuery(options);
+        String loggedQuery = query.getLoggedQuery();
         Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
         assertEquals(query.execute(new FindOptions().limit(1))
                           .tryNext()
@@ -1188,7 +1191,7 @@ public class TestQuery extends TestBase {
                                       .execute(options)
                                       .tryNext();
 
-        assertNotNull(query.getLoggedQuery(options), photoKey);
+        assertNotNull(query.getLoggedQuery(), photoKey);
         assertNotNull(getDs().find(ContainsPhotoKey.class)
                              .filter("photo", cpk.photo)
                              .execute(new FindOptions()

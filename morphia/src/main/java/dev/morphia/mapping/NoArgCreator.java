@@ -12,29 +12,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
-    private final E instance;
+/**
+ * @morphia.internal
+ * @param <E>
+ */
+public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
+    private E instance;
     private Datastore datastore;
+    private Constructor<E> noArgsConstructor;
     private Map<String, PropertyHandler> handlerMap;
     private List<BiConsumer<Datastore, Map<Object, Object>>> handlers = new ArrayList<>();
 
-    NoArgCreator(final Datastore datastore, final Constructor<E> noArgsConstructor, Map<String, PropertyHandler> handlerMap) {
+    public NoArgCreator(final Datastore datastore, final Constructor<E> noArgsConstructor, Map<String, PropertyHandler> handlerMap) {
         this.datastore = datastore;
+        this.noArgsConstructor = noArgsConstructor;
         this.handlerMap = handlerMap;
-        try {
-            instance = noArgsConstructor.newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new MappingException(e.getMessage(), e);
+    }
+
+    private E instance() {
+        if (instance == null) {
+            try {
+                instance = noArgsConstructor.newInstance();
+            } catch (ReflectiveOperationException e) {
+                throw new MappingException(e.getMessage(), e);
+            }
         }
+        return instance;
     }
 
     @Override
     public <S> void set(final S value, final PropertyModel<S> propertyModel) {
         final PropertyHandler propertyHandler = getHandler(propertyModel);
         if(propertyHandler != null) {
-            defer((datastore, entityCache) -> propertyHandler.set(instance, propertyModel, value, datastore, entityCache));
+            defer((datastore, entityCache) -> propertyHandler.set(instance(), propertyModel, value, datastore, entityCache));
         } else {
-            propertyModel.getPropertyAccessor().set(instance, value);
+            propertyModel.getPropertyAccessor().set(instance(), value);
         }
     }
 

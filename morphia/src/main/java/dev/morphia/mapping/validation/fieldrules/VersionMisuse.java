@@ -6,6 +6,8 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.NoArgCreator;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 
@@ -19,14 +21,14 @@ import static java.lang.String.format;
  */
 public class VersionMisuse extends FieldConstraint {
 
-    private ObjectFactory creator;
+    private MorphiaInstanceCreator creator;
 
     /**
      * Creates a version validator.
      *
      * @param creator the ObjectFactory to use
      */
-    public VersionMisuse(final ObjectFactory creator) {
+    public VersionMisuse(final MorphiaInstanceCreator creator) {
         this.creator = creator;
     }
 
@@ -37,7 +39,7 @@ public class VersionMisuse extends FieldConstraint {
             if (Long.class.equals(type) || long.class.equals(type)) {
 
                 //TODO: Replace this will a read ObjectFactory call -- requires Mapper instance.
-                final Object testInstance = creator.createInstance(mc.getClazz());
+                final Object testInstance = creator.getInstance();
 
                 // check initial value
                 if (Long.class.equals(type)) {
