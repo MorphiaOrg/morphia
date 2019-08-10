@@ -62,6 +62,7 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
 
     @Override
     public E getInstance() {
+        E instance = instance();
         Map<Object, Object> cache = new HashMap<>();
         for (BiConsumer<Datastore, Map<Object, Object>> deferral : handlers) {
             deferral.accept(datastore, cache);

@@ -15,17 +15,18 @@
 package dev.morphia.ext;
 
 
-import dev.morphia.annotations.Entity;
-import org.bson.Document;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.Query;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -41,7 +42,7 @@ public class NewAnnotationTest extends TestBase {
 
     @Test
     public void testIt() {
-//        MappedField.addInterestingAnnotation(Lowercase.class);
+        //        MappedField.addInterestingAnnotation(Lowercase.class);
         getMapper().addInterceptor(new ToLowercaseHelper());
         getMapper().map(User.class);
         final User u = new User();
@@ -49,9 +50,12 @@ public class NewAnnotationTest extends TestBase {
 
         getDs().save(u);
 
-        final User uScott = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase())
-                                   .execute(new FindOptions().limit(1))
-                                   .tryNext();
+        Query<User> query = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase());
+        final User uScott = query
+                                   .execute(/*new FindOptions()
+                                                .logQuery()
+*/                                                /*.limit(1)*/)
+                                   .next();
         Assert.assertNotNull(uScott);
     }
 

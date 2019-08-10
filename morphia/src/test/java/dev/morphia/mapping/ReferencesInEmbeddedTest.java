@@ -2,6 +2,7 @@ package dev.morphia.mapping;
 
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
@@ -10,9 +11,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
 
 
-/**
- * @author josephpachod
- */
+@Ignore("references need work")
 public class ReferencesInEmbeddedTest extends TestBase {
     @Test
     public void testLazyReferencesInEmbedded() throws Exception {

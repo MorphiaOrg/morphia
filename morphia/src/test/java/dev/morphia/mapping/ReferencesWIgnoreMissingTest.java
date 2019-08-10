@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -13,9 +14,7 @@ import dev.morphia.query.FindOptions;
 import java.util.List;
 
 
-/**
- * @author scotthernandez
- */
+@Ignore("references need work")
 public class ReferencesWIgnoreMissingTest extends TestBase {
     @Test
     public void testMissingReference() {

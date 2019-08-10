@@ -61,10 +61,8 @@ public class GenericsMappingTest extends TestBase {
         assertNotNull(ctLoaded.integerThing);
     }
 
-    @Entity
-    public static class GenericHolder<T> {
-        @Id
-        private ObjectId id;
+    @Embedded
+    static class GenericHolder<T> {
         @Property
         private T thing;
 
@@ -77,11 +75,9 @@ public class GenericsMappingTest extends TestBase {
         }
     }
 
-    @Embedded
     static class HoldsAString extends GenericHolder<String> {
     }
 
-    @Embedded
     static class HoldsAnInteger extends GenericHolder<Integer> {
     }
 
