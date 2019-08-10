@@ -29,7 +29,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-@Ignore("geo need work")
+@Ignore("geo needs work")
 public class GeoWithinQueriesWithPolygonTest extends TestBase {
     @Before
     @Override

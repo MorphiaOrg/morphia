@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-@Ignore("geo need work")
+@Ignore("geo needs work")
 public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
     private final PolygonCoordinates uk = new PolygonCoordinates(of(new Position(49.78, -10.5),
         new Position(49.78, 1.78),

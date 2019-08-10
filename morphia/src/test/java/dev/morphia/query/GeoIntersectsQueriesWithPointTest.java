@@ -25,7 +25,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-@Ignore("geo need work")
+@Ignore("geo needs work")
 public class GeoIntersectsQueriesWithPointTest extends TestBase {
     @Override
     @Before

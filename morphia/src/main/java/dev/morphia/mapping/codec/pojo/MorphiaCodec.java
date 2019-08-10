@@ -22,8 +22,8 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.BaseMorphiaCodec;
+import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.PropertyHandler;
 import org.bson.BsonDocumentReader;
@@ -70,8 +70,8 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     }
 
     public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
-                 final CodecRegistry registry, final PropertyCodecRegistry propertyCodecRegistry,
-                 final DiscriminatorLookup discriminatorLookup, final boolean specialized) {
+                        final CodecRegistry registry, final PropertyCodecRegistry propertyCodecRegistry,
+                        final DiscriminatorLookup discriminatorLookup, final boolean specialized) {
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized);
         this.mapper = mapper;
         this.mappedClass = mappedClass;

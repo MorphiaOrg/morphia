@@ -5,7 +5,7 @@ import dev.morphia.query.CriteriaContainerCodec;
 import dev.morphia.query.FieldCriteriaCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.MapCodec;
-import org.bson.codecs.ValueCodecProvider;
+import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.HashMap;
@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
-public class MorphiaTypesCodecProvider extends ValueCodecProvider {
+public class MorphiaTypesCodecProvider implements CodecProvider {
     private Mapper mapper;
+    private final Map<Class<?>, Codec<?>> codecs = new HashMap<Class<?>, Codec<?>>();
 
     public MorphiaTypesCodecProvider(final Mapper mapper) {
         this.mapper = mapper;
@@ -42,9 +43,13 @@ public class MorphiaTypesCodecProvider extends ValueCodecProvider {
         });
     }
 
+    protected <T> void addCodec(final Codec<T> codec) {
+        codecs.put(codec.getEncoderClass(), codec);
+    }
+
     @Override
     public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
-        final Codec<T> codec = super.get(clazz, registry);
+        final Codec<T> codec = (Codec<T>) codecs.get(clazz);
         if (codec != null) {
             return codec;
         } else if (clazz.isArray() && !clazz.getComponentType().equals(byte.class)) {

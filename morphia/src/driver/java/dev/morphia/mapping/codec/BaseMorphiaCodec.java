@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -47,14 +48,14 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
     }
 
 
-/* @Override
+    @Override
     protected void specialize() {
         ClassModel<T> classModel = getClassModel();
         getCodecCache().put(classModel, this);
         for (PropertyModel<?> propertyModel : classModel.getPropertyModels()) {
             addToCache(propertyModel);
         }
-    }*/
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -97,8 +98,8 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         Codec<T> codec = getRegistry().get(type);
         if(codec instanceof BaseMorphiaCodec) {
             final BaseMorphiaCodec<T> tCodec = (BaseMorphiaCodec<T>) codec;
-            final ClassModel<T> clazzModel = tCodec.getClassModel();
-            final ClassModel<T> newModel = new ClassModel<>(clazzModel.getType(), clazzModel.getPropertyNameToTypeParameterMap(),
+            final MorphiaModel<T> clazzModel = (MorphiaModel<T>) tCodec.getClassModel();
+            final MorphiaModel<T> newModel = new MorphiaModel<>(clazzModel.getType(), clazzModel.getPropertyNameToTypeParameterMap(),
                 clazzModel.getInstanceCreatorFactory(), getClassModel().useDiscriminator(), clazzModel.getDiscriminatorKey(),
                 clazzModel.getDiscriminator(), clazzModel.getIdPropertyModelHolder(), clazzModel.getAnnotations(),
                 clazzModel.getFieldModels(),

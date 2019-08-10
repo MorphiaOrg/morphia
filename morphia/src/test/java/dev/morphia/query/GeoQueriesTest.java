@@ -13,7 +13,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-@Ignore("geo need work")
+@Ignore("geo needs work")
 public class GeoQueriesTest extends TestBase {
     @Test
     public void shouldFindCitiesCloseToAGivenPointWithinARadiusOfMeters() {

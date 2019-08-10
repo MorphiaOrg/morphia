@@ -25,6 +25,7 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Version;
+import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.validation.MappingValidator;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
@@ -71,7 +72,7 @@ public class MappedClass {
     /**
      * the type we are mapping to/from
      */
-    private final ClassModel<?> classModel;
+    private final MorphiaModel<?> morphiaModel;
     private final Class<?> type;
     private Map<Class<? extends Annotation>, List<Annotation>> annotations;
     /**
@@ -90,12 +91,12 @@ public class MappedClass {
     /**
      * Creates a MappedClass instance
      *
-     * @param classModel the ClassModel
+     * @param morphiaModel the ClassModel
      * @param mapper     the Mapper to use
      */
-    public MappedClass(final ClassModel classModel, final Mapper mapper) {
-        this.classModel = classModel;
-        type = classModel.getType();
+    public MappedClass(final MorphiaModel morphiaModel, final Mapper mapper) {
+        this.morphiaModel = morphiaModel;
+        type = morphiaModel.getType();
         mapperOptions = mapper.getOptions();
 
         if (LOG.isTraceEnabled()) {
@@ -406,8 +407,8 @@ public class MappedClass {
      * Discovers interesting (that we care about) things about the class.
      */
     private void discover(final Mapper mapper) {
-        this.annotations = classModel.getAnnotations().stream()
-                                     .collect(groupingBy(
+        this.annotations = morphiaModel.getAnnotations().stream()
+                                       .collect(groupingBy(
                                          annotation -> (Class<? extends Annotation>) annotation.annotationType()));
 
 
@@ -452,7 +453,7 @@ public class MappedClass {
             return;
         }
 
-        mappedClass.classModel.getFieldModels().forEach(model -> {
+        mappedClass.morphiaModel.getFieldModels().forEach(model -> {
             final MappedField field = new MappedField(this, model);
             if (!field.isTransient()) {
                 fields.add(field);
@@ -463,7 +464,7 @@ public class MappedClass {
     }
 
     public ClassModel<?> getClassModel() {
-        return classModel;
+        return morphiaModel;
     }
 
     private static class ClassMethodPair {

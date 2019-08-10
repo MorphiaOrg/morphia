@@ -138,7 +138,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testBasicMapping() {
-        performBasicMappingTest(getDs());
+        performBasicMappingTest();
         final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getCreator();
         assertTrue(objectFactory.getClassNameCache().isEmpty());
     }
@@ -149,7 +149,7 @@ public class TestMapping extends TestBase {
                                              .cacheClassLookups(true)
                                              .build();
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
-        performBasicMappingTest(datastore);
+        performBasicMappingTest();
 
         final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getCreator();
         assertTrue(objectFactory.getClassNameCache().containsKey(Hotel.class.getName()));
@@ -633,11 +633,11 @@ public class TestMapping extends TestBase {
     }
 
     @SuppressWarnings("unchecked")
-    private void performBasicMappingTest(final Datastore datastore) {
+    private void performBasicMappingTest() {
         final MongoCollection<Document> hotels = getDatabase().getCollection("hotels");
         final MongoCollection<Document> agencies = getDatabase().getCollection("agencies");
 
-        Mapper mapper = datastore.getMapper();
+        Mapper mapper = getDs().getMapper();
         mapper.map(Hotel.class);
         mapper.map(TravelAgency.class);
 

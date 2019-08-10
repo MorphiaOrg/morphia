@@ -75,10 +75,10 @@ public class QueryForSubtypeTest extends TestBase {
         assertThat(compatible, is(true));
     }
 
+    @Entity
     interface User {
     }
 
-    @Entity
     static class UserImpl implements User {
         @Id
         @SuppressWarnings("unused")

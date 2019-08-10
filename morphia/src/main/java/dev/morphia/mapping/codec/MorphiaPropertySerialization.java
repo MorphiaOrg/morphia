@@ -2,7 +2,7 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.annotations.NotSaved;
 import dev.morphia.mapping.MapperOptions;
-import org.bson.codecs.pojo.FieldModelBuilder;
+import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import org.bson.codecs.pojo.PropertySerialization;
 
 import java.lang.annotation.Annotation;
