@@ -27,6 +27,8 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -46,12 +48,8 @@ public class TestIndexInheritance extends TestBase {
                           .size());
 
         getDs().ensureIndexes();
-        final MongoCollection<Document> coll = getDatabase().getCollection(Circle.class.getSimpleName());
 
-        Document listIndexes = getDatabase().runCommand(new Document("listIndexes", coll.getNamespace().getCollectionName()));
-        fail("listIndexes = " + listIndexes);
-//        assertEquals(4, listIndexes)
-//                            .size());
+        assertEquals(4, getIndexInfo(Circle.class).size());
     }
 
     @Test
@@ -60,13 +58,8 @@ public class TestIndexInheritance extends TestBase {
         getMapper().getMappedClass(Circle.class);
 
         getDs().ensureIndexes();
-        final MongoCollection<Document> coll = getDatabase().getCollection(Circle.class.getSimpleName());
 
-        Document listIndexes = getDatabase().runCommand(new Document("listIndexes", coll.getNamespace().getCollectionName()));
-        fail("listIndexes = " + listIndexes);
-
-//        assertEquals(4, coll.getIndexInfo()
-//                            .size());
+        assertEquals(4, getIndexInfo(Circle.class).size());
     }
 
     @Entity
