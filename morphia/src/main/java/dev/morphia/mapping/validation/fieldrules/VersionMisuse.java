@@ -35,7 +35,7 @@ public class VersionMisuse extends FieldConstraint {
     @Override
     protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(Version.class)) {
-            final Class<?> type = mf.getType();
+            final Class<?> type = mf.getField().getType();
             if (Long.class.equals(type) || long.class.equals(type)) {
 
                 //TODO: Replace this will a read ObjectFactory call -- requires Mapper instance.
