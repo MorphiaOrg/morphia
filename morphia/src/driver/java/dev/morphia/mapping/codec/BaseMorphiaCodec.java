@@ -72,7 +72,7 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
 
             encodeIdProperty(writer, value, encoderContext, getClassModel().getIdPropertyModelHolder());
 
-            if (/*encoderContext.isEncodingCollectibleDocument() && */getClassModel().useDiscriminator()) {
+            if (getClassModel().useDiscriminator()) {
                 writer.writeString(getClassModel().getDiscriminatorKey(), getClassModel().getDiscriminator());
             }
 
@@ -118,15 +118,6 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
                 } else {
-/*
-                    final DecoderContext propertyContext
-                        = DecoderContext.builder(decoderContext)
-                                        .checkedDiscriminator(decoderContext.hasCheckedDiscriminator() ||
-                                                              Boolean.TRUE.equals(propertyModel.useDiscriminator()))
-                                        .metaData("discriminatorKey", getClassModel().getDiscriminatorKey())
-                                        .build();
-                    value = propertyModel.getCachedCodec().decode(reader, propertyContext);
-*/
                     value = decoderContext.decodeWithChildContext(propertyModel.getCachedCodec(), reader);
                 }
                 if (propertyModel.isWritable()) {

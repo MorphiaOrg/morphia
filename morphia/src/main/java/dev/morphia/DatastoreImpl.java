@@ -1,14 +1,15 @@
 package dev.morphia;
 
 import com.mongodb.DBRef;
-import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import dev.morphia.UpdateDocument.Mode;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
@@ -558,7 +559,7 @@ class DatastoreImpl implements AdvancedDatastore {
                                               .writeConcern(options.getWriteConcern())
                                               .upsert(true);
             updateOptions.apply(collection)
-                         .updateOne(new Document("_id", id), new UpdateDocument(entity), updateOptions);
+                         .updateOne(new Document("_id", id), new UpdateDocument(entity, Mode.DEFAULT), updateOptions);
 
             return mapper.getKey(entity);
         }
@@ -577,39 +578,45 @@ class DatastoreImpl implements AdvancedDatastore {
         Key<T> key = null;
         MappedField idField = mc.getIdField();
         final Object idValue = idField.getFieldValue(entity);
-        final MappedField field = mc.getVersionField();
+        final MappedField versionField = mc.getVersionField();
 
-        Long oldVersion = (Long) field.getFieldValue(entity);
+        Long oldVersion = (Long) versionField.getFieldValue(entity);
         long newVersion = oldVersion == null ? 1 : oldVersion + 1;
 
         if (newVersion == 1) {
             try {
-                updateVersion(entity, field, newVersion);
+                updateVersion(entity, versionField, newVersion);
                 options.apply(collection)
                        .insertOne(entity, options.getOptions());
                 key = mapper.getKey(entity);
-            } catch (DuplicateKeyException e) {
-                updateVersion(entity, field, oldVersion);
+            } catch (MongoWriteException e) {
+                try {
+                    updateVersion(entity, versionField, oldVersion);
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                }
                 throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
                     entity.getClass().getName(), idValue));
             }
         } else if (idValue != null) {
-            final UpdateResult res = find(collection.getNamespace().getCollectionName())
-                                                     .disableValidation()
-                                                     .filter("_id", idValue)
-                                                     .enableValidation()
-                                                     .filter(field.getMappedFieldName(), oldVersion)
-                                                     .update()
-                                                     .set(entity)
-                                                     .execute(new UpdateOptions()
-                                                                        .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                                        .writeConcern(options.getWriteConcern()));
+            Query<Object> query = find(collection.getNamespace().getCollectionName())
+                                   .disableValidation()
+                                   .filter("_id", idValue)
+                                   .enableValidation()
+                                   .filter(versionField.getMappedFieldName(), oldVersion);
+            final UpdateResult res = query
+                                         .update()
+                                         .inc(versionField.getMappedFieldName(), 1)
+                                         .set(entity)
+                                         .execute(new UpdateOptions()
+                                                      .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                      .writeConcern(options.getWriteConcern()));
 
             if (res.getModifiedCount() != 1) {
                 throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
                     entity.getClass().getName(), idValue, oldVersion));
             }
-            updateVersion(entity, field, newVersion);
+            updateVersion(entity, versionField, newVersion);
         }
 
         return key;

@@ -17,6 +17,7 @@ import dev.morphia.query.Query;
 import dev.morphia.testutil.TestEntity;
 
 import java.util.ConcurrentModificationException;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -29,20 +30,25 @@ public class VersionTest extends TestBase {
 
 
     @Test(expected = ConcurrentModificationException.class)
-    public void testConcurrentModDetection() throws Exception {
-        getMapper().map(ALongPrimitive.class);
+    public void testConcurrentModDetection() {
+        getMapper().map(Set.of(ALongPrimitive.class));
 
         final ALongPrimitive a = new ALongPrimitive();
         Assert.assertEquals(0, a.version);
         getDs().save(a);
+        Assert.assertEquals(1, a.version);
 
-        getDs().save(getDs().get(a));
+        Query<ALongPrimitive> query = getDs().find(ALongPrimitive.class)
+                                          .filter("_id", a.getId());
+        getDs().save(query.execute().next());
+
+        Assert.assertEquals(2, query.execute().next().version);
 
         getDs().save(a);
     }
 
     @Test(expected = ConcurrentModificationException.class)
-    public void testConcurrentModDetectionLong() throws Exception {
+    public void testConcurrentModDetectionLong() {
         final ALong a = new ALong();
         Assert.assertEquals(null, a.v);
         getDs().save(a);
@@ -53,7 +59,7 @@ public class VersionTest extends TestBase {
     }
 
     @Test(expected = ConcurrentModificationException.class)
-    public void testConcurrentModDetectionLongWithMerge() throws Exception {
+    public void testConcurrentModDetectionLongWithMerge() {
         final ALong a = new ALong();
         Assert.assertEquals(null, a.v);
         getDs().save(a);
@@ -66,18 +72,18 @@ public class VersionTest extends TestBase {
     }
 
     @Test(expected = ConstraintViolationException.class)
-    public void testInvalidVersionUse() throws Exception {
+    public void testInvalidVersionUse() {
         getMapper().map(InvalidVersionUse.class);
     }
 
     @Test
-    public void testVersionFieldNameContribution() throws Exception {
+    public void testVersionFieldNameContribution() {
         final MappedField mappedFieldByJavaField = getMapper().getMappedClass(ALong.class).getMappedFieldByJavaField("v");
         Assert.assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getMappedFieldName());
     }
 
     @Test
-    public void testVersionInHashcode() throws Exception {
+    public void testVersionInHashcode() {
         getMapper().mapPackage("com.example");
 
         final VersionInHashcode model = new VersionInHashcode();
@@ -87,15 +93,15 @@ public class VersionTest extends TestBase {
     }
 
     @Test
-    public void testVersions() throws Exception {
+    public void testVersions() {
         final ALongPrimitive a = new ALongPrimitive();
         Assert.assertEquals(0, a.version);
         getDs().save(a);
-        Assert.assertTrue(a.version > 0);
+        Assert.assertTrue(a.version == 1);
         final long version1 = a.version;
 
         getDs().save(a);
-        Assert.assertTrue(a.version > 0);
+        Assert.assertTrue(a.version == 2);
         final long version2 = a.version;
 
         Assert.assertFalse(version1 == version2);

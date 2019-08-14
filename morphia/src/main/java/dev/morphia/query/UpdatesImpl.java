@@ -1,7 +1,9 @@
 package dev.morphia.query;
 
 import dev.morphia.Datastore;
+import dev.morphia.UpdateDocument;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.UpdateDocument.Mode.BODY_ONLY;
 import static dev.morphia.utils.ReflectionUtils.iterToList;
 import static java.util.Collections.singletonList;
 
@@ -20,6 +23,8 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
     protected final Class<T> clazz;
     private Map<String, Object> ops = new HashMap<>();
     private boolean validateNames = true;
+    private boolean versionedUpdate;
+    private UpdateDocument updateDocument;
 
     UpdatesImpl(final Datastore datastore, final Mapper mapper, final Class<T> clazz) {
         this.datastore = datastore;
@@ -182,7 +187,11 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
             throw new QueryException("Entity value cannot be null.");
         }
 
-        ops.put(UpdateOperator.SET.val(), entity);
+        updateDocument = new UpdateDocument(entity, BODY_ONLY);
+        if(versionedUpdate) {
+            updateDocument.skipVersion();
+        }
+        ops.put(UpdateOperator.SET.val(), updateDocument);
         return (Updater) this;
     }
 
@@ -247,4 +256,16 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
         ((Document) ops.get(opString)).put(fieldName, val);
     }
 
+
+    protected void versionUpdate() {
+        final MappedClass mc = mapper.getMappedClass(clazz);
+
+        if (mc.getVersionField() != null) {
+            versionedUpdate = true;
+            if(updateDocument != null) {
+                updateDocument.skipVersion();
+            }
+            inc(mc.getVersionField().getMappedFieldName());
+        }
+    }
 }

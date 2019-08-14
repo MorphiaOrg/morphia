@@ -2,8 +2,7 @@ package dev.morphia.query;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
-import dev.morphia.annotations.Version;
-import dev.morphia.mapping.MappedClass;
+import com.mongodb.client.model.ReturnDocument;
 import org.bson.Document;
 
 public class Modify<T> extends UpdatesImpl<T, Modify<T>> {
@@ -20,24 +19,15 @@ public class Modify<T> extends UpdatesImpl<T, Modify<T>> {
 
     public T execute() {
         return execute(new FindOneAndUpdateOptions()
+                           .returnDocument(ReturnDocument.AFTER)
                            .sort(query.getSort())
                            .projection(query.getFieldsObject()));
     }
 
     public T execute(final FindOneAndUpdateOptions options) {
         versionUpdate();
-        Document res = (Document) collection.findOneAndUpdate(queryObject, getOps(), options);
 
-        return mapper.fromDocument(clazz, res);
-
-    }
-
-    private void versionUpdate() {
-        final MappedClass mc = mapper.getMappedClass(clazz);
-
-        if (!mc.getFields(Version.class).isEmpty()) {
-            inc(mc.getVersionField().getMappedFieldName());
-        }
+        return collection.findOneAndUpdate(queryObject, getOps(), options);
 
     }
 }

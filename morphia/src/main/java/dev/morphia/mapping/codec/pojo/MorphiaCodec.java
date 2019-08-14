@@ -58,8 +58,8 @@ import static dev.morphia.mapping.codec.Conversions.convert;
  * @param <T>
  */
 public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleCodec<T> {
-    private Mapper mapper;
-    private MappedClass mappedClass;
+    private final Mapper mapper;
+    private final MappedClass mappedClass;
 
     public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
                  final CodecRegistry registry, final List<PropertyCodecProvider> propertyCodecProviders,
@@ -216,11 +216,6 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         return instanceCreator instanceof MorphiaInstanceCreator ? ((MorphiaInstanceCreator) instanceCreator).getHandler(propertyModel)
                                                                  : null;
 
-    }
-
-    private <S> MappedField getMappedField(final PropertyModel<S> propertyModel) {
-        final MappedField field = mappedClass.getMappedField(propertyModel.getName());
-        return field != null ?  field : mappedClass.getMappedFieldByJavaField(propertyModel.getName());
     }
 
     Mapper getMapper() {

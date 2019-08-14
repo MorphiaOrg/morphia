@@ -34,6 +34,7 @@ public class Update<T> extends UpdatesImpl<T, Update<T>> {
             inc(fields.get(0).getMappedFieldName(), 1);
         }
         MongoCollection mongoCollection = datastore.enforceWriteConcern(collection, clazz, options.getWriteConcern());
+        versionUpdate();
         return options.isMulti()
                ? mongoCollection.updateMany(queryObject, getOps(), options)
                : mongoCollection.updateOne(queryObject, getOps(), options);

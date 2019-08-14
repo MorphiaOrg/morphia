@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import com.mongodb.client.MongoCollection;
 import dev.morphia.annotations.Entity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -26,38 +27,39 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMap() {
-        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(MapOfInterfaces.class);
         final Goo g1 = new Goo("Scott");
-        final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
+        final ContainsGoo cmoeg = new ContainsGoo();
         cmoeg.values.put("first", g1);
         getDs().save(cmoeg);
         //check className in the map values.
 
-        Document first = (Document) getDatabase().getCollection(ContainsMapOfEmbeddedInterfaces.class.getSimpleName())
+        MongoCollection<Document> collection = getDatabase().getCollection(ContainsGoo.class.getSimpleName());
+        Document first = (Document) collection
                                                  .find()
                                                  .first()
                                                  .get("values");
         final Document goo = (Document) first.get("first");
 
-        assertFalse(goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
+        assertFalse(goo.toString(), goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
     public void testEmbeddedMapUpdateOperations() {
-        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(MapOfInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 
-        final ContainsMapOfEmbeddedGoos cmoeg = new ContainsMapOfEmbeddedGoos();
-        cmoeg.values.put("first", g1);
-        getDs().save(cmoeg);
-        getDs().find(ContainsMapOfEmbeddedGoos.class)
-               .filter("_id", cmoeg.id)
+        final ContainsGoo contains = new ContainsGoo();
+        contains.values.put("first", g1);
+        getDs().save(contains);
+        getDs().find(ContainsGoo.class)
+               .filter("_id", contains.id)
                .update()
                .set("values.second", g2)
                .execute();
 
-        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsMapOfEmbeddedGoos.class.getSimpleName())
+        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsGoo.class.getSimpleName())
                                                            .find()
                                                            .first()
                                                            .get("values")).get(
@@ -68,21 +70,21 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMapUpdateOperationsOnInterfaceValue() {
-        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(MapOfInterfaces.class);
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 
-        final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
+        final MapOfInterfaces cmoei = new MapOfInterfaces();
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
-        getDs().find(ContainsMapOfEmbeddedInterfaces.class)
+        getDs().find(MapOfInterfaces.class)
                .filter("_id", cmoei.id)
                .update()
                .set("values.second", g2)
                .execute();
 
         //check className in the map values.
-        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsMapOfEmbeddedInterfaces.class.getSimpleName())
+        final Document goo = (Document) ((Document) getDatabase().getCollection(MapOfInterfaces.class.getSimpleName())
                                                            .find()
                                                            .first()
                                                            .get("values"))
@@ -92,14 +94,14 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMapWithValueInterface() {
-        getMapper().map(ContainsMapOfEmbeddedInterfaces.class);
+        getMapper().map(MapOfInterfaces.class);
         final Goo g1 = new Goo("Scott");
 
-        final ContainsMapOfEmbeddedInterfaces cmoei = new ContainsMapOfEmbeddedInterfaces();
+        final MapOfInterfaces cmoei = new MapOfInterfaces();
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
         //check className in the map values.
-        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsMapOfEmbeddedInterfaces.class.getSimpleName())
+        final Document goo = (Document) ((Document) getDatabase().getCollection(MapOfInterfaces.class.getSimpleName())
                                                            .find()
                                                            .first()
                                                            .get("values"))
@@ -121,21 +123,24 @@ public class MapImplTest extends TestBase {
     }
 
     @Entity
-    private static class ContainsMapOfEmbeddedInterfaces {
+    private static class MapOfInterfaces {
         @Id
         private ObjectId id;
-        private final Map<String, Serializable> values = new HashMap<>();
+        private final Map<String, Goober> values = new HashMap<>();
     }
 
     @Entity
-    private static class ContainsMapOfEmbeddedGoos {
+    private static class ContainsGoo {
         @Id
         private ObjectId id;
         private final Map<String, Goo> values = new HashMap<>();
     }
 
-    @Embedded
-    private static class Goo implements Serializable {
+    @Entity
+    private interface Goober {}
+
+    @Embedded(useDiscriminator = false)
+    private static class Goo implements Goober {
         private String name;
 
         Goo() {
