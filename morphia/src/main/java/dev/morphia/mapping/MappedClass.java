@@ -299,7 +299,8 @@ public class MappedClass {
      */
     public MappedField getMappedField(final String storedName) {
         return fields.stream()
-                     .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName))
+                     .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName) ||
+                         mappedField.getJavaFieldName().equals(storedName))
                      .findFirst()
                      .orElse(null);
     }

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -28,7 +29,7 @@ public class MappedFieldTest extends TestBase {
 
     @Before
     public void mapping() {
-        getMapper().map(TestEntity.class);
+        getMapper().map(Set.of(TestEntity.class));
         mappedClass = getMapper().getMappedClass(TestEntity.class);
     }
     @Test
