@@ -345,7 +345,7 @@ public class NestedMapsAndListsTest extends TestBase {
 
     }
 
-    @Embedded
+    @Entity
     private static class HashMapOfMap {
         @Id
         private ObjectId id;

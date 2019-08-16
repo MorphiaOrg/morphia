@@ -11,9 +11,9 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -70,7 +70,7 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMapUpdateOperationsOnInterfaceValue() {
-        getMapper().map(MapOfInterfaces.class);
+        getMapper().map(Set.of(MapOfInterfaces.class));
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 
@@ -139,7 +139,7 @@ public class MapImplTest extends TestBase {
     @Entity
     private interface Goober {}
 
-    @Embedded(useDiscriminator = false)
+    @Embedded
     private static class Goo implements Goober {
         private String name;
 

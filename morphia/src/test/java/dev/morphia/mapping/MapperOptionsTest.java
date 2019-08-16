@@ -4,6 +4,7 @@ package dev.morphia.mapping;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MapperOptions.Builder;
@@ -278,6 +279,7 @@ public class MapperOptionsTest extends TestBase {
     private static class DummyEntity {
     }
 
+    @Embedded
     private static class ComplexObject {
         private String stringVal;
         private int intVal;

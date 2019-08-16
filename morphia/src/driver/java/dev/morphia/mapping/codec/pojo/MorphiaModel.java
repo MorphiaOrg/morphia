@@ -33,21 +33,6 @@ public class MorphiaModel<T> extends ClassModel<T> {
     }
 
     /**
-     * Gets a {@link FieldModel} by the field name.
-     *
-     * @param fieldName the FieldModel's field name
-     * @return the FieldModel or null if the field is not found
-     */
-    public FieldModel<?> getFieldModel(final String fieldName) {
-        for (FieldModel<?> fieldModel : fieldModels) {
-            if (fieldModel.getName().equals(fieldName)) {
-                return fieldModel;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Returns all the annotations on this model
      *
      * @return the list of annotations
