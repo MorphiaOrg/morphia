@@ -100,8 +100,7 @@ public class Mapper {
             fromProviders(
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
-                new MorphiaCodecProvider(datastore, this,
-                    List.of(new MorphiaConvention(datastore, opts)), Set.of(""))));
+                new MorphiaCodecProvider(this, List.of(new MorphiaConvention(datastore, opts)), Set.of(""))));
     }
 
     public Datastore getDatastore() {

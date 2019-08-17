@@ -1,13 +1,13 @@
 package dev.morphia.generics.model;
 
-public class ChildEmbedded extends FatherEmbedded {
+public class Child extends EmbeddedType {
 
     private String childField;
 
-    public ChildEmbedded() {
+    public Child() {
     }
 
-    public ChildEmbedded(final String childField) {
+    public Child(final String childField) {
         this.childField = childField;
     }
 
@@ -25,7 +25,7 @@ public class ChildEmbedded extends FatherEmbedded {
             return false;
         }
 
-        ChildEmbedded that = (ChildEmbedded) o;
+        Child that = (Child) o;
 
         return !(childField != null ? !childField.equals(that.childField) : that.childField != null);
 

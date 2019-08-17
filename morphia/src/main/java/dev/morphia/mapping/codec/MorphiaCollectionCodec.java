@@ -2,9 +2,7 @@ package dev.morphia.mapping.codec;
 
 import org.bson.BsonReader;
 import org.bson.BsonType;
-import org.bson.BsonWriter;
 import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
@@ -18,15 +16,10 @@ import java.util.Set;
 
 class MorphiaCollectionCodec<T> extends CollectionCodec<T> {
     public MorphiaCollectionCodec(final TypeWithTypeParameters<T> type,
-                                      final PropertyCodecRegistry registry,
-                                      final TypeWithTypeParameters<T> valueType) {
+                                  final PropertyCodecRegistry registry,
+                                  final TypeWithTypeParameters<T> valueType) {
 
         super((Class<Collection<T>>) type.getType(), registry.get(valueType));
-    }
-
-    @Override
-    public void encode(final BsonWriter writer, final Collection<T> collection, final EncoderContext encoderContext) {
-        super.encode(writer, collection, encoderContext);
     }
 
     @Override

@@ -19,7 +19,7 @@ package dev.morphia.internal;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.ValidationException;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
 
 import java.util.Iterator;
@@ -142,7 +142,7 @@ public class PathTarget {
     }
 
     private void failValidation() {
-        throw new ValidationException(Sofia.invalidPathTarget(join(segments, '.'), root.getType().getName()));
+        throw new MappingException(Sofia.invalidPathTarget(join(segments, '.'), root.getType().getName()));
     }
 
     private void translate(final String nameToStore) {

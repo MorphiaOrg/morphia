@@ -19,6 +19,7 @@ package dev.morphia.generics;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MapperOptions;
@@ -90,6 +91,7 @@ public class TestJavaLists extends TestBase {
         private String text;
         private Wrapped wrapped;
 
+        @Embedded
         private static class Wrapped {
             private List<Wrapped> others;
             private String text;

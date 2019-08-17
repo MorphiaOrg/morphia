@@ -145,19 +145,19 @@ public class IndexHelperTest extends TestBase {
     public void findField() {
         MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
-        assertEquals("indexName", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), singletonList("indexName")));
-        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nested", "name")));
-        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nest", "name")));
+        assertEquals("indexName", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "indexName"));
+        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "nested.name"));
+        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "nest.name"));
 
         try {
-            assertEquals("nest.whatsit", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), asList("nest", "whatsit")));
+            assertEquals("nest.whatsit", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "nest.whatsit"));
             fail("Should have failed on the bad index path");
         } catch (MappingException e) {
             // alles ist gut
         }
         assertEquals("nest.whatsit.nested.more.deeply.than.the.object.model",
                      indexHelper.findField(mappedClass, new IndexOptionsBuilder().disableValidation(true),
-                                           asList("nest", "whatsit", "nested", "more", "deeply", "than", "the", "object", "model")));
+                                           "nest.whatsit.nested.more.deeply.than.the.object.model"));
     }
 
     @Test

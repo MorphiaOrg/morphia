@@ -25,6 +25,7 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
+import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -44,10 +45,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static dev.morphia.internal.MorphiaUtils.join;
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 final class IndexHelper {
@@ -128,7 +127,7 @@ final class IndexHelper {
                         List<Field> fields = new ArrayList<Field>();
                         for (Field field : index.fields()) {
                             fields.add(new FieldBuilder()
-                                           .value(findField(mc, index.options(), asList(field.value().split("\\."))))
+                                           .value(findField(mc, index.options(), field.value()))
                                            .type(field.type())
                                            .weight(field.weight()));
                         }
@@ -141,10 +140,6 @@ final class IndexHelper {
         }
 
         return list;
-    }
-
-    private MappingException pathFail(final MappedClass mc, final List<String> path) {
-        return new MappingException(format("Could not resolve path '%s' against '%s'.", join(path, '.'), mc.getType().getName()));
     }
 
     private Index replaceFields(final Index original, final List<Field> list) {
@@ -167,7 +162,7 @@ final class IndexHelper {
         for (Field field : index.fields()) {
             String path;
             try {
-                path = findField(mc, index.options(), new ArrayList<String>(asList(field.value().split("\\."))));
+                path = findField(mc, index.options(), field.value());
             } catch (Exception e) {
                 path = field.value();
                 String message = format("The path '%s' can not be validated against '%s' and may represent an invalid index",
@@ -224,48 +219,12 @@ final class IndexHelper {
                                                  .build();
     }
 
-    String findField(final MappedClass mc, final IndexOptions options, final List<String> path) {
-        String segment = path.get(0);
-        if (segment.equals("$**")) {
-            return segment;
+    String findField(final MappedClass mc, final IndexOptions options, final String path) {
+        if (path.equals("$**")) {
+            return path;
         }
 
-        MappedField mf = mc.getMappedField(segment);
-        if (mf == null) {
-            mf = mc.getMappedFieldByJavaField(segment);
-        }
-        if (mf == null && mc.isInterface()) {
-            for (final MappedClass mappedClass : mapper.getSubTypes(mc)) {
-                try {
-                    return findField(mappedClass, options, new ArrayList<String>(path));
-                } catch (MappingException e) {
-                    // try the next one
-                }
-            }
-        }
-        String namePath;
-        if (mf != null) {
-            namePath = mf.getMappedFieldName();
-        } else {
-            if (!options.disableValidation()) {
-                throw pathFail(mc, path);
-            } else {
-                return join(path, '.');
-            }
-        }
-        if (path.size() > 1) {
-            Class concreteType = !mf.isScalarValue() ? mf.getSpecializedType() : mf.getType();
-            try {
-                namePath += "." + findField(mapper.getMappedClass(concreteType), options, path.subList(1, path.size()));
-            } catch (MappingException e) {
-                if (!options.disableValidation()) {
-                    throw pathFail(mc, path);
-                } else {
-                    return join(path, '.');
-                }
-            }
-        }
-        return namePath;
+        return new PathTarget(mapper, mc, path, !options.disableValidation()).translatedPath();
     }
 
     void createIndex(final MongoCollection collection, final MappedClass mc) {

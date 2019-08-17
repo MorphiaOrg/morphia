@@ -1,6 +1,5 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.Datastore;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappedClass;
@@ -33,8 +32,7 @@ public class MorphiaCodecProvider implements CodecProvider {
     private final DiscriminatorLookup discriminatorLookup;
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
 
-    public MorphiaCodecProvider(final Datastore datastore,
-                                final Mapper mapper,
+    public MorphiaCodecProvider(final Mapper mapper,
                                 final List<Convention> conventions,
                                 final Set<String> packages) {
         this.mapper = mapper;
@@ -53,6 +51,7 @@ public class MorphiaCodecProvider implements CodecProvider {
             discriminatorLookup.addClassModel(morphiaModel);
             codec = new MorphiaCodec<>(mapper, new MappedClass(morphiaModel, mapper), morphiaModel, registry,
                 propertyCodecProviders, discriminatorLookup);
+            codecs.put(type, codec);
         }
 
         return codec;
@@ -72,13 +71,10 @@ public class MorphiaCodecProvider implements CodecProvider {
             }
         }
 
-        boolean has = hasAnnotation(clazz.getSuperclass(), annotations)
-                    || Arrays.stream(clazz.getInterfaces())
+        return hasAnnotation(clazz.getSuperclass(), annotations)
+               || Arrays.stream(clazz.getInterfaces())
                              .map(i -> hasAnnotation(i, annotations))
-                             .reduce(false, (l, r) -> {
-                                 return l || r;
-                             });
-        return has;
+                             .reduce(false, (l, r) -> l || r);
     }
 
 

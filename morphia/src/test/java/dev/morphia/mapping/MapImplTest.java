@@ -42,7 +42,7 @@ public class MapImplTest extends TestBase {
                                                  .get("values");
         final Document goo = (Document) first.get("first");
 
-        assertFalse(goo.toString(), goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
+        assertTrue(goo.toString(), goo.containsKey(getMapper().getOptions().getDiscriminatorField()));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class MapImplTest extends TestBase {
                                                            .first()
                                                            .get("values")).get(
             "second");
-        assertFalse("className should not be here.", goo.containsKey(
+        assertTrue("className should not be here.", goo.containsKey(
             getMapper().getOptions().getDiscriminatorField()));
     }
 

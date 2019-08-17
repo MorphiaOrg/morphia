@@ -26,7 +26,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
-import dev.morphia.generics.model.ChildEmbedded;
+import dev.morphia.generics.model.Child;
 import dev.morphia.generics.model.ChildEntity;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
@@ -45,7 +45,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static com.mongodb.WriteConcern.ACKNOWLEDGED;
 import static com.mongodb.WriteConcern.MAJORITY;
@@ -73,7 +72,7 @@ public class TestDatastore extends TestBase {
     public void shouldSaveGenericTypeVariables() throws Exception {
         // given
         ChildEntity child = new ChildEntity();
-        child.setEmbeddedList(singletonList(new ChildEmbedded()));
+        child.setEmbeddedList(singletonList(new Child()));
 
         // when
         Key<ChildEntity> saveResult = getDs().save(child);

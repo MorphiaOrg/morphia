@@ -716,6 +716,7 @@ public class TestMapping extends TestBase {
         B
     }
 
+    @Embedded
     private interface Foo {
     }
 
