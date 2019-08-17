@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -94,11 +95,11 @@ public class MappedFieldTest extends TestBase {
         final Class<?> typeParameter = typeData.getType();
         assertTrue(List.class == typeData.getType());
 
-        assertTrue(String.class == typeData.getTypeParameters().get(0).getType());
+        assertEquals(String.class, typeData.getTypeParameters().get(0).getTypeParameters().get(0).getType());
         assertEquals("listOfListOfString", field.getJavaFieldName());
         assertEquals("listOfListOfString", field.getMappedFieldName());
 
-        final BasicDBList list = new BasicDBList();
+        final List<List<String>> list = new ArrayList<>();
         list.add(dbList("a", "b", "c"));
         list.add(dbList("d", "e", "f"));
         final TestEntity entity = getMapper().fromDocument(TestEntity.class, new Document("listOfListOfString", list));
@@ -110,10 +111,8 @@ public class MappedFieldTest extends TestBase {
         assertEquals(expected, entity.listOfListOfString);
     }
 
-    private BasicDBList dbList(final String... values) {
-        final BasicDBList list = new BasicDBList();
-        Collections.addAll(list, values);
-        return list;
+    private List<String> dbList(final String... values) {
+        return new ArrayList<>(Arrays.asList(values));
     }
 
     @Entity

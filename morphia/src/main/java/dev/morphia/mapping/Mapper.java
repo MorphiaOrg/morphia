@@ -245,9 +245,9 @@ public class Mapper {
     /**
      * Converts a Document back to a type-safe java object (POJO)
      *
-     * @param <T>         the type of the entity
+     * @param <T>      the type of the entity
      * @param clazz
-     * @param document    the Document containing the document from mongodb
+     * @param document the Document containing the document from mongodb
      * @return the new entity
      * @morphia.internal
      */
@@ -256,17 +256,18 @@ public class Mapper {
             return null;
         }
 
+        Class<T> aClass = clazz;
         if (document.containsKey(opts.getDiscriminatorField())) {
-            CodecRegistry codecRegistry = getCodecRegistry();
-            BsonDocumentReader reader = new BsonDocumentReader(document.toBsonDocument(getClass(document), codecRegistry));
-
-            return codecRegistry
-                       .get(clazz)
-                       .decode(reader, DecoderContext.builder().build());
-        } else {
-            throw new MappingException(format("The Document does not contain a %s key.  Unable to determine the entity type.",
-                opts.getDiscriminatorField()));
+            aClass = getClass(document);
         }
+
+        CodecRegistry codecRegistry = getCodecRegistry();
+
+        BsonDocumentReader reader = new BsonDocumentReader(document.toBsonDocument(aClass, codecRegistry));
+
+        return codecRegistry
+                   .get(clazz)
+                   .decode(reader, DecoderContext.builder().build());
     }
 
     @SuppressWarnings("unchecked")
