@@ -14,6 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 
@@ -21,7 +22,7 @@ public class CompoundIdTest extends TestBase {
 
     @Test
     public void testFetchKey() {
-        getMapper().map(Set.of(ConfigKey.class, ConfigEntry.class));
+        getMapper().map(List.of(ConfigKey.class, ConfigEntry.class));
         getDs().save(new ConfigEntry(new ConfigKey("env", "key", "subenv")));
         ConfigEntry entry = getDs().find(ConfigEntry.class)
                                     .execute(new FindOptions().limit(1))

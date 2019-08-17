@@ -30,7 +30,7 @@ public class TestMapper extends TestBase {
 
     @Test
     public void annotations() {
-        List<MappedClass> classes = getMapper().map(Set.of(Rectangle.class));
+        List<MappedClass> classes = getMapper().map(List.of(Rectangle.class));
         MappedClass mappedClass = classes.get(0);
         List<Entity> annotations = mappedClass.getAnnotations(Entity.class);
         Assert.assertEquals("Rectangle", mappedClass.getCollectionName());

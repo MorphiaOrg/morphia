@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
 
 public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
@@ -37,6 +38,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         for (Class<?> klass : classes) {
             List<String> genericTypeNames = processTypeNames(klass);
 
+            getAnnotations().addAll(asList(klass.getAnnotations()));
             processFields(klass,
                 parentClassTypeData, genericTypeNames);
 

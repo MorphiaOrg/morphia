@@ -177,7 +177,7 @@ public class TestIndexed extends TestBase {
 
     @Test(expected = MongoWriteException.class)
     public void testUniqueIndexedEntity() {
-        getMapper().map(Set.of(UniqueIndexOnValue.class));
+        getMapper().map(List.of(UniqueIndexOnValue.class));
         getDs().ensureIndexes();
         assertThat(getIndexInfo(UniqueIndexOnValue.class), hasIndexNamed("l_ascending"));
         getDs().save(new UniqueIndexOnValue("a"));
@@ -188,7 +188,7 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testDefaults() {
-        getMapper().map(Set.of(NewIndexed.class));
+        getMapper().map(List.of(NewIndexed.class));
         getDs().ensureIndexes();
     }
 

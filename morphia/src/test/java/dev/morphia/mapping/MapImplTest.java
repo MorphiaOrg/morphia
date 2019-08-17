@@ -12,6 +12,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class MapImplTest extends TestBase {
 
     @Test
     public void testEmbeddedMapUpdateOperationsOnInterfaceValue() {
-        getMapper().map(Set.of(MapOfInterfaces.class));
+        getMapper().map(List.of(MapOfInterfaces.class));
         final Goo g1 = new Goo("Scott");
         final Goo g2 = new Goo("Ralph");
 

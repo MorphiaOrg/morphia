@@ -1,9 +1,9 @@
 package dev.morphia.issue502;
 
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -26,13 +26,10 @@ public class CollectionInheritanceTest extends TestBase {
         return book;
     }
 
-    /**
-     * Issue's details...
-     */
     @Test
     public void testMappingBook() {
         // Mapping...
-        getMapper().map(Book.class /* , Authors.class, Author.class */);
+        getMapper().map(Book.class, Authors.class, Author.class);
 
         // Test mapping : author objects must be converted into Document (but wasn't)
         final Document dbBook = getMapper().toDocument(newBook());
@@ -42,9 +39,6 @@ public class CollectionInheritanceTest extends TestBase {
 
     }
 
-    /**
-     * Real test
-     */
     @Test
     public void testSavingBook() {
         // Test saving
@@ -62,6 +56,7 @@ public class CollectionInheritanceTest extends TestBase {
 
     }
 
+    @Embedded
     private static class Authors extends HashSet<Author> {
     }
 

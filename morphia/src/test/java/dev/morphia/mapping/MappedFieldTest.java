@@ -30,7 +30,7 @@ public class MappedFieldTest extends TestBase {
 
     @Before
     public void mapping() {
-        getMapper().map(Set.of(TestEntity.class));
+        getMapper().map(List.of(TestEntity.class));
         mappedClass = getMapper().getMappedClass(TestEntity.class);
     }
     @Test

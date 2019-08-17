@@ -36,6 +36,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,7 @@ import static dev.morphia.utils.ReflectionUtils.getDeclaredAndInheritedMethods;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @morphia.internal
@@ -421,7 +423,7 @@ public class MappedClass {
         for (Class<?> aClass : type.getInterfaces()) {
             final MappedClass mappedClass = mapper.getMappedClass(aClass);
             if (mappedClass != null) {
-                interfaces.add(mappedClass);
+                this.interfaces.add(mappedClass);
             }
         }
 

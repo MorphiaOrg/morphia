@@ -17,6 +17,7 @@ import dev.morphia.query.Query;
 import dev.morphia.testutil.TestEntity;
 
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class VersionTest extends TestBase {
 
     @Test(expected = ConcurrentModificationException.class)
     public void testConcurrentModDetection() {
-        getMapper().map(Set.of(ALongPrimitive.class));
+        getMapper().map(List.of(ALongPrimitive.class));
 
         final ALongPrimitive a = new ALongPrimitive();
         Assert.assertEquals(0, a.version);

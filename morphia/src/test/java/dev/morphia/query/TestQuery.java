@@ -96,7 +96,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        getMapper().map(Set.of(KeyValue.class));
+        getMapper().map(List.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
         final List<Object> keys = Arrays.asList("key1", "key2");

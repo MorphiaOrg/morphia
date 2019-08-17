@@ -26,12 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import static dev.morphia.internal.MorphiaUtils.join;
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
- * @since 1.3
  * @morphia.internal
+ * @since 1.3
  */
 public class PathTarget {
     private final List<String> segments;
@@ -47,8 +46,8 @@ public class PathTarget {
      * Creates a resolution context for the given root and path.
      *
      * @param mapper mapper
-     * @param root root
-     * @param path path
+     * @param root   root
+     * @param path   path
      */
     public PathTarget(final Mapper mapper, final MappedClass root, final String path) {
         this(mapper, root, path, true);
@@ -66,8 +65,8 @@ public class PathTarget {
      * Creates a resolution context for the given root and path.
      *
      * @param mapper mapper
-     * @param root root
-     * @param path path
+     * @param root   root
+     * @param path   path
      */
     public PathTarget(final Mapper mapper, final MappedClass root, final String path, boolean validateNames) {
         segments = asList(path.split("\\."));
@@ -151,25 +150,26 @@ public class PathTarget {
     }
 
     private MappedField resolveField(final String segment) {
-        if(context == null) {
-            failValidation();
-        }
-        MappedField mf = context.getMappedField(segment);
-        if (mf == null) {
-            mf = context.getMappedFieldByJavaField(segment);
-        }
-        if (mf == null) {
-            Iterator<MappedClass> subTypes = mapper.getSubTypes(context).iterator();
-            while (mf == null && subTypes.hasNext()) {
-                context = subTypes.next();
-                mf = resolveField(segment);
+        if (context != null) {
+            MappedField mf = context.getMappedField(segment);
+            if (mf == null) {
+                mf = context.getMappedFieldByJavaField(segment);
             }
-        }
+            if (mf == null) {
+                Iterator<MappedClass> subTypes = mapper.getSubTypes(context).iterator();
+                while (mf == null && subTypes.hasNext()) {
+                    context = subTypes.next();
+                    mf = resolveField(segment);
+                }
+            }
 
-        if (mf != null) {
-            context = mapper.getMappedClass(mf.getNormalizedType());
+            if (mf != null) {
+                context = mapper.getMappedClass(mf.getNormalizedType());
+            }
+            return mf;
+        } else {
+            return null;
         }
-        return mf;
     }
 
     @Override

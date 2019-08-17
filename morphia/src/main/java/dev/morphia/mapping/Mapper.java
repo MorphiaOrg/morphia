@@ -113,11 +113,11 @@ public class Mapper {
      *
      * @param entityClasses the classes to map
      * @return
-     * @deprecated use {@link #map(Set)}
+     * @deprecated use {@link #map(List)}
      */
     @Deprecated(since = "2.0", forRemoval = true)
     public List<MappedClass> map(final Class... entityClasses) {
-        return map(Set.of(entityClasses));
+        return map(List.of(entityClasses));
     }
 
     /**
@@ -126,7 +126,7 @@ public class Mapper {
      * @param classes the classes to map
      * @return the list of mapped classes
      */
-    public List<MappedClass> map(final Set<Class> classes) {
+    public List<MappedClass> map(final List<Class> classes) {
         return classes.stream()
                       .map(c -> getMappedClass(c))
                       .filter(mc -> mc != null)

@@ -19,6 +19,7 @@ import org.bson.codecs.pojo.PropertyCodecProvider;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,13 +63,22 @@ public class MorphiaCodecProvider implements CodecProvider {
     }
 
     private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
+        if(clazz == null) {
+            return false;
+        }
         for (Class<? extends Annotation> annotation : annotations) {
             if(clazz.getAnnotation(annotation) != null) {
                 return true;
             }
         }
 
-        return false;
+        boolean has = hasAnnotation(clazz.getSuperclass(), annotations)
+                    || Arrays.stream(clazz.getInterfaces())
+                             .map(i -> hasAnnotation(i, annotations))
+                             .reduce(false, (l, r) -> {
+                                 return l || r;
+                             });
+        return has;
     }
 
 

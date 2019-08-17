@@ -97,6 +97,7 @@ public class TestJavaMaps extends TestBase {
         private String text;
         private Wrapped wrapped;
 
+        @Embedded
         private static class Wrapped {
             private Map<String, Wrapped> others;
             private String text;
