@@ -147,7 +147,6 @@ public class MapperOptionsTest extends TestBase {
         //Test default storing empty map with storeEmpties option
         shouldFindField(nulls(true), hm, null);
 
-
         //Test opposite from above
         shouldNotFindField(nulls(false), hm);
     }
@@ -160,6 +159,7 @@ public class MapperOptionsTest extends TestBase {
                                              .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .names);
+        cleanup();
     }
 
     private void shouldFindField(final Datastore datastore, final HasMap hl, final Map<String, String> expected) {
@@ -171,6 +171,7 @@ public class MapperOptionsTest extends TestBase {
                                              .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .properties);
+        cleanup();
     }
 
     private void shouldFindField(final Datastore datastore, final HasCollectionValuedMap hm, final Map<String, Collection<String>> expected) {
@@ -182,6 +183,7 @@ public class MapperOptionsTest extends TestBase {
                                              .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .properties);
+        cleanup();
     }
 
     private void shouldFindField(final Datastore datastore, final HasComplexObjectValuedMap hm, final Map<String, ComplexObject> expected) {
@@ -193,6 +195,7 @@ public class MapperOptionsTest extends TestBase {
                                              .execute(new FindOptions().limit(1))
                                              .tryNext()
                                           .properties);
+        cleanup();
     }
 
     private void shouldNotFindField(final Datastore datastore, final HasMap hl) {
@@ -203,16 +206,18 @@ public class MapperOptionsTest extends TestBase {
                                  .execute(new FindOptions().limit(1))
                                  .tryNext()
                               .properties);
+        cleanup();
     }
 
     private void shouldNotFindField(final Datastore datastore, final HasList hl) {
         datastore.save(hl);
         Document document = getDatabase().getCollection(HasList.class.getSimpleName()).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("names"), document.containsKey("names"));
-        Assert.assertNull(datastore.find(HasList.class)
-                                 .execute(new FindOptions().limit(1))
-                                 .tryNext()
-                              .names);
+        HasList hasList = datastore.find(HasList.class)
+                                   .execute(new FindOptions().limit(1))
+                                   .tryNext();
+        Assert.assertNull(hasList.names);
+        cleanup();
     }
 
     private void shouldNotFindField(final Datastore datastore, final HasCollectionValuedMap hm) {
@@ -223,6 +228,7 @@ public class MapperOptionsTest extends TestBase {
                                  .execute(new FindOptions().limit(1))
                                  .tryNext()
                               .properties);
+        cleanup();
     }
 
     private void shouldNotFindField(final Datastore datastore, final HasComplexObjectValuedMap hm) {
@@ -233,6 +239,7 @@ public class MapperOptionsTest extends TestBase {
                                  .execute(new FindOptions().limit(1))
                                  .tryNext()
                               .properties);
+        cleanup();
     }
 
     @Entity
@@ -277,6 +284,8 @@ public class MapperOptionsTest extends TestBase {
 
     @Entity
     private static class DummyEntity {
+        @Id
+        private ObjectId id;
     }
 
     @Embedded
