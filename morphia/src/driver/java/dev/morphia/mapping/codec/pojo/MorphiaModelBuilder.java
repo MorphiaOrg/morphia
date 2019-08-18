@@ -35,15 +35,18 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         TypeData<?> parentClassTypeData = null;
 
         Set<Class<?>> classes = buildHierarchy(getType());
+
+        List<Annotation> annotations = new ArrayList<>();
         for (Class<?> klass : classes) {
             List<String> genericTypeNames = processTypeNames(klass);
 
-            getAnnotations().addAll(asList(klass.getAnnotations()));
+            annotations.addAll(asList(klass.getAnnotations()));
             processFields(klass,
                 parentClassTypeData, genericTypeNames);
 
             parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
         }
+        annotations(annotations);
     }
 
     private Set<Class<?>> buildHierarchy(Class<?> clazz) {

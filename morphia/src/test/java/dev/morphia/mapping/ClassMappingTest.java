@@ -27,7 +27,11 @@ public class ClassMappingTest extends TestBase {
         e.testClass2 = LinkedList.class;
         getDs().save(e);
 
-        Assert.assertNull(getDs().find(E.class).field("testClass2").equal(ArrayList.class).execute(new FindOptions().limit(1)).tryNext());
+        Assert.assertNull(getDs().find(E.class)
+                                 .field("testClass2").equal(ArrayList.class)
+                                 .execute(new FindOptions()
+                                              .limit(1))
+                                 .tryNext());
     }
 
     @Test
@@ -39,17 +43,6 @@ public class ClassMappingTest extends TestBase {
 
         e = getDs().get(e);
         Assert.assertEquals(LinkedList.class, e.testClass);
-    }
-
-    @Test
-    public void testMappingWithoutAnnotation() {
-        E e = new E();
-
-        e.testClass2 = LinkedList.class;
-        getDs().save(e);
-
-        e = getDs().get(e);
-        Assert.assertEquals(LinkedList.class, e.testClass2);
     }
 
     @Entity

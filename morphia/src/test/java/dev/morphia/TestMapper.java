@@ -36,6 +36,7 @@ public class TestMapper extends TestBase {
         Assert.assertEquals("Rectangle", mappedClass.getCollectionName());
         Assert.assertEquals(annotations.toString(), annotations.size(), 2);
     }
+
     @Test
     public void serializableId() {
         final CustomId cId = new CustomId();

@@ -14,7 +14,6 @@
 
 package dev.morphia.indexes;
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -23,7 +22,6 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.mapping.MappedClass;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
@@ -31,7 +29,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * @author Scott Hernandez
@@ -44,8 +41,8 @@ public class TestIndexInheritance extends TestBase {
         final MappedClass mc = getMapper().getMappedClass(Circle.class);
         assertNotNull(mc);
 
-        assertEquals(2, mc.getAnnotations(Indexes.class)
-                          .size());
+        List<Object> annotations = mc.getAnnotations(Indexes.class);
+        assertEquals(annotations.toString(), annotations.size());
 
         getDs().ensureIndexes();
 
