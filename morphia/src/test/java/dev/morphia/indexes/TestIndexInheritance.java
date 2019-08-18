@@ -42,7 +42,7 @@ public class TestIndexInheritance extends TestBase {
         assertNotNull(mc);
 
         List<Object> annotations = mc.getAnnotations(Indexes.class);
-        assertEquals(annotations.toString(), annotations.size());
+        assertEquals(annotations.toString(), 2, annotations.size());
 
         getDs().ensureIndexes();
 

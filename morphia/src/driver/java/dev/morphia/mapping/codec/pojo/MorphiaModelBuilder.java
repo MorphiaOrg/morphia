@@ -40,7 +40,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         for (Class<?> klass : classes) {
             List<String> genericTypeNames = processTypeNames(klass);
 
-            annotations.addAll(asList(klass.getAnnotations()));
+            annotations.addAll(asList(klass.getDeclaredAnnotations()));
             processFields(klass,
                 parentClassTypeData, genericTypeNames);
 
