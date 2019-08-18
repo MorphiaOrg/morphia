@@ -59,14 +59,14 @@ public class ReflectionUtilsTest extends TestBase {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void testGenericFieldTypeResolution() throws Exception {
+    public void testGenericFieldTypeResolution() throws NoSuchFieldException {
         Class<?> typeArgument = ReflectionUtils.getTypeArgument(Sub.class,
                                                                 (TypeVariable) Super1.class.getDeclaredField("field").getGenericType());
         assertThat(typeArgument, is(exactClass(Integer.class)));
     }
 
     @Test
-    public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws Exception {
+    public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws IOException, ClassNotFoundException {
         //we need a jar to test with so use JUnit since it will always be there
         String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         Set<Class<?>> result = ReflectionUtils.getFromJarFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit", true);
@@ -79,7 +79,7 @@ public class ReflectionUtilsTest extends TestBase {
     }
 
     @Test
-    public void testGetFromJarFileWithUnicodePath() throws Exception {
+    public void testGetFromJarFileWithUnicodePath() throws IOException, ClassNotFoundException {
         //we need a jar to test with so use JUnit since it will always be there
         String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         final File input = new File(rootPath);
@@ -99,7 +99,7 @@ public class ReflectionUtilsTest extends TestBase {
     }
 
     @Test
-    public void testGetParameterizedClassInheritance() throws Exception {
+    public void testGetParameterizedClassInheritance() throws NoSuchFieldException {
         // Work before fix...
         assertThat(ReflectionUtils.getParameterizedClass(Set.class), isA(Object.class));
         assertThat(ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")), is(exactClass(Author.class)));

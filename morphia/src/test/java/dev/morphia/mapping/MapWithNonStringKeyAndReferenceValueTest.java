@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
 @Ignore("references need work")
 public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
     @Test
-    public void testMapKeyShouldBeInteger() throws Exception {
+    public void testMapKeyShouldBeInteger() {
         getMapper().map(ChildEntity.class, ParentEntity.class);
 
         final ChildEntity ce1 = new ChildEntity();
@@ -44,7 +44,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
     }
 
     @Test
-    public void testWithProxy() throws Exception {
+    public void testWithProxy() {
         if (!LazyFeatureDependencies.assertDependencyFullFilled()) {
             return;
         }

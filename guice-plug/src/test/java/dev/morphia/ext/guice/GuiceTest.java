@@ -42,7 +42,7 @@ public class GuiceTest extends TestBase {
     }
 
     @Test
-    public void testE1() throws Exception {
+    public void testE1() {
 
         final E1 initialEntity = i.getInstance(E1.class);
         final Key<E1> k = getDs().save(initialEntity);
@@ -58,7 +58,7 @@ public class GuiceTest extends TestBase {
     }
 
     @Test
-    public void testE2() throws Exception {
+    public void testE2() {
 
         final E2 initialEntity = new E2();
         final Key<E2> k = getDs().save(initialEntity);
@@ -69,7 +69,7 @@ public class GuiceTest extends TestBase {
     }
 
     @Test
-    public void testE3() throws Exception {
+    public void testE3() {
 
         final E3 initialEntity = i.getInstance(E3.class);
         final Key<E3> k = getDs().save(initialEntity);
@@ -83,7 +83,7 @@ public class GuiceTest extends TestBase {
     }
 
     @Test
-    public void testE4() throws Exception {
+    public void testE4() {
 
         final E4 initialEntity = i.getInstance(E4.class);
         final Key<E4> k = getDs().save(initialEntity);

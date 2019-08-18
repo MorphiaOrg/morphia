@@ -10,6 +10,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 public class URIMappingTest extends TestBase {
 
     @Test
-    public void testURIField() throws Exception {
+    public void testURIField() throws URISyntaxException {
         final ContainsURI entity = new ContainsURI();
         final URI testURI = new URI("http://lamest.local/test.html");
 
@@ -33,7 +34,7 @@ public class URIMappingTest extends TestBase {
     }
 
     @Test
-    public void testURIMap() throws Exception {
+    public void testURIMap() throws URISyntaxException {
         final ContainsURIKeyedMap entity = new ContainsURIKeyedMap();
         final URI testURI = new URI("http://lamest.local/test.html");
 

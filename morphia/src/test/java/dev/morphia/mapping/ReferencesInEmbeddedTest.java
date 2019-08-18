@@ -14,7 +14,7 @@ import dev.morphia.testutil.TestEntity;
 @Ignore("references need work")
 public class ReferencesInEmbeddedTest extends TestBase {
     @Test
-    public void testLazyReferencesInEmbedded() throws Exception {
+    public void testLazyReferencesInEmbedded() {
         final Container container = new Container();
         container.name = "lazy";
         getDs().save(container);
@@ -30,13 +30,13 @@ public class ReferencesInEmbeddedTest extends TestBase {
     }
 
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         getMapper().map(Container.class);
         getMapper().map(ReferencedEntity.class);
     }
 
     @Test
-    public void testNonLazyReferencesInEmbedded() throws Exception {
+    public void testNonLazyReferencesInEmbedded() {
         final Container container = new Container();
         container.name = "nonLazy";
         getDs().save(container);

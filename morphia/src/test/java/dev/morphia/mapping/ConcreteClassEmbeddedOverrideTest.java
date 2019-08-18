@@ -14,7 +14,7 @@ import dev.morphia.annotations.Id;
 public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
     @Test
-    public void test() throws Exception {
+    public void test() {
         final E e1 = new E();
         Assert.assertEquals("A", e1.a1.s);
         Assert.assertEquals("A", e1.a2.s);

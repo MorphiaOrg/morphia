@@ -15,7 +15,7 @@ import java.util.List;
 
 public class FloatMappingTest extends TestBase {
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         getMapper().map(Floats.class);
         final Floats ent = new Floats();
         ent.listWrapperArray.add(new Float[]{1.1f, 2.2f});

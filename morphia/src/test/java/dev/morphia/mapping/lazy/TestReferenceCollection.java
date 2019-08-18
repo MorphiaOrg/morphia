@@ -17,7 +17,7 @@ import java.util.List;
 public class TestReferenceCollection extends ProxyTestBase {
 
     @Test
-    public void testOrderingPreserved() throws Exception {
+    public void testOrderingPreserved() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {
             return;

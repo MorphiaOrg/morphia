@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class QueryHasAnyOfForReferencedList extends TestBase {
 
     @Test
-    public void testInQuery() throws Exception {
+    public void testInQuery() {
 
         Plan plan1 = new Plan();
         plan1.name = "Trial";

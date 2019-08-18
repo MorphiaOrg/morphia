@@ -16,7 +16,7 @@ import java.util.List;
 
 public class IntegerMappingTest extends TestBase {
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         getMapper().map(Integers.class);
         final Integers ent = new Integers();
         ent.listWrapperArray.add(new Integer[]{1, 2});

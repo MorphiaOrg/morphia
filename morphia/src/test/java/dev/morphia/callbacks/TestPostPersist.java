@@ -29,7 +29,7 @@ public class TestPostPersist extends TestBase {
     }
 
     @Test
-    public void testCallback() throws Exception {
+    public void testCallback() {
         final ProblematicPostPersistEntity p = new ProblematicPostPersistEntity();
         getDs().save(p);
         Assert.assertTrue(p.called);
@@ -61,14 +61,15 @@ public class TestPostPersist extends TestBase {
 
     @Entity
     public static class TestObject {
-
         @Id
         private ObjectId id;
-        private final String value;
+        private String value;
         private String one;
 
-        public TestObject(final String value) {
+        private TestObject() {
+        }
 
+        public TestObject(final String value) {
             this.value = value;
         }
 

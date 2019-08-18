@@ -30,7 +30,7 @@ import dev.morphia.query.FindOptions;
 public class TestNotSaved extends TestBase {
 
     @Test
-    public void testBasic() throws Exception {
+    public void testBasic() {
         getDs().save(new Normal("value"));
         Normal n = getDs().find(Normal.class)
                           .execute(new FindOptions().limit(1))

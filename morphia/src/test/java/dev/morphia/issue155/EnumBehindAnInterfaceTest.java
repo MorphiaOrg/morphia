@@ -15,7 +15,7 @@ import dev.morphia.testutil.TestEntity;
 public class EnumBehindAnInterfaceTest extends TestBase {
     @Test
     @Ignore("does not work since the EnumConverter stores as a single string value -- no type info")
-    public void testEnumBehindAnInterfacePersistence() throws Exception {
+    public void testEnumBehindAnInterfacePersistence() {
         getMapper().map(ContainerEntity.class);
         ContainerEntity n = new ContainerEntity();
         getDs().save(n);

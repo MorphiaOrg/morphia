@@ -39,7 +39,7 @@ public class TestDatatypes extends TestBase {
     }
 
     @Test
-    public void testByte() throws Exception {
+    public void testByte() {
         final ContainsByte cb = new ContainsByte();
         getDs().save(cb);
         final ContainsByte loaded = getDs().get(cb);
@@ -50,7 +50,7 @@ public class TestDatatypes extends TestBase {
     }
 
     @Test
-    public void testFloat() throws Exception {
+    public void testFloat() {
         final ContainsFloat cf = new ContainsFloat();
         getDs().save(cf);
         final ContainsFloat loaded = getDs().get(cf);
@@ -61,7 +61,7 @@ public class TestDatatypes extends TestBase {
     }
 
     @Test
-    public void testShort() throws Exception {
+    public void testShort() {
         final ContainsShort cs = new ContainsShort();
         getDs().save(cs);
         final ContainsShort loaded = getDs().get(cs);

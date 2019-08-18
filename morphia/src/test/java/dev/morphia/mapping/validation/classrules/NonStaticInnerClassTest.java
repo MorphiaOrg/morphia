@@ -16,12 +16,12 @@ import dev.morphia.mapping.MappingException;
 public class NonStaticInnerClassTest extends TestBase {
 
     @Test(expected = MappingException.class)
-    public void testInValidInnerClass() throws Exception {
+    public void testInValidInnerClass() {
         getMapper().map(InValid.class);
     }
 
     @Test
-    public void testValidInnerClass() throws Exception {
+    public void testValidInnerClass() {
         getMapper().map(Valid.class);
     }
 

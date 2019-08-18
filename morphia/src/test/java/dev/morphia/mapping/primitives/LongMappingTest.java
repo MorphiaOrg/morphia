@@ -16,7 +16,7 @@ import java.util.List;
 
 public class LongMappingTest extends TestBase {
     @Test
-    public void testMapping() throws Exception {
+    public void testMapping() {
         getMapper().map(Longs.class);
         final Longs ent = new Longs();
         ent.listWrapperArray.add(new Long[]{1L, 2L});

@@ -17,7 +17,7 @@ public class NameValuePairTest extends TestBase {
 
     @Test
     @Ignore("add back when TypeLiteral support is in; issue 175")
-    public void testNameValuePairWithDoubleIn() throws Exception {
+    public void testNameValuePairWithDoubleIn() {
         getMapper().map(NameValuePairContainer.class);
         final NameValuePairContainer container = new NameValuePairContainer();
         container.pair = new NameValuePair<SimpleEnum, Double>(SimpleEnum.FOO, 1.2d);

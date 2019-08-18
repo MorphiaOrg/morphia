@@ -15,7 +15,7 @@ import dev.morphia.annotations.Id;
  */
 public class ByteArrayMappingTest extends TestBase {
     @Test
-    public void testCharMapping() throws Exception {
+    public void testCharMapping() {
         getMapper().map(ContainsByteArray.class);
         final ContainsByteArray entity = new ContainsByteArray();
         final Byte[] test = new Byte[]{6, 9, 1, -122};

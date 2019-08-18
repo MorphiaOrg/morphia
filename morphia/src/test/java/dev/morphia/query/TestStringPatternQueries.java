@@ -12,7 +12,7 @@ import static java.util.Arrays.asList;
 
 public class TestStringPatternQueries extends TestBase {
     @Test
-    public void testContains() throws Exception {
+    public void testContains() {
 
         getDs().save(asList(new E("xBA"), new E("xa"), new E("xAb"), new E("xab"), new E("xcB"), new E("aba")));
 
@@ -21,7 +21,7 @@ public class TestStringPatternQueries extends TestBase {
     }
 
     @Test
-    public void testEndsWith() throws Exception {
+    public void testEndsWith() {
 
         getDs().save(asList(new E("bxA"), new E("xba"), new E("xAb"), new E("xab"), new E("xcB"), new E("aba")));
 
@@ -30,7 +30,7 @@ public class TestStringPatternQueries extends TestBase {
     }
 
     @Test
-    public void testStartsWith() throws Exception {
+    public void testStartsWith() {
 
         getDs().save(asList(new E("A"), new E("a"), new E("Ab"), new E("ab"), new E("c")));
 

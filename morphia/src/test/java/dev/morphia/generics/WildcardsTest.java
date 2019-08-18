@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
 public class WildcardsTest extends TestBase {
 
     @Test
-    public void example() throws Exception {
+    public void example() {
         ChildEntity entity = new ChildEntity();
         entity.setEmbeddedList(asList(new Child("first"), new Child("second"), new Another("third")));
         getDs().save(entity);

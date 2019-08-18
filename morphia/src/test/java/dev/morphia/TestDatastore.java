@@ -69,7 +69,7 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void shouldSaveGenericTypeVariables() throws Exception {
+    public void shouldSaveGenericTypeVariables() {
         // given
         ChildEntity child = new ChildEntity();
         child.setEmbeddedList(singletonList(new Child()));
