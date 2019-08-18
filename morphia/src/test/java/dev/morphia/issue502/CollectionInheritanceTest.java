@@ -47,8 +47,12 @@ public class CollectionInheritanceTest extends TestBase {
         assertEquals(1, getDs().getCollection(Book.class).count());
     }
 
+    @Embedded
     private static class Author {
         private String name;
+
+        private Author() {
+        }
 
         Author(final String name) {
             this.name = name;
