@@ -25,10 +25,12 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Version;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.validation.MappingValidator;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
+import org.bson.codecs.pojo.InstanceCreatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -402,8 +404,9 @@ public class MappedClass {
      */
     @SuppressWarnings("deprecation")
     public void validate(final Mapper mapper) {
-        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(mapper.getDatastore(), getType());
-        new MappingValidator(creatorFactory.create()).validate(mapper, this);
+        MorphiaInstanceCreator factory = (MorphiaInstanceCreator) morphiaModel.getInstanceCreatorFactory()
+                                                                              .create();
+        new MappingValidator(factory).validate(mapper, this);
     }
 
     /**

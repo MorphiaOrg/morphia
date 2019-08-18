@@ -68,6 +68,7 @@ public class MorphiaConvention implements Convention {
         }
 
         final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(datastore, classModelBuilder.getType());
+        classModelBuilder.instanceCreatorFactory(creatorFactory);
         if (classModelBuilder instanceof MorphiaModelBuilder) {
             Iterator<FieldModelBuilder<?>> iterator = ((MorphiaModelBuilder) classModelBuilder).getFieldModelBuilders().iterator();
             while (iterator.hasNext()) {
@@ -111,7 +112,6 @@ public class MorphiaConvention implements Convention {
             }
         }
 
-        classModelBuilder.instanceCreatorFactory(creatorFactory);
     }
 
     private boolean hasHandler(final PropertyModelBuilder builder) {
