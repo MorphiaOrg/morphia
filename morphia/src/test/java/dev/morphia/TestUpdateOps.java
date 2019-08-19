@@ -18,29 +18,19 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.Update;
 import dev.morphia.query.Sort;
 import dev.morphia.query.TestQuery.ContainsPic;
 import dev.morphia.query.TestQuery.Pic;
-import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateOpsImpl;
+import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentReader;
-import org.bson.BsonDocumentWrapper;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -112,20 +102,23 @@ public class TestUpdateOps extends TestBase {
     public void testDisableValidation() {
         Child child1 = new Child("James", "Rigney");
 
-        validateClassName("children", getDs().createUpdateOperations(Parent.class)
+        validateClassName("children", getDs().find(Parent.class)
+                                             .update()
                                              .removeAll("children", child1), false);
 
-        validateClassName("children", getDs().createUpdateOperations(Parent.class)
+        validateClassName("children", getDs().find(Parent.class)
+                                             .update()
                                              .disableValidation()
                                              .removeAll("children", child1), false);
 
-        validateClassName("c", getDs().createUpdateOperations(Parent.class)
+        validateClassName("c", getDs().find(Parent.class)
+                                      .update()
                                       .disableValidation()
                                       .removeAll("c", child1), true);
     }
 
-    private void validateClassName(final String path, final UpdateOperations<Parent> ops, final boolean expected) {
-        Document ops1 = ((UpdateOpsImpl) ops).getOps();
+    private void validateClassName(final String path, final Update<Parent> ops, final boolean expected) {
+        Document ops1 = ops.getOps();
         Map pull = (Map) ops1.get("$pull");
         Map children = (Map) pull.get(path);
         assertEquals(expected, children.containsKey("className"));
@@ -160,7 +153,9 @@ public class TestUpdateOps extends TestBase {
 
         //cleanup for next tests
         ds.delete(ds.find(ContainsIntArray.class));
-        cIntArray = ds.getByKey(ContainsIntArray.class, ds.save(new ContainsIntArray()));
+        cIntArray = ds.find(ContainsIntArray.class)
+                      .filter("_id", ds.save(new ContainsIntArray()).id)
+                      .first();
 
         //add [4,5]
         final List<Integer> newValues = new ArrayList<>();
@@ -407,7 +402,7 @@ public class TestUpdateOps extends TestBase {
     public void testInsertWithRef() {
         final Pic pic = new Pic();
         pic.setName("fist");
-        final Key<Pic> picKey = getDs().save(pic);
+        final ObjectId picKey = getDs().save(pic).getId();
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class).filter("name", "first").filter("pic", picKey);
         assertInserted(query.update()
@@ -614,7 +609,7 @@ public class TestUpdateOps extends TestBase {
     @Test
     public void testElemMatchUpdate() {
         // setUp
-        Object id = getDs().save(new ContainsIntArray()).getId();
+        Object id = getDs().save(new ContainsIntArray()).id;
         assertThat(getDs().find(ContainsIntArray.class).filter("_id", id).first().values, arrayContaining(1, 2, 3));
 
         // do patch
@@ -680,17 +675,19 @@ public class TestUpdateOps extends TestBase {
     @Test
     public void testSetUnset() {
         Datastore ds = getDs();
-        final Key<Circle> key = ds.save(new Circle(1));
+        final ObjectId key = ds.save(new Circle(1)).getId();
 
         Query<Circle> circle = ds.find(Circle.class).filter("radius", 1D);
         assertUpdated(circle.update().set("radius", 2D).execute(), 1);
 
-        assertThat(ds.getByKey(Circle.class, key).getRadius(), is(2D));
+        Query<Circle> idQuery = ds.find(Circle.class)
+                             .filter("_id", key);
+        assertThat(idQuery.first().getRadius(), is(2D));
 
         circle = ds.find(Circle.class).filter("radius", 2D);
         assertUpdated(circle.update().unset("radius").execute(new UpdateOptions().multi(false)), 1);
 
-        assertThat(ds.getByKey(Circle.class, key).getRadius(), is(0D));
+        assertThat(idQuery.first().getRadius(), is(0D));
 
         Article article = new Article();
 
@@ -738,11 +735,8 @@ public class TestUpdateOps extends TestBase {
 
         final Pic pic = new Pic();
         pic.setName("fist again");
-        final Key<Pic> picKey = ds.save(pic);
-        // picKey = getDs().getKey(pic);
-
-
-        //test with Key<Pic>
+        ds.save(pic);
+        final Key<Pic> picKey = getMapper().getKey(pic);
 
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class).filter("name", cpk.name);
         assertThat(query.update().set("pic", pic).execute().getModifiedCount(), is(1));
@@ -778,7 +772,8 @@ public class TestUpdateOps extends TestBase {
 
         final Pic pic = new Pic();
         pic.setName("fist again");
-        final Key<Pic> picKey = ds.save(pic);
+        ds.save(pic);
+        final Key<Pic> picKey = getMapper().getKey(pic);
 
         cpk.keys = singletonList(picKey);
 
@@ -807,7 +802,8 @@ public class TestUpdateOps extends TestBase {
 
         final Pic pic = new Pic();
         pic.setName("fist");
-        final Key<Pic> picKey = getDs().save(pic);
+        getDs().save(pic);
+        final Key<Pic> picKey = getMapper().getKey(pic);
 
 
         //test with Key<Pic>

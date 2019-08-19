@@ -82,12 +82,12 @@ public class ReferenceTest extends ProxyTestBase {
         final Container c = new Container(refs);
 
         // test that we can save it
-        final Key<Container> key = getDs().save(c);
+        final ObjectId key = getDs().save(c).getId();
         getDs().save(refs);
 
         // ensure that we're not using DBRef
         final MongoCollection<Document> collection = getDatabase().getCollection(Container.class.getSimpleName());
-        final Document persisted = collection.find(new Document("_id", key.getId())).first();
+        final Document persisted = collection.find(new Document("_id", key)).first();
         assertNotNull(persisted);
         assertEquals("foo", persisted.get("singleRef"));
         assertEquals("foo", persisted.get("lazySingleRef"));
@@ -107,7 +107,9 @@ public class ReferenceTest extends ProxyTestBase {
         assertEquals(expectedMap, persisted.get("lazyMapRef"));
 
         // ensure that we can retrieve it
-        final Container retrieved = getDs().getByKey(Container.class, key);
+        final Container retrieved = getDs().find(Container.class)
+                                           .filter("_id", key)
+                                           .first();
 
         assertEquals(refs.get(0), retrieved.getSingleRef());
         if (testDependencyFullFilled()) {

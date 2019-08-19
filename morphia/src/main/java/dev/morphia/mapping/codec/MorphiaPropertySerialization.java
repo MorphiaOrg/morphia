@@ -1,6 +1,5 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.annotations.NotSaved;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import org.bson.codecs.pojo.PropertySerialization;
@@ -35,9 +34,6 @@ public class MorphiaPropertySerialization implements PropertySerialization {
                 || value instanceof Collection && ((Collection)value).isEmpty()) {
                 return false;
             }
-        }
-        if (hasAnnotation(NotSaved.class)) {
-            return false;
         }
 
         return true;

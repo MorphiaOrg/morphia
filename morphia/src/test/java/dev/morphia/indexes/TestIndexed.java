@@ -13,9 +13,7 @@
 
 package dev.morphia.indexes;
 
-import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoWriteException;
-import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Embedded;
@@ -26,13 +24,11 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.annotations.NotSaved;
 import dev.morphia.annotations.Property;
 import dev.morphia.entities.IndexOnValue;
 import dev.morphia.entities.NamedIndexOnValue;
 import dev.morphia.entities.UniqueIndexOnValue;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
@@ -42,12 +38,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Set;
 
 import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
 import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -59,22 +53,6 @@ public class TestIndexed extends TestBase {
     public void setUp() {
         super.setUp();
         getMapper().map(UniqueIndexOnValue.class, IndexOnValue.class, NamedIndexOnValue.class);
-    }
-
-    @Test
-    public void shouldNotCreateAnIndexWhenAnIndexedEntityIsMarkedAsNotSaved() {
-        // given
-        getMapper().map(IndexOnValue.class, NoIndexes.class);
-        Datastore ds = getDs();
-
-        // when
-        ds.ensureIndexes();
-        ds.save(new IndexOnValue());
-        ds.save(new NoIndexes());
-
-        // then
-        List<Document> indexes = getIndexInfo(NoIndexes.class);
-        assertEquals(1, indexes.size());
     }
 
     @Test
@@ -270,12 +248,4 @@ public class TestIndexed extends TestBase {
         private CircularEmbeddedEntity a;
     }
 
-    @Entity
-    private static class NoIndexes {
-        @Id
-        private ObjectId id;
-
-        @NotSaved
-        private IndexOnValue indexedClass;
-    }
 }

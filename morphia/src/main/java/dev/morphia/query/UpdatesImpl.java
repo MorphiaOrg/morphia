@@ -15,8 +15,13 @@ import static dev.morphia.UpdateDocument.Mode.BODY_ONLY;
 import static dev.morphia.utils.ReflectionUtils.iterToList;
 import static java.util.Collections.singletonList;
 
+/**
+ * @morphia.internal
+ * @param <T>
+ * @param <Updater>
+ */
 @SuppressWarnings("unchecked")
-abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Updater>  {
+public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Updater>  {
 
     protected Datastore datastore;
     protected final Mapper mapper;
@@ -214,7 +219,7 @@ abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Update
     /**
      * @return the operations listed
      */
-    protected Document getOps() {
+    public Document getOps() {
         return new Document(ops);
     }
 

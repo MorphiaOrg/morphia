@@ -14,6 +14,10 @@ public abstract class FatherEntity<T extends EmbeddedType> {
     public FatherEntity() {
     }
 
+    public ObjectId getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

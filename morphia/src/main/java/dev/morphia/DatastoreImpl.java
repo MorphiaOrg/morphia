@@ -13,7 +13,6 @@ import dev.morphia.UpdateDocument.Mode;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
-import dev.morphia.annotations.NotSaved;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
@@ -304,51 +303,50 @@ class DatastoreImpl implements AdvancedDatastore {
         final MappedClass mc = mapper.getMappedClass(unwrapped.getClass());
         final MongoCollection collection = mapper.getCollection(unwrapped.getClass());
 
-        Key<T> key = tryVersionedUpdate(collection, unwrapped, new InsertOneOptions().writeConcern(wc), mc);
-
-        if (key == null) {
+        if (!tryVersionedUpdate(collection, unwrapped, new InsertOneOptions().writeConcern(wc), mc)) {
             final Query<T> query = (Query<T>) find(unwrapped.getClass()).filter("_id", id);
-            UpdateResult execute = query.update(toDocument(entity))
+            UpdateResult execute = query.update()
+                                        .set(entity)
                                         .execute(new UpdateOptions().writeConcern(wc));
             if(execute.getModifiedCount() == 1) {
-                key = mapper.getKey(entity);
+                throw new UpdateException("Nothing updated");
             }
-        }
-
-        if (key == null) {
-            throw new UpdateException("Nothing updated");
         }
     }
 
     @Override
-    public <T> void save(final List<T> entities) {
+    public <T> List<T> save(final List<T> entities) {
         save(entities, new InsertManyOptions());
+        return entities;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> void save(final List<T> entities, final InsertManyOptions options) {
+    public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
         if(entities.isEmpty()) {
-            return;
+            return List.of();
         }
 
         MongoCollection<T> collection = (MongoCollection<T>) getCollection(entities.get(0).getClass());
         collection.insertMany(entities, options.getOptions());
+        return entities;
     }
 
     @Override
-    public <T> void save(final T entity) {
+    public <T> T save(final T entity) {
         save(entity, new InsertOneOptions());
+        return entity;
     }
 
     @Override
-    public <T> void save(final T entity, final InsertOneOptions options) {
+    public <T> T save(final T entity, final InsertOneOptions options) {
         if (entity == null) {
             throw new UpdateException("Can not persist a null entity");
         }
 
         final T unwrapped = ProxyHelper.unwrap(entity);
         save(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
+        return entity;
     }
 
     @Override
@@ -446,41 +444,25 @@ class DatastoreImpl implements AdvancedDatastore {
             .insertOne(singletonList(entityToDocument(entity)), options.getOptions());
     }
 
-    protected <T> Key<T> save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
-        final MappedClass mc = validateSave(entity);
-
-        Key<T> key;
-        if (getMapper().getMappedClass(entity.getClass()).getVersionField() != null) {
-            key = tryVersionedUpdate(collection, entity, options, mc);
-        } else {
-            key = saveDocument(entity, collection, options);
-        }
-
-        return key;
-    }
-
-    @Deprecated
-    private <T> MappedClass validateSave(final T entity) {
+    private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
         if (entity == null) {
             throw new UpdateException("Can not persist a null entity");
         }
 
         final MappedClass mc = mapper.getMappedClass(entity.getClass());
-        if (mc.getAnnotation(NotSaved.class) != null) {
-            throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
-                mc.getType().getName()));
+
+        if (!tryVersionedUpdate(collection, entity, options, mc)) {
+            saveDocument(entity, collection, options);
         }
-        return mc;
     }
 
-    private <T> Key<T> saveDocument(final T entity,
+    private <T> void saveDocument(final T entity,
                                     final MongoCollection<T> collection,
                                     final InsertOneOptions options) {
         Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
         if (id == null) {
             options.apply(collection)
                    .insertOne(entity, options.getOptions());
-            return mapper.getKey(entity);
         } else {
             UpdateOptions updateOptions = new UpdateOptions()
                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
@@ -488,8 +470,6 @@ class DatastoreImpl implements AdvancedDatastore {
                                               .upsert(true);
             updateOptions.apply(collection)
                          .updateOne(new Document("_id", id), new UpdateDocument(entity, Mode.DEFAULT), updateOptions);
-
-            return mapper.getKey(entity);
         }
     }
 
@@ -497,13 +477,12 @@ class DatastoreImpl implements AdvancedDatastore {
         field.setFieldValue(entity, newVersion);
     }
 
-    private <T> Key<T> tryVersionedUpdate(final MongoCollection collection, final T entity,
-                                          final InsertOneOptions options, final MappedClass mc) {
+    private <T> boolean tryVersionedUpdate(final MongoCollection collection, final T entity,
+                                           final InsertOneOptions options, final MappedClass mc) {
         if (mc.getVersionField() == null) {
-            return null;
+            return false;
         }
 
-        Key<T> key = null;
         MappedField idField = mc.getIdField();
         final Object idValue = idField.getFieldValue(entity);
         final MappedField versionField = mc.getVersionField();
@@ -516,7 +495,6 @@ class DatastoreImpl implements AdvancedDatastore {
                 updateVersion(entity, versionField, newVersion);
                 options.apply(collection)
                        .insertOne(entity, options.getOptions());
-                key = mapper.getKey(entity);
             } catch (MongoWriteException e) {
                 try {
                     updateVersion(entity, versionField, oldVersion);
@@ -547,7 +525,7 @@ class DatastoreImpl implements AdvancedDatastore {
             updateVersion(entity, versionField, newVersion);
         }
 
-        return key;
+        return true;
     }
 
     private Document entityToDocument(final Object entity) {
@@ -579,10 +557,6 @@ class DatastoreImpl implements AdvancedDatastore {
 
     private <T> Document toDocument(final T ent) {
         final MappedClass mc = mapper.getMappedClass(ent.getClass());
-        if (mc.getAnnotation(NotSaved.class) != null) {
-            throw new MappingException(format("Entity type: %s is marked as NotSaved which means you should not try to save it!",
-                mc.getType().getName()));
-        }
         Document document = entityToDocument(ent);
         List<MappedField> versionFields = mc.getFields(Version.class);
         for (MappedField mappedField : versionFields) {

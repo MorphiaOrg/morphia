@@ -73,7 +73,9 @@ public class TestMapping extends TestBase {
         final ContainsIntegerList cil = new ContainsIntegerList();
         cil.intList.add(1);
         getDs().save(cil);
-        final ContainsIntegerList cilLoaded = getDs().get(cil);
+        final ContainsIntegerList cilLoaded = getDs().find(ContainsIntegerList.class)
+                                                     .filter("_id", cil.id)
+                                                     .first();
         assertNotNull(cilLoaded);
         assertNotNull(cilLoaded.intList);
         assertEquals(cilLoaded.intList.size(), cil.intList.size());
@@ -159,8 +161,10 @@ public class TestMapping extends TestBase {
     @Test
     public void testByteArrayMapping() {
         getMapper().map(ContainsByteArray.class);
-        final Key<ContainsByteArray> savedKey = getDs().save(new ContainsByteArray());
-        final ContainsByteArray loaded = getDs().find(ContainsByteArray.class).filter("_id", savedKey.getId()).first();
+        final ObjectId savedKey = getDs().save(new ContainsByteArray()).id;
+        final ContainsByteArray loaded = getDs().find(ContainsByteArray.class)
+                                                .filter("_id", savedKey)
+                                                .first();
         assertEquals(new String((new ContainsByteArray()).bytes), new String(loaded.bytes));
         assertNotNull(loaded.id);
     }
@@ -168,8 +172,10 @@ public class TestMapping extends TestBase {
     @Test
     public void testCollectionMapping() {
         getMapper().map(ContainsCollection.class);
-        final Key<ContainsCollection> savedKey = getDs().save(new ContainsCollection());
-        final ContainsCollection loaded = getDs().find(ContainsCollection.class).filter("_id", savedKey.getId()).first();
+        final ObjectId savedKey = getDs().save(new ContainsCollection()).id;
+        final ContainsCollection loaded = getDs().find(ContainsCollection.class)
+                                                 .filter("_id", savedKey)
+                                                 .first();
         assertEquals(loaded.coll, (new ContainsCollection()).coll);
         assertNotNull(loaded.id);
     }
@@ -251,9 +257,9 @@ public class TestMapping extends TestBase {
         map.embeddedValues.put(Enum1.A, "I'm a");
         map.embeddedValues.put(Enum1.B, "I'm b");
 
-        final Key<?> mapKey = getDs().save(map);
+        getDs().save(map);
 
-        final ContainsEnum1KeyMap mapLoaded = getDs().find(ContainsEnum1KeyMap.class).filter("_id", mapKey.getId()).first();
+        final ContainsEnum1KeyMap mapLoaded = getDs().find(ContainsEnum1KeyMap.class).filter("_id", map.id).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -267,8 +273,10 @@ public class TestMapping extends TestBase {
     @Test
     public void testFinalField() {
         getMapper().map(ContainsFinalField.class);
-        final Key<ContainsFinalField> savedKey = getDs().save(new ContainsFinalField("blah"));
-        final ContainsFinalField loaded = getDs().find(ContainsFinalField.class).filter("_id", savedKey.getId()).first();
+        final ObjectId savedKey = getDs().save(new ContainsFinalField("blah")).id;
+        final ContainsFinalField loaded = getDs().find(ContainsFinalField.class)
+                                                 .filter("_id", savedKey)
+                                                 .first();
         assertNotNull(loaded);
         assertNotNull(loaded.name);
         assertEquals("blah", loaded.name);
@@ -282,8 +290,10 @@ public class TestMapping extends TestBase {
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
 
         getMapper().map(ContainsFinalField.class);
-        final Key<ContainsFinalField> savedKey = datastore.save(new ContainsFinalField("blah"));
-        final ContainsFinalField loaded = datastore.find(ContainsFinalField.class).filter("_id", savedKey.getId()).first();
+        final ObjectId savedKey = datastore.save(new ContainsFinalField("blah")).id;
+        final ContainsFinalField loaded = datastore.find(ContainsFinalField.class)
+                                                   .filter("_id", savedKey)
+                                                   .first();
         assertNotNull(loaded);
         assertNotNull(loaded.name);
         assertEquals("foo", loaded.name);
@@ -292,8 +302,10 @@ public class TestMapping extends TestBase {
     @Test
     public void testFinalIdField() {
         getMapper().map(HasFinalFieldId.class);
-        final Key<HasFinalFieldId> savedKey = getDs().save(new HasFinalFieldId(12));
-        final HasFinalFieldId loaded = getDs().find(HasFinalFieldId.class).filter("_id", savedKey.getId()).first();
+        final long savedKey = getDs().save(new HasFinalFieldId(12)).id;
+        final HasFinalFieldId loaded = getDs().find(HasFinalFieldId.class)
+                                              .filter("_id", savedKey)
+                                              .first();
         assertNotNull(loaded);
         assertNotNull(loaded.id);
         assertEquals(12, loaded.id);
@@ -307,9 +319,9 @@ public class TestMapping extends TestBase {
         map.values.put(1, "I'm 1");
         map.values.put(2, "I'm 2");
 
-        final Key<ContainsXKeyMap<Integer>> mapKey = getDs().save(map);
+        getDs().save(map);
 
-        final ContainsXKeyMap<Integer> mapLoaded = getDs().find(ContainsXKeyMap.class).filter("_id", mapKey.getId()).first();
+        final ContainsXKeyMap<Integer> mapLoaded = getDs().find(ContainsXKeyMap.class).filter("_id", map.id).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -328,10 +340,10 @@ public class TestMapping extends TestBase {
         map.values.put(1, Collections.singleton("I'm 1"));
         map.values.put(2, Collections.singleton("I'm 2"));
 
-        final Key<?> mapKey = getDs().save(map);
+        getDs().save(map);
 
         final ContainsIntKeySetStringMap mapLoaded = getDs().find(ContainsIntKeySetStringMap.class)
-                                                            .filter("_id", mapKey.getId())
+                                                            .filter("_id", map.id)
                                                             .first();
 
         assertNotNull(mapLoaded);
@@ -352,9 +364,9 @@ public class TestMapping extends TestBase {
         map.values.put(1, "I'm 1");
         map.values.put(2, "I'm 2");
 
-        final Key<?> mapKey = getDs().save(map);
+        getDs().save(map);
 
-        final ContainsIntKeyMap mapLoaded = getDs().find(ContainsIntKeyMap.class).filter("_id", mapKey.getId()).first();
+        final ContainsIntKeyMap mapLoaded = getDs().find(ContainsIntKeyMap.class).filter("_id", map.id).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -408,8 +420,8 @@ public class TestMapping extends TestBase {
         final ContainsLongAndStringArray array = new ContainsLongAndStringArray();
         array.strings = new String[]{"a", "B", "c"};
         array.longs = new Long[]{4L, 5L, 4L};
-        final Key<ContainsLongAndStringArray> k1 = getDs().save(array);
-        loaded = getDs().getByKey(ContainsLongAndStringArray.class, k1);
+        getDs().save(array);
+        loaded = getDs().getByKey(ContainsLongAndStringArray.class, getMapper().getKey(array));
         assertArrayEquals(loaded.longs, array.longs);
         assertArrayEquals(loaded.strings, array.strings);
 
@@ -498,9 +510,9 @@ public class TestMapping extends TestBase {
         map.values.put(o1, "I'm 1s");
         map.values.put(o2, "I'm 2s");
 
-        final Key<?> mapKey = getDs().save(map);
+        getDs().save(map);
 
-        final ContainsObjectIdKeyMap mapLoaded = getDs().find(ContainsObjectIdKeyMap.class).filter("_id", mapKey.getId()).first();
+        final ContainsObjectIdKeyMap mapLoaded = getDs().find(ContainsObjectIdKeyMap.class).filter("_id", map.id).first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
@@ -520,10 +532,10 @@ public class TestMapping extends TestBase {
         primMap.embeddedValues.put("second", 2L);
         primMap.values.put("first", 1L);
         primMap.values.put("second", 2L);
-        final Key<ContainsPrimitiveMap> primMapKey = getDs().save(primMap);
+        getDs().save(primMap);
 
         final ContainsPrimitiveMap primMapLoaded = getDs().find(ContainsPrimitiveMap.class)
-                                                          .filter("_id", primMapKey.getId())
+                                                          .filter("_id", primMap.id)
                                                           .first();
 
         assertNotNull(primMapLoaded);
@@ -538,10 +550,10 @@ public class TestMapping extends TestBase {
         primMap.embeddedValues.put("second", 2L);
         primMap.values.put("first", null);
         primMap.values.put("second", 2L);
-        final Key<ContainsPrimitiveMap> primMapKey = getDs().save(primMap);
+        getDs().save(primMap);
 
         final ContainsPrimitiveMap primMapLoaded = getDs().find(ContainsPrimitiveMap.class)
-                                                          .filter("_id", primMapKey.getId())
+                                                          .filter("_id", primMap.id)
                                                           .first();
 
         assertNotNull(primMapLoaded);
@@ -598,8 +610,10 @@ public class TestMapping extends TestBase {
     public void testTimestampMapping() {
         getMapper().map(ContainsTimestamp.class);
         final ContainsTimestamp cts = new ContainsTimestamp();
-        final Key<ContainsTimestamp> savedKey = getDs().save(cts);
-        final ContainsTimestamp loaded = getDs().find(ContainsTimestamp.class).filter("_id", savedKey.getId()).first();
+        getDs().save(cts);
+        final ContainsTimestamp loaded = getDs().find(ContainsTimestamp.class)
+                                                .filter("_id", cts.id)
+                                                .first();
         assertNotNull(loaded.ts);
         assertEquals(loaded.ts.getTime(), cts.ts.getTime());
 
@@ -622,7 +636,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testUuidId() {
-        getMapper().map(ContainsUuidId.class);
+        getMapper().map(List.of(ContainsUuidId.class));
         final ContainsUuidId uuidId = new ContainsUuidId();
         final UUID before = uuidId.id;
         getDs().save(uuidId);
@@ -638,8 +652,7 @@ public class TestMapping extends TestBase {
         final MongoCollection<Document> agencies = getDatabase().getCollection("agencies");
 
         Mapper mapper = getDs().getMapper();
-        mapper.map(Hotel.class);
-        mapper.map(TravelAgency.class);
+        mapper.map(List.of(Hotel.class, TravelAgency.class));
 
         final Hotel borg = new Hotel();
         borg.setName("Hotel Borg");

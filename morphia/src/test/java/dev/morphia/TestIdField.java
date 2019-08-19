@@ -72,10 +72,10 @@ public class TestIdField extends TestBase {
         final Rectangle r = new Rectangle(1, 1);
         //        Rectangle r2 = new Rectangle(11,11);
 
-        final Key<Rectangle> rKey = getDs().save(r);
+        final Key<Rectangle> rKey = getMapper().getKey(getDs().save(r));
         //        Key<Rectangle> r2Key = ds.save(r2);
         final KeyAsId kai = new KeyAsId(rKey);
-        final Key<KeyAsId> kaiKey = getDs().save(kai);
+        final Key<KeyAsId> kaiKey = getMapper().getKey(getDs().save(kai));
         final KeyAsId kaiLoaded = getDs().find(KeyAsId.class).filter("_id", rKey).first();
         assertNotNull(kaiLoaded);
         assertNotNull(kaiKey);
@@ -87,7 +87,7 @@ public class TestIdField extends TestBase {
 
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");
-        final Key<MapAsId> maiKey = getDs().save(mai);
+        final Key<MapAsId> maiKey = getMapper().getKey(getDs().save(mai));
         final MapAsId maiLoaded = getDs().find(MapAsId.class).filter("_id", new Document("test", "string")).first();
         assertNotNull(maiLoaded);
         assertNotNull(maiKey);

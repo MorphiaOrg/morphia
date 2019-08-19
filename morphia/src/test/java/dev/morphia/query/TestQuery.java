@@ -12,7 +12,7 @@ import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.TestDatastore.FacebookUser;
 import dev.morphia.TestDatastore.FacebookUserWithNoClassNameStored;
-import dev.morphia.TestDatastore.KeysKeysKeys;
+import dev.morphia.TestDatastore.Keys;
 import dev.morphia.TestMapper.CustomId;
 import dev.morphia.TestMapper.UsesCustomIdObject;
 import dev.morphia.annotations.CappedAt;
@@ -28,7 +28,6 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
-import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
@@ -44,12 +43,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Collation.builder;
 import static dev.morphia.query.Sort.ascending;
@@ -117,6 +116,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @Ignore("references need work")
     public void referenceKeys() {
         final ReferenceKey key1 = new ReferenceKey("key1");
 
@@ -125,9 +125,9 @@ public class TestQuery extends TestBase {
         final ReferenceKeyValue value = new ReferenceKeyValue();
         value.id = key1;
 
-        final Key<ReferenceKeyValue> key = getDs().save(value);
+        final ReferenceKeyValue key = getDs().save(value);
 
-        final ReferenceKeyValue byKey = getDs().getByKey(ReferenceKeyValue.class, key);
+        final ReferenceKeyValue byKey = getDs().getByKey(ReferenceKeyValue.class, getMapper().getKey(key));
         assertEquals(value.id, byKey.id);
     }
 
@@ -514,11 +514,11 @@ public class TestQuery extends TestBase {
         final PhotoWithKeywords pwk3 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
         final PhotoWithKeywords pwk4 = new PhotoWithKeywords(new Keyword("Scott", 14));
 
-        Iterator<Key<PhotoWithKeywords>> iterator = getDs().save(asList(pwk1, pwk2, pwk3, pwk4)).iterator();
-        Key<PhotoWithKeywords> key1 = iterator.next();
-        Key<PhotoWithKeywords> key2 = iterator.next();
-        Key<PhotoWithKeywords> key3 = iterator.next();
-        Key<PhotoWithKeywords> key4 = iterator.next();
+        Iterator<PhotoWithKeywords> iterator = getDs().save(asList(pwk1, pwk2, pwk3, pwk4)).iterator();
+        Key<PhotoWithKeywords> key1 = getMapper().getKey(iterator.next());
+        Key<PhotoWithKeywords> key2 = getMapper().getKey(iterator.next());
+        Key<PhotoWithKeywords> key3 = getMapper().getKey(iterator.next());
+        Key<PhotoWithKeywords> key4 = getMapper().getKey(iterator.next());
 
         assertListEquals(asList(key3, key4), getDs().find(PhotoWithKeywords.class)
                                                     .field("keywords")
@@ -664,8 +664,10 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testGetByKeysHetero() {
-        final Iterable<Key<Object>> keys = getDs().save(asList(new FacebookUser(1, "scott"), new Rectangle(1, 1)));
-        final List<Object> entities = getDs().getByKeys(keys);
+        List<Object> entities = getDs().save(asList(new FacebookUser(1, "scott"), new Rectangle(1, 1)));
+        List<Key<Object>> keys = entities.stream().map(e -> getMapper().getKey(e)).collect(Collectors.toList());
+
+        entities = getDs().getByKeys(keys);
         assertNotNull(entities);
         assertEquals(2, entities.size());
         int userCount = 0;
@@ -720,20 +722,20 @@ public class TestQuery extends TestBase {
     @Test
     public void testKeyList() {
         final Rectangle rect = new Rectangle(1000, 1);
-        final Key<Rectangle> rectKey = getDs().save(rect);
 
-        assertEquals(rectKey.getId(), rect.getId());
+        Rectangle rectangle = getDs().save(rect);
+        assertEquals(rectangle.getId(), rect.getId());
 
         final FacebookUser fbUser1 = new FacebookUser(1, "scott");
         final FacebookUser fbUser2 = new FacebookUser(2, "tom");
         final FacebookUser fbUser3 = new FacebookUser(3, "oli");
         final FacebookUser fbUser4 = new FacebookUser(4, "frank");
-        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
+        final List<FacebookUser> users = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (final Key<FacebookUser> key : fbKeys) {
-            fbUserKeys.add(key);
+        for (final FacebookUser user : users) {
+            fbUserKeys.add(getMapper().getKey(user));
         }
 
         assertEquals(fbUser1.getId(), fbUserKeys.get(0).getId());
@@ -741,15 +743,15 @@ public class TestQuery extends TestBase {
         assertEquals(fbUser3.getId(), fbUserKeys.get(2).getId());
         assertEquals(fbUser4.getId(), fbUserKeys.get(3).getId());
 
-        final KeysKeysKeys k1 = new KeysKeysKeys(rectKey, fbUserKeys);
-        final Key<KeysKeysKeys> k1Key = getDs().save(k1);
-        assertEquals(k1.getId(), k1Key.getId());
+        final Keys k1 = new Keys(getMapper().getKey(rectangle), fbUserKeys);
+        final Keys keys = getDs().save(k1);
+        assertEquals(k1.getId(), keys.getId());
 
         final Datastore datastore = getDs();
 
-        final KeysKeysKeys k1Loaded = datastore.find(KeysKeysKeys.class)
-                                               .filter("_id", k1.getId())
-                                               .first();
+        final Keys k1Loaded = datastore.find(Keys.class)
+                                       .filter("_id", k1.getId())
+                                       .first();
         for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
             assertNotNull(key.getId());
         }
@@ -763,12 +765,12 @@ public class TestQuery extends TestBase {
         final FacebookUser fbUser2 = new FacebookUser(2, "tom");
         final FacebookUser fbUser3 = new FacebookUser(3, "oli");
         final FacebookUser fbUser4 = new FacebookUser(4, "frank");
-        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
+        final List<FacebookUser> users = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (final Key<FacebookUser> key : fbKeys) {
-            fbUserKeys.add(key);
+        for (final FacebookUser user : users) {
+            fbUserKeys.add(getMapper().getKey(user));
         }
 
         assertEquals(fbUser1.getId(), fbUserKeys.get(0).getId());
@@ -776,12 +778,12 @@ public class TestQuery extends TestBase {
         assertEquals(fbUser3.getId(), fbUserKeys.get(2).getId());
         assertEquals(fbUser4.getId(), fbUserKeys.get(3).getId());
 
-        final KeysKeysKeys k1 = new KeysKeysKeys(null, fbUserKeys);
-        final Key<KeysKeysKeys> k1Key = getDs().save(k1);
-        assertEquals(k1.getId(), k1Key.getId());
+        final Keys k1 = new Keys(null, fbUserKeys);
+        final Keys keys = getDs().save(k1);
+        assertEquals(k1.getId(), keys.getId());
 
-        final KeysKeysKeys k1Reloaded = getDs().get(k1);
-        final KeysKeysKeys k1Loaded = getDs().getByKey(KeysKeysKeys.class, k1Key);
+        final Keys k1Reloaded = getDs().get(k1);
+        final Keys k1Loaded = getDs().getByKey(Keys.class, getMapper().getKey(keys));
         assertNotNull(k1Reloaded);
         assertNotNull(k1Loaded);
         for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
@@ -805,12 +807,12 @@ public class TestQuery extends TestBase {
         final FacebookUser fbUser2 = new FacebookUserWithNoClassNameStored(2, "tom");
         final FacebookUser fbUser3 = new FacebookUserWithNoClassNameStored(3, "oli");
         final FacebookUser fbUser4 = new FacebookUserWithNoClassNameStored(4, "frank");
-        final Iterable<Key<FacebookUser>> fbKeys = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
+        final List<FacebookUser> users = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
         assertEquals(1, fbUser1.getId());
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (final Key<FacebookUser> key : fbKeys) {
-            fbUserKeys.add(key);
+        for (final FacebookUser user : users) {
+            fbUserKeys.add(getMapper().getKey(user));
         }
 
         assertEquals(fbUser1.getId(), fbUserKeys.get(0).getId());
@@ -818,12 +820,12 @@ public class TestQuery extends TestBase {
         assertEquals(fbUser3.getId(), fbUserKeys.get(2).getId());
         assertEquals(fbUser4.getId(), fbUserKeys.get(3).getId());
 
-        final KeysKeysKeys k1 = new KeysKeysKeys(null, fbUserKeys);
-        final Key<KeysKeysKeys> k1Key = getDs().save(k1);
-        assertEquals(k1.getId(), k1Key.getId());
+        final Keys k1 = new Keys(null, fbUserKeys);
+        final Keys keys = getDs().save(k1);
+        assertEquals(k1.getId(), keys.getId());
 
-        final KeysKeysKeys k1Reloaded = getDs().get(k1);
-        final KeysKeysKeys k1Loaded = getDs().getByKey(KeysKeysKeys.class, k1Key);
+        final Keys k1Reloaded = getDs().get(k1);
+        final Keys k1Loaded = getDs().getByKey(Keys.class, getMapper().getKey(keys));
         assertNotNull(k1Reloaded);
         assertNotNull(k1Loaded);
         for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
@@ -1180,7 +1182,7 @@ public class TestQuery extends TestBase {
     public void testReferenceQuery() {
         final Photo p = new Photo();
         final ContainsPhotoKey cpk = new ContainsPhotoKey();
-        cpk.photo = getDs().save(p);
+        cpk.photo = getMapper().getKey(getDs().save(p));
         getDs().save(cpk);
 
         Query<ContainsPhotoKey> query = getDs().find(ContainsPhotoKey.class)

@@ -1,15 +1,14 @@
 package dev.morphia.mapping.lazy;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import dev.morphia.Key;
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.testutil.TestEntity;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 
 @Ignore("references need work")
@@ -27,8 +26,7 @@ public class TestLazySingleReference extends ProxyTestBase {
         root.r = reference;
         reference.setFoo("bar");
 
-        final Key<ReferencedEntity> k = getDs().save(reference);
-        final String keyAsString = k.getId().toString();
+        final ObjectId id = getDs().save(reference).getId();
         getDs().save(root);
 
         root = getDs().get(root);
@@ -37,7 +35,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
         assertIsProxy(p);
         assertNotFetched(p);
-        Assert.assertEquals(keyAsString, getDs().getKey(p).getId().toString());
+        Assert.assertEquals(id, getDs().getKey(p).getId());
         // still not fetched?
         assertNotFetched(p);
         p.getFoo();
@@ -116,9 +114,8 @@ public class TestLazySingleReference extends ProxyTestBase {
         root.secondReference = second;
         reference.setFoo("bar");
 
-        final Key<ReferencedEntity> k = getDs().save(reference);
+        final ObjectId id = getDs().save(reference).getId();
         getDs().save(second);
-        final Object key = k.getId();
         getDs().save(root);
 
         root = getDs().get(root);
@@ -127,7 +124,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
         assertIsProxy(referenced);
         assertNotFetched(referenced);
-        Assert.assertEquals(key, ((ProxiedEntityReference) referenced).__getKey().getId());
+        Assert.assertEquals(id, ((ProxiedEntityReference) referenced).__getKey().getId());
         // still not fetched?
         assertNotFetched(referenced);
         assertNotFetched(root.secondReference);

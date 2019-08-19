@@ -363,7 +363,7 @@ public interface Datastore {
      * @param entities the entities to save
      * @param <T>      the type of the entity
      */
-    <T> void save(List<T> entities);
+    <T> List<T> save(List<T> entities);
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -374,10 +374,10 @@ public interface Datastore {
      * @deprecated use {@link #save(List, InsertManyOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> void save(Iterable<T> entities, InsertOptions options) {
+    default <T> List<T> save(Iterable<T> entities, InsertOptions options) {
         List<T> list = new ArrayList<>();
         entities.forEach(e -> list.add(e));
-        save(list, options.toInsertManyOptions());
+        return save(list, options.toInsertManyOptions());
     }
 
     /**
@@ -388,7 +388,7 @@ public interface Datastore {
      * @param options  the options to apply to the save operation
      * @since 2.0
      */
-    <T> void save(List<T> entities, InsertManyOptions options);
+    <T> List<T> save(List<T> entities, InsertManyOptions options);
 
     /**
      * Saves an entity (Object) and updates the @Id field
@@ -396,7 +396,7 @@ public interface Datastore {
      * @param entity the entity to save
      * @param <T>    the type of the entity
      */
-    <T> void save(T entity);
+    <T> T save(T entity);
 
     /**
      * Saves an entity (Object) and updates the @Id field
@@ -407,8 +407,8 @@ public interface Datastore {
      * @deprecated use {@link #save(T, InsertOneOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> void save(T entity, InsertOptions options) {
-        save(entity, options.toInsertOneOptions());
+    default <T> T save(T entity, InsertOptions options) {
+        return save(entity, options.toInsertOneOptions());
     }
 
     /**
@@ -418,7 +418,7 @@ public interface Datastore {
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
      */
-    <T> void save(T entity, InsertOneOptions options);
+    <T> T save(T entity, InsertOneOptions options);
 
 
     /**
