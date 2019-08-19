@@ -316,8 +316,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> List<T> save(final List<T> entities) {
-        save(entities, new InsertManyOptions());
-        return entities;
+        return save(entities, new InsertManyOptions());
     }
 
     @Override
@@ -326,9 +325,20 @@ class DatastoreImpl implements AdvancedDatastore {
         if(entities.isEmpty()) {
             return List.of();
         }
+        Class<?> first = entities.get(0).getClass();
+        boolean allMatch = entities.stream().map(e -> e.getClass()).allMatch(c -> c.equals(first));
 
-        MongoCollection<T> collection = (MongoCollection<T>) getCollection(entities.get(0).getClass());
-        collection.insertMany(entities, options.getOptions());
+        if(allMatch) {
+            MongoCollection<T> collection = (MongoCollection<T>) getCollection(entities.get(0).getClass());
+            collection.insertMany(entities, options.getOptions());
+        } else {
+            InsertOneOptions insertOneOptions = new InsertOneOptions()
+                                                    .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                    .writeConcern(options.getWriteConcern());
+            for (final T entity : entities) {
+                save(entity, insertOneOptions);
+            }
+        }
         return entities;
     }
 
