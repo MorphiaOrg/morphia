@@ -18,10 +18,12 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
+import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -226,7 +228,6 @@ public interface Datastore {
     @Deprecated
     default <T> T get(T entity){
         return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
-
     }
 
     /**
@@ -321,7 +322,7 @@ public interface Datastore {
      * @param <T>    the type of the entity
      * @return the key of the entity
      */
-    <T> Key<T> merge(T entity);
+    <T> void merge(T entity);
 
     /**
      * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
@@ -331,7 +332,7 @@ public interface Datastore {
      * @param wc     the WriteConcern to use
      * @return the key of the entity
      */
-    <T> Key<T> merge(T entity, WriteConcern wc);
+    <T> void merge(T entity, WriteConcern wc);
 
     /**
      * Returns a new query based on the example object
@@ -347,9 +348,22 @@ public interface Datastore {
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
-     * @return the keys of the entities
+     * @deprecated
      */
-    <T> Iterable<Key<T>> save(Iterable<T> entities);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> void save(Iterable<T> entities) {
+        List<T> list = new ArrayList<>();
+        entities.forEach(e -> list.add(e));
+        save(list);
+    }
+
+    /**
+     * Saves the entities (Objects) and updates the @Id field
+     *
+     * @param entities the entities to save
+     * @param <T>      the type of the entity
+     */
+    <T> void save(List<T> entities);
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -357,12 +371,13 @@ public interface Datastore {
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
-     * @return the keys of the entities
-     * @deprecated use {@link #save(Iterable, InsertManyOptions)} instead
+     * @deprecated use {@link #save(List, InsertManyOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> Iterable<Key<T>> save(Iterable<T> entities, InsertOptions options) {
-        return save(entities, options.toInsertManyOptions());
+    default <T> void save(Iterable<T> entities, InsertOptions options) {
+        List<T> list = new ArrayList<>();
+        entities.forEach(e -> list.add(e));
+        save(list, options.toInsertManyOptions());
     }
 
     /**
@@ -371,18 +386,17 @@ public interface Datastore {
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
-     * @return the keys of the entities
+     * @since 2.0
      */
-    <T> Iterable<Key<T>> save(Iterable<T> entities, InsertManyOptions options);
+    <T> void save(List<T> entities, InsertManyOptions options);
 
     /**
      * Saves an entity (Object) and updates the @Id field
      *
      * @param entity the entity to save
      * @param <T>    the type of the entity
-     * @return the key of the entity
      */
-    <T> Key<T> save(T entity);
+    <T> void save(T entity);
 
     /**
      * Saves an entity (Object) and updates the @Id field
@@ -390,12 +404,11 @@ public interface Datastore {
      * @param entity  the entity to save
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
-     * @return the key of the entity
-     * @deprecated use {@link #save(Object, InsertOneOptions)} instead
+     * @deprecated use {@link #save(T, InsertOneOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> Key<T> save(T entity, InsertOptions options) {
-        return save(entity, options.toInsertOneOptions());
+    default <T> void save(T entity, InsertOptions options) {
+        save(entity, options.toInsertOneOptions());
     }
 
     /**
@@ -404,9 +417,8 @@ public interface Datastore {
      * @param entity  the entity to save
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
-     * @return the key of the entity
      */
-    <T> Key<T> save(T entity, InsertOneOptions options);
+    <T> void save(T entity, InsertOneOptions options);
 
 
     /**
@@ -419,7 +431,12 @@ public interface Datastore {
      * @deprecated use {@link Query#update()} instead.  Please note the default has changed from multi- to single- document updates.
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations);
+    default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations) {
+        return query.update(operations).execute(new UpdateOptions()
+                                                    .upsert(false)
+                                                    .multi(true)
+                                                    .writeConcern(getMapper().getWriteConcern(((QueryImpl) query).getEntityClass())));
+    }
 
     /**
      * Updates all entities found with the operations; this is an atomic operation per entity

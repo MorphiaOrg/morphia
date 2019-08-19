@@ -105,7 +105,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>    the type of the entity
      * @return the new key of the inserted entity
      */
-    <T> Key<T> insert(T entity);
+    <T> void insert(T entity);
 
     /**
      * Inserts an entity in to the mapped collection.
@@ -113,18 +113,17 @@ public interface AdvancedDatastore extends Datastore {
      * @param entity  the entity to insert
      * @param options the options to apply to the insert operation
      * @param <T>     the type of the entity
-     * @return the new key of the inserted entity
      * @morphia.inline
      * @since 1.3
      * @deprecated use {@link #insert(List, InsertManyOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default
-    <T> Key<T> insert(T entity, InsertOptions options) {
-        return insert(entity, options.toInsertOneOptions());
+    <T> void insert(T entity, InsertOptions options) {
+        insert(entity, options.toInsertOneOptions());
     }
 
-    <T> Key<T> insert(T entity, InsertOneOptions options);
+    <T> void insert(T entity, InsertOneOptions options);
 
     /**
      * Inserts entities in to the mapped collection.
@@ -133,8 +132,8 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>      the type of the entities
      * @return the new keys of the inserted entities
      */
-    default <T> Iterable<Key<T>> insert(List<T> entities) {
-        return insert(entities, new InsertOptions());
+    default <T> void insert(List<T> entities) {
+        insert(entities, new InsertOptions());
     }
 
     /**
@@ -143,17 +142,16 @@ public interface AdvancedDatastore extends Datastore {
      * @param entities the entities to insert
      * @param options  the options to apply to the insert operation
      * @param <T>      the type of the entity
-     * @return the new keys of the inserted entities
      * @morphia.inline
      * @since 1.3
      * @deprecated use {@link #insert(List, InsertManyOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> Iterable<Key<T>> insert(List<T> entities, InsertOptions options) {
-        return insert(entities, options.toInsertManyOptions());
+    default <T> void insert(List<T> entities, InsertOptions options) {
+        insert(entities, options.toInsertManyOptions());
     }
 
-    <T> Iterable<Key<T>> insert(List<T> entities, InsertManyOptions options);
+    <T> void insert(List<T> entities, InsertManyOptions options);
 
     /**
      * Returns a new query based on the example object
@@ -164,5 +162,4 @@ public interface AdvancedDatastore extends Datastore {
      * @return the query
      */
     <T> Query<T> queryByExample(String collection, T example);
-
 }

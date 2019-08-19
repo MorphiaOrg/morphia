@@ -14,7 +14,6 @@ import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.NotSaved;
-import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
@@ -22,33 +21,26 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.sofia.Sofia;
-import org.bson.BsonValue;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.bson.Document.parse;
 
@@ -292,13 +284,13 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Key<T> merge(final T entity) {
-        return merge(entity, mapper.getWriteConcern(entity.getClass()));
+    public <T> void merge(final T entity) {
+        merge(entity, mapper.getWriteConcern(entity.getClass()));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Key<T> merge(final T entity, final WriteConcern wc) {
+    public <T> void merge(final T entity, final WriteConcern wc) {
         T unwrapped = entity;
         final Document document = mapper.toDocument(unwrapped);
         unwrapped = ProxyHelper.unwrap(unwrapped);
@@ -326,56 +318,37 @@ class DatastoreImpl implements AdvancedDatastore {
         if (key == null) {
             throw new UpdateException("Nothing updated");
         }
-
-        return key;
     }
 
     @Override
-    public <T> Query<T> queryByExample(final T ex) {
-        return queryByExample(mapper.getCollection(ex.getClass()), ex);
+    public <T> void save(final List<T> entities) {
+        save(entities, new InsertManyOptions());
     }
 
     @Override
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        return save(entities, new InsertManyOptions());
-    }
-
-    @Override
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities, final InsertManyOptions options) {
-        final List<Key<T>> savedKeys = new ArrayList<>();
-        InsertOneOptions insertOneOptions = new InsertOneOptions()
-                                                .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                .writeConcern(options.getWriteConcern());
-        for (final T ent : entities) {
-            savedKeys.add(save(ent, insertOneOptions));
+    @SuppressWarnings("unchecked")
+    public <T> void save(final List<T> entities, final InsertManyOptions options) {
+        if(entities.isEmpty()) {
+            return;
         }
-        return savedKeys;
 
-
-
+        MongoCollection<T> collection = (MongoCollection<T>) getCollection(entities.get(0).getClass());
+        collection.insertMany(entities, options.getOptions());
     }
 
     @Override
-    public <T> Key<T> save(final T entity) {
-        return save(entity, new InsertOneOptions());
+    public <T> void save(final T entity) {
+        save(entity, new InsertOneOptions());
     }
 
     @Override
-    public <T> Key<T> save(final T entity, final InsertOneOptions options) {
+    public <T> void save(final T entity, final InsertOneOptions options) {
         if (entity == null) {
             throw new UpdateException("Can not persist a null entity");
         }
 
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return save(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
-    }
-
-    @Override
-    public <T> UpdateResult update(final Query<T> query, final UpdateOperations<T> operations) {
-        return query.update(operations).execute(new UpdateOptions()
-                                                    .upsert(false)
-                                                    .multi(true)
-                                                    .writeConcern(mapper.getWriteConcern(((QueryImpl) query).getEntityClass())));
+        save(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
     }
 
     @Override
@@ -421,30 +394,30 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Key<T> insert(final T entity) {
-        return insert(entity, mapper.getWriteConcern(entity.getClass()));
-    }
-
-    private <T> Key<T> insert(final T entity, final WriteConcern wc) {
-        return insert(entity, new InsertOptions().writeConcern(wc));
+    public <T> void insert(final T entity) {
+        insert(entity, new InsertOneOptions()
+                           .writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
     @Override
-    public <T> Key<T> insert(final T entity, final InsertOneOptions options) {
+    public <T> void insert(final T entity, final InsertOneOptions options) {
         final T unwrapped = ProxyHelper.unwrap(entity);
-        return insert(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
+        insert(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
     }
 
     @Override
-    public <T> Iterable<Key<T>> insert(final List<T> entities, final InsertManyOptions options) {
-        return entities.isEmpty()
-               ? Collections.emptyList()
-               : insert(mapper.getCollection(entities.get(0).getClass()), entities, options);
+    public <T> void insert(final List<T> entities, final InsertManyOptions options) {
+        if (!entities.isEmpty()) {
+            final MongoCollection collection = mapper.getCollection(entities.get(0).getClass());
+
+            enforceWriteConcern(collection, entities.get(0).getClass(), options.getWriteConcern())
+                .insertMany(entities, options.getOptions());
+        }
     }
 
     @Override
     public <T> Query<T> queryByExample(final String collection, final T ex) {
-        return queryByExample(getDatabase().getCollection(collection), ex);
+        return queryByExample(ex);
     }
 
     /**
@@ -463,31 +436,14 @@ class DatastoreImpl implements AdvancedDatastore {
         this.mapper = mapper;
     }
 
-    /**
-     * Inserts an entity in to the database
-     *
-     * @param collection the collection to query against
-     * @param entity     the entity to insert
-     * @param wc         the WriteConcern to use when deleting
-     * @param <T>        the type of the entities
-     * @return the key of entity
-     */
-    public <T> Key<T> insert(final String collection, final T entity, final WriteConcern wc) {
-        return insert(database.getCollection(collection, entity.getClass()), ProxyHelper.unwrap(entity),
-            new InsertOneOptions().writeConcern(wc));
-    }
-
     @Deprecated
     protected Object getId(final Object entity) {
         return mapper.getId(entity);
     }
 
-    protected <T> Key<T> insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
-        final LinkedHashMap<Object, Document> involvedObjects = new LinkedHashMap<>();
+    protected <T> void insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
         mapper.enforceWriteConcern(collection, entity.getClass())
             .insertOne(singletonList(entityToDocument(entity)), options.getOptions());
-
-        return postSaveOperations(singletonList(entity), involvedObjects, collection.getNamespace().getCollectionName()).get(0);
     }
 
     protected <T> Key<T> save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
@@ -502,34 +458,6 @@ class DatastoreImpl implements AdvancedDatastore {
 
         return key;
     }
-
-/*
-    @SuppressWarnings("unchecked")
-    private <T> Key<T> save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
-        final MappedClass mc = validateSave(entity);
-
-        // involvedObjects is used not only as a cache but also as a list of what needs to be called for life-cycle methods at the end.
-        final LinkedHashMap<Object, Document> involvedObjects = new LinkedHashMap<Object, Document>();
-        final Document document = new Document(entityToDBObj(entity, involvedObjects).toMap());
-
-        // try to do an update if there is a @Version field
-        final Object idValue = document.get(Mapper.ID_KEY);
-        UpdateResult wr = tryVersionedUpdate(collection, entity, document, idValue, options, mc);
-
-        if (wr == null) {
-            if (document.get(ID_FIELD_NAME) == null) {
-                 collection.insertOne(singletonList(document), options);
-            } else {
-                collection.updateOne(new Document(ID_FIELD_NAME, document.get(ID_FIELD_NAME)), document,
-                    new com.mongodb.client.model.UpdateOptions()
-                        .bypassDocumentValidation(options.getBypassDocumentValidation())
-                        .upsert(true));
-            }
-        }
-
-        return postSaveOperations(singletonList(entity), involvedObjects, collection.getNamespace().getCollectionName()).get(0);
-    }
-*/
 
     @Deprecated
     private <T> MappedClass validateSave(final T entity) {
@@ -622,28 +550,8 @@ class DatastoreImpl implements AdvancedDatastore {
         return key;
     }
 
-    private EntityCache createCache() {
-        return mapper.createEntityCache();
-    }
-
     private Document entityToDocument(final Object entity) {
         return mapper.toDocument(ProxyHelper.unwrap(entity));
-    }
-
-    private <T> Iterable<Key<T>> insert(final MongoCollection collection, final List<T> entities, final InsertManyOptions options) {
-        if (!entities.iterator().hasNext()) {
-            return emptyList();
-        }
-
-        final Map<Object, Document> involvedObjects = new LinkedHashMap<>();
-        final List<Document> list = new ArrayList<>();
-        for (final T entity : entities) {
-            list.add(toDocument(entity));
-        }
-        enforceWriteConcern(collection, entities.get(0).getClass(), options.getWriteConcern())
-            .insertMany(list, options.getOptions());
-
-        return postSaveOperations(entities, involvedObjects, collection.getNamespace().getCollectionName());
     }
 
     /**
@@ -662,40 +570,8 @@ class DatastoreImpl implements AdvancedDatastore {
         return getQueryFactory().createQuery(this, type);
     }
 
-    private <T> List<Key<T>> postSaveOperations(final Iterable<T> entities,
-                                                final Map<Object, Document> involvedObjects,
-                                                final String collectionName) {
-        return postSaveOperations(entities, involvedObjects, true, collectionName);
-    }
-
     @SuppressWarnings("unchecked")
-    private <T> List<Key<T>> postSaveOperations(final Iterable<T> entities, final Map<Object, Document> involvedObjects,
-                                                final boolean fetchKeys, final String collectionName) {
-        List<Key<T>> keys = new ArrayList<>();
-        for (final T entity : entities) {
-            final Document document = involvedObjects.remove(entity);
-
-            if (fetchKeys) {
-                if (document.get("_id") == null) {
-                    throw new MappingException(format("Missing _id after save on %s", entity.getClass().getName()));
-                }
-                mapper.updateKeyAndVersionInfo(this, document, createCache(), entity);
-                keys.add(new Key<>((Class<? extends T>) entity.getClass(), collectionName, mapper.getId(entity)));
-            }
-            mapper.getMappedClass(entity.getClass()).callLifecycleMethods(PostPersist.class, entity, document, mapper);
-        }
-
-        for (Entry<Object, Document> entry : involvedObjects.entrySet()) {
-            final Object key = entry.getKey();
-            mapper.getMappedClass(key.getClass()).callLifecycleMethods(PostPersist.class, key, entry.getValue(), mapper);
-
-        }
-        return keys;
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> Query<T> queryByExample(final MongoCollection coll, final T example) {
-        // TODO: think about remove className from baseQuery param below.
+    public <T> Query<T> queryByExample(final T example) {
         final Class<T> type = (Class<T>) example.getClass();
         final Document query = entityToDocument(example);
         return newQuery(type, query);
@@ -719,88 +595,10 @@ class DatastoreImpl implements AdvancedDatastore {
         return document;
     }
 
-/*
-    @SuppressWarnings("unchecked")
-    private <T> UpdateResults update(final QueryImpl<T> query, final Document update, final UpdateOptions options) {
-
-        MongoCollection dbColl = query.getCollection();
-        // TODO remove this after testing.
-        if (dbColl == null) {
-            dbColl = getCollection(query.getEntityClass());
-        }
-
-        if (query.getSort() != null && query.getSort().keySet() != null && !query.getSort().keySet().isEmpty()) {
-            throw new QueryException("sorting is not allowed for updates.");
-        }
-
-        Document queryObject = query.getQueryDocument();
-
-        final MappedClass mc = getMapper().getMappedClass(query.getEntityClass());
-        final List<MappedField> fields = mc.getFieldsAnnotatedWith(Version.class);
-        if (!fields.isEmpty()) {
-            final MappedField versionMF = fields.get(0);
-            Document localUpdate = update;
-            if (localUpdate.get("$set") != null) {
-                localUpdate = (Document) localUpdate.get("$set");
-            }
-            if (localUpdate.get(versionMF.getNameToStore()) == null) {
-                if (!localUpdate.containsKey("$inc")) {
-                    localUpdate.put("$inc", new Document(versionMF.getNameToStore(), 1));
-                } else {
-                    ((Map<String, Object>) (localUpdate.get("$inc"))).put(versionMF.getNameToStore(), 1);
-                }
-            }
-        }
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Executing update(%s) for query: %s, ops: %s, multi: %s, upsert: %s",
-                dbColl.getNamespace().getCollectionName(), queryObject, update, options.isMulti(), options.isUpsert()));
-        }
-
-        return null; //new UpdateResults(dbColl.updateMany(queryObject, update,
-//            enforceWriteConcern(options, query.getEntityClass())
-//                .getOptions()));
-    }
-*/
-
-
     public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass, WriteConcern option) {
         WriteConcern applied = option != null ? option : mapper.getWriteConcern(klass);
         return applied != null
                ? collection.withWriteConcern(applied)
                : collection;
-    }
-
-    private static class MockedUpdateResult extends UpdateResult {
-        private WriteConcern writeConcern;
-
-        public MockedUpdateResult(final WriteConcern writeConcern) {
-            this.writeConcern = writeConcern;
-        }
-
-        @Override
-        public boolean wasAcknowledged() {
-            return writeConcern.equals(WriteConcern.ACKNOWLEDGED);
-        }
-
-        @Override
-        public long getMatchedCount() {
-            return 1;
-        }
-
-        @Override
-        public boolean isModifiedCountAvailable() {
-            return true;
-        }
-
-        @Override
-        public long getModifiedCount() {
-            return 1;
-        }
-
-        @Override
-        public BsonValue getUpsertedId() {
-            return null;
-        }
     }
 }

@@ -60,6 +60,7 @@ import static dev.morphia.mapping.codec.Conversions.convert;
 public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleCodec<T> {
     private final Mapper mapper;
     private final MappedClass mappedClass;
+    private final MappedField idField;
 
     public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
                  final CodecRegistry registry, final List<PropertyCodecProvider> propertyCodecProviders,
@@ -67,6 +68,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         super(classModel, registry, propertyCodecProviders, discriminatorLookup);
         this.mapper = mapper;
         this.mappedClass = mappedClass;
+        idField = mappedClass.getIdField();
     }
 
     public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
@@ -75,6 +77,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized);
         this.mapper = mapper;
         this.mappedClass = mappedClass;
+        idField = mappedClass.getIdField();
     }
 
     @Override
@@ -108,17 +111,16 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     }
 
     @Override
-    public T generateIdIfAbsentFromDocument(final T document) {
-        if (!documentHasId(document)) {
-            final MappedField mappedIdField = mappedClass.getIdField();
-            mappedIdField.setFieldValue(document, convert(new ObjectId(), mappedIdField.getType()));
+    public T generateIdIfAbsentFromDocument(final T entity) {
+        if (!documentHasId(entity)) {
+            idField.setFieldValue(entity, convert(new ObjectId(), idField.getType()));
         }
-        return document;
+        return entity;
     }
 
     @Override
-    public boolean documentHasId(final T document) {
-        return mappedClass.getIdField().getFieldValue(document) != null;
+    public boolean documentHasId(final T entity) {
+        return mappedClass.getIdField().getFieldValue(entity) != null;
     }
 
     @Override
