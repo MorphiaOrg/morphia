@@ -3,7 +3,6 @@ package dev.morphia.mapping.validation;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import dev.morphia.ObjectFactory;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -54,36 +53,17 @@ public class MappingValidator {
     }
 
     /**
-     * Validates a MappedClass
+     * @morphia.internal
      *
      * @param mappedClass the MappedClass to validate
      * @param mapper the Mapper to use for validation
      */
-    @Deprecated
     public void validate(final Mapper mapper, final MappedClass mappedClass) {
-        validate(mapper, singletonList(mappedClass));
-    }
-
-    /**
-     * Validates a List of MappedClasses
-     *
-     * @param classes the MappedClasses to validate
-     * @param mapper the Mapper to use for validation
-     */
-    public void validate(final Mapper mapper, final List<MappedClass> classes) {
-        final Set<ConstraintViolation> ve = new TreeSet<ConstraintViolation>(new Comparator<ConstraintViolation>() {
-
-            @Override
-            public int compare(final ConstraintViolation o1, final ConstraintViolation o2) {
-                return o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1;
-            }
-        });
+        final Set<ConstraintViolation> ve = new TreeSet<>((o1, o2) -> o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1);
 
         final List<ClassConstraint> rules = getConstraints();
-        for (final MappedClass c : classes) {
-            for (final ClassConstraint v : rules) {
-                v.check(mapper, c, ve);
-            }
+        for (final ClassConstraint v : rules) {
+            v.check(mapper, mappedClass, ve);
         }
 
         if (!ve.isEmpty()) {
@@ -94,7 +74,7 @@ public class MappingValidator {
             }
 
             // sort by class to make it more readable
-            final List<LogLine> l = new ArrayList<LogLine>();
+            final List<LogLine> l = new ArrayList<>();
             for (final ConstraintViolation v : ve) {
                 l.add(new LogLine(v));
             }
@@ -107,7 +87,7 @@ public class MappingValidator {
     }
 
     private List<ClassConstraint> getConstraints() {
-        final List<ClassConstraint> constraints = new ArrayList<ClassConstraint>(32);
+        final List<ClassConstraint> constraints = new ArrayList<>(32);
 
         // normally, i do this with scanning the classpath, but that´d bring
         // another dependency ;)

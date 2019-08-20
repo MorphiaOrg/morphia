@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
@@ -26,20 +27,30 @@ import java.util.concurrent.ConcurrentMap;
 import static java.lang.String.format;
 
 public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
-    public BaseMorphiaCodec(final ClassModel<T> classModel,
+    private final Mapper mapper;
+
+    public BaseMorphiaCodec(final Mapper mapper,
+                            final ClassModel<T> classModel,
                             final CodecRegistry registry,
                             final List<PropertyCodecProvider> propertyCodecProviders,
                             final DiscriminatorLookup discriminatorLookup) {
         super(classModel, registry, propertyCodecProviders, discriminatorLookup);
+        this.mapper = mapper;
     }
 
-    public BaseMorphiaCodec(final ClassModel<T> classModel,
+    public BaseMorphiaCodec(final Mapper mapper,
+                            final ClassModel<T> classModel,
                             final CodecRegistry registry,
                             final PropertyCodecRegistry propertyCodecRegistry,
                             final DiscriminatorLookup discriminatorLookup,
                             final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache,
                             final boolean specialized) {
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, codecCache, specialized);
+        this.mapper = mapper;
+    }
+
+    public Mapper getMapper() {
+        return mapper;
     }
 
     @Override
@@ -98,12 +109,12 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         Codec<T> codec = getRegistry().get(type);
         if(codec instanceof BaseMorphiaCodec) {
             final BaseMorphiaCodec<T> tCodec = (BaseMorphiaCodec<T>) codec;
-            final MorphiaModel<T> clazzModel = (MorphiaModel<T>) tCodec.getClassModel();
-            final MorphiaModel<T> newModel = new MorphiaModel<>(clazzModel.getType(), clazzModel.getPropertyNameToTypeParameterMap(),
-                clazzModel.getInstanceCreatorFactory(), getClassModel().useDiscriminator(), clazzModel.getDiscriminatorKey(),
-                clazzModel.getDiscriminator(), clazzModel.getIdPropertyModelHolder(), clazzModel.getAnnotations(),
-                clazzModel.getFieldModels(),
-                clazzModel.getPropertyModels());
+            final MorphiaModel<T> morphiaModel = (MorphiaModel<T>) tCodec.getClassModel();
+            final MorphiaModel<T> newModel = new MorphiaModel<>(mapper, morphiaModel.getType(),
+                morphiaModel.getPropertyNameToTypeParameterMap(), morphiaModel.getInstanceCreatorFactory(),
+                getClassModel().useDiscriminator(), morphiaModel.getDiscriminatorKey(), morphiaModel.getDiscriminator(),
+                morphiaModel.getIdPropertyModelHolder(), morphiaModel.getAnnotations(), morphiaModel.getFieldModels(),
+                morphiaModel.getPropertyModels());
             codec = tCodec.getSpecializedCodec(newModel);
         }
         return codec;

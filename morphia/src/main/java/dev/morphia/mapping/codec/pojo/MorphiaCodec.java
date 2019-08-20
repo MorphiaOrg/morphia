@@ -58,15 +58,13 @@ import static dev.morphia.mapping.codec.Conversions.convert;
  * @param <T>
  */
 public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleCodec<T> {
-    private final Mapper mapper;
     private final MappedClass mappedClass;
     private final MappedField idField;
 
     public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
                  final CodecRegistry registry, final List<PropertyCodecProvider> propertyCodecProviders,
                  final DiscriminatorLookup discriminatorLookup) {
-        super(classModel, registry, propertyCodecProviders, discriminatorLookup);
-        this.mapper = mapper;
+        super(mapper, classModel, registry, propertyCodecProviders, discriminatorLookup);
         this.mappedClass = mappedClass;
         idField = mappedClass.getIdField();
     }
@@ -74,8 +72,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
                         final CodecRegistry registry, final PropertyCodecRegistry propertyCodecRegistry,
                         final DiscriminatorLookup discriminatorLookup, final boolean specialized) {
-        super(classModel, registry, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized);
-        this.mapper = mapper;
+        super(mapper, classModel, registry, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized);
         this.mappedClass = mappedClass;
         idField = mappedClass.getIdField();
     }
@@ -137,16 +134,16 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
         if (mappedClass.hasLifecycle(PostPersist.class)
             || mappedClass.hasLifecycle(PrePersist.class)
-            || mapper.hasInterceptors()) {
+            || getMapper().hasInterceptors()) {
             final DocumentWriter documentWriter = new DocumentWriter();
             super.encode(documentWriter, value, encoderContext);
             Document document = documentWriter.getRoot();
 
-            mappedClass.callLifecycleMethods(PrePersist.class, value, document, mapper);
+            mappedClass.callLifecycleMethods(PrePersist.class, value, document, getMapper());
 
             getRegistry().get(Document.class).encode(writer, document, encoderContext);
 
-            mappedClass.callLifecycleMethods(PostPersist.class, value, document, mapper);
+            mappedClass.callLifecycleMethods(PostPersist.class, value, document, getMapper());
 
         } else {
             super.encode(writer, value, encoderContext);
@@ -156,17 +153,17 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     @Override
     public T decode(final BsonReader reader, final DecoderContext decoderContext) {
         T entity;
-        if (mappedClass.hasLifecycle(PreLoad.class) || mappedClass.hasLifecycle(PostLoad.class) || mapper.hasInterceptors()) {
+        if (mappedClass.hasLifecycle(PreLoad.class) || mappedClass.hasLifecycle(PostLoad.class) || getMapper().hasInterceptors()) {
             final InstanceCreator<T> instanceCreator = getClassModel().getInstanceCreator();
             entity = instanceCreator.getInstance();
 
             Document document = getRegistry().get(Document.class).decode(reader, decoderContext);
-            mappedClass.callLifecycleMethods(PreLoad.class, entity, document, mapper);
+            mappedClass.callLifecycleMethods(PreLoad.class, entity, document, getMapper());
 
-            decodeProperties(new BsonDocumentReader(document.toBsonDocument(Document.class, mapper.getCodecRegistry())), decoderContext,
+            decodeProperties(new BsonDocumentReader(document.toBsonDocument(Document.class, getMapper().getCodecRegistry())), decoderContext,
                 instanceCreator);
 
-            mappedClass.callLifecycleMethods(PostLoad.class, entity, document, mapper);
+            mappedClass.callLifecycleMethods(PostLoad.class, entity, document, getMapper());
         } else {
             entity = super.decode(reader, decoderContext);
         }
@@ -205,7 +202,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
                     super.decodePropertyModel(reader, decoderContext, instanceCreator, name, propertyModel);
                 } catch (CodecConfigurationException e) {
                     mark.reset();
-                    final Object value = mapper.getCodecRegistry().get(Object.class).decode(reader, decoderContext);
+                    final Object value = getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
                     instanceCreator.set((S) convert(value, propertyModel.getTypeData().getType()), propertyModel);
                 }
             }
@@ -218,10 +215,6 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         return instanceCreator instanceof MorphiaInstanceCreator ? ((MorphiaInstanceCreator) instanceCreator).getHandler(propertyModel)
                                                                  : null;
 
-    }
-
-    Mapper getMapper() {
-        return mapper;
     }
 
     /**

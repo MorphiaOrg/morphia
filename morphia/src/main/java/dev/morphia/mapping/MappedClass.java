@@ -28,9 +28,9 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.validation.MappingValidator;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
-import org.bson.codecs.pojo.InstanceCreatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +46,6 @@ import java.util.Map;
 import static dev.morphia.utils.ReflectionUtils.getDeclaredAndInheritedMethods;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 /**
  * @morphia.internal
@@ -78,16 +75,10 @@ public class MappedClass {
      */
     private final MorphiaModel<?> morphiaModel;
     private final Class<?> type;
-    private Map<Class<? extends Annotation>, List<Annotation>> annotations;
     /**
      * special fields representing the Key of the object
      */
     private MappedField idField;
-    /**
-     * special annotations representing the type the object
-     */
-    private Entity entityAn;
-    private Embedded embeddedAn;
     private MapperOptions mapperOptions;
     private MappedClass superClass;
     private List<MappedClass> interfaces = new ArrayList<>();
@@ -238,8 +229,7 @@ public class MappedClass {
      * @return the instance if it was found, if more than one was found, the last one added
      */
     public <T> T getAnnotation(final Class<? extends Annotation> clazz) {
-        final List<Annotation> found = annotations.get(clazz);
-        return found == null || found.isEmpty() ? null : (T) found.get(found.size() - 1);
+        return morphiaModel.getAnnotation(clazz);
     }
 
     /**
@@ -251,7 +241,7 @@ public class MappedClass {
      */
     @SuppressWarnings("unchecked")
     public <T> List<T> getAnnotations(final Class<? extends Annotation> clazz) {
-        return (List<T>) annotations.get(clazz);
+        return morphiaModel.getAnnotations(clazz);
     }
 
     /**
@@ -265,27 +255,21 @@ public class MappedClass {
      * @return the collName
      */
     public String getCollectionName() {
-        if(entityAn == null) {
-            return null;
-        } else if (entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            return mapperOptions.isUseLowerCaseCollectionNames() ? type.getSimpleName().toLowerCase() : type.getSimpleName();
-        } else{
-            return entityAn.value();
-        }
+       return morphiaModel.getCollectionName();
     }
 
     /**
      * @return the embeddedAn
      */
     public Embedded getEmbeddedAnnotation() {
-        return embeddedAn;
+        return morphiaModel.getAnnotation(Embedded.class);
     }
 
     /**
      * @return the entityAn
      */
     public Entity getEntityAnnotation() {
-        return entityAn;
+        return morphiaModel.getAnnotation(Entity.class);
     }
 
     /**
@@ -389,8 +373,6 @@ public class MappedClass {
      * Update mappings based on fields/annotations.
      */
     public void update() {
-        embeddedAn = getAnnotation(Embedded.class);
-        entityAn = getAnnotation(Entity.class);
         final List<MappedField> fields = getFields(Id.class);
         if (fields != null && !fields.isEmpty()) {
             idField = fields.get(0);
@@ -402,7 +384,6 @@ public class MappedClass {
      *
      * @param mapper the Mapper to use for validation
      */
-    @SuppressWarnings("deprecation")
     public void validate(final Mapper mapper) {
         MorphiaInstanceCreator factory = (MorphiaInstanceCreator) morphiaModel.getInstanceCreatorFactory()
                                                                               .create();
@@ -413,11 +394,6 @@ public class MappedClass {
      * Discovers interesting (that we care about) things about the class.
      */
     private void discover(final Mapper mapper) {
-        this.annotations = morphiaModel.getAnnotations().stream()
-                                       .collect(groupingBy(
-                                         annotation -> (Class<? extends Annotation>) annotation.annotationType()));
-
-
         Class<?> superclass = type.getSuperclass();
         if (superclass != null && !superclass.equals(Object.class)) {
             superClass = mapper.getMappedClass(superclass);
@@ -464,7 +440,7 @@ public class MappedClass {
             if (!field.isTransient()) {
                 fields.add(field);
             } else {
-                LOG.warn("Ignoring (will not persist) field: %s", field.getFullName());
+                Sofia.logIgnoringTransientField(field.getFullName());
             }
         });
     }

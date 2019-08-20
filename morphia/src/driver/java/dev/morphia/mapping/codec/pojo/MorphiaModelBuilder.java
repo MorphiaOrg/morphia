@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
@@ -25,9 +26,11 @@ import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
 
 public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
     private final List<FieldModelBuilder<?>> fieldModelBuilders = new ArrayList<>();
+    private final Mapper mapper;
 
-    public MorphiaModelBuilder(final Class<T> type) {
+    public MorphiaModelBuilder(final Mapper mapper, final Class<T> type) {
         super(type);
+        this.mapper = mapper;
         configureClassModelBuilder();
     }
 
@@ -146,7 +149,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
                                                             .map(FieldModelBuilder::build)
                                                             .collect(Collectors.toList());
 
-        return new MorphiaModel<>(getType(), getPropertyNameToTypeParameterMap(), getInstanceCreatorFactory(), useDiscriminator(),
+        return new MorphiaModel<>(mapper, getType(), getPropertyNameToTypeParameterMap(), getInstanceCreatorFactory(), useDiscriminator(),
             getDiscriminatorKey(), getDiscriminator(), IdPropertyModelHolder.create(getType(), idPropertyModel, getIdGenerator()),
             getAnnotations(), fieldModels, propertyModels);
     }
@@ -191,45 +194,4 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
             fieldModelBuilder.typeData(specializedType);
         }
     }
-
-/*
-    public static <T> TypeData<?> extend(final TypeData<?> currentTypeData, final List<String> genericTypeNames,
-                                         final Type genericType,
-                                         final Class<T> clazz) {
-        TypeData.Builder<T> builder = TypeData.builder(clazz);
-        if (genericType instanceof ParameterizedType) {
-            ParameterizedType pType = (ParameterizedType) genericType;
-            for (Type argType : pType.getActualTypeArguments()) {
-                getNestedTypeData(currentTypeData, genericTypeNames, builder, argType);
-            }
-        }
-        return builder.build();
-    }
-*/
-
-/*
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static <T> void getNestedTypeData(final TypeData<?> currentTypeData, final List<String> genericTypeNames,
-                                              final TypeData.Builder<T> builder, final Type type) {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType pType = (ParameterizedType) type;
-            TypeData.Builder paramBuilder = TypeData.builder((Class) pType.getRawType());
-            for (Type argType : pType.getActualTypeArguments()) {
-                getNestedTypeData(paramBuilder, argType);
-            }
-            builder.addTypeParameter(paramBuilder.build());
-        } else if (type instanceof TypeVariable) {
-            final int index = genericTypeNames.indexOf(((TypeVariable) type).getName());
-            Class<?> clazz = Object.class;
-            if(index != -1 && currentTypeData != null) {
-                clazz = currentTypeData.getTypeParameters().get(index).getType();
-            }
-            builder.addTypeParameter(TypeData.builder(clazz).build());
-        } else if (type instanceof Class) {
-            builder.addTypeParameter(TypeData.builder((Class) type).build());
-        }
-    }
-*/
-
-
 }

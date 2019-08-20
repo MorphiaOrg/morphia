@@ -18,6 +18,7 @@ package dev.morphia.mapping;
 import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.ConstructorArgs;
@@ -25,9 +26,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 
 
-/**
- * @author Scott Hernandez
- */
+@Ignore("come back to this one")
 public class TestConstructorArgs extends TestBase {
 
     @Test
