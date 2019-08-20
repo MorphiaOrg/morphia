@@ -27,8 +27,7 @@ public class MapKeyDifferentFromString extends FieldConstraint {
                 ve.add(new ConstraintViolation(Level.WARNING, mc, mf, getClass(),
                                                "Maps cannot be keyed by Object (Map<Object,?>); Use a parametrized type that is supported "
                                                + SUPPORTED));
-            } else if (!aClass.equals(String.class) && !aClass.equals(ObjectId.class) && !ReflectionUtils.isPrimitiveLike(
-                                                                                                                             aClass)) {
+            } else if (!aClass.equals(String.class) && !aClass.equals(ObjectId.class) && !ReflectionUtils.isPrimitiveLike(aClass)) {
                 ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                                                "Maps must be keyed by a simple type " + SUPPORTED + "; " + aClass
                                                + " is not supported as a map key type."));

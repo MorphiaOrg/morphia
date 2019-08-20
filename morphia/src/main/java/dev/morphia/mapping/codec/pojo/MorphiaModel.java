@@ -1,7 +1,15 @@
 package dev.morphia.mapping.codec.pojo;
 
+import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.EntityListeners;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.sofia.Sofia;
+import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.IdPropertyModelHolder;
 import org.bson.codecs.pojo.InstanceCreatorFactory;
@@ -9,37 +17,21 @@ import org.bson.codecs.pojo.PropertyModel;
 import org.bson.codecs.pojo.TypeParameterMap;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import static java.util.stream.Collectors.groupingBy;
+import static dev.morphia.utils.ReflectionUtils.getDeclaredAndInheritedMethods;
 
 public class MorphiaModel<T> extends ClassModel<T> {
     private final Mapper mapper;
     private final Map<Class<? extends Annotation>, List<Annotation>> annotations;
     private final List<FieldModel<?>> fieldModels;
+    private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
     private String collectionName;
-
-    public MorphiaModel(final Mapper mapper,
-                        final Class<T> clazz,
-                        final Map<String, TypeParameterMap> propertyNameToTypeParameterMap,
-                        final InstanceCreatorFactory<T> instanceCreatorFactory,
-                        final Boolean discriminatorEnabled,
-                        final String discriminatorKey,
-                        final String discriminator,
-                        final IdPropertyModelHolder<?> idPropertyModelHolder,
-                        final List<Annotation> annotations,
-                        final List<FieldModel<?>> fieldModels,
-                        final List<PropertyModel<?>> propertyModels) {
-        super(clazz, propertyNameToTypeParameterMap, instanceCreatorFactory, discriminatorEnabled, discriminatorKey, discriminator,
-            idPropertyModelHolder, propertyModels);
-        this.mapper = mapper;
-        this.annotations = annotations.stream()
-                                      .collect(groupingBy(
-                                          annotation -> (Class<? extends Annotation>) annotation.annotationType()));
-        this.fieldModels = fieldModels;
-    }
 
     public MorphiaModel(final Mapper mapper,
                         final Class<T> clazz,
@@ -115,4 +107,69 @@ public class MorphiaModel<T> extends ClassModel<T> {
         }
         return collectionName;
     }
+
+    @SuppressWarnings("unchecked")
+    public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
+                                     final Mapper mapper) {
+        final List<ClassMethodPair> methodPairs = getLifecycleMethods().get(event);
+        if (methodPairs != null) {
+            for (final ClassMethodPair cm : methodPairs) {
+                cm.invoke(document, entity);
+            }
+        }
+
+        callGlobalInterceptors(event, entity, document, mapper);
+    }
+
+    private Map<Class<? extends Annotation>, List<ClassMethodPair>> mapEvent(final Class<?> type, final boolean entityListener) {
+        Map<Class<? extends Annotation>, List<ClassMethodPair>> map = new HashMap<>();
+        for (final Method method : getDeclaredAndInheritedMethods(type)) {
+            for (final Class<? extends Annotation> annotationClass : Mapper.LIFECYCLE_ANNOTATIONS) {
+                if (method.isAnnotationPresent(annotationClass)) {
+                    map.computeIfAbsent(annotationClass, c -> new ArrayList<>())
+                       .add(new ClassMethodPair(mapper, annotationClass, entityListener ? type : null, method));
+                }
+            }
+        }
+
+        return map;
+    }
+
+    public Map<Class<? extends Annotation>, List<ClassMethodPair>> getLifecycleMethods() {
+        if(lifecycleMethods == null) {
+            lifecycleMethods = new HashMap<>();
+
+            final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
+            if (entityLisAnn != null && entityLisAnn.value().length != 0) {
+                for (final Class<?> aClass : entityLisAnn.value()) {
+                    lifecycleMethods.putAll(mapEvent(aClass, true));
+                }
+            }
+
+            lifecycleMethods.putAll(mapEvent(getType(), false));
+        }
+        return lifecycleMethods;
+    }
+
+    public boolean hasLifecycle(Class<? extends Annotation> klass) {
+        return getLifecycleMethods().containsKey(klass);
+    }
+
+    private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final Document document,
+                                        final Mapper mapper) {
+        for (final EntityInterceptor ei : mapper.getInterceptors()) {
+            Sofia.logCallingInterceptorMethod(event.getSimpleName(), ei);
+
+            if (event.equals(PreLoad.class)) {
+                ei.preLoad(entity, document, mapper);
+            } else if (event.equals(PostLoad.class)) {
+                ei.postLoad(entity, document, mapper);
+            } else if (event.equals(PrePersist.class)) {
+                ei.prePersist(entity, document, mapper);
+            } else if (event.equals(PostPersist.class)) {
+                ei.postPersist(entity, document, mapper);
+            }
+        }
+    }
+
 }

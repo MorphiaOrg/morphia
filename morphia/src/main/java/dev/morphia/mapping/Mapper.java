@@ -8,8 +8,11 @@ import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
 import dev.morphia.annotations.Converters;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.EnumCodecProvider;
@@ -17,6 +20,7 @@ import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecProvider;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
+import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import dev.morphia.query.Query;
@@ -35,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +52,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
+import static java.util.Arrays.asList;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -69,6 +73,14 @@ public class Mapper {
     static final String CLASS_NAME_FIELDNAME = "className";
 
     private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
+    /**
+     * Annotations interesting for life-cycle events
+     */
+    @SuppressWarnings("unchecked")
+    public static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
+                                                                                          PreLoad.class,
+                                                                                          PostPersist.class,
+                                                                                          PostLoad.class);
     /**
      * Set of classes that registered by this mapper
      */
@@ -141,12 +153,7 @@ public class Mapper {
         try {
             for (final Class clazz : ReflectionUtils.getClasses(getClass().getClassLoader(), packageName,
                 getOptions().isMapSubPackages())) {
-                final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);
-                final Entity entityAnn = ReflectionUtils.getClassEntityAnnotation(clazz);
-                final boolean isAbstract = Modifier.isAbstract(clazz.getModifiers());
-                if ((entityAnn != null || embeddedAnn != null) && !isAbstract) {
-                    map(clazz);
-                }
+                map(clazz);
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
@@ -173,6 +180,14 @@ public class Mapper {
 
     public boolean hasInterceptors() {
         return !interceptors.isEmpty();
+    }
+
+    public MorphiaModel getModel(final Class<?> aClass) {
+        Codec<?> codec = getCodecRegistry().get(aClass);
+        if(codec instanceof MorphiaCodec) {
+            return ((MorphiaCodec)codec).getClassModel();
+        }
+        return null;
     }
 
     /**

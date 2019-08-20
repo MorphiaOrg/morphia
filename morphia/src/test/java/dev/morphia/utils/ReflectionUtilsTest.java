@@ -52,19 +52,6 @@ public class ReflectionUtilsTest extends TestBase {
         getMapper().map(MyEntity.class);
     }
 
-    /**
-     * Tests that in a class hierarchy of arbitrary depth, we can get the correct declared field type
-     *
-     * @throws Exception
-     */
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testGenericFieldTypeResolution() throws NoSuchFieldException {
-        Class<?> typeArgument = ReflectionUtils.getTypeArgument(Sub.class,
-                                                                (TypeVariable) Super1.class.getDeclaredField("field").getGenericType());
-        assertThat(typeArgument, is(exactClass(Integer.class)));
-    }
-
     @Test
     public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws IOException, ClassNotFoundException {
         //we need a jar to test with so use JUnit since it will always be there
@@ -96,46 +83,6 @@ public class ReflectionUtilsTest extends TestBase {
         }
         assertThat(result.contains(org.junit.Assert.class), is(true));
         assertThat(result.contains(org.junit.rules.RuleChain.class), is(true));
-    }
-
-    @Test
-    public void testGetParameterizedClassInheritance() throws NoSuchFieldException {
-        // Work before fix...
-        assertThat(ReflectionUtils.getParameterizedClass(Set.class), isA(Object.class));
-        assertThat(ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authorsSet")), is(exactClass(Author.class)));
-
-        // Works now...
-        assertThat(ReflectionUtils.getParameterizedClass(Book.class.getDeclaredField("authors")), is(exactClass(Author.class)));
-
-        assertThat(ReflectionUtils.getParameterizedClass(Authors.class), is(exactClass(Author.class)));
-
-        assertThat(ReflectionUtils.getParameterizedClass(WritingTeam.class), is(is(exactClass(Author.class))));
-    }
-
-    /**
-     * Test method for {@link ReflectionUtils#implementsInterface(Class, Class)} .
-     */
-    @Test
-    public void testImplementsInterface() {
-        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, List.class), is(true));
-        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
-        assertThat(ReflectionUtils.implementsInterface(ArrayList.class, Collection.class), is(true));
-
-        assertThat(ReflectionUtils.implementsInterface(Set.class, List.class), is(false));
-        assertThat(ReflectionUtils.implementsInterface(List.class, ArrayList.class), is(false));
-    }
-
-    @Test
-    public void testInheritedClassAnnotations() {
-        final List<Indexes> annotations = ReflectionUtils.getAnnotations(Foobie.class, Indexes.class);
-        assertThat(annotations.size(), is(2));
-        assertThat(ReflectionUtils.getAnnotation(Foobie.class, Indexes.class) != null, is(true));
-
-        assertThat("Base".equals(ReflectionUtils.getClassEntityAnnotation(Foo.class).value()), is(true));
-
-        assertThat("Sub".equals(ReflectionUtils.getClassEntityAnnotation(Foobie.class).value()), is(true));
-
-        assertThat(ReflectionUtils.getClassEntityAnnotation(Fooble.class).value(), is(Mapper.IGNORED_FIELDNAME));
     }
 
     private interface MapWithoutGenericTypes extends Map<Integer, String> {

@@ -1,14 +1,21 @@
 package dev.morphia.callbacks;
 
 
-import dev.morphia.annotations.Embedded;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostPersist;
+import dev.morphia.callbacks.TestPostPersist.NestedEventEntity.Inner;
+import dev.morphia.mapping.codec.pojo.ClassMethodPair;
+import dev.morphia.mapping.codec.pojo.MorphiaCodec;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
@@ -30,14 +37,19 @@ public class TestPostPersist extends TestBase {
 
     @Test
     public void testCallback() {
-        final ProblematicPostPersistEntity p = new ProblematicPostPersistEntity();
+        getMapper().map(List.of(NestedEventEntity.class, Inner.class));
+        MorphiaCodec<NestedEventEntity> codec = (MorphiaCodec<NestedEventEntity>) getMapper().getCodecRegistry()
+                                                                                             .get(NestedEventEntity.class);
+        Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = codec.getClassModel().getLifecycleMethods();
+        System.out.println("********************* lifecycleMethods = " + lifecycleMethods);
+        final NestedEventEntity p = new NestedEventEntity();
         getDs().save(p);
         Assert.assertTrue(p.called);
         Assert.assertTrue(p.i.innerCalled);
     }
 
     @Entity
-    public static class ProblematicPostPersistEntity {
+    public static class NestedEventEntity {
         @Id
         private ObjectId id;
         private final Inner i = new Inner();

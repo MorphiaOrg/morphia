@@ -83,8 +83,8 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     }
 
     @Override
-    public ClassModel<T> getClassModel() {
-        return super.getClassModel();
+    public MorphiaModel<T> getClassModel() {
+        return (MorphiaModel<T>) super.getClassModel();
     }
 
     @Override

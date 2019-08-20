@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.groupingBy;
 import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
 
 public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
@@ -148,10 +149,13 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         List<FieldModel<?>> fieldModels = fieldModelBuilders.stream()
                                                             .map(FieldModelBuilder::build)
                                                             .collect(Collectors.toList());
+        Map<Class<? extends Annotation>, List<Annotation>> annotations = getAnnotations().stream()
+                                 .collect(groupingBy(
+                                     annotation -> (Class<? extends Annotation>) annotation.annotationType()));
 
         return new MorphiaModel<>(mapper, getType(), getPropertyNameToTypeParameterMap(), getInstanceCreatorFactory(), useDiscriminator(),
             getDiscriminatorKey(), getDiscriminator(), IdPropertyModelHolder.create(getType(), idPropertyModel, getIdGenerator()),
-            getAnnotations(), fieldModels, propertyModels);
+            annotations, fieldModels, propertyModels);
     }
 
     public static <T> FieldModelBuilder<T> createFieldModelBuilder(final FieldMetadata<T> fieldMetadata) {

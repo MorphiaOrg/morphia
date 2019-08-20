@@ -2,6 +2,7 @@ package dev.morphia.callbacks;
 
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.query.FindOptions;
 
+import java.util.Map;
+
 
 public class TestMultipleCallbackMethods extends TestBase {
     private static int loading;
@@ -21,6 +24,9 @@ public class TestMultipleCallbackMethods extends TestBase {
     public void testMultipleCallbackAnnotation() {
         final SomeEntity entity = new SomeEntity();
         getDs().save(entity);
+        MorphiaModel model = getMapper().getModel(SomeEntity.class);
+
+        Map lifecycleMethods = model.getLifecycleMethods();
 
         Assert.assertEquals(4, entity.getFoo());
         Assert.assertEquals(0, loading);
@@ -31,7 +37,7 @@ public class TestMultipleCallbackMethods extends TestBase {
 
         Assert.assertEquals(4, entity.getFoo());
 
-        Assert.assertEquals(-1, someEntity.getFoo());
+        Assert.assertEquals(-3, someEntity.getFoo());
         Assert.assertEquals(2, loading);
     }
 
