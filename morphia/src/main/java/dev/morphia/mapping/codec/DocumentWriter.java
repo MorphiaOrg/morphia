@@ -30,6 +30,10 @@ public class DocumentWriter implements BsonWriter {
         push(new RootSlab());
     }
 
+    public DocumentWriter(Document seed) {
+        push(new RootSlab(seed));
+    }
+
     public <T> T getRoot() {
         return (T) root;
     }
@@ -341,12 +345,25 @@ public class DocumentWriter implements BsonWriter {
     }
 
     private class RootSlab extends ValueSlab {
+        private Document seed;
+
         private RootSlab() {
             super(null);
         }
 
+        private RootSlab(Document seed) {
+            super(null);
+            this.seed = seed;
+        }
+
         @Override
         public void apply(final Object value) {
+            if (seed != null) {
+                if (value instanceof Document) {
+                    ((Document) value).putAll(seed);
+                    seed = null;
+                }
+            }
             root = value;
         }
     }
@@ -370,5 +387,4 @@ public class DocumentWriter implements BsonWriter {
             return list.toString();
         }
     }
-
 }

@@ -136,9 +136,10 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
             || mappedClass.hasLifecycle(PrePersist.class)
             || getMapper().hasInterceptors()) {
 
-            mappedClass.callLifecycleMethods(PrePersist.class, value, null, getMapper());
+            Document prepersist = new Document();
+            mappedClass.callLifecycleMethods(PrePersist.class, value, prepersist, getMapper());
 
-            final DocumentWriter documentWriter = new DocumentWriter();
+            final DocumentWriter documentWriter = new DocumentWriter(prepersist);
             super.encode(documentWriter, value, encoderContext);
             Document document = documentWriter.getRoot();
             mappedClass.callLifecycleMethods(PostPersist.class, value, document, getMapper());

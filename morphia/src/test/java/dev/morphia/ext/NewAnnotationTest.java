@@ -52,9 +52,9 @@ public class NewAnnotationTest extends TestBase {
 
         Query<User> query = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase());
         final User uScott = query
-                                   .execute(/*new FindOptions()
+                                   .execute(new FindOptions()
                                                 .logQuery()
-*/                                                /*.limit(1)*/)
+                                                .limit(1))
                                    .next();
         Assert.assertNotNull(uScott);
     }
