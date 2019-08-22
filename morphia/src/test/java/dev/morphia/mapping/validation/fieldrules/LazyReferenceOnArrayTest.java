@@ -1,17 +1,15 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.testutil.TestEntity;
+import org.junit.Ignore;
+import org.junit.Test;
 
 
-@Ignore("references need some work")
+@Ignore("references need work")
 public class LazyReferenceOnArrayTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)

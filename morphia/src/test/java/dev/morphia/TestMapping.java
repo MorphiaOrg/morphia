@@ -463,6 +463,7 @@ public class TestMapping extends TestBase {
     }
 
     @Test
+    @Ignore("references need work")
     public void testMaps() {
         final MongoCollection<Document> articles = getDatabase().getCollection("articles");
         getMapper().map(Circle.class);
@@ -768,7 +769,7 @@ public class TestMapping extends TestBase {
         private ObjectId id;
     }
 
-    @Embedded("no-id")
+    @Embedded(value = "no-id", useDiscriminator = false)
     private static class RenamedEmbedded {
         private String name;
     }

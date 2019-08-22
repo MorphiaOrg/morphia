@@ -53,7 +53,7 @@ public class CompoundIdTest extends TestBase {
     }
 
     @Test
-    @Ignore("references need some work")
+    @Ignore("references need work")
     public void testReference() {
         getMapper().map(CompoundIdEntity.class, CompoundId.class);
 

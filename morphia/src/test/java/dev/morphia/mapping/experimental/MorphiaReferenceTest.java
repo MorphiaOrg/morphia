@@ -18,7 +18,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Ignore("references need some work")
+@Ignore("references need work")
 public class MorphiaReferenceTest extends TestBase {
     @Test
     public void basicReference() {
