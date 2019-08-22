@@ -23,8 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static dev.morphia.utils.ReflectionUtils.getDeclaredAndInheritedMethods;
+import static java.lang.String.format;
 
 public class MorphiaModel<T> extends ClassModel<T> {
     private final Mapper mapper;
@@ -80,7 +84,11 @@ public class MorphiaModel<T> extends ClassModel<T> {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", MorphiaModel.class.getSimpleName() + "[", "]")
+        String fields = fieldModels.stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
+                                         .collect(Collectors.joining(", "));
+        return format("%s<%s> { %s } ", MorphiaModel.class.getSimpleName(), getName(), fields);
+/*
+        return new StringJoiner(", ", MorphiaModel.class.getSimpleName() + "<", "]")
                    .add("name='" + getName() + "'")
                    .add("type=" + getType())
                    .add("annotations=" + annotations)
@@ -90,6 +98,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
                    .add("discriminator='" + getDiscriminator() + "'")
                    .add("fieldModels=" + fieldModels)
                    .toString();
+*/
     }
 
     public String getCollectionName() {

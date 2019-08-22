@@ -64,7 +64,9 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         ClassModel<T> classModel = getClassModel();
         getCodecCache().put(classModel, this);
         for (PropertyModel<?> propertyModel : classModel.getPropertyModels()) {
-            addToCache(propertyModel);
+            Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
+                                                           : getPropertyCodecRegistry().get(propertyModel.getTypeData());
+            propertyModel.cachedCodec(codec);
         }
     }
 
