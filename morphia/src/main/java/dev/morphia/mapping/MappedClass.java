@@ -271,7 +271,7 @@ public class MappedClass {
 
     @Override
     public String toString() {
-        return format("%s[%s] : %s", getType().getSimpleName(), getCollectionName(), fields);
+        return format("%s[%s]", getType().getSimpleName(), getCollectionName());
     }
 
     boolean isSubType(final MappedClass mc) {

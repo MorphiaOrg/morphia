@@ -33,7 +33,7 @@ public class TestMapper extends TestBase {
         List<MappedClass> classes = getMapper().map(List.of(Rectangle.class));
         MappedClass mappedClass = classes.get(0);
         List<Entity> annotations = mappedClass.getAnnotations(Entity.class);
-        Assert.assertEquals("Rectangle", mappedClass.getCollectionName());
+        Assert.assertEquals("shapes", mappedClass.getCollectionName());
         Assert.assertEquals(annotations.toString(), annotations.size(), 2);
     }
 

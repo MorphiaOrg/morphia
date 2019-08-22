@@ -2,6 +2,7 @@ package dev.morphia;
 
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.testmappackage.AbstractBaseClass;
 import org.junit.Test;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.testmappackage.SimpleEntity;
@@ -10,6 +11,7 @@ import dev.morphia.testmappackage.testmapsubpackage.testmapsubsubpackage.SimpleE
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -25,8 +27,11 @@ public class MorphiaTest extends TestBase {
 
         // then
         Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(1));
-        assertEquals(mappedClasses.iterator().next().getType(), SimpleEntity.class);
+        Collection<Class<?>> classes = mappedClasses.stream().map(mc -> mc.getType())
+                                                    .collect(Collectors.toList());
+        assertEquals(classes.size(), 2);
+        assertTrue(classes.toString(), classes.contains(AbstractBaseClass.class));
+        assertTrue(classes.toString(), classes.contains(SimpleEntity.class));
     }
 
     @Test
@@ -42,11 +47,10 @@ public class MorphiaTest extends TestBase {
 
         // then
         Collection<MappedClass> mappedClasses = mapper.getMappedClasses();
-        assertThat(mappedClasses.size(), is(3));
-        Collection<Class<?>> classes = new ArrayList<Class<?>>();
-        for (MappedClass mappedClass : mappedClasses) {
-            classes.add(mappedClass.getType());
-        }
+        assertEquals(mappedClasses.toString(), 4, mappedClasses.size());
+        Collection<Class<?>> classes = mappedClasses.stream().map(mc -> mc.getType())
+            .collect(Collectors.toList());
+        assertTrue(classes.contains(AbstractBaseClass.class));
         assertTrue(classes.contains(SimpleEntity.class));
         assertTrue(classes.contains(SimpleEntityInSubPackage.class));
         assertTrue(classes.contains(SimpleEntityInSubSubPackage.class));

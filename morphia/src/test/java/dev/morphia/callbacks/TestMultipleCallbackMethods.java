@@ -24,9 +24,6 @@ public class TestMultipleCallbackMethods extends TestBase {
     public void testMultipleCallbackAnnotation() {
         final SomeEntity entity = new SomeEntity();
         getDs().save(entity);
-        MorphiaModel model = getMapper().getModel(SomeEntity.class);
-
-        Map lifecycleMethods = model.getLifecycleMethods();
 
         Assert.assertEquals(4, entity.getFoo());
         Assert.assertEquals(0, loading);
@@ -37,7 +34,7 @@ public class TestMultipleCallbackMethods extends TestBase {
 
         Assert.assertEquals(4, entity.getFoo());
 
-        Assert.assertEquals(-3, someEntity.getFoo());
+        Assert.assertEquals(-1, someEntity.getFoo());
         Assert.assertEquals(2, loading);
     }
 
