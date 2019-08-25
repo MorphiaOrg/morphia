@@ -7,9 +7,9 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.UpdateDocument.Mode;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
@@ -474,12 +474,14 @@ class DatastoreImpl implements AdvancedDatastore {
             options.apply(collection)
                    .insertOne(entity, options.getOptions());
         } else {
-            UpdateOptions updateOptions = new UpdateOptions()
+            ReplaceOptions updateOptions = new ReplaceOptions()
                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                              .writeConcern(options.getWriteConcern())
                                               .upsert(true);
-            updateOptions.apply(collection)
-                         .updateOne(new Document("_id", id), new UpdateDocument(entity, Mode.DEFAULT), updateOptions);
+            if(options.getWriteConcern() != null) {
+                collection.withWriteConcern(options.getWriteConcern())
+                          .replaceOne(new Document("_id", id), entity, updateOptions);
+            }
+            collection.replaceOne(new Document("_id", id), entity, updateOptions);
         }
     }
 

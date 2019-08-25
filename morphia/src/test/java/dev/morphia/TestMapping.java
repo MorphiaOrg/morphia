@@ -22,7 +22,6 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.DefaultCreator;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
@@ -43,7 +42,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,11 +63,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unchecked"})
 public class TestMapping extends TestBase {
 
     @Test
     public void testAlsoLoad() {
+        getMapper().map(ContainsIntegerListNew.class, ContainsIntegerList.class);
         final ContainsIntegerList cil = new ContainsIntegerList();
         cil.intList.add(1);
         getDs().save(cil);
@@ -141,21 +140,6 @@ public class TestMapping extends TestBase {
     @Test
     public void testBasicMapping() {
         performBasicMappingTest();
-        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getCreator();
-        assertTrue(objectFactory.getClassNameCache().isEmpty());
-    }
-
-    @Test
-    public void testBasicMappingWithCachedClasses() {
-        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                                             .cacheClassLookups(true)
-                                             .build();
-        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
-        performBasicMappingTest();
-
-        final DefaultCreator objectFactory = (DefaultCreator) getMapper().getOptions().getCreator();
-        assertTrue(objectFactory.getClassNameCache().containsKey(Hotel.class.getName()));
-        assertTrue(objectFactory.getClassNameCache().containsKey(TravelAgency.class.getName()));
     }
 
     @Test
@@ -181,6 +165,7 @@ public class TestMapping extends TestBase {
     }
 
     @Test
+    @Ignore("references need work")
     public void testDbRefMapping() {
         getMapper().map(Rectangle.class);
         final MongoCollection<Document> stuff = getDatabase().getCollection("stuff");
@@ -608,19 +593,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void testTimestampMapping() {
-        getMapper().map(ContainsTimestamp.class);
-        final ContainsTimestamp cts = new ContainsTimestamp();
-        getDs().save(cts);
-        final ContainsTimestamp loaded = getDs().find(ContainsTimestamp.class)
-                                                .filter("_id", cts.id)
-                                                .first();
-        assertNotNull(loaded.ts);
-        assertEquals(loaded.ts.getTime(), cts.ts.getTime());
-
-    }
-
-    @Test
     public void testUUID() {
         //       getMorphia().map(ContainsUUID.class);
         final ContainsUUID uuid = new ContainsUUID();
@@ -650,7 +622,6 @@ public class TestMapping extends TestBase {
     @SuppressWarnings("unchecked")
     private void performBasicMappingTest() {
         final MongoCollection<Document> hotels = getDatabase().getCollection("hotels");
-        final MongoCollection<Document> agencies = getDatabase().getCollection("agencies");
 
         Mapper mapper = getDs().getMapper();
         mapper.map(List.of(Hotel.class, TravelAgency.class));
@@ -672,15 +643,16 @@ public class TestMapping extends TestBase {
         address.setPostCode("101");
         borg.setAddress(address);
 
-        Document hotelDocument = mapper.toDocument(borg);
+        getDs().save(borg);
+
+        Document hotelDocument = hotels.find(new Document("_id", borg.getId())).first();
         List<Document> numbers = (List<Document>) hotelDocument.get("phoneNumbers");
         assertFalse(numbers.get(0).containsKey(
             mapper.getOptions().getDiscriminatorField()));
 
-
-        hotels.insertOne(hotelDocument);
-
-        Hotel borgLoaded = mapper.fromDocument(Hotel.class, hotelDocument);
+        Hotel borgLoaded = getDs().find(Hotel.class)
+                                  .filter("_id", borg.getId())
+                                  .first();
 
         assertEquals(borg.getName(), borgLoaded.getName());
         assertEquals(borg.getStars(), borgLoaded.getStars());
@@ -699,11 +671,12 @@ public class TestMapping extends TestBase {
         agency.setName("Lastminute.com");
         agency.getHotels().add(borgLoaded);
 
-        final Document agencyDocument = mapper.toDocument(agency);
-        agencies.insertOne(agencyDocument);
+        getDs().save(agency);
 
-        final TravelAgency agencyLoaded = mapper.fromDocument(TravelAgency.class,
-            agencies.find(new Document("_id", agencyDocument.get("_id"))).first());
+        final TravelAgency agencyLoaded = getDs()
+                                              .find(TravelAgency.class)
+                                              .filter("_id", agency.getId())
+                                              .first();
 
         assertEquals(agency.getName(), agencyLoaded.getName());
         assertEquals(1, agency.getHotels().size());
@@ -714,10 +687,9 @@ public class TestMapping extends TestBase {
         borgLoaded.getPhoneNumbers().clear();
         borgLoaded.setName(null);
 
-        hotelDocument = mapper.toDocument(borgLoaded);
-        hotels.insertOne(hotelDocument);
+        getDs().save(borgLoaded);
 
-        hotelDocument = (Document) hotels.find(new Document("_id", hotelDocument.get("_id")));
+        hotelDocument = (Document) hotels.find(new Document("_id", borgLoaded.getId())).first();
 
         borgLoaded = mapper.fromDocument(Hotel.class, hotelDocument);
         assertNull(borgLoaded.getAddress());
@@ -833,13 +805,6 @@ public class TestMapping extends TestBase {
         ContainsFinalField(final String name) {
             this.name = name;
         }
-    }
-
-    @Entity
-    private static class ContainsTimestamp {
-        @Id
-        private ObjectId id;
-        private final Timestamp ts = new Timestamp(System.currentTimeMillis());
     }
 
     @Entity

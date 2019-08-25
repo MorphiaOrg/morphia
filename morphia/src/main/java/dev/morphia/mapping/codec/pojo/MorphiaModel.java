@@ -87,18 +87,6 @@ public class MorphiaModel<T> extends ClassModel<T> {
         String fields = fieldModels.stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
                                          .collect(Collectors.joining(", "));
         return format("%s<%s> { %s } ", MorphiaModel.class.getSimpleName(), getName(), fields);
-/*
-        return new StringJoiner(", ", MorphiaModel.class.getSimpleName() + "<", "]")
-                   .add("name='" + getName() + "'")
-                   .add("type=" + getType())
-                   .add("annotations=" + annotations)
-                   .add("hasTypeParameters=" + hasTypeParameters())
-                   .add("useDiscriminator=" + useDiscriminator())
-                   .add("discriminatorKey='" + getDiscriminatorKey() + "'")
-                   .add("discriminator='" + getDiscriminator() + "'")
-                   .add("fieldModels=" + fieldModels)
-                   .toString();
-*/
     }
 
     public String getCollectionName() {

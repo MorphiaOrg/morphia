@@ -5,6 +5,8 @@ import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
 import org.bson.codecs.pojo.IdPropertyModelHolder;
+import org.bson.codecs.pojo.PojoBuilderHelper;
+import org.bson.codecs.pojo.PropertyMetadata;
 import org.bson.codecs.pojo.PropertyModel;
 import org.bson.codecs.pojo.PropertyModelBuilder;
 import org.bson.codecs.pojo.TypeData;
@@ -14,6 +16,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +78,21 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
     }
 
     private void processFields(Class<?> currentClass, TypeData<?> parentClassTypeData, List<String> genericTypeNames) {
+        Map<String, PropertyMetadata<?>> propertyNameMap = new HashMap<String, PropertyMetadata<?>>();
+        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<String, TypeParameterMap>();
+
         for (Field field : currentClass.getDeclaredFields()) {
-            // Note if properties are present and types don't match, the underlying field is treated as an implementation detail.
+            PropertyMetadata<?> propertyMetadata = PojoBuilderHelper.getOrCreateFieldPropertyMetadata(field.getName(),
+                getType().getSimpleName(), propertyNameMap, TypeData.newInstance(field), propertyTypeParameterMap, parentClassTypeData,
+                genericTypeNames, field.getGenericType());
+            if (propertyMetadata != null && propertyMetadata.getField() == null) {
+                propertyMetadata.field(field);
+                for (Annotation annotation : field.getDeclaredAnnotations()) {
+                    propertyMetadata.addReadAnnotation(annotation);
+                    propertyMetadata.addWriteAnnotation(annotation);
+                }
+            }
+
             final TypeData<?> typeData = TypeData.newInstance(field);
 
             FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData);
@@ -119,6 +135,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      *
      * @return the new instance
      */
+    @SuppressWarnings("unchecked")
     public MorphiaModel<T> build() {
         PropertyModel<?> idPropertyModel = null;
 

@@ -21,10 +21,7 @@ import dev.morphia.annotations.Property;
 import java.io.Serializable;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
-@Embedded
+@Embedded(useDiscriminator = false)
 public class PhoneNumber implements Serializable {
 
     @Property

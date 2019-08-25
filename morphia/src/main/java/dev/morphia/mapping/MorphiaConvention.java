@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Handler;
@@ -25,6 +26,9 @@ import org.bson.codecs.pojo.TypeData;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -46,72 +50,85 @@ public class MorphiaConvention implements Convention {
 
     @Override
     public void apply(final ClassModelBuilder<?> classModelBuilder) {
+        if (!(classModelBuilder instanceof MorphiaModelBuilder)) {
+            return;
+        }
+        MorphiaModelBuilder modelBuilder = (MorphiaModelBuilder) classModelBuilder;
+        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(datastore, modelBuilder.getType());
+        modelBuilder.instanceCreatorFactory(creatorFactory);
+        modelBuilder.discriminator(modelBuilder.getType().getName())
+                         .discriminatorKey(options.getDiscriminatorField());
 
-        classModelBuilder.discriminator(classModelBuilder.getType().getName())
-                         .discriminatorKey("className");
-
-        final Entity entity = getAnnotation(classModelBuilder, Entity.class);
+        final Entity entity = getAnnotation(modelBuilder, Entity.class);
+        final Embedded embedded = getAnnotation(modelBuilder, Embedded.class);
         if(entity != null) {
-            classModelBuilder.enableDiscriminator(entity.useDiscriminator());
-        } else if(classModelBuilder instanceof MorphiaModelBuilder && ((MorphiaModelBuilder) classModelBuilder).hasAnnotation(Embedded.class)) {
-            classModelBuilder.enableDiscriminator(getAnnotation(classModelBuilder, Embedded.class).useDiscriminator());
+            modelBuilder.enableDiscriminator(entity.useDiscriminator());
+        } else if(embedded != null) {
+            modelBuilder.enableDiscriminator(embedded.useDiscriminator());
         } else {
-            classModelBuilder.enableDiscriminator(true);
+            modelBuilder.enableDiscriminator(true);
         }
 
-
-        final List<String> names = classModelBuilder.getPropertyModelBuilders().stream()
+        final List<String> properties = classModelBuilder.getPropertyModelBuilders().stream()
                                                     .map(PropertyModelBuilder::getName)
                                                     .collect(Collectors.toList());
-        for (final String name : names) {
+        for (final String name : properties) {
             classModelBuilder.removeProperty(name);
         }
+        classModelBuilder.propertyNameToTypeParameterMap(Collections.emptyMap());
 
-        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(datastore, classModelBuilder.getType());
-        classModelBuilder.instanceCreatorFactory(creatorFactory);
-        if (classModelBuilder instanceof MorphiaModelBuilder) {
-            Iterator<FieldModelBuilder<?>> iterator = ((MorphiaModelBuilder) classModelBuilder).getFieldModelBuilders().iterator();
-            while (iterator.hasNext()) {
-                final FieldModelBuilder<?> builder = iterator.next();
-                final Field field = builder.getField();
+        Iterator<FieldModelBuilder<?>> iterator = modelBuilder.getFieldModelBuilders().iterator();
+        while (iterator.hasNext()) {
+            final FieldModelBuilder<?> builder = iterator.next();
+            final Field field = builder.getField();
 
-                PropertyModelBuilder<?> property = classModelBuilder.getProperty(builder.getName());
+            if (isStatic(field.getModifiers()) || isTransient(builder)) {
+                iterator.remove();
+            } else {
+                Property property = builder.getAnnotation(Property.class);
+                if(property != null && !property.concreteClass().equals(Object.class)) {
+                    TypeData typeData = TypeData.newInstance(field.getGenericType(), property.concreteClass());
+                    builder.typeData(typeData);
+                }
 
-                if (isStatic(field.getModifiers()) || isTransient(builder)) {
-                    iterator.remove();
-                    if (property != null) {
-                        classModelBuilder.removeProperty(property.getName());
-                    }
-                } else {
-                    if (property == null) {
-                        final PropertyMetadata<?> propertyMetadata = new PropertyMetadata<>(builder.getName(),
-                            classModelBuilder.getType().getName(), builder.getTypeData())
-                                                                         .field(field);
-                        property = createPropertyModelBuilder(propertyMetadata);
-                        classModelBuilder.addProperty(property);
-                    }
-
-                    property.typeData((TypeData) builder.getTypeData());
-
-                    if (builder.hasAnnotation(Id.class)) {
-                        classModelBuilder.idPropertyName(property.getReadName());
-                    }
-
-                    final String mappedName = getMappedFieldName(builder);
-                    property.readName(mappedName)
-                            .writeName(mappedName)
-                            .propertySerialization(new MorphiaPropertySerialization(options, builder))
-                            .readAnnotations(builder.getAnnotations())
-                            .writeAnnotations(builder.getAnnotations())
-                            .propertyAccessor(getPropertyAccessor(creatorFactory, field, property));
-
-                    if (isNotConcrete(property.getTypeData())) {
-                        property.discriminatorEnabled(true);
-                    }
+                List<String> names = new ArrayList<>(List.of(getMappedFieldName(builder)));
+                AlsoLoad alsoLoad = builder.getAnnotation(AlsoLoad.class);
+                if(alsoLoad != null) {
+                    names.addAll(Arrays.asList(alsoLoad.value()));
+                }
+                for (final String name : names) {
+                    buildProperty(modelBuilder, creatorFactory, builder, field, name);
                 }
             }
         }
 
+    }
+
+    private void buildProperty(final MorphiaModelBuilder modelBuilder,
+                               final InstanceCreatorFactoryImpl creatorFactory,
+                               final FieldModelBuilder<?> builder, final Field field, final String mappedName) {
+        final PropertyMetadata<?> propertyMetadata = new PropertyMetadata<>(builder.getName(),
+            modelBuilder.getType().getName(), builder.getTypeData())
+                                                         .field(field);
+        final PropertyModelBuilder<?> property = createPropertyModelBuilder(propertyMetadata);
+        modelBuilder.addProperty(property);
+
+        property.typeData((TypeData) builder.getTypeData());
+
+        if (builder.hasAnnotation(Id.class)) {
+            modelBuilder.idPropertyName(property.getReadName());
+        }
+
+        property.readName(mappedName)
+                .writeName(mappedName)
+                .propertySerialization(new MorphiaPropertySerialization(options, builder))
+                .readAnnotations(builder.getAnnotations())
+                .writeAnnotations(builder.getAnnotations())
+                .propertyAccessor(getPropertyAccessor(creatorFactory, field, property));
+
+        if (isNotConcrete(property.getTypeData())) {
+            property.discriminatorEnabled(true);
+        }
     }
 
     private boolean hasHandler(final PropertyModelBuilder builder) {

@@ -7,7 +7,6 @@ import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
-import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
@@ -50,7 +49,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -124,9 +122,7 @@ public class Mapper {
      *
      * @param entityClasses the classes to map
      * @return
-     * @deprecated use {@link #map(List)}
      */
-    @Deprecated(since = "2.0", forRemoval = true)
     public List<MappedClass> map(final Class... entityClasses) {
         return map(List.of(entityClasses));
     }
@@ -638,42 +634,6 @@ public class Mapper {
     }
 
     /**
-     * Converts a Key to a DBRef
-     *
-     * @param key the Key to convert
-     * @return the DBRef
-     */
-    public DBRef keyToDBRef(final Key key) {
-        if (key == null) {
-            return null;
-        }
-        if (key.getType() == null && key.getCollection() == null) {
-            throw new IllegalStateException("How can it be missing both?");
-        }
-        if (key.getCollection() == null) {
-            key.setCollection(getMappedClass(key.getType()).getCollectionName());
-        }
-
-        Object id = key.getId();
-        if (isMapped(id.getClass())) {
-            id = toMongoObject(id, true);
-        }
-        return new DBRef(key.getCollection(), id);
-    }
-
-    /**
-     * Creates a Key for a type and an ID value
-     *
-     * @param type the Class of the entity
-     * @param id   the ID value
-     * @param <T>  the type of the entity
-     * @return the Key
-     */
-    public <T> Key<T> manualRefToKey(final Class<T> type, final Object id) {
-        return id == null ? null : new Key<>(type, getMappedClass(type).getCollectionName(), id);
-    }
-
-    /**
      * Converts a DBRef to a Key
      *
      * @param ref the DBRef to convert
@@ -688,11 +648,50 @@ public class Mapper {
     /**
      * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
      *
-     * @param entity          The POJO
+     * @param entity The POJO
      * @return the Document
+     * @morphia.internal
      */
     public Document toDocument(final Object entity) {
-        return toDocument(entity, true);
+
+        final MappedClass mc = getMappedClass(entity.getClass());
+
+        DocumentWriter writer = new DocumentWriter();
+        Codec codec = getCodecRegistry().get(mc.getType());
+        codec.encode(writer, entity,
+            EncoderContext.builder()
+                          .build());
+
+        return writer.getRoot();
+
+/*
+        Document document = new Document();
+
+        if (mc.getEntityAnnotation() == null || mc.getEntityAnnotation().useDiscriminator()) {
+            document.put(opts.getDiscriminatorField(), entity.getClass().getName());
+        }
+
+        if (lifecycle) {
+            mc.callLifecycleMethods(PrePersist.class, entity, document, this);
+        }
+
+        for (final MappedField mf : mc.getFields()) {
+            try {
+                writeMappedField(document, mf, entity, involvedObjects);
+            } catch (Exception e) {
+                throw new MappingException("Error mapping field:" + mf, e);
+            }
+        }
+        if (involvedObjects != null) {
+            involvedObjects.put(entity, document);
+        }
+
+        if (lifecycle) {
+            mc.callLifecycleMethods(PreSave.class, entity, document, this);
+        }
+
+        return document;
+*/
     }
 
     /**
@@ -737,257 +736,8 @@ public class Mapper {
         return key.getCollection();
     }
 
-    /**
-     * Updates the @{@link dev.morphia.annotations.Id} and @{@link dev.morphia.annotations.Version} fields.
-     *
-     * @param datastore the Datastore to use when fetching this reference
-     * @param dbObj     Value to update with; null means skip
-     * @param cache     the EntityCache
-     * @param entity    The object to update
-     */
-    public void updateKeyAndVersionInfo(final Datastore datastore, final Document dbObj, final EntityCache cache, final Object entity) {
-        final MappedClass mc = getMappedClass(entity.getClass());
-
-        // update id field, if there.
-        if ((mc.getIdField() != null) && (dbObj != null) && (dbObj.get("_id") != null)) {
-            try {
-                final MappedField mf = mc.getIdField();
-                final Object oldIdValue = mc.getIdField().getFieldValue(entity);
-                readMappedField(datastore, mf, entity, cache, dbObj);
-                if (oldIdValue != null) {
-                    // The entity already had an id set. Check to make sure it hasn't changed. That would be unexpected, and could
-                    // indicate a bad state.
-                    final Object dbIdValue = mf.getFieldValue(entity);
-                    if (!dbIdValue.equals(oldIdValue)) {
-                        mf.setFieldValue(entity, oldIdValue); //put the value back...
-                        throw new RuntimeException(format("@Id mismatch: %s != %s for %s", oldIdValue, dbIdValue,
-                            entity.getClass().getName()));
-                    }
-                }
-            } catch (Exception e) {
-                if (e instanceof RuntimeException) {
-                    throw (RuntimeException) e;
-                }
-
-                throw new RuntimeException("Error setting @Id field after save/insert.", e);
-            }
-        }
-        if (mc.getVersionField() != null && (dbObj != null)) {
-            readMappedField(datastore, mc.getVersionField(), entity, cache, dbObj);
-        }
-    }
-
-    private void addConverters(final MappedClass mc) {
-        if (mc.<Annotation>getAnnotations(Converters.class) != null) {
-            LOG.debug("Converters have been replaced by Conversions and custom codecs.  This annotation should be removed once the code "
-                      + "has been updated to the new approach.");
-        }
-    }
-
-    /**
-     * Add MappedClass to internal cache, possibly validating first.
-     */
-    private MappedClass addMappedClass(final MappedClass mc, final boolean validate) {
-        addConverters(mc);
-
-        if (validate && !mc.isInterface()) {
-            mc.validate(this);
-        }
-
-        mappedClasses.put(mc.getType(), mc);
-
-        Set<MappedClass> mcs = mappedClassesByCollection.get(mc.getCollectionName());
-        if (mcs == null) {
-            mcs = new CopyOnWriteArraySet<>();
-            final Set<MappedClass> temp = mappedClassesByCollection.putIfAbsent(mc.getCollectionName(), mcs);
-            if (temp != null) {
-                mcs = temp;
-            }
-        }
-
-        mcs.add(mc);
-
-        return mc;
-    }
-
-    private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
-                                 final Document document) {
-        if( 1 == 1) {
-            throw new UnsupportedOperationException();
-        }
-
-    }
-
-/*
-    private void writeMappedField(final Document document, final MappedField mf, final Object entity,
-                                  final Map<Object, Document> involvedObjects) {
-
-        if( 1 == 1) {
-            throw new UnsupportedOperationException();
-        }
-
-*/
-/*
-        //skip not saved fields.
-        if (mf.hasAnnotation(NotSaved.class)) {
-            return;
-        }
-
-        // get the annotation from the field.
-        Class<? extends Annotation> annType = getFieldAnnotation(mf);
-
-        if (Property.class.equals(annType) || Serialized.class.equals(annType) || mf.isTypeMongoCompatible()
-            || (getConverters().hasSimpleValueConverter(mf) || (getConverters().hasSimpleValueConverter(mf.getFieldValue(entity))))) {
-            opts.getValueMapper().toDocument(entity, mf, document, involvedObjects, this);
-        } else if (Reference.class.equals(annType) || MorphiaReference.class == mf.getConcreteType()) {
-            opts.getReferenceMapper().toDocument(entity, mf, document, involvedObjects, this);
-        } else if (Embedded.class.equals(annType)) {
-            opts.getEmbeddedMapper().toDocument(entity, mf, document, involvedObjects, this);
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No annotation was found, using default mapper " + opts.getDefaultMapper() + " for " + mf);
-            }
-            opts.getDefaultMapper().toDocument(entity, mf, document, involvedObjects, this);
-        }
-
-*//*
-
-    }
-*/
-
     <T> Key<T> manualRefToKey(final String collection, final Object id) {
         return id == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(collection), collection, id);
-    }
-
-    /**
-     * <p> Converts a java object to a mongo-compatible object (possibly a Document for complex mappings). Very similar to {@link
-     * Mapper#toDocument} </p> <p> Used (mainly) by query/update operations </p>
-     */
-    Object toMongoObject(final Object javaObj, final boolean includeClassName) {
-        if (javaObj == null) {
-            return null;
-        }
-
-        Class origClass = javaObj.getClass();
-
-        if (origClass.isAnonymousClass() && origClass.getSuperclass().isEnum()) {
-            origClass = origClass.getSuperclass();
-        }
-        DocumentWriter writer = new DocumentWriter();
-        getCodecRegistry().get(origClass).encode(writer, javaObj,
-            EncoderContext.builder()
-                          .isEncodingCollectibleDocument(includeClassName)
-                          .build());
-
-        return writer.getRoot();
-
-/*
-        final Object newObj = getConverters().encode(origClass, javaObj);
-        if (newObj == null) {
-            LOG.warn("converted " + javaObj + " to null");
-            return null;
-        }
-        final Class type = newObj.getClass();
-        final boolean bSameType = origClass.equals(type);
-
-        //TODO: think about this logic a bit more.
-        //Even if the converter changed it, should it still be processed?
-        if (!bSameType && !(Map.class.isAssignableFrom(type) || Iterable.class.isAssignableFrom(type))) {
-            return newObj;
-        } else { //The converter ran, and produced another type, or it is a list/map
-
-            boolean isSingleValue = true;
-            boolean isMap = false;
-            Class subType = null;
-
-            if (type.isArray() || Map.class.isAssignableFrom(type) || Iterable.class.isAssignableFrom(type)) {
-                isSingleValue = false;
-                isMap = implementsInterface(type, Map.class);
-                // subtype of Long[], List<Long> is Long
-                subType = (type.isArray()) ? type.getComponentType() : getParameterizedClass(type, (isMap) ? 1 : 0);
-            }
-
-            if (isSingleValue && !isPropertyType(type)) {
-                final Document dbObj = toDocument(newObj);
-                if (!includeClassName) {
-                    dbObj.remove(opts.getDiscriminatorField());
-                }
-                return dbObj;
-            } else if (newObj instanceof Document) {
-                return newObj;
-            } else if (isMap) {
-                if (isPropertyType(subType)) {
-                    return toDocument(newObj);
-                } else {
-                    final LinkedHashMap m = new LinkedHashMap();
-                    for (final Map.Entry e : (Iterable<Map.Entry>) ((Map) newObj).entrySet()) {
-                        m.put(e.getKey(), toMongoObject(e.getValue(), includeClassName));
-                    }
-
-                    return m;
-                }
-                //Set/List but needs elements converted
-            } else if (!isSingleValue && !isPropertyType(subType)) {
-                final List<Object> values = new BasicDBList();
-                if (type.isArray()) {
-                    for (final Object obj : (Object[]) newObj) {
-                        values.add(toMongoObject(obj, includeClassName));
-                    }
-                } else {
-                    for (final Object obj : (Iterable) newObj) {
-                        values.add(toMongoObject(obj, includeClassName));
-                    }
-                }
-
-                return values;
-            } else {
-                return newObj;
-            }
-        }
-*/
-    }
-
-    <T> Document toDocument(final T entity, final boolean lifecycle) {
-
-        final MappedClass mc = getMappedClass(entity.getClass());
-
-        DocumentWriter writer = new DocumentWriter();
-        Codec<T> codec = (Codec<T>) getCodecRegistry().get(mc.getType());
-        codec.encode(writer, entity,
-            EncoderContext.builder()
-                          .isEncodingCollectibleDocument(lifecycle)
-                          .build());
-
-        return writer.getRoot();
-
-/*
-        Document document = new Document();
-
-        if (mc.getEntityAnnotation() == null || mc.getEntityAnnotation().useDiscriminator()) {
-            document.put(opts.getDiscriminatorField(), entity.getClass().getName());
-        }
-
-        if (lifecycle) {
-            mc.callLifecycleMethods(PrePersist.class, entity, document, this);
-        }
-
-        for (final MappedField mf : mc.getFields()) {
-            try {
-                writeMappedField(document, mf, entity, involvedObjects);
-            } catch (Exception e) {
-                throw new MappingException("Error mapping field:" + mf, e);
-            }
-        }
-        if (involvedObjects != null) {
-            involvedObjects.put(entity, document);
-        }
-
-        if (lifecycle) {
-            mc.callLifecycleMethods(PreSave.class, entity, document, this);
-        }
-
-        return document;
-*/
     }
 
 }
