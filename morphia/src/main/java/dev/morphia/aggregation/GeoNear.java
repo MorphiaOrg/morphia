@@ -132,7 +132,7 @@ public final class GeoNear {
         return copy;
     }
 
-    Object getNearAsDBObject(final PointCodec pointCodec) {
+    Object getNearAsDocument(final PointCodec pointCodec) {
         if (nearGeoJson != null) {
             return pointCodec.encode(nearGeoJson, null);
         } else {

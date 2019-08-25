@@ -1,14 +1,14 @@
 package dev.morphia.mapping;
 
 
-import com.mongodb.BasicDBObject;
+import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Id;
 
 import java.io.Serializable;
 
@@ -58,6 +58,6 @@ public class MapWithDotInKeyTest extends TestBase {
     }
 
     @Embedded
-    private static class MyMap extends BasicDBObject {
+    private static class MyMap extends Document {
     }
 }

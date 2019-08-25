@@ -65,21 +65,21 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         Document query;
         FilterOperator operator = getOperator();
         GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(getMapper());
-        final Document geometryAsDBObject = (Document) geometryQueryConverter.encode(geometry, null);
+        final Document document = (Document) geometryQueryConverter.encode(geometry, null);
 
         switch (operator) {
             case NEAR:
             case NEAR_SPHERE:
                 if (options != null) {
-                    geometryAsDBObject.putAll(options);
+                    document.putAll(options);
                 }
-                query = new Document(NEAR.val(), geometryAsDBObject);
+                query = new Document(NEAR.val(), document);
                 break;
             case GEO_WITHIN:
             case INTERSECTS:
-                query = new Document(operator.val(), geometryAsDBObject);
+                query = new Document(operator.val(), document);
                 if (crs != null) {
-                    ((Document) geometryAsDBObject.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs,
+                    ((Document) document.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs,
                      null));
                 }
                 break;

@@ -98,7 +98,7 @@ public class AggregationTest extends TestBase {
                                                grouping("year", accumulator("$year", "date"))),
                                                grouping("count", accumulator("$sum", 1)));
         final Document group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
-        final Document id = getDBObject(group, "$group", "_id");
+        final Document id = getDocument(group, "$group", "_id");
         Assert.assertEquals(new Document("$month", "$date"), id.get("month"));
         Assert.assertEquals(new Document("$year", "$date"), id.get("year"));
 
@@ -708,7 +708,7 @@ public class AggregationTest extends TestBase {
                    .skip(0);
         List<Document> stages = ((AggregationPipelineImpl) pipeline).getStages();
         Document group = stages.get(0);
-        Document addToSet = getDBObject(group, "$group", "messageDataSet", "$addToSet");
+        Document addToSet = getDocument(group, "$group", "messageDataSet", "$addToSet");
         Assert.assertNotNull(addToSet);
         Assert.assertEquals(addToSet.get("sentDate"), "$sentDate");
         Assert.assertEquals(addToSet.get("messageId"), "$_id");
@@ -732,8 +732,8 @@ public class AggregationTest extends TestBase {
         pipeline.aggregate(User.class);
     }
 
-    private Document getDBObject(final Document dbObject, final String... path) {
-        Document current = dbObject;
+    private Document getDocument(final Document document, final String... path) {
+        Document current = document;
         for (String step : path) {
             Object next = current.get(step);
             Assert.assertNotNull(format("Could not find %s in \n%s", step, current), next);

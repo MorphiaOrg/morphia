@@ -114,7 +114,7 @@ public class MappedField {
     }
 
     /**
-     * @param document the DBObject get the value from
+     * @param document the Document get the value from
      * @return the value from best mapping of this field
      */
     public Object getDocumentValue(final Document document) {

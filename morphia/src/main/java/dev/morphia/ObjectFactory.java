@@ -26,11 +26,11 @@ public interface ObjectFactory {
      * is missing, the given Class is used instead.
      *
      * @param clazz type class to instantiate
-     * @param dbObj the state to populate the new instance with
+     * @param document the state to populate the new instance with
      * @param <T>   the type of the entity
      * @return the new instance
      */
-    <T> T createInstance(Class<T> clazz, Document dbObj);
+    <T> T createInstance(Class<T> clazz, Document document);
 
     /**
      * Creates an instance of the class defined in the discriminator field in the document passed in.  If that field
@@ -38,10 +38,10 @@ public interface ObjectFactory {
      *
      * @param mapper the Mapper to use
      * @param mf     the MappedField to consult when creating the instance
-     * @param dbObj  the state to populate the new instance with
+     * @param document  the state to populate the new instance with
      * @return the new instance
      */
-    Object createInstance(Mapper mapper, MappedField mf, Document dbObj);
+    Object createInstance(Mapper mapper, MappedField mf, Document document);
 
     /**
      * Defines how morphia creates a List object.

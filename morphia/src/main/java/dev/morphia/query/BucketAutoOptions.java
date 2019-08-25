@@ -22,10 +22,10 @@ public class BucketAutoOptions {
      *
      * @return the Document
      */
-    public Document toDBObject() {
-        Document dbObject = new Document();
+    public Document toDocument() {
+        Document document = new Document();
         if (granularity != null) {
-            dbObject.put("granularity", granularity.getGranulality());
+            document.put("granularity", granularity.getGranulality());
         }
 
         Document output = new Document();
@@ -33,10 +33,10 @@ public class BucketAutoOptions {
             output.put(entry.getKey(), entry.getValue().toDocument());
         }
         if (!accumulators.isEmpty()) {
-            dbObject.put("output", output);
+            document.put("output", output);
         }
 
-        return dbObject;
+        return document;
     }
 
     /**

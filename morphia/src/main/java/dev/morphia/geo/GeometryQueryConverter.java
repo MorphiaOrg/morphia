@@ -4,7 +4,7 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 
 /**
- * Converts Point objects into DBObjects for querying only.  When saving entities with Points in, this converter should not be used.
+ * Converts Point objects into Documents for querying only.  When saving entities with Points in, this converter should not be used.
  */
 public class GeometryQueryConverter {
 

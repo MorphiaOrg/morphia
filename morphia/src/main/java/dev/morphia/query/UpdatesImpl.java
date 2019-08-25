@@ -85,9 +85,9 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
 
         PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
-        Document dbObject = new Document(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
-        options.update(dbObject);
-        addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), dbObject);
+        Document document = new Document(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
+        options.update(document);
+        addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), document);
 
         return (Updater)this;
     }

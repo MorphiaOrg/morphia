@@ -23,9 +23,9 @@ public class BucketOptions {
      * @return the Document
      */
     public Document toDocument() {
-        Document dbObject = new Document();
+        Document document = new Document();
         if (defaultField != null) {
-            dbObject.put("default", defaultField);
+            document.put("default", defaultField);
         }
 
         Document output = new Document();
@@ -33,10 +33,10 @@ public class BucketOptions {
             output.put(entry.getKey(), entry.getValue().toDocument());
         }
         if (!accumulators.isEmpty()) {
-            dbObject.put("output", output);
+            document.put("output", output);
         }
 
-        return dbObject;
+        return document;
     }
 
     /**

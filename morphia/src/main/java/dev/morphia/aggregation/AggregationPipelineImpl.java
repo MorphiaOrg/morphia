@@ -92,7 +92,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
         Document geo = new Document();
 
-//        putIfNull(geo, "near", geoNear.getNearAsDBObject(pointConverter));
+//        putIfNull(geo, "near", geoNear.getNearAsDocument(pointConverter));
         putIfNull(geo, "distanceField", geoNear.getDistanceField());
         putIfNull(geo, "limit", geoNear.getLimit());
         putIfNull(geo, "num", geoNear.getMaxDocuments());
@@ -197,11 +197,11 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline project(final Projection... projections) {
         firstStage = stages.isEmpty();
-        Document dbObject = new Document();
+        Document document = new Document();
         for (Projection projection : projections) {
-            dbObject.putAll(toDocument(projection));
+            document.putAll(toDocument(projection));
         }
-        stages.add(new Document("$project", dbObject));
+        stages.add(new Document("$project", document));
         return this;
     }
 
@@ -256,10 +256,10 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         if (boundaries == null || boundaries.size() < 2) {
             throw new RuntimeException("Boundaries list should be present and has at least 2 elements");
         }
-        Document dbObject = options.toDocument();
-        dbObject.put("groupBy", "$" + field);
-        dbObject.put("boundaries", boundaries);
-        stages.add(new Document("$bucket", dbObject));
+        Document document = options.toDocument();
+        document.put("groupBy", "$" + field);
+        document.put("boundaries", boundaries);
+        stages.add(new Document("$bucket", document));
         return this;
     }
 
@@ -274,10 +274,10 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         if (bucketCount < 1) {
             throw new RuntimeException("bucket count should be more than 0");
         }
-        Document dbObject = options.toDBObject();
-        dbObject.put("groupBy", "$" + field);
-        dbObject.put("buckets", bucketCount);
-        stages.add(new Document("$bucketAuto", dbObject));
+        Document document = options.toDocument();
+        document.put("groupBy", "$" + field);
+        document.put("buckets", bucketCount);
+        stages.add(new Document("$bucketAuto", document));
         return this;
     }
 

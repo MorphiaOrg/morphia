@@ -255,7 +255,7 @@ public class QueryValidatorTest extends TestBase {
     }
 
     @Test
-    public void shouldNotAllowGeoOperatorIfValueIsNotDBObject() {
+    public void shouldNotAllowGeoOperatorIfValueIsNotDocument() {
         // expect
         MappedClass mappedClass = getMappedClass(GeoEntity.class);
         MappedField mappedField = mappedClass.getMappedField("array");

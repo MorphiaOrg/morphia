@@ -18,8 +18,8 @@ public class GeometryConverter  {
             throw new UnsupportedOperationException();
         }
 
-        Document dbObject = (Document) fromDocument;
-        String type = (String) dbObject.get("type");
+        Document document = (Document) fromDocument;
+        String type = (String) document.get("type");
 //        return getMapper().getConverters().decode(GeoJsonType.fromString(type).getTypeClass(), fromDocument, optionalExtraInfo);
 
         return null;

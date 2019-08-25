@@ -105,8 +105,8 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         wrapped.remove();
     }
 
-    private Key<T> convertItem(final Document dbObj) {
-        Object id = dbObj.get("_id");
+    private Key<T> convertItem(final Document document) {
+        Object id = document.get("_id");
         if (id instanceof Document) {
             id = mapper.fromDocument(clazz, (Document) id);
         }

@@ -111,7 +111,7 @@ public class GeoWithinOperationValidatorTest extends TestBase {
     }
 
     @Test
-    public void shouldRejectGeoWithinWhenValueIsNotADBObject() {
+    public void shouldRejectGeoWithinWhenValueIsNotADocument() {
         // given
         List<ValidationFailure> validationFailures = new ArrayList<>();
         MappedClass mappedClass = getMappedClass(GeoEntity.class);

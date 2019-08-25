@@ -59,8 +59,8 @@ public class BankAccount {
 
 class DigitalSigner {
   @PrePersist
-  void prePersist(final Object entity, final Document dbObject) {
-     dbObject.put("signature", sign(dbObject));
+  void prePersist(final Object entity, final Document document) {
+     document.put("signature", sign(document));
   }
 
 }

@@ -78,7 +78,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
 
     private Document and() {
-        Document dbObject = new Document();
+        Document document = new Document();
         final List<Document> and = new ArrayList<>();
         Set<String> names = new HashSet<>();
         boolean duplicates = false;
@@ -93,26 +93,26 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
         if (!duplicates) {
             for (final Object o : and) {
-                dbObject.putAll((Map) o);
+                document.putAll((Map) o);
             }
         } else {
-            dbObject.put("$and", and);
+            document.put("$and", and);
         }
 
-        return dbObject;
+        return document;
     }
 
     private Document or() {
-        Document dbObject = new Document();
+        Document document = new Document();
         final List<Document> or = new ArrayList<>();
 
         for (final Criteria child : children) {
             or.add(child.toDocument());
         }
 
-        dbObject.put("$or", or);
+        document.put("$or", or);
 
-        return dbObject;
+        return document;
     }
 
     @Override

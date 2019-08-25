@@ -11,7 +11,7 @@ import static java.lang.String.format;
 import static org.junit.Assert.fail;
 
 /**
- * Hamcrest matcher that can be used with a List of DBObjects representing the indexes on a Collection.  This list, for example, might be
+ * Hamcrest matcher that can be used with a List of Documents representing the indexes on a Collection.  This list, for example, might be
  * from a call like {@code getDs().getCollection(Entity.class).getIndexInfo()}
  */
 public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
@@ -24,21 +24,21 @@ public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
     }
 
     /**
-     * Use this matcher to determine if a list of DBObjects representing the indexes of a Collection contains an index with the given name.
+     * Use this matcher to determine if a list of Documents representing the indexes of a Collection contains an index with the given name.
      *
      * @param indexName the expected name of the index
-     * @return a Matcher that will match if a list of DBObjects contains an index with the given name
+     * @return a Matcher that will match if a list of Documents contains an index with the given name
      */
     public static Matcher<? super List<Document>> hasIndexNamed(final String indexName) {
         return new IndexMatcher(indexName, true);
     }
 
     /**
-     * Use this matcher to determine if a list of DBObjects representing the indexes of a Collection does not contain an index with the
+     * Use this matcher to determine if a list of Documents representing the indexes of a Collection does not contain an index with the
      * given name.
      *
      * @param indexName the expected name of the index
-     * @return a Matcher that will fail if a list of DBObjects contains an index with the given name
+     * @return a Matcher that will fail if a list of Documents contains an index with the given name
      */
     public static Matcher<? super List<Document>> doesNotHaveIndexNamed(final String indexName) {
         return new IndexMatcher(indexName, false);

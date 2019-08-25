@@ -13,38 +13,38 @@ import org.bson.Document;
  */
 public interface EntityInterceptor {
     /**
-     * @param ent    the entity being processed
-     * @param dbObj  the Document form of the entity
-     * @param mapper the Mapper being used
+     * @param ent      the entity being processed
+     * @param document the Document form of the entity
+     * @param mapper   the Mapper being used
      * @see PostLoad
      */
-    default void postLoad(Object ent, Document dbObj, Mapper mapper) {
+    default void postLoad(Object ent, Document document, Mapper mapper) {
     }
 
     /**
-     * @param ent    the entity being processed
-     * @param dbObj  the Document form of the entity
-     * @param mapper the Mapper being used
+     * @param ent      the entity being processed
+     * @param document the Document form of the entity
+     * @param mapper   the Mapper being used
      * @see PostPersist
      */
-    default void postPersist(Object ent, Document dbObj, Mapper mapper) {
+    default void postPersist(Object ent, Document document, Mapper mapper) {
     }
 
     /**
-     * @param ent    the entity being processed
-     * @param dbObj  the Document form of the entity
-     * @param mapper the Mapper being used
+     * @param ent      the entity being processed
+     * @param document the Document form of the entity
+     * @param mapper   the Mapper being used
      * @see PreLoad
      */
-    default void preLoad(Object ent, Document dbObj, Mapper mapper) {
+    default void preLoad(Object ent, Document document, Mapper mapper) {
     }
 
     /**
-     * @param ent    the entity being processed
-     * @param dbObj  the Document form of the entity
-     * @param mapper the Mapper being used
+     * @param ent      the entity being processed
+     * @param document the Document form of the entity
+     * @param mapper   the Mapper being used
      * @see PostPersist
      */
-    default void prePersist(Object ent, Document dbObj, Mapper mapper) {
+    default void prePersist(Object ent, Document document, Mapper mapper) {
     }
 }

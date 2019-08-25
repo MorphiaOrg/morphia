@@ -269,14 +269,13 @@ You can use Morphia to map queries you might have already written using the raw 
 For example:
 
 ```
-Document query = BasicDBObjectBuilder.start()
-	.add("albums",
+Document query = new Document()
+	.append("albums",
             new Document("$elemMatch",
                     new Document("$and", new Document[] {
                         new Document("albumId", albumDto.getAlbumId()),
                         new Document("album",
-                            new Document("$exists", false))})))
-	.get();
+                            new Document("$exists", false))})));
 
 Artist result = datastore.createQuery(Artist.class, query).get();
 ```

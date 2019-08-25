@@ -32,15 +32,15 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("unchecked")
 public class GeoEntitiesTest extends TestBase {
     @Test
-    public void shouldConvertPointCorrectlyToDBObject() {
+    public void shouldConvertPointCorrectlyToDocument() {
         // given
         City city = new City("New City", new Point(new Position(7.0, 3.0)));
 
         // when
-        Document dbObject = getMapper().toDocument(city);
+        Document document = getMapper().toDocument(city);
 
-        assertThat(dbObject, is(notNullValue()));
-        assertThat(dbObject.toJson(), JSONMatcher.jsonEqual("  {"
+        assertThat(document, is(notNullValue()));
+        assertThat(document.toJson(), JSONMatcher.jsonEqual("  {"
                                                               + " name: 'New City',"
                                                               + " className: 'dev.morphia.geo.City',"
                                                               + " location:  "

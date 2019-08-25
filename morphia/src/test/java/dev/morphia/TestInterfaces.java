@@ -42,11 +42,11 @@ public class TestInterfaces extends TestBase {
 
         final Shape rectangle = new Rectangle(2, 5);
 
-        final Document rectangleDbObj = getMapper().toDocument(rectangle);
-        shapes.insertOne(rectangleDbObj);
+        final Document rectDocument = getMapper().toDocument(rectangle);
+        shapes.insertOne(rectDocument);
 
-        final Document rectangleDbObjLoaded = shapes.find(new Document("_id", rectangleDbObj.get("_id"))).first();
-        final Shape rectangleLoaded = getMapper().fromDocument(Shape.class, rectangleDbObjLoaded);
+        Document loaded = shapes.find(new Document("_id", rectDocument.get("_id"))).first();
+        final Shape rectangleLoaded = getMapper().fromDocument(Shape.class, loaded);
 
         assertEquals(rectangle.getArea(), rectangleLoaded.getArea(), 0.0);
         assertTrue(rectangleLoaded instanceof Rectangle);
@@ -57,11 +57,11 @@ public class TestInterfaces extends TestBase {
         shifter.getAvailableShapes().add(new Rectangle(3, 3));
         shifter.getAvailableShapes().add(new Circle(4.4));
 
-        final Document shifterDbObj = getMapper().toDocument(shifter);
-        shapeshifters.insertOne(shifterDbObj);
+        final Document document = getMapper().toDocument(shifter);
+        shapeshifters.insertOne(document);
 
-        final Document shifterDbObjLoaded = shapeshifters.find(new Document("_id", shifterDbObj.get("_id"))).first();
-        final ShapeShifter shifterLoaded = getMapper().fromDocument(ShapeShifter.class, shifterDbObjLoaded);
+        loaded = shapeshifters.find(new Document("_id", document.get("_id"))).first();
+        final ShapeShifter shifterLoaded = getMapper().fromDocument(ShapeShifter.class, loaded);
         assertNotNull(shifterLoaded);
         assertNotNull(shifterLoaded.getReferencedShape());
         assertNotNull(shifterLoaded.getReferencedShape().getArea());
