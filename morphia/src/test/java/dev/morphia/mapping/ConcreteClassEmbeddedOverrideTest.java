@@ -10,21 +10,24 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 
+import java.util.List;
+
 
 public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
     @Test
     public void test() {
+        List<MappedClass> map = getMapper().map(E.class);
         final E e1 = new E();
         Assert.assertEquals("A", e1.a1.s);
-        Assert.assertEquals("A", e1.a2.s);
+        Assert.assertEquals("B", e1.a2.s);
 
         getDs().save(e1);
 
         final E e2 = getDs().get(e1);
 
         Assert.assertEquals("A", e2.a1.s);
-        Assert.assertEquals("A", e2.a2.s);
+        Assert.assertEquals("B", e2.a2.s);
         Assert.assertEquals(B.class, e2.a2.getClass());
         Assert.assertEquals(A.class, e2.a1.getClass());
 
@@ -36,7 +39,7 @@ public class ConcreteClassEmbeddedOverrideTest extends TestBase {
         private ObjectId id;
         private final A a1 = new A();
         @Property(concreteClass = B.class)
-        private final A a2 = new A();
+        private final A a2 = new B();
     }
 
     @Embedded
