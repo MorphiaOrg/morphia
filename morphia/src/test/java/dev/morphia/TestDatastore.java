@@ -179,7 +179,6 @@ public class TestDatastore extends TestBase {
                                                  .first();
         assertTrue(loaded.preLoad);
         assertTrue(loaded.preLoadWithParam);
-        assertTrue(loaded.preLoadWithParamAndReturn);
         assertTrue(loaded.postLoad);
         assertTrue(loaded.postLoadWithParam);
     }

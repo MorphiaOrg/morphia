@@ -91,7 +91,7 @@ public class TestUpdateOps extends TestBase {
                                          .execute();
 
         // then
-        assertThat(updateResult.getModifiedCount(), is(1));
+        assertThat(updateResult.getModifiedCount(), is(1L));
         assertThat(getDs().find(Parent.class).filter("id", parentId)
                           .execute(new FindOptions().limit(1))
                           .next()
@@ -781,7 +781,7 @@ public class TestUpdateOps extends TestBase {
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class).filter("name", cpk.name);
         final UpdateResult res = query.update().set("keys", cpk.keys).execute();
 
-        assertThat(res.getModifiedCount(), is(1));
+        assertThat(res.getModifiedCount(), is(1L));
 
         //test reading the object.
         final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class)
@@ -854,11 +854,11 @@ public class TestUpdateOps extends TestBase {
     }
 
     private void assertInserted(final UpdateResult res) {
-        assertThat(res.getUpsertedId(), is(1));
-        assertThat(res.getModifiedCount(), is(0));
+        assertThat(res.getUpsertedId(), notNullValue());
+        assertThat(res.getModifiedCount(), is(0L));
     }
 
-    private void assertUpdated(final UpdateResult res, final int count) {
+    private void assertUpdated(final UpdateResult res, final long count) {
         assertThat(res.getModifiedCount(), is(count));
     }
 
