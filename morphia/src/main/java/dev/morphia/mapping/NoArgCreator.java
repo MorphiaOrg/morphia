@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.PropertyHandler;
+import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.PropertyModel;
 
 import java.lang.reflect.Constructor;
@@ -34,7 +35,7 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
             try {
                 instance = noArgsConstructor.newInstance();
             } catch (ReflectiveOperationException e) {
-                throw new MappingException(e.getMessage(), e);
+                throw new MappingException(Sofia.instantiationProblem(noArgsConstructor.getDeclaringClass().getName(), e.getMessage()), e);
             }
         }
         return instance;

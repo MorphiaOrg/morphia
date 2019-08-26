@@ -673,6 +673,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+    @Ignore("references need work")
     public void testSetUnset() {
         Datastore ds = getDs();
         final ObjectId key = ds.save(new Circle(1)).getId();
@@ -1005,7 +1006,10 @@ public class TestUpdateOps extends TestBase {
         }
     }
 
+    @Entity
     private static final class DumbColl {
+        @Id
+        private ObjectId id;
         private String opaqueId;
         private List<DumbArrayElement> fromArray;
 
@@ -1017,8 +1021,12 @@ public class TestUpdateOps extends TestBase {
         }
     }
 
+    @Embedded
     private static final class DumbArrayElement {
         private String whereId;
+
+        public DumbArrayElement() {
+        }
 
         private DumbArrayElement(final String whereId) {
             this.whereId = whereId;
