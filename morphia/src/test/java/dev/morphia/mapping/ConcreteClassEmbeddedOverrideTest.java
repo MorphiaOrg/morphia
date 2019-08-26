@@ -17,7 +17,7 @@ public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
     @Test
     public void test() {
-        List<MappedClass> map = getMapper().map(E.class);
+        getMapper().map(E.class);
         final E e1 = new E();
         Assert.assertEquals("A", e1.a1.s);
         Assert.assertEquals("B", e1.a2.s);

@@ -480,8 +480,9 @@ class DatastoreImpl implements AdvancedDatastore {
             if(options.getWriteConcern() != null) {
                 collection.withWriteConcern(options.getWriteConcern())
                           .replaceOne(new Document("_id", id), entity, updateOptions);
+            } else {
+                collection.replaceOne(new Document("_id", id), entity, updateOptions);
             }
-            collection.replaceOne(new Document("_id", id), entity, updateOptions);
         }
     }
 
