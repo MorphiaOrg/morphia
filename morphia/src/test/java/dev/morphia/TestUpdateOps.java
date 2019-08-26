@@ -238,23 +238,26 @@ public class TestUpdateOps extends TestBase {
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
 
-        assertThat(getDs().get(cIntArray).values, is((new ContainsIntArray()).values));
+        Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class)
+                                               .filter("_id", cIntArray.id);
+        
+        assertThat(query.first().values, is((new ContainsIntArray()).values));
 
-        Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
         assertUpdated(query.update().addToSet("values", 5).execute(), 1);
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5}));
+        
+        assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5}));
 
         assertUpdated(query.update().addToSet("values", 4).execute(), 1);
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5, 4}));
+        assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4}));
 
         assertUpdated(query.update().addToSet("values", asList(8, 9)).execute(), 1);
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9}));
+        assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9}));
 
-        assertUpdated(query.update().addToSet("values", asList(4, 5)).execute(), 1);
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9}));
+        assertEquals(1, query.update().addToSet("values", asList(4, 5)).execute().getMatchedCount());
+        assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9}));
 
         assertUpdated(query.update().addToSet("values", new HashSet<>(asList(10, 11))).execute(), 1);
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9, 10, 11}));
+        assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9, 10, 11}));
     }
 
     @Test
@@ -855,12 +858,12 @@ public class TestUpdateOps extends TestBase {
     }
 
     private void assertInserted(final UpdateResult res) {
-        assertThat(res.getUpsertedId(), notNullValue());
-        assertThat(res.getModifiedCount(), is(0L));
+        assertNotNull(res.getUpsertedId());
+        assertEquals(0, res.getModifiedCount());
     }
 
     private void assertUpdated(final UpdateResult res, final long count) {
-        assertThat(res.getModifiedCount(), is(count));
+        assertEquals(count, res.getModifiedCount());
     }
 
     private EntityLogs createEntryLogs(final String value) {

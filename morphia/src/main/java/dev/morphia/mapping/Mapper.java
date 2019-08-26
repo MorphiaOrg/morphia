@@ -710,11 +710,10 @@ public class Mapper {
 
         Object mappedValue = value;
 
-
         if (value instanceof Query) {
             mappedValue = ((QueryImpl) value).getQueryDocument();
-        } else {
-            mappedValue = toDocument(value);
+//        } else {
+//            mappedValue = toDocument(value);
         }
 
         return mappedValue;
