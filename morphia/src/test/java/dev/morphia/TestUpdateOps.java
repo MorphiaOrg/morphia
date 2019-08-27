@@ -665,14 +665,25 @@ public class TestUpdateOps extends TestBase {
         checkMinServerVersion(2.4);
         ObjectId id = new ObjectId();
 
-        Query<Circle> query = getDs().find(Circle.class).field("id").equal(id);
-        assertInserted(query.update().setOnInsert("radius", 1D).execute(new UpdateOptions().upsert(true)));
+        Query<Circle> query = getDs()
+                                  .find(Circle.class)
+                                  .field("id")
+                                  .equal(id);
 
-        assertUpdated(query.update().setOnInsert("radius", 2D).execute(new UpdateOptions().upsert(true)), 1);
+        assertInserted(query.update()
+                            .setOnInsert("radius", 1D)
+                            .execute(new UpdateOptions()
+                                         .upsert(true)));
+
+        assertEquals(1, query.update()
+                             .setOnInsert("radius", 2D)
+                             .execute(new UpdateOptions()
+                                          .upsert(true)).getMatchedCount());
+
         final Circle updatedCircle = getDs().find(Circle.class).filter("_id", id).first();
 
-        assertThat(updatedCircle, is(notNullValue()));
-        assertThat(updatedCircle.getRadius(), is(1D));
+        assertNotNull(updatedCircle);
+        assertEquals(1D, updatedCircle.getRadius(), 0.1);
     }
 
     @Test
@@ -845,10 +856,13 @@ public class TestUpdateOps extends TestBase {
         getDs().save(cInt);
 
         Query<ContainsInt> query = getDs().find(ContainsInt.class);
+
         final UpdateResult res = query.update().inc("val", 1.1D).execute();
         assertUpdated(res, 1);
 
-        assertThat(query.execute(new FindOptions().limit(1)).next().val, is(22));
+        assertEquals(22, query.execute(new FindOptions()
+                                           .limit(1))
+                              .next().val);
     }
 
     @Test(expected = ValidationException.class)

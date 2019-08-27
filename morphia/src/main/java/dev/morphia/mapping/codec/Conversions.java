@@ -20,6 +20,32 @@ public final class Conversions {
     private static Map<Class<?>, Map<Class<?>, Function<?, ?>>> conversions  = new HashMap<>();
 
     static {
+        registerStringConversions();
+
+        register(Binary.class, byte[].class, Binary::getData);
+
+        register(Integer.class, Byte.class, Integer::byteValue);
+
+        register(Double.class, Long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
+        register(Double.class, Integer.class, Double::intValue, "Converting a double value to an int.  Possible loss of precision.");
+        register(Double.class, Float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
+
+        register(Long.class, Double.class, Long::doubleValue);
+        register(Long.class, Float.class, Long::floatValue);
+
+        register(Float.class, Long.class, Float::longValue, "Converting a float value to a long.  Possible loss of precision.");
+        register(Float.class, Integer.class, Float::intValue, "Converting a float value to an int.  Possible loss of precision.");
+
+        register(URI.class, String.class, u -> {
+            try {
+                return u.toURL().toExternalForm().replace(".", "%46");
+            } catch (MalformedURLException e) {
+                throw new MappingException("Could not convert URI: " + u);
+            }
+        });
+    }
+
+    private static void registerStringConversions() {
         register(String.class, ObjectId.class, ObjectId::new);
         register(String.class, Character.class, s -> {
             if (s.length() == 1) {
@@ -37,25 +63,7 @@ public final class Conversions {
         register(String.class, Long.class, Long::parseLong);
         register(String.class, Float.class, Float::parseFloat);
         register(String.class, Short.class, Short::parseShort);
-
-        register(Binary.class, byte[].class, Binary::getData);
-        register(Integer.class, Byte.class, Integer::byteValue);
-
-        register(Double.class, Long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
-        register(Double.class, Float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
-        register(Long.class, Double.class, Long::doubleValue);
-
-        register(Float.class, Long.class, Float::longValue, "Converting a float value to a long.  Possible loss of precision.");
-        register(Long.class, Float.class, Long::floatValue);
-
         register(String.class, URI.class, str -> URI.create(str.replace("%46", ".")));
-        register(URI.class, String.class, u -> {
-            try {
-                return u.toURL().toExternalForm().replace(".", "%46");
-            } catch (MalformedURLException e) {
-                throw new MappingException("Could not convert URI: " + u);
-            }
-        });
     }
 
     private static <F, T> void register(final Class<F> fromType, final Class<T> toType, final Function<F, T> function) {
