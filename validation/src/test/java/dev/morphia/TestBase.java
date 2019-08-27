@@ -55,7 +55,7 @@ public abstract class TestBase {
             throw new MappingException("Trying to map to an unmapped class: " + entityClass.getName());
         }
         try {
-            return mapper.fromDocument(, document);
+            return mapper.fromDocument(entityClass, document);
         } catch (Exception e) {
             throw new MappingException("Could not map entity from Document", e);
         }

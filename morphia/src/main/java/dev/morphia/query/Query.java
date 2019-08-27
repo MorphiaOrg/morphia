@@ -11,6 +11,7 @@ import org.bson.Document;
 import org.bson.types.CodeWScope;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -54,7 +55,9 @@ public interface Query<T> {
      * @return Map describing the process used to return the query results.
      * @mongodb.driver.manual reference/operator/meta/explain/ explain
      */
-    Map<String, Object> explain();
+    default Map<String, Object> explain() {
+        return explain(new FindOptions());
+    }
 
     /**
      * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
@@ -334,7 +337,17 @@ public interface Query<T> {
      * Deletes an entity from the database and returns it.
      * @return the deleted entity
      */
-    T delete();
+    default T delete() {
+        return delete(new FindAndDeleteOptions());
+    }
+
+    /**
+     * Deletes an entity from the database and returns it.
+
+     * @param options the options to apply
+     * @return the deleted entity
+     */
+    T delete(FindAndDeleteOptions options);
 
     /**
      * Deletes an entity from the database and returns it.
@@ -344,15 +357,15 @@ public interface Query<T> {
      * @deprecated use {@link #delete(FindAndDeleteOptions)}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    T delete(FindAndModifyOptions options);
+    default T delete(FindAndModifyOptions options) {
+        return delete(new FindAndDeleteOptions()
+                          .writeConcern(options.getWriteConcern())
+                          .collation(options.getCollation())
+                          .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+                          .sort(options.getSort())
+                          .projection(options.getProjection()));
 
-    /**
-     * Deletes an entity from the database and returns it.
-
-     * @param options the options to apply
-     * @return the deleted entity
-     */
-    T delete(FindAndDeleteOptions options);
+    }
 
     Modify<T> modify();
 

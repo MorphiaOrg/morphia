@@ -160,11 +160,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Map<String, Object> explain() {
-        return explain(new FindOptions());
-    }
-
-    @Override
     public Map<String, Object> explain(final FindOptions options) {
         return new LinkedHashMap<>(ds.getDatabase()
                                      .runCommand(new Document("explain",
@@ -344,20 +339,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public Query<T> where(final CodeWScope js) {
         add(new WhereCriteria(js));
         return this;
-    }
-
-    public T delete() {
-        return delete(new FindAndDeleteOptions());
-    }
-
-    @Override
-    public T delete(final FindAndModifyOptions options) {
-        return delete(new FindAndDeleteOptions()
-                          .writeConcern(options.getWriteConcern())
-                          .collation(options.getCollation())
-                          .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-                          .sort(options.getSort())
-                          .projection(options.getProjection()));
     }
 
     public T delete(final FindAndDeleteOptions options) {

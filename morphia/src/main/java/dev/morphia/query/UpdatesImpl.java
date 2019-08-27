@@ -52,8 +52,10 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
         if (values == null || values.isEmpty()) {
             throw new UpdateException("Values cannot be null or empty.");
         }
+        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
-        add(UpdateOperator.ADD_TO_SET_EACH, field, values);
+        Document document = new Document(UpdateOperator.EACH.val(), values);
+        addOperation(UpdateOperator.ADD_TO_SET_EACH, pathTarget.translatedPath(), document);
         return (Updater)this;
     }
 
@@ -85,7 +87,7 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
 
         PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
-        Document document = new Document(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
+        Document document = new Document(UpdateOperator.EACH.val(), values);
         options.update(document);
         addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), document);
 
