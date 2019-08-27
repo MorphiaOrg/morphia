@@ -118,18 +118,15 @@ public class MorphiaModel<T> extends ClassModel<T> {
         callGlobalInterceptors(event, entity, document, mapper);
     }
 
-    private Map<Class<? extends Annotation>, List<ClassMethodPair>> mapEvent(final Class<?> type, final boolean entityListener) {
-        Map<Class<? extends Annotation>, List<ClassMethodPair>> map = new HashMap<>();
+    private void mapEvent(final Class<?> type, final boolean entityListener) {
         for (final Method method : getDeclaredAndInheritedMethods(type)) {
             for (final Class<? extends Annotation> annotationClass : Mapper.LIFECYCLE_ANNOTATIONS) {
                 if (method.isAnnotationPresent(annotationClass)) {
-                    map.computeIfAbsent(annotationClass, c -> new ArrayList<>())
+                    lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
                        .add(new ClassMethodPair(mapper, annotationClass, entityListener ? type : null, method));
                 }
             }
         }
-
-        return map;
     }
 
     public Map<Class<? extends Annotation>, List<ClassMethodPair>> getLifecycleMethods() {
@@ -139,11 +136,11 @@ public class MorphiaModel<T> extends ClassModel<T> {
             final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
             if (entityLisAnn != null && entityLisAnn.value().length != 0) {
                 for (final Class<?> aClass : entityLisAnn.value()) {
-                    lifecycleMethods.putAll(mapEvent(aClass, true));
+                    mapEvent(aClass, true);
                 }
             }
 
-            lifecycleMethods.putAll(mapEvent(getType(), false));
+            mapEvent(getType(), false);
         }
         return lifecycleMethods;
     }

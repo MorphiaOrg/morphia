@@ -41,6 +41,7 @@ import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -126,6 +127,7 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    @Ignore("references need work")
     public void testGet() {
         getMapper().map(FacebookUser.class);
         List<FacebookUser> fbUsers = new ArrayList<>();
