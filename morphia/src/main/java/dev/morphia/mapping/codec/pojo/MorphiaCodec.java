@@ -23,6 +23,7 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseMorphiaCodec;
+import dev.morphia.mapping.codec.DocumentReader;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.PropertyHandler;
@@ -48,8 +49,10 @@ import org.bson.codecs.pojo.PropertyModel;
 import org.bson.types.ObjectId;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 
@@ -160,8 +163,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
             Document document = getRegistry().get(Document.class).decode(reader, decoderContext);
             mappedClass.callLifecycleMethods(PreLoad.class, entity, document, getMapper());
 
-            decodeProperties(new BsonDocumentReader(document.toBsonDocument(Document.class, getMapper().getCodecRegistry())), decoderContext,
-                instanceCreator);
+            decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
 
             mappedClass.callLifecycleMethods(PostLoad.class, entity, document, getMapper());
         } else {
@@ -192,6 +194,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
                                            final String name,
                                            final PropertyModel<S> propertyModel) {
         if (propertyModel != null) {
+            System.out.println("********************* propertyModel = " + propertyModel);
             final PropertyHandler handler = getPropertyHandler(instanceCreator, propertyModel);
             if (handler != null) {
                 S value = handler.decodeProperty(reader, decoderContext, instanceCreator, name, propertyModel);

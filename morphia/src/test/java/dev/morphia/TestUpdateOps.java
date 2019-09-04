@@ -18,6 +18,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.PreLoad;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
@@ -30,7 +31,11 @@ import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
+import org.bson.BsonDocument;
+import org.bson.BsonDocumentReader;
+import org.bson.BsonType;
 import org.bson.Document;
+import org.bson.codecs.DecoderContext;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -144,7 +149,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
 
         //add unique (4) -- noop
-        assertUpdated(query.update().addToSet("values", 4).execute(), 1);
+        assertEquals(1, query.update().addToSet("values", 4).execute().getMatchedCount());
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
 
         //add dup 4
@@ -166,7 +171,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add them again... noop
-        assertUpdated(query.update().addToSet("values", newValues).execute(), 1);
+        assertEquals(1, query.update().addToSet("values", newValues).execute().getMatchedCount());
         assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add dups [4,5]
@@ -176,35 +181,38 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testAddAll() {
-        getMapper().map(EntityLogs.class, EntityLog.class);
+        getMapper().map(LogHolder.class, Log.class);
         String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
 
-        EntityLogs logs = new EntityLogs();
+        LogHolder logs = new LogHolder();
         logs.uuid = uuid;
         getDs().save(logs);
 
-        Query<EntityLogs> finder = getDs().find(EntityLogs.class).field("uuid").equal(uuid);
+        Query<LogHolder> finder = getDs().find(LogHolder.class).field("uuid").equal(uuid);
 
         // both of these entries will have a className attribute
-        List<EntityLog> latestLogs = asList(new EntityLog("whatever1", new Date()), new EntityLog("whatever2", new Date()));
+        List<Log> latestLogs = asList(new Log(1), new Log(2));
 
         finder.update()
-              .addToSet("logs", latestLogs).execute(new UpdateOptions().upsert(true));
-        validateNoClassName(finder.first());
+              .addToSet("logs", latestLogs)
+              .execute(new UpdateOptions()
+                           .upsert(true));
+        LogHolder first = finder.first();
+        validateClassName(first);
 
         // this entry will NOT have a className attribute
-        EntityLog log = new EntityLog("whatever3", new Date());
+        Log log = new Log(3);
         finder
             .update()
             .addToSet("logs", log)
             .execute(new UpdateOptions().upsert(true));
-        validateNoClassName(finder.first());
+        validateClassName(finder.first());
 
         // this entry will NOT have a className attribute
         finder.update()
-              .addToSet("logs", new EntityLog("whatever4", new Date()))
+              .addToSet("logs", new Log(4))
               .execute(new UpdateOptions().upsert(true));
-        validateNoClassName(finder.first());
+        validateClassName(finder.first());
     }
 
     @Test
@@ -444,9 +452,9 @@ public class TestUpdateOps extends TestBase {
                             .setOnInsert("radius", originalValue)
                             .execute(new UpdateOptions().upsert(true)));
 
-        assertUpdated(query.update()
-                           .max("radius", 1D)
-                           .execute(new UpdateOptions().upsert(true)), 1);
+        assertEquals(1, query.update()
+                             .max("radius", 1D)
+                             .execute(new UpdateOptions().upsert(true)).getMatchedCount());
 
         assertThat(ds.find(Circle.class).filter("_id", id).first().getRadius(), is(originalValue));
     }
@@ -531,61 +539,59 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testRemoveAllSingleValue() {
-        EntityLogs logs = new EntityLogs();
+        LogHolder logs = new LogHolder();
         Date date = new Date();
         logs.logs.addAll(asList(
-            new EntityLog("log1", date),
-            new EntityLog("log2", date),
-            new EntityLog("log3", date),
-            new EntityLog("log1", date),
-            new EntityLog("log2", date),
-            new EntityLog("log3", date)));
+            new Log(1),
+            new Log(2),
+            new Log(3),
+            new Log(1),
+            new Log(2),
+            new Log(3)));
 
         Datastore ds = getDs();
         ds.save(logs);
 
-        UpdateResult results = ds.find(EntityLogs.class).update()
-                                  .removeAll("logs", new EntityLog("log3", date))
-                                  .execute();
+        UpdateResult results = ds.find(LogHolder.class).update()
+                                 .removeAll("logs", new Log(3))
+                                 .execute();
 
         assertEquals(1, results.getModifiedCount());
-        EntityLogs updated = ds.find(EntityLogs.class)
-                               .execute(new FindOptions().limit(1))
-                               .next();
+        LogHolder updated = ds.find(LogHolder.class)
+                              .execute(new FindOptions().limit(1))
+                              .next();
         assertEquals(4, updated.logs.size());
         for (int i = 0; i < 4; i++) {
-            assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
+            assertEquals(new Log(i + 1), updated.logs.get(i));
         }
     }
 
     @Test
     public void testRemoveAllList() {
-        EntityLogs logs = new EntityLogs();
+        LogHolder logs = new LogHolder();
         Date date = new Date();
         logs.logs.addAll(asList(
-            new EntityLog("log1", date),
-            new EntityLog("log2", date),
-            new EntityLog("log3", date),
-            new EntityLog("log1", date),
-            new EntityLog("log2", date),
-            new EntityLog("log3", date)));
+            new Log(1),
+            new Log(2),
+            new Log(3),
+            new Log(4),
+            new Log(5),
+            new Log(6)));
 
         Datastore ds = getDs();
         ds.save(logs);
 
-        UpdateResult results = ds.find(EntityLogs.class).update()
-                                  .removeAll("logs", singletonList(new EntityLog("log3", date)))
-                                  .execute();
+        UpdateResult results = ds.find(LogHolder.class).update()
+                                 .removeAll("logs", singletonList(new Log(3)))
+                                 .execute();
 
         assertEquals(1, results.getModifiedCount());
-        EntityLogs updated = ds.find(EntityLogs.class)
-                               .execute(new FindOptions()
-                                   .comment("morphia test query")
-                                            .limit(1))
-                               .next();
+        LogHolder updated = ds.find(LogHolder.class)
+                              .execute(/*new FindOptions().limit(1)*/)
+                              .next();
         assertEquals(4, updated.logs.size());
         for (int i = 0; i < 4; i++) {
-            assertEquals(new EntityLog("log" + ((i % 2) + 1), date), updated.logs.get(i));
+            assertEquals(new Log(i + 1), updated.logs.get(i));
         }
     }
 
@@ -720,22 +726,22 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testUpdateFirstNoCreate() {
-        getDs().delete(getDs().find(EntityLogs.class));
-        List<EntityLogs> logs = new ArrayList<>();
+        getDs().delete(getDs().find(LogHolder.class));
+        List<LogHolder> logs = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             logs.add(createEntryLogs("logs" + i));
         }
-        EntityLogs logs1 = logs.get(0);
-        Query<EntityLogs> query = getDs().find(EntityLogs.class);
+        LogHolder logs1 = logs.get(0);
+        Query<LogHolder> query = getDs().find(LogHolder.class);
         Document object = new Document("new", "value");
         query.update()
              .set("raw", object)
              .execute();
 
-        List<EntityLogs> list = getDs().find(EntityLogs.class).execute().toList();
+        List<LogHolder> list = getDs().find(LogHolder.class).execute().toList();
         for (int i = 0; i < list.size(); i++) {
-            final EntityLogs entityLogs = list.get(i);
-            assertEquals(entityLogs.id.equals(logs1.id) ? object : logs.get(i).raw, entityLogs.raw);
+            final LogHolder logHolder = list.get(i);
+            assertEquals(logHolder.id.equals(logs1.id) ? object : logs.get(i).raw, logHolder.raw);
         }
     }
 
@@ -880,8 +886,8 @@ public class TestUpdateOps extends TestBase {
         assertEquals(count, res.getModifiedCount());
     }
 
-    private EntityLogs createEntryLogs(final String value) {
-        EntityLogs logs = new EntityLogs();
+    private LogHolder createEntryLogs(final String value) {
+        LogHolder logs = new LogHolder();
         logs.raw = new Document("name", value);
         getDs().save(logs);
 
@@ -889,10 +895,10 @@ public class TestUpdateOps extends TestBase {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void validateNoClassName(final EntityLogs loaded) {
+    private void validateClassName(final LogHolder loaded) {
         List<Document> logs = (List<Document>) loaded.raw.get("logs");
         for (Document o : logs) {
-            Assert.assertNull(o.get("className"));
+            Assert.assertNotNull(o.get("className"));
         }
     }
 
@@ -920,38 +926,39 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    public static class EntityLogs {
+    public static class LogHolder {
         @Id
         private ObjectId id;
         @Indexed
         private String uuid;
-        private List<EntityLog> logs = new ArrayList<>();
+        private List<Log> logs = new ArrayList<>();
         private Document raw;
 
 //        @PreLoad
         public void preload(final Document raw) {
             this.raw = raw;
         }
+
+        public List<Log> getLogs() {
+            return logs;
+        }
+
+        public void setLogs(final List<Log> logs) {
+            this.logs = logs;
+        }
     }
 
     @Embedded
-    public static class EntityLog {
-        private Date receivedTs;
+    public static class Log {
+        private long receivedTs;
         private String value;
 
-        public EntityLog() {
+        public Log() {
         }
 
-        EntityLog(final String value, final Date date) {
-            this.value = value;
-            receivedTs = date;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = receivedTs != null ? receivedTs.hashCode() : 0;
-            result = 31 * result + (value != null ? value.hashCode() : 0);
-            return result;
+        public Log(final long value) {
+            this.value = "Log" + value;
+            receivedTs = value;
         }
 
         @Override
@@ -959,18 +966,24 @@ public class TestUpdateOps extends TestBase {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof EntityLog)) {
+            if (!(o instanceof Log)) {
                 return false;
             }
 
-            final EntityLog entityLog = (EntityLog) o;
+            final Log log = (Log) o;
 
-            return receivedTs != null ? receivedTs.equals(entityLog.receivedTs)
-                                      : entityLog.receivedTs == null && (value != null ? value.equals(entityLog.value)
-                                                                                       : entityLog.value == null);
-
+            if (receivedTs != log.receivedTs) {
+                return false;
+            }
+            return value.equals(log.value);
         }
 
+        @Override
+        public int hashCode() {
+            int result = (int) (receivedTs ^ (receivedTs >>> 32));
+            result = 31 * result + value.hashCode();
+            return result;
+        }
 
         @Override
         public String toString() {
@@ -1048,5 +1061,44 @@ public class TestUpdateOps extends TestBase {
         private DumbArrayElement(final String whereId) {
             this.whereId = whereId;
         }
+    }
+
+    @Test
+    public void temp() {
+        Document document = new Document("_id", new ObjectId("5d65f4168176fa58c64a8e1a"))
+                                .append("logs", List.of(
+                                    new Document("receivedTs", 1).append("className", "dev.morphia.TestUpdateOps$Log").append("value", "Log1"),
+                                    new Document("receivedTs", 2).append("className", "dev.morphia.TestUpdateOps$Log").append("value", "Log2"),
+                                    new Document("receivedTs", 3).append("className", "dev.morphia.TestUpdateOps$Log").append("value", "Log3"),
+                                    new Document("receivedTs", 4).append("className", "dev.morphia.TestUpdateOps$Log").append("value", "Log4"),
+                                    new Document("receivedTs", 5).append("className", "dev.morphia.TestUpdateOps$Log").append("value", "Log5")));
+        BsonDocumentReader reader = new BsonDocumentReader(document.toBsonDocument(Document.class, getMapper().getCodecRegistry()));
+        LogHolder decode = getMapper().getCodecRegistry().get(LogHolder.class).decode(reader, DecoderContext.builder().build());
+        System.out.println("********************* decode = " + decode);
+        //        System.out.println("********************* reader.readBsonType() = " + reader.readBsonType());
+//        reader.readStartDocument();
+//        System.out.println("********************* reader.readName() = " + reader.readName());
+//        System.out.println("********************* reader.readObjectId() = " + reader.readObjectId());
+//        System.out.println("********************* reader.readName() = " + reader.readName());
+//        reader.readStartArray();
+//        for (int i = 0; i < 5; i++) {
+//        while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+//            readLog(reader);
+//        }
+//        reader.readEndArray();
+//        reader.readEndDocument();
+    }
+
+    private void readLog(final BsonDocumentReader reader) {
+        Log log = getMapper().getCodecRegistry().get(Log.class).decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
+        System.out.println("********************* log = " + log);
+//        reader.readStartDocument();
+//        System.out.println("********************* reader.readName() = " + reader.readName());
+//        System.out.println("********************* reader.readInt64() = " + reader.readInt32());
+//        System.out.println("********************* reader.readName() = " + reader.readName());
+//        System.out.println("********************* reader.readString() = " + reader.readString());
+//        System.out.println("********************* reader.readName() = " + reader.readName());
+//        System.out.println("********************* reader.readString() = " + reader.readString());
+//        reader.readEndDocument();
     }
 }
