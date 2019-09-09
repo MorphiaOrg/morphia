@@ -29,7 +29,8 @@ public class DocumentReaderTest extends TestBase {
     @Test
     public void read() {
         setup(new Document("key", "value")
-            .append("numbers", List.of(1,2,3,4,5)));
+                  .append("numbers", List.of(1, 2, 3, 4, 5))
+                  .append("another", "entry"));
 
         step(r -> { r.readStartDocument();});
         step(r -> { Assert.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType());});
@@ -42,6 +43,8 @@ public class DocumentReaderTest extends TestBase {
             step(r -> { Assert.assertEquals(finalI, r.readInt32());});
         }
         step(r -> { r.readEndArray();});
+        step(r -> { Assert.assertEquals("another", r.readName());});
+        step(r -> { Assert.assertEquals("entry", r.readString());});
         step(r -> { r.readEndDocument();});
     }
 

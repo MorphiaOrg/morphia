@@ -17,14 +17,14 @@ import java.util.NoSuchElementException;
 public class Context {
 
     private FlattenedDocumentReader flattenedDocumentReader;
-    private final ArrayDeque<Iterator> iterators = new ArrayDeque<>();
+    private final ArrayDeque<ReaderIterator> iterators = new ArrayDeque<>();
     List<Stage> stages = new ArrayList<>();
     private int position = 0;
     private final BsonTypeMap typeMap = new BsonTypeMap();
 
     public Context(final FlattenedDocumentReader flattenedDocumentReader, final Document document) {
         this.flattenedDocumentReader = flattenedDocumentReader;
-        iterators.add(document.entrySet().iterator());
+        iterators.add(new DocumentIterator(this, document.entrySet().iterator()));
         stages.add(new InitialStage(this));
     }
 
@@ -44,11 +44,17 @@ public class Context {
         stage().startArray();
     }
 
-    public void iterate(final Iterator<Entry<String, Object>> iterator) {
+    public Stage iterate() {
+        ReaderIterator peek = iterators.peek();
+        Stage next = peek != null ? peek.next() : null;
+        return next;
+    }
+
+    public void iterate(final ReaderIterator iterator) {
         iterators.push(iterator);
     }
 
-    Iterator popIterator() {
+    ReaderIterator popIterator() {
         return iterators.pop();
     }
 
@@ -79,20 +85,6 @@ public class Context {
 
     public Mark mark() {
         return new Mark(stage());
-    }
-
-/*
-    public void reset() {
-        if (documentIterator != null) {
-            documentIterator.reset();
-        } else {
-            arrayIterator.reset();
-        }
-    }
-*/
-
-    public Object getNextValue() {
-        throw new UnsupportedOperationException();
     }
 
     BsonType getBsonType(final Object o) {

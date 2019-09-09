@@ -8,8 +8,6 @@ import org.bson.Document;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 import java.util.StringJoiner;
 
 class Stage {
@@ -18,7 +16,7 @@ class Stage {
     private final String name;
     private final Object value;
 
-    public Stage(final State state, final Context context) {
+    Stage(final State state, final Context context) {
         this.state = state;
         this.context = context;
         name = null;
@@ -32,57 +30,50 @@ class Stage {
         this.value = value;
     }
 
-    public BsonType getCurrentBsonType() {
+    BsonType getCurrentBsonType() {
         return value == null ? null : context.getBsonType(value);
     }
 
-    public String name() {
+    String name() {
         return name;
     }
 
-    public <T> T value() {
+    <T> T value() {
         advance();
         return (T) value;
     }
 
-    public Stage advance() {
+    Stage advance() {
         Stage stage = context.nextStage();
 
         if (stage == null) {
-            try {
-                Entry<String, Object> next = context.next();
-                if(next != null) {
-                    stage = context.newStage(new Stage(State.VALUE, context, next.getKey(), next.getValue()));
-                }
-            } catch (NoSuchElementException e) {
-                stage = context.newStage(new DocumentEndStage(context));
-
-            }
+           stage = context.iterate();
         }
 
         return stage;
     }
 
-    public void startDocument() {
+    void startDocument() {
         if (!(value instanceof Document)) {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(Document.class, getCurrentBsonType()));
         }
-        context.iterate(((Document) value).entrySet().iterator());
+        context.iterate(new DocumentIterator(context, ((Document) value).entrySet().iterator()));
+        context.newStage(new DocumentStartStage(context));
     }
 
-    public void startArray() {
+    void startArray() {
         if(!(value instanceof List)) {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(List.class, getCurrentBsonType()));
         }
-        context.iterate(((List)value).iterator());
-        context.newStage(new ListValueStage(context, context.next()));
+        context.iterate(new ArrayIterator(context, ((List) value).iterator()));
+        context.iterate();
     }
 
-    public void endArray() {
+    void endArray() {
         throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(List.class, getCurrentBsonType()));
     }
 
-    public void endDocument() {
+    void endDocument() {
         throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(Document.class, getCurrentBsonType()));
     }
 
@@ -96,63 +87,52 @@ class Stage {
                    .toString();
     }
 
-    static class DocumentStartStage extends Stage {
-        public DocumentStartStage(final Context context) {
-            super(State.VALUE, context);
-        }
-
-        @Override
-        public String name() {
-            return advance().name();
-        }
-
-        @Override
-        public BsonType getCurrentBsonType() {
-            return BsonType.DOCUMENT;
-        }
-    }
-
     static class InitialStage extends Stage {
 
-        public InitialStage(final Context context) {
+        InitialStage(final Context context) {
             super(State.INITIAL, context);
         }
 
         @Override
-        public void startDocument() {
+        void startDocument() {
             context.newStage(new DocumentStartStage(context));
         }
 
         @Override
-        public BsonType getCurrentBsonType() {
+        BsonType getCurrentBsonType() {
             return BsonType.DOCUMENT;
         }
     }
 
-    private static class ListValueStage extends Stage {
-        public ListValueStage(final Context context, final Object value) {
+    static class DocumentStartStage extends Stage {
+
+        DocumentStartStage(final Context context) {
+            super(State.VALUE, context);
+        }
+
+        @Override
+        String name() {
+            return advance().name();
+        }
+        @Override
+        BsonType getCurrentBsonType() {
+            return BsonType.DOCUMENT;
+        }
+    }
+
+    static class ListValueStage extends Stage {
+        ListValueStage(final Context context, final Object value) {
             super(State.VALUE, context, null, value);
         }
 
         @Override
-        public Stage advance() {
-            Stage stage = context.nextStage();
-
-            if (stage == null) {
-                try {
-                    return context.newStage(new ListValueStage(context, context.next()));
-                } catch (NoSuchElementException e) {
-                    return context.newStage(new ListEndStage(context));
-                }
-            }
-
-            return stage;
+        String name() {
+            throw new BsonInvalidOperationException(Sofia.cannotReadName());
         }
-
     }
 
     private static class EndStage extends Stage {
-        public EndStage(final State state, final Context context) {
+        EndStage(final State state, final Context context) {
             super(state, context);
         }
 
@@ -165,25 +145,25 @@ class Stage {
         }
     }
 
-    private static class DocumentEndStage extends EndStage {
-        public DocumentEndStage(final Context context) {
+    static class DocumentEndStage extends EndStage {
+        DocumentEndStage(final Context context) {
             super(State.END_OF_DOCUMENT, context);
         }
 
         @Override
-        public void endDocument() {
+        void endDocument() {
             end(Sofia.notDocumentEnd());
         }
 
     }
 
-    private static class ListEndStage extends EndStage {
-        public ListEndStage(final Context context) {
+    static class ListEndStage extends EndStage {
+        ListEndStage(final Context context) {
             super(State.END_OF_ARRAY, context);
         }
 
         @Override
-        public void endArray() {
+        void endArray() {
             end(Sofia.notArrayEnd());
         }
     }
