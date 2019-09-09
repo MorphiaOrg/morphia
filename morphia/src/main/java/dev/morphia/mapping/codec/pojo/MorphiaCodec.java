@@ -154,6 +154,19 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     }
 
     @Override
+    protected <S> void encodeProperty(final BsonWriter writer,
+                                      final T instance,
+                                      final EncoderContext encoderContext,
+                                      final PropertyModel<S> propertyModel) {
+        final PropertyHandler handler = getPropertyHandler(getClassModel().getInstanceCreator(), propertyModel);
+        if (handler != null) {
+            handler.encodeProperty(writer, instance, encoderContext, propertyModel);
+        } else {
+            super.encodeProperty(writer, instance, encoderContext, propertyModel);
+        }
+    }
+
+    @Override
     public T decode(final BsonReader reader, final DecoderContext decoderContext) {
         T entity;
         if (mappedClass.hasLifecycle(PreLoad.class) || mappedClass.hasLifecycle(PostLoad.class) || getMapper().hasInterceptors()) {
@@ -171,19 +184,6 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         }
 
         return entity;
-    }
-
-    @Override
-    protected <S> void encodeProperty(final BsonWriter writer,
-                                      final T instance,
-                                      final EncoderContext encoderContext,
-                                      final PropertyModel<S> propertyModel) {
-        final PropertyHandler handler = getPropertyHandler(getClassModel().getInstanceCreator(), propertyModel);
-        if (handler != null) {
-            handler.encodeProperty(writer, instance, encoderContext, propertyModel);
-        } else {
-            super.encodeProperty(writer, instance, encoderContext, propertyModel);
-        }
     }
 
     @Override

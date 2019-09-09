@@ -931,6 +931,7 @@ public class TestUpdateOps extends TestBase {
         private ObjectId id;
         @Indexed
         private String uuid;
+        private Log log;
         private List<Log> logs = new ArrayList<>();
         private Document raw;
 
@@ -945,6 +946,14 @@ public class TestUpdateOps extends TestBase {
 
         public void setLogs(final List<Log> logs) {
             this.logs = logs;
+        }
+
+        public Log getLog() {
+            return log;
+        }
+
+        public void setLog(final Log log) {
+            this.log = log;
         }
     }
 

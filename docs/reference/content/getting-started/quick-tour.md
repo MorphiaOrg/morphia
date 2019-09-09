@@ -113,7 +113,7 @@ final Employee elmer = new Employee("Elmer Fudd", 50000.0);
 datastore.save(elmer);
 ```
 
-Taking it one step further, lets define some relationships and save those, too.
+Taking it one stage further, lets define some relationships and save those, too.
 
 ```java
 final Employee daffy = new Employee("Daffy Duck", 40000.0);
@@ -178,7 +178,7 @@ the Java field, Morphia can use either form and will validate against either nam
 ## Updates
 
 Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set 
-of update operations.  In this example, we'll find all the underpaid employees and give them a raise of 10000.  The first step is to create
+of update operations.  In this example, we'll find all the underpaid employees and give them a raise of 10000.  The first stage is to create
  the query to find all the underpaid employees.  This is one we've already seen:
  
 ```java
@@ -194,7 +194,7 @@ final UpdateOperations<Employee> updateOperations = datastore.createUpdateOperat
 ```
 
 There are many operations on this class but, in this case, we're only updating the `salary` field by 10000.  This corresponds to the 
-[`$inc`]({{< docsref "reference/operator/update/inc/" >}}) operator.  There's one last step involved here:
+[`$inc`]({{< docsref "reference/operator/update/inc/" >}}) operator.  There's one last stage involved here:
 
 ```java
 final UpdateResults results = datastore.update(underPaidQuery, updateOperations);

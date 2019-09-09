@@ -4,12 +4,17 @@ import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
 import dev.morphia.TestUpdateOps.Log;
 import dev.morphia.TestUpdateOps.LogHolder;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.mapping.codec.reader.FlattenedDocumentReader;
 import org.bson.BsonDocumentReader;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonType;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +23,7 @@ import java.util.function.Consumer;
 
 public class DocumentReaderTest extends TestBase {
 
-    private DocumentReader reader;
+    private FlattenedDocumentReader reader;
     private BsonDocumentReader bsonDocumentReader;
 
     @Test
@@ -26,18 +31,18 @@ public class DocumentReaderTest extends TestBase {
         setup(new Document("key", "value")
             .append("numbers", List.of(1,2,3,4,5)));
 
-        doIt(r -> { r.readStartDocument();});
-        doIt(r -> { Assert.assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT);});
-        doIt(r -> { Assert.assertEquals(r.readName(), "key");});
-        doIt(r -> { Assert.assertEquals(r.readString(), "value");});
-        doIt(r -> { Assert.assertEquals(r.readName(), "numbers");});
-        doIt(r -> { r.readStartArray();});
+        step(r -> { r.readStartDocument();});
+        step(r -> { Assert.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType());});
+        step(r -> { Assert.assertEquals("key", r.readName());});
+        step(r -> { Assert.assertEquals("value", r.readString());});
+        step(r -> { Assert.assertEquals("numbers", r.readName());});
+        step(r -> { r.readStartArray();});
         for (int i = 1; i < 6; i++) {
             final int finalI = i;
-            doIt(r -> { Assert.assertEquals(r.readInt32(), finalI);});
+            step(r -> { Assert.assertEquals(finalI, r.readInt32());});
         }
-        doIt(r -> { r.readEndArray();});
-        doIt(r -> { r.readEndDocument();});
+        step(r -> { r.readEndArray();});
+        step(r -> { r.readEndDocument();});
     }
 
     @Test
@@ -49,30 +54,30 @@ public class DocumentReaderTest extends TestBase {
                  new Document("list3", "value3")
                                     )));
 
-        doIt(r -> { r.readStartDocument();});
-        doIt(r -> { Assert.assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT);});
-        doIt(r -> { Assert.assertEquals(r.readName(), "key");});
-        doIt(r -> { r.readStartDocument();});
-        doIt(r -> { Assert.assertEquals(r.readName(), "nested");});
-        doIt(r -> { Assert.assertEquals(r.readString(), "detsen");});
-        doIt(r -> { r.readEndDocument();});
-        doIt(r -> { Assert.assertEquals(r.readName(), "list");});
-        doIt(r -> { r.readStartArray();});
+        step(r -> { r.readStartDocument();});
+        step(r -> { Assert.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType());});
+        step(r -> { Assert.assertEquals("key", r.readName());});
+        step(r -> { r.readStartDocument();});
+        step(r -> { Assert.assertEquals("nested", r.readName());});
+        step(r -> { Assert.assertEquals("detsen", r.readString());});
+        step(r -> { r.readEndDocument();});
+        step(r -> { Assert.assertEquals("list", r.readName());});
+        step(r -> { r.readStartArray();});
         readDocument(1);
         readDocument(2);
         readDocument(3);
 
-        doIt(r -> { r.readEndArray();});
-        doIt(r -> { r.readEndDocument();});
+        step(r -> { r.readEndArray();});
+        step(r -> { r.readEndDocument();});
 
-        doIt(r -> { r.close();});
+        step(r -> { r.close();});
     }
 
     private void readDocument(final int count) {
-        doIt(r -> { r.readStartDocument();});
-        doIt(r -> { Assert.assertEquals(r.readName(), "list" + count);});
-        doIt(r -> { Assert.assertEquals(r.readString(), "value" + count);});
-        doIt(r -> { r.readEndDocument();});
+        step(r -> { r.readStartDocument();});
+        step(r -> { Assert.assertEquals("list" + count, r.readName());});
+        step(r -> { Assert.assertEquals("value" + count, r.readString());});
+        step(r -> { r.readEndDocument();});
     }
 
     @Test
@@ -80,32 +85,48 @@ public class DocumentReaderTest extends TestBase {
         setup(new Document("key", "value")
                   .append("nested", "detsen"));
 
-        doIt(r -> { r.readStartDocument();});
+        step(r -> { r.readStartDocument();});
         BsonReaderMark bsonMark = bsonDocumentReader.getMark();
         BsonReaderMark docMark = reader.getMark();
 
-        doIt(r -> { Assert.assertEquals(r.readName(), "key");});
-        doIt(r -> { Assert.assertEquals(r.readString(), "value");});
+        step(r -> { Assert.assertEquals("key", r.readName());});
+        step(r -> { Assert.assertEquals("value", r.readString());});
 
         bsonMark.reset();
         docMark.reset();
 
-        doIt(r -> { Assert.assertEquals(r.readName(), "key");});
-        doIt(r -> { Assert.assertEquals(r.readString(), "value");});
+        step(r -> { Assert.assertEquals("key", r.readName());});
+        step(r -> { Assert.assertEquals("value", r.readString());});
 
-        doIt(r -> { Assert.assertEquals(r.readName(), "nested");});
-        doIt(r -> { Assert.assertEquals(r.readString(), "detsen");});
+        step(r -> { Assert.assertEquals("nested", r.readName());});
+        step(r -> { Assert.assertEquals("detsen", r.readString());});
 
-        doIt(r -> { r.readEndDocument();});
+        step(r -> { r.readEndDocument();});
+    }
+
+    @Test
+    public void nestedDatabaseRead() {
+        getDs().getMapper().map(Parent.class, Child.class);
+        Parent parent = new Parent();
+        parent.child = new Child();
+        getDs().save(parent);
+
+        MongoCollection<Document> collection = getDatabase()
+                                                   .getCollection(Parent.class.getSimpleName());
+
+        Document first = collection.find().first();
+        System.out.println("********************* first = " + first);
+
+        Parent decode = getMapper().getCodecRegistry().get(Parent.class)
+                                      .decode(new DocumentReader(first), DecoderContext.builder().build());
+
     }
 
     @Test
     public void databaseRead() {
         getDs().getMapper().map(LogHolder.class, Log.class);
         LogHolder holder = new LogHolder();
-        for (int i = 0; i < 1; i++) {
-            holder.getLogs().add(new Log(i));
-        }
+        holder.setLog(new Log(1));
         getDs().save(holder);
         MongoCollection<Document> collection = getDatabase()
                                                    .getCollection(LogHolder.class.getSimpleName());
@@ -119,14 +140,25 @@ public class DocumentReaderTest extends TestBase {
     }
 
     private void setup(final Document document) {
-        reader = new DocumentReader(document);
+        reader = new FlattenedDocumentReader(document);
         bsonDocumentReader = new BsonDocumentReader(
             document.toBsonDocument(Document.class, getMapper().getCodecRegistry()));
     }
 
-    private void doIt(final Consumer<BsonReader> function) {
+    private void step(final Consumer<BsonReader> function) {
         function.accept(bsonDocumentReader);
         function.accept(reader);
     }
 
+    @Entity
+    private static class Parent {
+        @Id
+        private ObjectId id;
+        private Child child;
+    }
+
+    @Embedded
+    private static class Child {
+
+    }
 }
