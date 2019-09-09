@@ -3,51 +3,28 @@ package dev.morphia.mapping.codec.reader;
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.reader.Stage.InitialStage;
 import dev.morphia.sofia.Sofia;
-import org.bson.AbstractBsonReader.State;
 import org.bson.BsonType;
 import org.bson.Document;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 
 public class Context {
 
-    private FlattenedDocumentReader flattenedDocumentReader;
     private final ArrayDeque<ReaderIterator> iterators = new ArrayDeque<>();
-    List<Stage> stages = new ArrayList<>();
-    private int position = 0;
+    Stage stage;
+    //    List<Stage> stages = new ArrayList<>();
+    //    private int position = 0;
     private final BsonTypeMap typeMap = new BsonTypeMap();
 
-    public Context(final FlattenedDocumentReader flattenedDocumentReader, final Document document) {
-        this.flattenedDocumentReader = flattenedDocumentReader;
+    public Context(final Document document) {
         iterators.add(new DocumentIterator(this, document.entrySet().iterator()));
-        stages.add(new InitialStage(this));
-    }
-
-    public void startDocument() {
-        stage().startDocument();
-    }
-
-    public void endArray() {
-        stage().endArray();
-    }
-
-    public void endDocument() {
-        stage().endDocument();
-    }
-
-    public void startArray() {
-        stage().startArray();
+        stage = new InitialStage(this);
     }
 
     public Stage iterate() {
         ReaderIterator peek = iterators.peek();
-        Stage next = peek != null ? peek.next() : null;
-        return next;
+        return newStage(peek != null ? peek.next() : null);
     }
 
     public void iterate(final ReaderIterator iterator) {
@@ -58,33 +35,33 @@ public class Context {
         return iterators.pop();
     }
 
-    @SuppressWarnings("unchecked")
-    <T> T next() {
-        Iterator peek = iterators.peek();
-        Object next = peek != null ? peek.next() : null;
-        return (T) next;
+    Stage newStage(final Stage newStage) {
+        this.stage.next(newStage);
+        this.stage = newStage;
+        return newStage;
     }
 
-    Stage nextStage() {
-        return position < stages.size() - 1 ? stages.get(++position) : null;
-    }
 
-    Stage newStage(final Stage stage) {
-        position++;
-        stages.add(stage);
+    Stage nextStage(final Stage newStage) {
+        if (newStage.nextStage == null) {
+            newStage.next(iterate());
+        }
+
+        stage = newStage.nextStage;
         return stage;
     }
 
+
     Stage stage() {
-        if (position < stages.size()) {
-            return stages.get(position);
-        } else {
-            throw new IllegalStateException();
-        }
+        return this.stage;
+    }
+
+    void stage(final Stage reset) {
+        stage = reset;
     }
 
     public Mark mark() {
-        return new Mark(stage());
+        return new Mark(this, stage());
     }
 
     BsonType getBsonType(final Object o) {
@@ -99,15 +76,4 @@ public class Context {
         return bsonType;
     }
 
-    public String getCurrentName() {
-        return stage().name();
-    }
-
-    public <T> T getCurrentValue() {
-        return stage().value();
-    }
-
-    public BsonType getCurrentBsonType() {
-        return stage().getCurrentBsonType();
-    }
 }

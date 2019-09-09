@@ -33,10 +33,10 @@ class DocumentIterator implements ReaderIterator {
         try {
             Entry<String, Object> next = iterator.next();
             if(next != null) {
-                stage = context.newStage(new Stage(State.VALUE, context, next.getKey(), next.getValue()));
+                stage = new Stage(State.VALUE, context, next.getKey(), next.getValue());
             }
         } catch (NoSuchElementException e) {
-            stage = context.newStage(new DocumentEndStage(context));
+            stage = new DocumentEndStage(context);
 
         }
 
@@ -72,9 +72,9 @@ class ArrayIterator implements ReaderIterator {
     @Override
     public Stage next() {
         try {
-            return context.newStage(new ListValueStage(context, iterator.next()));
+            return new ListValueStage(context, iterator.next());
         } catch (NoSuchElementException e) {
-            return context.newStage(new ListEndStage(context));
+            return new ListEndStage(context);
         }
     }
 

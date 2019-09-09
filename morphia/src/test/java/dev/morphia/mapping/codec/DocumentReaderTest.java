@@ -149,7 +149,7 @@ public class DocumentReaderTest extends TestBase {
     }
 
     private void step(final Consumer<BsonReader> function) {
-        function.accept(bsonDocumentReader);
+//        function.accept(bsonDocumentReader);
         function.accept(reader);
     }
 

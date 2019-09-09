@@ -28,7 +28,7 @@ public class FlattenedDocumentReader implements BsonReader {
      * @param document the document to read from
      */
     public FlattenedDocumentReader(final Document document) {
-        context = new Context(this, document);
+        context = new Context(document);
     }
 
     @Override
@@ -45,70 +45,70 @@ public class FlattenedDocumentReader implements BsonReader {
 
     @Override
     public BsonBinary readBinaryData() {
-        return (BsonBinary) getContext().getCurrentValue();
+        return (BsonBinary) getContext().stage().value();
     }
 
     @Override
     public byte peekBinarySubType() {
-        BsonBinary currentValue = (BsonBinary) getContext().getCurrentValue();
+        BsonBinary currentValue = (BsonBinary) getContext().stage().value();
         return currentValue.getType();
     }
 
     @Override
     public int peekBinarySize() {
-        BsonBinary currentValue = (BsonBinary) getContext().getCurrentValue();
+        BsonBinary currentValue = (BsonBinary) getContext().stage().value();
         return currentValue.getData().length;
     }
 
     @Override
     public boolean readBoolean() {
-        return (boolean) getContext().getCurrentValue();
+        return (boolean) getContext().stage().value();
     }
 
     @Override
     public long readDateTime() {
-        return (long) getContext().getCurrentValue();
+        return (long) getContext().stage().value();
     }
 
     @Override
     public double readDouble() {
-        return (double) getContext().getCurrentValue();
+        return (double) getContext().stage().value();
     }
 
     @Override
     public void readEndArray() {
-        getContext().endArray();
+        getContext().stage().endArray();
     }
 
     @Override
     public void readEndDocument() {
-        getContext().endDocument();
+        getContext().stage().endDocument();
     }
 
     @Override
     public int readInt32() {
-        return (int) getContext().getCurrentValue();
+        return (int) getContext().stage().value();
     }
 
     @Override
     public long readInt64() {
-        return (long) getContext().getCurrentValue();
+        return (long) getContext().stage().value();
     }
 
     @Override
     public Decimal128 readDecimal128() {
-        return (Decimal128) getContext().getCurrentValue();
+        return (Decimal128) getContext().stage().value();
     }
 
     @Override
     public String readJavaScript() {
-        BsonJavaScript currentValue = (BsonJavaScript) getContext().getCurrentValue();
+        BsonJavaScript currentValue = (BsonJavaScript) getContext().stage().value();
         return currentValue.getCode();
     }
 
     @Override
     public String readJavaScriptWithScope() {
-        BsonJavaScriptWithScope currentValue = (BsonJavaScriptWithScope) getContext().getCurrentValue();
+        BsonJavaScriptWithScope currentValue = (BsonJavaScriptWithScope) getContext().stage().value();
         return currentValue.getCode();
     }
 
@@ -126,42 +126,42 @@ public class FlattenedDocumentReader implements BsonReader {
 
     @Override
     public ObjectId readObjectId() {
-        return (ObjectId) getContext().getCurrentValue();
+        return (ObjectId) getContext().stage().value();
     }
 
     @Override
     public BsonRegularExpression readRegularExpression() {
-        return (BsonRegularExpression) getContext().getCurrentValue();
+        return (BsonRegularExpression) getContext().stage().value();
     }
 
     @Override
     public BsonDbPointer readDBPointer() {
-        return (BsonDbPointer) getContext().getCurrentValue();
+        return (BsonDbPointer) getContext().stage().value();
     }
 
     @Override
     public void readStartArray() {
-        getContext().startArray();
+        getContext().stage().startArray();
     }
 
     @Override
     public void readStartDocument() {
-        getContext().startDocument();
+        getContext().stage().startDocument();
     }
 
     @Override
     public String readString() {
-        return (String) getContext().getCurrentValue();
+        return (String) getContext().stage().value();
     }
 
     @Override
     public String readSymbol() {
-        return (String) getContext().getCurrentValue();
+        return (String) getContext().stage().value();
     }
 
     @Override
     public BsonTimestamp readTimestamp() {
-        return (BsonTimestamp) getContext().getCurrentValue();
+        return (BsonTimestamp) getContext().stage().value();
     }
 
     @Override
@@ -178,12 +178,12 @@ public class FlattenedDocumentReader implements BsonReader {
 
     @Override
     public BsonType getCurrentBsonType() {
-        return getContext().getCurrentBsonType();
+        return getContext().stage().getCurrentBsonType();
     }
 
     @Override
     public String getCurrentName() {
-        return getContext().getCurrentName();
+        return getContext().stage().name();
     }
 
     @Override

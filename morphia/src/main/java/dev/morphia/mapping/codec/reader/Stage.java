@@ -15,6 +15,7 @@ class Stage {
     Context context;
     private final String name;
     private final Object value;
+    Stage nextStage;
 
     Stage(final State state, final Context context) {
         this.state = state;
@@ -28,6 +29,11 @@ class Stage {
         this.context = context;
         this.name = name;
         this.value = value;
+    }
+
+    Stage next(final Stage next) {
+        this.nextStage = next;
+        return next;
     }
 
     BsonType getCurrentBsonType() {
@@ -44,13 +50,7 @@ class Stage {
     }
 
     Stage advance() {
-        Stage stage = context.nextStage();
-
-        if (stage == null) {
-           stage = context.iterate();
-        }
-
-        return stage;
+        return context.nextStage(this);
     }
 
     void startDocument() {
@@ -114,6 +114,7 @@ class Stage {
         String name() {
             return advance().name();
         }
+
         @Override
         BsonType getCurrentBsonType() {
             return BsonType.DOCUMENT;
