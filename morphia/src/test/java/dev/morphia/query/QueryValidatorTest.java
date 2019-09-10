@@ -470,14 +470,14 @@ public class QueryValidatorTest extends TestBase {
 
     @Test
     public void shouldReferToMappedClassInExceptionWhenFieldNotFound() {
-        thrown.expect(MappingException.class);
+        thrown.expect(ValidationException.class);
         thrown.expectMessage("Could not resolve path '_id.notAField' against 'dev.morphia.entities.SimpleEntity'");
         new PathTarget(getMapper(), SimpleEntity.class, "id.notAField").getTarget();
     }
 
     @Test
     public void shouldReferToMappedClassInExceptionWhenQueryingPastReferenceField() {
-        thrown.expect(MappingException.class);
+        thrown.expect(ValidationException.class);
         thrown.expectMessage("Could not resolve path 'reference.name' against 'dev.morphia.query.QueryValidatorTest$WithReference'");
         new PathTarget(getMapper(), WithReference.class, "reference.name").getTarget();
     }
