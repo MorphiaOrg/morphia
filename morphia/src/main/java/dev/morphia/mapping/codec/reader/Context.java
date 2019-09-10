@@ -6,66 +6,51 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonType;
 import org.bson.Document;
 
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class Context {
 
-    private final ArrayDeque<ReaderIterator> iterators = new ArrayDeque<>();
-    Stage stage;
-    //    List<Stage> stages = new ArrayList<>();
-    //    private int position = 0;
-    private final BsonTypeMap typeMap = new BsonTypeMap();
+    private final Stage initial;
+    private Stage stage;
+    private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
 
     public Context(final Document document) {
-        iterators.add(new DocumentIterator(this, document.entrySet().iterator()));
-        stage = new InitialStage(this);
+        stage = new InitialStage(this, new DocumentIterator(this, document.entrySet().iterator()));
+        initial = stage;
     }
 
-    public Stage iterate() {
-        ReaderIterator peek = iterators.peek();
-        return newStage(peek != null ? peek.next() : null);
-    }
-
-    public void iterate(final ReaderIterator iterator) {
-        iterators.push(iterator);
-    }
-
-    ReaderIterator popIterator() {
-        return iterators.pop();
-    }
-
-    Stage newStage(final Stage newStage) {
-        this.stage.next(newStage);
-        this.stage = newStage;
-        return newStage;
-    }
-
-
-    Stage nextStage(final Stage newStage) {
-        if (newStage.nextStage == null) {
-            newStage.next(iterate());
+    public List<Stage> stages() {
+        List<Stage> stages = new ArrayList<>();
+        Stage current = initial;
+        while(current != null) {
+            stages.add(current);
+            current = current.nextStage;
         }
 
-        stage = newStage.nextStage;
+        return stages;
+    }
+
+    Stage nextStage(final Stage nextStage) {
+        stage = nextStage;
         return stage;
     }
 
-
     Stage stage() {
         return this.stage;
-    }
-
-    void stage(final Stage reset) {
-        stage = reset;
     }
 
     public Mark mark() {
         return new Mark(this, stage());
     }
 
+    void reset(final Stage bookmark) {
+        stage = bookmark;
+    }
+
     BsonType getBsonType(final Object o) {
-        BsonType bsonType = typeMap.get(o.getClass());
+        BsonType bsonType = TYPE_MAP.get(o.getClass());
         if (bsonType == null) {
             if (o instanceof List) {
                 bsonType = BsonType.ARRAY;
@@ -76,4 +61,11 @@ public class Context {
         return bsonType;
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Context.class.getSimpleName() + "[", "]")
+                   .add("stage=" + stage)
+                   .add("stages=" + stages())
+                   .toString();
+    }
 }

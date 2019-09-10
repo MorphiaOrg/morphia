@@ -12,6 +12,6 @@ public class Mark implements BsonReaderMark {
     }
 
     public void reset() {
-        context.stage(stage);
+        context.reset(stage);
     }
 }

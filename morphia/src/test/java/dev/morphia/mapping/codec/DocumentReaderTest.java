@@ -118,11 +118,11 @@ public class DocumentReaderTest extends TestBase {
                                                    .getCollection(Parent.class.getSimpleName());
 
         Document first = collection.find().first();
-        System.out.println("********************* first = " + first);
 
         Parent decode = getMapper().getCodecRegistry().get(Parent.class)
                                       .decode(new DocumentReader(first), DecoderContext.builder().build());
 
+        Assert.assertEquals(parent, decode);
     }
 
     @Test
@@ -134,12 +134,10 @@ public class DocumentReaderTest extends TestBase {
         MongoCollection<Document> collection = getDatabase()
                                                    .getCollection(LogHolder.class.getSimpleName());
 
-        Document first = collection.find().first();
-        System.out.println("********************* first = " + first);
-
         LogHolder decode = getMapper().getCodecRegistry().get(LogHolder.class)
-                                      .decode(new DocumentReader(first), DecoderContext.builder().build());
+                                      .decode(new FlattenedDocumentReader(collection.find().first()), DecoderContext.builder().build());
 
+        Assert.assertEquals(holder, decode);
     }
 
     private void setup(final Document document) {
@@ -158,10 +156,42 @@ public class DocumentReaderTest extends TestBase {
         @Id
         private ObjectId id;
         private Child child;
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Parent)) {
+                return false;
+            }
+
+            final Parent parent = (Parent) o;
+
+            if (id != null ? !id.equals(parent.id) : parent.id != null) {
+                return false;
+            }
+            return child != null ? child.equals(parent.child) : parent.child == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (child != null ? child.hashCode() : 0);
+            return result;
+        }
     }
 
     @Embedded
     private static class Child {
+        @Override
+        public boolean equals(final Object o) {
+            return this == o || o instanceof Child;
+        }
 
+        @Override
+        public int hashCode() {
+            return 0;
+        }
     }
 }

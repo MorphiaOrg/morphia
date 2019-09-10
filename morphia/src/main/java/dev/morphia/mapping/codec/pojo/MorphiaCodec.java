@@ -194,7 +194,6 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
                                            final String name,
                                            final PropertyModel<S> propertyModel) {
         if (propertyModel != null) {
-            System.out.println("********************* propertyModel = " + propertyModel);
             final PropertyHandler handler = getPropertyHandler(instanceCreator, propertyModel);
             if (handler != null) {
                 S value = handler.decodeProperty(reader, decoderContext, instanceCreator, name, propertyModel);

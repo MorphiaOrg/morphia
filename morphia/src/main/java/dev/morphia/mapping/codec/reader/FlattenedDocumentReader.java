@@ -188,7 +188,7 @@ public class FlattenedDocumentReader implements BsonReader {
 
     @Override
     public BsonType readBsonType() {
-        return getContext().stage().advance().getCurrentBsonType();
+        return getContext().stage().getCurrentBsonType();
    }
 
     @Deprecated

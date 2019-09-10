@@ -6,33 +6,45 @@ import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.Document;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringJoiner;
 
 class Stage {
-    State state;
     Context context;
+    ReaderIterator iterator;
     private final String name;
     private final Object value;
     Stage nextStage;
 
-    Stage(final State state, final Context context) {
-        this.state = state;
+    Stage(final Context context, final ReaderIterator iterator) {
         this.context = context;
+        this.iterator = iterator;
         name = null;
         value = null;
+        if (iterator.hasNext()) {
+            processNextStages(new DocumentEndStage(context), iterator);
+        }
     }
 
-    Stage(final State state, final Context context, final String name, final Object value) {
-        this.state = state;
+    private void processNextStages(final Stage endStage, final ReaderIterator iterator) {
+        next(endStage);
+        Stage current = this;
+        while (iterator.hasNext()) {
+            current = current.next(iterator.next());
+        }
+        context.nextStage(nextStage);
+    }
+
+    Stage(final Context context, final String name, final Object value) {
         this.context = context;
         this.name = name;
         this.value = value;
     }
 
     Stage next(final Stage next) {
-        this.nextStage = next;
+        Stage old = nextStage;
+        nextStage = next;
+        nextStage.nextStage = old;
         return next;
     }
 
@@ -50,23 +62,28 @@ class Stage {
     }
 
     Stage advance() {
-        return context.nextStage(this);
+        return context.nextStage(nextStage);
     }
 
     void startDocument() {
         if (!(value instanceof Document)) {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(Document.class, getCurrentBsonType()));
         }
-        context.iterate(new DocumentIterator(context, ((Document) value).entrySet().iterator()));
-        context.newStage(new DocumentStartStage(context));
+        if (!(nextStage instanceof DocumentStartStage)) {
+            processNextStages(new DocumentEndStage(context), new DocumentIterator(context, ((Document) value).entrySet().iterator()));
+            next(new DocumentStartStage(context, ArrayIterator.empty())).advance();
+        } else {
+            advance();
+        }
     }
 
     void startArray() {
-        if(!(value instanceof List)) {
+        if (!(value instanceof List)) {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(List.class, getCurrentBsonType()));
         }
-        context.iterate(new ArrayIterator(context, ((List) value).iterator()));
-        context.iterate();
+        if (!(nextStage instanceof ListValueStage)) {
+            processNextStages(new ListEndStage(context), new ArrayIterator(context, ((List) value).iterator()));
+        }
     }
 
     void endArray() {
@@ -80,7 +97,6 @@ class Stage {
     @Override
     public String toString() {
         return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
-                   .add("state=" + state)
                    .add("currentBsonType=" + getCurrentBsonType())
                    .add("name='" + name + "'")
                    .add("value=" + value)
@@ -89,13 +105,16 @@ class Stage {
 
     static class InitialStage extends Stage {
 
-        InitialStage(final Context context) {
-            super(State.INITIAL, context);
+        InitialStage(final Context context, final DocumentIterator documentIterator) {
+            super(context, documentIterator);
+            DocumentStartStage startStage = new DocumentStartStage(context, iterator);
+            startStage.nextStage = nextStage;
+            nextStage = startStage;
         }
 
         @Override
         void startDocument() {
-            context.newStage(new DocumentStartStage(context));
+            advance();
         }
 
         @Override
@@ -106,8 +125,8 @@ class Stage {
 
     static class DocumentStartStage extends Stage {
 
-        DocumentStartStage(final Context context) {
-            super(State.VALUE, context);
+        DocumentStartStage(final Context context, final ReaderIterator iterator) {
+            super(context, iterator);
         }
 
         @Override
@@ -123,7 +142,7 @@ class Stage {
 
     static class ListValueStage extends Stage {
         ListValueStage(final Context context, final Object value) {
-            super(State.VALUE, context, null, value);
+            super(context, null, value);
         }
 
         @Override
@@ -134,11 +153,10 @@ class Stage {
 
     private static class EndStage extends Stage {
         EndStage(final State state, final Context context) {
-            super(state, context);
+            super(context, ArrayIterator.empty());
         }
 
         void end(final String message) {
-            Iterator iterator = context.popIterator();
             if(iterator.hasNext()) {
                 throw new BsonInvalidOperationException(message);
             }
@@ -154,6 +172,11 @@ class Stage {
         @Override
         void endDocument() {
             end(Sofia.notDocumentEnd());
+        }
+
+        @Override
+        BsonType getCurrentBsonType() {
+            return BsonType.END_OF_DOCUMENT;
         }
 
     }

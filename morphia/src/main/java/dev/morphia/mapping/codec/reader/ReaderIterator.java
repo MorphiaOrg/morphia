@@ -3,9 +3,9 @@ package dev.morphia.mapping.codec.reader;
 import dev.morphia.mapping.codec.reader.Stage.DocumentEndStage;
 import dev.morphia.mapping.codec.reader.Stage.ListEndStage;
 import dev.morphia.mapping.codec.reader.Stage.ListValueStage;
-import org.bson.AbstractBsonReader.State;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
@@ -33,7 +33,7 @@ class DocumentIterator implements ReaderIterator {
         try {
             Entry<String, Object> next = iterator.next();
             if(next != null) {
-                stage = new Stage(State.VALUE, context, next.getKey(), next.getValue());
+                stage = new Stage(context, next.getKey(), next.getValue());
             }
         } catch (NoSuchElementException e) {
             stage = new DocumentEndStage(context);
@@ -59,6 +59,15 @@ class ArrayIterator implements ReaderIterator {
     private final Context context;
     private final Iterator<Object> iterator;
 
+    static ArrayIterator empty() {
+        return new ArrayIterator();
+    }
+
+    public ArrayIterator() {
+        this.context = null;
+        this.iterator = List.of().iterator();
+    }
+
     public ArrayIterator(final Context context, final Iterator<Object> iterator) {
         this.context = context;
         this.iterator = iterator;
@@ -71,11 +80,7 @@ class ArrayIterator implements ReaderIterator {
 
     @Override
     public Stage next() {
-        try {
-            return new ListValueStage(context, iterator.next());
-        } catch (NoSuchElementException e) {
-            return new ListEndStage(context);
-        }
+        return new ListValueStage(context, iterator.next());
     }
 
     @Override
