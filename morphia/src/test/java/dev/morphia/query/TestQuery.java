@@ -24,6 +24,7 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
@@ -1040,7 +1041,7 @@ public class TestQuery extends TestBase {
                 .execute(new FindOptions().limit(1))
                 .tryNext();
             fail("Validation should have caught the bad field");
-        } catch (MappingException e) {
+        } catch (ValidationException e) {
             // success!
         }
 
@@ -1138,7 +1139,7 @@ public class TestQuery extends TestBase {
                                .count());
     }
 
-    @Test(expected = MappingException.class)
+    @Test(expected = ValidationException.class)
     public void testQueryOverReference() {
 
         final ContainsPic cpk = new ContainsPic();
@@ -1281,7 +1282,7 @@ public class TestQuery extends TestBase {
                              .limit(1))
                 .tryNext();
             fail("Validation should have caught the bad field");
-        } catch (MappingException e) {
+        } catch (ValidationException e) {
             // success!
         }
     }

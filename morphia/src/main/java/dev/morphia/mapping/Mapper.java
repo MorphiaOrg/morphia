@@ -416,7 +416,7 @@ public class Mapper {
     public <T> MongoCollection<T> getCollection(final Class<T> clazz) {
         MappedClass mappedClass = getMappedClass(clazz);
         if (mappedClass == null) {
-            throw new IllegalArgumentException(Sofia.notMappable(clazz.getName()));
+            throw new MappingException(Sofia.notMappable(clazz.getName()));
         }
         if (mappedClass.getCollectionName() == null) {
             throw new MappingException(Sofia.noMappedCollection(clazz.getName()));

@@ -16,6 +16,7 @@ package dev.morphia;
 
 
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class TestInheritanceMappings extends TestBase {
         getMapper().map(FlyingCar.class);
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test(expected = MappingException.class)
     public void testMapEntity() {
         getMapper().map(MapLike.class);
         MapLike m = new MapLike();

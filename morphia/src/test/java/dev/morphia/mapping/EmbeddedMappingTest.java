@@ -103,7 +103,7 @@ public class EmbeddedMappingTest extends TestBase {
         getMapper().map(WithNestedValidated.class, Nested.class, NestedImpl.class, AnotherNested.class);
         try {
             getDs().ensureIndexes();
-        } catch (MappingException e) {
+        } catch (ValidationException e) {
             Assert.assertEquals("Could not resolve path 'nested.field.fail' against 'dev.morphia.mapping"
                                     + ".EmbeddedMappingTest$WithNestedValidated'.", e.getMessage());
         }
