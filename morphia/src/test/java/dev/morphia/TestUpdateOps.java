@@ -18,7 +18,6 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.PreLoad;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
@@ -31,11 +30,7 @@ import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentReader;
-import org.bson.BsonType;
 import org.bson.Document;
-import org.bson.codecs.DecoderContext;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -48,7 +43,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,32 +91,6 @@ public class TestUpdateOps extends TestBase {
                           .execute(new FindOptions().limit(1))
                           .next()
                        .children, hasItem(new Child(childName, updatedLastName)));
-    }
-
-    @Test
-    public void testDisableValidation() {
-        Child child1 = new Child("James", "Rigney");
-
-        validateClassName("children", getDs().find(Parent.class)
-                                             .update()
-                                             .removeAll("children", child1), false);
-
-        validateClassName("children", getDs().find(Parent.class)
-                                             .update()
-                                             .disableValidation()
-                                             .removeAll("children", child1), false);
-
-        validateClassName("c", getDs().find(Parent.class)
-                                      .update()
-                                      .disableValidation()
-                                      .removeAll("c", child1), true);
-    }
-
-    private void validateClassName(final String path, final Update<Parent> ops, final boolean expected) {
-        Document ops1 = ops.getOps();
-        Map pull = (Map) ops1.get("$pull");
-        Map children = (Map) pull.get(path);
-        assertEquals(expected, children.containsKey("className"));
     }
 
     @Test
@@ -297,7 +265,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(getDs().get(updated).values, is(target));
         assertThat(getDs().get(control).values, is(new Integer[]{1, 2, 3}));
 
-        assertUpdated(update.execute(new UpdateOptions()), 1);
+        assertEquals(1, update.execute(new UpdateOptions()).getMatchedCount());
         assertThat(getDs().get(updated).values, is(target));
         assertThat(getDs().get(control).values, is(new Integer[]{1, 2, 3}));
     }
@@ -454,47 +422,6 @@ public class TestUpdateOps extends TestBase {
                              .execute(new UpdateOptions().upsert(true)).getMatchedCount());
 
         assertThat(ds.find(Circle.class).filter("_id", id).first().getRadius(), is(originalValue));
-    }
-
-    @Test
-    public void testMinKeepsCurrentDocumentValueWhenThisIsSmallerThanSuppliedValue() {
-        checkMinServerVersion(2.6);
-        final ObjectId id = new ObjectId();
-        final double originalValue = 3D;
-
-        Query<Circle> query = getDs().find(Circle.class).field("id").equal(id);
-        assertInserted(query.update()
-                            .setOnInsert("radius", originalValue)
-                            .execute(new UpdateOptions().upsert(true)));
-
-        assertUpdated(query.update()
-                           .min("radius", 5D)
-                           .execute(new UpdateOptions().upsert(true)), 1);
-
-        final Circle updatedCircle = getDs().find(Circle.class).filter("_id", id).first();
-        assertThat(updatedCircle, is(notNullValue()));
-        assertThat(updatedCircle.getRadius(), is(originalValue));
-    }
-
-    @Test
-    public void testMinUsesSuppliedValueWhenThisIsSmallerThanCurrentDocumentValue() {
-        checkMinServerVersion(2.6);
-        final ObjectId id = new ObjectId();
-        final double newLowerValue = 2D;
-
-        Query<Circle> query = getDs().find(Circle.class).field("id").equal(id);
-        assertInserted(query.update()
-                            .setOnInsert("radius", 3D)
-                            .execute(new UpdateOptions().upsert(true)));
-
-
-        assertUpdated(query.update()
-                           .min("radius", newLowerValue)
-                           .execute(new UpdateOptions().upsert(true)), 1);
-
-        final Circle updatedCircle = getDs().find(Circle.class).filter("_id", id).first();
-        assertThat(updatedCircle, is(notNullValue()));
-        assertThat(updatedCircle.getRadius(), is(newLowerValue));
     }
 
     @Test

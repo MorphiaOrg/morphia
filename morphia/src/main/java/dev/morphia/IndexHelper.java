@@ -30,12 +30,9 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.IndexType;
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentWriter;
 import org.bson.Document;
-import org.bson.codecs.Encoder;
-import org.bson.codecs.EncoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +48,6 @@ import static java.util.Collections.emptyList;
 
 final class IndexHelper {
     private static final Logger LOG = LoggerFactory.getLogger(IndexHelper.class);
-    private static final EncoderContext ENCODER_CONTEXT = EncoderContext.builder().build();
 
     private final Mapper mapper;
     private final MongoDatabase database;
@@ -79,14 +75,14 @@ final class IndexHelper {
     Index convert(final Text text, final String nameToStore) {
         return new IndexBuilder()
                    .options(text.options())
-                   .fields(Collections.<Field>singletonList(new FieldBuilder()
+                   .fields(Collections.singletonList(new FieldBuilder()
                                                                 .value(nameToStore)
                                                                 .type(IndexType.TEXT)
                                                                 .weight(text.value())));
     }
 
     Index convert(final Indexed indexed, final String nameToStore) {
-        List<Field> fields = Collections.<Field>singletonList(new FieldBuilder()
+        List<Field> fields = Collections.singletonList(new FieldBuilder()
                                                                   .value(nameToStore)
                                                                   .type(fromValue(indexed.value().toIndexValue())));
         return new IndexBuilder()
@@ -95,7 +91,7 @@ final class IndexHelper {
     }
 
     private List<Index> collectFieldIndexes(final MappedClass mc) {
-        List<Index> list = new ArrayList<Index>();
+        List<Index> list = new ArrayList<>();
         for (final MappedField mf : mc.getFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 list.add(convert(mf.getAnnotation(Indexed.class), mf.getMappedFieldName()));
@@ -118,13 +114,13 @@ final class IndexHelper {
     }
 
     private List<Index> collectTopLevelIndexes(final MappedClass mc) {
-        List<Index> list = new ArrayList<Index>();
+        List<Index> list = new ArrayList<>();
         if (mc != null) {
             final List<Indexes> annotations = mc.getAnnotations(Indexes.class);
             if (annotations != null) {
                 for (final Indexes indexes : annotations) {
                     for (final Index index : indexes.value()) {
-                        List<Field> fields = new ArrayList<Field>();
+                        List<Field> fields = new ArrayList<>();
                         for (Field field : index.fields()) {
                             fields.add(new FieldBuilder()
                                            .value(findField(mc, index.options(), field.value()))
@@ -147,32 +143,20 @@ final class IndexHelper {
                    .fields(list);
     }
 
-    @SuppressWarnings("unchecked")
-    private BsonDocument toBsonDocument(final String key, final Object value) {
-        BsonDocumentWriter writer = new BsonDocumentWriter(new BsonDocument());
-        writer.writeStartDocument();
-        writer.writeName(key);
-        ((Encoder) database.getCodecRegistry().get(value.getClass())).encode(writer, value, ENCODER_CONTEXT);
-        writer.writeEndDocument();
-        return writer.getDocument();
-    }
-
-    BsonDocument calculateKeys(final MappedClass mc, final Index index) {
-        BsonDocument keys = new BsonDocument();
+    Document calculateKeys(final MappedClass mc, final Index index) {
+        Document keys = new Document();
         for (Field field : index.fields()) {
             String path;
             try {
                 path = findField(mc, index.options(), field.value());
             } catch (Exception e) {
                 path = field.value();
-                String message = format("The path '%s' can not be validated against '%s' and may represent an invalid index",
-                    path, mc.getType().getName());
                 if (!index.options().disableValidation()) {
-                    throw new MappingException(message);
+                    throw new MappingException(Sofia.invalidIndexPath(path, mc.getType().getName()));
                 }
-                LOG.warn(message);
+                LOG.warn(Sofia.invalidIndexPath(path, mc.getType().getName()));
             }
-            keys.putAll(toBsonDocument(path, field.type().toIndexValue()));
+            keys.putAll(new Document(path, field.type().toIndexValue()));
         }
         return keys;
     }
@@ -229,14 +213,14 @@ final class IndexHelper {
 
     void createIndex(final MongoCollection collection, final MappedClass mc) {
         if (!mc.isInterface() && !mc.isAbstract()) {
-            for (Index index : collectIndexes(mc, Collections.<MappedClass>emptyList())) {
+            for (Index index : collectIndexes(mc, Collections.emptyList())) {
                 createIndex(collection, mc, index);
             }
         }
     }
 
     void createIndex(final MongoCollection collection, final MappedClass mc, final Index index) {
-        BsonDocument keys = calculateKeys(mc, index);
+        Document keys = calculateKeys(mc, index);
         com.mongodb.client.model.IndexOptions indexOptions = convert(index.options());
         calculateWeights(index, indexOptions);
 

@@ -19,9 +19,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.testutil.TestEntity;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 public class Circle extends TestEntity implements Shape {
     @Property
     private double radius;

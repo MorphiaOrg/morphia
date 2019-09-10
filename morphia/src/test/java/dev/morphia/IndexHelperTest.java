@@ -26,10 +26,12 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.query.ValidationException;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 import org.bson.BsonDocument;
@@ -91,7 +93,7 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void calculateKeys() {
         MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
-        BsonDocument keys = indexHelper.calculateKeys(mappedClass, new IndexBuilder()
+        Document keys = indexHelper.calculateKeys(mappedClass, new IndexBuilder()
             .fields(new FieldBuilder()
                         .value("text")
                         .type(IndexType.TEXT)
@@ -99,9 +101,9 @@ public class IndexHelperTest extends TestBase {
                     new FieldBuilder()
                         .value("nest")
                         .type(IndexType.DESC)));
-        assertEquals(new BsonDocument()
-                         .append("text", new BsonString("text"))
-                         .append("nest", new BsonInt32(-1)),
+        assertEquals(new Document()
+                         .append("text", "text")
+                         .append("nest", -1),
                      keys);
     }
 
@@ -152,7 +154,7 @@ public class IndexHelperTest extends TestBase {
         try {
             assertEquals("nest.whatsit", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "nest.whatsit"));
             fail("Should have failed on the bad index path");
-        } catch (MappingException e) {
+        } catch (ValidationException e) {
             // alles ist gut
         }
         assertEquals("nest.whatsit.nested.more.deeply.than.the.object.model",
@@ -404,6 +406,7 @@ public class IndexHelperTest extends TestBase {
         @Text(value = 10, options = @IndexOptions(name = "searchme"))
         private String text;
         private double latitude;
+        @Property("nest")
         private NestedClass nested;
     }
 

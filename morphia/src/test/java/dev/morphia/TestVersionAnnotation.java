@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.entities.version.AbstractVersionedBase;
 import dev.morphia.entities.version.Versioned;
 import dev.morphia.entities.version.VersionedChildEntity;
@@ -181,7 +182,9 @@ public class TestVersionAnnotation extends TestBase {
         query.filter("name", "Value 1");
         entity = query.modify()
                       .set("name", "Value 3")
-                      .execute(new FindAndModifyOptions().upsert(true));
+                      .execute(new FindAndModifyOptions()
+                                   .returnDocument(ReturnDocument.AFTER)
+                                   .upsert(true));
 
         Assert.assertEquals("Value 3", entity.getName());
         Assert.assertEquals(1, entity.getVersion().longValue());
