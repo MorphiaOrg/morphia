@@ -58,14 +58,18 @@ class ArrayCodec implements Codec<Object> {
 
     @Override
     public Object[] decode(final BsonReader reader, final DecoderContext decoderContext) {
-        reader.readStartArray();
-
         List<Object> list = new ArrayList<>();
-        while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+        if(reader.getCurrentBsonType() == BsonType.ARRAY) {
+            reader.readStartArray();
+
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                list.add(readValue(reader, decoderContext));
+            }
+
+            reader.readEndArray();
+        } else {
             list.add(readValue(reader, decoderContext));
         }
-
-        reader.readEndArray();
 
         return list.toArray();
     }

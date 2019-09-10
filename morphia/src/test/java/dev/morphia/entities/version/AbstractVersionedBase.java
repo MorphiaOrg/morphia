@@ -6,7 +6,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 
 @Entity
-@SuppressWarnings("unused")
 public abstract class AbstractVersionedBase {
     @Id
     private ObjectId id;

@@ -22,7 +22,6 @@ class MorphiaCollectionCodec<T> extends CollectionCodec<T> {
         super((Class<Collection<T>>) type.getType(), registry.get(valueType));
     }
 
-/*
     @Override
     public Collection<T> decode(final BsonReader reader, final DecoderContext decoderContext) {
         if(reader.getCurrentBsonType().equals(BsonType.ARRAY)) {
@@ -33,7 +32,6 @@ class MorphiaCollectionCodec<T> extends CollectionCodec<T> {
         collection.add(value);
         return collection;
     }
-*/
 
     private Collection<T> getInstance() {
         if (getEncoderClass().equals(Collection.class) || getEncoderClass().equals(List.class)) {

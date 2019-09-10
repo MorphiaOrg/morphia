@@ -133,7 +133,7 @@ public interface AdvancedDatastore extends Datastore {
      * @return the new keys of the inserted entities
      */
     default <T> void insert(List<T> entities) {
-        insert(entities, new InsertOptions());
+        insert(entities, new InsertManyOptions());
     }
 
     /**

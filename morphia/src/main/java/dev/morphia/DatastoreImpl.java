@@ -27,6 +27,7 @@ import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
+import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -415,9 +416,17 @@ class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void insert(final List<T> entities, final InsertManyOptions options) {
         if (!entities.isEmpty()) {
-            final MongoCollection collection = mapper.getCollection(entities.get(0).getClass());
+            Class<?> type = entities.get(0).getClass();
+            MappedClass mappedClass = mapper.getMappedClass(type);
+            final MongoCollection collection = mapper.getCollection(type);
+            MappedField versionField = mappedClass.getVersionField();
+            if(versionField != null) {
+                for (final T entity : entities) {
+                    setInitialVersion(versionField, entity);
+                }
+            }
 
-            enforceWriteConcern(collection, entities.get(0).getClass(), options.getWriteConcern())
+            enforceWriteConcern(collection, type, options.getWriteConcern())
                 .insertMany(entities, options.getOptions());
         }
     }
@@ -449,8 +458,20 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected <T> void insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
+        setInitialVersion(mapper.getMappedClass(entity.getClass()).getVersionField(), entity);
         mapper.enforceWriteConcern(collection, entity.getClass())
             .insertOne(entity, options.getOptions());
+    }
+
+    private <T> void setInitialVersion(final MappedField versionField, final T entity) {
+        if(versionField != null) {
+            Object value = versionField.getFieldValue(entity);
+            if(value != null && !value.equals(0)) {
+                throw new ValidationException(Sofia.versionManuallySet());
+            } else {
+                versionField.setFieldValue(entity, 1L);
+            }
+        }
     }
 
     private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {

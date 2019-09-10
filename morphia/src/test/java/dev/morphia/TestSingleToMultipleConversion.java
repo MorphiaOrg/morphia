@@ -1,14 +1,14 @@
 package dev.morphia;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +17,8 @@ import java.util.Set;
 public class TestSingleToMultipleConversion extends TestBase {
     @Test
     public void testBasicType() {
-        getDs().delete(getDs().find(HasSingleString.class));
+        getDs().find(HasSingleString.class)
+               .remove();
         getDs().save(new HasSingleString());
         Assert.assertNotNull(getDs().find(HasSingleString.class)
                                     .execute(new FindOptions().limit(1))

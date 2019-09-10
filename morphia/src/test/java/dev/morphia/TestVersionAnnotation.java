@@ -60,7 +60,7 @@ public class TestVersionAnnotation extends TestBase {
         getMapper().mapPackage("dev.morphia.entities.version");
 
         Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(2));
+        assertThat(mappedClasses.size(), is(3));
         List<Class<?>> list = new ArrayList<>();
         for (MappedClass mappedClass : mappedClasses) {
             list.add(mappedClass.getType());
