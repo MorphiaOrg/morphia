@@ -14,7 +14,6 @@ import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Validation;
-import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -308,7 +307,7 @@ class DatastoreImpl implements AdvancedDatastore {
             UpdateResult execute = query.update()
                                         .set(entity)
                                         .execute(new UpdateOptions().writeConcern(wc));
-            if(execute.getModifiedCount() == 1) {
+            if(execute.getModifiedCount() != 1) {
                 throw new UpdateException("Nothing updated");
             }
         }
@@ -451,7 +450,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     protected <T> void insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
         mapper.enforceWriteConcern(collection, entity.getClass())
-            .insertOne(singletonList(entityToDocument(entity)), options.getOptions());
+            .insertOne(entity, options.getOptions());
     }
 
     private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
@@ -541,10 +540,6 @@ class DatastoreImpl implements AdvancedDatastore {
         return true;
     }
 
-    private Document entityToDocument(final Object entity) {
-        return mapper.toDocument(ProxyHelper.unwrap(entity));
-    }
-
     /**
      * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
      */
@@ -564,22 +559,7 @@ class DatastoreImpl implements AdvancedDatastore {
     @SuppressWarnings("unchecked")
     public <T> Query<T> queryByExample(final T example) {
         final Class<T> type = (Class<T>) example.getClass();
-        final Document query = entityToDocument(example);
-        return newQuery(type, query);
-    }
-
-    private <T> Document toDocument(final T ent) {
-        final MappedClass mc = mapper.getMappedClass(ent.getClass());
-        Document document = entityToDocument(ent);
-        List<MappedField> versionFields = mc.getFields(Version.class);
-        for (MappedField mappedField : versionFields) {
-            String name = mappedField.getMappedFieldName();
-            if (document.get(name) == null) {
-                document.put(name, 1);
-                mappedField.setFieldValue(ent, 1L);
-            }
-        }
-        return document;
+        return newQuery(type, mapper.toDocument(example));
     }
 
     public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass, WriteConcern option) {
