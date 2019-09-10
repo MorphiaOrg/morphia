@@ -1,7 +1,6 @@
 package dev.morphia.mapping.codec.reader;
 
 import dev.morphia.mapping.codec.reader.Stage.DocumentEndStage;
-import dev.morphia.mapping.codec.reader.Stage.ListEndStage;
 import dev.morphia.mapping.codec.reader.Stage.ListValueStage;
 
 import java.util.Iterator;

@@ -39,10 +39,6 @@ public class FlattenedDocumentReader implements BsonReader {
         return context;
     }
 
-    void setContext(final Context context) {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public BsonBinary readBinaryData() {
         return (BsonBinary) getContext().stage().value();
@@ -50,14 +46,12 @@ public class FlattenedDocumentReader implements BsonReader {
 
     @Override
     public byte peekBinarySubType() {
-        BsonBinary currentValue = (BsonBinary) getContext().stage().value();
-        return currentValue.getType();
+        return getContext().stage().<BsonBinary>value().getType();
     }
 
     @Override
     public int peekBinarySize() {
-        BsonBinary currentValue = (BsonBinary) getContext().stage().value();
-        return currentValue.getData().length;
+        return getContext().stage().<BsonBinary>value().getData().length;
     }
 
     @Override
@@ -102,14 +96,12 @@ public class FlattenedDocumentReader implements BsonReader {
 
     @Override
     public String readJavaScript() {
-        BsonJavaScript currentValue = (BsonJavaScript) getContext().stage().value();
-        return currentValue.getCode();
+        return getContext().stage().<BsonJavaScript>value().getCode();
     }
 
     @Override
     public String readJavaScriptWithScope() {
-        BsonJavaScriptWithScope currentValue = (BsonJavaScriptWithScope) getContext().stage().value();
-        return currentValue.getCode();
+        return getContext().stage().<BsonJavaScriptWithScope>value().getCode();
     }
 
     @Override

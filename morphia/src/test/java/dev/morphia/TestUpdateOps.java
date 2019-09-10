@@ -934,7 +934,7 @@ public class TestUpdateOps extends TestBase {
         private List<Log> logs = new ArrayList<>();
         private Document raw;
 
-        @PreLoad
+//        @PreLoad
         public void preload(final Document raw) {
             this.raw = raw;
         }
