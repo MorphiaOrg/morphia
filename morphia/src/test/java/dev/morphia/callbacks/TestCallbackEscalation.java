@@ -1,9 +1,6 @@
 package dev.morphia.callbacks;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -14,6 +11,9 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;

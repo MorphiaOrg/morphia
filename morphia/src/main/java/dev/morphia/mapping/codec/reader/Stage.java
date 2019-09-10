@@ -1,7 +1,6 @@
 package dev.morphia.mapping.codec.reader;
 
 import dev.morphia.sofia.Sofia;
-import org.bson.AbstractBsonReader.State;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.Document;
@@ -152,7 +151,7 @@ class Stage {
     }
 
     private static class EndStage extends Stage {
-        EndStage(final State state, final Context context) {
+        EndStage(final Context context) {
             super(context, ArrayIterator.empty());
         }
 
@@ -166,7 +165,7 @@ class Stage {
 
     static class DocumentEndStage extends EndStage {
         DocumentEndStage(final Context context) {
-            super(State.END_OF_DOCUMENT, context);
+            super(context);
         }
 
         @Override
@@ -183,7 +182,12 @@ class Stage {
 
     static class ListEndStage extends EndStage {
         ListEndStage(final Context context) {
-            super(State.END_OF_ARRAY, context);
+            super(context);
+        }
+
+        @Override
+        BsonType getCurrentBsonType() {
+            return BsonType.END_OF_DOCUMENT;
         }
 
         @Override
