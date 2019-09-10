@@ -109,7 +109,6 @@ public class DocumentReaderTest extends TestBase {
     }
 
     @Test
-    @Ignore("infinite loop somewhere")
     public void nestedDatabaseRead() {
         getDs().getMapper().map(Parent.class, Child.class);
         Parent parent = new Parent();

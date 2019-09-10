@@ -166,6 +166,7 @@ public class FlattenedDocumentReader implements BsonReader {
 
     @Override
     public void skipValue() {
+        getContext().stage().advance();
     }
 
     @Override
