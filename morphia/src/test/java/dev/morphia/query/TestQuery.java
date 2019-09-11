@@ -36,6 +36,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,7 +118,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void referenceKeys() {
         final ReferenceKey key1 = new ReferenceKey("key1");
 
@@ -1179,7 +1180,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test(expected = ValidationException.class)
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testReferenceQuery() {
         final Photo p = new Photo();
         final ContainsPhotoKey cpk = new ContainsPhotoKey();

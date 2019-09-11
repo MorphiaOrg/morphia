@@ -9,13 +9,15 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static java.util.Arrays.asList;
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class TestLazyCircularReference extends ProxyTestBase {
 
     @Test
+    @Ignore("infinite loop in here somewhere")
     public void testCircularReferences() {
         RootEntity root = new RootEntity();
         ReferencedEntity first = new ReferencedEntity();
@@ -36,6 +38,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
     }
 
     @Test
+    @Ignore("infinite loop in here somewhere")
     public final void testGetKeyWithoutFetching() {
         // TODO us: exclusion does not work properly with maven + junit4
         if (!LazyFeatureDependencies.testDependencyFullFilled()) {

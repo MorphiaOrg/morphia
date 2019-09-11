@@ -1,10 +1,12 @@
 package dev.morphia.mapping.lazy;
 
+import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +17,7 @@ import java.util.Set;
 import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static java.util.Arrays.asList;
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
     @Test
     public void interfaces() {

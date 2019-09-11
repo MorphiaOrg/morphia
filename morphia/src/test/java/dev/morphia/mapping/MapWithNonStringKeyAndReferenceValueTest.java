@@ -8,6 +8,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.testutil.TestEntity;
+import org.junit.experimental.categories.Category;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
     @Test
     public void testMapKeyShouldBeInteger() {

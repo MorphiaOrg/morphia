@@ -16,6 +16,7 @@
 
 package dev.morphia.internal;
 
+import dev.morphia.annotations.Reference;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,6 +34,7 @@ import dev.morphia.mapping.EmbeddedMappingTest.WithNested;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.testmodel.Article;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertEquals;
 
@@ -88,7 +90,7 @@ public class PathTargetTest extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void maps() {
         getMapper().map(Student.class, Article.class);
         Mapper mapper = getMapper();

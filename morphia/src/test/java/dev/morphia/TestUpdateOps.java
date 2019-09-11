@@ -18,6 +18,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
@@ -35,6 +36,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -374,7 +376,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testInsertWithRef() {
         final Pic pic = new Pic();
         pic.setName("fist");
@@ -619,7 +621,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testSetUnset() {
         Datastore ds = getDs();
         final ObjectId key = ds.save(new Circle(1)).getId();
@@ -672,7 +674,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testUpdateKeyRef() {
         final ContainsPicKey cpk = new ContainsPicKey();
         cpk.name = "cpk one";
@@ -740,7 +742,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testUpdateRef() {
         final ContainsPic cp = new ContainsPic();
         cp.setName("cp one");

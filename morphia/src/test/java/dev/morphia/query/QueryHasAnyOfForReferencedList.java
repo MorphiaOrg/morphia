@@ -8,6 +8,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import org.junit.experimental.categories.Category;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class QueryHasAnyOfForReferencedList extends TestBase {
 
     @Test

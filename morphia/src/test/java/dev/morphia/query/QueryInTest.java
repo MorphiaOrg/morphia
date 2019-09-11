@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 
 import java.io.Serializable;
@@ -44,7 +45,7 @@ public class QueryInTest extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testIdOnly() {
         ReferencedEntity b = new ReferencedEntity();
         b.setId(new ObjectId("111111111111111111111111"));
@@ -82,7 +83,7 @@ public class QueryInTest extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testInQuery() {
         checkMinServerVersion(2.5);
         final HasRefs hr = new HasRefs();
@@ -98,7 +99,7 @@ public class QueryInTest extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testInQueryByKey() {
         checkMinServerVersion(2.5);
         final HasRef hr = new HasRef();

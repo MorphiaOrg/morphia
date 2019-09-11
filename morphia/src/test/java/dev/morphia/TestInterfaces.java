@@ -1,6 +1,7 @@
 package dev.morphia;
 
 import com.mongodb.client.MongoCollection;
+import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
@@ -9,6 +10,7 @@ import dev.morphia.testmodel.ShapeShifter;
 import org.bson.Document;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 public class TestInterfaces extends TestBase {
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testDynamicInstantiation() {
         final MongoCollection<Document> shapes = getDatabase().getCollection("shapes");
         final MongoCollection<Document> shapeshifters = getDatabase().getCollection("shapeshifters");

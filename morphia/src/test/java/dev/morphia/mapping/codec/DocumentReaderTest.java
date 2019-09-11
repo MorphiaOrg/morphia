@@ -7,7 +7,7 @@ import dev.morphia.TestUpdateOps.LogHolder;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.codec.reader.FlattenedDocumentReader;
+import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonDocumentReader;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
@@ -16,7 +16,6 @@ import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.function.Consumer;
 
 public class DocumentReaderTest extends TestBase {
 
-    private FlattenedDocumentReader reader;
+    private DocumentReader reader;
     private BsonDocumentReader bsonDocumentReader;
 
     @Test
@@ -121,7 +120,7 @@ public class DocumentReaderTest extends TestBase {
         Document first = collection.find().first();
 
         Parent decode = getMapper().getCodecRegistry().get(Parent.class)
-                                      .decode(new FlattenedDocumentReader(first), DecoderContext.builder().build());
+                                      .decode(new DocumentReader(first), DecoderContext.builder().build());
 
         Assert.assertEquals(parent, decode);
     }
@@ -136,13 +135,13 @@ public class DocumentReaderTest extends TestBase {
                                                    .getCollection(LogHolder.class.getSimpleName());
 
         LogHolder decode = getMapper().getCodecRegistry().get(LogHolder.class)
-                                      .decode(new FlattenedDocumentReader(collection.find().first()), DecoderContext.builder().build());
+                                      .decode(new DocumentReader(collection.find().first()), DecoderContext.builder().build());
 
         Assert.assertEquals(holder, decode);
     }
 
     private void setup(final Document document) {
-        reader = new FlattenedDocumentReader(document);
+        reader = new DocumentReader(document);
         bsonDocumentReader = new BsonDocumentReader(
             document.toBsonDocument(Document.class, getMapper().getCodecRegistry()));
     }

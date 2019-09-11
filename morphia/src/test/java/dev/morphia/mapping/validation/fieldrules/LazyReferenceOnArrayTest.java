@@ -7,9 +7,10 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.testutil.TestEntity;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class LazyReferenceOnArrayTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)

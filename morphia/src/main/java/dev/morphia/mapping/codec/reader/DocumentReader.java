@@ -19,7 +19,7 @@ import static java.lang.String.format;
 /**
  * @morphia.internal
  */
-public class FlattenedDocumentReader implements BsonReader {
+public class DocumentReader implements BsonReader {
     private final Context context;
 
     /**
@@ -27,7 +27,7 @@ public class FlattenedDocumentReader implements BsonReader {
      *
      * @param document the document to read from
      */
-    public FlattenedDocumentReader(final Document document) {
+    public DocumentReader(final Document document) {
         context = new Context(document);
     }
 

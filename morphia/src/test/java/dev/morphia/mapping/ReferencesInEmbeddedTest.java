@@ -9,9 +9,10 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
+import org.junit.experimental.categories.Category;
 
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class ReferencesInEmbeddedTest extends TestBase {
     @Test
     public void testLazyReferencesInEmbedded() {

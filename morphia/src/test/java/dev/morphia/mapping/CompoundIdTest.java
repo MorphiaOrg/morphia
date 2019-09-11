@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.Serializable;
 import java.util.List;
@@ -53,7 +54,7 @@ public class CompoundIdTest extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testReference() {
         getMapper().map(CompoundIdEntity.class, CompoundId.class);
 

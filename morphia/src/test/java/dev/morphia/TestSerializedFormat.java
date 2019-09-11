@@ -28,6 +28,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -43,7 +44,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class TestSerializedFormat extends TestBase {
     @Test
     public void testQueryFormat() {

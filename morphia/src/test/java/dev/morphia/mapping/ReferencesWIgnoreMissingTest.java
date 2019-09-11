@@ -10,11 +10,12 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
+import org.junit.experimental.categories.Category;
 
 import java.util.List;
 
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class ReferencesWIgnoreMissingTest extends TestBase {
     @Test
     public void testMissingReference() {

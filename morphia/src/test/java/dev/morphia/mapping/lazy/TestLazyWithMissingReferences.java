@@ -12,8 +12,9 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import dev.morphia.query.FindOptions;
+import org.junit.experimental.categories.Category;
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class TestLazyWithMissingReferences extends TestBase {
 
     @Test(expected = MappingException.class)

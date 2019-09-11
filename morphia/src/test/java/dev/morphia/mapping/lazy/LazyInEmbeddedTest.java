@@ -12,6 +12,7 @@ import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class LazyInEmbeddedTest extends TestBase {
     @Test
     public void testLoadingOfRefInField() {

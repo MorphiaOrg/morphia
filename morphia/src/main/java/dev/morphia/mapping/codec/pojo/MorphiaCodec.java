@@ -26,7 +26,7 @@ import dev.morphia.mapping.codec.BaseMorphiaCodec;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.PropertyHandler;
-import dev.morphia.mapping.codec.reader.FlattenedDocumentReader;
+import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonValue;
@@ -173,7 +173,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
             Document document = getRegistry().get(Document.class).decode(reader, decoderContext);
             mappedClass.callLifecycleMethods(PreLoad.class, entity, document, getMapper());
 
-            decodeProperties(new FlattenedDocumentReader(document), decoderContext, instanceCreator);
+            decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
 
             mappedClass.callLifecycleMethods(PostLoad.class, entity, document, getMapper());
         } else {

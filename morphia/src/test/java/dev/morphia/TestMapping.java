@@ -22,6 +22,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
@@ -40,6 +41,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -165,7 +167,7 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testDbRefMapping() {
         getMapper().map(Rectangle.class);
         final MongoCollection<Document> stuff = getDatabase().getCollection("stuff");
@@ -448,7 +450,7 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testMaps() {
         final MongoCollection<Document> articles = getDatabase().getCollection("articles");
         getMapper().map(Circle.class);
@@ -548,7 +550,7 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testRecursiveReference() {
         final MongoCollection<Document> stuff = getDatabase().getCollection("stuff");
 

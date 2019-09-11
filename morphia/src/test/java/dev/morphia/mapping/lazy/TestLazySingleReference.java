@@ -9,9 +9,10 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class TestLazySingleReference extends ProxyTestBase {
 
     @Test

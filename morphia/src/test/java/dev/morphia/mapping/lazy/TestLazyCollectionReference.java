@@ -12,9 +12,10 @@ import org.junit.Test;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import dev.morphia.testutil.TestEntity;
+import org.junit.experimental.categories.Category;
 
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class TestLazyCollectionReference extends ProxyTestBase {
     @Test(expected = LazyReferenceFetchingException.class)
     public final void testCreateProxy() {

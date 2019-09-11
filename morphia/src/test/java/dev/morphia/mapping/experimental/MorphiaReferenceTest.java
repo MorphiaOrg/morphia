@@ -1,12 +1,14 @@
 package dev.morphia.mapping.experimental;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Reference;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Id;
+import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +20,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Ignore("references need work")
+@Category(Reference.class)
 public class MorphiaReferenceTest extends TestBase {
     @Test
     public void basicReference() {

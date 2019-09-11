@@ -43,6 +43,7 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,7 +128,7 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    @Ignore("references need work")
+    @Category(Reference.class)
     public void testGet() {
         getMapper().map(FacebookUser.class);
         List<FacebookUser> fbUsers = new ArrayList<>();
