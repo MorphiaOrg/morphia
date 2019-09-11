@@ -13,11 +13,11 @@ public interface ReaderIterator extends Iterator<Stage> {
 }
 
 class DocumentIterator implements ReaderIterator {
-    private Context context;
+    private DocumentReader reader;
     private Iterator<Entry<String, Object>> iterator;
 
-    DocumentIterator(Context context, final Iterator<Entry<String, Object>> iterator) {
-        this.context = context;
+    DocumentIterator(DocumentReader reader, final Iterator<Entry<String, Object>> iterator) {
+        this.reader = reader;
         this.iterator = iterator;
     }
 
@@ -32,10 +32,10 @@ class DocumentIterator implements ReaderIterator {
         try {
             Entry<String, Object> next = iterator.next();
             if(next != null) {
-                stage = new Stage(context, next.getKey(), next.getValue());
+                stage = new Stage(reader, next.getKey(), next.getValue());
             }
         } catch (NoSuchElementException e) {
-            stage = new DocumentEndStage(context);
+            stage = new DocumentEndStage(reader);
 
         }
 
@@ -55,7 +55,7 @@ class DocumentIterator implements ReaderIterator {
 
 class ArrayIterator implements ReaderIterator {
 
-    private final Context context;
+    private final DocumentReader reader;
     private final Iterator<Object> iterator;
 
     static ArrayIterator empty() {
@@ -63,12 +63,12 @@ class ArrayIterator implements ReaderIterator {
     }
 
     public ArrayIterator() {
-        this.context = null;
+        this.reader = null;
         this.iterator = List.of().iterator();
     }
 
-    public ArrayIterator(final Context context, final Iterator<Object> iterator) {
-        this.context = context;
+    public ArrayIterator(final DocumentReader reader, final Iterator<Object> iterator) {
+        this.reader = reader;
         this.iterator = iterator;
     }
 
@@ -79,16 +79,11 @@ class ArrayIterator implements ReaderIterator {
 
     @Override
     public Stage next() {
-        return new ListValueStage(context, iterator.next());
+        return new ListValueStage(reader, iterator.next());
     }
 
     @Override
     public void remove() {
         iterator.remove();
-    }
-
-    @Override
-    public void forEachRemaining(final Consumer action) {
-        throw new UnsupportedOperationException();
     }
 }

@@ -1,5 +1,8 @@
 package dev.morphia.mapping.codec.reader;
 
+import dev.morphia.mapping.codec.BsonTypeMap;
+import dev.morphia.mapping.codec.reader.Stage.InitialStage;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonJavaScript;
@@ -14,13 +17,18 @@ import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.String.format;
 
 /**
  * @morphia.internal
  */
 public class DocumentReader implements BsonReader {
-    private final Context context;
+    private final Stage initial;
+    private Stage stage;
+    private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
 
     /**
      * Construct a new instance.
@@ -28,80 +36,77 @@ public class DocumentReader implements BsonReader {
      * @param document the document to read from
      */
     public DocumentReader(final Document document) {
-        context = new Context(document);
+        stage = new InitialStage(this, new DocumentIterator(this, document.entrySet().iterator()));
+        initial = stage;
     }
 
     @Override
     public void close() {
     }
 
-    Context getContext() {
-        return context;
-    }
-
     @Override
     public BsonBinary readBinaryData() {
-        return (BsonBinary) getContext().stage().value();
+        return (BsonBinary) stage().value();
     }
 
     @Override
     public byte peekBinarySubType() {
-        return getContext().stage().<BsonBinary>value().getType();
+        return stage().<BsonBinary>value().getType();
     }
 
     @Override
     public int peekBinarySize() {
-        return getContext().stage().<BsonBinary>value().getData().length;
+        return stage().<BsonBinary>value().getData().length;
     }
 
     @Override
     public boolean readBoolean() {
-        return (boolean) getContext().stage().value();
+        return (boolean) stage().value();
     }
 
     @Override
     public long readDateTime() {
-        return (long) getContext().stage().value();
+        return (long) stage().value();
     }
 
     @Override
     public double readDouble() {
-        return (double) getContext().stage().value();
+        return (double) stage().value();
     }
 
     @Override
     public void readEndArray() {
-        getContext().stage().endArray();
+        stage().endArray();
     }
 
     @Override
     public void readEndDocument() {
-        getContext().stage().endDocument();
+        stage().endDocument();
     }
 
     @Override
     public int readInt32() {
-        return (int) getContext().stage().value();
+        return (int) stage().value();
     }
 
     @Override
     public long readInt64() {
-        return (long) getContext().stage().value();
+        return (long) stage().value();
     }
 
     @Override
     public Decimal128 readDecimal128() {
-        return (Decimal128) getContext().stage().value();
+        return (Decimal128) stage().value();
     }
 
     @Override
     public String readJavaScript() {
-        return getContext().stage().<BsonJavaScript>value().getCode();
+        return stage().<BsonJavaScript>value().getCode();
     }
 
     @Override
     public String readJavaScriptWithScope() {
-        return getContext().stage().<BsonJavaScriptWithScope>value().getCode();
+        return stage().<BsonJavaScriptWithScope>value().getCode();
     }
 
     @Override
@@ -118,42 +123,42 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public ObjectId readObjectId() {
-        return (ObjectId) getContext().stage().value();
+        return (ObjectId) stage().value();
     }
 
     @Override
     public BsonRegularExpression readRegularExpression() {
-        return (BsonRegularExpression) getContext().stage().value();
+        return (BsonRegularExpression) stage().value();
     }
 
     @Override
     public BsonDbPointer readDBPointer() {
-        return (BsonDbPointer) getContext().stage().value();
+        return (BsonDbPointer) stage().value();
     }
 
     @Override
     public void readStartArray() {
-        getContext().stage().startArray();
+        stage().startArray();
     }
 
     @Override
     public void readStartDocument() {
-        getContext().stage().startDocument();
+        stage().startDocument();
     }
 
     @Override
     public String readString() {
-        return (String) getContext().stage().value();
+        return (String) stage().value();
     }
 
     @Override
     public String readSymbol() {
-        return (String) getContext().stage().value();
+        return (String) stage().value();
     }
 
     @Override
     public BsonTimestamp readTimestamp() {
-        return (BsonTimestamp) getContext().stage().value();
+        return (BsonTimestamp) stage().value();
     }
 
     @Override
@@ -166,22 +171,22 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public void skipValue() {
-        getContext().stage().advance();
+        stage().advance();
     }
 
     @Override
     public BsonType getCurrentBsonType() {
-        return getContext().stage().getCurrentBsonType();
+        return stage().getCurrentBsonType();
     }
 
     @Override
     public String getCurrentName() {
-        return getContext().stage().name();
+        return stage().name();
     }
 
     @Override
     public BsonType readBsonType() {
-        return getContext().stage().getCurrentBsonType();
+        return stage().getCurrentBsonType();
    }
 
     @Deprecated
@@ -192,7 +197,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public BsonReaderMark getMark() {
-        return getContext().mark();
+        return new Mark(this, stage());
     }
 
     @Deprecated
@@ -269,7 +274,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readName() {
-        return getContext().stage().name();
+        return stage().name();
     }
 
     @Override
@@ -333,6 +338,42 @@ public class DocumentReader implements BsonReader {
             throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
                 expectedName, actualName));
         }
+    }
+
+    public List<Stage> stages() {
+        List<Stage> stages = new ArrayList<>();
+        Stage current = initial;
+        while(current != null) {
+            stages.add(current);
+            current = current.nextStage;
+        }
+
+        return stages;
+    }
+
+    Stage nextStage(final Stage nextStage) {
+        stage = nextStage;
+        return stage;
+    }
+
+    Stage stage() {
+        return this.stage;
+    }
+
+    void reset(final Stage bookmark) {
+        stage = bookmark;
+    }
+
+    BsonType getBsonType(final Object o) {
+        BsonType bsonType = TYPE_MAP.get(o.getClass());
+        if (bsonType == null) {
+            if (o instanceof List) {
+                bsonType = BsonType.ARRAY;
+            } else {
+                throw new IllegalStateException(Sofia.unknownBsonType(o.getClass()));
+            }
+        }
+        return bsonType;
     }
 
 }

@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.StringJoiner;
 
 class Stage {
-    Context context;
+    DocumentReader reader;
     ReaderIterator iterator;
     private final String name;
     private final Object value;
     Stage nextStage;
 
-    Stage(final Context context, final ReaderIterator iterator) {
-        this.context = context;
+    Stage(final DocumentReader reader, final ReaderIterator iterator) {
+        this.reader = reader;
         this.iterator = iterator;
         name = null;
         value = null;
         if (iterator.hasNext()) {
-            processNextStages(new DocumentEndStage(context), iterator);
+            processNextStages(new DocumentEndStage(reader), iterator);
         }
     }
 
@@ -31,11 +31,11 @@ class Stage {
         while (iterator.hasNext()) {
             current = current.next(iterator.next());
         }
-        context.nextStage(nextStage);
+        reader.nextStage(nextStage);
     }
 
-    Stage(final Context context, final String name, final Object value) {
-        this.context = context;
+    Stage(final DocumentReader reader, final String name, final Object value) {
+        this.reader = reader;
         this.name = name;
         this.value = value;
     }
@@ -48,7 +48,7 @@ class Stage {
     }
 
     BsonType getCurrentBsonType() {
-        return value == null ? null : context.getBsonType(value);
+        return value == null ? null : reader.getBsonType(value);
     }
 
     String name() {
@@ -61,7 +61,7 @@ class Stage {
     }
 
     Stage advance() {
-        return context.nextStage(nextStage);
+        return reader.nextStage(nextStage);
     }
 
     void startDocument() {
@@ -69,8 +69,8 @@ class Stage {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(Document.class, getCurrentBsonType()));
         }
         if (!(nextStage instanceof DocumentStartStage)) {
-            processNextStages(new DocumentEndStage(context), new DocumentIterator(context, ((Document) value).entrySet().iterator()));
-            next(new DocumentStartStage(context, ArrayIterator.empty())).advance();
+            processNextStages(new DocumentEndStage(reader), new DocumentIterator(reader, ((Document) value).entrySet().iterator()));
+            next(new DocumentStartStage(reader, ArrayIterator.empty())).advance();
         } else {
             advance();
         }
@@ -81,7 +81,7 @@ class Stage {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(List.class, getCurrentBsonType()));
         }
         if (!(nextStage instanceof ListValueStage)) {
-            processNextStages(new ListEndStage(context), new ArrayIterator(context, ((List) value).iterator()));
+            processNextStages(new ListEndStage(reader), new ArrayIterator(reader, ((List) value).iterator()));
         }
     }
 
@@ -104,9 +104,9 @@ class Stage {
 
     static class InitialStage extends Stage {
 
-        InitialStage(final Context context, final DocumentIterator documentIterator) {
-            super(context, documentIterator);
-            DocumentStartStage startStage = new DocumentStartStage(context, iterator);
+        InitialStage(final DocumentReader reader, final DocumentIterator documentIterator) {
+            super(reader, documentIterator);
+            DocumentStartStage startStage = new DocumentStartStage(reader, iterator);
             startStage.nextStage = nextStage;
             nextStage = startStage;
         }
@@ -124,8 +124,8 @@ class Stage {
 
     static class DocumentStartStage extends Stage {
 
-        DocumentStartStage(final Context context, final ReaderIterator iterator) {
-            super(context, iterator);
+        DocumentStartStage(final DocumentReader reader, final ReaderIterator iterator) {
+            super(reader, iterator);
         }
 
         @Override
@@ -140,8 +140,8 @@ class Stage {
     }
 
     static class ListValueStage extends Stage {
-        ListValueStage(final Context context, final Object value) {
-            super(context, null, value);
+        ListValueStage(final DocumentReader reader, final Object value) {
+            super(reader, null, value);
         }
 
         @Override
@@ -151,8 +151,8 @@ class Stage {
     }
 
     private static class EndStage extends Stage {
-        EndStage(final Context context) {
-            super(context, ArrayIterator.empty());
+        EndStage(final DocumentReader reader) {
+            super(reader, ArrayIterator.empty());
         }
 
         void end(final String message) {
@@ -164,8 +164,8 @@ class Stage {
     }
 
     static class DocumentEndStage extends EndStage {
-        DocumentEndStage(final Context context) {
-            super(context);
+        DocumentEndStage(final DocumentReader reader) {
+            super(reader);
         }
 
         @Override
@@ -181,8 +181,8 @@ class Stage {
     }
 
     static class ListEndStage extends EndStage {
-        ListEndStage(final Context context) {
-            super(context);
+        ListEndStage(final DocumentReader reader) {
+            super(reader);
         }
 
         @Override
