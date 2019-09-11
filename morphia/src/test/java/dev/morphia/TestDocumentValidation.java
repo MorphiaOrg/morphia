@@ -16,6 +16,7 @@
 
 package dev.morphia;
 
+import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcernException;
@@ -62,7 +63,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             getDs().save(new DocumentValidation("John", 1, new Date()));
             fail("Document should have failed validation");
-        } catch (WriteConcernException e) {
+        } catch (MongoWriteException e) {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
 
@@ -99,7 +100,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             getDs().save(new DocumentValidation("John", 1, new Date()));
             fail("Document should have failed validation");
-        } catch (WriteConcernException e) {
+        } catch (MongoWriteException e) {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
     }
@@ -168,7 +169,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             update.execute(options);
             fail("Document validation should have complained");
-        } catch (WriteConcernException e) {
+        } catch (MongoWriteException e) {
             // expected
         }
 
@@ -188,7 +189,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             getDs().save(new DocumentValidation("Harold", 8, new Date()));
             fail("Document validation should have complained");
-        } catch (WriteConcernException e) {
+        } catch (MongoWriteException e) {
             // expected
         }
 
@@ -207,7 +208,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             getDs().save(list);
             fail("Document validation should have complained");
-        } catch (WriteConcernException e) {
+        } catch (MongoBulkWriteException e) {
             // expected
         }
 
@@ -228,7 +229,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             getDs().save(user);
             fail("Document validation should have rejected the document");
-        } catch (WriteConcernException ignored) {
+        } catch (MongoWriteException ignored) {
         }
 
         getDs().save(user, new InsertOptions().bypassDocumentValidation(true));
@@ -244,7 +245,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             getAds().insert(new DocumentValidation("Harold", 8, new Date()));
             fail("Document validation should have complained");
-        } catch (WriteConcernException e) {
+        } catch (MongoWriteException e) {
             // expected
         }
 
@@ -263,7 +264,7 @@ public class TestDocumentValidation extends TestBase {
         try {
             getAds().insert(list);
             fail("Document validation should have complained");
-        } catch (WriteConcernException e) {
+        } catch (MongoBulkWriteException e) {
             // expected
         }
 

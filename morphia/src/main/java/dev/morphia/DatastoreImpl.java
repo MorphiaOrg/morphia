@@ -2,12 +2,14 @@ package dev.morphia;
 
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.aggregation.AggregationPipeline;
@@ -162,27 +164,25 @@ class DatastoreImpl implements AdvancedDatastore {
     void process(final MappedClass mc, final Validation validation) {
         if (validation != null) {
             String collectionName = mc.getCollectionName();
-            Document result = getDatabase()
-                                  .runCommand(new Document("collMod", collectionName)
-                                                  .append("validator", parse(validation.value()))
-                                                  .append("validationLevel", validation.level().getValue())
-                                                  .append("validationAction", validation.action().getValue())
-                                             );
-
-            throw new UnsupportedOperationException("update from the command result");
-/*
-            if (!result.ok()) {
-                if (result.getInt("code") == 26) {
-                    ValidationOptions options = new ValidationOptions()
-                                                    .validator(parse(validation.value()))
-                                                    .validationLevel(validation.level())
-                                                    .validationAction(validation.action());
-                    getDatabase().createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
+            try {
+                Document result = getDatabase()
+                                      .runCommand(new Document("collMod", collectionName)
+                                                      .append("validator", parse(validation.value()))
+                                                      .append("validationLevel", validation.level().getValue())
+                                                      .append("validationAction", validation.action().getValue())
+                                                 );
+            } catch (MongoCommandException e) {
+                if (e.getCode() == 26) {
+                    getDatabase().createCollection(collectionName,
+                        new CreateCollectionOptions()
+                            .validationOptions(new ValidationOptions()
+                                                   .validator(parse(validation.value()))
+                                                   .validationLevel(validation.level())
+                                                   .validationAction(validation.action())));
                 } else {
-                    result.throwOnError();
+                    throw e;
                 }
             }
-*/
         }
     }
 
