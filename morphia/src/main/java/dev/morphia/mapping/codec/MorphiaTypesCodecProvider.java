@@ -1,8 +1,14 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.experimental.ListReferenceCodec;
+import dev.morphia.mapping.experimental.MapReferenceCodec;
+import dev.morphia.mapping.experimental.MorphiaReferenceCodec;
+import dev.morphia.mapping.experimental.SetReferenceCodec;
+import dev.morphia.mapping.experimental.SingleReferenceCodec;
 import dev.morphia.query.CriteriaContainerCodec;
 import dev.morphia.query.FieldCriteriaCodec;
+import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.MapCodec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -19,6 +25,8 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
 
     public MorphiaTypesCodecProvider(final Mapper mapper) {
         this.mapper = mapper;
+        BsonTypeClassMap typeMap = new BsonTypeClassMap();
+
         addCodec(new ClassCodec());
         addCodec(new CriteriaContainerCodec(mapper));
         addCodec(new FieldCriteriaCodec(mapper));
@@ -30,6 +38,11 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new ShapeCodec());
         addCodec(new QueryCodec(mapper));
         addCodec(new URICodec());
+        addCodec(new MorphiaReferenceCodec(mapper, typeMap));
+        addCodec(new SingleReferenceCodec(mapper, typeMap));
+        addCodec(new ListReferenceCodec(mapper, typeMap));
+        addCodec(new MapReferenceCodec(mapper, typeMap));
+        addCodec(new SetReferenceCodec(mapper, typeMap));
 
         List.of(boolean.class, Boolean.class,
             byte.class, Byte.class,

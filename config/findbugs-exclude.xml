@@ -26,14 +26,6 @@
         <Bug pattern="SS_SHOULD_BE_STATIC"/>
     </Match>
     <Match>
-        <Class name="relocated.morphia.org.apache.commons.collections.ReferenceMap"/>
-        <Bug pattern="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
-    </Match>
-    <Match>
-        <Class name="relocated.morphia.org.apache.commons.collections.ReferenceMap$EntryIterator"/>
-        <Bug pattern="VO_VOLATILE_INCREMENT, URF_UNREAD_FIELD, WMI_WRONG_MAP_ITERATOR"/>
-    </Match>
-    <Match>
         <Class name="dev.morphia.mapping.MappedClass"/>
         <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
     </Match>

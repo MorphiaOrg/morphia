@@ -14,6 +14,7 @@ import org.bson.Document;
  * @morphia.internal
  */
 public class SingleReference<T> extends MorphiaReference<T> {
+    private MappedClass mappedClass;
     private Object id;
     private T value;
 
@@ -21,7 +22,8 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @morphia.internal
      */
     SingleReference(final Datastore datastore, final MappedClass mappedClass, final Object id) {
-        super(datastore, mappedClass);
+        super(datastore);
+        this.mappedClass = mappedClass;
         this.id = id;
     }
 
@@ -49,7 +51,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
             query = ((AdvancedDatastore) getDatastore()).find(clazz)
                                                         .filter("_id", ((DBRef) id).getId());
         } else {
-            query = ((AdvancedDatastore) getDatastore()).find(getMappedClass().getType())
+            query = ((AdvancedDatastore) getDatastore()).find(mappedClass.getType())
                                                         .filter("_id", id);
         }
         return query;

@@ -19,19 +19,18 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
-    private MappedClass mappedClass;
 
     MorphiaReference() {
     }
 
-    MorphiaReference(final Datastore datastore, final MappedClass mappedClass) {
+    MorphiaReference(final Datastore datastore) {
         this.datastore = datastore;
-        this.mappedClass = mappedClass;
     }
 
     static Object wrapId(final Mapper mapper, final MappedField field, final Object entity) {
         Object id = mapper.getId(entity);
-        Object encoded = mapper.toMongoObject(field, mapper.getMappedClass(entity.getClass()), id);
+        mapper.getMappedClass(entity.getClass());
+        Object encoded = id;
         if (!entity.getClass().equals(field.getType())) {
             encoded = new DBRef(mapper.getMappedClass(entity.getClass()).getCollectionName(), encoded);
         }
@@ -68,14 +67,6 @@ public abstract class MorphiaReference<T> {
     }
 
     /**
-     * @return the MappedClass of the referenced entity type
-     * @morphia.internal
-     */
-    MappedClass getMappedClass() {
-        return mappedClass;
-    }
-
-    /**
      * Wraps an value in a MorphiaReference to storing on an entity
      * @param value the value wrap
      * @param <V> the type of the value
@@ -91,6 +82,24 @@ public abstract class MorphiaReference<T> {
             return (MorphiaReference<V>) new MapReference<>((Map<String, V>) value);
         } else {
             return new SingleReference<>(value);
+        }
+    }
+    /**
+     * Wraps an value in a MorphiaReference to storing on an entity
+     * @param value the value wrap
+     * @param <V> the type of the value
+     * @return the MorphiaReference wrapper
+     */
+    @SuppressWarnings("unchecked")
+    public static <V> MorphiaReference<V> wrapIds(final Mapper mapper, final MappedClass mappedClass, final V value) {
+        if (value instanceof List) {
+            return (MorphiaReference<V>) new ListReference<>((List<V>) value);
+        } else if (value instanceof Set) {
+            return (MorphiaReference<V>) new SetReference<>((Set<V>) value);
+        } else if (value instanceof Map) {
+            return (MorphiaReference<V>) new MapReference<>((Map<String, V>) value);
+        } else {
+            return new SingleReference<>(mapper.getDatastore(), mappedClass, value);
         }
     }
 }

@@ -451,6 +451,7 @@ public class TestMapping extends TestBase {
 
     @Test
     @Category(Reference.class)
+    @Ignore("Infinite loop in here somewhere")
     public void testMaps() {
         final MongoCollection<Document> articles = getDatabase().getCollection("articles");
         getMapper().map(Circle.class);

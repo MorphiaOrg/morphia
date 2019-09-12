@@ -200,8 +200,7 @@ public class Mapper {
                 if (codec1 instanceof MorphiaCodec) {
                     return addMappedClass(((MorphiaCodec) codec1).getMappedClass());
                 }
-            } catch (CodecConfigurationException e) {
-               // unmappable type
+            } catch (CodecConfigurationException ignore) {
             }
         }
         return mappedClass;
@@ -219,15 +218,6 @@ public class Mapper {
         }
 
         return mc;
-    }
-
-    /**
-     * Creates a cache for tracking entities seen during processing
-     *
-     * @return the cache
-     */
-    public EntityCache createEntityCache() {
-        return getOptions().getCacheFactory().createCache();
     }
 
     /**
@@ -305,80 +295,6 @@ public class Mapper {
             }
         }
         return c;
-    }
-
-    /**
-     * Converts a Document back to a type-safe java object (POJO)
-     *
-     * @param <T>       the type of the entity
-     * @param document  the Document containing the document from mongodb
-     * @return the entity
-     * @morphia.internal
-     * @deprecated no replacement is planned
-     */
-    private <T> T fromDb(final Document document) {
-
-        CodecRegistry codecRegistry = getCodecRegistry();
-        BsonDocumentReader reader = new BsonDocumentReader(document.toBsonDocument(getClass(document), codecRegistry));
-        T decoded = (T) codecRegistry
-                            .get(Object.class)
-                            .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
-
-        return decoded;
-
-/*
-        //hack to bypass things and just read the value.
-        if (entity instanceof MappedField) {
-            readMappedField(datastore, (MappedField) entity, entity, cache, document);
-            return entity;
-        }
-
-        // check the history key (a key is the namespace + id)
-
-        if (document.containsKey("_id") && getMappedClass(entity).getIdField() != null
-            && getMappedClass(entity).getEntityAnnotation() != null) {
-            final Key<T> key = new Key(entity.getClass(), getCollectionName(entity.getClass()), document.get("_id"));
-            final T cachedInstance = cache.getEntity(key);
-            if (cachedInstance != null) {
-                return cachedInstance;
-            } else {
-                cache.putEntity(key, entity); // to avoid stackOverflow in recursive refs
-            }
-        }
-
-        if (entity instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) entity;
-            for (String key : document.keySet()) {
-                Object o = document.get(key);
-                map.put(key, (o instanceof Document) ? fromDocument(datastore, (Document) o) : o);
-            }
-        } else if (entity instanceof Collection) {
-            Collection<Object> collection = (Collection<Object>) entity;
-            for (Object o : ((List) document)) {
-                collection.add((o instanceof Document) ? fromDocument(datastore, (Document) o) : o);
-            }
-        } else {
-            final MappedClass mc = getMappedClass(entity);
-            mc.callLifecycleMethods(PreLoad.class, entity, document, this);
-            try {
-                for (final MappedField mf : mc.getFields()) {
-                    readMappedField(datastore, mf, entity, cache, document);
-                }
-            } catch (final MappingException e) {
-                Object id = document.get("_id");
-                String entityName = entity.getClass().getName();
-                throw new MappingException(format("Could not map %s with ID: %s in database '%s'", entityName, id,
-                    datastore.getDatabase().getName()), e);
-            }
-
-            if (document.containsKey("_id") && getMappedClass(entity).getIdField() != null) {
-                final Key key = new Key(entity.getClass(), getCollectionName(entity.getClass()), document.get("_id"));
-                cache.putEntity(key, entity);
-            }
-            mc.callLifecycleMethods(PostLoad.class, entity, document, this);
-        }
-        return entity;
-*/
     }
 
     /**
@@ -574,13 +490,6 @@ public class Mapper {
     }
 
     /**
-     * @return map of MappedClasses by class name
-     */
-    public Map<Class, MappedClass> getMCMap() {
-        return Collections.unmodifiableMap(mappedClasses);
-    }
-
-    /**
      * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
      *
      * @param type the type to process
@@ -695,31 +604,6 @@ public class Mapper {
     }
 
     /**
-     * Converts a java object to a mongo-compatible object (possibly a Document for complex mappings).  Very similar to {@link
-     * Mapper#toDocument}.  Used (mainly) by query/update operations.
-     *
-     * @param mf    the MappedField for this value
-     * @param mc    the MappedClass for this value
-     * @param value the value to convert
-     * @return the MongoDB compatible object
-     */
-    public Object toMongoObject(final MappedField mf, final MappedClass mc, final Object value) {
-        if (value == null) {
-            return null;
-        }
-
-        Object mappedValue = value;
-
-        if (value instanceof Query) {
-            mappedValue = ((QueryImpl) value).getQueryDocument();
-//        } else {
-//            mappedValue = toDocument(value);
-        }
-
-        return mappedValue;
-    }
-
-    /**
      * Updates the collection value on a Key with the mapped value on the Key's type Class
      *
      * @param key the Key to update
@@ -727,7 +611,7 @@ public class Mapper {
      */
     public String updateCollection(final Key key) {
         if (key.getCollection() == null && key.getType() == null) {
-            throw new IllegalStateException("Key is invalid! " + this);
+            throw new IllegalStateException("Key is invalid! " + key);
         } else if (key.getCollection() == null) {
             key.setCollection(getMappedClass(key.getType()).getCollectionName());
         }

@@ -43,3 +43,4 @@ trivial
 applications should be updated to use those types directly.  Any use of those types as fields on entities will break as there will be no 
 codecs defined for those types.
 * Lifecycle events on nested types are only called when instances of those embedded types are being persisted.
+* Keys are no longer allowed as fields.  Use `@Reference` or `MorphiaReference` instead.

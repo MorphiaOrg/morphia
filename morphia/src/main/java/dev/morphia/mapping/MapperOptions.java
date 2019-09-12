@@ -2,8 +2,6 @@ package dev.morphia.mapping;
 
 
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.cache.DefaultEntityCacheFactory;
-import dev.morphia.mapping.cache.EntityCacheFactory;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +23,6 @@ public class MapperOptions {
     private final boolean useLowerCaseCollectionNames;
     private final boolean cacheClassLookups;
     private final boolean mapSubPackages;
-    private final EntityCacheFactory cacheFactory;
-    private final DateStorage dateStorage ;
     private final MorphiaInstanceCreator creator;
 
     private MapperOptions(final Builder builder) {
@@ -37,16 +33,7 @@ public class MapperOptions {
         cacheClassLookups = builder.cacheClassLookups;
         mapSubPackages = builder.mapSubPackages;
         creator = builder.creator;
-        cacheFactory = builder.cacheFactory;
-        dateStorage = builder.dateStorage;
         propertyHandlers = builder.propertyHandlers;
-    }
-
-    /**
-     * @return the factory to create an EntityCache
-     */
-    public EntityCacheFactory getCacheFactory() {
-        return cacheFactory;
     }
 
     /**
@@ -110,13 +97,6 @@ public class MapperOptions {
     }
 
     /**
-     * @return the format to use for Java 8 date/time storage
-     */
-    public DateStorage getDateStorage() {
-        return dateStorage;
-    }
-
-    /**
      * @return a builder to set mapping options
      */
     public static Builder builder() {
@@ -136,7 +116,6 @@ public class MapperOptions {
         builder.cacheClassLookups = original.isCacheClassLookups();
         builder.mapSubPackages = original.isMapSubPackages();
         builder.creator = original.getCreator();
-        builder.cacheFactory = original.getCacheFactory();
         return builder;
     }
 
@@ -152,9 +131,7 @@ public class MapperOptions {
         private boolean useLowerCaseCollectionNames;
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
-        private DateStorage dateStorage = DateStorage.UTC;
         private MorphiaInstanceCreator creator;
-        private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
         private final List<Class<? extends Annotation>> propertyHandlers = new ArrayList<>();
 
         private Builder() {
@@ -247,28 +224,6 @@ public class MapperOptions {
          */
         public Builder objectFactory(final MorphiaInstanceCreator creator) {
             this.creator = creator;
-            return this;
-        }
-
-        /**
-         * @param cacheFactory the cache factory to use
-         * @return this
-         */
-        public Builder cacheFactory(final EntityCacheFactory cacheFactory) {
-            this.cacheFactory = cacheFactory;
-            return this;
-        }
-
-        /**
-         * @param dateStorage the storage format to use for dates
-         * @return this
-         * @deprecated This will be removed in 2.0.  It is intended to bridge the gap when correcting the storage of data/time values in the
-         * database.  {@link DateStorage#UTC} should be used and will be the default in 2.0.  In 1.5 it is
-         * {@link DateStorage#SYSTEM_DEFAULT} for backwards compatibility.
-         */
-        @Deprecated
-        public Builder dateForm(final DateStorage dateStorage) {
-            this.dateStorage = dateStorage;
             return this;
         }
 

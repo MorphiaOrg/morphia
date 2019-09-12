@@ -93,7 +93,7 @@ public class ReferenceTest extends ProxyTestBase {
         assertEquals("foo", persisted.get("singleRef"));
         assertEquals("foo", persisted.get("lazySingleRef"));
 
-        final BasicDBList expectedList = new BasicDBList();
+        final List<String> expectedList = new ArrayList<>();
         expectedList.add("foo");
         expectedList.add("bar");
         expectedList.add("baz");

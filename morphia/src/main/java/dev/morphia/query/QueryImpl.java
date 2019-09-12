@@ -8,7 +8,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
-import dev.morphia.FindAndModifyOptions;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.query.CriteriaJoin.AND;

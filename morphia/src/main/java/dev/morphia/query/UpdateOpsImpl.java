@@ -109,7 +109,8 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
         PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
-        Document document = new Document(UpdateOperator.EACH.val(), mapper.toMongoObject(pathTarget.getTarget(), null, values));
+        pathTarget.getTarget();
+        Document document = new Document(UpdateOperator.EACH.val(), values);
         options.update(document);
         addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), document);
 
@@ -257,7 +258,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             if (UpdateOperator.PULL_ALL.equals(op) && value instanceof List) {
                 val = toMongoObjects(mf, (List<?>) value);
             } else {
-                val = mapper.toMongoObject(mf, null, value);
+                val = value;
             }
         }
 
@@ -286,7 +287,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     protected List<Object> toMongoObjects(final MappedField mf, final List<?> values) {
         final List<Object> list = new ArrayList<>(values.size());
         for (final Object obj : values) {
-            list.add(mapper.toMongoObject(mf, null, obj));
+            list.add(obj);
         }
 
         return list;

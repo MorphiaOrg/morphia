@@ -333,7 +333,15 @@ public class MappedField {
     }
 
     public Class getNormalizedType() {
-        return !isParameterized() ? getTypeData().getType() : getTypeData().getTypeParameters().get(0).getType();
+        Class<?> type;
+        if (!isParameterized()) {
+            type = getTypeData().getType();
+        } else {
+            List<TypeData<?>> typeParameters = getTypeData().getTypeParameters();
+            TypeData<?> typeData = typeParameters.get(typeParameters.size() - 1);
+            type = typeData.getType();
+        }
+        return type.isArray() ? type.getComponentType() : type;
     }
 
     public PropertyHandler getHandler() {
@@ -342,11 +350,16 @@ public class MappedField {
         PropertyHandler handler = null;
         if (instanceCreator instanceof MorphiaInstanceCreator) {
             MorphiaInstanceCreator creator = (MorphiaInstanceCreator) instanceCreator;
-            final PropertyModel<?> propertyModel = model.getPropertyModel(getMappedFieldName());
+            final PropertyModel<?> propertyModel = getPropertyModel();
             if (propertyModel != null) {
                 handler = creator.getHandler(propertyModel);
             }
         }
         return handler;
+    }
+
+    public PropertyModel<?> getPropertyModel() {
+        return getDeclaringClass().getClassModel()
+                                  .getPropertyModel(getMappedFieldName());
     }
 }

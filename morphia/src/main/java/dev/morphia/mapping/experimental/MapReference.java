@@ -28,7 +28,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
      * @morphia.internal
      */
     MapReference(final Datastore datastore, final MappedClass mappedClass, final Map<String, Object> ids) {
-        super(datastore, mappedClass);
+        super(datastore);
         Map<String, Object> unwrapped = ids;
         if (ids != null) {
             for (final Entry<String, Object> entry : ids.entrySet()) {
@@ -52,6 +52,10 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
             mergeReads();
         }
         return values;
+    }
+
+    public Map<String, Object> getIds() {
+        return ids;
     }
 
     private void mergeReads() {

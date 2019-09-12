@@ -1184,7 +1184,7 @@ public class TestQuery extends TestBase {
     public void testReferenceQuery() {
         final Photo p = new Photo();
         final ContainsPhotoKey cpk = new ContainsPhotoKey();
-        cpk.photo = getMapper().getKey(getDs().save(p));
+        cpk.photo = getDs().save(p);
         getDs().save(cpk);
 
         Query<ContainsPhotoKey> query = getDs().find(ContainsPhotoKey.class)
@@ -1630,7 +1630,8 @@ public class TestQuery extends TestBase {
     private static class ContainsPhotoKey {
         @Id
         private ObjectId id;
-        private Key<Photo> photo;
+        @Reference
+        private Photo photo;
     }
 
     @Entity

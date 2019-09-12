@@ -19,7 +19,7 @@ class SetReference<T> extends CollectionReference<Set<T>> {
      * @morphia.internal
      */
     SetReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
-        super(datastore, mappedClass, ids);
+        super(datastore, ids);
     }
 
     SetReference(final Set<T> values) {

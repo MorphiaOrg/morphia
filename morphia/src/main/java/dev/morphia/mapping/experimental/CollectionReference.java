@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 
@@ -30,8 +29,8 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     CollectionReference() {
     }
 
-    CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
-        super(datastore, mappedClass);
+    CollectionReference(final Datastore datastore, final List ids) {
+        super(datastore);
         List<Object> unwrapped = ids;
         if (ids != null) {
             for (final Object o : ids) {

@@ -11,6 +11,7 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.MappingException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
+import org.bson.Document;
 import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -22,8 +23,12 @@ import org.bson.codecs.pojo.TypeData;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class ReferenceHandler extends PropertyHandler {
@@ -52,9 +57,21 @@ public class ReferenceHandler extends PropertyHandler {
                                    final String name,
                                    final PropertyModel<S> propertyModel) {
 
-        return (S) getDatastore().getMapper().getCodecRegistry()
-                                 .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
-                                 .decode(reader, decoderContext);
+        Object decode = getDatastore().getMapper().getCodecRegistry()
+                                     .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
+                                     .decode(reader, decoderContext);
+        if(decode instanceof Document) {
+            Document document = (Document) decode;
+            if(document.containsKey("$ref")) {
+                decode = document.get("$id");
+                if(decode instanceof Document) {
+                    decode = getDatastore().getMapper().getCodecRegistry()
+                                  .get(Object.class)
+                                  .decode(reader, decoderContext);
+                }
+            }
+        }
+        return (S) decode;
     }
 
     @Override
@@ -62,37 +79,69 @@ public class ReferenceHandler extends PropertyHandler {
                            final Map<Object, Object> entityCache) {
         S fetched = value;
         if(value instanceof List) {
-            List<Object> ids = new ArrayList<>();
-            for (Object o : (List) value) {
-                ids.add(extractId(o));
-            }
-            final MongoCollection<S> collection = datastore.getCollection((Class<S>) getFieldMappedClass().getType());
-            final List<S> entities = collection.find(Filters.in("_id", ids)).into(new ArrayList<>());
-            for (final S entity : entities) {
-                entityCache.putIfAbsent(getIdField().getFieldValue(entity), entity);
-            }
-            List list = new ArrayList();
-            for (Object id : ids) {
-                final Object e = entityCache.get(id);
-                if(e != null) {
-                    list.add(e);
-                }
-            }
-            if(list.size() < ids.size() && !annotation.ignoreMissing()) {
-                throw new MappingException("Referenced entities not found");
-            }
-            fetched = (S) list;
+            fetched = loadList((List) value, datastore, entityCache);
+        } else if(value instanceof Map) {
+            fetched = loadMap((Map) value, datastore, entityCache);
         } else {
             final Object id = extractId(fetched);
             fetched = (S) entityCache.computeIfAbsent(id,
-                (k) -> datastore.getCollection((Class<S>) getField().getType())
-                                .find(Filters.eq("_id", id))
+                (k) -> datastore.find((Class<S>) getFieldMappedClass().getType())
+                                .filter("_id", id)
                                 .first());
             if (fetched == null && !annotation.ignoreMissing()) {
                 throw new MappingException("Referenced entity not found");
             }
         }
         propertyModel.getPropertyAccessor().set(instance, fetched);
+    }
+
+    <S> S loadList(final List value, final Datastore datastore, final Map<Object, Object> entityCache) {
+        List<Object> ids = new ArrayList<>();
+        for (Object o : value) {
+            ids.add(extractId(o));
+        }
+        datastore.find((Class<S>) getFieldMappedClass().getType())
+                 .filter("_id in", ids)
+                 .execute()
+                 .forEachRemaining(entity -> {
+                     entityCache.putIfAbsent(getIdField().getFieldValue(entity), entity);
+                 });
+
+        List list = ids.stream()
+                       .map(entityCache::get)
+                       .filter(Objects::nonNull)
+                       .collect(Collectors.toList());
+
+        if(list.size() < ids.size() && !annotation.ignoreMissing()) {
+            throw new MappingException("Referenced entities not found");
+        }
+        return (S) list;
+    }
+
+    <S> S loadMap(final Map value, final Datastore datastore, final Map<Object, Object> entityCache) {
+        List<Object> ids = new ArrayList<>();
+        for (Object o : value.values()) {
+            ids.add(extractId(o));
+        }
+
+        datastore.find((Class<S>) getFieldMappedClass().getType())
+                 .filter("_id in", ids)
+                 .execute()
+                 .forEachRemaining(entity -> {
+                     entityCache.putIfAbsent(getIdField().getFieldValue(entity), entity);
+                 });
+
+        Map map = new LinkedHashMap();
+        for (Object id : ids) {
+            final Object e = entityCache.get(id);
+            if(e != null) {
+                map.putIfAbsent(getIdField().getFieldValue(e), e);
+            }
+        }
+        if(map.size() < ids.size() && !annotation.ignoreMissing()) {
+            throw new MappingException("Referenced entities not found");
+        }
+        return (S) map;
     }
 
     @Override
@@ -121,22 +170,29 @@ public class ReferenceHandler extends PropertyHandler {
     }
 
     private Object collectIdValues(final Object value) {
-        List ids;
         if(value instanceof Collection) {
-            ids = new ArrayList(((Collection)value).size());
+            List ids = new ArrayList(((Collection)value).size());
             for (Object o : (Collection)value) {
                 ids.add(collectIdValues(o));
             }
+            return ids;
+        } else if(value instanceof Map) {
+            final LinkedHashMap ids = new LinkedHashMap();
+            Map<Object, Object> map = (Map<Object, Object>) value;
+            for (final Map.Entry<Object, Object> o : map.entrySet()) {
+                ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
+            }
+            return ids;
         } else if (value.getClass().isArray()) {
-            ids = new ArrayList(((Object[])value).length);
+            List ids = new ArrayList(((Object[])value).length);
             for (Object o : (Object[])value) {
                 ids.add(collectIdValues(o));
             }
+            return ids;
         } else {
             return encodeId(value);
         }
 
-        return ids;
     }
 
     private <S> Object encodeId(final S value) {
@@ -159,7 +215,7 @@ public class ReferenceHandler extends PropertyHandler {
         if(annotation.idOnly()) {
             return o;
         }
-        return ((DBRef) transformer.transform(o)).getId();
+        return o instanceof DBRef ? ((DBRef) transformer.transform(o)).getId() : o;
     }
 }
 

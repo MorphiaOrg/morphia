@@ -3,7 +3,6 @@ package dev.morphia.mapping.experimental;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -16,8 +15,8 @@ class ListReference<T> extends CollectionReference<List<T>> {
     /**
      * @morphia.internal
      */
-    ListReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
-        super(datastore, mappedClass, ids);
+    ListReference(final Datastore datastore, final List ids) {
+        super(datastore, ids);
     }
 
     ListReference(final List<T> values) {
@@ -25,7 +24,7 @@ class ListReference<T> extends CollectionReference<List<T>> {
     }
 
     @Override
-    Collection<?> getValues() {
+    List<?> getValues() {
         return values;
     }
 
