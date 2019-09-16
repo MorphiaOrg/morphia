@@ -2,6 +2,7 @@ package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.Handler;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -17,6 +18,7 @@ import java.util.Set;
  * @since 1.5
  */
 @SuppressWarnings("unchecked")
+@Handler(MorphiaReferenceCodec.class)
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
 
@@ -42,6 +44,8 @@ public abstract class MorphiaReference<T> {
      * @return returns the referenced entity if it exists.  May return null.
      */
     public abstract T get();
+
+    abstract Object getId(final Mapper mapper, final MappedClass mappedClass);
 
     /**
      * @return true if this reference has already been resolved
@@ -82,24 +86,6 @@ public abstract class MorphiaReference<T> {
             return (MorphiaReference<V>) new MapReference<>((Map<String, V>) value);
         } else {
             return new SingleReference<>(value);
-        }
-    }
-    /**
-     * Wraps an value in a MorphiaReference to storing on an entity
-     * @param value the value wrap
-     * @param <V> the type of the value
-     * @return the MorphiaReference wrapper
-     */
-    @SuppressWarnings("unchecked")
-    public static <V> MorphiaReference<V> wrapIds(final Mapper mapper, final MappedClass mappedClass, final V value) {
-        if (value instanceof List) {
-            return (MorphiaReference<V>) new ListReference<>((List<V>) value);
-        } else if (value instanceof Set) {
-            return (MorphiaReference<V>) new SetReference<>((Set<V>) value);
-        } else if (value instanceof Map) {
-            return (MorphiaReference<V>) new MapReference<>((Map<String, V>) value);
-        } else {
-            return new SingleReference<>(mapper.getDatastore(), mappedClass, value);
         }
     }
 }

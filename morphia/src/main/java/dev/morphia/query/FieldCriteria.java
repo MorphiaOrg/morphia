@@ -2,22 +2,12 @@ package dev.morphia.query;
 
 
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.mapping.codec.PropertyHandler;
-import dev.morphia.utils.ReflectionUtils;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.pojo.PropertyModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -43,12 +33,14 @@ class FieldCriteria extends AbstractCriteria {
         mappedField = pathTarget.getTarget();
 
         Object mappedValue = value;
+/*
         if (value != null && mapper.getMappedClass(value.getClass()) != null && mappedField != null) {
             PropertyHandler handler = mappedField.getHandler();
             if(handler != null) {
                 mappedValue = handler.encodeValue(value);
             }
         }
+*/
 
         final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
 

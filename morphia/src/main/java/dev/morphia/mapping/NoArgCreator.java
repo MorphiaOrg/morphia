@@ -2,7 +2,7 @@ package dev.morphia.mapping;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.PropertyHandler;
+import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.PropertyModel;
 
@@ -21,10 +21,10 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
     private E instance;
     private Datastore datastore;
     private Constructor<E> noArgsConstructor;
-    private Map<String, PropertyHandler> handlerMap;
+    private Map<String, PropertyCodec> handlerMap;
     private List<BiConsumer<Datastore, Map<Object, Object>>> handlers = new ArrayList<>();
 
-    public NoArgCreator(final Datastore datastore, final Constructor<E> noArgsConstructor, Map<String, PropertyHandler> handlerMap) {
+    public NoArgCreator(final Datastore datastore, final Constructor<E> noArgsConstructor, Map<String, PropertyCodec> handlerMap) {
         this.datastore = datastore;
         this.noArgsConstructor = noArgsConstructor;
         this.handlerMap = handlerMap;
@@ -43,16 +43,16 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
 
     @Override
     public <S> void set(final S value, final PropertyModel<S> propertyModel) {
-        final PropertyHandler propertyHandler = getHandler(propertyModel);
-        if(propertyHandler != null) {
-            defer((datastore, entityCache) -> propertyHandler.set(instance(), propertyModel, value, datastore, entityCache));
-        } else {
+//        final PropertyHandler propertyHandler = getHandler(propertyModel);
+//        if(propertyHandler != null) {
+//            defer((datastore, entityCache) -> propertyHandler.set(instance(), propertyModel, value, datastore, entityCache));
+//        } else {
             propertyModel.getPropertyAccessor().set(instance(), value);
-        }
+//        }
     }
 
     @Override
-    public <S> PropertyHandler getHandler(final PropertyModel<S> propertyModel) {
+    public <S> PropertyCodec getHandler(final PropertyModel<S> propertyModel) {
         return handlerMap.get(propertyModel.getName());
     }
 

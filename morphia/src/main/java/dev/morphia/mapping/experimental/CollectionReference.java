@@ -7,7 +7,6 @@ import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -26,22 +26,22 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     private List<Object> ids;
     private Map<String, List<Object>> collections = new HashMap<>();
 
-    CollectionReference() {
-    }
-
-    CollectionReference(final Datastore datastore, final List ids) {
+    CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
         super(datastore);
         List<Object> unwrapped = ids;
         if (ids != null) {
             for (final Object o : ids) {
-                collate(datastore, collections, o);
+                collate(mappedClass, collections, o);
             }
         }
 
         this.ids = unwrapped;
     }
 
-    static void collate(final Datastore datastore, final Map<String, List<Object>> collections,
+    protected CollectionReference() {
+    }
+
+    static void collate(final MappedClass mappedClass, final Map<String, List<Object>> collections,
                         final Object o) {
         final String collectionName;
         final Object id;
@@ -50,7 +50,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             collectionName = dbRef.getCollectionName();
             id = dbRef.getId();
         } else {
-            collectionName = datastore.getMapper().getMappedClass(o.getClass()).getCollectionName();
+            collectionName = mappedClass.getCollectionName();
             id = o;
         }
 
@@ -75,7 +75,14 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
      */
     public abstract C get();
 
-    final List<Object> getIds() {
+    @Override
+    final List<Object> getId(final Mapper mapper, final MappedClass mappedClass) {
+        if(ids == null) {
+            MappedField idField = mappedClass.getIdField();
+            ids = getValues().stream()
+                             .map(v -> idField.getFieldValue(v))
+                             .collect(Collectors.toList());
+        }
         return ids;
     }
 
@@ -121,42 +128,5 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         } else {
             return null;
         }
-    }
-
-    /**
-     * Decodes a document in to entities
-     * @param datastore the datastore
-     * @param mapper the mapper
-     * @param mappedField the MappedField
-     * @param paramType the type of the underlying entity
-     * @param document the Document to decode
-     * @return the entities
-     */
-    public static MorphiaReference<?> decode(final Datastore datastore,
-                                             final Mapper mapper,
-                                             final MappedField mappedField,
-                                             final Class paramType,
-                                             final Document document) {
-        MorphiaReference reference = null;
-        if (1 == 1) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        }
-
-/*
-        final List dbVal = (List) mappedField.getDocumentValue(document);
-        if (dbVal != null) {
-            final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
-            final MappedClass mappedClass = mapper.getMappedClass(subType);
-
-            if (Set.class.isAssignableFrom(paramType)) {
-                reference = new SetReference(datastore, mappedClass, dbVal);
-            } else {
-                reference = new ListReference(datastore, mappedClass, dbVal);
-            }
-        }
-*/
-
-        return reference;
     }
 }

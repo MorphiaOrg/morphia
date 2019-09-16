@@ -2,7 +2,7 @@ package dev.morphia.mapping;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.PropertyHandler;
+import dev.morphia.mapping.codec.PropertyCodec;
 import org.bson.codecs.pojo.InstanceCreatorFactory;
 
 import java.lang.reflect.Constructor;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> {
     private Constructor<T> noArgsConstructor;
     private Datastore datastore;
-    private Map<String, PropertyHandler> handlers = new HashMap<>();
+    private Map<String, PropertyCodec> handlers = new HashMap<>();
 
     public InstanceCreatorFactoryImpl(final Datastore datastore, final Class type) {
         this.datastore = datastore;
@@ -37,7 +37,7 @@ public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> 
         return new NoArgCreator<>(datastore, noArgsConstructor, handlers);
     }
 
-    void register(final PropertyHandler handler) {
+    void register(final PropertyCodec handler) {
         handlers.put(handler.getPropertyName(), handler);
     }
 

@@ -15,8 +15,8 @@ class ListReference<T> extends CollectionReference<List<T>> {
     /**
      * @morphia.internal
      */
-    ListReference(final Datastore datastore, final List ids) {
-        super(datastore, ids);
+    ListReference(final Datastore datastore,final MappedClass mappedClass, final List ids) {
+        super(datastore, mappedClass, ids);
     }
 
     ListReference(final List<T> values) {
@@ -30,7 +30,7 @@ class ListReference<T> extends CollectionReference<List<T>> {
 
     @Override
     public List<T> get() {
-        if (values == null && getIds() != null) {
+        if (values == null) {
             values = (List<T>) find();
         }
         return values;

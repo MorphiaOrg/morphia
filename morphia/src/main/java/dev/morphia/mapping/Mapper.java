@@ -12,7 +12,6 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
@@ -22,8 +21,6 @@ import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
-import dev.morphia.query.Query;
-import dev.morphia.query.QueryImpl;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.ReflectionUtils;
 import org.bson.BsonDocumentReader;
@@ -40,7 +37,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -201,6 +197,7 @@ public class Mapper {
                     return addMappedClass(((MorphiaCodec) codec1).getMappedClass());
                 }
             } catch (CodecConfigurationException ignore) {
+                ignore.printStackTrace();
             }
         }
         return mappedClass;

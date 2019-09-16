@@ -57,7 +57,19 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return query;
     }
 
-    Object getId() {
+    MappedClass getMappedClass(final Mapper mapper) {
+        if(mappedClass == null) {
+            mappedClass = mapper.getMappedClass(get().getClass());
+        }
+
+        return mappedClass;
+    }
+
+    @Override
+    Object getId(final Mapper mapper, final MappedClass mappedClass) {
+        if(id == null) {
+            id = getMappedClass(mapper).getIdField().getFieldValue(get());
+        }
         return id;
     }
 

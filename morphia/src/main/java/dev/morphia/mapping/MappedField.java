@@ -27,7 +27,7 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.PropertyHandler;
+import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
@@ -344,10 +344,10 @@ public class MappedField {
         return type.isArray() ? type.getComponentType() : type;
     }
 
-    public PropertyHandler getHandler() {
+    public PropertyCodec getHandler() {
         final ClassModel<?> model = getDeclaringClass().getClassModel();
         final InstanceCreator<?> instanceCreator = model.getInstanceCreator();
-        PropertyHandler handler = null;
+        PropertyCodec handler = null;
         if (instanceCreator instanceof MorphiaInstanceCreator) {
             MorphiaInstanceCreator creator = (MorphiaInstanceCreator) instanceCreator;
             final PropertyModel<?> propertyModel = getPropertyModel();

@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * @param <T>
@@ -32,7 +33,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         Map<String, Object> unwrapped = ids;
         if (ids != null) {
             for (final Entry<String, Object> entry : ids.entrySet()) {
-                CollectionReference.collate(datastore, collections, entry.getValue());
+                CollectionReference.collate(mappedClass, collections, entry.getValue());
             }
         }
 
@@ -54,7 +55,13 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
         return values;
     }
 
-    public Map<String, Object> getIds() {
+    public Map<String, Object> getId(final Mapper Mapper, final MappedClass mappedClass) {
+        if(ids == null) {
+            MappedField idField = mappedClass.getIdField();
+            ids = new LinkedHashMap<>();
+            values.entrySet().stream()
+                             .forEach(e -> ids.put(e.getKey(), idField.getFieldValue(e.getValue())));
+        }
         return ids;
     }
 

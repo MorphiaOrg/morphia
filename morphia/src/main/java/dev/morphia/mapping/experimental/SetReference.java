@@ -19,7 +19,7 @@ class SetReference<T> extends CollectionReference<Set<T>> {
      * @morphia.internal
      */
     SetReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
-        super(datastore, ids);
+        super(datastore, mappedClass, ids);
     }
 
     SetReference(final Set<T> values) {
@@ -32,7 +32,7 @@ class SetReference<T> extends CollectionReference<Set<T>> {
     }
 
     public Set<T> get() {
-        if (values == null && getIds() != null) {
+        if (values == null) {
             values = new LinkedHashSet(find());
         }
         return values;

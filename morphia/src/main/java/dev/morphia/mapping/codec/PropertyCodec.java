@@ -4,6 +4,7 @@ import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
+import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.InstanceCreator;
@@ -13,14 +14,14 @@ import org.bson.codecs.pojo.TypeData;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public abstract class PropertyHandler {
+public abstract class PropertyCodec<T> implements Codec<T> {
     private final Field field;
     private final String propertyName;
     private MappedClass mappedClass;
     private Datastore datastore;
     private final TypeData typeData;
 
-    public PropertyHandler(final Datastore datastore, final Field field, final String propertyName, final TypeData typeData) {
+    public PropertyCodec(final Datastore datastore, final Field field, final String propertyName, final TypeData typeData) {
         this.datastore = datastore;
         this.propertyName = propertyName;
         this.field = field;
@@ -56,19 +57,4 @@ public abstract class PropertyHandler {
         return typeData;
     }
 
-    public abstract <S, E> void set(final E instance, final PropertyModel<S> propertyModel, final S value, final Datastore datastore,
-                                    final Map<Object, Object> entityCache);
-
-    public abstract <T, S> S decodeProperty(final BsonReader reader,
-                                            final DecoderContext decoderContext,
-                                            final InstanceCreator<T> instanceCreator,
-                                            final String name,
-                                            final PropertyModel<S> propertyModel);
-
-    public abstract <S, T> void encodeProperty(final BsonWriter writer,
-                                               final T instance,
-                                               final EncoderContext encoderContext,
-                                               final PropertyModel<S> propertyModel);
-
-    public abstract <S> Object encodeValue(S value);
 }

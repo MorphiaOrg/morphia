@@ -2,8 +2,6 @@ package dev.morphia.mapping.codec;
 
 import com.mongodb.DBRef;
 import com.mongodb.DocumentToDBRefTransformer;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
@@ -16,14 +14,12 @@ import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.pojo.InstanceCreator;
 import org.bson.codecs.pojo.PropertyModel;
 import org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,16 +27,19 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
-public class ReferenceHandler extends PropertyHandler {
+public class ReferenceCodec<T> extends PropertyCodec<T> {
 
     private final Reference annotation;
+    private final PropertyModel propertyModel;
     private MappedField idField;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private DocumentToDBRefTransformer transformer = new DocumentToDBRefTransformer();
 
-    public ReferenceHandler(final Datastore datastore, final Field field, final String name, final TypeData typeData) {
+    public ReferenceCodec(final Datastore datastore, final Field field, final String name, final TypeData typeData,
+                          final PropertyModel propertyModel) {
         super(datastore, field, name, typeData);
         annotation = field.getAnnotation(Reference.class);
+        this.propertyModel = propertyModel;
     }
 
     private MappedField getIdField() {
@@ -51,11 +50,7 @@ public class ReferenceHandler extends PropertyHandler {
     }
 
     @Override
-    public <T, S> S decodeProperty(final BsonReader reader,
-                                   final DecoderContext decoderContext,
-                                   final InstanceCreator<T> instanceCreator,
-                                   final String name,
-                                   final PropertyModel<S> propertyModel) {
+    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
 
         Object decode = getDatastore().getMapper().getCodecRegistry()
                                      .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
@@ -71,9 +66,10 @@ public class ReferenceHandler extends PropertyHandler {
                 }
             }
         }
-        return (S) decode;
+        return (T) decode;
     }
 
+/*
     @Override
     public <S, E> void set(final E instance, final PropertyModel<S> propertyModel, final S value, final Datastore datastore,
                            final Map<Object, Object> entityCache) {
@@ -94,6 +90,7 @@ public class ReferenceHandler extends PropertyHandler {
         }
         propertyModel.getPropertyAccessor().set(instance, fetched);
     }
+*/
 
     <S> S loadList(final List value, final Datastore datastore, final Map<Object, Object> entityCache) {
         List<Object> ids = new ArrayList<>();
@@ -145,28 +142,17 @@ public class ReferenceHandler extends PropertyHandler {
     }
 
     @Override
-    public <S, T> void encodeProperty(final BsonWriter writer,
-                                      final T instance,
-                                      final EncoderContext encoderContext,
-                                      final PropertyModel<S> propertyModel) {
-        S value = propertyModel.getPropertyAccessor().get(instance);
-        if (propertyModel.shouldSerialize(value)) {
-            if (value == null) {
-                writer.writeNull(propertyModel.getReadName());
-            } else {
-                writer.writeName(propertyModel.getReadName());
-                Object idValue = encodeValue(value);
-
-                final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
-                codec.encode(writer, idValue, encoderContext);
-            }
-        }
-
+    public Class<T> getEncoderClass() {
+        return (Class<T>) Object.class;
     }
 
     @Override
-    public <S> Object encodeValue(final S value) {
-        return collectIdValues(value);
+    public void encode(final BsonWriter writer, final T instance, final EncoderContext encoderContext) {
+        writer.writeName(propertyModel.getReadName());
+        Object idValue = collectIdValues(instance);
+
+        final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
+        codec.encode(writer, idValue, encoderContext);
     }
 
     private Object collectIdValues(final Object value) {
@@ -195,7 +181,7 @@ public class ReferenceHandler extends PropertyHandler {
 
     }
 
-    private <S> Object encodeId(final S value) {
+    private Object encodeId(final Object value) {
         Object idValue;
         if(value instanceof Key) {
             idValue = ((Key)value).getId();

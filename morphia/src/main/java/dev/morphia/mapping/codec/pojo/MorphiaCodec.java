@@ -25,7 +25,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseMorphiaCodec;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.PropertyHandler;
+import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
@@ -136,12 +136,12 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
             || mappedClass.hasLifecycle(PrePersist.class)
             || getMapper().hasInterceptors()) {
 
-            Document prepersist = new Document();
-            mappedClass.callLifecycleMethods(PrePersist.class, value, prepersist, getMapper());
+            Document document = new Document();
+            mappedClass.callLifecycleMethods(PrePersist.class, value, document, getMapper());
 
-            final DocumentWriter documentWriter = new DocumentWriter(prepersist);
+            final DocumentWriter documentWriter = new DocumentWriter(document);
             super.encode(documentWriter, value, encoderContext);
-            Document document = documentWriter.getRoot();
+            document = documentWriter.getRoot();
             mappedClass.callLifecycleMethods(PostPersist.class, value, document, getMapper());
 
             getRegistry().get(Document.class).encode(writer, document, encoderContext);
@@ -150,6 +150,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         }
     }
 
+/*
     @Override
     protected <S> void encodeProperty(final BsonWriter writer,
                                       final T instance,
@@ -162,6 +163,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
             super.encodeProperty(writer, instance, encoderContext, propertyModel);
         }
     }
+*/
 
 
     @Override
@@ -192,11 +194,13 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
                                            final String name,
                                            final PropertyModel<S> propertyModel) {
         if (propertyModel != null) {
-            final PropertyHandler handler = getPropertyHandler(instanceCreator, propertyModel);
+            final PropertyCodec handler = getPropertyHandler(instanceCreator, propertyModel);
+/*
             if (handler != null) {
-                S value = handler.decodeProperty(reader, decoderContext, instanceCreator, name, propertyModel);
+                S value = handler.decodeProperty(reader, decoderContext, name, propertyModel);
                 instanceCreator.set(value, propertyModel);
             } else {
+*/
                 final BsonReaderMark mark = reader.getMark();
                 try {
                     super.decodePropertyModel(reader, decoderContext, instanceCreator, name, propertyModel);
@@ -205,13 +209,13 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
                     final Object value = getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
                     instanceCreator.set((S) convert(value, propertyModel.getTypeData().getType()), propertyModel);
                 }
-            }
+//            }
         } else {
             reader.skipValue();
         }
     }
 
-    private <S> PropertyHandler getPropertyHandler(final InstanceCreator<?> instanceCreator, final PropertyModel<S> propertyModel) {
+    private <S> PropertyCodec getPropertyHandler(final InstanceCreator<?> instanceCreator, final PropertyModel<S> propertyModel) {
         return instanceCreator instanceof MorphiaInstanceCreator ? ((MorphiaInstanceCreator) instanceCreator).getHandler(propertyModel)
                                                                  : null;
 

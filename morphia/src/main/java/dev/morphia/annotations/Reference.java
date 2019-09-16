@@ -16,7 +16,7 @@ package dev.morphia.annotations;
 
 
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.ReferenceHandler;
+import dev.morphia.mapping.codec.ReferenceCodec;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Handler(ReferenceHandler.class)
+@Handler(ReferenceCodec.class)
 public @interface Reference {
     /**
      * @return the concrete class to instantiate.

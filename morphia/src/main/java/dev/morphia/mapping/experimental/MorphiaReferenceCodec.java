@@ -1,25 +1,32 @@
 package dev.morphia.mapping.experimental;
 
+import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.PropertyCodec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.pojo.TypeData;
 
-public class MorphiaReferenceCodec implements Codec<MorphiaReference> {
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-    private Mapper mapper;
-    private BsonTypeClassMap bsonTypeClassMap;
+@SuppressWarnings("unchecked")
+public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> {
 
-    public MorphiaReferenceCodec(final Mapper mapper, final BsonTypeClassMap typeMap) {
-        this.mapper = mapper;
-        bsonTypeClassMap = typeMap;
-    }
+    private final Mapper mapper;
+    private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
 
-    Mapper getMapper() {
-        return mapper;
+    public MorphiaReferenceCodec(final Datastore datastore, final Field field, final String name,
+                                 final TypeData typeData) {
+        super(datastore, field, name, (TypeData) typeData.getTypeParameters().get(0));
+        mapper = datastore.getMapper();
     }
 
     @Override
@@ -27,17 +34,27 @@ public class MorphiaReferenceCodec implements Codec<MorphiaReference> {
         return MorphiaReference.class;
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public MorphiaReference decode(final BsonReader reader, final DecoderContext decoderContext) {
-        Object decode = mapper.getCodecRegistry()
-                              .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
-                              .decode(reader, decoderContext);
-        return MorphiaReference.wrapIds(mapper, decode);
+        Mapper mapper = getDatastore().getMapper();
+        Object value = mapper.getCodecRegistry()
+                             .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
+                             .decode(reader, decoderContext);
+        if (Set.class.isAssignableFrom(getTypeData().getType())) {
+            return new SetReference<>(getDatastore(), getFieldMappedClass(), (List) value);
+        } else if (Collection.class.isAssignableFrom(getTypeData().getType())) {
+            return new ListReference<>(getDatastore(), getFieldMappedClass(), (List) value);
+        } else if (Map.class.isAssignableFrom(getTypeData().getType())) {
+            return new MapReference<>(getDatastore(), getFieldMappedClass(), (Map) value);
+        } else {
+            return new SingleReference<>(mapper.getDatastore(), getFieldMappedClass(), value);
+        }
     }
 
     @Override
     public void encode(final BsonWriter writer, final MorphiaReference value, final EncoderContext encoderContext) {
-        Codec codec = mapper.getCodecRegistry().get(value.getClass());
-        codec.encode(writer, value, encoderContext);
+        Object ids = value.getId(mapper, getFieldMappedClass());
+        Codec codec = mapper.getCodecRegistry().get(ids.getClass());
+        codec.encode(writer, ids, encoderContext);
     }
 }

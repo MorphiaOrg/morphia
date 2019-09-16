@@ -12,5 +12,5 @@ public interface MorphiaInstanceCreator<T> extends InstanceCreator<T> {
 
     void defer(final BiConsumer<Datastore, Map<Object, Object>> function);
 
-    <S> PropertyHandler getHandler(final PropertyModel<S> propertyModel);
+    <S> PropertyCodec getHandler(final PropertyModel<S> propertyModel);
 }

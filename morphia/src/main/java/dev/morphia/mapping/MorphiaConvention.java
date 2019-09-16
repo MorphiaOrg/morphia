@@ -13,9 +13,9 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
-import dev.morphia.mapping.codec.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
+import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -57,21 +57,21 @@ public class MorphiaConvention implements Convention {
         final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(datastore, modelBuilder.getType());
         modelBuilder.instanceCreatorFactory(creatorFactory);
         modelBuilder.discriminator(modelBuilder.getType().getName())
-                         .discriminatorKey(options.getDiscriminatorField());
+                    .discriminatorKey(options.getDiscriminatorField());
 
         final Entity entity = getAnnotation(modelBuilder, Entity.class);
         final Embedded embedded = getAnnotation(modelBuilder, Embedded.class);
-        if(entity != null) {
+        if (entity != null) {
             modelBuilder.enableDiscriminator(entity.useDiscriminator());
-        } else if(embedded != null) {
+        } else if (embedded != null) {
             modelBuilder.enableDiscriminator(embedded.useDiscriminator());
         } else {
             modelBuilder.enableDiscriminator(true);
         }
 
         final List<String> properties = classModelBuilder.getPropertyModelBuilders().stream()
-                                                    .map(PropertyModelBuilder::getName)
-                                                    .collect(Collectors.toList());
+                                                         .map(PropertyModelBuilder::getName)
+                                                         .collect(Collectors.toList());
         for (final String name : properties) {
             classModelBuilder.removeProperty(name);
         }
@@ -86,18 +86,18 @@ public class MorphiaConvention implements Convention {
                 iterator.remove();
             } else {
                 Property property = builder.getAnnotation(Property.class);
-                if(property != null && !property.concreteClass().equals(Object.class)) {
+                if (property != null && !property.concreteClass().equals(Object.class)) {
                     TypeData typeData = TypeData.newInstance(field.getGenericType(), property.concreteClass());
                     builder.typeData(typeData);
                 }
 
                 List<String> names = new ArrayList<>(List.of(getMappedFieldName(builder)));
                 AlsoLoad alsoLoad = builder.getAnnotation(AlsoLoad.class);
-                if(alsoLoad != null) {
+                if (alsoLoad != null) {
                     names.addAll(Arrays.asList(alsoLoad.value()));
                 }
                 for (final String name : names) {
-                    buildProperty(modelBuilder, creatorFactory, builder, field, name);
+                    buildProperty(modelBuilder, builder, field, name);
                 }
             }
         }
@@ -105,7 +105,6 @@ public class MorphiaConvention implements Convention {
     }
 
     private void buildProperty(final MorphiaModelBuilder modelBuilder,
-                               final InstanceCreatorFactoryImpl creatorFactory,
                                final FieldModelBuilder<?> builder, final Field field, final String mappedName) {
         final PropertyMetadata<?> propertyMetadata = new PropertyMetadata<>(builder.getName(),
             modelBuilder.getType().getName(), builder.getTypeData())
@@ -124,52 +123,52 @@ public class MorphiaConvention implements Convention {
                 .propertySerialization(new MorphiaPropertySerialization(options, builder))
                 .readAnnotations(builder.getAnnotations())
                 .writeAnnotations(builder.getAnnotations())
-                .propertyAccessor(getPropertyAccessor(creatorFactory, field, property));
+                .propertyAccessor(getPropertyAccessor(field, property));
+        configureCodec(property, field);
 
         if (isNotConcrete(property.getTypeData())) {
             property.discriminatorEnabled(true);
         }
     }
 
-    private boolean hasHandler(final PropertyModelBuilder builder) {
-        final List<Annotation> readAnnotations = builder.getReadAnnotations();
-        for (Annotation annotation : readAnnotations) {
-            if(annotation.annotationType().getAnnotation(Handler.class) != null) {
-                return true;
+    private void configureCodec(final PropertyModelBuilder builder, final Field field) {
+        Handler handler = getHandler(builder);
+        if (handler != null) {
+            try {
+                builder.codec(handler.value()
+                                     .getDeclaredConstructor(Datastore.class, Field.class, String.class, TypeData.class)
+                                     .newInstance(datastore, field, builder.getName(), builder.getTypeData()));
+            } catch (ReflectiveOperationException e) {
+                throw new MappingException(e.getMessage(), e);
             }
         }
-        return false;
     }
 
-    private PropertyHandler getHandler(final PropertyModelBuilder builder, final Field field) {
-        final List<Annotation> readAnnotations = builder.getReadAnnotations();
-        for (Annotation annotation : readAnnotations) {
-            final Handler handler = annotation.annotationType().getAnnotation(Handler.class);
-            if(handler != null) {
-                try {
-                    return handler.value()
-                                  .getDeclaredConstructor(Datastore.class, Field.class, String.class, TypeData.class)
-                                  .newInstance(datastore, field, builder.getName(), builder.getTypeData());
-                } catch (ReflectiveOperationException e) {
-                    throw new MappingException(e.getMessage(), e);
+    private Handler getHandler(final PropertyModelBuilder builder) {
+        Handler handler = (Handler) builder.getTypeData().getType().getAnnotation(Handler.class);
+
+        if (handler == null) {
+            final List<Annotation> readAnnotations = builder.getReadAnnotations();
+            handler = (Handler) readAnnotations
+                                    .stream().filter(a -> a.getClass().equals(Handler.class))
+                                    .findFirst().orElse(null);
+            if (handler == null) {
+                for (Annotation annotation : readAnnotations) {
+                    handler = annotation.annotationType().getAnnotation(Handler.class);
                 }
             }
         }
-        return null;
+
+        return handler;
     }
 
 
-    private PropertyAccessor getPropertyAccessor(final InstanceCreatorFactoryImpl creatorFactory,
-                                                 final Field field,
+    private PropertyAccessor getPropertyAccessor(final Field field,
                                                  final PropertyModelBuilder<?> property) {
 
-        if(hasHandler(property)) {
-            creatorFactory.register(getHandler(property, field));
-        }
-
         return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-                          ? new ArrayFieldAccessor(property.getTypeData(), field)
-                          : new FieldAccessor(field);
+               ? new ArrayFieldAccessor(property.getTypeData(), field)
+               : new FieldAccessor(field);
     }
 
     private <T extends Annotation> T getAnnotation(final ClassModelBuilder<?> classModelBuilder, final Class<T> klass) {
@@ -189,7 +188,7 @@ public class MorphiaConvention implements Convention {
 
     private boolean isNotConcrete(final TypeData<?> typeData) {
         Class type;
-        if(!typeData.getTypeParameters().isEmpty()) {
+        if (!typeData.getTypeParameters().isEmpty()) {
             type = typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1).getType();
         } else {
             type = typeData.getType();
@@ -200,7 +199,7 @@ public class MorphiaConvention implements Convention {
 
     private boolean isNotConcrete(final Class type) {
         Class componentType = type;
-        if(type.isArray()) {
+        if (type.isArray()) {
             componentType = type.getComponentType();
         }
         return componentType.isInterface() || isAbstract(componentType.getModifiers());
