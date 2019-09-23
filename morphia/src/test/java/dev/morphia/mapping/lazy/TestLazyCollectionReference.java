@@ -8,6 +8,7 @@ import java.util.List;
 
 import dev.morphia.Datastore;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
@@ -20,9 +21,7 @@ public class TestLazyCollectionReference extends ProxyTestBase {
     @Test(expected = LazyReferenceFetchingException.class)
     public final void testCreateProxy() {
 
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         // Create a root entity with 2 referenced entities
         RootEntity root = new RootEntity();

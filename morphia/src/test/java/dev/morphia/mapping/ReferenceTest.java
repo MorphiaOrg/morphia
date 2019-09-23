@@ -1,6 +1,5 @@
 package dev.morphia.mapping;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
@@ -16,7 +15,6 @@ import dev.morphia.query.Query;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -26,11 +24,10 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static dev.morphia.mapping.lazy.LazyFeatureDependencies.testDependencyFullFilled;
+import static dev.morphia.mapping.lazy.LazyFeatureDependencies.assertProxyClassesPresent;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -114,7 +111,7 @@ public class ReferenceTest extends ProxyTestBase {
                                            .first();
 
         assertEquals(refs.get(0), retrieved.getSingleRef());
-        if (testDependencyFullFilled()) {
+        if (assertProxyClassesPresent()) {
             assertIsProxy(retrieved.getLazySingleRef());
         }
         assertEquals(refs.get(0), retrieved.getLazySingleRef());

@@ -7,7 +7,7 @@ import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.testutil.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -17,9 +17,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testGetKeyWithoutFetching() {
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();
@@ -47,9 +45,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testCallIdGetterWithoutFetching() {
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();
@@ -83,9 +79,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testSameProxy() {
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();
@@ -103,9 +97,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testShortcutInterface() {
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();

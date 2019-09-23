@@ -2,7 +2,7 @@ package dev.morphia.mapping;
 
 
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Assume;
 import org.junit.Test;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
@@ -46,9 +46,8 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
 
     @Test
     public void testWithProxy() {
-        if (!LazyFeatureDependencies.assertDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+
         getMapper().map(ChildEntity.class, ParentEntity.class);
 
         final ChildEntity ce1 = new ChildEntity();

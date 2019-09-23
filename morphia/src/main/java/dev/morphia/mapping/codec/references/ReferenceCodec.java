@@ -2,7 +2,6 @@ package dev.morphia.mapping.codec.references;
 
 import com.mongodb.DBRef;
 import com.mongodb.DocumentToDBRefTransformer;
-import com.thoughtworks.proxy.factory.CglibProxyFactory;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
@@ -16,16 +15,10 @@ import dev.morphia.mapping.experimental.MapReference;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.experimental.SetReference;
 import dev.morphia.mapping.experimental.SingleReference;
-import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.description.field.FieldDescription;
-import net.bytebuddy.description.field.FieldList;
-import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.dynamic.DynamicType.Loaded;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
-import net.bytebuddy.matcher.DeclaringFieldMatcher;
-import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -44,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unchecked")
 public class ReferenceCodec extends PropertyCodec<Object> {
@@ -53,16 +45,10 @@ public class ReferenceCodec extends PropertyCodec<Object> {
     private MappedField idField;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private DocumentToDBRefTransformer transformer = new DocumentToDBRefTransformer();
-    private final CglibProxyFactory factory;
 
     public ReferenceCodec(final Datastore datastore, final Field field, final String name, final TypeData typeData) {
         super(datastore, field, name, typeData);
         annotation = field.getAnnotation(Reference.class);
-        if (LazyFeatureDependencies.assertDependencyFullFilled()) {
-            factory = new CglibProxyFactory();
-        } else {
-            factory = null;
-        }
     }
 
     private MappedField getIdField() {
@@ -94,7 +80,6 @@ public class ReferenceCodec extends PropertyCodec<Object> {
     }
 
     public Object fetch(final Object value) {
-        ConcurrentHashMap<Object, Object> entityCache = new ConcurrentHashMap<>();
         MorphiaReference reference;
         Object ids;
         if (value instanceof List) {
@@ -105,7 +90,7 @@ public class ReferenceCodec extends PropertyCodec<Object> {
             reference = new ListReference(getDatastore(), getFieldMappedClass(), (List) ids);
         } else if (value instanceof Map) {
             ids = new LinkedHashMap<>();
-            Set<Entry<Object, Object>> set = ((Map<Object, Object>) (Map) value).entrySet();
+            Set<Entry<Object, Object>> set = ((Map<Object, Object>) value).entrySet();
             Class keyType = ((TypeData) getTypeData().getTypeParameters().get(0)).getType();
             for (final Entry entry : set) {
                 ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), extractId(entry.getValue()));
@@ -128,52 +113,6 @@ public class ReferenceCodec extends PropertyCodec<Object> {
                                                                             .ignoreMissing(annotation.ignoreMissing())));
     }
 
-    Object loadSingle(Object value) {
-        final Object id = extractId(value);
-        MorphiaReference reference = new SingleReference(getDatastore(), getFieldMappedClass(), id)
-                                         .ignoreMissing(annotation.ignoreMissing());
-        return !annotation.lazy() ? reference.get()
-                                  : createProxy(new ReferenceProxy(id, reference));
-    }
-
-    Object loadList(final List value) {
-        List<Object> ids = new ArrayList<>();
-        for (Object o : value) {
-            ids.add(extractId(o));
-        }
-        MorphiaReference reference = new ListReference(getDatastore(), getFieldMappedClass(), ids)
-                                             .ignoreMissing(annotation.ignoreMissing());
-        return !annotation.lazy() ? reference.get()
-                                  : createProxy(new ReferenceProxy(ids, reference));
-    }
-
-    Object loadSet(final Set value) {
-        List<Object> ids = new ArrayList<>();
-        for (Object o : value) {
-            ids.add(extractId(o));
-        }
-        MorphiaReference reference = new SetReference(getDatastore(), getFieldMappedClass(), ids)
-                                             .ignoreMissing(annotation.ignoreMissing());
-        return !annotation.lazy() ? reference.get()
-                                  : createProxy(new ReferenceProxy(ids, reference));
-    }
-
-    Object loadMap(final Map<Object, Object> value) {
-        Map<Object, Object> ids = new LinkedHashMap<>();
-        Set<Entry<Object, Object>> set = value.entrySet();
-        Class keyType = ((TypeData) getTypeData().getTypeParameters().get(0)).getType();
-        for (final Map.Entry entry : set) {
-            ids.put(Conversions.convert(entry.getKey(), keyType), extractId(entry.getValue()));
-        }
-
-        MorphiaReference reference = new MapReference(getDatastore(), getFieldMappedClass(), ids)
-                                         .ignoreMissing(annotation.ignoreMissing());
-
-        return !annotation.lazy() ? reference.get()
-                                  : createProxy(new ReferenceProxy(ids, reference));
-
-    }
-
     private <T> T createProxy(final ReferenceProxy referenceProxy) {
         try {
             Class<?> type = getField().getType();
@@ -181,15 +120,8 @@ public class ReferenceCodec extends PropertyCodec<Object> {
             return ((Loaded<T>) new ByteBuddy()
                                     .subclass(type)
                                     .name(name)
-//                                    .invokable(ElementMatchers.isDeclaredBy(type))
-                                    .invokable((ElementMatcher<MethodDescription>) target -> {
-                                        return !(target.isStatic()
-                                                 || target.isConstructor()
-                                                 || target.isNative());
-                                    })
+                                    .invokable(ElementMatchers.isDeclaredBy(type))
                                     .intercept(InvocationHandlerAdapter.of(referenceProxy))
-//                                    .invokable(new DeclaringFieldMatcher(target -> true))
-//                                    .intercept(InvocationHandlerAdapter.of(referenceProxy))
                                     .make()
                                     .load(type.getClassLoader(), Default.WRAPPER))
                        .getLoaded()

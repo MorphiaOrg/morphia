@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>morphia-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 

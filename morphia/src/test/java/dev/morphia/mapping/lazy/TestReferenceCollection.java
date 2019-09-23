@@ -2,6 +2,7 @@ package dev.morphia.mapping.lazy;
 
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
@@ -18,10 +19,7 @@ public class TestReferenceCollection extends ProxyTestBase {
 
     @Test
     public void testOrderingPreserved() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         final Origin origin = new Origin();
         final Endpoint endpoint1 = new Endpoint();

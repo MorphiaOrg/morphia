@@ -7,6 +7,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -40,10 +41,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
     @Test
     @Ignore("infinite loop in here somewhere")
     public final void testGetKeyWithoutFetching() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();

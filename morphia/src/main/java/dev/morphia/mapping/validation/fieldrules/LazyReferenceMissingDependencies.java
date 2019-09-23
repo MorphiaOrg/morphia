@@ -22,9 +22,9 @@ public class LazyReferenceMissingDependencies extends FieldConstraint {
         final Reference ref = mf.getAnnotation(Reference.class);
         if (ref != null) {
             if (ref.lazy()) {
-                if (!LazyFeatureDependencies.testDependencyFullFilled()) {
+                if (!LazyFeatureDependencies.assertProxyClassesPresent()) {
                     ve.add(new ConstraintViolation(Level.SEVERE, mc, mf, getClass(),
-                                                   "Lazy references need CGLib and Proxytoys in the classpath."));
+                                                   "Lazy references need ByteBuddy the classpath."));
                 }
             }
         }

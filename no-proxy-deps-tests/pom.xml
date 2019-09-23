@@ -56,25 +56,25 @@
 
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>morphia-core</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.thoughtworks.proxytoys</groupId>
-                    <artifactId>proxytoys</artifactId>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>morphia-core</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>com.thoughtworks.proxytoys</groupId>
-                    <artifactId>proxytoys</artifactId>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

@@ -16,13 +16,12 @@ import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 
@@ -66,10 +65,7 @@ public class TestMapper extends TestBase {
     @Test
     @Category(Reference.class)
     public void singleProxy() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         A.loadCount = 0;
         final A a = new A();

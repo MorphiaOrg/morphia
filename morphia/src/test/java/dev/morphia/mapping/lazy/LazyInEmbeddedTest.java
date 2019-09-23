@@ -10,7 +10,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -25,10 +25,7 @@ import static java.util.Arrays.asList;
 public class LazyInEmbeddedTest extends TestBase {
     @Test
     public void testLoadingOfRefInField() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         getMapper().map(ContainerWithRefInField.class);
         getMapper().map(OtherEntity.class);
@@ -56,10 +53,7 @@ public class LazyInEmbeddedTest extends TestBase {
 
     @Test
     public void testLoadingOfRefInList() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         getMapper().map(ContainerWithRefList.class);
         getMapper().map(OtherEntity.class);
@@ -91,10 +85,7 @@ public class LazyInEmbeddedTest extends TestBase {
 
     @Test
     public void testLoadingOfRefThroughInheritanceInField() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         getMapper().map(ContainerWithRefInField.class);
         getMapper().map(OtherEntityChild.class);
@@ -122,10 +113,7 @@ public class LazyInEmbeddedTest extends TestBase {
 
     @Test
     public void testLoadingOfRefThroughInheritanceInList() {
-        // TODO us: exclusion does not work properly with maven + junit4
-        if (!LazyFeatureDependencies.testDependencyFullFilled()) {
-            return;
-        }
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
 
         getMapper().map(ContainerWithRefList.class);
         getMapper().map(OtherEntityChild.class);
