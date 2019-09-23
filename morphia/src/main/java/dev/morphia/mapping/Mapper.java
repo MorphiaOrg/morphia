@@ -45,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
+import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -263,7 +264,7 @@ public class Mapper {
         BsonDocumentReader reader = new BsonDocumentReader(document.toBsonDocument(aClass, codecRegistry));
 
         return codecRegistry
-                   .get(clazz)
+                   .get(aClass)
                    .decode(reader, DecoderContext.builder().build());
     }
 
@@ -493,7 +494,7 @@ public class Mapper {
      * @return the MappedClass for the object given
      */
     public MappedClass getMappedClass(final Class type) {
-        if (type == null) {
+        if (type == null || !isMappable(type)) {
             return null;
         }
 

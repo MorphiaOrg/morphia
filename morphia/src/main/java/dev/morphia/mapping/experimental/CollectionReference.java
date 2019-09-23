@@ -7,6 +7,8 @@ import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
+import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
@@ -23,11 +26,13 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  */
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
+    private MappedClass mappedClass;
     private List<Object> ids;
     private Map<String, List<Object>> collections = new HashMap<>();
 
     CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
         super(datastore);
+        this.mappedClass = mappedClass;
         List<Object> unwrapped = ids;
         if (ids != null) {
             for (final Object o : ids) {
@@ -41,7 +46,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     protected CollectionReference() {
     }
 
-    static void collate(final MappedClass mappedClass, final Map<String, List<Object>> collections,
+    static void collate(final MappedClass valueType, final Map<String, List<Object>> collections,
                         final Object o) {
         final String collectionName;
         final Object id;
@@ -50,7 +55,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             collectionName = dbRef.getCollectionName();
             id = dbRef.getId();
         } else {
-            collectionName = mappedClass.getCollectionName();
+            collectionName = valueType.getCollectionName();
             id = o;
         }
 
@@ -107,6 +112,12 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 idMap.put(getDatastore().getMapper().getId(entity), entity);
             }
 
+            if(!ignoreMissing() && idMap.size() != collectionIds.size()) {
+                throw new LazyReferenceFetchingException(
+                    Sofia.missingReferencedEntities(mappedClass.getType().getSimpleName()));
+
+            }
+
             for (int i = 0; i < ids.size(); i++) {
                 final Object id = ids.get(i);
                 final Object value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
@@ -115,6 +126,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 }
             }
         }
+
     }
 
     @Override

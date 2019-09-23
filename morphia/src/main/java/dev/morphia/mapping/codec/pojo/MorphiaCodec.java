@@ -24,8 +24,6 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseMorphiaCodec;
 import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
@@ -194,31 +192,17 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
                                            final String name,
                                            final PropertyModel<S> propertyModel) {
         if (propertyModel != null) {
-            final PropertyCodec handler = getPropertyHandler(instanceCreator, propertyModel);
-/*
-            if (handler != null) {
-                S value = handler.decodeProperty(reader, decoderContext, name, propertyModel);
-                instanceCreator.set(value, propertyModel);
-            } else {
-*/
-                final BsonReaderMark mark = reader.getMark();
-                try {
-                    super.decodePropertyModel(reader, decoderContext, instanceCreator, name, propertyModel);
-                } catch (CodecConfigurationException e) {
-                    mark.reset();
-                    final Object value = getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
-                    instanceCreator.set((S) convert(value, propertyModel.getTypeData().getType()), propertyModel);
-                }
-//            }
+            final BsonReaderMark mark = reader.getMark();
+            try {
+                super.decodePropertyModel(reader, decoderContext, instanceCreator, name, propertyModel);
+            } catch (CodecConfigurationException e) {
+                mark.reset();
+                final Object value = getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
+                instanceCreator.set((S) convert(value, propertyModel.getTypeData().getType()), propertyModel);
+            }
         } else {
             reader.skipValue();
         }
-    }
-
-    private <S> PropertyCodec getPropertyHandler(final InstanceCreator<?> instanceCreator, final PropertyModel<S> propertyModel) {
-        return instanceCreator instanceof MorphiaInstanceCreator ? ((MorphiaInstanceCreator) instanceCreator).getHandler(propertyModel)
-                                                                 : null;
-
     }
 
     /**

@@ -21,7 +21,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     /**
      * @morphia.internal
      */
-    SingleReference(final Datastore datastore, final MappedClass mappedClass, final Object id) {
+    public SingleReference(final Datastore datastore, final MappedClass mappedClass, final Object id) {
         super(datastore);
         this.mappedClass = mappedClass;
         this.id = id;

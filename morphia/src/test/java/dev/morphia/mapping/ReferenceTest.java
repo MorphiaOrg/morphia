@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -116,7 +117,7 @@ public class ReferenceTest extends ProxyTestBase {
         if (testDependencyFullFilled()) {
             assertIsProxy(retrieved.getLazySingleRef());
         }
-        assertEquals(refs.get(0), unwrap(retrieved.getLazySingleRef()));
+        assertEquals(refs.get(0), retrieved.getLazySingleRef());
 
         final List<Ref> expectedRefList = new ArrayList<>();
         final Map<Integer, Ref> expectedRefMap = new LinkedHashMap<>();
@@ -127,9 +128,9 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         assertEquals(expectedRefList, retrieved.getCollectionRef());
-        assertEquals(expectedRefList, unwrapList(retrieved.getLazyCollectionRef()));
+        assertEquals(expectedRefList, retrieved.getLazyCollectionRef());
         assertEquals(expectedRefMap, retrieved.getMapRef());
-        assertEquals(expectedRefMap, unwrapMap(retrieved.getLazyMapRef()));
+        assertEquals(expectedRefMap, retrieved.getLazyMapRef());
     }
 
     @Test
@@ -318,23 +319,31 @@ public class ReferenceTest extends ProxyTestBase {
             this.id = id;
         }
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(final String id) {
+            this.id = id;
+        }
+
         @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
             }
-            if (o == null || getClass() != o.getClass()) {
+            if (!(o instanceof Ref)) {
                 return false;
             }
 
             final Ref ref = (Ref) o;
 
-            return id != null ? id.equals(ref.id) : ref.id == null;
+            return getId() != null ? getId().equals(ref.getId()) : ref.getId() == null;
         }
 
         @Override
         public int hashCode() {
-            return id != null ? id.hashCode() : 0;
+            return getId() != null ? getId().hashCode() : 0;
         }
 
         @Override

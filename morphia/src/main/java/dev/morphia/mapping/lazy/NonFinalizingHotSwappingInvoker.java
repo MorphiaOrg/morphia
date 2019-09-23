@@ -1,24 +1,25 @@
 package dev.morphia.mapping.lazy;
 
-
 import com.thoughtworks.proxy.ProxyFactory;
 import com.thoughtworks.proxy.kit.ObjectReference;
 import com.thoughtworks.proxy.toys.delegate.DelegationMode;
 import com.thoughtworks.proxy.toys.hotswap.HotSwappingInvoker;
-
-import dev.morphia.mapping.lazy.proxy.EntityObjectReference;
 import dev.morphia.annotations.IdGetter;
+import dev.morphia.mapping.lazy.proxy.EntityObjectReference;
 
 import java.lang.reflect.Method;
 
-
-class NonFinalizingHotSwappingInvoker<T> extends HotSwappingInvoker<T> {
+/**
+ * @morphia.internal
+ * @param <T>
+ */
+public class NonFinalizingHotSwappingInvoker<T> extends HotSwappingInvoker<T> {
 
     private static final long serialVersionUID = 1L;
 
-    NonFinalizingHotSwappingInvoker(final Class<?>[] types, final ProxyFactory proxyFactory,
-                                    final ObjectReference<Object> delegateReference,
-                                    final DelegationMode delegationMode) {
+    public NonFinalizingHotSwappingInvoker(final Class<?>[] types, final ProxyFactory proxyFactory,
+                                           final ObjectReference<Object> delegateReference,
+                                           final DelegationMode delegationMode) {
         super(types, proxyFactory, delegateReference, delegationMode);
     }
 
@@ -36,8 +37,7 @@ class NonFinalizingHotSwappingInvoker<T> extends HotSwappingInvoker<T> {
         if (method.getAnnotation(IdGetter.class) != null) {
             ObjectReference<Object> delegateReference = getDelegateReference();
             if (delegateReference instanceof EntityObjectReference) {
-                EntityObjectReference entityObjectReference = (EntityObjectReference) delegateReference;
-                return entityObjectReference.__getKey().getId();
+                return ((EntityObjectReference) delegateReference).__getKey().getId();
             }
         }
 

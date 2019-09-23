@@ -20,34 +20,34 @@ import java.util.stream.Collectors;
  * @param <T>
  * @morphia.internal
  */
-public class MapReference<T> extends MorphiaReference<Map<String, T>> {
+public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private Map<String, Object> ids;
-    private Map<String, T> values;
+    private Map<Object, T> values;
     private Map<String, List<Object>> collections = new HashMap<>();
 
     /**
      * @morphia.internal
      */
-    MapReference(final Datastore datastore, final MappedClass mappedClass, final Map<String, Object> ids) {
+    public MapReference(final Datastore datastore, final MappedClass valueType, final Map<String, Object> ids) {
         super(datastore);
         Map<String, Object> unwrapped = ids;
         if (ids != null) {
             for (final Entry<String, Object> entry : ids.entrySet()) {
-                CollectionReference.collate(mappedClass, collections, entry.getValue());
+                CollectionReference.collate(valueType, collections, entry.getValue());
             }
         }
 
         this.ids = unwrapped;
     }
 
-    MapReference(final Map<String, T> values) {
+    MapReference(final Map<Object, T> values) {
         this.values = values;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Map<String, T> get() {
+    public Map<Object, T> get() {
         if (values == null && ids != null) {
             values = new LinkedHashMap<>();
             mergeReads();
@@ -60,7 +60,7 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
             MappedField idField = mappedClass.getIdField();
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
-                             .forEach(e -> ids.put(e.getKey(), idField.getFieldValue(e.getValue())));
+                             .forEach(e -> ids.put(e.getKey().toString(), idField.getFieldValue(e.getValue())));
         }
         return ids;
     }
@@ -107,8 +107,8 @@ public class MapReference<T> extends MorphiaReference<Map<String, T>> {
     public Object encode(final Mapper mapper, final Object value, final MappedField field) {
         if (isResolved()) {
             Map<String, Object> ids = new LinkedHashMap<>();
-            for (final Entry<String, T> entry : get().entrySet()) {
-                ids.put(entry.getKey(), wrapId(mapper, field, entry.getValue()));
+            for (final Entry<Object, T> entry : get().entrySet()) {
+                ids.put(entry.getKey().toString(), wrapId(mapper, field, entry.getValue()));
             }
             return ids;
         } else {

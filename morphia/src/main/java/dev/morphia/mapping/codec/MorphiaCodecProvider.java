@@ -57,11 +57,11 @@ public class MorphiaCodecProvider implements CodecProvider {
         return codec;
     }
 
-    private <T> boolean isMappable(final Class<T> type) {
+    public static <T> boolean isMappable(final Class<T> type) {
         return hasAnnotation(type, List.of(Entity.class, Embedded.class));
     }
 
-    private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
+    private static <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
         if(clazz == null) {
             return false;
         }

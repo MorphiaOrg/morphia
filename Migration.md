@@ -44,3 +44,5 @@ applications should be updated to use those types directly.  Any use of those ty
 codecs defined for those types.
 * Lifecycle events on nested types are only called when instances of those embedded types are being persisted.
 * Keys are no longer allowed as fields.  Use `@Reference` or `MorphiaReference` instead.
+* Polymorphic queries across collections are not currently supported.  That is, if you have entities A and B each mapped to separate
+ collections, a query against type A will not automatically look in the collection mapped for B to find your entities. 

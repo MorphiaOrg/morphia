@@ -21,12 +21,31 @@ import java.util.Set;
 @Handler(MorphiaReferenceCodec.class)
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
+    private boolean ignoreMissing;
 
     MorphiaReference() {
     }
 
     MorphiaReference(final Datastore datastore) {
         this.datastore = datastore;
+    }
+
+    /**
+     * @return true if Morphia will ignore missing referenced entities.
+     */
+    public boolean ignoreMissing() {
+        return ignoreMissing;
+    }
+
+    /**
+     * Instructs Morphia to ignore missing referenced entities.  The default is to throw an exception on missing entities.
+     *
+     * @param ignoreMissing
+     * @return this
+     */
+    public MorphiaReference ignoreMissing(final boolean ignoreMissing) {
+        this.ignoreMissing = ignoreMissing;
+        return this;
     }
 
     static Object wrapId(final Mapper mapper, final MappedField field, final Object entity) {
@@ -72,8 +91,9 @@ public abstract class MorphiaReference<T> {
 
     /**
      * Wraps an value in a MorphiaReference to storing on an entity
+     *
      * @param value the value wrap
-     * @param <V> the type of the value
+     * @param <V>   the type of the value
      * @return the MorphiaReference wrapper
      */
     @SuppressWarnings("unchecked")
@@ -83,7 +103,7 @@ public abstract class MorphiaReference<T> {
         } else if (value instanceof Set) {
             return (MorphiaReference<V>) new SetReference<>((Set<V>) value);
         } else if (value instanceof Map) {
-            return (MorphiaReference<V>) new MapReference<>((Map<String, V>) value);
+            return (MorphiaReference<V>) new MapReference<>((Map<Object, V>) value);
         } else {
             return new SingleReference<>(value);
         }

@@ -9,13 +9,13 @@ import java.util.List;
  * @param <T>
  * @morphia.internal
  */
-class ListReference<T> extends CollectionReference<List<T>> {
+public class ListReference<T> extends CollectionReference<List<T>> {
     private List<T> values;
 
     /**
      * @morphia.internal
      */
-    ListReference(final Datastore datastore,final MappedClass mappedClass, final List ids) {
+    public ListReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
         super(datastore, mappedClass, ids);
     }
 

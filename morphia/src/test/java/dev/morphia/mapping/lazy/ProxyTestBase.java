@@ -25,7 +25,8 @@ public class ProxyTestBase extends TestBase {
     }
 
     protected void assertIsProxy(final Object p) {
-        Assert.assertTrue("Should be a proxy", p instanceof ProxiedReference);
+        Assert.assertTrue("Should be a proxy: " + p.getClass(), p.getClass().getClassLoader().getClass().getPackageName()
+                                                                 .startsWith("net.bytebuddy") );
     }
 
     protected void assertNotFetched(final Object e) {
@@ -46,6 +47,7 @@ public class ProxyTestBase extends TestBase {
                : proxy;
     }
 
+/*
     protected List unwrapList(final List list) {
         if (list == null) {
             return null;
@@ -58,7 +60,9 @@ public class ProxyTestBase extends TestBase {
 
         return unwrapped;
     }
+*/
 
+/*
     protected <K, V> Map<K, V> unwrapMap(final Map<K, V> map) {
         if (map == null) {
             return null;
@@ -71,5 +75,6 @@ public class ProxyTestBase extends TestBase {
 
         return unwrapped;
     }
+*/
 
 }

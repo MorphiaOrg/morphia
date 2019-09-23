@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import dev.morphia.Datastore;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
@@ -43,26 +43,23 @@ public class TestLazyCollectionReference extends ProxyTestBase {
 
         // read root entity from DB
         root = getDs().get(root);
-        assertNotFetched(root.references);
+        Assert.assertEquals(2, root.references.size());
 
         // use the lazy collection
         Collection<ReferencedEntity> retrievedReferences = root.references;
         Assert.assertEquals(2, retrievedReferences.size());
-        assertFetched(root.references);
         Iterator<ReferencedEntity> it = retrievedReferences.iterator();
         Assert.assertEquals("bar1", it.next().getFoo());
         Assert.assertEquals("bar2", it.next().getFoo());
 
-        // read root entity from DB again
-        root = getDs().get(root);
-        assertNotFetched(root.references);
+        final Datastore datastore = getDs();
+        root = datastore.find(RootEntity.class)
+                        .filter("_id", root.getId())
+                        .first();
 
-        // remove the first referenced entity from DB
         getDs().delete(referenced1);
 
-        // must fail
-        root.references.size();
-
+        root.references.iterator();
     }
 
     public static class RootEntity extends TestEntity {

@@ -16,7 +16,7 @@ package dev.morphia.annotations;
 
 
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.ReferenceCodec;
+import dev.morphia.mapping.codec.references.ReferenceCodec;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

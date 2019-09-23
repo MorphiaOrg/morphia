@@ -12,13 +12,14 @@ import java.util.Set;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
+public
 class SetReference<T> extends CollectionReference<Set<T>> {
     private Set<T> values;
 
     /**
      * @morphia.internal
      */
-    SetReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
+    public SetReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
         super(datastore, mappedClass, ids);
     }
 

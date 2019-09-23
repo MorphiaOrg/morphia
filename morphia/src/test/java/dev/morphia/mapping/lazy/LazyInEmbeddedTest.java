@@ -171,7 +171,7 @@ public class LazyInEmbeddedTest extends TestBase {
         private final List<EmbedWithRef> embedWithRef = new ArrayList<>();
     }
 
-    @Entity
+    @Entity("other")
     public static class OtherEntity extends TestEntity {
         @Property(value = "some")
         private SomeEnum someEnum;
@@ -185,7 +185,6 @@ public class LazyInEmbeddedTest extends TestBase {
         }
     }
 
-    @Entity
     public static class OtherEntityChild extends OtherEntity {
         @Property
         private String name;
