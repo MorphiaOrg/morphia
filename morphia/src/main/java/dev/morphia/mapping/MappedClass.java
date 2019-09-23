@@ -332,7 +332,7 @@ public class MappedClass {
         });
     }
 
-    public MorphiaModel<?> getClassModel() {
+    public MorphiaModel<?> getMorphiaModel() {
         return morphiaModel;
     }
 

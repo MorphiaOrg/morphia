@@ -5,23 +5,18 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
-import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-/**
- * @author us@thomas-daily.de
- */
 public class GuiceTest extends TestBase {
     private Injector i;
 
@@ -45,8 +40,11 @@ public class GuiceTest extends TestBase {
     public void testE1() {
 
         final E1 initialEntity = i.getInstance(E1.class);
-        final Key<E1> k = getDs().save(initialEntity);
-        final E1 loadedEntity = getDs().getByKey(E1.class, k);
+        final E1 k = getDs().save(initialEntity);
+        final E1 loadedEntity = getDs().find(E1.class)
+                                       .filter("_id", k.id)
+                                       .execute()
+                                       .next();
 
         Assert.assertNotNull(loadedEntity);
         Assert.assertNotNull(loadedEntity.foo);
@@ -61,8 +59,11 @@ public class GuiceTest extends TestBase {
     public void testE2() {
 
         final E2 initialEntity = new E2();
-        final Key<E2> k = getDs().save(initialEntity);
-        final E2 loadedEntity = getDs().getByKey(E2.class, k);
+        final E2 k = getDs().save(initialEntity);
+        final E2 loadedEntity = getDs().find(E2.class)
+                                       .filter("_id", k.id)
+                                       .execute()
+                                       .next();
 
         Assert.assertNotNull(loadedEntity);
 
@@ -72,8 +73,11 @@ public class GuiceTest extends TestBase {
     public void testE3() {
 
         final E3 initialEntity = i.getInstance(E3.class);
-        final Key<E3> k = getDs().save(initialEntity);
-        final E3 loadedEntity = getDs().getByKey(E3.class, k);
+        final E3 k = getDs().save(initialEntity);
+        final E3 loadedEntity = getDs().find(E3.class)
+                                       .filter("_id", k.id)
+                                       .execute()
+                                       .next();
 
         Assert.assertNotNull(loadedEntity);
         Assert.assertEquals(MyList.class, loadedEntity.l
@@ -86,8 +90,11 @@ public class GuiceTest extends TestBase {
     public void testE4() {
 
         final E4 initialEntity = i.getInstance(E4.class);
-        final Key<E4> k = getDs().save(initialEntity);
-        final E4 loadedEntity = getDs().getByKey(E4.class, k);
+        final E4 k = getDs().save(initialEntity);
+        final E4 loadedEntity = getDs().find(E4.class)
+                                       .filter("_id", k.id)
+                                       .execute()
+                                       .next();
 
         Assert.assertNotNull(loadedEntity);
         Assert.assertNotNull(loadedEntity.foo);

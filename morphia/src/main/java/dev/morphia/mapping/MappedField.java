@@ -142,9 +142,7 @@ public class MappedField {
     public Object getFieldValue(final Object instance) {
         try {
             return property.getField().get(instance);
-        } catch (IllegalAccessException e) {
-            throw new MappingException(e.getMessage(), e);
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }
     }
@@ -345,7 +343,7 @@ public class MappedField {
     }
 
     public PropertyCodec getHandler() {
-        final ClassModel<?> model = getDeclaringClass().getClassModel();
+        final ClassModel<?> model = getDeclaringClass().getMorphiaModel();
         final InstanceCreator<?> instanceCreator = model.getInstanceCreator();
         PropertyCodec handler = null;
         if (instanceCreator instanceof MorphiaInstanceCreator) {
@@ -359,7 +357,7 @@ public class MappedField {
     }
 
     public PropertyModel<?> getPropertyModel() {
-        return getDeclaringClass().getClassModel()
+        return getDeclaringClass().getMorphiaModel()
                                   .getPropertyModel(getMappedFieldName());
     }
 }

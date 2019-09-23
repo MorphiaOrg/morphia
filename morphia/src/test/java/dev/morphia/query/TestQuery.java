@@ -24,8 +24,6 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Validation;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
@@ -1183,32 +1181,31 @@ public class TestQuery extends TestBase {
     @Category(Reference.class)
     public void testReferenceQuery() {
         final Photo p = new Photo();
-        final ContainsPhotoKey cpk = new ContainsPhotoKey();
+        final HasPhotoReference cpk = new HasPhotoReference();
         cpk.photo = getDs().save(p);
         getDs().save(cpk);
 
-        Query<ContainsPhotoKey> query = getDs().find(ContainsPhotoKey.class)
-                                               .filter("photo", p);
-        FindOptions options = new FindOptions()
-                                .logQuery()
-                                .limit(1);
-        ContainsPhotoKey photoKey = query
-                                      .execute(options)
-                                      .tryNext();
+        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class)
+                                                .filter("photo", p);
+        HasPhotoReference photoKey = query.execute(new FindOptions()
+                                                        .logQuery()
+                                                        .limit(1))
+                                          .tryNext();
 
         assertNotNull(query.getLoggedQuery(), photoKey);
-        assertNotNull(getDs().find(ContainsPhotoKey.class)
+
+        assertNotNull(getDs().find(HasPhotoReference.class)
                              .filter("photo", cpk.photo)
                              .execute(new FindOptions()
                                           .limit(1))
                              .tryNext());
-        assertNull(getDs().find(ContainsPhotoKey.class)
+        assertNull(getDs().find(HasPhotoReference.class)
                           .filter("photo", 1)
                           .execute(new FindOptions()
                                        .limit(1))
                           .tryNext());
 
-        getDs().find(ContainsPhotoKey.class)
+        getDs().find(HasPhotoReference.class)
                .filter("photo.keywords", "foo")
                .execute(new FindOptions()
                             .limit(1))
@@ -1627,7 +1624,7 @@ public class TestQuery extends TestBase {
     }
 
     @Entity
-    private static class ContainsPhotoKey {
+    private static class HasPhotoReference {
         @Id
         private ObjectId id;
         @Reference

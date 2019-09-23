@@ -133,8 +133,8 @@ public class ReferenceCodec extends PropertyCodec<Object> {
     }
 
     @Override
-    public Class<Object> getEncoderClass() {
-        return Object.class;
+    public Class getEncoderClass() {
+        return getField().getType();
     }
 
     @Override

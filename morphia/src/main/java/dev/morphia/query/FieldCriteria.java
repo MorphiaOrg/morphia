@@ -4,7 +4,11 @@ package dev.morphia.query;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.pojo.PropertyModel;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,14 +37,17 @@ class FieldCriteria extends AbstractCriteria {
         mappedField = pathTarget.getTarget();
 
         Object mappedValue = value;
-/*
-        if (value != null && mapper.getMappedClass(value.getClass()) != null && mappedField != null) {
-            PropertyHandler handler = mappedField.getHandler();
-            if(handler != null) {
-                mappedValue = handler.encodeValue(value);
+        PropertyModel<?> propertyModel = mappedField.getDeclaringClass()
+                                                    .getMorphiaModel()
+                                                    .getPropertyModel(mappedField.getMappedFieldName());
+        if(propertyModel != null) {
+            Codec cachedCodec = propertyModel.getCachedCodec();
+            if (cachedCodec.getEncoderClass().isAssignableFrom(value.getClass())) {
+                DocumentWriter writer = new DocumentWriter();
+                cachedCodec.encode(writer, value, EncoderContext.builder().build());
+                mappedValue = writer.getRoot();
             }
         }
-*/
 
         final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
 

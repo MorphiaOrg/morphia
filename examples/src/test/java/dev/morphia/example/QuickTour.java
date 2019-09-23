@@ -28,14 +28,13 @@ public final class QuickTour {
     }
 
     public static void main(final String[] args) {
-        final Morphia morphia = new Morphia();
+        final Datastore datastore = Morphia.createDatastore(new MongoClient(), "morphia_example");
 
         // tell morphia where to find your classes
         // can be called multiple times with different packages or classes
-        getMapper().mapPackage("dev.morphia.example");
+        datastore.getMapper().mapPackage("dev.morphia.example");
 
         // create the Datastore connecting to the database running on the default port on the local host
-        final Datastore datastore = morphia.createDatastore(new MongoClient(), "morphia_example");
         datastore.getDatabase().drop();
         datastore.ensureIndexes();
 

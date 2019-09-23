@@ -1,6 +1,8 @@
 package dev.morphia;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.mapping.Mapper;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.Email;
 import org.junit.Assert;
@@ -24,14 +26,14 @@ public class TestMorphiaValidation extends TestBase {
     }
 
     /**
-     * Test method for {@link ValidationExtension#prePersist(Object, com.mongodb.Document, dev.morphia.mapping.Mapper)}.
+     * Test method for {@link ValidationExtension#prePersist(Object, Document, Mapper)}.
      */
     @Test
     public final void testPrePersist() {
         final E e = new E();
         e.email = "not an email";
 
-        new ValidationExtension(getMorphia());
+        new ValidationExtension(getDs().getMapper());
 
         try {
             getDs().save(e);
