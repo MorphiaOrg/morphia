@@ -23,10 +23,10 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
     public void testInQuery() {
 
         Plan plan1 = new Plan();
-        plan1.name = "Trial";
+        plan1.name = "Trial 1";
 
         Plan plan2 = new Plan();
-        plan2.name = "Trial";
+        plan2.name = "Trial 2";
 
         getDs().save(plan1);
         getDs().save(plan2);
@@ -45,13 +45,13 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         long count = getDs().find(Org.class).field("name").equal("Test Org1").count();
         assertEquals(1, count);
 
-        List<Plan> plans = new ArrayList<Plan>();
+        List<Plan> plans = new ArrayList<>();
         plans.add(plan1);
 
         count = getDs().find(Org.class).field("plan").hasAnyOf(plans).count();
         assertEquals(1, count);
 
-        plans = new ArrayList<Plan>();
+        plans = new ArrayList<>();
         plans.add(plan1);
         plans.add(plan2);
 

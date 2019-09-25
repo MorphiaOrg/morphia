@@ -3,7 +3,6 @@ package dev.morphia.mapping.lazy;
 
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.testutil.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -28,9 +27,9 @@ public class TestLazySingleReference extends ProxyTestBase {
         final ObjectId id = getDs().save(reference).getId();
         getDs().save(root);
 
-        root = getDs().get(root);
+        RootEntity loaded = getDs().get(root);
 
-        final ReferencedEntity p = root.r;
+        final ReferencedEntity p = loaded.r;
 
         assertIsProxy(p);
         assertNotFetched(p);
@@ -117,9 +116,6 @@ public class TestLazySingleReference extends ProxyTestBase {
 
         assertIsProxy(referenced);
         assertNotFetched(referenced);
-        Assert.assertEquals(id, ((ProxiedEntityReference) referenced).__getKey().getId());
-        // still not fetched?
-        assertNotFetched(referenced);
         assertNotFetched(root.secondReference);
         referenced.getFoo();
         // should be fetched now.
@@ -159,6 +155,25 @@ public class TestLazySingleReference extends ProxyTestBase {
 
         public void setFoo(final String string) {
             foo = string;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ReferencedEntity)) {
+                return false;
+            }
+
+            final ReferencedEntity that = (ReferencedEntity) o;
+
+            return getFoo() != null ? getFoo().equals(that.getFoo()) : that.getFoo() == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return getFoo() != null ? getFoo().hashCode() : 0;
         }
     }
 

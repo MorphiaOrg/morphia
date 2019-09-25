@@ -1,6 +1,9 @@
 package dev.morphia;
 
 
+import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
+
 import java.io.Serializable;
 
 /**
@@ -36,7 +39,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      * @param id         the value of the entity's ID
      */
     public Key(final Class<? extends T> type, final String collection, final Object id) {
-        this.type = type;
+        this.type = MorphiaProxy.class.isAssignableFrom(type) ? (Class<? extends T>) type.getSuperclass() : type;
         this.collection = collection;
         this.id = id;
     }

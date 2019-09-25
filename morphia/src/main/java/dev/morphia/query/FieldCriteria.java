@@ -10,8 +10,10 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.PropertyModel;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -40,16 +42,25 @@ class FieldCriteria extends AbstractCriteria {
         PropertyModel<?> propertyModel = mappedField.getDeclaringClass()
                                                     .getMorphiaModel()
                                                     .getPropertyModel(mappedField.getMappedFieldName());
-        if(propertyModel != null) {
+        final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
+
+        if (propertyModel != null) {
             Codec cachedCodec = propertyModel.getCachedCodec();
-            if (cachedCodec.getEncoderClass().isAssignableFrom(value.getClass())) {
+            Class<?> componentType = type;
+            if (type.isArray() || Iterable.class.isAssignableFrom(type)) {
+                if(type.isArray()) {
+                    componentType = type.getComponentType();
+                } else {
+                    componentType = ((Iterable)value).iterator().next().getClass();
+                }
+            }
+            if (cachedCodec.getEncoderClass().isAssignableFrom(componentType)) {
                 DocumentWriter writer = new DocumentWriter();
                 cachedCodec.encode(writer, value, EncoderContext.builder().build());
                 mappedValue = writer.getRoot();
             }
         }
 
-        final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
 
         //convert single values into lists for $in/$nin
         if (type != null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN)

@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
@@ -27,23 +26,32 @@ import static java.util.Arrays.asList;
  */
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
     private MappedClass mappedClass;
-    private List<Object> ids;
+    private List ids;
     private Map<String, List<Object>> collections = new HashMap<>();
 
     CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
         super(datastore);
         this.mappedClass = mappedClass;
-        List<Object> unwrapped = ids;
         if (ids != null) {
             for (final Object o : ids) {
                 collate(mappedClass, collections, o);
             }
         }
 
-        this.ids = unwrapped;
+        this.ids = (List) ids;
     }
 
     protected CollectionReference() {
+    }
+
+    @Override
+    public List getIds() {
+        return ids;
+    }
+
+    @Override
+    public Class<C> getType() {
+        return (Class<C>) mappedClass.getType();
     }
 
     static void collate(final MappedClass valueType, final Map<String, List<Object>> collections,
@@ -83,9 +91,8 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     @Override
     final List<Object> getId(final Mapper mapper, final MappedClass mappedClass) {
         if(ids == null) {
-            MappedField idField = mappedClass.getIdField();
             ids = getValues().stream()
-                             .map(v -> idField.getFieldValue(v))
+                             .map(v -> mapper.getId(v))
                              .collect(Collectors.toList());
         }
         return ids;

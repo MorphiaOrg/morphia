@@ -35,5 +35,4 @@ public class ListReference<T> extends CollectionReference<List<T>> {
         }
         return values;
     }
-
 }

@@ -18,6 +18,7 @@ package dev.morphia.mapping;
 
 import com.mongodb.DBRef;
 import dev.morphia.Key;
+import dev.morphia.Morphia;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
@@ -29,6 +30,7 @@ import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.InstanceCreator;
@@ -141,7 +143,11 @@ public class MappedField {
      */
     public Object getFieldValue(final Object instance) {
         try {
-            return property.getField().get(instance);
+            Object target = instance;
+            if(target instanceof MorphiaProxy) {
+                target = ((MorphiaProxy)instance).unwrap();
+            }
+            return property.getField().get(target);
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }

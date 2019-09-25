@@ -19,8 +19,7 @@ import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecProvider;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
-import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
-import dev.morphia.mapping.lazy.proxy.ProxyHelper;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.ReflectionUtils;
 import org.bson.BsonDocumentReader;
@@ -376,17 +375,15 @@ public class Mapper {
      * @return the ID value
      */
     public Object getId(final Object entity) {
-        Object unwrapped = entity;
-        if (unwrapped == null) {
+        if (entity == null) {
             return null;
         }
-        unwrapped = ProxyHelper.unwrap(unwrapped);
         try {
-            final MappedClass mappedClass = getMappedClass(unwrapped.getClass());
+            final MappedClass mappedClass = getMappedClass(entity.getClass());
             if (mappedClass != null) {
                 final MappedField idField = mappedClass.getIdField();
                 if (idField != null) {
-                    return idField.getFieldValue(unwrapped);
+                    return idField.getFieldValue(entity);
                 }
             }
         } catch (Exception e) {
@@ -412,19 +409,12 @@ public class Mapper {
      * @return the Key
      */
     public <T> Key<T> getKey(final T entity) {
-        T unwrapped = entity;
-        if (unwrapped instanceof ProxiedEntityReference) {
-            final ProxiedEntityReference proxy = (ProxiedEntityReference) unwrapped;
-            return (Key<T>) proxy.__getKey();
+        if (entity instanceof Key) {
+            return (Key<T>) entity;
         }
 
-        unwrapped = ProxyHelper.unwrap(unwrapped);
-        if (unwrapped instanceof Key) {
-            return (Key<T>) unwrapped;
-        }
-
-        final Object id = getId(unwrapped);
-        final Class<T> aClass = (Class<T>) unwrapped.getClass();
+        final Object id = getId(entity);
+        final Class<T> aClass = (Class<T>) entity.getClass();
         return id == null ? null : new Key<>(aClass, getMappedClass(aClass).getCollectionName(), id);
     }
 
@@ -437,19 +427,12 @@ public class Mapper {
      * @return the Key
      */
     public <T> Key<T> getKey(final T entity, final String collection) {
-        T unwrapped = entity;
-        if (unwrapped instanceof ProxiedEntityReference) {
-            final ProxiedEntityReference proxy = (ProxiedEntityReference) unwrapped;
-            return (Key<T>) proxy.__getKey();
+        if (entity instanceof Key) {
+            return (Key<T>) entity;
         }
 
-        unwrapped = ProxyHelper.unwrap(unwrapped);
-        if (unwrapped instanceof Key) {
-            return (Key<T>) unwrapped;
-        }
-
-        final Object id = getId(unwrapped);
-        final Class<T> aClass = (Class<T>) unwrapped.getClass();
+        final Object id = getId(entity);
+        final Class<T> aClass = (Class<T>) entity.getClass();
         return id == null ? null : new Key<>(aClass, collection, id);
     }
 
@@ -494,13 +477,15 @@ public class Mapper {
      * @return the MappedClass for the object given
      */
     public MappedClass getMappedClass(final Class type) {
-        if (type == null || !isMappable(type)) {
+
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        if (type == null || !isMappable(actual)) {
             return null;
         }
 
-        MappedClass mc = mappedClasses.get(type);
+        MappedClass mc = mappedClasses.get(actual);
         if (mc == null) {
-            mc = addMappedClass(type);
+            mc = addMappedClass(actual);
         }
         return mc;
     }

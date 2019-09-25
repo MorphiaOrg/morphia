@@ -5,7 +5,6 @@ import com.mongodb.DocumentToDBRefTransformer;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.PropertyCodec;
@@ -40,9 +39,7 @@ import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public class ReferenceCodec extends PropertyCodec<Object> {
-
     private final Reference annotation;
-    private MappedField idField;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private DocumentToDBRefTransformer transformer = new DocumentToDBRefTransformer();
 
@@ -51,16 +48,8 @@ public class ReferenceCodec extends PropertyCodec<Object> {
         annotation = field.getAnnotation(Reference.class);
     }
 
-    private MappedField getIdField() {
-        if (idField == null) {
-            idField = getFieldMappedClass().getIdField();
-        }
-        return idField;
-    }
-
     @Override
     public Object decode(final BsonReader reader, final DecoderContext decoderContext) {
-
         Object decode = getDatastore().getMapper().getCodecRegistry()
                                       .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
                                       .decode(reader, decoderContext);
@@ -108,26 +97,28 @@ public class ReferenceCodec extends PropertyCodec<Object> {
             reference = new SingleReference(getDatastore(), getFieldMappedClass(), ids);
         }
 
-        return !annotation.lazy() ? reference.get()
-                                  : createProxy(new ReferenceProxy(ids, reference
-                                                                            .ignoreMissing(annotation.ignoreMissing())));
+        return !annotation.lazy() ? reference.get() : createProxy(reference);
     }
 
-    private <T> T createProxy(final ReferenceProxy referenceProxy) {
+    private <T> T createProxy(final MorphiaReference reference) {
+        ReferenceProxy referenceProxy = new ReferenceProxy(reference.ignoreMissing(annotation.ignoreMissing()));
         try {
             Class<?> type = getField().getType();
             String name = (type.getPackageName().startsWith("java") ? type.getSimpleName() : type.getName()) + "$$Proxy";
             return ((Loaded<T>) new ByteBuddy()
                                     .subclass(type)
+                                    .implement(MorphiaProxy.class)
                                     .name(name)
                                     .invokable(ElementMatchers.isDeclaredBy(type))
+                                    .intercept(InvocationHandlerAdapter.of(referenceProxy))
+                                    .method(ElementMatchers.isDeclaredBy(MorphiaProxy.class))
                                     .intercept(InvocationHandlerAdapter.of(referenceProxy))
                                     .make()
                                     .load(type.getClassLoader(), Default.WRAPPER))
                        .getLoaded()
                        .getDeclaredConstructor()
                        .newInstance();
-        } catch (ReflectiveOperationException e) {
+        } catch (ReflectiveOperationException | IllegalArgumentException e) {
             throw new MappingException(e.getMessage(), e);
         }
     }
@@ -176,7 +167,7 @@ public class ReferenceCodec extends PropertyCodec<Object> {
         if (value instanceof Key) {
             idValue = ((Key) value).getId();
         } else {
-            idValue = getIdField().getFieldValue(value);
+            idValue = getDatastore().getMapper().getId(value);
         }
         if (!getField().getAnnotation(Reference.class).idOnly()) {
             if (idValue == null) {

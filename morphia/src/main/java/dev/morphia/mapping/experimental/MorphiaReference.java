@@ -64,6 +64,10 @@ public abstract class MorphiaReference<T> {
      */
     public abstract T get();
 
+    public abstract Class<T> getType();
+
+    public abstract List<Object> getIds();
+
     abstract Object getId(final Mapper mapper, final MappedClass mappedClass);
 
     /**

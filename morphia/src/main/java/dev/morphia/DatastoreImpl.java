@@ -21,7 +21,6 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -115,16 +114,15 @@ class DatastoreImpl implements AdvancedDatastore {
      */
     @Override
     public <T> DeleteResult delete(final T entity, final DeleteOptions options) {
-        final T wrapped = ProxyHelper.unwrap(entity);
-        if (wrapped instanceof Class<?>) {
+        if (entity instanceof Class<?>) {
             throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
         }
-        return find(wrapped.getClass()).filter("_id", mapper.getId(wrapped)).remove(options);
+        return find(entity.getClass()).filter("_id", mapper.getId(entity)).remove(options);
     }
 
     @Override
     public void ensureCaps() {
-        ArrayList<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
+        List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
                 final CappedAt cap = mc.getEntityAnnotation().cap();
@@ -290,21 +288,19 @@ class DatastoreImpl implements AdvancedDatastore {
     @Override
     @SuppressWarnings("unchecked")
     public <T> void merge(final T entity, final WriteConcern wc) {
-        T unwrapped = entity;
-        final Document document = mapper.toDocument(unwrapped);
-        unwrapped = ProxyHelper.unwrap(unwrapped);
-        final Object id = mapper.getId(unwrapped);
+        final Object id = mapper.getId(entity);
         if (id == null) {
-            throw new MappingException("Could not get id for " + unwrapped.getClass().getName());
+            throw new MappingException("Could not get id for " + entity.getClass().getName());
         }
 
+        final Document document = mapper.toDocument(entity);
         document.remove("_id");
 
-        final MappedClass mc = mapper.getMappedClass(unwrapped.getClass());
-        final MongoCollection collection = mapper.getCollection(unwrapped.getClass());
+        final MappedClass mc = mapper.getMappedClass(entity.getClass());
+        final MongoCollection collection = mapper.getCollection(entity.getClass());
 
-        if (!tryVersionedUpdate(collection, unwrapped, new InsertOneOptions().writeConcern(wc), mc)) {
-            final Query<T> query = (Query<T>) find(unwrapped.getClass()).filter("_id", id);
+        if (!tryVersionedUpdate(collection, entity, new InsertOneOptions().writeConcern(wc), mc)) {
+            final Query<T> query = (Query<T>) find(entity.getClass()).filter("_id", id);
             UpdateResult execute = query.update()
                                         .set(entity)
                                         .execute(new UpdateOptions().writeConcern(wc));
@@ -354,8 +350,7 @@ class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException("Can not persist a null entity");
         }
 
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        save(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
+        save(mapper.getCollection(entity.getClass()), entity, options);
         return entity;
     }
 
@@ -369,12 +364,11 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> DBRef createRef(final T entity) {
-        final T wrapped = ProxyHelper.unwrap(entity);
-        final Object id = mapper.getId(wrapped);
+        final Object id = mapper.getId(entity);
         if (id == null) {
-            throw new MappingException("Could not get id for " + wrapped.getClass().getName());
+            throw new MappingException("Could not get id for " + entity.getClass().getName());
         }
-        return createRef(wrapped.getClass(), id);
+        return createRef(entity.getClass(), id);
     }
 
     @Override
@@ -409,8 +403,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void insert(final T entity, final InsertOneOptions options) {
-        final T unwrapped = ProxyHelper.unwrap(entity);
-        insert(mapper.getCollection(unwrapped.getClass()), unwrapped, options);
+        insert(mapper.getCollection(entity.getClass()), entity, options);
     }
 
     @Override

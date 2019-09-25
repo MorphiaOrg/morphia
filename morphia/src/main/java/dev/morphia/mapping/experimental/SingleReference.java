@@ -9,6 +9,8 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Query;
 import org.bson.Document;
 
+import java.util.List;
+
 /**
  * @param <T>
  * @morphia.internal
@@ -42,6 +44,11 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return value;
     }
 
+    @Override
+    public Class<T> getType() {
+        return (Class<T>) mappedClass.getType();
+    }
+
     Query<?> buildQuery() {
         final Query<?> query;
         if (id instanceof DBRef) {
@@ -63,6 +70,11 @@ public class SingleReference<T> extends MorphiaReference<T> {
         }
 
         return mappedClass;
+    }
+
+    @Override
+    public List<Object> getIds() {
+        return List.of(id);
     }
 
     @Override

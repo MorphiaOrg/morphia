@@ -435,11 +435,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public String toString() {
-//        if (1 == 1) {
-//            //TODO:  implement this
-//            throw new UnsupportedOperationException();
-//        }
-
         return getOptions().getProjection() == null ? getQueryDocument().toString()
                                                     : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
     }

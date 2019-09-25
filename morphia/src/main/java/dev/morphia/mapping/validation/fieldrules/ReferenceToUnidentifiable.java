@@ -33,7 +33,7 @@ public class ReferenceToUnidentifiable extends FieldConstraint {
                 ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(), Sofia.keyNotAllowedAsField()));
             } else {
                 MappedClass mappedClass = mapper.getMappedClass(realType);
-                if (mappedClass == null || mappedClass.getIdField() == null) {
+                if (mappedClass == null || mappedClass.getIdField() == null && !mappedClass.getType().isInterface()) {
                     ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                         mf.getFullName() + " is annotated as a @" + Reference.class.getSimpleName() + " but the "
                         + mf.getType().getName()

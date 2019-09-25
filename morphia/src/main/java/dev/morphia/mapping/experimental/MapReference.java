@@ -9,18 +9,19 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 /**
  * @param <T>
  * @morphia.internal
  */
-public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
+public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
+    private MappedClass valueType;
     private Map<String, Object> ids;
     private Map<Object, T> values;
     private Map<String, List<Object>> collections = new HashMap<>();
@@ -30,6 +31,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      */
     public MapReference(final Datastore datastore, final MappedClass valueType, final Map<String, Object> ids) {
         super(datastore);
+        this.valueType = valueType;
         Map<String, Object> unwrapped = ids;
         if (ids != null) {
             for (final Entry<String, Object> entry : ids.entrySet()) {
@@ -44,6 +46,16 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         this.values = values;
     }
 
+    @Override
+    public List<Object> getIds() {
+        return new ArrayList<>(ids.values());
+    }
+
+    @Override
+    public Class<Map<Object, T>> getType() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -55,12 +67,17 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         return values;
     }
 
-    public Map<String, Object> getId(final Mapper Mapper, final MappedClass mappedClass) {
+    @Override
+    public Map<String, Object> getId(final Mapper mapper, final MappedClass field) {
         if(ids == null) {
-            MappedField idField = mappedClass.getIdField();
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
-                             .forEach(e -> ids.put(e.getKey().toString(), idField.getFieldValue(e.getValue())));
+                  .forEach(e -> {
+                      T value = e.getValue();
+                      MappedClass mappedClass = mapper.getMappedClass(value.getClass());
+                      ids.put(e.getKey().toString(),
+                          mappedClass.getIdField().getFieldValue(value));
+                  });
         }
         return ids;
     }
