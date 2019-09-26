@@ -264,7 +264,9 @@ application.
 
 ### Raw Querying
 
-You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.
+You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which
+ are not yet present in Morphia.  Using your regular `Datastore` reference, you can cast to `AdvancedDatastore` and pass an existing
+  query document to be used instead of building it via the API.
 
 For example:
 
