@@ -312,6 +312,8 @@ public interface AdvancedDatastore extends Datastore {
     /**
      * Inserts an entity in to the mapped collection.
      *
+     * <i>The return type will change in 2.0</i>
+     *
      * @param entity the entity to insert
      * @param <T>    the type of the entity
      * @return the new key of the inserted entity
@@ -334,6 +336,8 @@ public interface AdvancedDatastore extends Datastore {
 
     /**
      * Inserts an entity in to the mapped collection.
+     *
+     * <i>The return type will change in 2.0</i>
      *
      * @param entity  the entity to insert
      * @param options the options to apply to the insert operation
@@ -386,6 +390,8 @@ public interface AdvancedDatastore extends Datastore {
     /**
      * Inserts entities in to the mapped collection.
      *
+     * <i>The return type will change in 2.0</i>
+     *
      * @param entities the entities to insert
      * @param <T>      the type of the entities
      * @return the new keys of the inserted entities
@@ -406,6 +412,8 @@ public interface AdvancedDatastore extends Datastore {
 
     /**
      * Inserts entities in to the mapped collection.
+     *
+     * <i>The return type will change in 2.0</i>
      *
      * @param entities the entities to insert
      * @param options  the options to apply to the insert operation

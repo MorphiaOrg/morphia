@@ -663,6 +663,8 @@ public interface Datastore {
     /**
      * Saves the entities (Objects) and updates the @Id field
      *
+     * <i>The return type will change in 2.0</i>
+     *
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @return the keys of the entities
@@ -683,6 +685,8 @@ public interface Datastore {
 
     /**
      * Saves the entities (Objects) and updates the @Id field, with the WriteConcern
+     *
+     * <i>The return type will change in 2.0</i>
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
@@ -705,6 +709,8 @@ public interface Datastore {
     /**
      * Saves an entity (Object) and updates the @Id field
      *
+     * <i>The return type will change in 2.0</i>
+     *
      * @param entity the entity to save
      * @param <T>    the type of the entity
      * @return the keys of the entity
@@ -725,6 +731,8 @@ public interface Datastore {
 
     /**
      * Saves an entity (Object) and updates the @Id field
+     *
+     * <i>The return type will change in 2.0</i>
      *
      * @param entity  the entity to save
      * @param options the options to apply to the save operation
