@@ -28,7 +28,7 @@
         <driver.version>3.10.1</driver.version>
         <jacoco.version>0.8.1</jacoco.version>
         <json.assert.version>1.2.3</json.assert.version>
-        <maven.version>3.5.2</maven.version>
+        <maven.version>3.6.0</maven.version>
         <slf4j.version>1.7.25</slf4j.version>
         <surefire.version>2.22.1</surefire.version>
         <zt.exec.version>1.10</zt.exec.version>
