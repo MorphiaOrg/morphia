@@ -10,14 +10,12 @@ import java.lang.annotation.Target;
 
 
 /**
- * Called right before DBCollection.save() is called. Changes made to the entity (java class) will not be persisted. This event will be
- * called on top level Entities.
- *
- * @author Scott Hernandez
+ * @deprecated use {@link PostPersist} instead
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Deprecated
 public @interface PreSave {
 }
