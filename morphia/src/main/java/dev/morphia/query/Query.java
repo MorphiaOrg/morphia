@@ -79,10 +79,11 @@ public interface Query<T> {
     FieldEnd<? extends Query<T>> field(String field);
 
     /**
-     * Create a filter based on the specified condition and value. </p> <p><b>Note</b>: Property is in the form of "name op" ("age
-     * >").
+     * Create a filter based on the specified condition and value. </p>
+     *
+     * <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
      * <p/>
-     * <p>Valid operators are ["=", "==","!=", "<>", ">", "<", ">=", "<=", "in", "nin", "all", "size", "exists"] </p>
+     * <p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
      * <p/>
      * <p>Examples:</p>
      * <p/>

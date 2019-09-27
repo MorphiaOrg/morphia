@@ -1,7 +1,6 @@
 package dev.morphia;
 
 
-import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 
 import java.io.Serializable;
@@ -13,8 +12,6 @@ import java.io.Serializable;
  * in your entities if you desire neither type safety nor GWT-ability. </p>
  *
  * @param <T> The type of the entity
- * @author Jeff Schnitzer <jeff@infohazard.org> (from Objectify codebase)
- * @author Scott Hernandez (adapted to morphia/mongodb)
  */
 public class Key<T> implements Serializable, Comparable<Key<T>> {
     private String collection;

@@ -48,7 +48,7 @@ public class MapperOptions {
     }
 
     /**
-     * @return true if Morphia should cache name -> Class lookups
+     * @return true if Morphia should cache name to Class lookups
      */
     public boolean isCacheClassLookups() {
         return cacheClassLookups;
