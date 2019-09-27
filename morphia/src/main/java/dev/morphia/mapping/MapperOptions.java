@@ -244,14 +244,14 @@ public class MapperOptions {
     }
 
     /**
-     * @return true if Morphia should cache name -> Class lookups
+     * @return true if Morphia should cache name to Class lookups
      */
     public boolean isCacheClassLookups() {
         return cacheClassLookups;
     }
 
     /**
-     * Sets whether Morphia should cache name -> Class lookups
+     * Sets whether Morphia should cache name to Class lookups
      *
      * @param cacheClassLookups true if the lookup results should be cached
      * @see Builder

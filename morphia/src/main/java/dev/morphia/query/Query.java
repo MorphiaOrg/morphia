@@ -31,7 +31,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     /**
      * Batch-size of the fetched result (cursor).
      *
-     * @param value must be >= 0.  A value of 0 indicates the server default.
+     * @param value must be &gt;= 0.  A value of 0 indicates the server default.
      * @return this
      * @deprecated use the methods that accept Options directly
      * @see FindOptions#batchSize(int)
@@ -152,10 +152,11 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     FieldEnd<? extends Query<T>> field(String field);
 
     /**
-     * Create a filter based on the specified condition and value. </p> <p><b>Note</b>: Property is in the form of "name op" ("age
-     * >").
+     * Create a filter based on the specified condition and value. </p>
+     *
+     * <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
      * <p/>
-     * <p>Valid operators are ["=", "==","!=", "<>", ">", "<", ">=", "<=", "in", "nin", "all", "size", "exists"] </p>
+     * <p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
      * <p/>
      * <p>Examples:</p>
      * <p/>
@@ -263,7 +264,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     /**
      * Limit the fetched result set to a certain number of values.
      *
-     * @param value must be >= 0.  A value of 0 indicates no limit.  For values < 0, use {@link FindOptions#batchSize(int)} which
+     * @param value must be &gt;= 0.  A value of 0 indicates no limit.  For values &lt; 0, use {@link FindOptions#batchSize(int)} which
      *              is the preferred method
      * @return this
      * @deprecated use the methods that accept Options directly
@@ -290,7 +291,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     /**
      * Constrains the query to only scan the specified number of documents when fulfilling the query.
      *
-     * @param value must be > 0.  A value < 0 indicates no limit
+     * @param value must be &gt; 0.  A value &lt; 0 indicates no limit
      * @return this
      * @mongodb.driver.manual reference/operator/meta/maxScan/#op._S_maxScan $maxScan
      * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$maxScan", value) }
@@ -302,11 +303,11 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     /**
      * Specifies a time limit for executing the query. Requires server version 2.6 or above.
      *
-     * @param maxTime     must be > 0.  A value < 0 indicates no limit
+     * @param maxTime     must be &gt; 0.  A value &lt; 0 indicates no limit
      * @param maxTimeUnit the unit of time to use
      * @return this
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.maxTime(value, unit) }
      * @see FindOptions#modifier(String, Object)
+     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.maxTime(value, unit) }
      */
     @Deprecated
     Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
@@ -314,7 +315,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     /**
      * Starts the query results at a particular zero-based offset.
      *
-     * @param value must be >= 0
+     * @param value must be &gt;= 0
      * @return this
      * @deprecated use the methods that accept Options directly
      * @see FindOptions#skip(int)

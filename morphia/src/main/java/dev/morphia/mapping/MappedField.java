@@ -305,7 +305,7 @@ public class MappedField {
     }
 
     /**
-     * If the underlying java type is a map then it returns T from Map<T,V>
+     * If the underlying java type is a map then it returns T from Map&lt;T,V&gt;
      *
      * @return the type of the map key
      */
@@ -321,7 +321,7 @@ public class MappedField {
     }
 
     /**
-     * If the java field is a list/array/map then the sub-type T is returned (ex. List<T>, T[], Map<?,T>
+     * If the java field is a list/array/map then the sub-type T is returned (ex. List&lt;T&gt;, T[], Map&lt;?,T&gt;
      *
      * @return the parameterized type of the field
      */
@@ -330,7 +330,7 @@ public class MappedField {
     }
 
     /**
-     * If the java field is a list/array/map then the sub-type T is returned (ex. List<T>, T[], Map<?,T>
+     * If the java field is a list/array/map then the sub-type T is returned (ex. List&lt;T&gt;, T[], Map&lt;?,T&gt;
      *
      * @return the parameterized type of the field
      */

@@ -12,11 +12,8 @@ import java.lang.annotation.Target;
  * typically used when a field is renamed, allowing the field to be populated by both its current name and any prior names.</p>
  * <p/>
  * When placed on a field, the additional names (document field) will be checked when this field is loaded.  If the document contains data
- * for more than one of the names, an exception will be thrown. (orig @author Jeff Schnitzer <jeff@infohazard.org> for Objectify)
- *
- * @author Scott Hernandez
+ * for more than one of the names, an exception will be thrown.
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface AlsoLoad {
