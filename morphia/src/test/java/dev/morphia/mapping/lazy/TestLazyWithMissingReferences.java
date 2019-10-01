@@ -87,7 +87,7 @@ public class TestLazyWithMissingReferences extends TestBase {
     }
 
     @Entity
-    static class Target {
+    public static class Target {
         @Id
         private ObjectId id = new ObjectId();
         private String foo = "bar";
