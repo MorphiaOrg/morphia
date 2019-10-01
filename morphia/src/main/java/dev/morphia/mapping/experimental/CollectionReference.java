@@ -7,6 +7,7 @@ import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import dev.morphia.sofia.Sofia;
 
@@ -92,7 +93,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     final List<Object> getId(final Mapper mapper, final MappedClass mappedClass) {
         if(ids == null) {
             ids = getValues().stream()
-                             .map(v -> mapper.getId(v))
+                             .map(v -> ReferenceCodec.encodeId(mapper, mappedClass, v))
                              .collect(Collectors.toList());
         }
         return ids;

@@ -138,7 +138,7 @@ public class MappedClass {
      * @param clazz the type to search for
      * @return the instance if it was found, if more than one was found, the last one added
      */
-    public <T> T getAnnotation(final Class<? extends Annotation> clazz) {
+    public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
         return morphiaModel.getAnnotation(clazz);
     }
 
@@ -150,7 +150,7 @@ public class MappedClass {
      * @return the instance if it was found, if more than one was found, the last one added
      */
     @SuppressWarnings("unchecked")
-    public <T> List<T> getAnnotations(final Class<? extends Annotation> clazz) {
+    public <T extends Annotation> List<T> getAnnotations(final Class<T> clazz) {
         return morphiaModel.getAnnotations(clazz);
     }
 

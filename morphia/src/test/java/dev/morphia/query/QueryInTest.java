@@ -103,13 +103,11 @@ public class QueryInTest extends TestBase {
     public void testInQueryByKey() {
         checkMinServerVersion(2.5);
         final HasRef hr = new HasRef();
-        List<Key<ReferencedEntity>> refs = new ArrayList<>();
+        List<ReferencedEntity> refs = new ArrayList<>();
         for (int x = 0; x < 10; x++) {
             final ReferencedEntity re = new ReferencedEntity("" + x);
             getDs().save(re);
-            refs.add(new Key<>(ReferencedEntity.class,
-                getMapper().getMappedClass(ReferencedEntity.class).getCollectionName(),
-                re.getId()));
+            refs.add(re);
         }
         hr.ref = refs.get(0);
 
@@ -156,7 +154,7 @@ public class QueryInTest extends TestBase {
         @Id
         private ObjectId id = new ObjectId();
         @Reference
-        private Key<ReferencedEntity> ref;
+        private ReferencedEntity ref;
     }
 
     @Entity

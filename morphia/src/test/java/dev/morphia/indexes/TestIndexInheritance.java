@@ -41,7 +41,7 @@ public class TestIndexInheritance extends TestBase {
         final MappedClass mc = getMapper().getMappedClass(Circle.class);
         assertNotNull(mc);
 
-        List<Object> annotations = mc.getAnnotations(Indexes.class);
+        List<Indexes> annotations = mc.getAnnotations(Indexes.class);
         assertEquals(annotations.toString(), 2, annotations.size());
 
         getDs().ensureIndexes();

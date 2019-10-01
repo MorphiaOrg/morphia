@@ -7,6 +7,7 @@ import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.references.ReferenceCodec;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -73,10 +74,8 @@ public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
                   .forEach(e -> {
-                      T value = e.getValue();
-                      MappedClass mappedClass = mapper.getMappedClass(value.getClass());
                       ids.put(e.getKey().toString(),
-                          mappedClass.getIdField().getFieldValue(value));
+                          ReferenceCodec.encodeId(mapper, field, e.getValue()));
                   });
         }
         return ids;

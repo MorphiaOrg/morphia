@@ -1,10 +1,16 @@
 package dev.morphia.mapping.lazy;
 
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
+import dev.morphia.mapping.codec.references.ReferenceProxy;
 import dev.morphia.mapping.experimental.MorphiaReference;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
+import net.bytebuddy.implementation.InvocationHandlerAdapter;
+import net.bytebuddy.matcher.ElementMatchers;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -19,6 +25,7 @@ import static java.util.Arrays.asList;
 
 @Category(Reference.class)
 public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
+    @SuppressWarnings("unchecked")
     @Test
     public void interfaces() {
         getMapper().map(InterfaceA.class, InterfaceB.class, ClassA.class, B1.class, B2.class);
@@ -47,12 +54,13 @@ public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
         final ClassA first = getDs().find(ClassA.class).first();
 
         Assert.assertNotNull(first.b);
-
-        Assert.assertNotNull(first.map);
-        Assert.assertEquals(map, first.map.get());
+        Assert.assertEquals(b1.getId(), first.b.getId());
 
         Assert.assertNotNull(first.reference);
         Assert.assertEquals(b2, first.reference.get());
+
+        Assert.assertNotNull(first.map);
+        Assert.assertEquals(map, first.map.get());
 
         Assert.assertNotNull(first.list);
         Assert.assertEquals(list, first.list.get());

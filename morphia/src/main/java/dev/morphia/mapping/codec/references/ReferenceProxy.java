@@ -10,9 +10,9 @@ import java.util.List;
 public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     private static final List<String> NONFETCHES = List.of(
         "isEmpty", "size");
-    private MorphiaReference<Object> reference;
+    private MorphiaReference<?> reference;
 
-    public ReferenceProxy(final MorphiaReference<Object> reference) {
+    public ReferenceProxy(final MorphiaReference<?> reference) {
         this.reference = reference;
     }
 
@@ -20,11 +20,11 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
         if (method.getName().equals("isFetched")) {
             return isFetched();
-//        } else if (method.getName().equals("getClass")) {
-//            return reference.getType();
+            //        } else if (method.getName().equals("getClass")) {
+            //            return reference.getType();
         }
 
-            fetch(method);
+        fetch(method);
         return invoke(method, args);
     }
 
@@ -39,7 +39,7 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     }
 
     private void fetch(final Method method) {
-        if(!isFetched() && !NONFETCHES.contains(method.getName())) {
+        if (!isFetched() && !NONFETCHES.contains(method.getName())) {
             reference.get();
         }
     }

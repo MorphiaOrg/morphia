@@ -2,9 +2,12 @@ package dev.morphia.mapping.codec.references;
 
 import com.mongodb.DBRef;
 import com.mongodb.DocumentToDBRefTransformer;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.PropertyCodec;
@@ -53,19 +56,25 @@ public class ReferenceCodec extends PropertyCodec<Object> {
         Object decode = getDatastore().getMapper().getCodecRegistry()
                                       .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
                                       .decode(reader, decoderContext);
+        decode = processId(decode, getDatastore().getMapper(), decoderContext);
+        return fetch(decode);
+    }
+
+    public static Object processId(Object decode, final Mapper mapper, final DecoderContext decoderContext) {
         if (decode instanceof Document) {
             Document document = (Document) decode;
             if (document.containsKey("$ref")) {
-                decode = document.get("$id");
-                if (decode instanceof Document) {
-                    DocumentReader documentReader = new DocumentReader((Document) decode);
-                    decode = getDatastore().getMapper().getCodecRegistry()
-                                           .get(Object.class)
-                                           .decode(documentReader, decoderContext);
+                Object id = document.get("$id");
+                if (id instanceof Document) {
+                    DocumentReader documentReader = new DocumentReader((Document) id);
+                    id = mapper.getCodecRegistry()
+                               .get(Object.class)
+                               .decode(documentReader, decoderContext);
                 }
+                decode = new DBRef((String) document.get("$ref"), id);
             }
         }
-        return fetch(decode);
+        return decode;
     }
 
     public Object fetch(final Object value) {
@@ -74,7 +83,7 @@ public class ReferenceCodec extends PropertyCodec<Object> {
         if (value instanceof List) {
             ids = new ArrayList<>();
             for (Object o : (List) value) {
-                ((List) ids).add(extractId(o));
+                ((List) ids).add(o);
             }
             reference = new ListReference(getDatastore(), getFieldMappedClass(), (List) ids);
         } else if (value instanceof Map) {
@@ -82,18 +91,18 @@ public class ReferenceCodec extends PropertyCodec<Object> {
             Set<Entry<Object, Object>> set = ((Map<Object, Object>) value).entrySet();
             Class keyType = ((TypeData) getTypeData().getTypeParameters().get(0)).getType();
             for (final Entry entry : set) {
-                ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), extractId(entry.getValue()));
+                ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
             }
 
             reference = new MapReference(getDatastore(), getFieldMappedClass(), (Map<String, Object>) ids);
         } else if (value instanceof Set) {
             ids = new ArrayList<>();
             for (Object o : (Set) value) {
-                ((List) ids).add(extractId(o));
+                ((List) ids).add(o);
             }
             reference = new SetReference(getDatastore(), getFieldMappedClass(), (List) ids);
         } else {
-            ids = extractId(value);
+            ids = value;
             reference = new SingleReference(getDatastore(), getFieldMappedClass(), ids);
         }
 
@@ -109,10 +118,13 @@ public class ReferenceCodec extends PropertyCodec<Object> {
                                     .subclass(type)
                                     .implement(MorphiaProxy.class)
                                     .name(name)
+
                                     .invokable(ElementMatchers.isDeclaredBy(type))
                                     .intercept(InvocationHandlerAdapter.of(referenceProxy))
+
                                     .method(ElementMatchers.isDeclaredBy(MorphiaProxy.class))
                                     .intercept(InvocationHandlerAdapter.of(referenceProxy))
+
                                     .make()
                                     .load(type.getClassLoader(), Default.WRAPPER))
                        .getLoaded()
@@ -157,40 +169,39 @@ public class ReferenceCodec extends PropertyCodec<Object> {
             }
             return ids;
         } else {
-            return encodeId(value);
+            return encodeId(getDatastore().getMapper(), getFieldMappedClass(), value);
         }
-
     }
 
-    private Object encodeId(final Object value) {
+    /**
+     * @morphia.internal
+     */
+    public static Object encodeId(final Mapper mapper, final MappedClass fieldMappedClass, final Object value) {
         Object idValue;
         if (value instanceof Key) {
             idValue = ((Key) value).getId();
         } else {
-            idValue = getDatastore().getMapper().getId(value);
+            idValue = mapper.getId(value);
         }
-        if (!getField().getAnnotation(Reference.class).idOnly()) {
+        MongoCollection<?> collection = null;
+        try {
+            collection = mapper.getCollection(value.getClass());
+        } catch (NullPointerException e) {
+            System.out.println(value);
+
+        }
+        String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;
+        String fieldCollectionName = fieldMappedClass.getCollectionName();
+
+        Reference annotation = fieldMappedClass.getAnnotation(Reference.class);
+        if (annotation != null && !annotation.idOnly()
+            || valueCollectionName != null && !valueCollectionName.equals(fieldCollectionName)) {
             if (idValue == null) {
                 throw new MappingException("The ID value can not be null");
             }
-            idValue = new DBRef(getFieldMappedClass().getCollectionName(), idValue);
+            idValue = new DBRef(valueCollectionName, idValue);
         }
         return idValue;
-    }
-
-    private Object extractId(final Object o) {
-        if (annotation.idOnly()) {
-            return o;
-        }
-        if (o instanceof DBRef) {
-            Object id = ((DBRef) transformer.transform(o)).getId();
-            if (id instanceof Document) {
-                id = getDatastore().getMapper().fromDocument(null, (Document) id);
-            }
-            return id;
-        } else {
-            return o;
-        }
     }
 }
 
