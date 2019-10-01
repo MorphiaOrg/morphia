@@ -8,7 +8,6 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.codec.reader.DocumentReader;
-import org.bson.BsonDocumentReader;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonType;
@@ -24,7 +23,6 @@ import java.util.function.Consumer;
 public class DocumentReaderTest extends TestBase {
 
     private DocumentReader reader;
-    private BsonDocumentReader bsonDocumentReader;
 
     @Test
     public void read() {
@@ -89,13 +87,11 @@ public class DocumentReaderTest extends TestBase {
                   .append("nested", "detsen"));
 
         step(r -> { r.readStartDocument();});
-        BsonReaderMark bsonMark = bsonDocumentReader.getMark();
         BsonReaderMark docMark = reader.getMark();
 
         step(r -> { Assert.assertEquals("key", r.readName());});
         step(r -> { Assert.assertEquals("value", r.readString());});
 
-        bsonMark.reset();
         docMark.reset();
 
         step(r -> { Assert.assertEquals("key", r.readName());});
@@ -142,12 +138,9 @@ public class DocumentReaderTest extends TestBase {
 
     private void setup(final Document document) {
         reader = new DocumentReader(document);
-        bsonDocumentReader = new BsonDocumentReader(
-            document.toBsonDocument(Document.class, getMapper().getCodecRegistry()));
     }
 
     private void step(final Consumer<BsonReader> function) {
-//        function.accept(bsonDocumentReader);
         function.accept(reader);
     }
 

@@ -19,10 +19,10 @@ import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecProvider;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
+import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.ReflectionUtils;
-import org.bson.BsonDocumentReader;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -260,7 +260,7 @@ public class Mapper {
 
         CodecRegistry codecRegistry = getCodecRegistry();
 
-        BsonDocumentReader reader = new BsonDocumentReader(document.toBsonDocument(aClass, codecRegistry));
+        DocumentReader reader = new DocumentReader(document);
 
         return codecRegistry
                    .get(aClass)

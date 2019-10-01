@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec.references;
 
+import dev.morphia.annotations.IdGetter;
 import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.mapping.experimental.SingleReference;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +24,9 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
             return isFetched();
             //        } else if (method.getName().equals("getClass")) {
             //            return reference.getType();
+        }
+        if(method.getAnnotation(IdGetter.class) != null) {
+            return reference.getIds().get(0);
         }
 
         fetch(method);
@@ -45,6 +50,10 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     }
 
     private Object invoke(final Method method, final Object[] args) throws InvocationTargetException, IllegalAccessException {
-        return method.invoke(isFetched() ? reference.get() : reference.getIds(), args);
+        if (method.getDeclaringClass().isAssignableFrom(getClass())) {
+            return method.invoke(this, args);
+        } else {
+            return method.invoke(isFetched() ? reference.get() : reference.getIds(), args);
+        }
     }
 }
