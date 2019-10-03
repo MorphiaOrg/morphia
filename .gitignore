@@ -67,3 +67,4 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
+/mongodb-osx-x86_64-3.4.17/
