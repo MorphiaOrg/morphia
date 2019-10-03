@@ -79,14 +79,15 @@ public class ReferenceCodec extends PropertyCodec<Object> {
 
     public Object fetch(final Object value) {
         MorphiaReference reference;
-        if (value instanceof List) {
+        final Class<?> type = getField().getType();
+        if (type.isAssignableFrom(List.class)) {
             reference = readList((List) value);
+        } else if (type.isAssignableFrom(Map.class)) {
+            reference = readMap((Map<Object, Object>) value);
+        } else if (type.isAssignableFrom(Set.class)) {
+            reference = readSet((List) value);
         } else if (value instanceof Document) {
             reference = readDocument((Document) value);
-        } else if (value instanceof Map) {
-            reference = readMap((Map<Object, Object>) value);
-        } else if (value instanceof Set) {
-            reference = readSet((Set) value);
         } else {
             reference = readSingle(value);
         }
@@ -109,8 +110,8 @@ public class ReferenceCodec extends PropertyCodec<Object> {
         return new SingleReference(getDatastore(), getFieldMappedClass(), value);
     }
 
-    MorphiaReference readSet(final Set value) {
-        return new SetReference(getDatastore(), getFieldMappedClass(), new ArrayList(value));
+    MorphiaReference readSet(final List value) {
+        return new SetReference(getDatastore(), getFieldMappedClass(), value);
     }
 
     MorphiaReference readMap(final Map<Object, Object> value) {

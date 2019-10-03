@@ -43,12 +43,7 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
 
     @Override
     public <S> void set(final S value, final PropertyModel<S> propertyModel) {
-//        final PropertyHandler propertyHandler = getHandler(propertyModel);
-//        if(propertyHandler != null) {
-//            defer((datastore, entityCache) -> propertyHandler.set(instance(), propertyModel, value, datastore, entityCache));
-//        } else {
-            propertyModel.getPropertyAccessor().set(instance(), value);
-//        }
+        propertyModel.getPropertyAccessor().set(instance(), value);
     }
 
     @Override

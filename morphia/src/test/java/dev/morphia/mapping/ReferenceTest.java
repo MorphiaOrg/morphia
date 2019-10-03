@@ -215,7 +215,9 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(sets);
 
         // this query throws a NullPointerException
-        Assert.assertNotNull(getDs().find(Sets.class).filter("refs", ref).first());
+        Assert.assertNotNull(getDs().find(Sets.class)
+                                    .filter("refs", ref)
+                                    .first());
 
         final MapOfSet map = new MapOfSet();
         map.strings = new HashMap<>();
