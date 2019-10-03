@@ -79,38 +79,56 @@ public class ReferenceCodec extends PropertyCodec<Object> {
 
     public Object fetch(final Object value) {
         MorphiaReference reference;
-        Object ids;
         if (value instanceof List) {
-            ids = new ArrayList<>();
-            for (Object o : (List) value) {
-                ((List) ids).add(o);
-            }
-            reference = new ListReference(getDatastore(), getFieldMappedClass(), (List) ids);
+            reference = readList((List) value);
+        } else if (value instanceof Document) {
+            reference = readDocument((Document) value);
         } else if (value instanceof Map) {
-            ids = new LinkedHashMap<>();
-            Set<Entry<Object, Object>> set = ((Map<Object, Object>) value).entrySet();
-            Class keyType = ((TypeData) getTypeData().getTypeParameters().get(0)).getType();
-            for (final Entry entry : set) {
-                ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
-            }
-
-            reference = new MapReference(getDatastore(), getFieldMappedClass(), (Map<String, Object>) ids);
+            reference = readMap((Map<Object, Object>) value);
         } else if (value instanceof Set) {
-            ids = new ArrayList<>();
-            for (Object o : (Set) value) {
-                ((List) ids).add(o);
-            }
-            reference = new SetReference(getDatastore(), getFieldMappedClass(), (List) ids);
+            reference = readSet((Set) value);
         } else {
-            ids = value;
-            reference = new SingleReference(getDatastore(), getFieldMappedClass(), ids);
+            reference = readSingle(value);
         }
+        reference.ignoreMissing(annotation.ignoreMissing());
 
         return !annotation.lazy() ? reference.get() : createProxy(reference);
     }
 
+    MorphiaReference readDocument(final Document value) {
+        final MorphiaReference reference;
+        Mapper mapper = getDatastore().getMapper();
+        Document document = value;
+        final Object id = mapper.getCodecRegistry().get(Object.class)
+                                .decode(new DocumentReader(document), DecoderContext.builder().build());
+        reference = readSingle(id);
+        return reference;
+    }
+
+    MorphiaReference readSingle(final Object value) {
+        return new SingleReference(getDatastore(), getFieldMappedClass(), value);
+    }
+
+    MorphiaReference readSet(final Set value) {
+        return new SetReference(getDatastore(), getFieldMappedClass(), new ArrayList(value));
+    }
+
+    MorphiaReference readMap(final Map<Object, Object> value) {
+        final Object ids = new LinkedHashMap<>();
+        Class keyType = ((TypeData) getTypeData().getTypeParameters().get(0)).getType();
+        for (final Entry entry : value.entrySet()) {
+            ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
+        }
+
+        return new MapReference(getDatastore(), getFieldMappedClass(), (Map<String, Object>) ids);
+    }
+
+    MorphiaReference readList(final List value) {
+        return new ListReference(getDatastore(), getFieldMappedClass(), value);
+    }
+
     private <T> T createProxy(final MorphiaReference reference) {
-        ReferenceProxy referenceProxy = new ReferenceProxy(reference.ignoreMissing(annotation.ignoreMissing()));
+        ReferenceProxy referenceProxy = new ReferenceProxy(reference);
         try {
             Class<?> type = getField().getType();
             String name = (type.getPackageName().startsWith("java") ? type.getSimpleName() : type.getName()) + "$$Proxy";

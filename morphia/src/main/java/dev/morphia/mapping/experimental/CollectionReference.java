@@ -39,7 +39,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             }
         }
 
-        this.ids = (List) ids;
+        this.ids = ids;
     }
 
     protected CollectionReference() {
@@ -105,7 +105,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         for (final Entry<String, List<Object>> entry : collections.entrySet()) {
             query(entry.getKey(), entry.getValue(), values);
         }
-        return values;
+        return values.stream().filter(o -> o != null).collect(Collectors.toList());
     }
 
     void query(final String collection, final List<Object> collectionIds, final List<Object> values) {
@@ -134,7 +134,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 }
             }
         }
-
     }
 
     @Override

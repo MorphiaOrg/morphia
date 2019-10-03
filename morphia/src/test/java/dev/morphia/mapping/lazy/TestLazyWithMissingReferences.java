@@ -1,17 +1,16 @@
 package dev.morphia.mapping.lazy;
 
 
-import dev.morphia.annotations.Entity;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(Reference.class)
@@ -33,7 +32,10 @@ public class TestLazyWithMissingReferences extends TestBase {
         e.setLazy(new Target());
 
         getDs().save(e); // does not fail due to pre-initialized Ids
-        Assert.assertNull(getDs().find(Source.class).execute(new FindOptions().limit(1)).tryNext().getLazy());
+        Assert.assertNull(getDs().find(Source.class)
+                                 .execute(new FindOptions().limit(1))
+                                 .tryNext()
+                                 .getLazy());
     }
 
     @Test

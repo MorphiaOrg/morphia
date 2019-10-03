@@ -268,7 +268,7 @@ public class Mapper {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Class<T> getClass(final Document document) {
+    public <T> Class<T> getClass(final Document document) {
         // see if there is a className value
         Class c = null;
         if (document.containsKey(getOptions().getDiscriminatorField())) {

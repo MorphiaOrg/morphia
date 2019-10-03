@@ -24,7 +24,9 @@ public class ReferencesWIgnoreMissingTest extends TestBase {
         getDs().save(c);
         getDs().save(c.refs[0]);
 
-        Container reloadedContainer = getDs().find(Container.class).execute(new FindOptions().limit(1)).tryNext();
+        Container reloadedContainer = getDs().find(Container.class)
+                                             .execute(new FindOptions().limit(1))
+                                             .tryNext();
         Assert.assertNotNull(reloadedContainer);
         Assert.assertNotNull(reloadedContainer.refs);
         Assert.assertEquals(1, reloadedContainer.refs.length);
