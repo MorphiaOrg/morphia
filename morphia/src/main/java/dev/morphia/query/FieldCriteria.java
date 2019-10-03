@@ -10,10 +10,8 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.PropertyModel;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -39,21 +37,23 @@ class FieldCriteria extends AbstractCriteria {
         mappedField = pathTarget.getTarget();
 
         Object mappedValue = value;
-        PropertyModel<?> propertyModel = mappedField.getDeclaringClass()
-                                                    .getMorphiaModel()
-                                                    .getPropertyModel(mappedField.getMappedFieldName());
         final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
+        PropertyModel<?> propertyModel = mappedField != null
+                                         ? mappedField.getDeclaringClass()
+                                                      .getMorphiaModel()
+                                                      .getPropertyModel(mappedField.getMappedFieldName())
+                                         : null;
 
-        if (propertyModel != null) {
-            Codec cachedCodec = propertyModel.getCachedCodec();
+        if (type != null && propertyModel != null) {
             Class<?> componentType = type;
-            if (type.isArray() || Iterable.class.isAssignableFrom(type)) {
+            if (componentType.isArray() || Iterable.class.isAssignableFrom(componentType)) {
                 if(type.isArray()) {
                     componentType = type.getComponentType();
                 } else {
                     componentType = ((Iterable)value).iterator().next().getClass();
                 }
             }
+            Codec cachedCodec = propertyModel.getCachedCodec();
             if (cachedCodec.getEncoderClass().isAssignableFrom(componentType)) {
                 DocumentWriter writer = new DocumentWriter();
                 cachedCodec.encode(writer, value, EncoderContext.builder().build());

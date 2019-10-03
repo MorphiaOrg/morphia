@@ -16,7 +16,7 @@ import org.junit.experimental.categories.Category;
 @Category(Reference.class)
 public class TestLazyWithMissingReferences extends TestBase {
 
-    @Test(expected = MappingException.class)
+    @Test(expected = LazyReferenceFetchingException.class)
     public void testMissingRef() {
         final Source source = new Source();
         source.setTarget(new Target());
