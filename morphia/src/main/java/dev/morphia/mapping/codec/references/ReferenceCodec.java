@@ -155,7 +155,12 @@ public class ReferenceCodec extends PropertyCodec<Object> {
 
     @Override
     public Class getEncoderClass() {
-        return getField().getType();
+        TypeData type = getTypeData();
+        List typeParameters = type.getTypeParameters();
+        if(!typeParameters.isEmpty()) {
+            type = (TypeData) typeParameters.get(typeParameters.size() - 1);
+        }
+        return type.getType();
     }
 
     @Override
