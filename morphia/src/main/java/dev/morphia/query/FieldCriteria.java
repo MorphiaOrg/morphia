@@ -12,6 +12,7 @@ import org.bson.codecs.pojo.PropertyModel;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -50,7 +51,10 @@ class FieldCriteria extends AbstractCriteria {
                 if(type.isArray()) {
                     componentType = type.getComponentType();
                 } else {
-                    componentType = ((Iterable)value).iterator().next().getClass();
+                    Iterator iterator = ((Iterable) value).iterator();
+                    if (iterator.hasNext()) {
+                        componentType = iterator.next().getClass();
+                    }
                 }
             }
             Codec cachedCodec = propertyModel.getCachedCodec();

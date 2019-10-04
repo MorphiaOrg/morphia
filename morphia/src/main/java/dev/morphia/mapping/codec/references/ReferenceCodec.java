@@ -86,6 +86,8 @@ public class ReferenceCodec extends PropertyCodec<Object> {
             reference = readMap((Map<Object, Object>) value);
         } else if (type.isAssignableFrom(Set.class)) {
             reference = readSet((List) value);
+        } else if (type.isArray()) {
+            reference = readList((List) value);
         } else if (value instanceof Document) {
             reference = readDocument((Document) value);
         } else {
