@@ -758,7 +758,10 @@ public class TestUpdateOps extends TestBase {
         //test with Key<Pic>
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class).filter("name", cp.getName());
-        assertThat(query.update().set("pic", pic).execute().getModifiedCount(), is(1));
+        UpdateResult result = query.update()
+                                   .set("pic", pic)
+                                   .execute();
+        assertEquals(result.getModifiedCount(), 1);
 
         //test reading the object.
         final ContainsPic cp2 = getDs().find(ContainsPic.class)

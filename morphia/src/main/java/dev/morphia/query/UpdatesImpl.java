@@ -235,12 +235,12 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
         this.ops = ops;
     }
 
-    private void add(final UpdateOperator op, final String f, final Object value) {
+    private void add(final UpdateOperator op, final String field, final Object value) {
         if (value == null) {
             throw new QueryException("Val cannot be null");
         }
 
-        PathTarget pathTarget = new PathTarget(mapper, clazz, f, validateNames);
+        PathTarget pathTarget = new PathTarget(mapper, clazz, field, validateNames);
         addOperation(op, pathTarget.translatedPath(), value);
     }
 

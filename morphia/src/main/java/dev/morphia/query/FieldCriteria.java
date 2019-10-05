@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
@@ -39,30 +40,10 @@ class FieldCriteria extends AbstractCriteria {
 
         Object mappedValue = value;
         final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
-        PropertyModel<?> propertyModel = mappedField != null
-                                         ? mappedField.getDeclaringClass()
-                                                      .getMorphiaModel()
-                                                      .getPropertyModel(mappedField.getMappedFieldName())
-                                         : null;
+        MappedClass valueMappedClass = getMapper().getMappedClass(type);
 
-        if (type != null && propertyModel != null) {
-            Class<?> componentType = type;
-            if (componentType.isArray() || Iterable.class.isAssignableFrom(componentType)) {
-                if(type.isArray()) {
-                    componentType = type.getComponentType();
-                } else {
-                    Iterator iterator = ((Iterable) value).iterator();
-                    if (iterator.hasNext()) {
-                        componentType = iterator.next().getClass();
-                    }
-                }
-            }
-            Codec cachedCodec = propertyModel.getCachedCodec();
-            if (cachedCodec.getEncoderClass().isAssignableFrom(componentType)) {
-                DocumentWriter writer = new DocumentWriter();
-                cachedCodec.encode(writer, value, EncoderContext.builder().build());
-                mappedValue = writer.getRoot();
-            }
+        if (valueMappedClass != null) {
+            mappedValue = mapValue(value, mappedValue, type);
         }
 
 
@@ -80,6 +61,33 @@ class FieldCriteria extends AbstractCriteria {
         this.operator = op;
         this.value = mappedValue;
         this.not = not;
+    }
+
+    private Object mapValue(final Object value, Object mappedValue, final Class<?> type) {
+        PropertyModel<?> propertyModel = mappedField != null
+                                         ? mappedField.getDeclaringClass()
+                                                      .getMorphiaModel()
+                                                      .getPropertyModel(mappedField.getJavaFieldName())
+                                         : null;
+
+        Class<?> componentType = type;
+        if (componentType.isArray() || Iterable.class.isAssignableFrom(componentType)) {
+            if (type.isArray()) {
+                componentType = type.getComponentType();
+            } else {
+                Iterator iterator = ((Iterable) value).iterator();
+                if (iterator.hasNext()) {
+                    componentType = iterator.next().getClass();
+                }
+            }
+        }
+        Codec cachedCodec = propertyModel.getCachedCodec();
+        if (cachedCodec.getEncoderClass().isAssignableFrom(componentType)) {
+            DocumentWriter writer = new DocumentWriter();
+            cachedCodec.encode(writer, value, EncoderContext.builder().build());
+            mappedValue = writer.getRoot();
+        }
+        return mappedValue;
     }
 
     @Override
