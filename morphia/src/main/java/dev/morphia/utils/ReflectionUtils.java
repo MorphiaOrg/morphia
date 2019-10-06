@@ -1,14 +1,15 @@
 /**
  * Copyright (C) 2010 Olafur Gauti Gudmundsson
  * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
- * obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p/>
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
- * and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 
@@ -22,11 +23,6 @@ import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappingException;
-import org.bson.types.CodeWScope;
-import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,6 +39,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -58,6 +55,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
+import org.bson.types.CodeWScope;
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -66,6 +67,7 @@ import java.util.regex.Pattern;
  * @morphia.internal
  */
 public final class ReflectionUtils {
+
     private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);
 
 
@@ -79,7 +81,8 @@ public final class ReflectionUtils {
      * @param returnFinalFields specifies whether to return final fields
      * @return an array of all declared and inherited fields
      */
-    public static Field[] getDeclaredAndInheritedFields(final Class type, final boolean returnFinalFields) {
+    public static Field[] getDeclaredAndInheritedFields(final Class type,
+        final boolean returnFinalFields) {
         final List<Field> allFields = new ArrayList<Field>();
         allFields.addAll(getValidFields(type.getDeclaredFields(), returnFinalFields));
         Class parent = type.getSuperclass();
@@ -97,11 +100,13 @@ public final class ReflectionUtils {
      * @param returnFinalFields include final fields in the results
      * @return the valid fields
      */
-    public static List<Field> getValidFields(final Field[] fields, final boolean returnFinalFields) {
+    public static List<Field> getValidFields(final Field[] fields,
+        final boolean returnFinalFields) {
         final List<Field> validFields = new ArrayList<Field>();
         // we ignore static and final fields
         for (final Field field : fields) {
-            if (!Modifier.isStatic(field.getModifiers()) && (returnFinalFields || !Modifier.isFinal(field.getModifiers()))) {
+            if (!Modifier.isStatic(field.getModifiers()) && (returnFinalFields || !Modifier
+                .isFinal(field.getModifiers()))) {
                 validFields.add(field);
             }
         }
@@ -118,13 +123,15 @@ public final class ReflectionUtils {
         return getDeclaredAndInheritedMethods(type, new ArrayList<Method>());
     }
 
-    private static List<Method> getDeclaredAndInheritedMethods(final Class type, final List<Method> methods) {
+    private static List<Method> getDeclaredAndInheritedMethods(final Class type,
+        final List<Method> methods) {
         if ((type == null) || (type == Object.class)) {
             return methods;
         }
 
         final Class parent = type.getSuperclass();
-        final List<Method> list = getDeclaredAndInheritedMethods(parent, methods == null ? new ArrayList<Method>() : methods);
+        final List<Method> list = getDeclaredAndInheritedMethods(parent,
+            methods == null ? new ArrayList<Method>() : methods);
 
         for (final Method m : type.getDeclaredMethods()) {
             if (!Modifier.isStatic(m.getModifiers())) {
@@ -154,7 +161,8 @@ public final class ReflectionUtils {
      * @return true if the type is an integral type
      */
     public static boolean isIntegerType(final Class type) {
-        return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class,
+        return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class,
+            short.class, Byte.class,
             byte.class).contains(type);
     }
 
@@ -194,14 +202,16 @@ public final class ReflectionUtils {
     public static Class getParameterizedClass(final Field field, final int index) {
         if (field.getGenericType() instanceof ParameterizedType) {
             final ParameterizedType type = (ParameterizedType) field.getGenericType();
-            if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length <= index)) {
+            if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length
+                <= index)) {
                 return null;
             }
             final Type paramType = type.getActualTypeArguments()[index];
             if (paramType instanceof GenericArrayType) {
-                final Class arrayType = (Class) ((GenericArrayType) paramType).getGenericComponentType();
+                final Class arrayType = (Class) ((GenericArrayType) paramType)
+                    .getGenericComponentType();
                 return Array.newInstance(arrayType, 0)
-                            .getClass();
+                    .getClass();
             } else {
                 if (paramType instanceof ParameterizedType) {
                     final ParameterizedType paramPType = (ParameterizedType) paramType;
@@ -211,12 +221,15 @@ public final class ReflectionUtils {
                         // TODO: Figure out what to do... Walk back up the to
                         // the parent class and try to get the variable type
                         // from the T/V/X
-                        throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) paramType).getName() + "> = "
-                                                   + ((TypeVariable) paramType).getBounds()[0]);
+                        throw new MappingException(
+                            "Generic Typed Class not supported:  <" + ((TypeVariable) paramType)
+                                .getName() + "> = "
+                                + ((TypeVariable) paramType).getBounds()[0]);
                     } else if (paramType instanceof Class) {
                         return (Class) paramType;
                     } else {
-                        throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+                        throw new MappingException(
+                            "Unknown type... pretty bad... call for help, wave your hands... yeah!");
                     }
                 }
             }
@@ -235,7 +248,8 @@ public final class ReflectionUtils {
         if (field != null) {
             if (field.getGenericType() instanceof ParameterizedType) {
                 final ParameterizedType type = (ParameterizedType) field.getGenericType();
-                if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length <= index)) {
+                if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length
+                    <= index)) {
                     return null;
                 }
                 final Type paramType = type.getActualTypeArguments()[index];
@@ -257,7 +271,8 @@ public final class ReflectionUtils {
                         } else if (paramType instanceof Class) {
                             return paramType;
                         } else {
-                            throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+                            throw new MappingException(
+                                "Unknown type... pretty bad... call for help, wave your hands... yeah!");
                         }
                     }
                 }
@@ -309,8 +324,10 @@ public final class ReflectionUtils {
                 }
             }
             if (superclass instanceof ParameterizedType) {
-                final Type[] actualTypeArguments = ((ParameterizedType) superclass).getActualTypeArguments();
-                return actualTypeArguments.length > index ? (Class<?>) actualTypeArguments[index] : null;
+                final Type[] actualTypeArguments = ((ParameterizedType) superclass)
+                    .getActualTypeArguments();
+                return actualTypeArguments.length > index ? (Class<?>) actualTypeArguments[index]
+                    : null;
             } else if (!Object.class.equals(superclass)) {
                 return getParameterizedClass((Class) superclass);
             } else {
@@ -380,9 +397,10 @@ public final class ReflectionUtils {
      * @return true if the Class's type is considered a property type
      */
     public static boolean isPropertyType(final Class type) {
-        return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class
-                                || type == CodeWScope.class || type == ObjectId.class || type == Key.class
-                                || type == DBObject.class || type == BasicDBObject.class);
+        return type != null && (isPrimitiveLike(type) || type == DBRef.class
+            || type == Pattern.class
+            || type == CodeWScope.class || type == ObjectId.class || type == Key.class
+            || type == DBObject.class || type == BasicDBObject.class);
 
     }
 
@@ -394,12 +412,16 @@ public final class ReflectionUtils {
      */
     public static boolean isPrimitiveLike(final Class type) {
         return type != null && (type == String.class || type == char.class
-                                || type == Character.class || type == short.class || type == Short.class
-                                || type == Integer.class || type == int.class || type == Long.class || type == long.class
-                                || type == Double.class || type == double.class || type == float.class || type == Float.class
-                                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
-                                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
-                                || type == URI.class || type.isEnum());
+            || type == Character.class || type == short.class || type == Short.class
+            || type == Integer.class || type == int.class || type == Long.class
+            || type == long.class
+            || type == Double.class || type == double.class || type == float.class
+            || type == Float.class
+            || type == Boolean.class || type == boolean.class || type == Byte.class
+            || type == byte.class
+            || type == Date.class || type == Locale.class || type == Class.class
+            || type == UUID.class
+            || type == URI.class || type.isEnum());
 
     }
 
@@ -492,26 +514,28 @@ public final class ReflectionUtils {
      * @throws IOException            thrown if an error is encountered scanning packages
      * @throws ClassNotFoundException thrown if a class can not be found
      */
-    public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
+    public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName,
+        final boolean mapSubPackages)
         throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final String path = packageName.replace('.', '/');
         final Enumeration<URL> resources = loader.getResources(path);
         if (resources != null) {
             while (resources.hasMoreElements()) {
-                String filePath = URLDecoder.decode(resources.nextElement().getFile(), "utf-8");
+                String filePath = resources.nextElement().getFile();
                 // WINDOWS HACK
                 if (filePath.indexOf("%20") > 0) {
-                    filePath = filePath.replaceAll("%20", " ");
+                    filePath = filePath.replace("%20", " ");
                 }
                 // # in the jar name
                 if (filePath.indexOf("%23") > 0) {
-                    filePath = filePath.replaceAll("%23", "#");
+                    filePath = filePath.replace("%23", "#");
                 }
 
-                if ((filePath.indexOf("!") > 0) && (filePath.indexOf(".jar") > 0)) {
-                    String jarPath = filePath.substring(0, filePath.lastIndexOf("!"))
-                                             .substring(filePath.indexOf(":") + 1);
+                filePath = URLDecoder.decode(filePath, "utf-8");
+                if ((filePath.indexOf('!') > 0) && (filePath.indexOf(".jar") > 0)) {
+                    String jarPath = filePath.substring(0, filePath.lastIndexOf('!'))
+                        .substring(filePath.indexOf(':') + 1);
                     // WINDOWS HACK
                     if (jarPath.contains(":")) {
                         jarPath = jarPath.substring(1);
@@ -522,7 +546,8 @@ public final class ReflectionUtils {
                         classes.addAll(getFromJarFile(loader, jarPath, path, mapSubPackages));
                     }
                 } else {
-                    classes.addAll(getFromDirectory(loader, new File(filePath), packageName, mapSubPackages));
+                    classes.addAll(
+                        getFromDirectory(loader, new File(filePath), packageName, mapSubPackages));
                 }
             }
         }
@@ -540,9 +565,9 @@ public final class ReflectionUtils {
      * @morphia.internal
      */
     protected static Set<Class<?>> readFromNestedJar(final ClassLoader loader,
-                                                     final String jarPath,
-                                                     final String packageName,
-                                                     final boolean mapSubPackages) throws IOException, ClassNotFoundException {
+        final String jarPath,
+        final String packageName,
+        final boolean mapSubPackages) throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final JarFile jarFile = new JarFile(new File(jarPath.substring(0, jarPath.indexOf("!"))));
         final InputStream inputStream = jarFile.getInputStream(jarFile.getEntry(
@@ -557,7 +582,8 @@ public final class ReflectionUtils {
                     String className = jarEntry.getName();
                     if (className.endsWith(".class")) {
                         String classPackageName = getPackageName(className);
-                        if (classPackageName.equals(packagePath) || (mapSubPackages && isSubPackage(classPackageName, packagePath))) {
+                        if (classPackageName.equals(packagePath) || (mapSubPackages && isSubPackage(
+                            classPackageName, packagePath))) {
                             className = stripFilenameExtension(className);
                             classes.add(Class.forName(className.replace('/', '.'), true, loader));
                         }
@@ -583,8 +609,9 @@ public final class ReflectionUtils {
      * @throws ClassNotFoundException thrown if a class can not be found
      * @morphia.internal
      */
-    public static Set<Class<?>> getFromJarFile(final ClassLoader loader, final String jar, final String packageName, final boolean
-                                                                                                                         mapSubPackages)
+    public static Set<Class<?>> getFromJarFile(final ClassLoader loader, final String jar,
+        final String packageName, final boolean
+        mapSubPackages)
         throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         final JarInputStream jarFile = new JarInputStream(new FileInputStream(jar));
@@ -596,7 +623,8 @@ public final class ReflectionUtils {
                     String className = jarEntry.getName();
                     if (className.endsWith(".class")) {
                         String classPackageName = getPackageName(className);
-                        if (classPackageName.equals(packageName) || (mapSubPackages && isSubPackage(classPackageName, packageName))) {
+                        if (classPackageName.equals(packageName) || (mapSubPackages && isSubPackage(
+                            classPackageName, packageName))) {
                             className = stripFilenameExtension(className);
                             classes.add(Class.forName(className.replace('/', '.'), true, loader));
                         }
@@ -619,8 +647,9 @@ public final class ReflectionUtils {
      * @return the list of classes
      * @throws ClassNotFoundException thrown if a class can not be found
      */
-    public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName,
-                                                 final boolean mapSubPackages) throws ClassNotFoundException {
+    public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory,
+        final String packageName,
+        final boolean mapSubPackages) throws ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         if (directory.exists()) {
             for (final String file : getFileNames(directory, packageName, mapSubPackages)) {
@@ -634,7 +663,8 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    private static Set<String> getFileNames(final File directory, final String packageName, final boolean mapSubPackages) {
+    private static Set<String> getFileNames(final File directory, final String packageName,
+        final boolean mapSubPackages) {
         Set<String> fileNames = new HashSet<String>();
         final File[] files = directory.listFiles();
         if (files != null) {
@@ -661,7 +691,8 @@ public final class ReflectionUtils {
         }
     }
 
-    private static boolean isSubPackage(final String fullPackageName, final String parentPackageName) {
+    private static boolean isSubPackage(final String fullPackageName,
+        final String parentPackageName) {
         return fullPackageName.startsWith(parentPackageName);
     }
 
@@ -741,7 +772,8 @@ public final class ReflectionUtils {
      * @return a list of the raw classes for the actual type arguments.
      * @deprecated this class is unused in morphia and will be removed in a future release
      */
-    public static <T> List<Class<?>> getTypeArguments(final Class<T> baseClass, final Class<? extends T> childClass) {
+    public static <T> List<Class<?>> getTypeArguments(final Class<T> baseClass,
+        final Class<? extends T> childClass) {
         final Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
         Type type = childClass;
         // start walking up the inheritance hierarchy until we hit baseClass
@@ -794,7 +826,8 @@ public final class ReflectionUtils {
      * @param <T>   the type of the Class
      * @return the Class type
      */
-    public static <T> Class<?> getTypeArgument(final Class<? extends T> clazz, final TypeVariable<? extends GenericDeclaration> tv) {
+    public static <T> Class<?> getTypeArgument(final Class<? extends T> clazz,
+        final TypeVariable<? extends GenericDeclaration> tv) {
         final Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
         Type type = clazz;
         // start walking up the inheritance hierarchy until we hit the end
