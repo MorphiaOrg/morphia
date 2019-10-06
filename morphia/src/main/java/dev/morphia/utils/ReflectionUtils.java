@@ -499,8 +499,7 @@ public final class ReflectionUtils {
         final Enumeration<URL> resources = loader.getResources(path);
         if (resources != null) {
             while (resources.hasMoreElements()) {
-                String filePath = resources.nextElement()
-                                           .getFile();
+                String filePath = URLDecoder.decode(resources.nextElement().getFile(), "utf-8");
                 // WINDOWS HACK
                 if (filePath.indexOf("%20") > 0) {
                     filePath = filePath.replaceAll("%20", " ");
