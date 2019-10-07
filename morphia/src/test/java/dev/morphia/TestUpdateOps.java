@@ -19,6 +19,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
@@ -685,10 +686,11 @@ public class TestUpdateOps extends TestBase {
         final Pic pic = new Pic();
         pic.setName("fist again");
         ds.save(pic);
-        final Key<Pic> picKey = getMapper().getKey(pic);
 
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class).filter("name", cpk.name);
-        assertThat(query.update().set("pic", pic).execute().getModifiedCount(), is(1));
+        assertThat(query.update()
+                        .set("pic", pic)
+                        .execute().getModifiedCount(), is(1L));
 
         //test reading the object.
         final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class)
@@ -697,9 +699,9 @@ public class TestUpdateOps extends TestBase {
         assertThat(cpk2, is(notNullValue()));
         assertThat(cpk.name, is(cpk2.name));
         assertThat(cpk2.pic, is(notNullValue()));
-        assertThat(picKey, is(cpk2.pic));
+        assertThat(pic, is(cpk2.pic.get()));
 
-        query.update().set("pic", picKey).execute();
+        query.update().set("pic", pic).execute();
 
         //test reading the object.
         final ContainsPicKey cpk3 = ds.find(ContainsPicKey.class)
@@ -708,7 +710,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(cpk3, is(notNullValue()));
         assertThat(cpk.name, is(cpk3.name));
         assertThat(cpk3.pic, is(notNullValue()));
-        assertThat(picKey, is(cpk3.pic));
+        assertThat(pic, is(cpk3.pic.get()));
     }
 
     @Test
@@ -722,9 +724,8 @@ public class TestUpdateOps extends TestBase {
         final Pic pic = new Pic();
         pic.setName("fist again");
         ds.save(pic);
-        final Key<Pic> picKey = getMapper().getKey(pic);
 
-        cpk.keys = singletonList(picKey);
+        cpk.keys = MorphiaReference.wrap(List.of(pic));
 
         //test with Key<Pic>
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class).filter("name", cpk.name);
@@ -738,7 +739,7 @@ public class TestUpdateOps extends TestBase {
                                       .next();
         assertThat(cpk2, is(notNullValue()));
         assertThat(cpk.name, is(cpk2.name));
-        assertThat(cpk2.keys, hasItem(picKey));
+        assertThat(cpk2.keys.get(), hasItem(pic));
     }
 
     @Test
@@ -852,8 +853,8 @@ public class TestUpdateOps extends TestBase {
         @Id
         private ObjectId id;
         private String name = "test";
-        private Key<Pic> pic;
-        private List<Key<Pic>> keys;
+        private MorphiaReference<Pic> pic;
+        private MorphiaReference<List<Pic>> keys;
     }
 
     @Entity(useDiscriminator = false)

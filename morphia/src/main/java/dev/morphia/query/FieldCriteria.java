@@ -40,10 +40,9 @@ class FieldCriteria extends AbstractCriteria {
 
         Object mappedValue = value;
         final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
-        MappedClass valueMappedClass = getMapper().getMappedClass(type);
 
-        if (valueMappedClass != null) {
-            mappedValue = mapValue(value, mappedValue, type);
+        if (getMapper().getMappedClass(type) != null) {
+            mappedValue = mapValue(value, type);
         }
 
 
@@ -63,7 +62,8 @@ class FieldCriteria extends AbstractCriteria {
         this.not = not;
     }
 
-    private Object mapValue(final Object value, Object mappedValue, final Class<?> type) {
+    private Object mapValue(final Object value, final Class<?> type) {
+        Object mappedValue = value;
         PropertyModel<?> propertyModel = mappedField != null
                                          ? mappedField.getDeclaringClass()
                                                       .getMorphiaModel()

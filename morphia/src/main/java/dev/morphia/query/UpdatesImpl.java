@@ -7,9 +7,7 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static dev.morphia.UpdateDocument.Mode.BODY_ONLY;
 import static dev.morphia.utils.ReflectionUtils.iterToList;
@@ -26,7 +24,7 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
     protected Datastore datastore;
     protected final Mapper mapper;
     protected final Class<T> clazz;
-    private Map<String, Object> ops = new HashMap<>();
+    private final Operations operations = new Operations();
     private boolean validateNames = true;
     private boolean versionedUpdate;
     private UpdateDocument updateDocument;
@@ -54,8 +52,7 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
         }
         PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
 
-        Document document = new Document(UpdateOperator.EACH.val(), values);
-        addOperation(UpdateOperator.ADD_TO_SET_EACH, pathTarget.translatedPath(), document);
+        addOperation(UpdateOperator.ADD_TO_SET_EACH, pathTarget, new Document(UpdateOperator.EACH.val(), values));
         return (Updater)this;
     }
 
@@ -85,11 +82,9 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
             throw new QueryException("Values cannot be null or empty.");
         }
 
-        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
-
         Document document = new Document(UpdateOperator.EACH.val(), values);
         options.update(document);
-        addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), document);
+        addOperation(UpdateOperator.PUSH, new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames), document);
 
         return (Updater)this;
     }
@@ -198,7 +193,7 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
         if(versionedUpdate) {
             updateDocument.skipVersion();
         }
-        ops.put(UpdateOperator.SET.val(), updateDocument);
+        operations.add(UpdateOperator.SET, new TargetValue(null, updateDocument));
         return (Updater) this;
     }
 
@@ -221,8 +216,8 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
     /**
      * @return the operations listed
      */
-    public Document getOps() {
-        return new Document(ops);
+    public Document toDocument() {
+        return operations.toDocument();
     }
 
     /**
@@ -230,9 +225,13 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
      *
      * @param ops the operations
      */
-    @SuppressWarnings("unchecked")
     void setOps(final Document ops) {
-        this.ops = ops;
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
+
+//        this.ops = ops;
     }
 
     private void add(final UpdateOperator op, final String field, final Object value) {
@@ -240,8 +239,7 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
             throw new QueryException("Val cannot be null");
         }
 
-        PathTarget pathTarget = new PathTarget(mapper, clazz, field, validateNames);
-        addOperation(op, pathTarget.translatedPath(), value);
+        addOperation(op, new PathTarget(mapper, clazz, field, validateNames), value);
     }
 
     protected Updater remove(final String fieldExpr, final boolean firstNotLast) {
@@ -251,18 +249,12 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
 
     @Override
     public String toString() {
-        return getOps().toString();
+        return toDocument().toString();
     }
 
-    private void addOperation(final UpdateOperator op, final String fieldName, final Object val) {
-        final String opString = op.val();
-
-        if (!ops.containsKey(opString)) {
-            ops.put(opString, new Document());
-        }
-        ((Document) ops.get(opString)).put(fieldName, val);
+    private void addOperation(final UpdateOperator operator, final PathTarget path, final Object val) {
+        operations.add(operator, new TargetValue(path, val));
     }
-
 
     protected void versionUpdate() {
         final MappedClass mc = mapper.getMappedClass(clazz);
@@ -275,4 +267,5 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
             inc(mc.getVersionField().getMappedFieldName());
         }
     }
+
 }

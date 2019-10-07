@@ -27,7 +27,7 @@ public class Modify<T> extends UpdatesImpl<T, Modify<T>> {
     public T execute(final FindOneAndUpdateOptions options) {
         versionUpdate();
 
-        return collection.findOneAndUpdate(queryObject, getOps(), options);
+        return collection.findOneAndUpdate(queryObject, toDocument(), options);
 
     }
 }

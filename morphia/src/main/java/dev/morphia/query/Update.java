@@ -35,9 +35,10 @@ public class Update<T> extends UpdatesImpl<T, Update<T>> {
         }
         MongoCollection mongoCollection = datastore.enforceWriteConcern(collection, clazz, options.getWriteConcern());
         versionUpdate();
+        Document update = toDocument();
         return options.isMulti()
-               ? mongoCollection.updateMany(queryObject, getOps(), options)
-               : mongoCollection.updateOne(queryObject, getOps(), options);
+               ? mongoCollection.updateMany(queryObject, update, options)
+               : mongoCollection.updateOne(queryObject, update, options);
     }
 
 }
