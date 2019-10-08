@@ -43,6 +43,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -503,16 +504,17 @@ public final class ReflectionUtils {
                                            .getFile();
                 // WINDOWS HACK
                 if (filePath.indexOf("%20") > 0) {
-                    filePath = filePath.replaceAll("%20", " ");
+                    filePath = filePath.replace("%20", " ");
                 }
                 // # in the jar name
                 if (filePath.indexOf("%23") > 0) {
-                    filePath = filePath.replaceAll("%23", "#");
+                    filePath = filePath.replace("%23", "#");
                 }
 
-                if ((filePath.indexOf("!") > 0) && (filePath.indexOf(".jar") > 0)) {
-                    String jarPath = filePath.substring(0, filePath.lastIndexOf("!"))
-                                             .substring(filePath.indexOf(":") + 1);
+                filePath = URLDecoder.decode(filePath, "utf-8");
+                if ((filePath.indexOf('!') > 0) && (filePath.indexOf(".jar") > 0)) {
+                    String jarPath = filePath.substring(0, filePath.lastIndexOf('!'))
+                        .substring(filePath.indexOf(':') + 1);
                     // WINDOWS HACK
                     if (jarPath.contains(":")) {
                         jarPath = jarPath.substring(1);
