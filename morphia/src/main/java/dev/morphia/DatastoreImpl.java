@@ -362,10 +362,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> T findAndModify(final Query<T> query, final UpdateOperations<T> operations, final FindAndModifyOptions options) {
         DBCollection dbColl = query.getCollection();
-        // TODO remove this after testing.
-        if (dbColl == null) {
-            dbColl = getCollection(query.getEntityClass());
-        }
 
         if (LOG.isTraceEnabled()) {
             LOG.info("Executing findAndModify(" + dbColl.getName() + ") with update ");
@@ -378,7 +374,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                                            .update(((UpdateOpsImpl<T>) operations).getOps())
                                                                            .getOptions());
 
-        return res == null ? null : mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
+        return mapper.fromDBObject(this, query.getEntityClass(), res, createCache());
 
     }
 
