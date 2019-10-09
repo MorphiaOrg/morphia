@@ -3,6 +3,8 @@ package dev.morphia.query;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.PropertyCodec;
+import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -22,7 +24,6 @@ class TargetValue {
     public Object encode() {
         MappedField mappedField = this.target.getTarget();
         Object mappedValue = value;
-//        final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
 
         PropertyModel<?> propertyModel = mappedField != null
                                          ? mappedField.getDeclaringClass()
@@ -30,23 +31,14 @@ class TargetValue {
                                                       .getPropertyModel(mappedField.getJavaFieldName())
                                          : null;
 
-/*
-        Class<?> componentType = type;
-        if (componentType.isArray() || Iterable.class.isAssignableFrom(componentType)) {
-            if (type.isArray()) {
-                componentType = type.getComponentType();
-            } else {
-                Iterator iterator = ((Iterable) value).iterator();
-                if (iterator.hasNext()) {
-                    componentType = iterator.next().getClass();
-                }
-            }
-        }
-*/
         Codec cachedCodec = propertyModel.getCachedCodec();
+        if(cachedCodec instanceof PropertyHandler) {
+            mappedValue = ((PropertyHandler)cachedCodec).prepare(mappedValue);
+        }
+
 //        if (cachedCodec.getEncoderClass().isAssignableFrom(componentType)) {
             DocumentWriter writer = new DocumentWriter();
-            cachedCodec.encode(writer, value, EncoderContext.builder().build());
+            cachedCodec.encode(writer, mappedValue, EncoderContext.builder().build());
             mappedValue = writer.getRoot();
 //        }
         return new Document(target.translatedPath(), mappedValue);

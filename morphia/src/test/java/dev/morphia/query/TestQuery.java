@@ -1766,6 +1766,34 @@ public class TestQuery extends TestBase {
         public void tweak() {
             prePersist = true;
         }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Pic)) {
+                return false;
+            }
+
+            final Pic pic = (Pic) o;
+
+            if (isPrePersist() != pic.isPrePersist()) {
+                return false;
+            }
+            if (getId() != null ? !getId().equals(pic.getId()) : pic.getId() != null) {
+                return false;
+            }
+            return getName() != null ? getName().equals(pic.getName()) : pic.getName() == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+            result = 31 * result + (isPrePersist() ? 1 : 0);
+            return result;
+        }
     }
 
     @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))

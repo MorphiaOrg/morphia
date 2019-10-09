@@ -349,6 +349,7 @@ public class MappedField {
     }
 
     public PropertyCodec getHandler() {
+        Class<?> type = getPropertyModel().getTypeData().getType();
         final ClassModel<?> model = getDeclaringClass().getMorphiaModel();
         final InstanceCreator<?> instanceCreator = model.getInstanceCreator();
         PropertyCodec handler = null;

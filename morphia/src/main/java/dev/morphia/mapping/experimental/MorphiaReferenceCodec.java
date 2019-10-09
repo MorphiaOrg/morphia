@@ -3,6 +3,7 @@ package dev.morphia.mapping.experimental;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.PropertyCodec;
+import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -21,7 +22,7 @@ import java.util.Set;
 import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
 
 @SuppressWarnings("unchecked")
-public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> {
+public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> implements PropertyHandler {
 
     private final Mapper mapper;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
@@ -60,5 +61,10 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> {
         Object ids = value.getId(mapper, getFieldMappedClass());
         Codec codec = mapper.getCodecRegistry().get(ids.getClass());
         codec.encode(writer, ids, encoderContext);
+    }
+
+    @Override
+    public Object prepare(final Object value) {
+        return MorphiaReference.wrap(value);
     }
 }
