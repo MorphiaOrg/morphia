@@ -209,7 +209,7 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
 
     @Override
     public Updater unset(final String field) {
-        add(UpdateOperator.UNSET, field, 1);
+        addOperation(UpdateOperator.UNSET, new PathTarget(mapper, clazz, field, validateNames), null);
         return (Updater)this;
     }
 

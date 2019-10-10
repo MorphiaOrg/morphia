@@ -3,14 +3,11 @@ package dev.morphia.query;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.PropertyModel;
-
-import java.util.Iterator;
 
 class TargetValue {
     private PathTarget target;
@@ -32,15 +29,15 @@ class TargetValue {
                                          : null;
 
         Codec cachedCodec = propertyModel.getCachedCodec();
-        if(cachedCodec instanceof PropertyHandler) {
-            mappedValue = ((PropertyHandler)cachedCodec).prepare(mappedValue);
+        if (cachedCodec instanceof PropertyHandler) {
+            mappedValue = ((PropertyHandler) cachedCodec).prepare(mappedValue);
         }
 
-//        if (cachedCodec.getEncoderClass().isAssignableFrom(componentType)) {
+        if (mappedValue != null) {
             DocumentWriter writer = new DocumentWriter();
             cachedCodec.encode(writer, mappedValue, EncoderContext.builder().build());
             mappedValue = writer.getRoot();
-//        }
+        }
         return new Document(target.translatedPath(), mappedValue);
     }
 }

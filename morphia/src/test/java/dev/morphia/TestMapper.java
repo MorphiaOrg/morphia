@@ -17,6 +17,7 @@ import dev.morphia.testmodel.Rectangle;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -50,6 +51,7 @@ public class TestMapper extends TestBase {
 
     @Test
     @Category(Reference.class)
+    @Ignore("entity caching needs to be implemented")
     public void singleLookup() {
         A.loadCount = 0;
         final A a = new A();

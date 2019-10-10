@@ -167,32 +167,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    @Category(Reference.class)
-    public void testDbRefMapping() {
-        getMapper().map(Rectangle.class);
-        final MongoCollection<Document> stuff = getDatabase().getCollection("stuff");
-        final MongoCollection<Document> rectangles = getDatabase().getCollection("rectangles");
-
-        final Rectangle r = new Rectangle(1, 1);
-        final Document rDocument = getMapper().toDocument(r);
-        rDocument.put("_ns", rectangles.getNamespace().getCollectionName());
-        rectangles.insertOne(rDocument);
-
-        final ContainsRef cRef = new ContainsRef();
-        cRef.rect = new DBRef((String) rDocument.get("_ns"), rDocument.get("_id"));
-        final Document cRefDocument = getMapper().toDocument(cRef);
-        stuff.insertOne(cRefDocument);
-        final Document cRefDocumentLoaded = (Document) stuff.find(new Document("_id", cRefDocument.get("_id")));
-        final ContainsRef cRefLoaded = getMapper().fromDocument(ContainsRef.class, cRefDocumentLoaded);
-        assertNotNull(cRefLoaded);
-        assertNotNull(cRefLoaded.rect);
-        assertNotNull(cRefLoaded.rect.getId());
-        assertNotNull(cRefLoaded.rect.getCollectionName());
-        assertEquals(cRefLoaded.rect.getId(), cRef.rect.getId());
-        assertEquals(cRefLoaded.rect.getCollectionName(), cRef.rect.getCollectionName());
-    }
-
-    @Test
     public void testEmbeddedArrayElementHasNoClassname() {
         getMapper().map(ContainsEmbeddedArray.class);
         final ContainsEmbeddedArray cea = new ContainsEmbeddedArray();
@@ -552,35 +526,33 @@ public class TestMapping extends TestBase {
 
     @Test
     @Category(Reference.class)
+    @Ignore("entity caching needs to be implemented")
     public void testRecursiveReference() {
-        final MongoCollection<Document> stuff = getDatabase().getCollection("stuff");
+        getMapper().map(RecursiveParent.class, RecursiveChild.class);
 
-        getMapper().map(RecursiveChild.class);
+        final RecursiveParent parent = getDs().save(new RecursiveParent());
+        final RecursiveChild child = getDs().save(new RecursiveChild());
 
-        final RecursiveParent parent = new RecursiveParent();
-        final Document parentDocument = getMapper().toDocument(parent);
-        stuff.insertOne(parentDocument);
-
-        final RecursiveChild child = new RecursiveChild();
-        final Document childDocument = getMapper().toDocument(child);
-        stuff.insertOne(childDocument);
-
-        final RecursiveParent parentLoaded = getMapper().fromDocument(RecursiveParent.class,
-            stuff.find(new Document("_id", parentDocument.get("_id"))).first());
-        final RecursiveChild childLoaded = getMapper().fromDocument(RecursiveChild.class,
-            stuff.find(new Document("_id", childDocument.get("_id"))).first());
+        final RecursiveParent parentLoaded = getDs().find(RecursiveParent.class)
+                                                    .filter("_id", parent.getId())
+                                                    .first();
+        final RecursiveChild childLoaded = getDs().find(RecursiveChild.class)
+                                                  .filter("_id", child.getId())
+                                                  .first();
 
         parentLoaded.setChild(childLoaded);
         childLoaded.setParent(parentLoaded);
 
-        stuff.insertOne(getMapper().toDocument(parentLoaded));
-        stuff.insertOne(getMapper().toDocument(childLoaded));
+        getDs().save(parentLoaded);
+        getDs().save(childLoaded);
 
-        final RecursiveParent finalParentLoaded = getMapper().fromDocument(RecursiveParent.class,
-            stuff.find(new Document("_id", parentDocument.get("_id")))
-                 .first());
-        final RecursiveChild finalChildLoaded = getMapper().fromDocument(RecursiveChild.class,
-            stuff.find(new Document("_id", childDocument.get("_id"))).first());
+        final RecursiveParent finalParentLoaded = getDs().find(RecursiveParent.class)
+                                                    .filter("_id", parent.getId())
+                                                    .first();
+        final RecursiveChild finalChildLoaded = getDs().find(RecursiveChild.class)
+                                                  .filter("_id", child.getId())
+                                                  .first();
+
 
         assertNotNull(finalParentLoaded.getChild());
         assertNotNull(finalChildLoaded.getParent());
@@ -765,28 +737,12 @@ public class TestMapping extends TestBase {
         private RenamedEmbedded[] res;
     }
 
-    private static class NotEmbeddable {
-        private String noImNot = "no, I'm not";
-    }
-
-    private static class SerializableClass implements Serializable {
-        private final String someString = "hi, from the ether.";
-    }
-
-    @Entity
-    private static class ContainsRef {
-        @Id
-        private ObjectId id;
-        private DBRef rect;
-    }
-
     @Entity
     private static class HasFinalFieldId {
         @Id
         private final long id;
         private String name = "some string";
 
-        //only called when loaded by the persistence framework.
         protected HasFinalFieldId() {
             id = -1;
         }

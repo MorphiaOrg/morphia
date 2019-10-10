@@ -635,7 +635,8 @@ public class TestUpdateOps extends TestBase {
         assertThat(idQuery.first().getRadius(), is(2D));
 
         circle = ds.find(Circle.class).filter("radius", 2D);
-        assertUpdated(circle.update().unset("radius").execute(new UpdateOptions().multi(false)), 1);
+        assertUpdated(circle.update().unset("radius")
+                            .execute(new UpdateOptions().multi(false)), 1);
 
         assertThat(idQuery.first().getRadius(), is(0D));
 
@@ -753,10 +754,6 @@ public class TestUpdateOps extends TestBase {
         final Pic pic = new Pic();
         pic.setName("fist");
         getDs().save(pic);
-        final Key<Pic> picKey = getMapper().getKey(pic);
-
-
-        //test with Key<Pic>
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class).filter("name", cp.getName());
         UpdateResult result = query.update()
@@ -773,8 +770,6 @@ public class TestUpdateOps extends TestBase {
         assertThat(cp2.getPic(), is(notNullValue()));
         assertThat(cp2.getPic().getName(), is(notNullValue()));
         assertThat(pic.getName(), is(cp2.getPic().getName()));
-
-        query.update().set("pic", picKey).execute();
 
         //test reading the object.
         final ContainsPic cp3 = getDs().find(ContainsPic.class)
