@@ -1,8 +1,6 @@
 package dev.morphia.query;
 
 
-import com.mongodb.MongoException;
-import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -10,7 +8,6 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
@@ -105,21 +102,13 @@ public class QueryInTest extends TestBase {
         final HasRef hr = new HasRef();
         List<ReferencedEntity> refs = new ArrayList<>();
         for (int x = 0; x < 10; x++) {
-            final ReferencedEntity re = new ReferencedEntity("" + x);
-            getDs().save(re);
-            refs.add(re);
+            refs.add(getDs().save(new ReferencedEntity("" + x)));
         }
         hr.ref = refs.get(0);
 
         getDs().save(hr);
 
-        Query<HasRef> query = getDs().find(HasRef.class).field("ref").in(refs);
-        try {
-            Assert.assertEquals(1, query.count());
-        } catch (MongoException e) {
-            LOG.debug("query = " + query);
-            throw e;
-        }
+        Assert.assertEquals(1, getDs().find(HasRef.class).field("ref").in(refs).count());
     }
 
     @Test

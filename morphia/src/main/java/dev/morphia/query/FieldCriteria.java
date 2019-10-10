@@ -39,27 +39,38 @@ class FieldCriteria extends AbstractCriteria {
         mappedField = pathTarget.getTarget();
 
         Object mappedValue = value;
-        final Class<?> type = (mappedValue == null) ? null : mappedValue.getClass();
+        final Class<?> type = getType(mappedValue);
 
         if (getMapper().getMappedClass(type) != null) {
             mappedValue = mapValue(value, type);
         }
 
-
-        //convert single values into lists for $in/$nin
-        if (type != null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN)
-            && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {
-            mappedValue = Collections.singletonList(mappedValue);
-        }
-
-        if (value != null && type == null && (op == FilterOperator.IN || op == FilterOperator.NOT_IN)
-            && Iterable.class.isAssignableFrom(value.getClass())) {
-            mappedValue = Collections.emptyList();
-        }
         this.field = pathTarget.translatedPath();
         this.operator = op;
         this.value = mappedValue;
         this.not = not;
+    }
+
+    private Class getType(final Object value) {
+        if(value == null) {
+            return null;
+        }
+        Class type;
+        if(value instanceof Iterator) {
+            final Iterator iterator = (Iterator) value;
+            if(iterator.hasNext()) {
+                type = getType(iterator.next());
+            } else {
+                type = null;
+            }
+        } else if(value instanceof Iterable) {
+            type = getType(((Iterable) value).iterator());
+        } else if(value instanceof Map) {
+            type = getType(((Map) value).entrySet().iterator());
+        } else {
+            type = value.getClass();
+        }
+        return type;
     }
 
     private Object mapValue(final Object value, final Class<?> type) {

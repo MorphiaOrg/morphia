@@ -127,11 +127,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T hasAnyOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
-        if (LOG.isWarnEnabled()) {
-            if (!values.iterator().hasNext()) {
-                LOG.warn("Specified an empty list/collection with the '" + field + "' criteria");
-            }
-        }
+        Assert.parameterNotEmpty("values", values);
+
         return addCriteria(IN, values);
     }
 
