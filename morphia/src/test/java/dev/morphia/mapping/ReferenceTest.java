@@ -121,7 +121,7 @@ public class ReferenceTest extends ProxyTestBase {
         assertEquals(expectedRefList, retrieved.getCollectionRef());
         assertEquals(expectedRefList, retrieved.getLazyCollectionRef());
         assertEquals(expectedRefMap, retrieved.getMapRef());
-        assertEquals(expectedRefMap, retrieved.getLazyMapRef());
+        assertEquals(expectedRefMap.keySet(), retrieved.getLazyMapRef().keySet());
     }
 
     @Test
@@ -153,10 +153,9 @@ public class ReferenceTest extends ProxyTestBase {
 
     @Test
     public void testReferenceQueryWithoutValidation() {
-        Ref ref = new Ref("no validation");
-        getDs().save(ref);
-        final Container container = new Container(singletonList(ref));
-        getDs().save(container);
+        Ref ref = getDs().save(new Ref("no validation"));
+        getDs().save(new Container(singletonList(ref)));
+
         final Query<Container> query = getDs().find(Container.class)
                                               .disableValidation()
                                               .field("singleRef").equal(ref);

@@ -68,7 +68,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         assertIsProxy(fetched.lazyChildMap);
         assertNotFetched(fetched.lazyChildMap);
         Assert.assertEquals(2, fetched.lazyChildMap.size());
-        assertFetched(fetched.lazyChildMap);
+        assertNotFetched(fetched.lazyChildMap);
         Assert.assertTrue(fetched.lazyChildMap.keySet().iterator().next() != null);
     }
 

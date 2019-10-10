@@ -25,6 +25,10 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
             return isFetched();
         } else if (method.getAnnotation(IdGetter.class) != null) {
             return reference.getIds().get(0);
+        } else if ("isEmpty".equals(method.getName())) {
+            return isFetched() ? invoke(method, args) : reference.getIds().isEmpty();
+        } else if ("size".equals(method.getName())) {
+            return isFetched() ? invoke(method, args) : reference.getIds().size();
         } else {
             fetch(method);
             return invoke(method, args);

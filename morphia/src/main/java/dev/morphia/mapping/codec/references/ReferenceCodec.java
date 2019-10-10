@@ -97,11 +97,11 @@ public class ReferenceCodec extends PropertyCodec<Object> {
     public Object fetch(final Object value) {
         MorphiaReference reference;
         final Class<?> type = getField().getType();
-        if (type.isAssignableFrom(List.class)) {
+        if (List.class.isAssignableFrom(type)) {
             reference = readList((List) value);
-        } else if (type.isAssignableFrom(Map.class)) {
+        } else if (Map.class.isAssignableFrom(type)) {
             reference = readMap((Map<Object, Object>) value);
-        } else if (type.isAssignableFrom(Set.class)) {
+        } else if (Set.class.isAssignableFrom(type)) {
             reference = readSet((List) value);
         } else if (type.isArray()) {
             reference = readList((List) value);
