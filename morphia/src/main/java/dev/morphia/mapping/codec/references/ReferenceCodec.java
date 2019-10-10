@@ -147,7 +147,7 @@ public class ReferenceCodec extends PropertyCodec<Object> {
                                     .intercept(InvocationHandlerAdapter.of(referenceProxy))
 
                                     .make()
-                                    .load(type.getClassLoader(), Default.WRAPPER))
+                                    .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER))
                        .getLoaded()
                        .getDeclaredConstructor()
                        .newInstance();
