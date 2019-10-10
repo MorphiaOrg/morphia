@@ -85,6 +85,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
         for (final Entry<String, List<Object>> entry : collections.entrySet()) {
             readFromSingleCollection(entry.getKey(), entry.getValue());
         }
+        resolve();
     }
 
     @SuppressWarnings("unchecked")
@@ -107,13 +108,6 @@ public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
                 }
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isResolved() {
-        return values != null;
     }
 
     /**

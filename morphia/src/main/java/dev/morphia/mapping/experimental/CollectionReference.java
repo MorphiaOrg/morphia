@@ -75,13 +75,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return collections.computeIfAbsent(name, k -> new ArrayList<>());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final boolean isResolved() {
-        return getValues() != null;
-    }
-
     abstract Collection<?> getValues();
 
     /**
@@ -105,6 +98,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         for (final Entry<String, List<Object>> entry : collections.entrySet()) {
             query(entry.getKey(), entry.getValue(), values);
         }
+        resolve();
         return values.stream().filter(o -> o != null).collect(Collectors.toList());
     }
 

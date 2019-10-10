@@ -22,6 +22,7 @@ import java.util.Set;
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
     private boolean ignoreMissing;
+    private boolean resolved;
 
     MorphiaReference() {
     }
@@ -74,7 +75,13 @@ public abstract class MorphiaReference<T> {
      * @return true if this reference has already been resolved
      * @morphia.internal
      */
-    public abstract boolean isResolved();
+    public final boolean isResolved() {
+        return resolved;
+    }
+
+    protected void resolve() {
+        resolved = true;
+    }
 
     /**
      * @param mapper            the mapper

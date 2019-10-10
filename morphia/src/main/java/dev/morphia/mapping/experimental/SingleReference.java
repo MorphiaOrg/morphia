@@ -40,12 +40,13 @@ public class SingleReference<T> extends MorphiaReference<T> {
      */
     @SuppressWarnings("unchecked")
     public T get() {
-        if (value == null && id != null) {
+        if (!isResolved() && value == null && id != null) {
             value = (T) buildQuery().execute().tryNext();
             if (value == null && !ignoreMissing()) {
                 throw new LazyReferenceFetchingException(
                     Sofia.missingReferencedEntity(mappedClass.getType().getSimpleName()));
             }
+            resolve();
         }
         return value;
     }
@@ -93,13 +94,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
             }
         }
         return id;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isResolved() {
-        return value != null;
     }
 
     /**

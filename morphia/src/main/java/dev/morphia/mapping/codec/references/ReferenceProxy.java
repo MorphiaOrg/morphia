@@ -2,6 +2,8 @@ package dev.morphia.mapping.codec.references;
 
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
+import dev.morphia.sofia.Sofia;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +51,15 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
         if (method.getDeclaringClass().isAssignableFrom(getClass())) {
             return method.invoke(this, args);
         } else {
-            return method.invoke(isFetched() ? reference.get() : reference.getIds(), args);
+            if (isFetched()) {
+                Object target = reference.get();
+                if(target == null) {
+                    throw new LazyReferenceFetchingException(Sofia.missingReferencedEntity(reference.getType()));
+                }
+                return method.invoke(target, args);
+            } else {
+                return method.invoke(reference.getIds(), args);
+            }
         }
     }
 }

@@ -5,7 +5,6 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
@@ -32,24 +31,21 @@ public class TestLazyWithMissingReferences extends TestBase {
         e.setLazy(new Target());
 
         getDs().save(e); // does not fail due to pre-initialized Ids
-        Assert.assertNull(getDs().find(Source.class)
-                                 .execute(new FindOptions().limit(1))
-                                 .tryNext()
-                                 .getLazy());
+        Source source = getDs().find(Source.class)
+                               .execute(new FindOptions().limit(1))
+                               .tryNext();
+        Assert.assertNull(source.getLazy().getFoo());
     }
 
-    @Test
+    @Test(expected = LazyReferenceFetchingException.class)
     public void testMissingRefLazyIgnoreMissing() {
         final Source e = new Source();
         e.setIgnoreMissing(new Target());
 
         getDs().save(e); // does not fail due to pre-initialized Ids
 
-        try {
-            getDs().find(Source.class).execute(new FindOptions().limit(1)).tryNext().getIgnoreMissing().foo();
-        } catch (RuntimeException re) {
-            Assert.assertEquals("Cannot dispatch method foo", re.getMessage());
-        }
+        Source source = getDs().find(Source.class).execute(new FindOptions().limit(1)).tryNext();
+        source.getIgnoreMissing().getFoo();
     }
 
     @Entity
@@ -94,9 +90,21 @@ public class TestLazyWithMissingReferences extends TestBase {
         private ObjectId id = new ObjectId();
         private String foo = "bar";
 
-        void foo() {
+        public ObjectId getId() {
+            return id;
         }
 
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public String getFoo() {
+            return foo;
+        }
+
+        public void setFoo(final String foo) {
+            this.foo = foo;
+        }
     }
 
 }
