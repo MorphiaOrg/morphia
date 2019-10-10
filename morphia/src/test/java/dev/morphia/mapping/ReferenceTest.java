@@ -39,26 +39,20 @@ import static org.junit.Assert.assertTrue;
 public class ReferenceTest extends ProxyTestBase {
     @Test
     public void testComplexIds() {
-        Complex complex = new Complex(new ChildId("Bob", 67), "Kelso");
-        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-            new Complex(new ChildId("JD", 26), "Dorian"),
-            new Complex(new ChildId("Carla", 29), "Espinosa"));
-        List<Complex> lazyList = asList(new Complex(new ChildId("Bippity", 67), "Boppity"),
-            new Complex(new ChildId("Cinder", 22), "Ella"),
-            new Complex(new ChildId("Prince", 29), "Charming"));
-
         ComplexParent parent = new ComplexParent();
-        parent.complex = complex;
-        parent.list = list;
-        parent.lazyList = lazyList;
+        parent.complex = new Complex(new ChildId("Bob", 67), "Kelso");
+        parent.list = List.of(new Complex(new ChildId("Turk", 27), "Turk"));
+        parent.lazyList = List.of(new Complex(new ChildId("Bippity", 67), "Boppity"));
 
-        getDs().save(complex);
-        getDs().save(list);
-        getDs().save(lazyList);
+        getDs().save(parent.complex);
+        getDs().save(parent.list);
+        getDs().save(parent.lazyList);
         getDs().save(parent);
 
-        ComplexParent complexParent = getDs().find(ComplexParent.class).filter("_id", parent.id).first();
-        assertEquals(parent, complexParent);
+        ComplexParent loaded = getDs().find(ComplexParent.class)
+                                      .filter("_id", parent.id)
+                                      .first();
+        assertEquals(parent, loaded);
     }
 
     @Test

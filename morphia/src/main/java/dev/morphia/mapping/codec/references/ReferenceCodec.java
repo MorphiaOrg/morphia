@@ -61,7 +61,14 @@ public class ReferenceCodec extends PropertyCodec<Object> {
     }
 
     public static Object processId(Object decode, final Mapper mapper, final DecoderContext decoderContext) {
-        if (decode instanceof Document) {
+        if (decode instanceof Iterable) {
+            Iterable iterable = (Iterable) decode;
+            List ids = new ArrayList();
+            for (final Object o : iterable) {
+                ids.add(processId(o, mapper, decoderContext));
+            }
+            decode = ids;
+        } else if (decode instanceof Document) {
             Document document = (Document) decode;
             if (document.containsKey("$ref")) {
                 Object id = document.get("$id");
@@ -72,6 +79,16 @@ public class ReferenceCodec extends PropertyCodec<Object> {
                                .decode(documentReader, decoderContext);
                 }
                 decode = new DBRef((String) document.get("$ref"), id);
+            } else if (document.containsKey(mapper.getOptions().getDiscriminatorField())) {
+                DocumentReader documentReader = new DocumentReader(document);
+                try {
+                    decode = mapper.getCodecRegistry()
+                               .get(Class.forName((String) document.get(mapper.getOptions().getDiscriminatorField())))
+                               .decode(documentReader, decoderContext);
+                } catch (ClassNotFoundException e) {
+                    throw new MappingException(e.getMessage(), e);
+                }
+
             }
         }
         return decode;
