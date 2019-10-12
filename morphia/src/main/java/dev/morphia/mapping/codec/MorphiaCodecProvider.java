@@ -7,6 +7,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -58,7 +59,8 @@ public class MorphiaCodecProvider implements CodecProvider {
     }
 
     public static <T> boolean isMappable(final Class<T> type) {
-        return hasAnnotation(type, List.of(Entity.class, Embedded.class));
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
     }
 
     private static <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {

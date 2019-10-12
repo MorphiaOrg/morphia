@@ -11,7 +11,7 @@ import org.bson.Document;
 
 import java.util.List;
 
-public class Update<T> extends UpdatesImpl<T, Update<T>> {
+public class Update<T> extends UpdateBase<T, Update<T>> {
     private Document queryObject;
     private MongoCollection<T> collection;
 
@@ -30,15 +30,12 @@ public class Update<T> extends UpdatesImpl<T, Update<T>> {
 
         final List<MappedField> fields = mapper.getMappedClass(clazz)
                                                .getFields(Version.class);
-        if (!fields.isEmpty()) {
-            inc(fields.get(0).getMappedFieldName(), 1);
-        }
         MongoCollection mongoCollection = datastore.enforceWriteConcern(collection, clazz, options.getWriteConcern());
-        versionUpdate();
-        Document update = toDocument();
+        Document updateOperations = toDocument();
+        System.out.println("********************* updateOperations = " + updateOperations);
         return options.isMulti()
-               ? mongoCollection.updateMany(queryObject, update, options)
-               : mongoCollection.updateOne(queryObject, update, options);
+               ? mongoCollection.updateMany(queryObject, updateOperations, options)
+               : mongoCollection.updateOne(queryObject, updateOperations, options);
     }
 
 }

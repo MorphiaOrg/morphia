@@ -478,11 +478,11 @@ public class Mapper {
      */
     public MappedClass getMappedClass(final Class type) {
 
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        if (type == null || !isMappable(actual)) {
+        if (type == null || !isMappable(type)) {
             return null;
         }
 
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
         MappedClass mc = mappedClasses.get(actual);
         if (mc == null) {
             mc = addMappedClass(actual);

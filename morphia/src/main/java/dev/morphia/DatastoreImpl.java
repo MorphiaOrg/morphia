@@ -514,7 +514,7 @@ class DatastoreImpl implements AdvancedDatastore {
         final MappedField versionField = mc.getVersionField();
 
         Long oldVersion = (Long) versionField.getFieldValue(entity);
-        long newVersion = oldVersion == null ? 1 : oldVersion + 1;
+        long newVersion = oldVersion == null ? 1L : oldVersion + 1;
 
         if (newVersion == 1) {
             try {
@@ -531,14 +531,10 @@ class DatastoreImpl implements AdvancedDatastore {
                     entity.getClass().getName(), idValue));
             }
         } else if (idValue != null) {
-            Query<Object> query = find(collection.getNamespace().getCollectionName())
-                                   .disableValidation()
-                                   .filter("_id", idValue)
-                                   .enableValidation()
-                                   .filter(versionField.getMappedFieldName(), oldVersion);
-            final UpdateResult res = query
+            final UpdateResult res = find(collection.getNamespace().getCollectionName())
+                                         .filter("_id", idValue)
+                                         .filter(versionField.getMappedFieldName(), oldVersion)
                                          .update()
-                                         .inc(versionField.getMappedFieldName(), 1)
                                          .set(entity)
                                          .execute(new UpdateOptions()
                                                       .bypassDocumentValidation(options.getBypassDocumentValidation())

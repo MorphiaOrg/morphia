@@ -9,6 +9,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.PropertyModel;
 
+import java.util.Objects;
+import java.util.StringJoiner;
+
 class TargetValue {
     private PathTarget target;
     private Object value;
@@ -18,7 +21,18 @@ class TargetValue {
         this.value = value;
     }
 
+    public PathTarget getTarget() {
+        return target;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
     public Object encode() {
+        if(target == null) {
+            return value;
+        }
         MappedField mappedField = this.target.getTarget();
         Object mappedValue = value;
 
@@ -39,5 +53,13 @@ class TargetValue {
             mappedValue = writer.getRoot();
         }
         return new Document(target.translatedPath(), mappedValue);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", TargetValue.class.getSimpleName() + "[", "]")
+                   .add("target=" + target)
+                   .add("value=" + value)
+                   .toString();
     }
 }

@@ -137,7 +137,6 @@ public class MapImplTest extends TestBase {
         private final Map<String, Goo> values = new HashMap<>();
     }
 
-    @Entity
     private interface Goober {}
 
     @Embedded

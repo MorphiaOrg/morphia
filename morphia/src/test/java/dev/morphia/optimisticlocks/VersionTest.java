@@ -35,15 +35,15 @@ public class VersionTest extends TestBase {
         getMapper().map(List.of(ALongPrimitive.class));
 
         final ALongPrimitive a = new ALongPrimitive();
-        Assert.assertEquals(0, a.version);
+        assertEquals(0, a.version);
         getDs().save(a);
-        Assert.assertEquals(1, a.version);
+        assertEquals(1, a.version);
 
         Query<ALongPrimitive> query = getDs().find(ALongPrimitive.class)
                                           .filter("_id", a.getId());
         getDs().save(query.execute().next());
 
-        Assert.assertEquals(2, query.execute().next().version);
+        assertEquals(2, query.execute().next().version);
 
         getDs().save(a);
     }
@@ -51,7 +51,7 @@ public class VersionTest extends TestBase {
     @Test(expected = ConcurrentModificationException.class)
     public void testConcurrentModDetectionLong() {
         final ALong a = new ALong();
-        Assert.assertEquals(null, a.v);
+        Assert.assertNull(a.v);
         getDs().save(a);
 
         getDs().save(getDs().get(a));
@@ -62,7 +62,7 @@ public class VersionTest extends TestBase {
     @Test(expected = ConcurrentModificationException.class)
     public void testConcurrentModDetectionLongWithMerge() {
         final ALong a = new ALong();
-        Assert.assertEquals(null, a.v);
+        Assert.assertNull(a.v);
         getDs().save(a);
 
         a.text = " foosdfds ";
@@ -80,7 +80,7 @@ public class VersionTest extends TestBase {
     @Test
     public void testVersionFieldNameContribution() {
         final MappedField mappedFieldByJavaField = getMapper().getMappedClass(ALong.class).getMappedFieldByJavaField("v");
-        Assert.assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getMappedFieldName());
+        assertEquals("versionNameContributedByAnnotation", mappedFieldByJavaField.getMappedFieldName());
     }
 
     @Test
@@ -96,16 +96,16 @@ public class VersionTest extends TestBase {
     @Test
     public void testVersions() {
         final ALongPrimitive a = new ALongPrimitive();
-        Assert.assertEquals(0, a.version);
+        assertEquals(0, a.version);
         getDs().save(a);
-        Assert.assertTrue(a.version == 1);
+        assertEquals(1, a.version);
         final long version1 = a.version;
 
         getDs().save(a);
-        Assert.assertTrue(a.version == 2);
+        assertEquals(2, a.version);
         final long version2 = a.version;
 
-        Assert.assertFalse(version1 == version2);
+        Assert.assertNotEquals(version1, version2);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class VersionTest extends TestBase {
                                          .set("text", "some new value")
                                          .execute();
 
-        Assert.assertEquals(initial.version + 1, postUpdate.version);
+        assertEquals(initial.version + 1, postUpdate.version);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class VersionTest extends TestBase {
         assertEquals(1, results.getModifiedCount());
         ALongPrimitive postUpdate = ds.find(ALongPrimitive.class).filter("_id", initial.getId()).first();
 
-        Assert.assertEquals(initial.version + 1, postUpdate.version);
+        assertEquals(initial.version + 1, postUpdate.version);
     }
 
     @Test(expected = ConcurrentModificationException.class)

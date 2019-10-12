@@ -5,7 +5,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import org.bson.Document;
 
-public class Modify<T> extends UpdatesImpl<T, Modify<T>> {
+public class Modify<T> extends UpdateBase<T, Modify<T>> {
     private final QueryImpl<T> query;
     private final MongoCollection<T> collection;
     private final Document queryObject;
@@ -25,8 +25,6 @@ public class Modify<T> extends UpdatesImpl<T, Modify<T>> {
     }
 
     public T execute(final FindOneAndUpdateOptions options) {
-        versionUpdate();
-
         return collection.findOneAndUpdate(queryObject, toDocument(), options);
 
     }

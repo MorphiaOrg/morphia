@@ -150,7 +150,8 @@ public class TestSerializedFormat extends TestBase {
 
         getDs().save(entity);
 
-        Document document = getDatabase().getCollection(ReferenceType.class.getSimpleName()).find().first();
+        String collectionName = getDs().getMapper().getMappedClass(ReferenceType.class).getCollectionName();
+        Document document = getDatabase().getCollection(collectionName).find().first();
         Assert.assertEquals(Document.parse(readFully("/ReferenceType.json")), document);
         verifyCoverage(document);
     }

@@ -1,8 +1,11 @@
 package dev.morphia;
 
 import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
+import dev.morphia.query.UpdateException;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
@@ -10,21 +13,25 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
 public class UpdateDocument implements Bson {
+
+
+    public enum Mode {
+        DEFAULT, BODY_ONLY;
+    }
+    private Mapper mapper;
+
+    private Object entity;
+    private Mode mode;
     private boolean skipVersion;
+
+    public <T> UpdateDocument(final Mapper mapper, final T entity, final Mode mode) {
+        this.mapper = mapper;
+        this.entity = entity;
+        this.mode = mode;
+    }
 
     public void skipVersion() {
         skipVersion = true;
-    }
-
-    public enum Mode {
-        DEFAULT, BODY_ONLY
-    }
-    private Object entity;
-    private Mode mode;
-
-    public <T> UpdateDocument(final T entity, final Mode mode) {
-        this.entity = entity;
-        this.mode = mode;
     }
 
     @Override

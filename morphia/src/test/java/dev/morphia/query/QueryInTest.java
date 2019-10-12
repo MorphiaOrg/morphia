@@ -35,8 +35,7 @@ public class QueryInTest extends TestBase {
 
         query.or(
             query.criteria("id").hasAnyOf(memberships),
-            query.criteria("otherIds").hasAnyOf(memberships)
-                );
+            query.criteria("otherIds").hasAnyOf(memberships));
 
         Assert.assertFalse(query.execute().hasNext());
     }

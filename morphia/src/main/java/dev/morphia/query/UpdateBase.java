@@ -19,20 +19,20 @@ import static java.util.Collections.singletonList;
  * @param <Updater>
  */
 @SuppressWarnings("unchecked")
-public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates<Updater>  {
+public abstract class UpdateBase<T, Updater extends Updates> implements Updates<Updater>  {
 
     protected Datastore datastore;
     protected final Mapper mapper;
     protected final Class<T> clazz;
-    private final Operations operations = new Operations();
+    protected final Operations operations;
     private boolean validateNames = true;
-    private boolean versionedUpdate;
-    private UpdateDocument updateDocument;
 
-    UpdatesImpl(final Datastore datastore, final Mapper mapper, final Class<T> clazz) {
+    UpdateBase(final Datastore datastore, final Mapper mapper, final Class<T> clazz) {
         this.datastore = datastore;
         this.mapper = mapper;
         this.clazz = clazz;
+        final MappedClass mc = mapper.getMappedClass(clazz);
+        operations = new Operations(mapper, mc);
     }
 
     @Override
@@ -185,15 +185,7 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
 
     @Override
     public Updater set(final Object entity) {
-        if (entity == null) {
-            throw new QueryException("Entity value cannot be null.");
-        }
-
-        updateDocument = new UpdateDocument(entity, BODY_ONLY);
-        if(versionedUpdate) {
-            updateDocument.skipVersion();
-        }
-        operations.add(UpdateOperator.SET, new TargetValue(null, updateDocument));
+        operations.replaceEntity(entity);
         return (Updater) this;
     }
 
@@ -255,17 +247,4 @@ public abstract class UpdatesImpl<T, Updater extends Updates> implements Updates
     private void addOperation(final UpdateOperator operator, final PathTarget path, final Object val) {
         operations.add(operator, new TargetValue(path, val));
     }
-
-    protected void versionUpdate() {
-        final MappedClass mc = mapper.getMappedClass(clazz);
-
-        if (mc.getVersionField() != null) {
-            versionedUpdate = true;
-            if(updateDocument != null) {
-                updateDocument.skipVersion();
-            }
-            inc(mc.getVersionField().getMappedFieldName());
-        }
-    }
-
 }
