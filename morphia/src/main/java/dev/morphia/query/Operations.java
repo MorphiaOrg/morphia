@@ -46,7 +46,7 @@ class Operations {
         Document document = new Document();
         for (final Entry<UpdateOperator, List<TargetValue>> entry : ops.entrySet()) {
             var list = entry.getValue().stream()
-                            .map(TargetValue::encode)
+                            .map(targetValue -> targetValue.encode(mapper))
                             .collect(toList());
 
             document.put(entry.getKey().val(), list.size() == 1 ? list.get(0) : list);

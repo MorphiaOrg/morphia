@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import org.bson.Document;
@@ -9,7 +10,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.PropertyModel;
 
-import java.util.Objects;
 import java.util.StringJoiner;
 
 class TargetValue {
@@ -29,7 +29,7 @@ class TargetValue {
         return value;
     }
 
-    public Object encode() {
+    public Object encode(final Mapper mapper) {
         if(target == null) {
             return value;
         }
@@ -48,8 +48,14 @@ class TargetValue {
         }
 
         if (mappedValue != null) {
+            Codec codec = mapper.getCodecRegistry().get(mappedValue.getClass());
             DocumentWriter writer = new DocumentWriter();
-            cachedCodec.encode(writer, mappedValue, EncoderContext.builder().build());
+            try {
+                codec.encode(writer, mappedValue, EncoderContext.builder().build());
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                throw e;
+            }
             mappedValue = writer.getRoot();
         }
         return new Document(target.translatedPath(), mappedValue);

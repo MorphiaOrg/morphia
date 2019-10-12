@@ -1,21 +1,24 @@
 package dev.morphia.utils;
 
+import dev.morphia.query.QueryException;
+
 import static java.lang.String.format;
 
 /**
  * Provides various assertions for Morphia during validation
+ * @morphia.internal
  */
 public final class Assert {
     private Assert() {
     }
 
     /**
-     * Throws an AssertionFailedException with the given error message.
+     * Throws an QueryException with the given error message.
      *
      * @param error the error message
      */
     public static void raiseError(final String error) {
-        throw new AssertionFailedException(error);
+        throw new QueryException(error);
     }
 
     /**
@@ -71,35 +74,9 @@ public final class Assert {
      * @param value the proposed parameter value
      */
     public static void parameterNotEmpty(final String name, final String value) {
-        if (value != null && value.length() == 0) {
+        if (value != null && value.isEmpty()) {
             raiseError(format("Parameter '%s' is expected to NOT be empty.", name));
         }
     }
 
-    /**
-     * Represents a failed Morphia Assertion
-     */
-    public static class AssertionFailedException extends RuntimeException {
-
-        private static final long serialVersionUID = 435272532743543854L;
-
-        /**
-         * Creates a AssertionFailedException with a message and a cause
-         *
-         * @param message the message to record
-         */
-        public AssertionFailedException(final String message) {
-            super(message);
-        }
-
-        /**
-         * Creates a AssertionFailedException with a message and a cause
-         *
-         * @param message the message to record
-         * @param cause   the underlying cause
-         */
-        public AssertionFailedException(final String message, final Throwable cause) {
-            super(message, cause);
-        }
-    }
 }

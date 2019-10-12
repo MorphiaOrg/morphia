@@ -21,48 +21,48 @@ public class TestQueryParams extends TestBase {
         e = getDs().find(E.class).field("_id");
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testAnyOfNull() {
         e.hasAnyOf(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testGreaterThanNull() {
         e.greaterThan(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testGreaterThanOrEqualNull() {
         e.greaterThanOrEq(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testHasAllOfEmptyList() {
         final Query<E> q = getDs().find(E.class);
         q.field("_id").hasAllOf(Collections.emptyList());
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testHasAllOfNull() {
         e.hasAllOf(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testHasNoneOfNull() {
         e.hasNoneOf(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testLessThanNull() {
         e.lessThan(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testLessThanOrEqualNull() {
         e.lessThanOrEq(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testNoneOfEmptyList() {
         final Query<E> q = getDs().find(E.class);
         q.field("_id").hasNoneOf(Collections.emptyList());
@@ -80,12 +80,12 @@ public class TestQueryParams extends TestBase {
         e.hasThisOne(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testStartsWithIgnoreCaseNull() {
         e.startsWithIgnoreCase(null);
     }
 
-    @Test(expected = Assert.AssertionFailedException.class)
+    @Test(expected = QueryException.class)
     public void testStartsWithNull() {
         e.startsWith(null);
     }

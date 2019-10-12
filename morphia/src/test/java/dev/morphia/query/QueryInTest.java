@@ -28,7 +28,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class QueryInTest extends TestBase {
     private static final Logger LOG = getLogger(QueryInTest.class);
 
-    @Test
+    @Test(expected = QueryException.class)
     public void testAddEmpty() {
         Query<Data> query = getDs().find(Data.class);
         List<ObjectId> memberships = new ArrayList<>();

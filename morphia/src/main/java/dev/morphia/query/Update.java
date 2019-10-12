@@ -32,7 +32,6 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
                                                .getFields(Version.class);
         MongoCollection mongoCollection = datastore.enforceWriteConcern(collection, clazz, options.getWriteConcern());
         Document updateOperations = toDocument();
-        System.out.println("********************* updateOperations = " + updateOperations);
         return options.isMulti()
                ? mongoCollection.updateMany(queryObject, updateOperations, options)
                : mongoCollection.updateOne(queryObject, updateOperations, options);
