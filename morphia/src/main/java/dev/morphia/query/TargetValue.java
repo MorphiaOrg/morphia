@@ -44,18 +44,11 @@ class TargetValue {
 
         Codec cachedCodec = propertyModel.getCachedCodec();
         if (cachedCodec instanceof PropertyHandler) {
-            mappedValue = ((PropertyHandler) cachedCodec).prepare(mappedValue);
-        }
-
-        if (mappedValue != null) {
+            mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
+        } else if (mappedValue != null) {
             Codec codec = mapper.getCodecRegistry().get(mappedValue.getClass());
             DocumentWriter writer = new DocumentWriter();
-            try {
-                codec.encode(writer, mappedValue, EncoderContext.builder().build());
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-                throw e;
-            }
+            codec.encode(writer, mappedValue, EncoderContext.builder().build());
             mappedValue = writer.getRoot();
         }
         return new Document(target.translatedPath(), mappedValue);

@@ -24,6 +24,8 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseMorphiaCodec;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
@@ -148,21 +150,24 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         }
     }
 
-/*
     @Override
     protected <S> void encodeProperty(final BsonWriter writer,
                                       final T instance,
                                       final EncoderContext encoderContext,
                                       final PropertyModel<S> propertyModel) {
-        final PropertyHandler handler = getPropertyHandler(getClassModel().getInstanceCreator(), propertyModel);
-        if (handler != null) {
-            handler.encodeProperty(writer, instance, encoderContext, propertyModel);
-        } else {
+//        final PropertyHandler handler = getPropertyHandler(getClassModel().getInstanceCreator(), propertyModel);
+//        if (handler != null) {
+//            handler.encodeProperty(writer, instance, encoderContext, propertyModel);
+//        } else {
             super.encodeProperty(writer, instance, encoderContext, propertyModel);
-        }
+//        }
     }
-*/
 
+    private <S> PropertyCodec getPropertyHandler(final InstanceCreator<?> instanceCreator, final PropertyModel<S> propertyModel) {
+        return instanceCreator instanceof MorphiaInstanceCreator ? ((MorphiaInstanceCreator) instanceCreator).getHandler(propertyModel)
+                                                                 : null;
+
+    }
 
     @Override
     public T decode(final BsonReader reader, final DecoderContext decoderContext) {

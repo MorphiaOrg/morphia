@@ -16,7 +16,6 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.JSONMatcher;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.hamcrest.Matcher;
 import org.junit.Ignore;
 import org.junit.Test;
 

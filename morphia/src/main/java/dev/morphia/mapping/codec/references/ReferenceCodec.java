@@ -10,7 +10,9 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
+import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.experimental.ListReference;
 import dev.morphia.mapping.experimental.MapReference;
@@ -41,7 +43,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 @SuppressWarnings("unchecked")
-public class ReferenceCodec extends PropertyCodec<Object> {
+public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHandler {
     private final Reference annotation;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private DocumentToDBRefTransformer transformer = new DocumentToDBRefTransformer();
@@ -115,6 +117,26 @@ public class ReferenceCodec extends PropertyCodec<Object> {
         return !annotation.lazy() ? reference.get() : createProxy(reference);
     }
 
+    @Override
+    public Object encode(final Object value) {
+        DocumentWriter writer = new DocumentWriter();
+        try {
+            encode(writer, value, EncoderContext.builder().build());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return writer.getRoot();
+    }
+
+    @Override
+    public void encode(final BsonWriter writer, final Object instance, final EncoderContext encoderContext) {
+        Object idValue = collectIdValues(instance);
+
+        final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
+        codec.encode(writer, idValue, encoderContext);
+    }
+
     MorphiaReference readDocument(final Document value) {
         final MorphiaReference reference;
         Mapper mapper = getDatastore().getMapper();
@@ -181,14 +203,6 @@ public class ReferenceCodec extends PropertyCodec<Object> {
             type = (TypeData) typeParameters.get(typeParameters.size() - 1);
         }
         return type.getType();
-    }
-
-    @Override
-    public void encode(final BsonWriter writer, final Object instance, final EncoderContext encoderContext) {
-        Object idValue = collectIdValues(instance);
-
-        final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
-        codec.encode(writer, idValue, encoderContext);
     }
 
     private Object collectIdValues(final Object value) {

@@ -2,6 +2,7 @@ package dev.morphia.mapping.experimental;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
@@ -34,7 +35,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
     }
 
     @Override
-    public Class<MorphiaReference> getEncoderClass() {
+    public Class getEncoderClass() {
         return MorphiaReference.class;
     }
 
@@ -64,7 +65,15 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
     }
 
     @Override
-    public Object prepare(final Object value) {
-        return MorphiaReference.wrap(value);
+    public Object encode(final Object value) {
+        MorphiaReference<Object> wrap = MorphiaReference.wrap(value);
+        DocumentWriter writer = new DocumentWriter();
+        try {
+            encode(writer, wrap, EncoderContext.builder().build());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return writer.getRoot();
     }
 }

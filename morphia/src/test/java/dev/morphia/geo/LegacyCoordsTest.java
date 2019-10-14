@@ -1,24 +1,21 @@
 package dev.morphia.geo;
 
 import com.mongodb.MongoException;
-import dev.morphia.query.QueryImpl;
-import org.bson.Document;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import org.bson.Document;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
+import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
-import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
-import static dev.morphia.testutil.JSONMatcher.jsonEqual;
 
 /**
  * This test shows how to define an entity that uses the legacy co-ordinate pairs standard, which works with MongoDB server versions 2.2
