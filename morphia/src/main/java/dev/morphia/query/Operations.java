@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 import dev.morphia.UpdateDocument;
+import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -19,7 +20,7 @@ import static dev.morphia.UpdateDocument.Mode.BODY_ONLY;
 import static java.util.stream.Collectors.toList;
 
 class Operations {
-    private Map<UpdateOperator, List<TargetValue>> ops = new HashMap<>();
+    private Map<UpdateOperator, List<UpdateTarget>> ops = new HashMap<>();
     private UpdateDocument updateDocument;
     private Mapper mapper;
     private MappedClass mappedClass;
@@ -29,7 +30,7 @@ class Operations {
         this.mappedClass = mappedClass;
     }
 
-    public void add(final UpdateOperator operator, final TargetValue value) {
+    public void add(final UpdateOperator operator, final UpdateTarget value) {
         ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
     }
 
@@ -44,12 +45,19 @@ class Operations {
         versionUpdate();
 
         Document document = new Document();
-        for (final Entry<UpdateOperator, List<TargetValue>> entry : ops.entrySet()) {
-            var list = entry.getValue().stream()
-                            .map(targetValue -> targetValue.encode(mapper))
-                            .collect(toList());
-
-            document.put(entry.getKey().val(), list.size() == 1 ? list.get(0) : list);
+        for (final Entry<UpdateOperator, List<UpdateTarget>> entry : ops.entrySet()) {
+            Document targets = new Document();
+            for (UpdateTarget updateTarget : entry.getValue()) {
+                Object encode = updateTarget.encode(mapper);
+                if(encode instanceof Document) {
+                    targets.putAll((Document) encode);
+                } else {
+                    document.put(entry.getKey().val(), encode);
+                }
+            }
+            if (!targets.isEmpty()) {
+                document.put(entry.getKey().val(), targets);
+            }
         }
         return document;
     }
@@ -60,14 +68,14 @@ class Operations {
             if (updateDocument != null) {
                 updateDocument.skipVersion();
             }
-            List<TargetValue> targetValues = ops.get(UpdateOperator.INC);
-            boolean already = targetValues != null
-                              && targetValues.stream()
-                                             .noneMatch(tv -> tv.getTarget()
+            List<UpdateTarget> updateTargets = ops.get(UpdateOperator.INC);
+            boolean already = updateTargets != null
+                              && updateTargets.stream()
+                                              .noneMatch(tv -> tv.getTarget()
                                                                 .translatedPath()
                                                                 .equals(versionField.getMappedFieldName()));
             if (!already) {
-                add(UpdateOperator.INC, new TargetValue(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
+                add(UpdateOperator.INC, new UpdateTarget(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
             }
         }
     }
@@ -81,7 +89,7 @@ class Operations {
         }
 
         updateDocument = new UpdateDocument(mapper, entity, BODY_ONLY);
-        add(UpdateOperator.SET, new TargetValue(null, updateDocument));
+        add(UpdateOperator.SET, new UpdateTarget(null, updateDocument));
     }
 
 }

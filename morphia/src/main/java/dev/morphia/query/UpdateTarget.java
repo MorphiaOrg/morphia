@@ -12,11 +12,11 @@ import org.bson.codecs.pojo.PropertyModel;
 
 import java.util.StringJoiner;
 
-class TargetValue {
+class UpdateTarget {
     private PathTarget target;
     private Object value;
 
-    public TargetValue(final PathTarget target, final Object value) {
+    public UpdateTarget(final PathTarget target, final Object value) {
         this.target = target;
         this.value = value;
     }
@@ -56,7 +56,7 @@ class TargetValue {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", TargetValue.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", UpdateTarget.class.getSimpleName() + "[", "]")
                    .add("target=" + target)
                    .add("value=" + value)
                    .toString();

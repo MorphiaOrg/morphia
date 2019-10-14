@@ -19,6 +19,7 @@ import dev.morphia.mapping.experimental.MapReference;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.experimental.SetReference;
 import dev.morphia.mapping.experimental.SingleReference;
+import dev.morphia.sofia.Sofia;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType.Loaded;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
@@ -133,8 +134,12 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     public void encode(final BsonWriter writer, final Object instance, final EncoderContext encoderContext) {
         Object idValue = collectIdValues(instance);
 
-        final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
-        codec.encode(writer, idValue, encoderContext);
+        if(idValue != null) {
+            final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
+            codec.encode(writer, idValue, encoderContext);
+        } else {
+            throw new MappingException(Sofia.noIdForReference());
+        }
     }
 
     MorphiaReference readDocument(final Document value) {

@@ -102,13 +102,14 @@ public class MappedFieldTest extends TestBase {
         final List<List<String>> list = new ArrayList<>();
         list.add(dbList("a", "b", "c"));
         list.add(dbList("d", "e", "f"));
-        final TestEntity entity = getMapper().fromDocument(TestEntity.class, new Document("listOfListOfString", list));
-        final List<String> strings = asList("a", "b", "c");
-        final List<String> strings1 = asList("d", "e", "f");
-        final List<List<String>> expected = new ArrayList<>();
-        expected.add(strings);
-        expected.add(strings1);
-        assertEquals(expected, entity.listOfListOfString);
+        TestEntity testEntity = new TestEntity();
+        testEntity.listOfListOfString = list;
+        getDs().save(testEntity);
+
+        assertEquals(list, getDs().find(TestEntity.class)
+                               .filter("_id", testEntity.id)
+                               .first()
+                               .listOfListOfString);
     }
 
     private List<String> dbList(final String... values) {

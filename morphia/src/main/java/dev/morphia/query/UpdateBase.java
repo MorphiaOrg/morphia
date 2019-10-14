@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 import dev.morphia.Datastore;
-import dev.morphia.UpdateDocument;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
@@ -9,7 +8,6 @@ import org.bson.Document;
 
 import java.util.List;
 
-import static dev.morphia.UpdateDocument.Mode.BODY_ONLY;
 import static dev.morphia.utils.ReflectionUtils.iterToList;
 import static java.util.Collections.singletonList;
 
@@ -245,6 +243,6 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
     }
 
     private void addOperation(final UpdateOperator operator, final PathTarget path, final Object val) {
-        operations.add(operator, new TargetValue(path, val));
+        operations.add(operator, new UpdateTarget(path, val));
     }
 }
