@@ -27,6 +27,7 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.Query;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
@@ -139,7 +140,72 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testBasicMapping() {
-        performBasicMappingTest();
+        Mapper mapper = getDs().getMapper();
+        mapper.map(List.of(Hotel.class, TravelAgency.class));
+
+        final Hotel borg = new Hotel();
+        borg.setName("Hotel Borg");
+        borg.setStars(4);
+        borg.setTakesCreditCards(true);
+        borg.setStartDate(new Date());
+        borg.setType(Hotel.Type.LEISURE);
+        borg.getTags().add("Swimming pool");
+        borg.getTags().add("Room service");
+        borg.setTemp("A temporary transient value");
+        borg.getPhoneNumbers().add(new PhoneNumber(354, 5152233, PhoneNumber.Type.PHONE));
+        borg.getPhoneNumbers().add(new PhoneNumber(354, 5152244, PhoneNumber.Type.FAX));
+
+        final Address address = new Address();
+        address.setStreet("Posthusstraeti 11");
+        address.setPostCode("101");
+        borg.setAddress(address);
+
+        getDs().save(borg);
+
+        Query<Hotel> query = getDs().find(Hotel.class)
+                                 .filter("_id", borg.getId());
+        Hotel borgLoaded = query.first();
+
+        assertEquals(borg.getName(), borgLoaded.getName());
+        assertEquals(borg.getStars(), borgLoaded.getStars());
+        assertEquals(borg.getStartDate(), borgLoaded.getStartDate());
+        assertEquals(borg.getType(), borgLoaded.getType());
+        assertEquals(borg.getAddress().getStreet(), borgLoaded.getAddress().getStreet());
+        assertEquals(borg.getTags().size(), borgLoaded.getTags().size());
+        assertEquals(borg.getTags(), borgLoaded.getTags());
+        assertEquals(borg.getPhoneNumbers().size(), borgLoaded.getPhoneNumbers().size());
+        assertEquals(borg.getPhoneNumbers().get(1), borgLoaded.getPhoneNumbers().get(1));
+        assertNull(borgLoaded.getTemp());
+        assertTrue(borgLoaded.getPhoneNumbers() instanceof Vector);
+        assertNotNull(borgLoaded.getId());
+
+        final TravelAgency agency = new TravelAgency();
+        agency.setName("Lastminute.com");
+        agency.getHotels().add(borgLoaded);
+
+        getDs().save(agency);
+
+        final TravelAgency agencyLoaded = getDs()
+                                              .find(TravelAgency.class)
+                                              .filter("_id", agency.getId())
+                                              .first();
+
+        assertEquals(agency.getName(), agencyLoaded.getName());
+        assertEquals(1, agency.getHotels().size());
+        assertEquals(agency.getHotels().get(0).getName(), borg.getName());
+
+        // try clearing values
+        borgLoaded.setAddress(null);
+        borgLoaded.getPhoneNumbers().clear();
+        borgLoaded.setName(null);
+
+        getDs().save(borgLoaded);
+
+        borgLoaded = query.first();
+
+        assertNull(borgLoaded.getAddress());
+        assertEquals(0, borgLoaded.getPhoneNumbers().size());
+        assertNull(borgLoaded.getName());
     }
 
     @Test
