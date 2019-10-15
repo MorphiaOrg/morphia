@@ -7,6 +7,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 import static dev.morphia.utils.ReflectionUtils.iterToList;
 import static java.util.Collections.singletonList;
@@ -143,7 +144,7 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
     }
 
     @Override
-    public Updater removeAll(final String field, final Object value) {
+    public Updater pull(final String field, final Object value) {
         if (value == null) {
             throw new QueryException("Value cannot be null.");
         }
@@ -152,13 +153,24 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
     }
 
     @Override
-    public Updater removeAll(final String field, final List<?> values) {
+    public Updater pullAll(final String field, final List<?> values) {
         if (values == null || values.isEmpty()) {
             throw new QueryException("Value cannot be null or empty.");
         }
 
         add(UpdateOperator.PULL_ALL, field, values);
         return (Updater)this;
+    }
+
+
+    @Override
+    public Updater removeAll(final String field, final Object value) {
+        return pull(field, value);
+    }
+
+    @Override
+    public Updater removeAll(final String field, final List<?> values) {
+        return pullAll(field, values);
     }
 
     @Override
@@ -216,9 +228,12 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
      * @param ops the operations
      */
     void setOps(final Document ops) {
-        if (1 == 1) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
+        for (final Entry<String, Object> entry : ops.entrySet()) {
+            Document value = (Document) entry.getValue();
+            UpdateOperator op = UpdateOperator.fromString(entry.getKey());
+            for (final Entry<String, Object> valueEntry : value.entrySet()) {
+                add(op, valueEntry.getKey(), valueEntry.getValue());
+            }
         }
 
 //        this.ops = ops;

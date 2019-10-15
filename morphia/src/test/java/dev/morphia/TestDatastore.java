@@ -34,6 +34,7 @@ import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
+import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Hotel;
@@ -396,6 +397,28 @@ public class TestDatastore extends TestBase {
         assertEquals("Ron Swanson", results.username);
         assertEquals(1, user.loginCount);
         assertEquals("Ron Swanson", user.username);
+    }
+
+    @Test
+    public void testFindAndModifyLegacy() {
+        getDs().save(asList(new FacebookUser(1, "John Doe"),
+            new FacebookUser(2, "john doe")));
+
+        Query<FacebookUser> query = getDs().find(FacebookUser.class)
+                                           .field("username").equal("john doe");
+        UpdateOperations<FacebookUser> modify = getDs().createUpdateOperations(FacebookUser.class).inc("loginCount");
+
+        FacebookUser results = getDs().findAndModify(query, modify);
+
+        assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 2)
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(1, results.loginCount);
     }
 
     @Test

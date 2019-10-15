@@ -533,10 +533,10 @@ public class TestUpdateOps extends TestBase {
         getDs().save(asList(dumbColl, dumbColl2));
 
         UpdateResult deleteResults = getDs().find(DumbColl.class)
-                                             .field("opaqueId").equalIgnoreCase("ID")
-                                             .update(new Document("$pull",
-                                               new Document("fromArray", new Document("whereId", "not there"))))
-                                             .execute();
+                                            .field("opaqueId").equalIgnoreCase("ID")
+                                            .update()
+                                            .pull("fromArray", new Document("whereId", "not there"))
+                                            .execute();
 
         final UpdateResult execute = getDs().find(DumbColl.class).field("opaqueId").equalIgnoreCase("ID")
                                              .update()
