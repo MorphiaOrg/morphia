@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 import dev.morphia.UpdateDocument;
-import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -17,10 +16,9 @@ import java.util.Map.Entry;
 import java.util.StringJoiner;
 
 import static dev.morphia.UpdateDocument.Mode.BODY_ONLY;
-import static java.util.stream.Collectors.toList;
 
 class Operations {
-    private Map<UpdateOperator, List<UpdateTarget>> ops = new HashMap<>();
+    private Map<UpdateOperator, List<OperationTarget>> ops = new HashMap<>();
     private UpdateDocument updateDocument;
     private Mapper mapper;
     private MappedClass mappedClass;
@@ -30,7 +28,7 @@ class Operations {
         this.mappedClass = mappedClass;
     }
 
-    public void add(final UpdateOperator operator, final UpdateTarget value) {
+    public void add(final UpdateOperator operator, final OperationTarget value) {
         ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
     }
 
@@ -45,10 +43,10 @@ class Operations {
         versionUpdate();
 
         Document document = new Document();
-        for (final Entry<UpdateOperator, List<UpdateTarget>> entry : ops.entrySet()) {
+        for (final Entry<UpdateOperator, List<OperationTarget>> entry : ops.entrySet()) {
             Document targets = new Document();
-            for (UpdateTarget updateTarget : entry.getValue()) {
-                Object encode = updateTarget.encode(mapper);
+            for (OperationTarget operationTarget : entry.getValue()) {
+                Object encode = operationTarget.encode(mapper);
                 if(encode instanceof Document) {
                     targets.putAll((Document) encode);
                 } else {
@@ -68,14 +66,14 @@ class Operations {
             if (updateDocument != null) {
                 updateDocument.skipVersion();
             }
-            List<UpdateTarget> updateTargets = ops.get(UpdateOperator.INC);
-            boolean already = updateTargets != null
-                              && updateTargets.stream()
-                                              .noneMatch(tv -> tv.getTarget()
+            List<OperationTarget> operationTargets = ops.get(UpdateOperator.INC);
+            boolean already = operationTargets != null
+                              && operationTargets.stream()
+                                                 .noneMatch(tv -> tv.getTarget()
                                                                 .translatedPath()
                                                                 .equals(versionField.getMappedFieldName()));
             if (!already) {
-                add(UpdateOperator.INC, new UpdateTarget(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
+                add(UpdateOperator.INC, new OperationTarget(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
             }
         }
     }
@@ -89,7 +87,7 @@ class Operations {
         }
 
         updateDocument = new UpdateDocument(mapper, entity, BODY_ONLY);
-        add(UpdateOperator.SET, new UpdateTarget(null, updateDocument));
+        add(UpdateOperator.SET, new OperationTarget(null, updateDocument));
     }
 
 }

@@ -1,14 +1,14 @@
 package dev.morphia;
 
 
-import org.junit.Assert;
-import org.junit.Test;
-import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.TestQuery.ContainsPic;
 import dev.morphia.query.TestQuery.Pic;
 import dev.morphia.query.TestQuery.PicWithObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 public class TestQueriesOnReferences extends TestBase {
@@ -30,7 +30,7 @@ public class TestQueriesOnReferences extends TestBase {
                                  .tryNext());
     }
 
-    @Test(expected = MappingException.class)
+    @Test(expected = LazyReferenceFetchingException.class)
     public void testMissingReferences() {
         final ContainsPic cpk = new ContainsPic();
         final Pic p = new Pic();
@@ -94,15 +94,17 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(p);
         getDs().save(cpk);
 
-        ContainsPic containsPic = getDs().find(ContainsPic.class)
-                                         .field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.getId()))
-                                         .execute(new FindOptions().limit(1))
-                                         .tryNext();
-        Assert.assertEquals(cpk.getId(), containsPic.getId());
+        Query<ContainsPic> query = getDs().find(ContainsPic.class)
+                                          .field("pic").equal(new Key<>(Pic.class, "Pic", p.getId()));
+        ContainsPic containsPic = query.execute(new FindOptions()
+                                                    .logQuery()
+                                                    .limit(1))
+                                       .tryNext();
 
-        containsPic = getDs().find(ContainsPic.class).field("pic").equal(new Key<Pic>(Pic.class, "Pic", p.getId()))
-                             .execute(new FindOptions().limit(1))
-                             .tryNext();
+        Assert.assertEquals(query.getLoggedQuery(), cpk.getId(), containsPic.getId());
+
+        containsPic = query.execute(new FindOptions().limit(1))
+                           .tryNext();
         Assert.assertEquals(cpk.getId(), containsPic.getId());
     }
 }

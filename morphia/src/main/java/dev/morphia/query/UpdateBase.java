@@ -243,6 +243,6 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
     }
 
     private void addOperation(final UpdateOperator operator, final PathTarget path, final Object val) {
-        operations.add(operator, new UpdateTarget(path, val));
+        operations.add(operator, new OperationTarget(path, val));
     }
 }

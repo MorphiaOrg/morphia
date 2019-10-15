@@ -12,11 +12,13 @@ import org.bson.codecs.pojo.PropertyModel;
 
 import java.util.StringJoiner;
 
-class UpdateTarget {
+import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
+
+class OperationTarget {
     private PathTarget target;
     private Object value;
 
-    public UpdateTarget(final PathTarget target, final Object value) {
+    public OperationTarget(final PathTarget target, final Object value) {
         this.target = target;
         this.value = value;
     }
@@ -42,7 +44,7 @@ class UpdateTarget {
                                                       .getPropertyModel(mappedField.getJavaFieldName())
                                          : null;
 
-        Codec cachedCodec = propertyModel.getCachedCodec();
+        Codec cachedCodec = propertyModel != null ? propertyModel.getCachedCodec() : null;
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
         } else if (mappedValue != null) {
@@ -56,7 +58,7 @@ class UpdateTarget {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", UpdateTarget.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", OperationTarget.class.getSimpleName() + "[", "]")
                    .add("target=" + target)
                    .add("value=" + value)
                    .toString();

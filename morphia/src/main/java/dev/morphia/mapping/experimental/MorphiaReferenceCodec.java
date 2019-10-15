@@ -66,14 +66,14 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
 
     @Override
     public Object encode(final Object value) {
-        MorphiaReference<Object> wrap = MorphiaReference.wrap(value);
-        DocumentWriter writer = new DocumentWriter();
-        try {
-            encode(writer, wrap, EncoderContext.builder().build());
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            throw e;
+        MorphiaReference<Object> wrap;
+        if(!(value instanceof MorphiaReference)) {
+            wrap = MorphiaReference.wrap(value);
+        } else {
+            wrap = (MorphiaReference<Object>) value;
         }
+        DocumentWriter writer = new DocumentWriter();
+        encode(writer, wrap, EncoderContext.builder().build());
         return writer.getRoot();
     }
 }

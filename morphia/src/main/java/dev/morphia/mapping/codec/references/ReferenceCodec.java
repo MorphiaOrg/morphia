@@ -224,6 +224,8 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
                 ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
             }
             return ids;
+//        } else if (value instanceof Key) {
+//            return ((Key) value).getId();
         } else if (value.getClass().isArray()) {
             List ids = new ArrayList(((Object[]) value).length);
             for (Object o : (Object[]) value) {
@@ -240,18 +242,21 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
      */
     public static Object encodeId(final Mapper mapper, final MappedClass fieldMappedClass, final Object value) {
         Object idValue;
+        MongoCollection<?> collection = null;
         if (value instanceof Key) {
             idValue = ((Key) value).getId();
         } else {
             idValue = mapper.getId(value);
+            if(idValue == null) {
+                return value;
+            }
+            try {
+                collection = mapper.getCollection(value.getClass());
+            } catch (NullPointerException e) {
+                System.out.println(value);
+            }
         }
-        MongoCollection<?> collection = null;
-        try {
-            collection = mapper.getCollection(value.getClass());
-        } catch (NullPointerException e) {
-            System.out.println(value);
 
-        }
         String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;
         String fieldCollectionName = fieldMappedClass.getCollectionName();
 

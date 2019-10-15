@@ -2,7 +2,6 @@ package dev.morphia.query;
 
 
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
@@ -11,7 +10,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.PropertyModel;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,21 +31,15 @@ class FieldCriteria extends AbstractCriteria {
 
     @SuppressWarnings("deprecation")
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value, final boolean not) {
-        this.mapper = mapper;
         final PathTarget pathTarget = new PathTarget(mapper,  mapper.getMappedClass(query.getEntityClass()),
             fieldName, query.isValidatingNames());
-        mappedField = pathTarget.getTarget();
-
-        Object mappedValue = value;
-        final Class<?> type = getType(mappedValue);
-
-        if (getMapper().getMappedClass(type) != null) {
-            mappedValue = mapValue(value, type);
-        }
 
         this.field = pathTarget.translatedPath();
+
+        this.mapper = mapper;
+        mappedField = pathTarget.getTarget();
         this.operator = op;
-        this.value = mappedValue;
+        this.value = ((Document) new OperationTarget(pathTarget, value).encode(mapper)).get(this.field);
         this.not = not;
     }
 

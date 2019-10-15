@@ -275,7 +275,6 @@ public interface Datastore {
         return getMapper().getCollection(clazz);
     }
 
-
     /**
      * @return the MongoDatabase used by this DataStore
      * @since 1.5

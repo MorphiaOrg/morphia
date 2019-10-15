@@ -378,17 +378,14 @@ public class Mapper {
         if (entity == null) {
             return null;
         }
-        try {
-            final MappedClass mappedClass = getMappedClass(entity.getClass());
-            if (mappedClass != null) {
-                final MappedField idField = mappedClass.getIdField();
-                if (idField != null) {
-                    return idField.getFieldValue(entity);
-                }
+        final MappedClass mappedClass = getMappedClass(entity.getClass());
+        if (mappedClass != null) {
+            final MappedField idField = mappedClass.getIdField();
+            if (idField != null) {
+                return idField.getFieldValue(entity);
             }
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
         }
+
         return null;
     }
 
