@@ -19,6 +19,7 @@ import dev.morphia.mapping.experimental.MapReference;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.experimental.SetReference;
 import dev.morphia.mapping.experimental.SingleReference;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType.Loaded;
@@ -42,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
 
 @SuppressWarnings("unchecked")
 public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHandler {
@@ -138,7 +141,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
             codec.encode(writer, idValue, encoderContext);
         } else {
-            throw new MappingException(Sofia.noIdForReference());
+            throw new ReferenceException(Sofia.noIdForReference());
         }
     }
 
@@ -247,8 +250,8 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             idValue = ((Key) value).getId();
         } else {
             idValue = mapper.getId(value);
-            if(idValue == null) {
-                return value;
+            if (idValue == null) {
+                return !isMappable(value.getClass()) ? value : null;
             }
             try {
                 collection = mapper.getCollection(value.getClass());

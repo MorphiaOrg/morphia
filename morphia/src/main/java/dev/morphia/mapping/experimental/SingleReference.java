@@ -6,7 +6,7 @@ import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.Query;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
@@ -43,7 +43,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
         if (!isResolved() && value == null && id != null) {
             value = (T) buildQuery().execute().tryNext();
             if (value == null && !ignoreMissing()) {
-                throw new LazyReferenceFetchingException(
+                throw new ReferenceException(
                     Sofia.missingReferencedEntity(mappedClass.getType().getSimpleName()));
             }
             resolve();

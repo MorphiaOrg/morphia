@@ -1,7 +1,7 @@
 package dev.morphia;
 
 
-import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.TestQuery.ContainsPic;
@@ -30,7 +30,7 @@ public class TestQueriesOnReferences extends TestBase {
                                  .tryNext());
     }
 
-    @Test(expected = LazyReferenceFetchingException.class)
+    @Test(expected = ReferenceException.class)
     public void testMissingReferences() {
         final ContainsPic cpk = new ContainsPic();
         final Pic p = new Pic();

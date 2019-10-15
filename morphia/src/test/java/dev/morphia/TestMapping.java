@@ -15,7 +15,6 @@
 package dev.morphia;
 
 
-import com.mongodb.DBRef;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.TestInheritanceMappings.MapLike;
 import dev.morphia.annotations.AlsoLoad;
@@ -26,13 +25,13 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.PhoneNumber;
-import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.RecursiveChild;
 import dev.morphia.testmodel.RecursiveParent;
 import dev.morphia.testmodel.Translation;
@@ -43,7 +42,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -558,19 +556,19 @@ public class TestMapping extends TestBase {
         assertNotNull(finalChildLoaded.getParent());
     }
 
-    @Test(expected = MappingException.class)
+    @Test(expected = ReferenceException.class)
     public void testReferenceWithoutIdValue() {
+        getMapper().map(RecursiveParent.class, RecursiveChild.class);
         final RecursiveParent parent = new RecursiveParent();
         final RecursiveChild child = new RecursiveChild();
         child.setId(null);
         parent.setChild(child);
         getDs().save(parent);
-
     }
 
     @Test
     public void testUUID() {
-        //       getMorphia().map(ContainsUUID.class);
+        getMapper().map(ContainsUUID.class);
         final ContainsUUID uuid = new ContainsUUID();
         final UUID before = uuid.uuid;
         getDs().save(uuid);

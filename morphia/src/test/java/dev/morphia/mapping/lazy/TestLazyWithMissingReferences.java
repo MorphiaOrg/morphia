@@ -5,7 +5,7 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -15,7 +15,7 @@ import org.junit.experimental.categories.Category;
 @Category(Reference.class)
 public class TestLazyWithMissingReferences extends TestBase {
 
-    @Test(expected = LazyReferenceFetchingException.class)
+    @Test(expected = ReferenceException.class)
     public void testMissingRef() {
         final Source source = new Source();
         source.setTarget(new Target());
@@ -25,7 +25,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         getDs().find(Source.class).execute().toList();
     }
 
-    @Test(expected = LazyReferenceFetchingException.class)
+    @Test(expected = ReferenceException.class)
     public void testMissingRefLazy() {
         final Source e = new Source();
         e.setLazy(new Target());
@@ -37,7 +37,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         Assert.assertNull(source.getLazy().getFoo());
     }
 
-    @Test(expected = LazyReferenceFetchingException.class)
+    @Test(expected = ReferenceException.class)
     public void testMissingRefLazyIgnoreMissing() {
         final Source e = new Source();
         e.setIgnoreMissing(new Target());

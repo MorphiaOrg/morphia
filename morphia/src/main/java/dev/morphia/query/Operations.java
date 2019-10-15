@@ -67,11 +67,10 @@ class Operations {
                 updateDocument.skipVersion();
             }
             List<OperationTarget> operationTargets = ops.get(UpdateOperator.INC);
+            String version = versionField.getMappedFieldName();
             boolean already = operationTargets != null
                               && operationTargets.stream()
-                                                 .noneMatch(tv -> tv.getTarget()
-                                                                .translatedPath()
-                                                                .equals(versionField.getMappedFieldName()));
+                                                 .anyMatch(tv -> tv.getTarget().translatedPath().equals(version));
             if (!already) {
                 add(UpdateOperator.INC, new OperationTarget(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
             }

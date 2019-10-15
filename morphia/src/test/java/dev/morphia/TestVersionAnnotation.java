@@ -98,8 +98,9 @@ public class TestVersionAnnotation extends TestBase {
              .inc("count")
              .execute(new UpdateOptions().upsert(true));
 
-
-        final Versioned version2 = getDs().find(Versioned.class).filter("_id", version1.getId()).first();
+        final Versioned version2 = getDs().find(Versioned.class)
+                                          .filter("_id", version1.getId())
+                                          .first();
 
         assertEquals(Long.valueOf(2), version2.getVersion());
         assertEquals(1, version2.getCount());

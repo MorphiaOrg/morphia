@@ -78,8 +78,8 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
     }
 
     private void processFields(Class<?> currentClass, TypeData<?> parentClassTypeData, List<String> genericTypeNames) {
-        Map<String, PropertyMetadata<?>> propertyNameMap = new HashMap<String, PropertyMetadata<?>>();
-        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<String, TypeParameterMap>();
+        Map<String, PropertyMetadata<?>> propertyNameMap = new HashMap<>();
+        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
 
         for (Field field : currentClass.getDeclaredFields()) {
             PropertyMetadata<?> propertyMetadata = PojoBuilderHelper.getOrCreateFieldPropertyMetadata(field.getName(),
@@ -135,7 +135,6 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      *
      * @return the new instance
      */
-    @SuppressWarnings("unchecked")
     public MorphiaModel<T> build() {
         PropertyModel<?> idPropertyModel = null;
 
@@ -157,7 +156,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         List<PropertyModel<?>> propertyModels = new ArrayList<>();
         for (final PropertyModelBuilder<?> builder : getPropertyModelBuilders()) {
             PropertyModel<?> propertyModel = builder.build();
-            if (propertyModel.getReadName().equals(getIdPropertyName())) {
+            if (propertyModel.getReadName().equals(ID_PROPERTY_NAME)) {
                 idPropertyModel = propertyModel;
             }
             propertyModels.add(propertyModel);

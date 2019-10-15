@@ -8,7 +8,7 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
-import dev.morphia.mapping.lazy.proxy.LazyReferenceFetchingException;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
@@ -115,7 +115,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             }
 
             if(!ignoreMissing() && idMap.size() != collectionIds.size()) {
-                throw new LazyReferenceFetchingException(
+                throw new ReferenceException(
                     Sofia.missingReferencedEntities(mappedClass.getType().getSimpleName()));
 
             }

@@ -12,7 +12,7 @@ public class Versioned {
     @Version
     private Long version;
     private String name;
-    private int count = 0;
+    private int count;
 
     public int getCount() {
         return count;
