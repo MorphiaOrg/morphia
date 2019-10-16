@@ -50,6 +50,17 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions{
      *
      * @return the write concern, or null if the default will be used.
      */
+    public WriteConcern writeConcern() {
+        return writeConcern;
+    }
+
+    /**
+     * The write concern to use for the delete.
+     *
+     * @return the write concern, or null if the default will be used.
+     * @deprecated use {@link #writeConcern()} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
     public WriteConcern getWriteConcern() {
         return writeConcern;
     }

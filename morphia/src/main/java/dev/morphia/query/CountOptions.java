@@ -16,26 +16,9 @@
 
 package dev.morphia.query;
 
-/*
- * Copyright 2016 MongoDB, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.Collation;
-import org.bson.BsonString;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -53,6 +36,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     private ReadPreference readPreference;
     private ReadConcern readConcern;
 
+
     /**
      * @inheritDoc
      */
@@ -62,29 +46,18 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     }
 
     /**
-     * Returns the readConcern
-     *
-     * @return the readConcern
-     * @mongodb.server.release 3.2
+     * @inheritDoc
      */
-    public ReadConcern getReadConcern() {
-        return readConcern;
-    }
-
-    /**
-     * Returns the readPreference
-     *
-     * @return the readPreference
-     */
-    public ReadPreference getReadPreference() {
-        return readPreference;
+    public CountOptions hint(final String hint) {
+        super.hint(new Document(hint, 1));
+        return this;
     }
 
     /**
      * @inheritDoc
      */
-    public CountOptions hint(final String hint) {
-        super.hint(new Document(hint, 1));
+    public CountOptions hint(final Document hint) {
+        super.hint(hint);
         return this;
     }
 
@@ -100,6 +73,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     /**
      * @inheritDoc
      */
+    @Override
     public CountOptions limit(final int limit) {
         super.limit(limit);
         return this;
@@ -108,11 +82,30 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     /**
      * @inheritDoc
      */
+    @Override
     public CountOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
         super.maxTime(maxTime, timeUnit);
         return this;
     }
 
+    /**
+     * @inheritDoc
+     * @return
+     */
+    @Override
+    public long getMaxTime(final TimeUnit timeUnit) {
+        return super.getMaxTime(timeUnit);
+    }
+
+    /**
+     * Returns the readConcern
+     *
+     * @return the readConcern
+     * @mongodb.server.release 3.2
+     */
+    public ReadConcern readConcern() {
+        return readConcern;
+    }
     /**
      * Sets the readConcern
      *
@@ -124,6 +117,16 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
         this.readConcern = readConcern;
         return this;
     }
+
+    /**
+     * Returns the readPreference
+     *
+     * @return the readPreference
+     */
+    public ReadPreference readPreference() {
+        return readPreference;
+    }
+
 
     /**
      * Sets the readPreference
@@ -139,6 +142,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     /**
      * @inheritDoc
      */
+    @Override
     public CountOptions skip(final int skip) {
         super.skip(skip);
         return this;

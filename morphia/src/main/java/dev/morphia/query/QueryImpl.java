@@ -340,7 +340,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     public T delete(final FindAndDeleteOptions options) {
-        return ds.enforceWriteConcern(getCollection(), clazz, options.getWriteConcern())
+        return ds.enforceWriteConcern(getCollection(), clazz, options.writeConcern())
                    .findOneAndDelete(getQueryDocument(), options);
     }
 

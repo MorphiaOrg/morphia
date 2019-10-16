@@ -58,6 +58,17 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
      *
      * @return the write concern, or null if the default will be used.
      */
+    public WriteConcern writeConcern() {
+        return writeConcern;
+    }
+
+    /**
+     * The write concern to use for the insertion.  By default the write concern configured for the DBCollection instance will be used.
+     *
+     * @return the write concern, or null if the default will be used.
+     * @deprecated use {@link #writeConcern()} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
     public WriteConcern getWriteConcern() {
         return writeConcern;
     }

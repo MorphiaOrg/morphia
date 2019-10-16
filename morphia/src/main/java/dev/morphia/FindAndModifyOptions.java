@@ -33,12 +33,22 @@ import java.util.concurrent.TimeUnit;
 public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
     private WriteConcern writeConcern;
 
+    public WriteConcern writeConcern() {
+        return writeConcern;
+    }
+
+    /**
+     * @return the write concern
+     * @deprecated use {@link #writeConcern()} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
     public WriteConcern getWriteConcern() {
         return writeConcern;
     }
 
-    public void writeConcern(final WriteConcern writeConcern) {
+    public FindAndModifyOptions writeConcern(final WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
+        return this;
     }
 
     /**
