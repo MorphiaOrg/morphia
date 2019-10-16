@@ -53,12 +53,6 @@ public enum FilterOperator {
 
     NEAR_SPHERE("$nearSphere"),
 
-    /**
-     * @deprecated New in server version 2.4: $geoWithin replaces $within which is deprecated.
-     */
-    @Deprecated
-    WITHIN("$within", "within"),
-
     GEO_NEAR("$geoNear", "geoNear"),
 
     GEO_WITHIN("$geoWithin", "geoWithin"),

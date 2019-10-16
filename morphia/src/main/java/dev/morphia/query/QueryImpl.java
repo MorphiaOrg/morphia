@@ -8,7 +8,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
-import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
@@ -119,18 +118,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public T first(final FindOptions options) {
         try (MongoCursor<T> it = this.execute(options.copy().limit(1))) {
-            return it.tryNext();
-        }
-    }
-
-    @Override
-    public Key<T> getKey() {
-        return getKey(getOptions());
-    }
-
-    @Override
-    public Key<T> getKey(final FindOptions options) {
-        try (MongoCursor<Key<T>> it = keys(options.copy().limit(1))) {
             return it.tryNext();
         }
     }

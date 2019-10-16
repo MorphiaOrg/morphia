@@ -36,10 +36,6 @@
         <Bug category="I18N,MT_CORRECTNESS,SECURITY,PERFORMANCE"/>
     </Match>
     <Match>
-        <Class name="dev.morphia.aggregation.Sort"/>
-        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
-    </Match>
-    <Match>
       <Class name="dev.morphia.query.QueryImpl" />
       <!--<Method name="compare" params="FindOptions,FindOptions"/>-->
       <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />

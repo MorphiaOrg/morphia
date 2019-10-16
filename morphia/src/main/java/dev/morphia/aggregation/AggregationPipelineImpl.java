@@ -103,7 +103,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         putIfNull(geo, "spherical", geoNear.getSpherical());
         putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
         putIfNull(geo, "includeLocs", geoNear.getIncludeLocations());
-        putIfNull(geo, "uniqueDocs", geoNear.getUniqueDocuments());
         stages.add(new Document("$geoNear", geo));
         throw new UnsupportedOperationException();
 

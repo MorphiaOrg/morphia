@@ -51,17 +51,6 @@ public class DefaultCreator implements ObjectFactory {
         }
     }
 
-    /**
-     * @param clazz the Class of the type to create
-     * @param <T>   the type of the class
-     * @return the new instance
-     * @deprecated use {@link #createInstance(Class)} instead
-     */
-    @Deprecated
-    public <T> T createInst(final Class<T> clazz) {
-        return createInstance(clazz);
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public <T> T createInstance(final Class<T> clazz) {

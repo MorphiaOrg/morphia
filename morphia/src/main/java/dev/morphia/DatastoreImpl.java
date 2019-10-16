@@ -266,11 +266,6 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public MongoClient getMongo() {
-        return mongoClient;
-    }
-
-    @Override
     public QueryFactory getQueryFactory() {
         return queryFactory;
     }
@@ -443,11 +438,6 @@ class DatastoreImpl implements AdvancedDatastore {
      */
     public void setMapper(final Mapper mapper) {
         this.mapper = mapper;
-    }
-
-    @Deprecated
-    protected Object getId(final Object entity) {
-        return mapper.getId(entity);
     }
 
     protected <T> void insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {

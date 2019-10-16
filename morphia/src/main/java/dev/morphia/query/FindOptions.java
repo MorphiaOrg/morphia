@@ -254,7 +254,6 @@ public final class FindOptions {
     public int hashCode() {
         int result = getBatchSize();
         result = 31 * result + getLimit();
-        result = 31 * result + (getModifiers() != null ? getModifiers().hashCode() : 0);
         result = 31 * result + (int) (maxTimeMS ^ (maxTimeMS >>> 32));
         result = 31 * result + (int) (maxAwaitTimeMS ^ (maxAwaitTimeMS >>> 32));
         result = 31 * result + getSkip();
@@ -321,9 +320,6 @@ public final class FindOptions {
         if (snapshot != that.snapshot) {
             return false;
         }
-        if (getModifiers() != null ? !getModifiers().equals(that.getModifiers()) : that.getModifiers() != null) {
-            return false;
-        }
         if (getSort() != null ? !getSort().equals(that.getSort()) : that.getSort() != null) {
             return false;
         }
@@ -384,14 +380,6 @@ public final class FindOptions {
 
     public boolean isShowRecordId() {
         return this.showRecordId;
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public Document getModifiers() {
-        return this.modifiers;
     }
 
     public Document getSort() {

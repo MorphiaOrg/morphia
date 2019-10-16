@@ -22,37 +22,4 @@ public class Sort extends dev.morphia.query.Sort {
     public Sort(final String field, final int direction) {
         super(field, direction);
     }
-
-    /**
-     * Creates an ascending sort on a field
-     *
-     * @param field the field
-     * @return the Sort instance
-     * @deprecated Use {@link dev.morphia.query.Sort#ascending(String)} instead.
-     */
-    @Deprecated
-    public static Sort ascending(final String field) {
-        return new Sort(field, 1);
-    }
-
-    /**
-     * Creates a descending sort on a field
-     *
-     * @param field the field
-     * @return the Sort instance
-     * @deprecated Use {@link dev.morphia.query.Sort#descending(String)} instead.
-     */
-    @Deprecated
-    public static Sort descending(final String field) {
-        return new Sort(field, -1);
-    }
-
-    /**
-     * @return the sort direction
-     * @deprecated Use {@link dev.morphia.query.Sort#getOrder()} instead.
-     */
-    @Deprecated
-    public int getDirection() {
-        return super.getOrder();
-    }
 }

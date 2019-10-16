@@ -315,26 +315,6 @@ public interface Query<T> {
     T first(FindOptions options);
 
     /**
-     * Get the key of the first entity in the result set.  Obeys the {@link Query} offset value.
-     *
-     * @return the key of the first instance in the result, or null if the result set is empty.
-     * @deprecated use {@link #first()} instead
-     */
-    @Deprecated
-    Key<T> getKey();
-
-    /**
-     * Get the key of the first entity in the result set.  Obeys the {@link Query} offset value.
-     *
-     * @param options the options to apply to the find operation
-     * @return the key of the first instance in the result, or null if the result set is empty.
-     * @since 1.3
-     * @deprecated use {@link #first()} instead
-     */
-    @Deprecated
-    Key<T> getKey(FindOptions options);
-
-    /**
      * Deletes an entity from the database and returns it.
      * @return the deleted entity
      */

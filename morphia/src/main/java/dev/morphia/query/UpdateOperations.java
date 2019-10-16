@@ -16,54 +16,6 @@ import static java.util.Collections.singletonList;
  */
 @Deprecated(since = "2.0", forRemoval = true)
 public interface UpdateOperations<T> {
-    /**
-     * adds the value to an array field
-     *
-     * @param field the field to update
-     * @param value the value to add
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
-     * @deprecated use {@link #addToSet(String, Object)} instead
-     */
-    @Deprecated
-    UpdateOperations<T> add(String field, Object value);
-
-    /**
-     * adds the value to an array field
-     *
-     * @param field   the field to update
-     * @param value   the value to add
-     * @param addDups if true, the value will be added even if it already exists in the array ($push)
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
-     * @mongodb.driver.manual reference/operator/update/push/ $push
-     * @deprecated use {@link #push(String, Object)} if addDups is false or {@link #addToSet(String, Object)} instead
-     */
-    @Deprecated
-    default UpdateOperations<T> add(String field, Object value, boolean addDups){
-        if (addDups) {
-            push(field, value instanceof List ? (List<?>) value : singletonList(value));
-        } else {
-            addToSet(field, value instanceof List ? (List<?>) value : singletonList(value));
-        }
-        return this;
-    }
-
-    /**
-     * adds the values to an array field
-     *
-     * @param field   the field to update
-     * @param values  the values to add
-     * @param addDups if true, the values will be added even if they already exists in the array ($push)
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/addToSet/ $addToSet
-     * @mongodb.driver.manual reference/operator/update/push/ $push
-     * @deprecated use {@link #push(String, List)} if addDups is false or {@link #addToSet(String, List)}
-     */
-    @Deprecated
-    default UpdateOperations<T> addAll(String field, List<?> values, boolean addDups) {
-        return (addDups) ? push(field, values) : addToSet(field, values);
-    }
 
     /**
      * adds the value to an array field if it doesn't already exist in the array

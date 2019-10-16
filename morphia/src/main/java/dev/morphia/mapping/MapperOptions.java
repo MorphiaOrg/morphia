@@ -144,18 +144,6 @@ public class MapperOptions {
         }
 
         /**
-         * this method does nothing
-         *
-         * @param actLikeSerializer unused
-         * @return this
-         * @deprecated
-         */
-        @Deprecated
-        public Builder actLikeSerializer(final boolean actLikeSerializer) {
-            return this;
-        }
-
-        /**
          * @param ignoreFinals if true final fields are ignored
          * @return this
          */

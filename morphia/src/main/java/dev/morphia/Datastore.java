@@ -292,15 +292,6 @@ public interface Datastore {
     <T> Key<T> getKey(T entity);
 
     /**
-     * Get the underlying MongoClient that allows connection to the MongoDB instance being used.
-     *
-     * @return the MongoClient being used by this datastore.
-     * @deprecated no replacement is planned
-     */
-    @Deprecated
-    MongoClient getMongo();
-
-    /**
      * @return the current {@link QueryFactory}.
      * @see QueryFactory
      */
