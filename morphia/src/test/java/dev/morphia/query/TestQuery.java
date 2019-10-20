@@ -1411,46 +1411,11 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    @Ignore("the new driver API doesn't include the types necessary for this.  rectify once the new code is in place")
-    public void testWhereCodeWScopeQuery() {
-/*
-        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        //        CodeWScope hasKeyword = new CodeWScope("for (kw in this.keywords) { if(kw.keyword == kwd) return true; } return false;
-        // ", new Document("kwd","california"));
-        final CodeWScope hasKeyword = new CodeWScope("this.keywords != null", new Document());
-        assertNotNull(getDs().find(PhotoWithKeywords.class).where(hasKeyword)
-                             .execute(new FindOptions().limit(1))
-                             .next());
-*/
-    }
-
-    @Test
     public void testWhereStringQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class).where("this.keywords != null")
                              .execute(new FindOptions().limit(1))
                              .next());
-    }
-
-    @Test
-    @Ignore("the new driver API doesn't include the types necessary for this.  rectify once the new code is in place")
-    public void testWhereWithInvalidStringQuery() {
-/*
-        getDs().save(new PhotoWithKeywords());
-        final CodeWScope hasKeyword = new CodeWScope("keywords != null", new Document());
-        try {
-            // must fail
-            assertNotNull(getDs().find(PhotoWithKeywords.class).where(hasKeyword.getCode())
-                                 .execute(new FindOptions().limit(1))
-                                 .next());
-            fail("Invalid javascript magically isn't invalid anymore?");
-        } catch (MongoInternalException e) {
-            // fine
-        } catch (MongoException e) {
-            // fine
-        }
-*/
-
     }
 
     @Test

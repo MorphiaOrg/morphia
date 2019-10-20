@@ -4,11 +4,9 @@ package dev.morphia.query;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
 import dev.morphia.FindAndModifyOptions;
-import dev.morphia.Key;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.Document;
-import org.bson.types.CodeWScope;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -207,14 +205,6 @@ public interface Query<T> {
      * @return this
      */
     Query<T> where(String js);
-
-    /**
-     * Limit the query using this javascript block; only one per query
-     *
-     * @param js the javascript block to apply
-     * @return this
-     */
-    Query<T> where(CodeWScope js);
 
     /**
      * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})

@@ -18,7 +18,6 @@ import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
-import org.bson.types.CodeWScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -316,12 +315,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Query<T> where(final String js) {
-        add(new WhereCriteria(js));
-        return this;
-    }
-
-    @Override
-    public Query<T> where(final CodeWScope js) {
         add(new WhereCriteria(js));
         return this;
     }
