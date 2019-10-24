@@ -27,12 +27,13 @@ public class DefaultCreator implements ObjectFactory {
 
     private Map<String, Class> classNameCache = new ConcurrentHashMap<String, Class>();
 
-    private MapperOptions options = null;
+    private final MapperOptions options;
 
     /**
      * Creates a new DefaultCreator with no options
      */
     public DefaultCreator() {
+        options = MapperOptions.builder().build();
     }
 
     /**
