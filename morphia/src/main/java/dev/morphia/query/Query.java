@@ -505,7 +505,9 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * @param js the javascript block to apply
      * @return this
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     Query<T> where(String js);
 
     /**
@@ -513,7 +515,9 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * @param js the javascript block to apply
      * @return this
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     Query<T> where(CodeWScope js);
 
     /**

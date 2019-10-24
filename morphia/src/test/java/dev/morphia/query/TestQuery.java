@@ -1612,6 +1612,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @Deprecated
     public void testWhereCodeWScopeQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         //        CodeWScope hasKeyword = new CodeWScope("for (kw in this.keywords) { if(kw.keyword == kwd) return true; } return false;
@@ -1623,6 +1624,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @Deprecated
     public void testWhereStringQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class).where("this.keywords != null")
@@ -1631,6 +1633,7 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    @Deprecated
     public void testWhereWithInvalidStringQuery() {
         getDs().save(new PhotoWithKeywords());
         final CodeWScope hasKeyword = new CodeWScope("keywords != null", new BasicDBObject());

@@ -7,7 +7,9 @@ import org.bson.types.CodeWScope;
 
 /**
  * Creates a Criteria for a $where clause.
+ * @deprecated no replacement is planned
  */
+@Deprecated
 public class WhereCriteria extends AbstractCriteria {
 
     private final Object js;
