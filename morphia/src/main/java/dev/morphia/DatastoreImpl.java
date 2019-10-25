@@ -489,8 +489,8 @@ class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> void updateVersion(final T entity, MappedField field, final Long updated) {
-        field.setFieldValue(entity, updated);
+    private <T> void updateVersion(final T entity, MappedField field, final Long newVersion) {
+        field.setFieldValue(entity, newVersion);
     }
 
     private <T> boolean tryVersionedUpdate(final MongoCollection collection, final T entity,
