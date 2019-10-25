@@ -489,8 +489,8 @@ class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> void updateVersion(final T entity, MappedField field, final long newVersion) {
-        field.setFieldValue(entity, newVersion);
+    private <T> void updateVersion(final T entity, MappedField field, final Long updated) {
+        field.setFieldValue(entity, updated);
     }
 
     private <T> boolean tryVersionedUpdate(final MongoCollection collection, final T entity,
@@ -512,11 +512,7 @@ class DatastoreImpl implements AdvancedDatastore {
                 options.apply(collection)
                        .insertOne(entity, options.getOptions());
             } catch (MongoWriteException e) {
-                try {
-                    updateVersion(entity, versionField, oldVersion);
-                } catch (NullPointerException ex) {
-                    ex.printStackTrace();
-                }
+                updateVersion(entity, versionField, oldVersion);
                 throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
                     entity.getClass().getName(), idValue));
             }
