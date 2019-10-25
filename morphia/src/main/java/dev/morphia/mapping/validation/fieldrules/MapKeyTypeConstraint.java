@@ -1,6 +1,7 @@
 package dev.morphia.mapping.validation.fieldrules;
 
 
+import org.bson.codecs.pojo.TypeData;
 import org.bson.types.ObjectId;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -9,19 +10,22 @@ import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.utils.ReflectionUtils;
 
+import java.util.List;
 import java.util.Set;
 
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
-public class MapKeyDifferentFromString extends FieldConstraint {
+public class MapKeyTypeConstraint extends FieldConstraint {
     private static final String SUPPORTED = "(Map<String/Enum/Long/ObjectId/..., ?>)";
 
     @Override
     protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
         if (mf.isMap()) {
-            final Class<?> aClass = ReflectionUtils.getParameterizedClass(mf.getField(), 0);
+            Class aClass = null;
+            List typeParameters = mf.getFieldModel().getTypeData().getTypeParameters();
+            if(!typeParameters.isEmpty()) {
+                TypeData typeData = (TypeData) typeParameters.get(0);
+                aClass = typeData.getType();
+            }
             // WARN if not parameterized : null or Object...
             if (aClass == null || Object.class.equals(aClass)) {
                 ve.add(new ConstraintViolation(Level.WARNING, mc, mf, getClass(),

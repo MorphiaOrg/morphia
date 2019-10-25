@@ -35,13 +35,6 @@ import static org.junit.Assert.assertThat;
 public class ReflectionUtilsTest extends TestBase {
 
     @Test
-    public void shouldAcceptMapWithoutItsOwnGenericParameters() {
-        Class parameterizedClass = ReflectionUtils.getParameterizedClass(MapWithoutGenericTypes.class);
-
-        assertThat(parameterizedClass, is(exactClass(Integer.class)));
-    }
-
-    @Test
     public void shouldSupportGenericArrays() {
         getMapper().map(MyEntity.class);
     }

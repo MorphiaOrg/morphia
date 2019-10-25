@@ -1,20 +1,12 @@
 package dev.morphia.utils;
 
 
-import dev.morphia.mapping.MappingException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -73,95 +65,6 @@ public final class ReflectionUtils {
     public static boolean isIntegerType(final Class type) {
         return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class,
             byte.class).contains(type);
-    }
-
-    /**
-     * Get the class that parameterizes the Field supplied, at the index supplied (field can be parameterized with multiple param classes).
-     *
-     * @param field the field
-     * @param index the index of the parameterizing class
-     * @return the class that parameterizes the field, or null if field is not parameterized
-     */
-    public static Class getParameterizedClass(final Field field, final int index) {
-        if (field.getGenericType() instanceof ParameterizedType) {
-            final ParameterizedType type = (ParameterizedType) field.getGenericType();
-            if ((type.getActualTypeArguments() != null) && (type.getActualTypeArguments().length <= index)) {
-                return null;
-            }
-            final Type paramType = type.getActualTypeArguments()[index];
-            if (paramType instanceof GenericArrayType) {
-                final Class arrayType = (Class) ((GenericArrayType) paramType).getGenericComponentType();
-                return Array.newInstance(arrayType, 0)
-                            .getClass();
-            } else {
-                if (paramType instanceof ParameterizedType) {
-                    final ParameterizedType paramPType = (ParameterizedType) paramType;
-                    return (Class) paramPType.getRawType();
-                } else {
-                    if (paramType instanceof TypeVariable) {
-                        // TODO: Figure out what to do... Walk back up the to
-                        // the parent class and try to get the variable type
-                        // from the T/V/X
-                        throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) paramType).getName() + "> = "
-                                                   + ((TypeVariable) paramType).getBounds()[0]);
-                    } else if (paramType instanceof Class) {
-                        return (Class) paramType;
-                    } else {
-                        throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
-                    }
-                }
-            }
-        }
-        return getParameterizedClass(field.getType());
-    }
-
-    /**
-     * Returns the parameterized type of a Class
-     *
-     * @param c the class to examine
-     * @return the type
-     */
-    public static Class getParameterizedClass(final Class c) {
-        return getParameterizedClass(c, 0);
-    }
-
-    /**
-     * Returns the parameterized type in the given position
-     *
-     * @param c     the class to examine
-     * @param index the position of the type to return
-     * @return the type
-     */
-    public static Class getParameterizedClass(final Class c, final int index) {
-        final TypeVariable[] typeVars = c.getTypeParameters();
-        if (typeVars.length > 0) {
-            final TypeVariable typeVariable = typeVars[index];
-            final Type[] bounds = typeVariable.getBounds();
-
-            final Type type = bounds[0];
-            if (type instanceof Class) {
-                return (Class) type; // broke for EnumSet, cause bounds contain
-                // type instead of class
-            } else {
-                return null;
-            }
-        } else {
-            Type superclass = c.getGenericSuperclass();
-            if (superclass == null && c.isInterface()) {
-                Type[] interfaces = c.getGenericInterfaces();
-                if (interfaces.length > 0) {
-                    superclass = interfaces[index];
-                }
-            }
-            if (superclass instanceof ParameterizedType) {
-                final Type[] actualTypeArguments = ((ParameterizedType) superclass).getActualTypeArguments();
-                return actualTypeArguments.length > index ? (Class<?>) actualTypeArguments[index] : null;
-            } else if (!Object.class.equals(superclass)) {
-                return getParameterizedClass((Class) superclass);
-            } else {
-                return null;
-            }
-        }
     }
 
     /**

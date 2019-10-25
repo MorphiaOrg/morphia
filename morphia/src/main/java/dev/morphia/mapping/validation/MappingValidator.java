@@ -20,24 +20,18 @@ import dev.morphia.mapping.validation.classrules.NoId;
 import dev.morphia.mapping.validation.fieldrules.ContradictingFieldAnnotation;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceMissingDependencies;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
-import dev.morphia.mapping.validation.fieldrules.MapKeyDifferentFromString;
+import dev.morphia.mapping.validation.fieldrules.MapKeyTypeConstraint;
 import dev.morphia.mapping.validation.fieldrules.ReferenceToUnidentifiable;
 import dev.morphia.mapping.validation.fieldrules.VersionMisuse;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static java.lang.String.format;
-import static java.util.Collections.singletonList;
 import static java.util.Collections.sort;
 
-
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class MappingValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);
@@ -106,7 +100,7 @@ public class MappingValidator {
         constraints.add(new ReferenceToUnidentifiable());
         constraints.add(new LazyReferenceMissingDependencies());
         constraints.add(new LazyReferenceOnArray());
-        constraints.add(new MapKeyDifferentFromString());
+        constraints.add(new MapKeyTypeConstraint());
         constraints.add(new VersionMisuse(creator));
 
         constraints.add(new ContradictingFieldAnnotation(Reference.class, Property.class));

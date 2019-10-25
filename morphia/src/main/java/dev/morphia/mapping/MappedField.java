@@ -18,7 +18,6 @@ package dev.morphia.mapping;
 
 import com.mongodb.DBRef;
 import dev.morphia.Key;
-import dev.morphia.Morphia;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
@@ -27,14 +26,9 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.Conversions;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import org.bson.Document;
-import org.bson.codecs.pojo.ClassModel;
-import org.bson.codecs.pojo.InstanceCreator;
-import org.bson.codecs.pojo.PropertyModel;
 import org.bson.codecs.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
@@ -59,16 +53,15 @@ import static java.util.Arrays.asList;
 public class MappedField {
     private final Map<Class<? extends Annotation>, Annotation> annotations;
     private MappedClass declaringClass;
-    private FieldModel property; // the field :)
+    private FieldModel fieldModel;
 
-    private String nameToStore; // the field name in the db.
     private List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
 
     MappedField(final MappedClass declaringClass, final FieldModel f) {
         this.declaringClass = declaringClass;
-        property = f;
+        fieldModel = f;
 
-        final List<Annotation> list = property.getAnnotations();
+        final List<Annotation> list = fieldModel.getAnnotations();
         this.annotations = list.stream()
                                .map(ann -> this.<Class<? extends Annotation>, Annotation>map(ann.annotationType(), ann))
                                .reduce(new HashMap<>(), (map1, update) -> {
@@ -79,7 +72,6 @@ public class MappedField {
     }
 
     private void discoverNames() {
-        nameToStore = getMappedFieldName();
         loadNames = inferLoadNames();
     }
 
@@ -112,7 +104,7 @@ public class MappedField {
      * @return the underlying java field
      */
     public Field getField() {
-        return property.getField();
+        return fieldModel.getField();
     }
 
     /**
@@ -147,7 +139,7 @@ public class MappedField {
             if(target instanceof MorphiaProxy) {
                 target = ((MorphiaProxy)instance).unwrap();
             }
-            return property.getField().get(target);
+            return fieldModel.getField().get(target);
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }
@@ -157,7 +149,7 @@ public class MappedField {
      * @return the full name of the class plus java field name
      */
     public String getFullName() {
-        Field field = property.getField();
+        Field field = fieldModel.getField();
         return String.format("%s#%s", field.getDeclaringClass().getName(), field.getName());
     }
 
@@ -165,7 +157,7 @@ public class MappedField {
      * @return the name of the java field, as declared on the class
      */
     public String getJavaFieldName() {
-        return property.getName();
+        return fieldModel.getName();
     }
 
     /**
@@ -185,7 +177,7 @@ public class MappedField {
         if (getType().isArray()) {
             specializedType = getType().getComponentType();
         } else {
-            final List<TypeData<?>> typeParameters = property.getTypeData().getTypeParameters();
+            final List<TypeData<?>> typeParameters = fieldModel.getTypeData().getTypeParameters();
             specializedType = !typeParameters.isEmpty() ? typeParameters.get(0).getType() : null;
         }
 
@@ -206,7 +198,7 @@ public class MappedField {
      * @return the type of the underlying java field
      */
     public Class getType() {
-        return property.getTypeData().getType();
+        return fieldModel.getTypeData().getType();
     }
 
     /**
@@ -285,7 +277,7 @@ public class MappedField {
      */
     public void setFieldValue(final Object instance, final Object value) {
         try {
-            final Field field = property.getField();
+            final Field field = fieldModel.getField();
             field.set(instance, Conversions.convert(value, field.getType()));
         } catch (IllegalAccessException e) {
             throw new MappingException(e.getMessage(), e);
@@ -294,7 +286,7 @@ public class MappedField {
 
     @Override
     public String toString() {
-        return format("%s : %s", getMappedFieldName(), property.getTypeData().toString());
+        return format("%s : %s", getMappedFieldName(), fieldModel.getTypeData().toString());
     }
 
     /**
@@ -325,11 +317,11 @@ public class MappedField {
             }
         }
 
-        return property.getName();
+        return fieldModel.getName();
     }
 
     public TypeData<?> getTypeData() {
-        return property.getTypeData();
+        return fieldModel.getTypeData();
     }
 
     public boolean isParameterized() {
@@ -348,23 +340,7 @@ public class MappedField {
         return type.isArray() ? type.getComponentType() : type;
     }
 
-    public PropertyCodec getHandler() {
-        Class<?> type = getPropertyModel().getTypeData().getType();
-        final ClassModel<?> model = getDeclaringClass().getMorphiaModel();
-        final InstanceCreator<?> instanceCreator = model.getInstanceCreator();
-        PropertyCodec handler = null;
-        if (instanceCreator instanceof MorphiaInstanceCreator) {
-            MorphiaInstanceCreator creator = (MorphiaInstanceCreator) instanceCreator;
-            final PropertyModel<?> propertyModel = getPropertyModel();
-            if (propertyModel != null) {
-                handler = creator.getHandler(propertyModel);
-            }
-        }
-        return handler;
-    }
-
-    public PropertyModel<?> getPropertyModel() {
-        return getDeclaringClass().getMorphiaModel()
-                                  .getPropertyModel(getMappedFieldName());
+    public FieldModel getFieldModel() {
+        return fieldModel;
     }
 }

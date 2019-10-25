@@ -5,7 +5,6 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.testutil.TestEntity;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -13,11 +12,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
-public class MapKeyDifferentFromStringTest extends TestBase {
+public class MapKeyTypeConstraintTest extends TestBase {
 
     @Test(expected = ConstraintViolationException.class)
     public void testInvalidKeyType() {
