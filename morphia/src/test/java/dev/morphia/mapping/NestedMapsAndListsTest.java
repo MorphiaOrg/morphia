@@ -21,17 +21,14 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 
-/**
- * @author scotthernandez
- */
 public class NestedMapsAndListsTest extends TestBase {
 
     @Test
     public void testListOfList() {
         getMorphia().map(ListOfList.class);
         ListOfList list = new ListOfList();
-        list.list.add(asList("a", "b", "c"));
-        list.list.add(asList("123", "456"));
+        list.list.add(asList(1, 2, 3));
+        list.list.add(asList(123, 456));
         getDs().save(list);
 
         ListOfList listOfList = getDs().find(ListOfList.class).find(new FindOptions().limit(1)).tryNext();
@@ -201,7 +198,7 @@ public class NestedMapsAndListsTest extends TestBase {
     @Entity
     private static class ListOfList {
         @Property
-        private final List<List<String>> list = new ArrayList<List<String>>();
+        private final List<List<Integer>> list = new ArrayList<List<Integer>>();
 
         @Id
         private long id;
