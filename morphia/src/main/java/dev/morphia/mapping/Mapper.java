@@ -325,8 +325,12 @@ public class Mapper {
             throw new MappingException(format("The collection '%s' is not mapped to a java class.", collection));
         }
         if (mcs.size() > 1) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info(format("Found more than one class mapped to collection '%s'%s", collection, mcs));
+            if (LOG.isWarnEnabled()) {
+                List<String> classes = new ArrayList<String>();
+                for (final MappedClass mc : mcs) {
+                    classes.add(mc.getClazz().getName());
+                }
+                LOG.warn(format("Found more than one class mapped to collection '%s': %s", collection, classes));
             }
         }
         return mcs.iterator().next().getClazz();
