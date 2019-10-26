@@ -222,7 +222,7 @@ public final class ReflectionUtils {
                 }
             }
         }
-        return getParameterizedClass(field.getType());
+        return getParameterizedClass(field.getType(), index);
     }
 
     /**
@@ -265,7 +265,7 @@ public final class ReflectionUtils {
             }
 
             // Not defined on field, but may be on class or super class...
-            return getParameterizedClass(field.getType());
+            return getParameterizedClass(field.getType(), index);
         }
 
         return null;
@@ -313,7 +313,7 @@ public final class ReflectionUtils {
                 final Type[] actualTypeArguments = ((ParameterizedType) superclass).getActualTypeArguments();
                 return actualTypeArguments.length > index ? (Class<?>) actualTypeArguments[index] : null;
             } else if (!Object.class.equals(superclass)) {
-                return getParameterizedClass((Class) superclass);
+                return getParameterizedClass((Class) superclass, index);
             } else {
                 return null;
             }

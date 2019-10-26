@@ -2,12 +2,14 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.BasicDBObject;
+import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.mapping.MapImplTest.EnumMapEntity.SomeEnum;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Id;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -22,6 +24,20 @@ import static org.junit.Assert.assertTrue;
  * @author scott hernandez
  */
 public class MapImplTest extends TestBase {
+
+    @Test
+    public void testEnumKeyedMap() {
+        getMorphia().map(EnumMapEntity.class);
+
+        EnumMapEntity entity = new EnumMapEntity();
+        entity.testMap.put(SomeEnum.A, Boolean.FALSE);
+
+        getDs().save(entity);
+
+        EnumMapEntity loaded = getDs().find(EnumMapEntity.class)
+                                      .filter("_id", entity.id)
+                                      .first();
+    }
 
     @Test
     public void testEmbeddedMap() throws Exception {
@@ -54,7 +70,7 @@ public class MapImplTest extends TestBase {
         final BasicDBObject goo = (BasicDBObject) ((BasicDBObject) getDs().getCollection(ContainsMapOfEmbeddedGoos.class)
                                                                           .findOne()
                                                                           .get("values")).get(
-                                                                                                 "second");
+            "second");
         assertFalse("className should not be here.", goo.containsField(
             getMorphia().getMapper().getOptions().getDiscriminatorField()));
     }
@@ -139,5 +155,21 @@ public class MapImplTest extends TestBase {
     }
 
     private static class MyMap extends HashMap<String, String> {
+    }
+
+    @Entity
+    public static class EnumMapEntity {
+
+        @Id
+        private ObjectId id;
+
+        private TestMap testMap = new TestMap();
+
+        public enum SomeEnum {
+            A
+        }
+
+        public static class TestMap extends HashMap<SomeEnum, Boolean> {
+        }
     }
 }
