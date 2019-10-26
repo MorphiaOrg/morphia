@@ -208,7 +208,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         QueryImpl<T> cloned = cloneQuery();
         cloned.getOptions().projection(new BasicDBObject("_id", 1));
         cloned.includeFields = true;
-        return cloned.fetch();
+        return cloned.fetch(options);
     }
 
     @Override
