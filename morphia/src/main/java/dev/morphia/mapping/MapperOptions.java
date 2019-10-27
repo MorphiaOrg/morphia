@@ -431,6 +431,13 @@ public class MapperOptions {
         return builder;
     }
 
+    /**
+     * Returns the classloader used, in theory, when loading the entity types.  This value is read only.
+     *
+     * @return the classloader
+     *
+     * @morphia.internal
+     */
     public ClassLoader getClassLoader() {
         if (classLoader == null) {
             classLoader = Thread.currentThread().getContextClassLoader();
