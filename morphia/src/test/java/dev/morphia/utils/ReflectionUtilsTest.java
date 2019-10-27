@@ -69,7 +69,8 @@ public class ReflectionUtilsTest extends TestBase {
     public void testGetFromJarFileOnlyLoadsClassesInSpecifiedPackage() throws Exception {
         //we need a jar to test with so use JUnit since it will always be there
         String rootPath = Test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        Set<Class<?>> result = ReflectionUtils.getFromJarFile(Thread.currentThread().getContextClassLoader(), rootPath, "org/junit", true);
+        Set<Class<?>> result = ReflectionUtils.getFromJarFile(getMorphia().getMapper().getOptions().getClassLoader(),
+            rootPath, "org/junit", true);
 
         for (Class clazz : result) {
             assertThat(clazz.getPackage().getName().startsWith("org.junit"), is(true));

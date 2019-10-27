@@ -85,7 +85,7 @@ public class DefaultCreator implements ObjectFactory {
 
     @Override
     public <T> T createInstance(final Class<T> clazz, final DBObject dbObj) {
-        Class<T> c = getClass(dbObj);
+        Class<T> c = getClass(dbObj, options.getClassLoader());
         if (c == null) {
             c = clazz;
         }
@@ -95,7 +95,7 @@ public class DefaultCreator implements ObjectFactory {
     @Override
     @SuppressWarnings("unchecked")
     public Object createInstance(final Mapper mapper, final MappedField mf, final DBObject dbObj) {
-        Class c = getClass(dbObj);
+        Class c = getClass(dbObj, options.getClassLoader());
         if (c == null) {
             c = mf.isSingleValue() ? mf.getConcreteType() : mf.getSubClass();
             if (c.equals(Object.class)) {
@@ -156,12 +156,8 @@ public class DefaultCreator implements ObjectFactory {
         return copy;
     }
 
-    protected ClassLoader getClassLoaderForClass() {
-        return Thread.currentThread().getContextClassLoader();
-    }
-
     @SuppressWarnings("unchecked")
-    private <T> Class<T> getClass(final DBObject dbObj) {
+    private <T> Class<T> getClass(final DBObject dbObj, final ClassLoader classLoader) {
         // see if there is a className value
         Class c = null;
         if (dbObj.containsField(options.getDiscriminatorField())) {
@@ -172,11 +168,11 @@ public class DefaultCreator implements ObjectFactory {
                 if (options.isCacheClassLookups()) {
                     c = classNameCache.get(className);
                     if (c == null) {
-                        c = Class.forName(className, true, getClassLoaderForClass());
+                        c = Class.forName(className, true, classLoader);
                         classNameCache.put(className, c);
                     }
                 } else {
-                    c = Class.forName(className, true, getClassLoaderForClass());
+                    c = Class.forName(className, true, classLoader);
                 }
             } catch (ClassNotFoundException e) {
                 if (LOG.isWarnEnabled()) {

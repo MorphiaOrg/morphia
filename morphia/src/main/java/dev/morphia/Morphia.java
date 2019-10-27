@@ -240,7 +240,7 @@ public class Morphia {
      */
     public synchronized Morphia mapPackage(final String packageName, final boolean ignoreInvalidClasses) {
         try {
-            for (final Class clazz : ReflectionUtils.getClasses(getClass().getClassLoader(), packageName,
+            for (final Class clazz : ReflectionUtils.getClasses(mapper.getOptions().getClassLoader(), packageName,
                 mapper.getOptions().isMapSubPackages())) {
                 try {
                     final Embedded embeddedAnn = ReflectionUtils.getClassEmbeddedAnnotation(clazz);

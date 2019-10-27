@@ -29,6 +29,7 @@ public class MapperOptions {
     private CustomMapper defaultMapper = embeddedMapper;
     private CustomMapper referenceMapper = new ReferenceMapper();
     private CustomMapper valueMapper = new ValueMapper();
+    private ClassLoader classLoader;
 
     /**
      * Creates a default options instance.
@@ -428,6 +429,13 @@ public class MapperOptions {
         builder.valueMapper = original.getValueMapper();
         builder.disableEmbeddedIndexes = original.isDisableEmbeddedIndexes();
         return builder;
+    }
+
+    public ClassLoader getClassLoader() {
+        if (classLoader == null) {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        }
+        return classLoader;
     }
 
     /**
