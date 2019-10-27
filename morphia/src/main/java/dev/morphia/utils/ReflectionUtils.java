@@ -494,8 +494,7 @@ public final class ReflectionUtils {
         } else {
             classGraph.whitelistPackagesNonRecursive(packageName);
         }
-        ScanResult scanResult = classGraph
-                .scan();
+        ScanResult scanResult = classGraph.scan();
         try {
             Iterator<ClassInfo> iterator = scanResult.getAllClasses().iterator();
             while(iterator.hasNext()) {
