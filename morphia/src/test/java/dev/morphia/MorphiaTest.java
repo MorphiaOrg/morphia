@@ -37,7 +37,7 @@ public class MorphiaTest extends TestBase {
 
         // then
         Collection<MappedClass> mappedClasses = morphia.getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(3));
+        assertEquals(mappedClasses.size(), 3);
         Collection<Class<?>> classes = new ArrayList<Class<?>>();
         for (MappedClass mappedClass : mappedClasses) {
             classes.add(mappedClass.getClazz());
