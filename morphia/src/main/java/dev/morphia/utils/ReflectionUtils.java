@@ -490,7 +490,7 @@ public final class ReflectionUtils {
         ClassGraph classGraph = new ClassGraph()
                                     .addClassLoader(loader)
                                     .enableAllInfo();
-        if(mapSubPackages) {
+        if (mapSubPackages) {
             classGraph.whitelistPackages(packageName);
             classGraph.whitelistPackages(packageName + ".*");
         } else {
@@ -499,7 +499,7 @@ public final class ReflectionUtils {
         ScanResult scanResult = classGraph.scan();
         try {
             Iterator<ClassInfo> iterator = scanResult.getAllClasses().iterator();
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 classes.add(Class.forName(iterator.next().getName(), true, loader));
             }
         } finally {
