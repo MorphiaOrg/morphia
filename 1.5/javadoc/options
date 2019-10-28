@@ -1,5 +1,5 @@
 -classpath
-'/var/lib/jenkins/.m2/repository/org/mongodb/mongo-java-driver/3.10.1/mongo-java-driver-3.10.1.jar:/var/lib/jenkins/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/var/lib/jenkins/.m2/repository/cglib/cglib-nodep/3.2.9/cglib-nodep-3.2.9.jar:/var/lib/jenkins/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:/var/lib/jenkins/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar'
+'/var/lib/jenkins/.m2/repository/org/mongodb/mongo-java-driver/3.10.1/mongo-java-driver-3.10.1.jar:/var/lib/jenkins/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/var/lib/jenkins/.m2/repository/io/github/classgraph/classgraph/4.8.47/classgraph-4.8.47.jar:/var/lib/jenkins/.m2/repository/cglib/cglib-nodep/3.2.9/cglib-nodep-3.2.9.jar:/var/lib/jenkins/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:/var/lib/jenkins/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar'
 -encoding
 'UTF-8'
 -protected
