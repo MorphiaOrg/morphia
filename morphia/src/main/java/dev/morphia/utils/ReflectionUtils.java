@@ -1,26 +1,22 @@
 package dev.morphia.utils;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
 
 
 /**
@@ -91,178 +87,32 @@ public final class ReflectionUtils {
      * @param packageName    the package to scan
      * @param mapSubPackages whether to map the sub-packages while scanning
      * @return the list of classes
-     * @throws IOException            thrown if an error is encountered scanning packages
      * @throws ClassNotFoundException thrown if a class can not be found
      */
     public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
-        throws IOException, ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
-        final String path = packageName.replace('.', '/');
-        final Enumeration<URL> resources = loader.getResources(path);
-        if (resources != null) {
-            while (resources.hasMoreElements()) {
-                String filePath = resources.nextElement()
-                                           .getFile();
-                // WINDOWS HACK
-                if (filePath.indexOf("%20") > 0) {
-                    filePath = filePath.replaceAll("%20", " ");
-                }
-                // # in the jar name
-                if (filePath.indexOf("%23") > 0) {
-                    filePath = filePath.replaceAll("%23", "#");
-                }
+        throws ClassNotFoundException {
+        final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-                if ((filePath.indexOf("!") > 0) && (filePath.indexOf(".jar") > 0)) {
-                    String jarPath = filePath.substring(0, filePath.lastIndexOf("!"))
-                                             .substring(filePath.indexOf(":") + 1);
-                    // WINDOWS HACK
-                    if (jarPath.contains(":")) {
-                        jarPath = jarPath.substring(1);
-                    }
-                    if (jarPath.contains("!")) {
-                        classes.addAll(readFromNestedJar(loader, jarPath, path, mapSubPackages));
-                    } else {
-                        classes.addAll(getFromJarFile(loader, jarPath, path, mapSubPackages));
-                    }
-                } else {
-                    classes.addAll(getFromDirectory(loader, new File(filePath), packageName, mapSubPackages));
-                }
-            }
-        }
-        return classes;
-    }
-
-    /**
-     * @param loader
-     * @param jarPath
-     * @param packageName
-     * @param mapSubPackages
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @morphia.internal
-     */
-    protected static Set<Class<?>> readFromNestedJar(final ClassLoader loader,
-                                                     final String jarPath,
-                                                     final String packageName,
-                                                     final boolean mapSubPackages) throws IOException, ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
-        final JarFile jarFile = new JarFile(new File(jarPath.substring(0, jarPath.indexOf("!"))));
-        final InputStream inputStream = jarFile.getInputStream(jarFile.getEntry(
-            jarPath.substring(jarPath.indexOf("!") + 2)));
-        final String packagePath = packageName.replace('.', '/');
-        final JarInputStream jarStream = new JarInputStream(inputStream);
-        try {
-            JarEntry jarEntry;
-            do {
-                jarEntry = jarStream.getNextJarEntry();
-                if (jarEntry != null) {
-                    String className = jarEntry.getName();
-                    if (className.endsWith(".class")) {
-                        String classPackageName = getPackageName(className);
-                        if (classPackageName.equals(packagePath) || (mapSubPackages && isSubPackage(classPackageName, packagePath))) {
-                            className = stripFilenameExtension(className);
-                            classes.add(Class.forName(className.replace('/', '.'), true, loader));
-                        }
-                    }
-                }
-            } while (jarEntry != null);
-        } finally {
-            jarFile.close();
-            jarStream.close();
-        }
-        return classes;
-    }
-
-    /**
-     * Returns the classes in a package found in a jar
-     *
-     * @param loader         the ClassLoader to use
-     * @param jar            the jar to scan
-     * @param packageName    the package to scan
-     * @param mapSubPackages whether to map the sub-packages while scanning
-     * @return the list of classes
-     * @throws IOException            thrown if an error is encountered scanning packages
-     * @throws ClassNotFoundException thrown if a class can not be found
-     * @morphia.internal
-     */
-    public static Set<Class<?>> getFromJarFile(final ClassLoader loader, final String jar, final String packageName, final boolean
-                                                                                                                         mapSubPackages)
-        throws IOException, ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
-        try (JarInputStream jarFile = new JarInputStream(new FileInputStream(jar))) {
-            JarEntry jarEntry;
-            do {
-                jarEntry = jarFile.getNextJarEntry();
-                if (jarEntry != null) {
-                    String className = jarEntry.getName();
-                    if (className.endsWith(".class")) {
-                        String classPackageName = getPackageName(className);
-                        if (classPackageName.equals(packageName) || (mapSubPackages && isSubPackage(classPackageName, packageName))) {
-                            className = stripFilenameExtension(className);
-                            classes.add(Class.forName(className.replace('/', '.'), true, loader));
-                        }
-                    }
-                }
-            } while (jarEntry != null);
-        }
-        return classes;
-    }
-
-    /**
-     * Returns the classes in a package found in a directory
-     *
-     * @param loader         the ClassLoader to use
-     * @param directory      the directory to scan
-     * @param packageName    the package to scan
-     * @param mapSubPackages whether to map the sub-packages while scanning
-     * @return the list of classes
-     * @throws ClassNotFoundException thrown if a class can not be found
-     */
-    public static Set<Class<?>> getFromDirectory(final ClassLoader loader, final File directory, final String packageName,
-                                                 final boolean mapSubPackages) throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
-        if (directory.exists()) {
-            for (final String file : getFileNames(directory, packageName, mapSubPackages)) {
-                if (file.endsWith(".class")) {
-                    final String name = stripFilenameExtension(file);
-                    final Class<?> clazz = Class.forName(name, true, loader);
-                    classes.add(clazz);
-                }
-            }
-        }
-        return classes;
-    }
-
-    private static Set<String> getFileNames(final File directory, final String packageName, final boolean mapSubPackages) {
-        Set<String> fileNames = new HashSet<>();
-        final File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    fileNames.add(packageName + '.' + file.getName());
-                } else if (mapSubPackages) {
-                    fileNames.addAll(getFileNames(file, packageName + '.' + file.getName(), true));
-                }
-            }
-        }
-        return fileNames;
-    }
-
-    private static String getPackageName(final String filename) {
-        return filename.contains("/") ? filename.substring(0, filename.lastIndexOf('/')) : filename;
-    }
-
-    private static String stripFilenameExtension(final String filename) {
-        if (filename.indexOf('.') != -1) {
-            return filename.substring(0, filename.lastIndexOf('.'));
+        ClassGraph classGraph = new ClassGraph()
+                                    .addClassLoader(loader)
+                                    .enableAllInfo();
+        if(mapSubPackages) {
+            classGraph.whitelistPackages(packageName);
+            classGraph.whitelistPackages(packageName + ".*");
         } else {
-            return filename;
+            classGraph.whitelistPackagesNonRecursive(packageName);
         }
-    }
-
-    private static boolean isSubPackage(final String fullPackageName, final String parentPackageName) {
-        return fullPackageName.startsWith(parentPackageName);
+        ScanResult scanResult = classGraph
+                .scan();
+        try {
+            Iterator<ClassInfo> iterator = scanResult.getAllClasses().iterator();
+            while(iterator.hasNext()) {
+                classes.add(Class.forName(iterator.next().getName(), true, loader));
+            }
+        } finally {
+            scanResult.close();
+        }
+        return classes;
     }
 
     /**

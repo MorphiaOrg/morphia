@@ -147,7 +147,7 @@ public class Mapper {
                 getOptions().isMapSubPackages())) {
                 map(clazz);
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
     }
