@@ -69,13 +69,13 @@ public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
     }
 
     @Override
-    public Map<String, Object> getId(final Mapper mapper, final MappedClass field) {
+    public Map<String, Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass field) {
         if(ids == null) {
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
                   .forEach(e -> {
                       ids.put(e.getKey().toString(),
-                          ReferenceCodec.encodeId(mapper, field, e.getValue()));
+                          ReferenceCodec.encodeId(mapper, datastore, e.getValue(), field));
                   });
         }
         return ids;

@@ -22,7 +22,6 @@ class FieldCriteria extends AbstractCriteria {
     private final FilterOperator operator;
     private final Object value;
     private final boolean not;
-    private Mapper mapper;
     private MappedField mappedField;
 
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator op, final Object value) {
@@ -36,7 +35,6 @@ class FieldCriteria extends AbstractCriteria {
 
         this.field = pathTarget.translatedPath();
 
-        this.mapper = mapper;
         mappedField = pathTarget.getTarget();
         this.operator = op;
         this.value = ((Document) new OperationTarget(pathTarget, value).encode(mapper)).get(this.field);
@@ -155,10 +153,6 @@ class FieldCriteria extends AbstractCriteria {
      */
     public boolean isNot() {
         return not;
-    }
-
-    protected Mapper getMapper() {
-        return mapper;
     }
 
     @Override

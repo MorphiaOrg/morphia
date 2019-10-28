@@ -53,13 +53,13 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
         } else if (Map.class.isAssignableFrom(getTypeData().getType())) {
             return new MapReference<>(getDatastore(), getFieldMappedClass(), (Map) value);
         } else {
-            return new SingleReference<>(mapper.getDatastore(), getFieldMappedClass(), value);
+            return new SingleReference<>(getDatastore(), getFieldMappedClass(), value);
         }
     }
 
     @Override
     public void encode(final BsonWriter writer, final MorphiaReference value, final EncoderContext encoderContext) {
-        Object ids = value.getId(mapper, getFieldMappedClass());
+        Object ids = value.getId(mapper, getDatastore(), getFieldMappedClass());
         Codec codec = mapper.getCodecRegistry().get(ids.getClass());
         codec.encode(writer, ids, encoderContext);
     }

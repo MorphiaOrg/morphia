@@ -45,6 +45,9 @@ import java.util.Set;
 
 import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
 
+/**
+ * @morphia.internal
+ */
 @SuppressWarnings("unchecked")
 public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHandler {
     private final Reference annotation;
@@ -222,8 +225,6 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
                 ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
             }
             return ids;
-//        } else if (value instanceof Key) {
-//            return ((Key) value).getId();
         } else if (value.getClass().isArray()) {
             List ids = new ArrayList(((Object[]) value).length);
             for (Object o : (Object[]) value) {
@@ -231,14 +232,14 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             }
             return ids;
         } else {
-            return encodeId(getDatastore().getMapper(), getFieldMappedClass(), value);
+            return encodeId(getDatastore().getMapper(), getDatastore(), value, getFieldMappedClass());
         }
     }
 
     /**
      * @morphia.internal
      */
-    public static Object encodeId(final Mapper mapper, final MappedClass fieldMappedClass, final Object value) {
+    public static Object encodeId(final Mapper mapper, final Datastore datastore, final Object value, final MappedClass fieldMappedClass) {
         Object idValue;
         MongoCollection<?> collection = null;
         if (value instanceof Key) {
@@ -248,11 +249,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             if (idValue == null) {
                 return !isMappable(value.getClass()) ? value : null;
             }
-            try {
-                collection = mapper.getCollection(value.getClass());
-            } catch (NullPointerException e) {
-                System.out.println(value);
-            }
+            collection = datastore.getCollection(value.getClass());
         }
 
         String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;

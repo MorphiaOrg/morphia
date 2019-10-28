@@ -1,13 +1,9 @@
 package dev.morphia.mapping;
 
-import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.PropertyCodec;
 import org.bson.codecs.pojo.InstanceCreatorFactory;
 
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @morphia.internal
@@ -16,11 +12,8 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> {
     private Constructor<T> noArgsConstructor;
-    private Datastore datastore;
-    private Map<String, PropertyCodec> handlers = new HashMap<>();
 
-    public InstanceCreatorFactoryImpl(final Datastore datastore, final Class type) {
-        this.datastore = datastore;
+    public InstanceCreatorFactoryImpl(final Class type) {
         for (Constructor<?> constructor : type.getDeclaredConstructors()) {
             if (constructor.getParameterTypes().length == 0) {
                 noArgsConstructor = (Constructor<T>) constructor;
@@ -34,11 +27,6 @@ public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> 
 
     @Override
     public MorphiaInstanceCreator<T> create() {
-        return new NoArgCreator<>(datastore, noArgsConstructor, handlers);
+        return new NoArgCreator<>(noArgsConstructor);
     }
-
-    void register(final PropertyCodec handler) {
-        handlers.put(handler.getPropertyName(), handler);
-    }
-
 }

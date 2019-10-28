@@ -37,7 +37,7 @@ import static java.lang.String.format;
 @SuppressWarnings("removal")
 public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
-    final Datastore ds;
+    final Datastore datastore;
     final Class<T> clazz;
     final Mapper mapper;
     private boolean validateName = true;
@@ -49,25 +49,25 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private MongoCollection<T> collection;
     private FindOptions previousOptions;
 
+    /**
+     * Creates a Query for the given type and collection
+     *
+     * @param clazz the type to return
+     * @param datastore    the Datastore to use
+     */
+    public QueryImpl(final Class<T> clazz, final Datastore datastore) {
+        this.clazz = clazz;
+        this.datastore = datastore;
+        mapper = this.datastore.getMapper();
+
+        compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
+    }
+
     FindOptions getOptions() {
         if (options == null) {
             options = new FindOptions();
         }
         return options;
-    }
-
-    /**
-     * Creates a Query for the given type and collection
-     *
-     * @param clazz the type to return
-     * @param ds    the Datastore to use
-     */
-    public QueryImpl(final Class<T> clazz, final Datastore ds) {
-        this.clazz = clazz;
-        this.ds = ds;
-        mapper = this.ds.getMapper();
-
-        compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             .include("_id");
 
         return new MorphiaKeyCursor<>(prepareCursor(returnKey,
-            mapper.getDatastore().getDatabase().getCollection(getCollectionName())), ds.getMapper(),
+            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
             clazz, getCollectionName());
     }
 
@@ -145,8 +145,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Map<String, Object> explain(final FindOptions options) {
-        return new LinkedHashMap<>(ds.getDatabase()
-                                     .runCommand(new Document("explain",
+        return new LinkedHashMap<>(datastore.getDatabase()
+                                            .runCommand(new Document("explain",
                                          new Document("find", getCollection().getNamespace().getCollectionName())
                                              .append("filter", getQueryDocument()))));
     }
@@ -185,7 +185,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      */
     public MongoCollection<T> getCollection() {
         if(collection == null) {
-            collection = mapper.getCollection(clazz);
+            collection = datastore.getCollection(clazz);
         }
         return collection;
     }
@@ -254,7 +254,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         for (Sort sort : sorts) {
             String s = sort.getField();
             if (validateName) {
-                s = new PathTarget(ds.getMapper(), clazz, s).translatedPath();
+                s = new PathTarget(datastore.getMapper(), clazz, s).translatedPath();
             }
             sortList.put(s, sort.getOrder());
         }
@@ -320,8 +320,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     public T delete(final FindAndDeleteOptions options) {
-        return ds.enforceWriteConcern(getCollection(), clazz, options.writeConcern())
-                   .findOneAndDelete(getQueryDocument(), options);
+        return datastore.enforceWriteConcern(getCollection(), clazz, options.writeConcern())
+                        .findOneAndDelete(getQueryDocument(), options);
     }
 
     @Override
@@ -347,7 +347,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Update<T> update() {
-        return new Update<>(ds, mapper, clazz, getCollection(), getQueryDocument());
+        return new Update<>(datastore, mapper, clazz, getCollection(), getQueryDocument());
     }
 
     @Override
@@ -397,7 +397,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         Document oldProfile = null;
         if(findOptions.isLogQuery()) {
             oldProfile = // ds.getDatabase().runCommand(new Document("profile", 2));
-                ds.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
+                datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
             return findOptions
@@ -405,7 +405,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
                        .iterator();
         } finally {
             if(findOptions.isLogQuery()) {
-                ds.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
+                datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
                                       .append("slowms", oldProfile.get("slowms"))
                                       .append("sampleRate", oldProfile.get("sampleRate")));
             }
@@ -526,7 +526,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     public String getLoggedQuery() {
         if(previousOptions != null && previousOptions.isLogQuery()) {
-            Document first = mapper.getDatastore().getDatabase()
+            Document first = datastore.getDatabase()
                                    .getCollection("system.profile")
                                    .find(new Document("command.comment", "logged query: " + previousOptions.getQueryLogId()), Document.class)
                                    .projection(new Document("command.filter", 1))

@@ -11,7 +11,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
     private final Document queryObject;
 
     Modify(final QueryImpl<T> query) {
-        super(query.ds, query.mapper, query.clazz);
+        super(query.datastore, query.mapper, query.clazz);
         this.query = query;
         this.collection = query.getCollection();
         this.queryObject = query.getQueryDocument();

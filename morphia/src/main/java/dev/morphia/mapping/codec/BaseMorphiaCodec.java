@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import org.bson.BsonInvalidOperationException;
@@ -28,25 +29,25 @@ import static java.lang.String.format;
 
 public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
     private final Mapper mapper;
+    private final Datastore datastore;
 
-    public BaseMorphiaCodec(final Mapper mapper,
-                            final ClassModel<T> classModel,
-                            final CodecRegistry registry,
+    public BaseMorphiaCodec(final Datastore datastore,
                             final List<PropertyCodecProvider> propertyCodecProviders,
-                            final DiscriminatorLookup discriminatorLookup) {
+                            final DiscriminatorLookup discriminatorLookup, final ClassModel<T> classModel, final CodecRegistry registry) {
         super(classModel, registry, propertyCodecProviders, discriminatorLookup);
-        this.mapper = mapper;
+        this.mapper = datastore.getMapper();
+        this.datastore = datastore;
     }
 
-    public BaseMorphiaCodec(final Mapper mapper,
-                            final ClassModel<T> classModel,
-                            final CodecRegistry registry,
+    public BaseMorphiaCodec(final Datastore datastore,
                             final PropertyCodecRegistry propertyCodecRegistry,
                             final DiscriminatorLookup discriminatorLookup,
                             final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache,
-                            final boolean specialized) {
+                            final boolean specialized,
+                            final ClassModel<T> classModel, final CodecRegistry registry) {
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, codecCache, specialized);
-        this.mapper = mapper;
+        this.mapper = datastore.getMapper();
+        this.datastore = datastore;
     }
 
     public Mapper getMapper() {
@@ -105,12 +106,13 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         if(codec instanceof BaseMorphiaCodec) {
             final BaseMorphiaCodec<T> tCodec = (BaseMorphiaCodec<T>) codec;
             final MorphiaModel<T> morphiaModel = (MorphiaModel<T>) tCodec.getClassModel();
-            final MorphiaModel<T> newModel = new MorphiaModel<>(mapper, morphiaModel.getType(),
-                morphiaModel.getPropertyNameToTypeParameterMap(), morphiaModel.getInstanceCreatorFactory(),
-                getClassModel().useDiscriminator(), morphiaModel.getDiscriminatorKey(), morphiaModel.getDiscriminator(),
-                morphiaModel.getIdPropertyModelHolder(), morphiaModel.getAnnotations(), morphiaModel.getFieldModels(),
-                morphiaModel.getPropertyModels());
-            codec = tCodec.getSpecializedCodec(newModel);
+            final MorphiaModel<T> newModel = new MorphiaModel<>(datastore,
+                mapper.getOptions(), morphiaModel.getInstanceCreatorFactory(), getClassModel().useDiscriminator(),
+                morphiaModel.getDiscriminatorKey(), morphiaModel.getDiscriminator(), morphiaModel.getIdPropertyModelHolder(),
+                morphiaModel.getAnnotations(), morphiaModel.getFieldModels(), morphiaModel.getPropertyModels(), morphiaModel.getType(),
+                morphiaModel.getPropertyNameToTypeParameterMap()
+            );
+            codec = tCodec.getSpecializedCodec(newModel, datastore);
         }
         return codec;
     }
@@ -138,7 +140,7 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         }
     }
 
-    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized) {
+    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized, final Datastore datastore) {
         return new LazyPojoCodec<>(specialized, getRegistry(), getPropertyCodecRegistry(), getDiscriminatorLookup(), getCodecCache());
     }
 

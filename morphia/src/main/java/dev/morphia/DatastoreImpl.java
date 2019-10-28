@@ -52,7 +52,6 @@ import static org.bson.Document.parse;
 class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
-    private final MongoClient mongoClient;
     private final MongoDatabase database;
     private final IndexHelper indexHelper;
     private Mapper mapper;
@@ -66,7 +65,6 @@ class DatastoreImpl implements AdvancedDatastore {
      * @param dbName      the name of the database for this data store.
      */
     DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
-        this.mongoClient = mongoClient;
         MongoDatabase database = mongoClient.getDatabase(dbName);
         this.mapper = new Mapper(this, database.getCodecRegistry(), options);
 
@@ -250,6 +248,23 @@ class DatastoreImpl implements AdvancedDatastore {
         return getByKeys(null, keys);
     }
 
+    public <T> MongoCollection<T> getCollection(Class<T> clazz) {
+        MappedClass mappedClass = mapper.getMappedClass(clazz);
+        if (mappedClass == null) {
+            throw new MappingException(Sofia.notMappable(clazz.getName()));
+        }
+        if (mappedClass.getCollectionName() == null) {
+            throw new MappingException(Sofia.noMappedCollection(clazz.getName()));
+        }
+
+        MongoCollection<T> collection = null;
+        if (mappedClass.getEntityAnnotation() != null) {
+            collection = getDatabase().getCollection(mappedClass.getCollectionName(), clazz);
+            collection = enforceWriteConcern(collection, clazz, null);
+        }
+        return collection;
+    }
+
 
     @Override
     public MongoDatabase getDatabase() {
@@ -290,7 +305,7 @@ class DatastoreImpl implements AdvancedDatastore {
         document.remove("_id");
 
         final MappedClass mc = mapper.getMappedClass(entity.getClass());
-        final MongoCollection collection = mapper.getCollection(entity.getClass());
+        final MongoCollection collection = getCollection(entity.getClass());
 
         if (!tryVersionedUpdate(collection, entity, new InsertOneOptions().writeConcern(wc), mc)) {
             final Query<T> query = (Query<T>) find(entity.getClass()).filter("_id", id);
@@ -343,7 +358,7 @@ class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException("Can not persist a null entity");
         }
 
-        save(mapper.getCollection(entity.getClass()), entity, options);
+        save(getCollection(entity.getClass()), entity, options);
         return entity;
     }
 
@@ -378,14 +393,14 @@ class DatastoreImpl implements AdvancedDatastore {
         }
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if(mc.getEntityAnnotation() != null) {
-                indexHelper.createIndex(mapper.getCollection(mc.getType()), mc);
+                indexHelper.createIndex(getCollection(mc.getType()), mc);
             }
         }
     }
 
     @Override
     public <T> void ensureIndexes(final Class<T> clazz) {
-        indexHelper.createIndex(mapper.getCollection(clazz), mapper.getMappedClass(clazz));
+        indexHelper.createIndex(getCollection(clazz), mapper.getMappedClass(clazz));
     }
 
     @Override
@@ -396,7 +411,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void insert(final T entity, final InsertOneOptions options) {
-        insert(mapper.getCollection(entity.getClass()), entity, options);
+        insert(getCollection(entity.getClass()), entity, options);
     }
 
     @Override
@@ -404,7 +419,7 @@ class DatastoreImpl implements AdvancedDatastore {
         if (!entities.isEmpty()) {
             Class<?> type = entities.get(0).getClass();
             MappedClass mappedClass = mapper.getMappedClass(type);
-            final MongoCollection collection = mapper.getCollection(type);
+            final MongoCollection collection = getCollection(type);
             MappedField versionField = mappedClass.getVersionField();
             if(versionField != null) {
                 for (final T entity : entities) {

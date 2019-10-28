@@ -1,7 +1,6 @@
 package dev.morphia.geo;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.mapping.Mapper;
 
 /**
  * Converts Point objects into Documents for querying only.  When saving entities with Points in, this converter should not be used.
@@ -11,9 +10,8 @@ public class GeometryQueryConverter {
     /**
      * Create a new converter.  Registers itself to convert Point classes.
      *
-     * @param mapper the Mapper is required as this converter delegates other type encoding back to the mapper
      */
-    public GeometryQueryConverter(final Mapper mapper) {
+    public GeometryQueryConverter() {
     }
 
     public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {

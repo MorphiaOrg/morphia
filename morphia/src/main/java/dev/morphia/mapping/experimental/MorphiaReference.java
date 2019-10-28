@@ -69,7 +69,7 @@ public abstract class MorphiaReference<T> {
 
     public abstract List<Object> getIds();
 
-    abstract Object getId(final Mapper mapper, final MappedClass mappedClass);
+    abstract Object getId(final Mapper mapper, final Datastore datastore, final MappedClass mappedClass);
 
     /**
      * @return true if this reference has already been resolved

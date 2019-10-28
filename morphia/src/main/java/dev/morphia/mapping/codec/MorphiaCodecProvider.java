@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappedClass;
@@ -32,15 +33,16 @@ public class MorphiaCodecProvider implements CodecProvider {
     private final List<Convention> conventions;
     private final DiscriminatorLookup discriminatorLookup;
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
+    private final Datastore datastore;
 
     public MorphiaCodecProvider(final Mapper mapper,
-                                final List<Convention> conventions,
-                                final Set<String> packages) {
+                                final Datastore datastore, final Set<String> packages, final List<Convention> conventions) {
         this.mapper = mapper;
         this.conventions = conventions;
         this.discriminatorLookup = new DiscriminatorLookup(this.classModels, packages);
         propertyCodecProviders.add(new MorphiaMapPropertyCodecProvider());
         propertyCodecProviders.add(new MorphiaCollectionPropertyCodecProvider());
+        this.datastore = datastore;
     }
 
     @Override
@@ -48,10 +50,11 @@ public class MorphiaCodecProvider implements CodecProvider {
     public <T> Codec<T> get(final Class<T> type, final CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && isMappable(type)) {
-            MorphiaModel<T> morphiaModel = createMorphiaModel(mapper, type, conventions);
+            MorphiaModel<T> morphiaModel = createMorphiaModel(datastore, conventions, type);
             discriminatorLookup.addClassModel(morphiaModel);
-            codec = new MorphiaCodec<>(mapper, new MappedClass(morphiaModel, mapper), morphiaModel, registry,
-                propertyCodecProviders, discriminatorLookup);
+            codec = new MorphiaCodec<>(datastore, morphiaModel, registry, propertyCodecProviders, discriminatorLookup,
+                new MappedClass(morphiaModel, mapper)
+            );
             codecs.put(type, codec);
         }
 
@@ -81,8 +84,9 @@ public class MorphiaCodecProvider implements CodecProvider {
 
 
 
-    private static <T> MorphiaModel<T> createMorphiaModel(final Mapper mapper, final Class<T> clazz, final List<Convention> conventions) {
-        MorphiaModelBuilder<T> builder = new MorphiaModelBuilder<>(mapper, clazz);
+    private static <T> MorphiaModel<T> createMorphiaModel(final Datastore datastore,
+                                                          final List<Convention> conventions, final Class<T> clazz) {
+        MorphiaModelBuilder<T> builder = new MorphiaModelBuilder<>(datastore, datastore.getMapper().getOptions(), clazz);
         if (conventions != null) {
             builder.conventions(conventions);
         }

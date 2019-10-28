@@ -2,7 +2,6 @@ package dev.morphia;
 
 
 import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -14,14 +13,16 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
-import org.bson.Document;
+import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -271,9 +272,7 @@ public interface Datastore {
      * @return the mapped collection for the collection
      * @morphia.internal
      */
-    default <T> MongoCollection<T> getCollection(Class<T> clazz) {
-        return getMapper().getCollection(clazz);
-    }
+    <T> MongoCollection<T> getCollection(Class<T> clazz);
 
     /**
      * @return the MongoDatabase used by this DataStore

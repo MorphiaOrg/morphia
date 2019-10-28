@@ -85,7 +85,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    Object getId(final Mapper mapper, final MappedClass fieldClass) {
+    Object getId(final Mapper mapper, final Datastore datastore, final MappedClass fieldClass) {
         if(id == null) {
             MappedClass mappedClass = getMappedClass(mapper);
             id = mappedClass.getIdField().getFieldValue(get());

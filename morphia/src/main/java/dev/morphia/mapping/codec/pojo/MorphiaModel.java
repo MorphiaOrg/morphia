@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -8,6 +9,7 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
@@ -28,15 +30,15 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 public class MorphiaModel<T> extends ClassModel<T> {
-    private final Mapper mapper;
     private final Map<Class<? extends Annotation>, List<Annotation>> annotations;
     private final List<FieldModel<?>> fieldModels;
+    private final Datastore datastore;
+    private final MapperOptions options;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
     private String collectionName;
 
-    public MorphiaModel(final Mapper mapper,
-                        final Class<T> clazz,
-                        final Map<String, TypeParameterMap> propertyNameToTypeParameterMap,
+    public MorphiaModel(final Datastore datastore,
+                        final MapperOptions options,
                         final InstanceCreatorFactory<T> instanceCreatorFactory,
                         final Boolean discriminatorEnabled,
                         final String discriminatorKey,
@@ -44,12 +46,14 @@ public class MorphiaModel<T> extends ClassModel<T> {
                         final IdPropertyModelHolder<?> idPropertyModelHolder,
                         final Map<Class<? extends Annotation>, List<Annotation>> annotations,
                         final List<FieldModel<?>> fieldModels,
-                        final List<PropertyModel<?>> propertyModels) {
+                        final List<PropertyModel<?>> propertyModels,
+                        final Class<T> clazz, final Map<String, TypeParameterMap> propertyNameToTypeParameterMap) {
         super(clazz, propertyNameToTypeParameterMap, instanceCreatorFactory, discriminatorEnabled, discriminatorKey, discriminator,
             idPropertyModelHolder, propertyModels);
-        this.mapper = mapper;
         this.annotations = annotations;
         this.fieldModels = fieldModels;
+        this.datastore = datastore;
+        this.options = options;
     }
 
     /**
@@ -92,7 +96,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
             if(entityAn != null) {
                 collectionName = null;
                 if (entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                    return mapper.getOptions().isUseLowerCaseCollectionNames() ? getType().getSimpleName().toLowerCase() :
+                    return options.isUseLowerCaseCollectionNames() ? getType().getSimpleName().toLowerCase() :
                            getType().getSimpleName();
                 } else {
                     return entityAn.value();
@@ -120,7 +124,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
             for (final Class<? extends Annotation> annotationClass : Mapper.LIFECYCLE_ANNOTATIONS) {
                 if (method.isAnnotationPresent(annotationClass)) {
                     lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
-                       .add(new ClassMethodPair(mapper, annotationClass, entityListener ? type : null, method));
+                       .add(new ClassMethodPair(datastore, method, entityListener ? type : null, annotationClass));
                 }
             }
         }

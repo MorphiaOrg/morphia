@@ -15,6 +15,7 @@
  */
 package dev.morphia.mapping.codec.pojo;
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
@@ -59,18 +60,24 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     private final MappedClass mappedClass;
     private final MappedField idField;
 
-    public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
-                 final CodecRegistry registry, final List<PropertyCodecProvider> propertyCodecProviders,
-                 final DiscriminatorLookup discriminatorLookup) {
-        super(mapper, classModel, registry, propertyCodecProviders, discriminatorLookup);
+    public MorphiaCodec(final Datastore datastore,
+                        final ClassModel<T> classModel,
+                        final CodecRegistry registry,
+                        final List<PropertyCodecProvider> propertyCodecProviders,
+                        final DiscriminatorLookup discriminatorLookup, final MappedClass mappedClass) {
+        super(datastore, propertyCodecProviders, discriminatorLookup, classModel, registry);
         this.mappedClass = mappedClass;
         idField = mappedClass.getIdField();
     }
 
-    public MorphiaCodec(final Mapper mapper, final MappedClass mappedClass, final ClassModel<T> classModel,
-                        final CodecRegistry registry, final PropertyCodecRegistry propertyCodecRegistry,
-                        final DiscriminatorLookup discriminatorLookup, final boolean specialized) {
-        super(mapper, classModel, registry, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized);
+    public MorphiaCodec(final Mapper mapper,
+                        final Datastore datastore,
+                        final ClassModel<T> classModel,
+                        final CodecRegistry registry,
+                        final PropertyCodecRegistry propertyCodecRegistry,
+                        final DiscriminatorLookup discriminatorLookup,
+                        final boolean specialized, final MappedClass mappedClass) {
+        super(datastore, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized, classModel, registry);
         this.mappedClass = mappedClass;
         idField = mappedClass.getIdField();
     }
@@ -197,8 +204,8 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     }
 
     @Override
-    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized) {
-        return new SpecializedMorphiaCodec(this, specialized);
+    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized, final Datastore datastore) {
+        return new SpecializedMorphiaCodec(this, specialized, datastore);
     }
 
 }

@@ -87,7 +87,6 @@ public class Mapper {
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
 
     private CodecRegistry codecRegistry;
-    private Datastore datastore;
     private final MapperOptions opts;
 
     // TODO:  unify with DefaultCreator if it survives the Codec switchover
@@ -100,7 +99,6 @@ public class Mapper {
      * @param opts the options to use
      */
     public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions opts) {
-        this.datastore = datastore;
         this.opts = opts;
         this.codecRegistry = fromRegistries(
             new PrimitiveCodecProvider(codecRegistry),
@@ -108,11 +106,7 @@ public class Mapper {
             fromProviders(
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
-                new MorphiaCodecProvider(this, List.of(new MorphiaConvention(datastore, opts)), Set.of(""))));
-    }
-
-    public Datastore getDatastore() {
-        return datastore;
+                new MorphiaCodecProvider(this, datastore, Set.of(""), List.of(new MorphiaConvention(datastore, opts)))));
     }
 
     /**
@@ -348,23 +342,6 @@ public class Mapper {
             throw new MappingException(Sofia.collectionNotMapped(collection));
         }
         return new ArrayList<>(mcs);
-    }
-
-    public <T> MongoCollection<T> getCollection(final Class<T> clazz) {
-        MappedClass mappedClass = getMappedClass(clazz);
-        if (mappedClass == null) {
-            throw new MappingException(Sofia.notMappable(clazz.getName()));
-        }
-        if (mappedClass.getCollectionName() == null) {
-            throw new MappingException(Sofia.noMappedCollection(clazz.getName()));
-        }
-
-        MongoCollection<T> collection = null;
-        if (mappedClass.getEntityAnnotation() != null) {
-            collection = datastore.getDatabase().getCollection(mappedClass.getCollectionName(), clazz);
-            collection = enforceWriteConcern(collection, clazz);
-        }
-        return collection;
     }
 
     public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass) {

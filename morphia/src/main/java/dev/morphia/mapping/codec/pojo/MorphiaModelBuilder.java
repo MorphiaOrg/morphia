@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
@@ -30,12 +31,14 @@ import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
 
 public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
     private final List<FieldModelBuilder<?>> fieldModelBuilders = new ArrayList<>();
-    private final Mapper mapper;
+    private final Datastore datastore;
+    private final MapperOptions options;
 
-    public MorphiaModelBuilder(final Mapper mapper, final Class<T> type) {
+    public MorphiaModelBuilder(final Datastore datastore, final MapperOptions options, final Class<T> type) {
         super(type);
-        this.mapper = mapper;
         configureClassModelBuilder();
+        this.datastore = datastore;
+        this.options = options;
     }
 
     protected void configureClassModelBuilder() {
@@ -169,9 +172,10 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
                                  .collect(groupingBy(
                                      annotation -> (Class<? extends Annotation>) annotation.annotationType()));
 
-        return new MorphiaModel<>(mapper, getType(), getPropertyNameToTypeParameterMap(), getInstanceCreatorFactory(), useDiscriminator(),
+        return new MorphiaModel<>(datastore, options, getInstanceCreatorFactory(), useDiscriminator(),
             getDiscriminatorKey(), getDiscriminator(), IdPropertyModelHolder.create(getType(), idPropertyModel, getIdGenerator()),
-            annotations, fieldModels, propertyModels);
+            annotations, fieldModels, propertyModels, getType(), getPropertyNameToTypeParameterMap()
+        );
     }
 
     public static <T> FieldModelBuilder<T> createFieldModelBuilder(final FieldMetadata<T> fieldMetadata) {

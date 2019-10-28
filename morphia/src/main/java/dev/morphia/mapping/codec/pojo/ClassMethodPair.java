@@ -1,12 +1,11 @@
 package dev.morphia.mapping.codec.pojo;
 
+import dev.morphia.Datastore;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +14,16 @@ import java.util.List;
  * @morphia.internal
  */
 public class ClassMethodPair {
-    private Mapper mapper;
     private Class<? extends Annotation> event;
     private final Class<?> type;
     private final Method method;
+    private final Datastore datastore;
 
-    ClassMethodPair(final Mapper mapper, Class<? extends Annotation> event, final Class<?> type, final Method method) {
-        this.mapper = mapper;
+    ClassMethodPair(final Datastore datastore, final Method method, final Class<?> type, Class<? extends Annotation> event) {
         this.event = event;
         this.type = type;
         this.method = method;
+        this.datastore = datastore;
     }
 
     public Class<?> getType() {
@@ -39,7 +38,7 @@ public class ClassMethodPair {
         try {
             Object instance;
             if (type != null) {
-                instance = getOrCreateInstance(type, mapper);
+                instance = getOrCreateInstance(type, datastore);
             } else {
                 instance = entity;
             }
@@ -67,8 +66,8 @@ public class ClassMethodPair {
         }
     }
 
-    private Object getOrCreateInstance(final Class<?> clazz, final Mapper mapper) {
-        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(mapper.getDatastore(), clazz);
+    private Object getOrCreateInstance(final Class<?> clazz, final Datastore datastore) {
+        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(clazz);
         return creatorFactory.create().getInstance();
 
     }

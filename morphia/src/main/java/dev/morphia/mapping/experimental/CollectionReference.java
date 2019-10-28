@@ -83,10 +83,10 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     public abstract C get();
 
     @Override
-    final List<Object> getId(final Mapper mapper, final MappedClass mappedClass) {
+    final List<Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass mappedClass) {
         if(ids == null) {
             ids = getValues().stream()
-                             .map(v -> ReferenceCodec.encodeId(mapper, mappedClass, v))
+                             .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, mappedClass))
                              .collect(Collectors.toList());
         }
         return ids;

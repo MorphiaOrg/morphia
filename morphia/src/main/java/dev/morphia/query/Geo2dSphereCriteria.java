@@ -64,7 +64,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
 
         Document query;
         FilterOperator operator = getOperator();
-        GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter(getMapper());
+        GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter();
         final Document document = (Document) geometryQueryConverter.encode(geometry, null);
 
         switch (operator) {

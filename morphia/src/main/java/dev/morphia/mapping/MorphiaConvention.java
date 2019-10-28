@@ -15,7 +15,6 @@ import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
-import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -54,7 +53,7 @@ public class MorphiaConvention implements Convention {
             return;
         }
         MorphiaModelBuilder modelBuilder = (MorphiaModelBuilder) classModelBuilder;
-        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(datastore, modelBuilder.getType());
+        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(modelBuilder.getType());
         modelBuilder.instanceCreatorFactory(creatorFactory);
         modelBuilder.discriminator(modelBuilder.getType().getName())
                     .discriminatorKey(options.getDiscriminatorField());
