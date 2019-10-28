@@ -15,7 +15,6 @@ import static java.util.Collections.singletonList;
 
 /**
  * @param <T> the type to update
- * @author Scott Hernandez
  */
 public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     private final Mapper mapper;

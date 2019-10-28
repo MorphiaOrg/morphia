@@ -2,13 +2,13 @@ package dev.morphia.query.validation;
 
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.FilterOperator;
-import dev.morphia.utils.ReflectionUtils;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
-import static java.lang.String.format;
 import static dev.morphia.query.FilterOperator.MOD;
+import static java.lang.String.format;
 
 
 /**
@@ -46,7 +46,7 @@ public final class ModOperationValidator extends OperationValidator {
                                                                     + " elements.  Instead it had %s", value, Array.getLength(value))));
 
             }
-            if (!(ReflectionUtils.isIntegerType(value.getClass().getComponentType()))) {
+            if (!isIntegerType(value.getClass().getComponentType())) {
                 validationFailures.add(new ValidationFailure(format("Array value needs to contain integers for $mod, but contained: %s",
                                                                     value.getClass().getComponentType())));
             }
@@ -56,6 +56,11 @@ public final class ModOperationValidator extends OperationValidator {
                                                                 value, value.getClass()
                                                                )));
         }
+    }
+
+    private boolean isIntegerType(final Class type) {
+        return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class,
+            byte.class).contains(type);
     }
 
     //    { field: { $mod: [ divisor, remainder ] } }

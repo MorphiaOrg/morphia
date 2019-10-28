@@ -7,16 +7,10 @@ import io.github.classgraph.ScanResult;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
 
 
 /**
@@ -53,34 +47,6 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Checks if the class is an integer type, i.e., is numeric but not a floating point type.
-     *
-     * @param type the class we want to check
-     * @return true if the type is an integral type
-     */
-    public static boolean isIntegerType(final Class type) {
-        return Arrays.<Class>asList(Integer.class, int.class, Long.class, long.class, Short.class, short.class, Byte.class,
-            byte.class).contains(type);
-    }
-
-    /**
-     * Checks if the Class given is a primitive type.  This includes the Java primitive types and their wrapper types.
-     *
-     * @param type the Class to examine
-     * @return true if the Class's type is considered a primitive type
-     */
-    public static boolean isPrimitiveLike(final Class type) {
-        return type != null && (type == String.class || type == char.class
-                                || type == Character.class || type == short.class || type == Short.class
-                                || type == Integer.class || type == int.class || type == Long.class || type == long.class
-                                || type == Double.class || type == double.class || type == float.class || type == Float.class
-                                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
-                                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
-                                || type == URI.class || type.isEnum());
-
-    }
-
-    /**
      * Returns the classes in a package
      *
      * @param loader         the ClassLoader to use
@@ -91,7 +57,7 @@ public final class ReflectionUtils {
      */
     public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
         throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        final Set<Class<?>> classes = new HashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
                                     .addClassLoader(loader)
@@ -102,15 +68,11 @@ public final class ReflectionUtils {
         } else {
             classGraph.whitelistPackagesNonRecursive(packageName);
         }
-        ScanResult scanResult = classGraph
-                .scan();
-        try {
-            Iterator<ClassInfo> iterator = scanResult.getAllClasses().iterator();
-            while(iterator.hasNext()) {
-                classes.add(Class.forName(iterator.next().getName(), true, loader));
+
+        try (ScanResult scanResult = classGraph.scan()) {
+            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
+                classes.add(Class.forName(classInfo.getName(), true, loader));
             }
-        } finally {
-            scanResult.close();
         }
         return classes;
     }
