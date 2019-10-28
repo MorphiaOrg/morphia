@@ -1,7 +1,7 @@
 package dev.morphia;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -23,7 +23,7 @@ public abstract class TestBase {
     private final Datastore ds;
 
     protected TestBase() {
-        this(new MongoClient(new MongoClientURI(getMongoURI())));
+        this(MongoClients.create(getMongoURI()));
     }
 
     protected TestBase(final MongoClient mongoClient) {

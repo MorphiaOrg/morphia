@@ -1,7 +1,7 @@
 package dev.morphia;
 
 import com.mongodb.DBRef;
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
@@ -67,12 +67,10 @@ class DatastoreImpl implements AdvancedDatastore {
      */
     DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
         this.mongoClient = mongoClient;
-        this.mapper = new Mapper(this, mongoClient.getMongoClientOptions().getCodecRegistry(), options);
-
         MongoDatabase database = mongoClient.getDatabase(dbName);
-        MongoDatabase database1 = database
-                                      .withCodecRegistry(mapper.getCodecRegistry());
-        this.database = database1;
+        this.mapper = new Mapper(this, database.getCodecRegistry(), options);
+
+        this.database = database.withCodecRegistry(mapper.getCodecRegistry());
         this.indexHelper = new IndexHelper(mapper, this.database);
     }
 

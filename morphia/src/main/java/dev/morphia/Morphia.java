@@ -1,11 +1,11 @@
 package dev.morphia;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import dev.morphia.mapping.MapperOptions;
 
 
 public final class Morphia {
-
     private Morphia() {}
 
     /**
@@ -25,7 +25,7 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(final String dbName, final MapperOptions options) {
-        return createDatastore(new MongoClient(), dbName, options);
+        return createDatastore(MongoClients.create(), dbName, options);
     }
 
     /**
@@ -35,7 +35,7 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(final MongoClient mongoClient, final String dbName) {
-        return new DatastoreImpl(mongoClient, MapperOptions.DEFAULT, dbName);
+        return createDatastore(mongoClient, dbName, MapperOptions.DEFAULT);
     }
 
     /**
@@ -44,9 +44,7 @@ public final class Morphia {
      * @param dbName      the name of the database
      * @return a Datastore that you can use to interact with MongoDB
      */
-    public static Datastore createDatastore(final MongoClient mongoClient,
-                                            final String dbName,
-                                            final MapperOptions options) {
+    public static Datastore createDatastore(final MongoClient mongoClient, final String dbName, final MapperOptions options) {
         return new DatastoreImpl(mongoClient, options, dbName);
     }
 }
