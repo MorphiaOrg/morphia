@@ -480,6 +480,7 @@ public final class ReflectionUtils {
      * @param packageName    the package to scan
      * @param mapSubPackages whether to map the sub-packages while scanning
      * @return the list of classes
+     * @throws IOException            thrown if a class can not be loaded
      * @throws ClassNotFoundException thrown if a class can not be found
      */
     public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
