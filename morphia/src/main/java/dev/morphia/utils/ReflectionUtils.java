@@ -28,6 +28,7 @@ import io.github.classgraph.ScanResult;
 import org.bson.types.CodeWScope;
 import org.bson.types.ObjectId;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -482,7 +483,7 @@ public final class ReflectionUtils {
      * @throws ClassNotFoundException thrown if a class can not be found
      */
     public static Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
-        throws ClassNotFoundException {
+        throws IOException, ClassNotFoundException {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
 
         ClassGraph classGraph = new ClassGraph()

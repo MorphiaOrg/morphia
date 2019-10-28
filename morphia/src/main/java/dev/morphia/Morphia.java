@@ -256,7 +256,7 @@ public class Morphia {
                 }
             }
             return this;
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
     }
