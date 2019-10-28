@@ -9,7 +9,7 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.utils.ReflectionUtils.iterToList;
+import static dev.morphia.query.UpdateBase.iterToList;
 import static java.util.Collections.singletonList;
 
 

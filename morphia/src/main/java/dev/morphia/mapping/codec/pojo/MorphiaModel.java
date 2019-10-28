@@ -18,16 +18,13 @@ import org.bson.codecs.pojo.TypeParameterMap;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static dev.morphia.utils.ReflectionUtils.getDeclaredAndInheritedMethods;
 import static java.lang.String.format;
 
 public class MorphiaModel<T> extends ClassModel<T> {
@@ -166,4 +163,22 @@ public class MorphiaModel<T> extends ClassModel<T> {
         }
     }
 
+
+    private List<Method> getDeclaredAndInheritedMethods(final Class type) {
+        final List<Method> methods = new ArrayList<>();
+        if ((type == null) || (type == Object.class)) {
+            return methods;
+        }
+
+        final Class parent = type.getSuperclass();
+        methods.addAll(getDeclaredAndInheritedMethods(parent));
+
+        for (final Method m : type.getDeclaredMethods()) {
+            if (!Modifier.isStatic(m.getModifiers())) {
+                methods.add(m);
+            }
+        }
+
+        return methods;
+    }
 }

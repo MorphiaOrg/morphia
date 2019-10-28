@@ -22,7 +22,9 @@ import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
-import dev.morphia.utils.ReflectionUtils;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -32,10 +34,10 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -137,13 +139,22 @@ public class Mapper {
     }
 
     /**
+     * Maps all the classes found in the package to which the given class belongs.
+     *
+     * @param clazz the class to use when trying to find others to map
+     */
+    public void mapPackageFromClass(final Class clazz) {
+        mapPackage(clazz.getPackage().getName());
+    }
+
+    /**
      * Tries to map all classes in the package specified.
      *
      * @param packageName the name of the package to process
      */
     public synchronized void mapPackage(final String packageName) {
         try {
-            for (final Class clazz : ReflectionUtils.getClasses(getClass().getClassLoader(), packageName,
+            for (final Class clazz : getClasses(getClass().getClassLoader(), packageName,
                 getOptions().isMapSubPackages())) {
                 map(clazz);
             }
@@ -152,13 +163,26 @@ public class Mapper {
         }
     }
 
-    /**
-     * Maps all the classes found in the package to which the given class belongs.
-     *
-     * @param clazz the class to use when trying to find others to map
-     */
-    public void mapPackageFromClass(final Class clazz) {
-        mapPackage(clazz.getPackage().getName());
+    private Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
+        throws ClassNotFoundException {
+        final Set<Class<?>> classes = new HashSet<>();
+
+        ClassGraph classGraph = new ClassGraph()
+                                    .addClassLoader(loader)
+                                    .enableAllInfo();
+        if(mapSubPackages) {
+            classGraph.whitelistPackages(packageName);
+            classGraph.whitelistPackages(packageName + ".*");
+        } else {
+            classGraph.whitelistPackagesNonRecursive(packageName);
+        }
+
+        try (ScanResult scanResult = classGraph.scan()) {
+            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
+                classes.add(Class.forName(classInfo.getName(), true, loader));
+            }
+        }
+        return classes;
     }
 
     /**

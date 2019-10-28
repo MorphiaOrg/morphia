@@ -1,7 +1,6 @@
 package dev.morphia.mapping.codec.references;
 
 import com.mongodb.DBRef;
-import com.mongodb.DocumentToDBRefTransformer;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
@@ -50,7 +49,6 @@ import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
 public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHandler {
     private final Reference annotation;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
-    private DocumentToDBRefTransformer transformer = new DocumentToDBRefTransformer();
 
     public ReferenceCodec(final Datastore datastore, final Field field, final String name, final TypeData typeData) {
         super(datastore, field, name, typeData);
@@ -146,13 +144,10 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     }
 
     MorphiaReference readDocument(final Document value) {
-        final MorphiaReference reference;
         Mapper mapper = getDatastore().getMapper();
-        Document document = value;
         final Object id = mapper.getCodecRegistry().get(Object.class)
-                                .decode(new DocumentReader(document), DecoderContext.builder().build());
-        reference = readSingle(id);
-        return reference;
+                                .decode(new DocumentReader(value), DecoderContext.builder().build());
+        return readSingle(id);
     }
 
     MorphiaReference readSingle(final Object value) {

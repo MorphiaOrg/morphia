@@ -6,10 +6,10 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import static dev.morphia.utils.ReflectionUtils.iterToList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -259,5 +259,28 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
 
     private void addOperation(final UpdateOperator operator, final PathTarget path, final Object val) {
         operations.add(operator, new OperationTarget(path, val));
+    }
+
+    /**
+     * Converts an Iterable to a List
+     *
+     * @param it  the Iterable
+     * @param <T> the types of the elements in the Iterable
+     * @return the List
+     */
+    public static <T> List<T> iterToList(final Iterable<T> it) {
+        if (it instanceof List) {
+            return (List<T>) it;
+        }
+        if (it == null) {
+            return null;
+        }
+
+        final List<T> ar = new ArrayList<>();
+        for (final T o : it) {
+            ar.add(o);
+        }
+
+        return ar;
     }
 }
