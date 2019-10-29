@@ -17,6 +17,10 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -76,12 +80,12 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeDateTime(final long value) {
-        value(value);
+        value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
     }
 
     @Override
     public void writeDateTime(final String name, final long value) {
-        document().put(name, value);
+        document().put(name, LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
     }
 
     @Override
