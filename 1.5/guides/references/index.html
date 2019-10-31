@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.49" />
+    <meta name="generator" content="Hugo 0.40.1" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>References :: Morphia</title>
 
     
-    <link href="/1.5/css/nucleus.css?1572495782" rel="stylesheet">
-    <link href="/1.5/css/fontawesome-all.min.css?1572495782" rel="stylesheet">
-    <link href="/1.5/css/hybrid.css?1572495782" rel="stylesheet">
-    <link href="/1.5/css/featherlight.min.css?1572495782" rel="stylesheet">
-    <link href="/1.5/css/perfect-scrollbar.min.css?1572495782" rel="stylesheet">
-    <link href="/1.5/css/auto-complete.css?1572495782" rel="stylesheet">
-    <link href="/1.5/css/theme.css?1572495782" rel="stylesheet">
-    <link href="/1.5/css/hugo-theme.css?1572495782" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1572497141" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1572497141" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1572497141" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1572497141" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1572497141" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1572497141" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1572497141" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1572497141" rel="stylesheet">
     
 
-    <script src="/1.5/js/jquery-2.x.min.js?1572495782"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1572497141"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -585,16 +585,16 @@ the mapping metadata for <code>Book</code>.  Because these references point to t
 
 <pre><code class="language-javascript">&gt; db.Author.find().pretty()
 {
-	&quot;_id&quot; : ObjectId(&quot;5c3e99276a44c77dfc1b5dbd&quot;),
-	&quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
-	&quot;name&quot; : &quot;Jane Austen&quot;,
-	&quot;list&quot; : [
-		ObjectId(&quot;5c3e99276a44c77dfc1b5dbe&quot;),
-		ObjectId(&quot;5c3e99276a44c77dfc1b5dbf&quot;),
-		ObjectId(&quot;5c3e99276a44c77dfc1b5dc0&quot;),
-		ObjectId(&quot;5c3e99276a44c77dfc1b5dc1&quot;),
-		ObjectId(&quot;5c3e99276a44c77dfc1b5dc2&quot;)
-	]
+    &quot;_id&quot; : ObjectId(&quot;5c3e99276a44c77dfc1b5dbd&quot;),
+    &quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
+    &quot;name&quot; : &quot;Jane Austen&quot;,
+    &quot;list&quot; : [
+        ObjectId(&quot;5c3e99276a44c77dfc1b5dbe&quot;),
+        ObjectId(&quot;5c3e99276a44c77dfc1b5dbf&quot;),
+        ObjectId(&quot;5c3e99276a44c77dfc1b5dc0&quot;),
+        ObjectId(&quot;5c3e99276a44c77dfc1b5dc1&quot;),
+        ObjectId(&quot;5c3e99276a44c77dfc1b5dc2&quot;)
+    ]
 }
 </code></pre>
 
@@ -603,16 +603,16 @@ refer to documents stored in different collections.  For example, if the generic
 
 <pre><code class="language-javascript">&gt; db.jane.find().pretty()
 {
-	&quot;_id&quot; : ObjectId(&quot;5c3e99c06a44c77e5a9b5701&quot;),
-	&quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
-	&quot;name&quot; : &quot;Jane Austen&quot;,
-	&quot;list&quot; : [
-		DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c06a44c77e5a9b5702&quot;)),
-		DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5703&quot;)),
-		DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5704&quot;)),
-		DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5705&quot;)),
-		DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5706&quot;))
-	]
+    &quot;_id&quot; : ObjectId(&quot;5c3e99c06a44c77e5a9b5701&quot;),
+    &quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
+    &quot;name&quot; : &quot;Jane Austen&quot;,
+    &quot;list&quot; : [
+        DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c06a44c77e5a9b5702&quot;)),
+        DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5703&quot;)),
+        DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5704&quot;)),
+        DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5705&quot;)),
+        DBRef(&quot;books&quot;, ObjectId(&quot;5c3e99c16a44c77e5a9b5706&quot;))
+    ]
 }
 </code></pre>
 
@@ -633,16 +633,16 @@ complicated.  A <code>Map</code> might look something like this:</p>
 
 <pre><code class="language-javascript">&gt; db.Author.find().pretty()
 {
-	&quot;_id&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f58&quot;),
-	&quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
-	&quot;name&quot; : &quot;Jane Austen&quot;,
-	&quot;map&quot; : {
-		&quot;Sense and Sensibility &quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f59&quot;),
-		&quot;Pride and Prejudice&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5a&quot;),
-		&quot;Mansfield Park&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5b&quot;),
-		&quot;Emma&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5c&quot;),
-		&quot;Northanger Abbey&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5d&quot;)
-	}
+    &quot;_id&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f58&quot;),
+    &quot;className&quot; : &quot;dev.morphia.mapping.experimental.MorphiaReferenceTest$Author&quot;,
+    &quot;name&quot; : &quot;Jane Austen&quot;,
+    &quot;map&quot; : {
+        &quot;Sense and Sensibility &quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f59&quot;),
+        &quot;Pride and Prejudice&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5a&quot;),
+        &quot;Mansfield Park&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5b&quot;),
+        &quot;Emma&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5c&quot;),
+        &quot;Northanger Abbey&quot; : ObjectId(&quot;5c3e9cad6a44c77fa8f38f5d&quot;)
+    }
 }
 </code></pre>
 
@@ -956,20 +956,20 @@ complicated.  A <code>Map</code> might look something like this:</p>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5/js/clipboard.min.js?1572495782"></script>
-    <script src="/1.5/js/perfect-scrollbar.min.js?1572495782"></script>
-    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1572495782"></script>
-    <script src="/1.5/js/jquery.sticky.js?1572495782"></script>
-    <script src="/1.5/js/featherlight.min.js?1572495782"></script>
-    <script src="/1.5/js/html5shiv-printshiv.min.js?1572495782"></script>
-    <script src="/1.5/js/highlight.pack.js?1572495782"></script>
+    <script src="/1.5/js/clipboard.min.js?1572497141"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1572497141"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1572497141"></script>
+    <script src="/1.5/js/jquery.sticky.js?1572497141"></script>
+    <script src="/1.5/js/featherlight.min.js?1572497141"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1572497141"></script>
+    <script src="/1.5/js/highlight.pack.js?1572497141"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5/js/modernizr.custom.71422.js?1572495782"></script>
-    <script src="/1.5/js/learn.js?1572495782"></script>
-    <script src="/1.5/js/hugo-learn.js?1572495782"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1572497141"></script>
+    <script src="/1.5/js/learn.js?1572497141"></script>
+    <script src="/1.5/js/hugo-learn.js?1572497141"></script>
 
-    <link href="/1.5/mermaid/mermaid.css?1572495782" type="text/css" rel="stylesheet" />
-    <script src="/1.5/mermaid/mermaid.js?1572495782"></script>
+    <link href="/1.5/mermaid/mermaid.css?1572497141" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1572497141"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
