@@ -46,3 +46,5 @@ codecs defined for those types.
 * Keys are no longer allowed as fields.  Use `@Reference` or `MorphiaReference` instead.
 * Polymorphic queries across collections are not currently supported.  That is, if you have entities A and B each mapped to separate
  collections, a query against type A will not automatically look in the collection mapped for B to find your entities. 
+* The default option when calling `modify()` is to return the before state of the entity.  This is a change to the default behavior of
+ the old, deprecated methods which was to return the new state.  This brings Morphia's behavior inline with the server's.
