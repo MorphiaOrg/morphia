@@ -24,6 +24,7 @@ public class MapperOptions {
     private final boolean cacheClassLookups;
     private final boolean mapSubPackages;
     private final MorphiaInstanceCreator creator;
+    private ClassLoader classLoader;
 
     private MapperOptions(final Builder builder) {
         ignoreFinals = builder.ignoreFinals;
@@ -34,6 +35,7 @@ public class MapperOptions {
         mapSubPackages = builder.mapSubPackages;
         creator = builder.creator;
         propertyHandlers = builder.propertyHandlers;
+        classLoader = builder.classLoader;
     }
 
     /**
@@ -97,6 +99,20 @@ public class MapperOptions {
     }
 
     /**
+     * Returns the classloader used, in theory, when loading the entity types.
+     *
+     * @return the classloader
+     *
+     * @morphia.internal
+     */
+    public ClassLoader getClassLoader() {
+        if (classLoader == null) {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        }
+        return classLoader;
+    }
+
+    /**
      * @return a builder to set mapping options
      */
     public static Builder builder() {
@@ -116,6 +132,7 @@ public class MapperOptions {
         builder.cacheClassLookups = original.isCacheClassLookups();
         builder.mapSubPackages = original.isMapSubPackages();
         builder.creator = original.getCreator();
+        builder.classLoader = original.getClassLoader();
         return builder;
     }
 
@@ -133,6 +150,7 @@ public class MapperOptions {
         private boolean mapSubPackages;
         private MorphiaInstanceCreator creator;
         private final List<Class<? extends Annotation>> propertyHandlers = new ArrayList<>();
+        private ClassLoader classLoader;
 
         private Builder() {
             addPropertyHandler(Reference.class);
@@ -212,6 +230,15 @@ public class MapperOptions {
          */
         public Builder objectFactory(final MorphiaInstanceCreator creator) {
             this.creator = creator;
+            return this;
+        }
+
+        /**
+         * @param classLoader the ClassLoader to use
+         * @return this
+         */
+        public Builder classLoader(final ClassLoader classLoader) {
+            this.classLoader = classLoader;
             return this;
         }
 
