@@ -17,9 +17,6 @@
 package dev.morphia.mapping;
 
 import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -30,12 +27,31 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.ValidationException;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class EmbeddedMappingTest extends TestBase {
+
+    @Test
+    public void embedded() {
+        getMorphia().map(EmbeddedArrayFields.class, FieldValue.class);
+
+        EmbeddedArrayFields embeddedArrayFields = new EmbeddedArrayFields(new FieldValue[]{new FieldValue("first", "value")});
+        getDs().save(embeddedArrayFields);
+
+        EmbeddedArrayFields first = getDs().find(EmbeddedArrayFields.class)
+                                           .first();
+
+        System.out.println("********************* first = " + first);
+    }
+
     @Test
     public void mapGenericEmbeds() {
         getMorphia().map(AuditEntry.class, Delta.class);
@@ -270,5 +286,50 @@ public class EmbeddedMappingTest extends TestBase {
         @Id
         private ObjectId id;
         private Nested nested;
+    }
+
+    @Entity
+    public static class EmbeddedArrayFields {
+        @Id
+        private ObjectId id;
+        @Embedded("Fields")
+        public FieldValue[] Fields;
+
+        public EmbeddedArrayFields() {
+        }
+
+        public EmbeddedArrayFields(final FieldValue[] fields) {
+            Fields = fields;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", EmbeddedArrayFields.class.getSimpleName() + "[", "]")
+                       .add("id=" + id)
+                       .add("Fields=" + Arrays.toString(Fields))
+                       .toString();
+        }
+    }
+
+    @Embedded
+    public static class FieldValue{
+        public String Key;
+        public Object Value;
+
+        public FieldValue() {
+        }
+
+        public FieldValue(final String key, final Object value) {
+            Key = key;
+            Value = value;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", FieldValue.class.getSimpleName() + "[", "]")
+                       .add("Key='" + Key + "'")
+                       .add("Value=" + Value)
+                       .toString();
+        }
     }
 }

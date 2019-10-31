@@ -65,10 +65,14 @@ class EmbeddedMapper implements CustomMapper {
                         if (mapper.getConverters().hasSimpleValueConverter(mf) || mapper.getConverters()
                                                                                         .hasSimpleValueConverter(mf.getType())) {
                             refObj = mapper.getConverters().decode(mf.getType(), dbVal, mf);
-                        } else {
+                        } else if (mapper.getConverters().hasSimpleValueConverter(dbVal.getClass())) {
+                            refObj = mapper.getConverters().decode(dbVal.getClass(), dbVal, mf);
+                        } else if (isDBObject) {
                             DBObject value = (DBObject) dbVal;
                             refObj = mapper.getOptions().getObjectFactory().createInstance(mapper, mf, value);
                             refObj = mapper.fromDb(datastore, value, refObj, cache);
+                        } else {
+                            refObj = dbVal;
                         }
                         if (refObj != null) {
                             mf.setFieldValue(entity, refObj);

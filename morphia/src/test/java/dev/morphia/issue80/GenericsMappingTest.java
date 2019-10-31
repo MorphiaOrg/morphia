@@ -14,22 +14,22 @@
 package dev.morphia.issue80;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.StringJoiner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-/**
- * @author Scott Hernandez
- */
 public class GenericsMappingTest extends TestBase {
 
     @Test
@@ -58,6 +58,19 @@ public class GenericsMappingTest extends TestBase {
         assertNotNull(ctLoaded.id);
         assertNotNull(ctLoaded.stringThing);
         assertNotNull(ctLoaded.integerThing);
+    }
+
+    @Test
+    public void genericField() {
+        getMorphia().map(GenericField.class, ParameterizedType.class);
+
+        GenericField test = new GenericField(new ParameterizedType<>("test"));
+        getDs().save(test);
+
+        GenericField first = getDs().find(GenericField.class).first();
+
+        Assert.assertNotNull(first);
+        Assert.assertEquals("test", first.genericField.value);
     }
 
     public static class GenericHolder<T> {
@@ -96,5 +109,45 @@ public class GenericsMappingTest extends TestBase {
     }
 
     public static class AudioElement extends Element<Long> {
+    }
+
+    @Entity
+    static class GenericField {
+        @Id ObjectId id;
+        ParameterizedType<String> genericField;
+
+        public GenericField() {
+        }
+
+        public GenericField(final ParameterizedType<String> genericField) {
+            this.genericField = genericField;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", GenericField.class.getSimpleName() + "[", "]")
+                       .add("id=" + id)
+                       .add("s=" + genericField)
+                       .toString();
+        }
+    }
+
+    @Embedded
+    static class ParameterizedType<T> {
+        T value;
+
+        public ParameterizedType() {
+        }
+
+        public ParameterizedType(final T value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", ParameterizedType.class.getSimpleName() + "[", "]")
+                       .add("value=" + value)
+                       .toString();
+        }
     }
 }
