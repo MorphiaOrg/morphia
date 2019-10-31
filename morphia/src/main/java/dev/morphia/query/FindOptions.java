@@ -461,7 +461,6 @@ public final class FindOptions {
      * @return
      */
     public FindOptions logQuery() {
-        Sofia.logTestFeatureOnly();
         queryLogId = new ObjectId().toString();
         comment(Sofia.loggedQuery(queryLogId));
         return this;
