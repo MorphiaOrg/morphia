@@ -1,5 +1,5 @@
 [[versions]]
-  version = "1.5.7"
+  version = "1.5.8"
   status = "current"
   docs = "./1.5"
   api = "/javadoc"
