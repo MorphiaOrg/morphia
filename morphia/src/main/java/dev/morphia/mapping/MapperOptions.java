@@ -66,6 +66,7 @@ public class MapperOptions {
         mapSubPackages = options.isMapSubPackages();
         dateStorage = options.dateStorage;
         disableEmbeddedIndexes = options.disableEmbeddedIndexes;
+        classLoader = options.getClassLoader();
     }
 
     private MapperOptions(final Builder builder) {
@@ -83,6 +84,7 @@ public class MapperOptions {
         referenceMapper = builder.referenceMapper;
         valueMapper = builder.valueMapper;
         dateStorage = builder.dateStorage;
+        classLoader = builder.classLoader;
     }
 
     /**
@@ -428,11 +430,12 @@ public class MapperOptions {
         builder.referenceMapper = original.getReferenceMapper();
         builder.valueMapper = original.getValueMapper();
         builder.disableEmbeddedIndexes = original.isDisableEmbeddedIndexes();
+        builder.classLoader = original.getClassLoader();
         return builder;
     }
 
     /**
-     * Returns the classloader used, in theory, when loading the entity types.  This value is read only.
+     * Returns the classloader used, in theory, when loading the entity types.
      *
      * @return the classloader
      *
@@ -460,6 +463,7 @@ public class MapperOptions {
         private boolean disableEmbeddedIndexes;
         private DateStorage dateStorage = DateStorage.SYSTEM_DEFAULT;
         private ObjectFactory objectFactory;
+        private ClassLoader classLoader;
         private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
         private CustomMapper embeddedMapper = new EmbeddedMapper();
         private CustomMapper defaultMapper = embeddedMapper;
@@ -616,6 +620,15 @@ public class MapperOptions {
          * @return this
          */
         public Builder datastoreProvider(final DatastoreProvider datastoreProvider) {
+            return this;
+        }
+
+        /**
+         * @param classLoader the ClassLoader to use
+         * @return this
+         */
+        public Builder classLoader(final ClassLoader classLoader) {
+            this.classLoader = classLoader;
             return this;
         }
 
