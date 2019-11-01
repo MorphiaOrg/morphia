@@ -14,10 +14,13 @@ import java.util.function.Function;
 
 import static java.lang.Boolean.FALSE;
 
+/**
+ * Defines basic type conversions
+ */
 public final class Conversions {
     private static final Logger LOG = LoggerFactory.getLogger(Conversions.class);
 
-    private static Map<Class<?>, Map<Class<?>, Function<?, ?>>> conversions  = new HashMap<>();
+    private static Map<Class<?>, Map<Class<?>, Function<?, ?>>> conversions = new HashMap<>();
 
     static {
         registerStringConversions();
@@ -45,13 +48,16 @@ public final class Conversions {
         });
     }
 
+    private Conversions() {
+    }
+
     private static void registerStringConversions() {
         register(String.class, ObjectId.class, ObjectId::new);
         register(String.class, Character.class, s -> {
             if (s.length() == 1) {
                 return s.charAt(0);
-            } else if (s.isEmpty()){
-                return (char)0;
+            } else if (s.isEmpty()) {
+                return (char) 0;
             } else {
                 throw new MappingException("Could not convert String to char: " + s);
             }
@@ -70,39 +76,46 @@ public final class Conversions {
         register(fromType, toType, function, null);
     }
 
-    private static <F, T> void register(final Class<F> fromType, final Class<T> toType, final Function<F, T> function, String warning) {
-        final Function<F, T> conversion =
-            warning == null
-            ? function
-            : f -> {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn(warning);
-                }
-                return function.apply(f);
-            };
+    private static <F, T> void register(final Class<F> fromType, final Class<T> toType, final Function<F, T> function,
+                                        final String warning) {
+        final Function<F, T> conversion = warning == null
+                                          ? function
+                                          : f -> {
+                                              if (LOG.isWarnEnabled()) {
+                                                  LOG.warn(warning);
+                                              }
+                                              return function.apply(f);
+                                          };
         conversions.computeIfAbsent(fromType, (Class<?> c) -> new HashMap<>())
                    .put(toType, conversion);
     }
 
+    /**
+     * Attempts to convert a value to the given type
+     *
+     * @param value  the value to convert
+     * @param target the target type
+     * @return the potentially converted value
+     */
     @SuppressWarnings("unchecked")
-    public static Object convert(Object value, Class<?> toType) {
-        if(value == null) {
-            return convertNull(toType);
+    public static Object convert(final Object value, final Class<?> target) {
+        if (value == null) {
+            return convertNull(target);
         }
 
         final Class<?> fromType = value.getClass();
-        if(fromType.equals(toType)) {
+        if (fromType.equals(target)) {
             return value;
         }
 
         final Map<Class<?>, Function<?, ?>> functions = conversions.computeIfAbsent(fromType, (Class f) -> new HashMap<>());
-        final Function function = functions.get(toType);
-        if(function == null) {
-            if(toType.equals(String.class)) {
+        final Function function = functions.get(target);
+        if (function == null) {
+            if (target.equals(String.class)) {
                 return value.toString();
             }
-            if(toType.isEnum() && fromType.equals(String.class)) {
-                return Enum.valueOf((Class<? extends Enum>)toType, (String)value);
+            if (target.isEnum() && fromType.equals(String.class)) {
+                return Enum.valueOf((Class<? extends Enum>) target, (String) value);
             }
             return value;
         }
@@ -110,9 +123,9 @@ public final class Conversions {
     }
 
     private static Object convertNull(final Class<?> toType) {
-        if(isNumber(toType)) {
+        if (isNumber(toType)) {
             return 0;
-        } else if(isBoolean(toType)) {
+        } else if (isBoolean(toType)) {
             return FALSE;
         }
         return null;

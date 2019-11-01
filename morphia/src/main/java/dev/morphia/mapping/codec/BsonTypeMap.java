@@ -20,9 +20,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Maps Java type to BSON types
+ */
 public class BsonTypeMap {
     private final Map<Class<?>, BsonType> map = new HashMap<>();
 
+    /**
+     * Creates the map
+     */
     public BsonTypeMap() {
         map.put(List.class, BsonType.ARRAY);
         map.put(Binary.class, BsonType.BINARY);
@@ -67,11 +73,7 @@ public class BsonTypeMap {
 
         final BsonTypeMap that = (BsonTypeMap) o;
 
-        if (!map.equals(that.map)) {
-            return false;
-        }
-
-        return true;
+        return map.equals(that.map);
     }
 
     @Override

@@ -9,6 +9,9 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A provider for collection types
+ */
 @SuppressWarnings("unchecked")
 public class MorphiaCollectionPropertyCodecProvider extends MorphiaPropertyCodecProvider {
     @Override

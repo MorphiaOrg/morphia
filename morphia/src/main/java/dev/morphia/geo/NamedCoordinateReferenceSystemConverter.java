@@ -1,8 +1,5 @@
 package dev.morphia.geo;
 
-import dev.morphia.mapping.MappedField;
-import org.bson.Document;
-
 /**
  * A Morphia TypeConverter that knows how to turn things that are labelled with the Geometry interface into the correct concrete class,
  * based on the GeoJSON type.
@@ -13,6 +10,7 @@ import org.bson.Document;
  */
 @Deprecated(since = "2.0", forRemoval = true)
 public class NamedCoordinateReferenceSystemConverter {
+/*
     public Object decode(final Class<?> targetClass, final Object fromDocument, final MappedField optionalExtraInfo) {
         throw new UnsupportedOperationException("We should never need to decode these");
     }
@@ -27,4 +25,5 @@ public class NamedCoordinateReferenceSystemConverter {
     protected boolean isSupported(final Class<?> c, final MappedField optionalExtraInfo) {
         return CoordinateReferenceSystem.class.isAssignableFrom(c);
     }
+*/
 }

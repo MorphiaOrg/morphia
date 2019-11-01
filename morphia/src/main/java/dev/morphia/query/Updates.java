@@ -2,6 +2,11 @@ package dev.morphia.query;
 
 import java.util.List;
 
+/**
+ * Defines the update operations available
+ *
+ * @param <Updater>
+ */
 public interface Updates<Updater extends Updates> {
     /**
      * adds the value to an array field if it doesn't already exist in the array
@@ -48,9 +53,9 @@ public interface Updates<Updater extends Updates> {
      *
      * @param field the field to update
      * @param value the value to decrement by
-     * @throws IllegalArgumentException of the value is not an instance of
-     *         Double, Float,Long, or Integer
      * @return this
+     * @throws IllegalArgumentException of the value is not an instance of
+     *                                  Double, Float,Long, or Integer
      * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */
     Updater dec(String field, Number value);
@@ -148,7 +153,7 @@ public interface Updates<Updater extends Updates> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
      */
-    Updater push(String field, Object value, final PushOptions options);
+    Updater push(String field, Object value, PushOptions options);
 
     /**
      * Adds new values to an array field.
@@ -179,7 +184,6 @@ public interface Updates<Updater extends Updates> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/pull/ $pull
      * @deprecated use {@link #pull(String, Object)} instead
-     *
      */
     @Deprecated(since = "2.0", forRemoval = true)
     Updater removeAll(String field, Object value);
@@ -224,6 +228,13 @@ public interface Updates<Updater extends Updates> {
      */
     Updater set(String field, Object value);
 
+    /**
+     * sets the entity value to completely replace the stored document
+     *
+     * @param entity the entity to store
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/set/ $set
+     */
     Updater set(Object entity);
 
     /**

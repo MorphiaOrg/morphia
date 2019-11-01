@@ -37,6 +37,9 @@ import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;
 import static org.bson.codecs.pojo.PojoBuilderHelper.createPropertyModelBuilder;
 
+/**
+ * A set of conventions to apply to Morphia entities
+ */
 @SuppressWarnings("unchecked")
 public class MorphiaConvention implements Convention {
     private Datastore datastore;
@@ -103,6 +106,55 @@ public class MorphiaConvention implements Convention {
 
     }
 
+    private <T extends Annotation> T getAnnotation(final ClassModelBuilder<?> classModelBuilder, final Class<T> klass) {
+        final List<Annotation> annotations = classModelBuilder.getAnnotations();
+        if (!annotations.isEmpty()) {
+            final ListIterator<Annotation> iterator = annotations.listIterator(annotations.size());
+            while (iterator.hasPrevious()) {
+                final Annotation annotation = iterator.previous();
+                if (klass.equals(annotation.annotationType())) {
+                    return klass.cast(annotation);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean isTransient(final FieldModelBuilder<?> field) {
+        return field.hasAnnotation(Transient.class)
+               || field.hasAnnotation(java.beans.Transient.class)
+               || Modifier.isTransient(field.getField().getModifiers());
+    }
+
+    private static String getMappedFieldName(final FieldModelBuilder<?> field) {
+        if (field.hasAnnotation(Id.class)) {
+            return "_id";
+        } else if (field.hasAnnotation(Property.class)) {
+            final Property mv = field.getAnnotation(Property.class);
+            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mv.value();
+            }
+        } else if (field.hasAnnotation(Reference.class)) {
+            final Reference mr = field.getAnnotation(Reference.class);
+            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mr.value();
+            }
+        } else if (field.hasAnnotation(Embedded.class)) {
+            final Embedded me = field.getAnnotation(Embedded.class);
+            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return me.value();
+            }
+        } else if (field.hasAnnotation(Version.class)) {
+            final Version me = field.getAnnotation(Version.class);
+            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return me.value();
+            }
+        }
+
+        return field.getName();
+    }
+
     private void buildProperty(final MorphiaModelBuilder modelBuilder,
                                final FieldModelBuilder<?> builder, final Field field, final String mappedName) {
         final PropertyMetadata<?> propertyMetadata = new PropertyMetadata<>(builder.getName(),
@@ -130,17 +182,36 @@ public class MorphiaConvention implements Convention {
         }
     }
 
+    private PropertyAccessor getPropertyAccessor(final Field field,
+                                                 final PropertyModelBuilder<?> property) {
+
+        return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
+               ? new ArrayFieldAccessor(property.getTypeData(), field)
+               : new FieldAccessor(field);
+    }
+
     private void configureCodec(final PropertyModelBuilder builder, final Field field) {
         Handler handler = getHandler(builder);
         if (handler != null) {
             try {
                 builder.codec(handler.value()
-                                     .getDeclaredConstructor(Datastore.class, Field.class, String.class, TypeData.class)
-                                     .newInstance(datastore, field, builder.getName(), builder.getTypeData()));
+                                     .getDeclaredConstructor(Datastore.class, Field.class, TypeData.class)
+                                     .newInstance(datastore, field, builder.getTypeData()));
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);
             }
         }
+    }
+
+    private boolean isNotConcrete(final TypeData<?> typeData) {
+        Class type;
+        if (!typeData.getTypeParameters().isEmpty()) {
+            type = typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1).getType();
+        } else {
+            type = typeData.getType();
+        }
+
+        return isNotConcrete(type);
     }
 
     private Handler getHandler(final PropertyModelBuilder builder) {
@@ -161,81 +232,12 @@ public class MorphiaConvention implements Convention {
         return handler;
     }
 
-
-    private PropertyAccessor getPropertyAccessor(final Field field,
-                                                 final PropertyModelBuilder<?> property) {
-
-        return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-               ? new ArrayFieldAccessor(property.getTypeData(), field)
-               : new FieldAccessor(field);
-    }
-
-    private <T extends Annotation> T getAnnotation(final ClassModelBuilder<?> classModelBuilder, final Class<T> klass) {
-        final List<Annotation> annotations = classModelBuilder.getAnnotations();
-        if (!annotations.isEmpty()) {
-            final ListIterator<Annotation> iterator = annotations.listIterator(annotations.size());
-            while (iterator.hasPrevious()) {
-                final Annotation annotation = iterator.previous();
-                if (klass.equals(annotation.annotationType())) {
-                    return klass.cast(annotation);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private boolean isNotConcrete(final TypeData<?> typeData) {
-        Class type;
-        if (!typeData.getTypeParameters().isEmpty()) {
-            type = typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1).getType();
-        } else {
-            type = typeData.getType();
-        }
-
-        return isNotConcrete(type);
-    }
-
     private boolean isNotConcrete(final Class type) {
         Class componentType = type;
         if (type.isArray()) {
             componentType = type.getComponentType();
         }
         return componentType.isInterface() || isAbstract(componentType.getModifiers());
-    }
-
-    private static boolean isTransient(final FieldModelBuilder<?> field) {
-        return field.hasAnnotation(Transient.class)
-               || field.hasAnnotation(java.beans.Transient.class)
-               || Modifier.isTransient(field.getField().getModifiers());
-    }
-
-    private static String getMappedFieldName(FieldModelBuilder<?> field) {
-        if (field.hasAnnotation(Id.class)) {
-            return "_id";
-        } else if (field.hasAnnotation(Property.class)) {
-            final Property mv = field.getAnnotation(Property.class);
-            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mv.value();
-            }
-        } else if (field.hasAnnotation(Reference.class)) {
-            final Reference mr = field.getAnnotation(Reference.class);
-            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mr.value();
-            }
-        } else if (field.hasAnnotation(Embedded.class)) {
-            final Embedded me = field.getAnnotation(Embedded.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        } else if (field.hasAnnotation(Version.class)) {
-            final Version me = field.getAnnotation(Version.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        }
-
-        return field.getName();
     }
 
 }

@@ -15,20 +15,34 @@ import static dev.morphia.query.CriteriaJoin.AND;
 /**
  * Defines a container of Criteria and a join method.
  *
- * @see CriteriaJoin
  * @morphia.internal
+ * @see CriteriaJoin
  */
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
+    private final Mapper mapper;
     private CriteriaJoin joinMethod;
     private List<Criteria> children = new ArrayList<>();
-
-    private final Mapper mapper;
     private QueryImpl<?> query;
 
     protected CriteriaContainerImpl(final Mapper mapper, final QueryImpl<?> query, final CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
         this.mapper = mapper;
         this.query = query;
+    }
+
+    /**
+     * @return the join method used
+     * @see CriteriaJoin
+     */
+    public CriteriaJoin getJoinMethod() {
+        return joinMethod;
+    }
+
+    /**
+     * @return the children of this container
+     */
+    public List<Criteria> getChildren() {
+        return children;
     }
 
     @Override
@@ -39,34 +53,6 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         }
     }
 
-    public CriteriaJoin getJoinMethod() {
-        return joinMethod;
-    }
-
-    public List<Criteria> getChildren() {
-        return children;
-    }
-
-    @Override
-    public CriteriaContainer and(final Criteria... criteria) {
-        return collect(AND, criteria);
-    }
-
-    @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
-        return new FieldEndImpl<>(mapper, query, name, this);
-    }
-
-    @Override
-    public CriteriaContainer or(final Criteria... criteria) {
-        return collect(CriteriaJoin.OR, criteria);
-    }
-
-    @Override
-    public void remove(final Criteria criteria) {
-        children.remove(criteria);
-    }
-
     @Override
     public Document toDocument() {
         if (joinMethod == AND) {
@@ -75,7 +61,6 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
             return or();
         }
     }
-
 
     private Document and() {
         Document document = new Document();
@@ -120,6 +105,11 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         return joinMethod.toString();
     }
 
+    @Override
+    public CriteriaContainer and(final Criteria... criteria) {
+        return collect(AND, criteria);
+    }
+
     /**
      * @return the Query for this CriteriaContainer
      */
@@ -134,6 +124,24 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
      */
     public void setQuery(final QueryImpl<?> query) {
         this.query = query;
+    }    @Override
+    public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
+        return new FieldEndImpl<>(mapper, query, name, this);
+    }
+
+    @Override
+    public String toString() {
+        return children.toString();
+    }
+
+    @Override
+    public CriteriaContainer or(final Criteria... criteria) {
+        return collect(CriteriaJoin.OR, criteria);
+    }
+
+    @Override
+    public void remove(final Criteria criteria) {
+        children.remove(criteria);
     }
 
     private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
@@ -146,10 +154,5 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         add(parent);
 
         return parent;
-    }
-
-    @Override
-    public String toString() {
-        return children.toString();
     }
 }

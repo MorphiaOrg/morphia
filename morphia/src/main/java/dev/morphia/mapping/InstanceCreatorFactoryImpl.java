@@ -6,13 +6,18 @@ import org.bson.codecs.pojo.InstanceCreatorFactory;
 import java.lang.reflect.Constructor;
 
 /**
- * @morphia.internal
  * @param <T>
+ * @morphia.internal
  */
 @SuppressWarnings("unchecked")
 public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> {
     private Constructor<T> noArgsConstructor;
 
+    /**
+     * Creates a factory for this type
+     *
+     * @param type the type to create
+     */
     public InstanceCreatorFactoryImpl(final Class type) {
         for (Constructor<?> constructor : type.getDeclaredConstructors()) {
             if (constructor.getParameterTypes().length == 0) {
@@ -20,7 +25,7 @@ public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> 
                 noArgsConstructor.setAccessible(true);
             }
         }
-        if(!type.isInterface() && noArgsConstructor == null) {
+        if (!type.isInterface() && noArgsConstructor == null) {
             throw new MappingException("Can not find a no arg constructor for " + type);
         }
     }

@@ -22,7 +22,6 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseMorphiaCodec;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.reader.DocumentReader;
@@ -53,13 +52,23 @@ import java.util.concurrent.ConcurrentMap;
 import static dev.morphia.mapping.codec.Conversions.convert;
 
 /**
- * @morphia.internal
  * @param <T>
+ * @morphia.internal
  */
 public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleCodec<T> {
     private final MappedClass mappedClass;
     private final MappedField idField;
 
+    /**
+     * Creates the codec
+     *
+     * @param datastore              the datastore to use
+     * @param classModel             the model of the type
+     * @param registry               the codec registry
+     * @param propertyCodecProviders the property codec provider
+     * @param discriminatorLookup    the discriminator lookup
+     * @param mappedClass            the mapped class
+     */
     public MorphiaCodec(final Datastore datastore,
                         final ClassModel<T> classModel,
                         final CodecRegistry registry,
@@ -70,46 +79,27 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         idField = mappedClass.getIdField();
     }
 
-    public MorphiaCodec(final Mapper mapper,
-                        final Datastore datastore,
+    /**
+     * Creates the codec
+     *
+     * @param datastore             the datastore to use
+     * @param classModel            the model of the type
+     * @param registry              the codec registry
+     * @param propertyCodecRegistry the property codec registry
+     * @param discriminatorLookup   the discriminator lookup
+     * @param specialized           has this codec been specialized for a field
+     * @param mappedClass           the mapped class
+     */
+    public MorphiaCodec(final Datastore datastore,
                         final ClassModel<T> classModel,
                         final CodecRegistry registry,
                         final PropertyCodecRegistry propertyCodecRegistry,
                         final DiscriminatorLookup discriminatorLookup,
-                        final boolean specialized, final MappedClass mappedClass) {
+                        final boolean specialized,
+                        final MappedClass mappedClass) {
         super(datastore, propertyCodecRegistry, discriminatorLookup, new ConcurrentHashMap<>(), specialized, classModel, registry);
         this.mappedClass = mappedClass;
         idField = mappedClass.getIdField();
-    }
-
-    @Override
-    public Class<T> getEncoderClass() {
-        return super.getEncoderClass();
-    }
-
-    @Override
-    public MorphiaModel<T> getClassModel() {
-        return (MorphiaModel<T>) super.getClassModel();
-    }
-
-    @Override
-    protected CodecRegistry getRegistry() {
-        return super.getRegistry();
-    }
-
-    @Override
-    protected PropertyCodecRegistry getPropertyCodecRegistry() {
-        return super.getPropertyCodecRegistry();
-    }
-
-    @Override
-    protected DiscriminatorLookup getDiscriminatorLookup() {
-        return super.getDiscriminatorLookup();
-    }
-
-    @Override
-    protected ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
-        return super.getCodecCache();
     }
 
     @Override
@@ -156,23 +146,8 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     }
 
     @Override
-    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
-        T entity;
-        if (mappedClass.hasLifecycle(PreLoad.class) || mappedClass.hasLifecycle(PostLoad.class) || getMapper().hasInterceptors()) {
-            final InstanceCreator<T> instanceCreator = getClassModel().getInstanceCreator();
-            entity = instanceCreator.getInstance();
-
-            Document document = getRegistry().get(Document.class).decode(reader, decoderContext);
-            mappedClass.callLifecycleMethods(PreLoad.class, entity, document, getMapper());
-
-            decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
-
-            mappedClass.callLifecycleMethods(PostLoad.class, entity, document, getMapper());
-        } else {
-            entity = super.decode(reader, decoderContext);
-        }
-
-        return entity;
+    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized, final Datastore datastore) {
+        return new SpecializedMorphiaCodec(this, specialized, datastore);
     }
 
     @Override
@@ -196,16 +171,61 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         }
     }
 
-    /**
-     * @return
-     */
-    public MappedClass getMappedClass() {
-        return mappedClass;
+    @Override
+    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+        T entity;
+        if (mappedClass.hasLifecycle(PreLoad.class) || mappedClass.hasLifecycle(PostLoad.class) || getMapper().hasInterceptors()) {
+            final InstanceCreator<T> instanceCreator = getClassModel().getInstanceCreator();
+            entity = instanceCreator.getInstance();
+
+            Document document = getRegistry().get(Document.class).decode(reader, decoderContext);
+            mappedClass.callLifecycleMethods(PreLoad.class, entity, document, getMapper());
+
+            decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
+
+            mappedClass.callLifecycleMethods(PostLoad.class, entity, document, getMapper());
+        } else {
+            entity = super.decode(reader, decoderContext);
+        }
+
+        return entity;
     }
 
     @Override
-    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized, final Datastore datastore) {
-        return new SpecializedMorphiaCodec(this, specialized, datastore);
+    public Class<T> getEncoderClass() {
+        return super.getEncoderClass();
+    }
+
+    @Override
+    public MorphiaModel<T> getClassModel() {
+        return (MorphiaModel<T>) super.getClassModel();
+    }
+
+    @Override
+    protected CodecRegistry getRegistry() {
+        return super.getRegistry();
+    }
+
+    @Override
+    protected PropertyCodecRegistry getPropertyCodecRegistry() {
+        return super.getPropertyCodecRegistry();
+    }
+
+    @Override
+    protected DiscriminatorLookup getDiscriminatorLookup() {
+        return super.getDiscriminatorLookup();
+    }
+
+    @Override
+    protected ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
+        return super.getCodecCache();
+    }
+
+    /**
+     * @return the mapped class
+     */
+    public MappedClass getMappedClass() {
+        return mappedClass;
     }
 
 }

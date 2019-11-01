@@ -19,17 +19,18 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
     /**
      * Creates a MorphiaCursor
      *
-     * @param cursor     the Iterator to use
+     * @param cursor the Iterator to use
      */
     public MorphiaCursor(final MongoCursor<T> cursor) {
         wrapped = cursor;
-        if(wrapped == null) {
+        if (wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");
         }
     }
 
     /**
      * Converts this cursor to a List.  Care should be taken on large datasets as OutOfMemoryErrors are a risk.
+     *
      * @return the list of Entities
      */
     public List<T> toList() {

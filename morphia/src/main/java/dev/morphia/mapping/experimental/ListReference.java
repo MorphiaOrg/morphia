@@ -13,6 +13,9 @@ public class ListReference<T> extends CollectionReference<List<T>> {
     private List<T> values;
 
     /**
+     * @param datastore   the datastore to use
+     * @param ids         the IDs of the entities
+     * @param mappedClass the MappedClass for the entity type
      * @morphia.internal
      */
     public ListReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {

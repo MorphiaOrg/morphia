@@ -39,11 +39,10 @@ import static java.util.regex.Pattern.quote;
  */
 public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);
-
-    private Mapper mapper;
     private final QueryImpl<?> query;
     private final String field;
     private final T target;
+    private Mapper mapper;
     private boolean not;
 
     /**
@@ -162,7 +161,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T intersects(final com.mongodb.client.model.geojson.Geometry geometry, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
+    public T intersects(final com.mongodb.client.model.geojson.Geometry geometry,
+                        final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, INTERSECTS, geometry)
                                       .addCoordinateReferenceSystem(crs));
         return target;
@@ -293,25 +293,18 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T within(final com.mongodb.client.model.geojson.Polygon boundary, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
+    public T within(final com.mongodb.client.model.geojson.Polygon boundary,
+                    final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundary)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
 
     @Override
-    public T within(final com.mongodb.client.model.geojson.MultiPolygon boundaries, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
+    public T within(final com.mongodb.client.model.geojson.MultiPolygon boundaries,
+                    final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundaries)
                                       .addCoordinateReferenceSystem(crs));
-        return target;
-    }
-
-    private T addCriteria(final FilterOperator op, final Object val) {
-        return addCriteria(op, val, not);
-    }
-
-    private T addCriteria(final FilterOperator op, final Object val, final boolean not) {
-        target.add(new FieldCriteria(mapper, query, field, op, val, not));
         return target;
     }
 
@@ -321,6 +314,15 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
         }
 
         target.add(new Geo2dCriteria(mapper, query, field, op, val, opts));
+        return target;
+    }
+
+    private T addCriteria(final FilterOperator op, final Object val) {
+        return addCriteria(op, val, not);
+    }
+
+    private T addCriteria(final FilterOperator op, final Object val, final boolean not) {
+        target.add(new FieldCriteria(mapper, query, field, op, val, not));
         return target;
     }
 }

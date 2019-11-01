@@ -25,6 +25,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 
+/**
+ * Marks a type as eligible for mapping and embedding in entity types.
+ */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

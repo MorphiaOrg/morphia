@@ -2,59 +2,67 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
-import org.bson.BsonReader;
-import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.pojo.InstanceCreator;
-import org.bson.codecs.pojo.PropertyModel;
 import org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
+/**
+ * Defines codecs for properties
+ * @param <T> the property type
+ * @morphia.internal
+ */
 public abstract class PropertyCodec<T> implements Codec<T> {
     private final Field field;
-    private final String propertyName;
+    private final TypeData typeData;
     private MappedClass mappedClass;
     private Datastore datastore;
-    private final TypeData typeData;
 
-    public PropertyCodec(final Datastore datastore, final Field field, final String propertyName, final TypeData typeData) {
+    /**
+     * Creates a codec
+     *
+     * @param datastore    the datastore
+     * @param field        the reference field
+     * @param typeData     the field type data
+     */
+    public PropertyCodec(final Datastore datastore, final Field field, final TypeData typeData) {
         this.datastore = datastore;
-        this.propertyName = propertyName;
         this.field = field;
         this.typeData = typeData;
     }
 
+    /**
+     * @return the datastore
+     */
     public Datastore getDatastore() {
         return datastore;
     }
 
+    /**
+     * @return the field
+     */
     public Field getField() {
         return field;
     }
 
+    /**
+     * @return the type data
+     */
+    public TypeData getTypeData() {
+        return typeData;
+    }
+
     protected MappedClass getFieldMappedClass() {
-        if(mappedClass == null) {
-            Class<?> type = typeData.getTypeParameters().size() == 0
-                ? typeData.getType()
-                : ((TypeData) typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1)).getType();
-            if(type.isArray()) {
+        if (mappedClass == null) {
+            Class<?> type = typeData.getTypeParameters().isEmpty()
+                            ? typeData.getType()
+                            : ((TypeData) typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1)).getType();
+            if (type.isArray()) {
                 type = type.getComponentType();
             }
             mappedClass = datastore.getMapper().getMappedClass(type);
         }
         return mappedClass;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public TypeData getTypeData() {
-        return typeData;
     }
 
 }

@@ -4,19 +4,24 @@ import dev.morphia.mapping.codec.reader.Stage.DocumentEndStage;
 import dev.morphia.mapping.codec.reader.Stage.ListValueStage;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
-public interface ReaderIterator extends Iterator<Stage> {
+/**
+ * @morphia.internal
+ */
+interface ReaderIterator extends Iterator<Stage> {
 }
 
+/**
+ * @morphia.internal
+ */
 class DocumentIterator implements ReaderIterator {
     private DocumentReader reader;
     private Iterator<Entry<String, Object>> iterator;
 
-    DocumentIterator(DocumentReader reader, final Iterator<Entry<String, Object>> iterator) {
+    DocumentIterator(final DocumentReader reader, final Iterator<Entry<String, Object>> iterator) {
         this.reader = reader;
         this.iterator = iterator;
     }
@@ -31,12 +36,11 @@ class DocumentIterator implements ReaderIterator {
         Stage stage = null;
         try {
             Entry<String, Object> next = iterator.next();
-            if(next != null) {
+            if (next != null) {
                 stage = new Stage(reader, next.getKey(), next.getValue());
             }
         } catch (NoSuchElementException e) {
             stage = new DocumentEndStage(reader);
-
         }
 
         return stage;
@@ -58,23 +62,23 @@ class ArrayIterator implements ReaderIterator {
     private final DocumentReader reader;
     private final Iterator<Object> iterator;
 
-    static ArrayIterator empty() {
-        return new ArrayIterator();
-    }
-
-    public ArrayIterator() {
+    ArrayIterator() {
         this.reader = null;
-        this.iterator = List.of().iterator();
+        this.iterator = null;
     }
 
-    public ArrayIterator(final DocumentReader reader, final Iterator<Object> iterator) {
+    ArrayIterator(final DocumentReader reader, final Iterator<Object> iterator) {
         this.reader = reader;
         this.iterator = iterator;
     }
 
+    static ArrayIterator empty() {
+        return new ArrayIterator();
+    }
+
     @Override
     public boolean hasNext() {
-        return iterator.hasNext();
+        return iterator != null && iterator.hasNext();
     }
 
     @Override

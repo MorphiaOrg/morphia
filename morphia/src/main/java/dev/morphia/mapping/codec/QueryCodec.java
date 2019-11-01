@@ -9,9 +9,17 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * Defines a codec for Query instances
+ */
 public class QueryCodec implements Codec<QueryImpl> {
     private Mapper mapper;
 
+    /**
+     * Creates a codec
+     *
+     * @param mapper the mapper to use
+     */
     public QueryCodec(final Mapper mapper) {
         this.mapper = mapper;
     }

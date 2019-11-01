@@ -8,17 +8,12 @@ import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecProvider;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
-import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
@@ -29,12 +24,10 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -48,7 +41,6 @@ import java.util.stream.Collectors;
 
 import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
 import static java.lang.Thread.currentThread;
-import static java.util.Arrays.asList;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -69,14 +61,7 @@ public class Mapper {
     static final String CLASS_NAME_FIELDNAME = "className";
 
     private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
-    /**
-     * Annotations interesting for life-cycle events
-     */
-    @SuppressWarnings("unchecked")
-    public static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
-                                                                                          PreLoad.class,
-                                                                                          PostPersist.class,
-                                                                                          PostLoad.class);
+
     /**
      * Set of classes that registered by this mapper
      */
@@ -85,18 +70,18 @@ public class Mapper {
 
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
-
-    private CodecRegistry codecRegistry;
     private final MapperOptions opts;
-
+    private CodecRegistry codecRegistry;
     // TODO:  unify with DefaultCreator if it survives the Codec switchover
     private Map<String, Class> classNameCache = new ConcurrentHashMap<>();
 
     /**
      * Creates a Mapper with the given options.
      *
+     * @param datastore     the datastore to use
+     * @param codecRegistry the codec registry
+     * @param opts          the options to use
      * @morphia.internal
-     * @param opts the options to use
      */
     public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions opts) {
         this.opts = opts;
@@ -107,29 +92,6 @@ public class Mapper {
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
                 new MorphiaCodecProvider(this, datastore, Set.of(""), List.of(new MorphiaConvention(datastore, opts)))));
-    }
-
-    /**
-     * Maps a set of classes
-     *
-     * @param entityClasses the classes to map
-     * @return
-     */
-    public List<MappedClass> map(final Class... entityClasses) {
-        return map(List.of(entityClasses));
-    }
-
-    /**
-     * Maps a set of classes
-     *
-     * @param classes the classes to map
-     * @return the list of mapped classes
-     */
-    public List<MappedClass> map(final List<Class> classes) {
-        return classes.stream()
-                      .map(c -> getMappedClass(c))
-                      .filter(mc -> mc != null)
-                      .collect(Collectors.toList());
     }
 
     /**
@@ -164,7 +126,7 @@ public class Mapper {
         ClassGraph classGraph = new ClassGraph()
                                     .addClassLoader(loader)
                                     .enableAllInfo();
-        if(mapSubPackages) {
+        if (mapSubPackages) {
             classGraph.whitelistPackages(packageName);
             classGraph.whitelistPackages(packageName + ".*");
         } else {
@@ -180,24 +142,53 @@ public class Mapper {
     }
 
     /**
-     * Adds an {@link EntityInterceptor}
-     *
-     * @param ei the interceptor to add
+     * @return the options used by this Mapper
      */
-    public void addInterceptor(final EntityInterceptor ei) {
-        interceptors.add(ei);
+    public MapperOptions getOptions() {
+        return opts;
     }
 
-    public boolean hasInterceptors() {
-        return !interceptors.isEmpty();
+    /**
+     * Maps a set of classes
+     *
+     * @param entityClasses the classes to map
+     * @return the MappedClass references
+     */
+    public List<MappedClass> map(final Class... entityClasses) {
+        return map(List.of(entityClasses));
     }
 
-    public MorphiaModel getModel(final Class<?> aClass) {
-        Codec<?> codec = getCodecRegistry().get(aClass);
-        if(codec instanceof MorphiaCodec) {
-            return ((MorphiaCodec)codec).getClassModel();
+    /**
+     * Maps a set of classes
+     *
+     * @param classes the classes to map
+     * @return the list of mapped classes
+     */
+    public List<MappedClass> map(final List<Class> classes) {
+        return classes.stream()
+                      .map(c -> getMappedClass(c))
+                      .filter(mc -> mc != null)
+                      .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     *
+     * @param type the type to process
+     * @return the MappedClass for the object given
+     */
+    public MappedClass getMappedClass(final Class type) {
+
+        if (type == null || !isMappable(type)) {
+            return null;
         }
-        return null;
+
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        MappedClass mc = mappedClasses.get(actual);
+        if (mc == null) {
+            mc = addMappedClass(actual);
+        }
+        return mc;
     }
 
     /**
@@ -209,13 +200,9 @@ public class Mapper {
     private MappedClass addMappedClass(final Class c) {
         MappedClass mappedClass = mappedClasses.get(c);
         if (mappedClass == null) {
-            try {
-                final Codec codec1 = codecRegistry.get(c);
-                if (codec1 instanceof MorphiaCodec) {
-                    return addMappedClass(((MorphiaCodec) codec1).getMappedClass());
-                }
-            } catch (CodecConfigurationException ignore) {
-                ignore.printStackTrace();
+            final Codec codec1 = codecRegistry.get(c);
+            if (codec1 instanceof MorphiaCodec) {
+                return addMappedClass(((MorphiaCodec) codec1).getMappedClass());
             }
         }
         return mappedClass;
@@ -223,7 +210,7 @@ public class Mapper {
 
     private MappedClass addMappedClass(final MappedClass mc) {
         mappedClasses.put(mc.getType(), mc);
-        if(mc.getEntityAnnotation() != null) {
+        if (mc.getEntityAnnotation() != null) {
             mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                                      .add(mc);
         }
@@ -233,6 +220,33 @@ public class Mapper {
         }
 
         return mc;
+    }
+
+    /**
+     * Sets the options this Mapper should use
+     *
+     * @param options the options to use
+     * @deprecated no longer used
+     */
+    @SuppressWarnings("unused")
+    @Deprecated(since = "2.0", forRemoval = true)
+    public void setOptions(final MapperOptions options) {
+    }
+
+    /**
+     * Adds an {@link EntityInterceptor}
+     *
+     * @param ei the interceptor to add
+     */
+    public void addInterceptor(final EntityInterceptor ei) {
+        interceptors.add(ei);
+    }
+
+    /**
+     * @return true if there are global interceptors defined
+     */
+    public boolean hasInterceptors() {
+        return !interceptors.isEmpty();
     }
 
     /**
@@ -253,25 +267,28 @@ public class Mapper {
         return subtypes;
     }
 
-    public CodecRegistry getCodecRegistry() {
-        return codecRegistry;
+    /**
+     * @return collection of MappedClasses
+     */
+    public Collection<MappedClass> getMappedClasses() {
+        return new ArrayList<>(mappedClasses.values());
     }
 
     /**
      * Converts a Document back to a type-safe java object (POJO)
      *
      * @param <T>      the type of the entity
-     * @param clazz
+     * @param type     the target type
      * @param document the Document containing the document from mongodb
      * @return the new entity
      * @morphia.internal
      */
-    public <T> T fromDocument(final Class<T> clazz, final Document document) {
+    public <T> T fromDocument(final Class<T> type, final Document document) {
         if (document == null) {
             return null;
         }
 
-        Class<T> aClass = clazz;
+        Class<T> aClass = type;
         if (document.containsKey(opts.getDiscriminatorField())) {
             aClass = getClass(document);
         }
@@ -285,13 +302,20 @@ public class Mapper {
                    .decode(reader, DecoderContext.builder().build());
     }
 
+    /**
+     * Gets the class as defined by any discriminator field
+     *
+     * @param document the document to check
+     * @param <T>      the class type
+     * @return the class reference.  might be null
+     */
     @SuppressWarnings("unchecked")
     public <T> Class<T> getClass(final Document document) {
         // see if there is a className value
         Class c = null;
         if (document.containsKey(getOptions().getDiscriminatorField())) {
             final String className = (String) document.get(getOptions().getDiscriminatorField());
-            // try to Class.forName(className) as defined in the documentect first,
+            // try to Class.forName(className) as defined in the document first,
             // otherwise return the entityClass
             try {
                 if (getOptions().isCacheClassLookups()) {
@@ -313,39 +337,21 @@ public class Mapper {
     }
 
     /**
-     * Looks up the class mapped to a named collection.
-     *
-     * @param collection the collection name
-     * @param <T> the class type
-     * @return the Class mapped to this collection name
-     * @morphia.internal
+     * @return the codec registry
      */
-    public <T> Class<T> getClassFromCollection(final String collection) {
-        final List<MappedClass> classes = getClassesMappedToCollection(collection);
-        if (classes.size() > 1) {
-                Sofia.logMoreThanOneMapper(collection,
-                    classes.stream()
-                           .map(c-> c.getType().getName())
-                               .collect(Collectors.joining(", ")));
-        }
-        return (Class<T>) classes.get(0).getType();
+    public CodecRegistry getCodecRegistry() {
+        return codecRegistry;
     }
 
     /**
-     * @morphia.internal
-     * @param collection
-     * @return
+     * Updates a collection to use a specific WriteConcern
+     *
+     * @param collection the collection to update
+     * @param type       the entity type
+     * @return the updated collection
      */
-    public List<MappedClass> getClassesMappedToCollection(final String collection) {
-        final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
-        if (mcs == null || mcs.isEmpty()) {
-            throw new MappingException(Sofia.collectionNotMapped(collection));
-        }
-        return new ArrayList<>(mcs);
-    }
-
-    public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class klass) {
-        WriteConcern applied = getWriteConcern(klass);
+    public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class type) {
+        WriteConcern applied = getWriteConcern(type);
         return applied != null
                ? collection.withWriteConcern(applied)
                : collection;
@@ -355,6 +361,7 @@ public class Mapper {
      * Gets the write concern for entity or returns the default write concern for this datastore
      *
      * @param clazz the class to use when looking up the WriteConcern
+     * @return the write concern for the type
      * @morphia.internal
      */
     public WriteConcern getWriteConcern(final Class clazz) {
@@ -367,27 +374,6 @@ public class Mapper {
         }
 
         return wc;
-    }
-
-    /**
-     * Gets the ID value for an entity
-     *
-     * @param entity the entity to process
-     * @return the ID value
-     */
-    public Object getId(final Object entity) {
-        if (entity == null) {
-            return null;
-        }
-        final MappedClass mappedClass = getMappedClass(entity.getClass());
-        if (mappedClass != null) {
-            final MappedField idField = mappedClass.getIdField();
-            if (idField != null) {
-                return idField.getFieldValue(entity);
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -435,6 +421,27 @@ public class Mapper {
     }
 
     /**
+     * Gets the ID value for an entity
+     *
+     * @param entity the entity to process
+     * @return the ID value
+     */
+    public Object getId(final Object entity) {
+        if (entity == null) {
+            return null;
+        }
+        final MappedClass mappedClass = getMappedClass(entity.getClass());
+        if (mappedClass != null) {
+            final MappedField idField = mappedClass.getIdField();
+            if (idField != null) {
+                return idField.getFieldValue(entity);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Gets the Keys for a list of objects
      *
      * @param clazz the Class of the objects
@@ -450,6 +457,44 @@ public class Mapper {
         }
 
         return keys;
+    }
+
+    <T> Key<T> manualRefToKey(final String collection, final Object id) {
+        return id == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(collection), collection, id);
+    }
+
+    /**
+     * Looks up the class mapped to a named collection.
+     *
+     * @param collection the collection name
+     * @param <T>        the class type
+     * @return the Class mapped to this collection name
+     * @morphia.internal
+     */
+    public <T> Class<T> getClassFromCollection(final String collection) {
+        final List<MappedClass> classes = getClassesMappedToCollection(collection);
+        if (classes.size() > 1) {
+            Sofia.logMoreThanOneMapper(collection,
+                classes.stream()
+                       .map(c -> c.getType().getName())
+                       .collect(Collectors.joining(", ")));
+        }
+        return (Class<T>) classes.get(0).getType();
+    }
+
+    /**
+     * Finds all the types mapped to a named collection
+     *
+     * @param collection the collection to check
+     * @return the mapped types
+     * @morphia.internal
+     */
+    public List<MappedClass> getClassesMappedToCollection(final String collection) {
+        final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
+        if (mcs == null || mcs.isEmpty()) {
+            throw new MappingException(Sofia.collectionNotMapped(collection));
+        }
+        return new ArrayList<>(mcs);
     }
 
     /**
@@ -469,61 +514,6 @@ public class Mapper {
     }
 
     /**
-     * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
-     *
-     * @param type the type to process
-     * @return the MappedClass for the object given
-     */
-    public MappedClass getMappedClass(final Class type) {
-
-        if (type == null || !isMappable(type)) {
-            return null;
-        }
-
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        MappedClass mc = mappedClasses.get(actual);
-        if (mc == null) {
-            mc = addMappedClass(actual);
-        }
-        return mc;
-    }
-
-    /**
-     * @return collection of MappedClasses
-     */
-    public Collection<MappedClass> getMappedClasses() {
-        return new ArrayList<>(mappedClasses.values());
-    }
-
-    /**
-     * @return the options used by this Mapper
-     */
-    public MapperOptions getOptions() {
-        return opts;
-    }
-
-    /**
-     * Sets the options this Mapper should use
-     *
-     * @param options the options to use
-     * @deprecated no longer used
-     */
-    @SuppressWarnings("unused")
-    @Deprecated(since = "2.0", forRemoval = true)
-    public void setOptions(final MapperOptions options) {
-    }
-
-    /**
-     * Checks to see if a Class has been mapped.
-     *
-     * @param c the Class to check
-     * @return true if the Class has been mapped
-     */
-    public boolean isMapped(final Class c) {
-        return mappedClasses.containsKey(c.getName());
-    }
-
-    /**
      * Converts a DBRef to a Key
      *
      * @param ref the DBRef to convert
@@ -533,6 +523,16 @@ public class Mapper {
     public <T> Key<T> refToKey(final DBRef ref) {
         return ref == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(ref.getCollectionName()),
             ref.getCollectionName(), ref.getId());
+    }
+
+    /**
+     * Checks to see if a Class has been mapped.
+     *
+     * @param c the Class to check
+     * @return true if the Class has been mapped
+     */
+    public boolean isMapped(final Class c) {
+        return mappedClasses.containsKey(c);
     }
 
     /**
@@ -598,10 +598,6 @@ public class Mapper {
         }
 
         return key.getCollection();
-    }
-
-    <T> Key<T> manualRefToKey(final String collection, final Object id) {
-        return id == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(collection), collection, id);
     }
 
 }

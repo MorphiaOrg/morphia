@@ -7,15 +7,25 @@ import org.bson.codecs.pojo.PropertyModel;
 import java.lang.reflect.Constructor;
 
 /**
- * @morphia.internal
  * @param <E>
+ * @morphia.internal
  */
 public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
     private E instance;
     private Constructor<E> noArgsConstructor;
 
+    /**
+     * Creates the creator
+     *
+     * @param noArgsConstructor the constructor
+     */
     public NoArgCreator(final Constructor<E> noArgsConstructor) {
         this.noArgsConstructor = noArgsConstructor;
+    }
+
+    @Override
+    public <S> void set(final S value, final PropertyModel<S> propertyModel) {
+        propertyModel.getPropertyAccessor().set(instance(), value);
     }
 
     private E instance() {
@@ -27,11 +37,6 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
             }
         }
         return instance;
-    }
-
-    @Override
-    public <S> void set(final S value, final PropertyModel<S> propertyModel) {
-        propertyModel.getPropertyAccessor().set(instance(), value);
     }
 
     @Override

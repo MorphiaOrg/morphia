@@ -2,12 +2,8 @@ package dev.morphia.query;
 
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Geometry;
-import dev.morphia.geo.GeometryQueryConverter;
-import dev.morphia.geo.NamedCoordinateReferenceSystemConverter;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
-
-import static dev.morphia.query.FilterOperator.NEAR;
 
 /**
  * Creates queries for GeoJson geo queries on MongoDB. These queries generally require MongoDB 2.4 and above, and usually work on 2d sphere
@@ -57,11 +53,9 @@ final class Geo2dSphereCriteria extends FieldCriteria {
 
     @Override
     public Document toDocument() {
-        if (1 == 1) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException("the codecs should take care of all this");
-        }
+        throw new UnsupportedOperationException("the codecs should take care of all this");
 
+/*
         Document query;
         FilterOperator operator = getOperator();
         GeometryQueryConverter geometryQueryConverter = new GeometryQueryConverter();
@@ -79,8 +73,8 @@ final class Geo2dSphereCriteria extends FieldCriteria {
             case INTERSECTS:
                 query = new Document(operator.val(), document);
                 if (crs != null) {
-                    ((Document) document.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter().encode(crs,
-                     null));
+                    ((Document) document.get("$geometry")).put("crs", new NamedCoordinateReferenceSystemConverter()
+                                                                          .encode(crs, null));
                 }
                 break;
             default:
@@ -88,5 +82,6 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         }
 
         return new Document(getField(), query);
+*/
     }
 }

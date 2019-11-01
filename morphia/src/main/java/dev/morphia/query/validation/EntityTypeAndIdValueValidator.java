@@ -34,7 +34,8 @@ public final class EntityTypeAndIdValueValidator implements Validator {
      * @param mappedField        the MappedField
      * @param value              the value for the query
      * @param validationFailures the list to add any failures to. If validation passes or {@code appliesTo} returned false, this list will
-     *                           not change.    @return true if the validation was applied.
+     *                           not change.
+     * @return true if the validation was applied.
      */
     public boolean apply(final MappedClass mappedClass, final MappedField mappedField, final Object value,
                          final List<ValidationFailure> validationFailures) {
@@ -44,7 +45,7 @@ public final class EntityTypeAndIdValueValidator implements Validator {
             if (!mappedField.getType().equals(classOfValue) && !classOfValue.equals(classOfIdFieldForType)) {
                 validationFailures.add(new ValidationFailure(format("The value class needs to match the type of ID for the field. "
                                                                     + "Value was %s and was a %s and the ID of the type was %s",
-                                                                    value, classOfValue, classOfIdFieldForType)));
+                    value, classOfValue, classOfIdFieldForType)));
             }
             return true;
         }

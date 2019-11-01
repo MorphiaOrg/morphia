@@ -3,7 +3,6 @@ package dev.morphia.mapping.codec;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.CriteriaContainerCodec;
 import dev.morphia.query.FieldCriteriaCodec;
-import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.MapCodec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -13,14 +12,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines a provider of codecs for Morphia's types
+ */
 @SuppressWarnings("unchecked")
 public class MorphiaTypesCodecProvider implements CodecProvider {
     private Mapper mapper;
-    private final Map<Class<?>, Codec<?>> codecs = new HashMap<Class<?>, Codec<?>>();
+    private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
 
+    /**
+     * Create the provider
+     *
+     * @param mapper the mapper to use
+     */
     public MorphiaTypesCodecProvider(final Mapper mapper) {
         this.mapper = mapper;
-        BsonTypeClassMap typeMap = new BsonTypeClassMap();
 
         addCodec(new ClassCodec());
         addCodec(new CriteriaContainerCodec(mapper));
@@ -41,9 +47,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
             float.class, Float.class,
             int.class, Integer.class,
             long.class, Long.class,
-            short.class, Short.class).forEach(c -> {
-            addCodec(new TypedArrayCodec(c, mapper));
-        });
+            short.class, Short.class).forEach(c -> addCodec(new TypedArrayCodec(c, mapper)));
     }
 
     protected <T> void addCodec(final Codec<T> codec) {

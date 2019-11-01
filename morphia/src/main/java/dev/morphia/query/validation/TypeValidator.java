@@ -33,8 +33,8 @@ public abstract class TypeValidator implements Validator {
      * @param type the type to be validated
      * @return true if this validator applies to this type, false otherwise
      */
-    protected abstract boolean appliesTo(final Class<?> type);
+    protected abstract boolean appliesTo(Class<?> type);
 
-    protected abstract void validate(final Class<?> type, final Object value, final List<ValidationFailure> validationFailures);
+    protected abstract void validate(Class<?> type, Object value, List<ValidationFailure> validationFailures);
 
 }

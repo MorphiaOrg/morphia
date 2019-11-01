@@ -14,6 +14,10 @@ import java.util.HashSet;
 
 import static java.lang.String.format;
 
+/**
+ * A codec for Collection type
+ * @param <T> parameterized type of the Collection
+ */
 public class CollectionCodec<T> implements Codec<Collection<T>> {
     private final Class<Collection<T>> encoderClass;
     private final Codec<T> codec;

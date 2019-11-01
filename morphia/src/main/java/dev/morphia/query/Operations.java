@@ -15,21 +15,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringJoiner;
 
-import static dev.morphia.UpdateDocument.Mode.BODY_ONLY;
-
+/**
+ * @morphia.internal
+ */
 class Operations {
     private Map<UpdateOperator, List<OperationTarget>> ops = new HashMap<>();
-    private UpdateDocument updateDocument;
     private Mapper mapper;
     private MappedClass mappedClass;
 
-    public Operations(final Mapper mapper, final MappedClass mappedClass) {
+    Operations(final Mapper mapper, final MappedClass mappedClass) {
         this.mapper = mapper;
         this.mappedClass = mappedClass;
-    }
-
-    public void add(final UpdateOperator operator, final OperationTarget value) {
-        ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
     }
 
     @Override
@@ -39,6 +35,9 @@ class Operations {
                    .toString();
     }
 
+    /**
+     * @return the Document form of this instance
+     */
     public Document toDocument() {
         versionUpdate();
 
@@ -47,7 +46,7 @@ class Operations {
             Document targets = new Document();
             for (OperationTarget operationTarget : entry.getValue()) {
                 Object encode = operationTarget.encode(mapper);
-                if(encode instanceof Document) {
+                if (encode instanceof Document) {
                     targets.putAll((Document) encode);
                 } else {
                     document.put(entry.getKey().val(), encode);
@@ -63,9 +62,6 @@ class Operations {
     protected void versionUpdate() {
         MappedField versionField = mappedClass.getVersionField();
         if (versionField != null) {
-            if (updateDocument != null) {
-                updateDocument.skipVersion();
-            }
             List<OperationTarget> operationTargets = ops.get(UpdateOperator.INC);
             String version = versionField.getMappedFieldName();
             boolean already = operationTargets != null
@@ -77,6 +73,16 @@ class Operations {
         }
     }
 
+    /**
+     * Add an operator
+     *
+     * @param operator the operator
+     * @param value    the value
+     */
+    void add(final UpdateOperator operator, final OperationTarget value) {
+        ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
+    }
+
     public void replaceEntity(final Object entity) {
         if (entity == null) {
             throw new UpdateException(Sofia.nullUpdateEntity());
@@ -85,8 +91,7 @@ class Operations {
             throw new UpdateException(Sofia.mixedUpdateOperationsNotAllowed());
         }
 
-        updateDocument = new UpdateDocument(mapper, entity, BODY_ONLY);
-        add(UpdateOperator.SET, new OperationTarget(null, updateDocument));
+        add(UpdateOperator.SET, new OperationTarget(null, new UpdateDocument(entity)));
     }
 
 }

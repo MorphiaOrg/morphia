@@ -46,6 +46,6 @@ public abstract class OperationValidator implements Validator {
      * @param value              the query value, to apply the operator to. This should not be null.
      * @param validationFailures the list to add any new {@code ValidationFailures} to. If validation passed this list will not change.
      */
-    protected abstract void validate(final MappedField mappedField, final Object value, final List<ValidationFailure> validationFailures);
+    protected abstract void validate(MappedField mappedField, Object value, List<ValidationFailure> validationFailures);
 
 }

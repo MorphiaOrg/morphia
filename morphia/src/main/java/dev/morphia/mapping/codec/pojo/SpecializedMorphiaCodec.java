@@ -8,6 +8,10 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.PojoCodec;
 
+/**
+ * A specialized form of a codec
+ * @param <T>
+ */
 public class SpecializedMorphiaCodec<T> extends PojoCodec<T> {
 
     private final MorphiaCodec morphiaCodec;
@@ -33,7 +37,7 @@ public class SpecializedMorphiaCodec<T> extends PojoCodec<T> {
 
     private PojoCodec<T> getSpecialized() {
         if (specialized == null) {
-            specialized = new MorphiaCodec<>(morphiaCodec.getMapper(), datastore, classModel,
+            specialized = new MorphiaCodec<>(datastore, classModel,
                 morphiaCodec.getRegistry(), morphiaCodec.getPropertyCodecRegistry(), morphiaCodec.getDiscriminatorLookup(), true,
                 morphiaCodec.getMappedClass()
             );

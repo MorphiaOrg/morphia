@@ -20,38 +20,60 @@ import org.bson.types.ObjectId;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * Utility to write out to a Document
+ */
 @SuppressWarnings("unchecked")
 public class DocumentWriter implements BsonWriter {
     private Stack<Object> state = new Stack<>();
     private Object root;
 
+    /**
+     * Creates a new Writer
+     */
     public DocumentWriter() {
         push(new RootSlab());
     }
 
-    public DocumentWriter(Document seed) {
+    private void push(final Object o) {
+        state.push(o);
+    }
+
+    /**
+     * Creates a new Writer with a seeded Document
+     *
+     * @param seed the seed Document
+     */
+    public DocumentWriter(final Document seed) {
         push(new RootSlab(seed));
     }
 
+    /**
+     * @param <T> the root type
+     * @return the root, or output, of this writer.  usually a Document.
+     */
     public <T> T getRoot() {
         return (T) root;
     }
 
+    /**
+     * Encodes a value in to this Writer
+     *
+     * @param codecRegistry  the registry to use
+     * @param value          the value to encode
+     * @param encoderContext the context
+     * @return this
+     */
     public DocumentWriter encode(final CodecRegistry codecRegistry, final Object value, final EncoderContext encoderContext) {
         ((Codec) codecRegistry
                      .get(value.getClass()))
             .encode(this, value, encoderContext);
 
         return this;
-    }
-
-    private void push(final Object o) {
-        state.push(o);
     }
 
     @Override
@@ -313,7 +335,7 @@ public class DocumentWriter implements BsonWriter {
         return (T) state.peek();
     }
 
-    private void value(Object value) {
+    private void value(final Object value) {
         ((ValueSlab) pop()).apply(value);
     }
 
@@ -338,7 +360,7 @@ public class DocumentWriter implements BsonWriter {
             this.name = name;
         }
 
-        public void apply(Object value) {
+        public void apply(final Object value) {
             document().put(name, value);
         }
 
@@ -348,14 +370,14 @@ public class DocumentWriter implements BsonWriter {
         }
     }
 
-    private class RootSlab extends ValueSlab {
+    private final class RootSlab extends ValueSlab {
         private Document seed;
 
         private RootSlab() {
             super(null);
         }
 
-        private RootSlab(Document seed) {
+        private RootSlab(final Document seed) {
             super(null);
             this.seed = seed;
         }
@@ -372,10 +394,10 @@ public class DocumentWriter implements BsonWriter {
         }
     }
 
-    private class ListSlab extends ValueSlab {
+    private final class ListSlab extends ValueSlab {
         private List<Object> list;
 
-        private ListSlab(List<Object> list) {
+        private ListSlab(final List<Object> list) {
             super(null);
             this.list = list;
         }

@@ -84,9 +84,24 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
         return this;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
+    public UpdateOptions upsert(final boolean upsert) {
+        super.upsert(upsert);
+        return this;
+    }
+
+    @Override
+    public UpdateOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+        super.bypassDocumentValidation(bypassDocumentValidation);
+        return this;
+    }
+
+    @Override
+    public UpdateOptions collation(final Collation collation) {
+        super.collation(collation);
+        return this;
+    }
+
     @Override
     public UpdateOptions arrayFilters(final List<? extends Bson> arrayFilters) {
         super.arrayFilters(arrayFilters);
@@ -94,32 +109,12 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
     }
 
     /**
-     * @inheritDoc
+     * Updates the collection with the configured WriteConcern
+     *
+     * @param collection the collection to update
+     * @param <T>        the collection type
+     * @return the potentially updated collection
      */
-    @Override
-    public UpdateOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
-        super.bypassDocumentValidation(bypassDocumentValidation);
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public UpdateOptions collation(final Collation collation) {
-        super.collation(collation);
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public UpdateOptions upsert(final boolean upsert) {
-        super.upsert(upsert);
-        return this;
-    }
-
     public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
         return collection.withWriteConcern(writeConcern);
     }

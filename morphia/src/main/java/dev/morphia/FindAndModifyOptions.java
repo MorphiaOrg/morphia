@@ -33,6 +33,15 @@ import java.util.concurrent.TimeUnit;
 public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
     private WriteConcern writeConcern;
 
+    /**
+     * Creates a new options instance.
+     */
+    public FindAndModifyOptions() {
+    }
+
+    /**
+     * @return the write concern to use
+     */
     public WriteConcern writeConcern() {
         return writeConcern;
     }
@@ -46,20 +55,12 @@ public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
         return writeConcern;
     }
 
+    /**
+     * @param writeConcern the write concern
+     * @return this
+     */
     public FindAndModifyOptions writeConcern(final WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
-        return this;
-    }
-
-    /**
-     * Creates a new options instance.
-     */
-    public FindAndModifyOptions() {
-    }
-
-    @Override
-    public FindAndModifyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
-        super.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
@@ -90,6 +91,12 @@ public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
     @Override
     public FindAndModifyOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
         super.maxTime(maxTime, timeUnit);
+        return this;
+    }
+
+    @Override
+    public FindAndModifyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+        super.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 

@@ -1,23 +1,10 @@
 package dev.morphia.geo;
 
-import dev.morphia.mapping.MappedField;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static dev.morphia.geo.GeoJsonType.LINE_STRING;
-import static dev.morphia.geo.GeoJsonType.MULTI_LINE_STRING;
-import static dev.morphia.geo.GeoJsonType.MULTI_POINT;
-import static dev.morphia.geo.GeoJsonType.MULTI_POLYGON;
-import static dev.morphia.geo.GeoJsonType.POINT;
-import static dev.morphia.geo.GeoJsonType.POLYGON;
 
 /**
  * Converter that understands most Geometry instances are effectively just lists of either other geometry objects or double coordinates.
@@ -25,8 +12,24 @@ import static dev.morphia.geo.GeoJsonType.POLYGON;
  * the hierarchy of Geometries that make up the required Geometry object.
  * <p/>
  * Overridden by subclasses to define exact behaviour for specific Geometry concrete classes.
+ * @param <T> the type
  */
 public class GeometryShapeConverter<T> implements Codec<T> {
+    @Override
+    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Class<T> getEncoderClass() {
+        throw new UnsupportedOperationException();
+    }
+/*
     private final GeoJsonType geoJsonType;
     private final List<GeometryFactory> factories;
 
@@ -64,9 +67,11 @@ public class GeometryShapeConverter<T> implements Codec<T> {
         return null;
     }
 
-    /*
+    */
+/*
      * We're expecting a List that can be turned into a geometry using a series of factories
-      */
+      *//*
+
     @SuppressWarnings("unchecked") // always have unchecked casts when dealing with raw classes
     private Geometry decodeObject(final List mongoDBGeometry, final List<GeometryFactory> geometryFactories) {
         GeometryFactory factory = geometryFactories.get(0);
@@ -97,86 +102,111 @@ public class GeometryShapeConverter<T> implements Codec<T> {
         return encodedObjects;
     }
 
-    /**
+    */
+/**
      * Extends and therefore configures GeometryShapeConverter to provide the specific configuration for converting MultiPolygon objects to
      * and from <a href="http://geojson.org/geojson-spec.html#id7">MongoDB representations</a> of the GeoJson.
-     */
+     *//*
+
     public static class MultiPolygonConverter extends GeometryShapeConverter {
-        /**
+        */
+/**
          * Creates a new MultiPolygonConverter.
-         */
+         *//*
+
         public MultiPolygonConverter() {
             super(MULTI_POLYGON, POLYGON, LINE_STRING, POINT);
         }
     }
 
-    /**
+    */
+/**
      * Defines a new PolygonConverter.  This extends and therefore configures GeometryShapeConverter to provide the specific
      * configuration for converting Polygon objects to and from <a href="http://geojson.org/geojson-spec.html#id4">MongoDB
      * representations</a> of the GeoJson.
-     */
+     *//*
+
     public static class PolygonConverter extends GeometryShapeConverter {
-        /**
+        */
+/**
          * Creates a new PolygonConverter.
-         */
+         *//*
+
         public PolygonConverter() {
             super(POLYGON, LINE_STRING, POINT);
         }
     }
 
-    /**
+    */
+/**
      * Defines a new MultiLineStringConverter.  This extends and therefore configures GeometryShapeConverter to provide the specific
      * configuration for converting MultiLineString objects to and from <a href="http://geojson.org/geojson-spec.html#id6">MongoDB
      * representations</a> of the GeoJson.
-     */
+     *//*
+
     public static class MultiLineStringConverter extends GeometryShapeConverter {
-        /**
+        */
+/**
          * Creates a new MultiLineStringConverter.
-         */
+         *//*
+
         public MultiLineStringConverter() {
             super(MULTI_LINE_STRING, LINE_STRING, POINT);
         }
     }
 
-    /**
+    */
+/**
      * Defines a new MultiPointConverter. This extends and therefore configures GeometryShapeConverter to provide the specific
      * configuration for converting MultiPoint objects to and from <a href="http://geojson.org/geojson-spec.html#id5">MongoDB
      * representations</a> of the GeoJson.
-     */
+     *//*
+
     public static class MultiPointConverter extends GeometryShapeConverter {
-        /**
+        */
+/**
          * Creates a new MultiPointConverter.
-         */
+         *//*
+
         public MultiPointConverter() {
             super(MULTI_POINT, POINT);
         }
     }
 
-    /**
+    */
+/**
      * Defines a new LineStringConverter. This extends and therefore configures GeometryShapeConverter to provide the specific
      * configuration for converting LineString objects to and from <a href="http://geojson.org/geojson-spec.html#id3">MongoDB
      * representations</a> of the GeoJson.
-     */
+     *//*
+
     public static class LineStringConverter extends GeometryShapeConverter {
-        /**
+        */
+/**
          * Creates a new LineStringConverter.
-         */
+         *//*
+
         public LineStringConverter() {
             super(LINE_STRING, POINT);
         }
     }
 
-    /**
+    */
+/**
      * Defines a new PointCodec. This extends and therefore configures GeometryShapeConverter to provide the specific configuration
      * for converting Point objects to and from <a href="http://geojson.org/geojson-spec.html#id3">MongoDB representations</a> of the
      * GeoJson.
-     */
+     *//*
+
     public static class PointCodec extends GeometryShapeConverter {
-        /**
+        */
+/**
          * Creates a new PointCodec.
-         */
+         *//*
+
         public PointCodec() {
             super(POINT);
         }
     }
+*/
 }

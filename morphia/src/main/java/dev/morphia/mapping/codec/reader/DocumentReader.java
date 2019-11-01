@@ -17,7 +17,6 @@ import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -26,9 +25,9 @@ import static java.lang.String.format;
  * @morphia.internal
  */
 public class DocumentReader implements BsonReader {
+    private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
     private final Stage initial;
     private Stage stage;
-    private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
 
     /**
      * Construct a new instance.
@@ -41,7 +40,13 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public void close() {
+    public BsonType getCurrentBsonType() {
+        return stage().getCurrentBsonType();
+    }
+
+    @Override
+    public String getCurrentName() {
+        return stage().name();
     }
 
     @Override
@@ -60,8 +65,25 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
+    public BsonBinary readBinaryData(final String name) {
+        verifyName(name);
+        return readBinaryData();
+    }
+
+    @Override
     public boolean readBoolean() {
         return (boolean) stage().value();
+    }
+
+    @Override
+    public boolean readBoolean(final String name) {
+        verifyName(name);
+        return readBoolean();
+    }
+
+    @Override
+    public BsonType readBsonType() {
+        return stage().getCurrentBsonType();
     }
 
     @Override
@@ -70,8 +92,20 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
+    public long readDateTime(final String name) {
+        verifyName(name);
+        return readDateTime();
+    }
+
+    @Override
     public double readDouble() {
         return (double) stage().value();
+    }
+
+    @Override
+    public double readDouble(final String name) {
+        verifyName(name);
+        return readDouble();
     }
 
     @Override
@@ -90,150 +124,14 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public long readInt64() {
-        return (long) stage().value();
-    }
-
-    @Override
-    public Decimal128 readDecimal128() {
-        return (Decimal128) stage().value();
-    }
-
-    @Override
-    public String readJavaScript() {
-        return stage().<BsonJavaScript>value().getCode();
-    }
-
-    @Override
-    public String readJavaScriptWithScope() {
-        return stage().<BsonJavaScriptWithScope>value().getCode();
-    }
-
-    @Override
-    public void readMaxKey() {
-    }
-
-    @Override
-    public void readMinKey() {
-    }
-
-    @Override
-    public void readNull() {
-    }
-
-    @Override
-    public ObjectId readObjectId() {
-        return (ObjectId) stage().value();
-    }
-
-    @Override
-    public BsonRegularExpression readRegularExpression() {
-        return (BsonRegularExpression) stage().value();
-    }
-
-    @Override
-    public BsonDbPointer readDBPointer() {
-        return (BsonDbPointer) stage().value();
-    }
-
-    @Override
-    public void readStartArray() {
-        stage().startArray();
-    }
-
-    @Override
-    public void readStartDocument() {
-        stage().startDocument();
-    }
-
-    @Override
-    public String readString() {
-        return (String) stage().value();
-    }
-
-    @Override
-    public String readSymbol() {
-        return (String) stage().value();
-    }
-
-    @Override
-    public BsonTimestamp readTimestamp() {
-        return (BsonTimestamp) stage().value();
-    }
-
-    @Override
-    public void readUndefined() {
-    }
-
-    @Override
-    public void skipName() {
-    }
-
-    @Override
-    public void skipValue() {
-        stage().advance();
-    }
-
-    @Override
-    public BsonType getCurrentBsonType() {
-        return stage().getCurrentBsonType();
-    }
-
-    @Override
-    public String getCurrentName() {
-        return stage().name();
-    }
-
-    @Override
-    public BsonType readBsonType() {
-        return stage().getCurrentBsonType();
-   }
-
-    @Deprecated
-    @Override
-    public void mark() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public BsonReaderMark getMark() {
-        return new Mark(this, stage());
-    }
-
-    @Deprecated
-    @Override
-    public void reset() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public BsonBinary readBinaryData(final String name) {
-        verifyName(name);
-        return readBinaryData();
-    }
-
-    @Override
-    public boolean readBoolean(final String name) {
-        verifyName(name);
-        return readBoolean();
-    }
-
-    @Override
-    public long readDateTime(final String name) {
-        verifyName(name);
-        return readDateTime();
-    }
-
-    @Override
-    public double readDouble(final String name) {
-        verifyName(name);
-        return readDouble();
-    }
-
-    @Override
     public int readInt32(final String name) {
         verifyName(name);
         return readInt32();
+    }
+
+    @Override
+    public long readInt64() {
+        return (long) stage().value();
     }
 
     @Override
@@ -243,9 +141,19 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
+    public Decimal128 readDecimal128() {
+        return (Decimal128) stage().value();
+    }
+
+    @Override
     public Decimal128 readDecimal128(final String name) {
         verifyName(name);
         return readDecimal128();
+    }
+
+    @Override
+    public String readJavaScript() {
+        return stage().<BsonJavaScript>value().getCode();
     }
 
     @Override
@@ -255,15 +163,28 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
+    public String readJavaScriptWithScope() {
+        return stage().<BsonJavaScriptWithScope>value().getCode();
+    }
+
+    @Override
     public String readJavaScriptWithScope(final String name) {
         verifyName(name);
         return readJavaScriptWithScope();
     }
 
     @Override
+    public void readMaxKey() {
+    }
+
+    @Override
     public void readMaxKey(final String name) {
         verifyName(name);
         readMaxKey();
+    }
+
+    @Override
+    public void readMinKey() {
     }
 
     @Override
@@ -283,9 +204,18 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
+    public void readNull() {
+    }
+
+    @Override
     public void readNull(final String name) {
         verifyName(name);
         readNull();
+    }
+
+    @Override
+    public ObjectId readObjectId() {
+        return (ObjectId) stage().value();
     }
 
     @Override
@@ -295,9 +225,19 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
+    public BsonRegularExpression readRegularExpression() {
+        return (BsonRegularExpression) stage().value();
+    }
+
+    @Override
     public BsonRegularExpression readRegularExpression(final String name) {
         verifyName(name);
         return readRegularExpression();
+    }
+
+    @Override
+    public BsonDbPointer readDBPointer() {
+        return (BsonDbPointer) stage().value();
     }
 
     @Override
@@ -306,11 +246,30 @@ public class DocumentReader implements BsonReader {
         return readDBPointer();
     }
 
+    @Override
+    public void readStartArray() {
+        stage().startArray();
+    }
+
+    @Override
+    public void readStartDocument() {
+        stage().startDocument();
+    }
+
+    @Override
+    public String readString() {
+        return (String) stage().value();
+    }
 
     @Override
     public String readString(final String name) {
         verifyName(name);
         return readString();
+    }
+
+    @Override
+    public String readSymbol() {
+        return (String) stage().value();
     }
 
     @Override
@@ -320,15 +279,54 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
+    public BsonTimestamp readTimestamp() {
+        return (BsonTimestamp) stage().value();
+    }
+
+    @Override
     public BsonTimestamp readTimestamp(final String name) {
         verifyName(name);
         return readTimestamp();
     }
 
     @Override
+    public void readUndefined() {
+    }
+
+    @Override
     public void readUndefined(final String name) {
         verifyName(name);
         readUndefined();
+    }
+
+    @Override
+    public void skipName() {
+    }
+
+    @Override
+    public void skipValue() {
+        stage().advance();
+    }
+
+    @Deprecated
+    @Override
+    public void mark() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public BsonReaderMark getMark() {
+        return new Mark(this, stage());
+    }
+
+    @Deprecated
+    @Override
+    public void reset() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void close() {
     }
 
     protected void verifyName(final String expectedName) {
@@ -340,24 +338,13 @@ public class DocumentReader implements BsonReader {
         }
     }
 
-    public List<Stage> stages() {
-        List<Stage> stages = new ArrayList<>();
-        Stage current = initial;
-        while(current != null) {
-            stages.add(current);
-            current = current.nextStage;
-        }
-
-        return stages;
+    Stage stage() {
+        return this.stage;
     }
 
     Stage nextStage(final Stage nextStage) {
         stage = nextStage;
         return stage;
-    }
-
-    Stage stage() {
-        return this.stage;
     }
 
     void reset(final Stage bookmark) {

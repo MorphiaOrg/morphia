@@ -19,7 +19,6 @@ package dev.morphia.internal;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
 
@@ -54,22 +53,16 @@ public class PathTarget {
         this(mapper, root, path, true);
     }
 
-    public <T> PathTarget(final Mapper mapper, final Class<T> clazz, final String field) {
-        this(mapper, mapper.getMappedClass(clazz), field, true);
-    }
-
-    public <T> PathTarget(final Mapper mapper, final Class<T> clazz, final String field, final boolean validateNames) {
-        this(mapper, mapper.getMappedClass(clazz), field, validateNames);
-    }
 
     /**
      * Creates a resolution context for the given root and path.
      *
-     * @param mapper mapper
-     * @param root   root
-     * @param path   path
+     * @param mapper        mapper
+     * @param root          root
+     * @param path          path
+     * @param validateNames true if names should be validated
      */
-    public PathTarget(final Mapper mapper, final MappedClass root, final String path, boolean validateNames) {
+    public PathTarget(final Mapper mapper, final MappedClass root, final String path, final boolean validateNames) {
         segments = asList(path.split("\\."));
         this.root = root;
         this.mapper = mapper;
@@ -77,8 +70,29 @@ public class PathTarget {
         resolved = path.startsWith("$");
     }
 
-    private boolean hasNext() {
-        return position < segments.size();
+    /**
+     * Creates a resolution context for the given root and path.
+     *
+     * @param mapper mapper
+     * @param type   the root type
+     * @param path   the path
+     * @param <T>    the root type
+     */
+    public <T> PathTarget(final Mapper mapper, final Class<T> type, final String path) {
+        this(mapper, mapper.getMappedClass(type), path, true);
+    }
+
+    /**
+     * Creates a resolution context for the given root and path.
+     *
+     * @param mapper        mapper
+     * @param type          the root type
+     * @param path          the path
+     * @param validateNames true if names should be validated
+     * @param <T>           the root type
+     */
+    public <T> PathTarget(final Mapper mapper, final Class<T> type, final String path, final boolean validateNames) {
+        this(mapper, mapper.getMappedClass(type), path, validateNames);
     }
 
     /**
@@ -105,8 +119,13 @@ public class PathTarget {
         return target;
     }
 
-    String next() {
-        return segments.get(position++);
+    @Override
+    public String toString() {
+        return String.format("PathTarget{root=%s, segments=%s, target=%s}", root.getType().getSimpleName(), segments, target);
+    }
+
+    private boolean hasNext() {
+        return position < segments.size();
     }
 
     private void resolve() {
@@ -173,8 +192,7 @@ public class PathTarget {
         }
     }
 
-    @Override
-    public String toString() {
-        return String.format("PathTarget{root=%s, segments=%s, target=%s}", root.getType().getSimpleName(), segments, target);
+    String next() {
+        return segments.get(position++);
     }
 }

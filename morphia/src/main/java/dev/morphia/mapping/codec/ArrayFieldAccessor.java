@@ -16,6 +16,12 @@ public class ArrayFieldAccessor extends FieldAccessor {
     private TypeData typeData;
     private Class<?> componentType;
 
+    /**
+     * Creates the accessor
+     *
+     * @param typeData the type data
+     * @param field    the field
+     */
     public ArrayFieldAccessor(final TypeData typeData, final Field field) {
         super(field);
         this.typeData = typeData;
@@ -55,7 +61,7 @@ public class ArrayFieldAccessor extends FieldAccessor {
 
 
     private Object convert(final Object o, final Class type) {
-        if(o instanceof List) {
+        if (o instanceof List) {
             List list = (List) o;
             final Object newArray = Array.newInstance(type.getComponentType(), list.size());
             for (int i = 0; i < list.size(); i++) {

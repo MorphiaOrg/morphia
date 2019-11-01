@@ -1,7 +1,6 @@
 package dev.morphia.geo;
 
 import com.mongodb.client.model.geojson.Position;
-import dev.morphia.annotations.Embedded;
 
 import java.util.ArrayList;
 import java.util.List;

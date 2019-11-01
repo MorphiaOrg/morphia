@@ -1,11 +1,9 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
-import org.bson.codecs.pojo.IdPropertyModelHolder;
 import org.bson.codecs.pojo.PojoBuilderHelper;
 import org.bson.codecs.pojo.PropertyMetadata;
 import org.bson.codecs.pojo.PropertyModel;
@@ -29,161 +27,35 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
 
+/**
+ * Builder for MorphiaModels
+ *
+ * @param <T> the entity type
+ */
 public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
     private final List<FieldModelBuilder<?>> fieldModelBuilders = new ArrayList<>();
     private final Datastore datastore;
-    private final MapperOptions options;
+    private List<FieldModel<?>> fieldModels;
+    private Map<Class<? extends Annotation>, List<Annotation>> annotationsMap;
+    private List<PropertyModel<?>> propertyModels;
+    private PropertyModel<?> idPropertyModel;
 
-    public MorphiaModelBuilder(final Datastore datastore, final MapperOptions options, final Class<T> type) {
+    /**
+     * Create a builder
+     *
+     * @param datastore the datastore to use
+     * @param type      the entity type
+     */
+    public MorphiaModelBuilder(final Datastore datastore, final Class<T> type) {
         super(type);
         configureClassModelBuilder();
         this.datastore = datastore;
-        this.options = options;
     }
 
-    protected void configureClassModelBuilder() {
-        TypeData<?> parentClassTypeData = null;
-
-        Set<Class<?>> classes = buildHierarchy(getType());
-
-        List<Annotation> annotations = new ArrayList<>();
-        for (Class<?> klass : classes) {
-            List<String> genericTypeNames = processTypeNames(klass);
-
-            annotations.addAll(asList(klass.getDeclaredAnnotations()));
-            processFields(klass,
-                parentClassTypeData, genericTypeNames);
-
-            parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
-        }
-        annotations(annotations);
-    }
-
-    private Set<Class<?>> buildHierarchy(Class<?> clazz) {
-        Set<Class<?>> set = new LinkedHashSet<>();
-        if (clazz != null && !clazz.isEnum() && !clazz.equals(Object.class)) {
-            set.addAll(buildHierarchy(clazz.getSuperclass()));
-            for (Class<?> anInterface : clazz.getInterfaces()) {
-                set.addAll(buildHierarchy(anInterface));
-            }
-            set.add(clazz);
-        }
-
-        return set;
-    }
-
-    private List<String> processTypeNames(Class<?> currentClass) {
-        List<String> genericTypeNames = new ArrayList<>();
-        for (TypeVariable<? extends Class<?>> classTypeVariable : currentClass.getTypeParameters()) {
-            genericTypeNames.add(classTypeVariable.getName());
-        }
-        return genericTypeNames;
-    }
-
-    private void processFields(Class<?> currentClass, TypeData<?> parentClassTypeData, List<String> genericTypeNames) {
-        Map<String, PropertyMetadata<?>> propertyNameMap = new HashMap<>();
-        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
-
-        for (Field field : currentClass.getDeclaredFields()) {
-            PropertyMetadata<?> propertyMetadata = PojoBuilderHelper.getOrCreateFieldPropertyMetadata(field.getName(),
-                getType().getSimpleName(), propertyNameMap, TypeData.newInstance(field), propertyTypeParameterMap, parentClassTypeData,
-                genericTypeNames, field.getGenericType());
-            if (propertyMetadata != null && propertyMetadata.getField() == null) {
-                propertyMetadata.field(field);
-                for (Annotation annotation : field.getDeclaredAnnotations()) {
-                    propertyMetadata.addReadAnnotation(annotation);
-                    propertyMetadata.addWriteAnnotation(annotation);
-                }
-            }
-
-            final TypeData<?> typeData = TypeData.newInstance(field);
-
-            FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData);
-            TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, field.getGenericType());
-            fieldMetadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                fieldMetadata.addAnnotation(annotation);
-            }
-            fieldModelBuilders.add(createFieldModelBuilder(fieldMetadata));
-        }
-    }
-
-    public <A extends Annotation> A getAnnotation(Class<A> klass) {
-        for (Annotation annotation : getAnnotations()) {
-            if (klass.equals(annotation.annotationType())) {
-                return klass.cast(annotation);
-            }
-        }
-        return null;
-    }
-
-    public boolean hasAnnotation(Class<? extends Annotation> klass) {
-        for (Annotation annotation : getAnnotations()) {
-            if (klass.equals(annotation.annotationType())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return the fields on the modeled type
-     */
-    public List<FieldModelBuilder<?>> getFieldModelBuilders() {
-        return fieldModelBuilders;
-    }
-
-    /**
-     * Creates a new ClassModel instance based on the mapping data provided.
-     *
-     * @return the new instance
-     */
-    public MorphiaModel<T> build() {
-        PropertyModel<?> idPropertyModel = null;
-
-        for (Convention convention : getConventions()) {
-            convention.apply(this);
-        }
-
-        if (useDiscriminator()) {
-            Objects.requireNonNull(getDiscriminatorKey(), Sofia.notNull("discriminatorKey"));
-            Objects.requireNonNull(getDiscriminator(), Sofia.notNull("discriminator"));
-        }
-
-        for (PropertyModelBuilder<?> propertyModelBuilder : getPropertyModelBuilders()) {
-            if (propertyModelBuilder.getName().equals(getIdPropertyName())) {
-                propertyModelBuilder.readName(ID_PROPERTY_NAME).writeName(ID_PROPERTY_NAME);
-            }
-        }
-
-        List<PropertyModel<?>> propertyModels = new ArrayList<>();
-        for (final PropertyModelBuilder<?> builder : getPropertyModelBuilders()) {
-            PropertyModel<?> propertyModel = builder.build();
-            if (propertyModel.getReadName().equals(ID_PROPERTY_NAME)) {
-                idPropertyModel = propertyModel;
-            }
-            propertyModels.add(propertyModel);
-        }
-
-        List<FieldModel<?>> fieldModels = fieldModelBuilders.stream()
-                                                            .map(FieldModelBuilder::build)
-                                                            .collect(Collectors.toList());
-        Map<Class<? extends Annotation>, List<Annotation>> annotations = getAnnotations().stream()
-                                 .collect(groupingBy(
-                                     annotation -> (Class<? extends Annotation>) annotation.annotationType()));
-
-        return new MorphiaModel<>(datastore, options, getInstanceCreatorFactory(), useDiscriminator(),
-            getDiscriminatorKey(), getDiscriminator(), IdPropertyModelHolder.create(getType(), idPropertyModel, getIdGenerator()),
-            annotations, fieldModels, propertyModels, getType(), getPropertyNameToTypeParameterMap()
-        );
-    }
-
-    public static <T> FieldModelBuilder<T> createFieldModelBuilder(final FieldMetadata<T> fieldMetadata) {
+    static <T> FieldModelBuilder<T> createFieldModelBuilder(final FieldMetadata<T> fieldMetadata) {
         FieldModelBuilder<T> fieldModelBuilder = FieldModel.<T>builder()
                                                      .field(fieldMetadata.getField())
                                                      .fieldName(fieldMetadata.getName())
-                                                     .readName(fieldMetadata.getName())
-                                                     .writeName(fieldMetadata.getName())
                                                      .typeData(fieldMetadata.getTypeData())
                                                      .annotations(fieldMetadata.getAnnotations());
 
@@ -216,6 +88,172 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
                 specializedType = builder.build();
             }
             fieldModelBuilder.typeData(specializedType);
+        }
+    }
+
+    /**
+     * @param type the annotation class
+     * @param <A>  the annotation type
+     * @return the annotation or null if it doesn't exist
+     */
+    public <A extends Annotation> A getAnnotation(final Class<A> type) {
+        for (Annotation annotation : getAnnotations()) {
+            if (type.equals(annotation.annotationType())) {
+                return type.cast(annotation);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param type the annotation class
+     * @return the annotation if it exists
+     */
+    public boolean hasAnnotation(final Class<? extends Annotation> type) {
+        for (Annotation annotation : getAnnotations()) {
+            if (type.equals(annotation.annotationType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return the fields on the modeled type
+     */
+    public List<FieldModelBuilder<?>> getFieldModelBuilders() {
+        return fieldModelBuilders;
+    }
+
+    /**
+     * Creates a new ClassModel instance based on the mapping data provided.
+     *
+     * @return the new instance
+     */
+    public MorphiaModel<T> build() {
+        idPropertyModel = null;
+
+        for (Convention convention : getConventions()) {
+            convention.apply(this);
+        }
+
+        if (useDiscriminator()) {
+            Objects.requireNonNull(getDiscriminatorKey(), Sofia.notNull("discriminatorKey"));
+            Objects.requireNonNull(getDiscriminator(), Sofia.notNull("discriminator"));
+        }
+
+        for (PropertyModelBuilder<?> propertyModelBuilder : getPropertyModelBuilders()) {
+            if (propertyModelBuilder.getName().equals(getIdPropertyName())) {
+                propertyModelBuilder.readName(ID_PROPERTY_NAME).writeName(ID_PROPERTY_NAME);
+            }
+        }
+
+        propertyModels = new ArrayList<>();
+        for (final PropertyModelBuilder<?> builder : getPropertyModelBuilders()) {
+            PropertyModel<?> propertyModel = builder.build();
+            if (propertyModel.getReadName().equals(ID_PROPERTY_NAME)) {
+                idPropertyModel = propertyModel;
+            }
+            propertyModels.add(propertyModel);
+        }
+
+        fieldModels = fieldModelBuilders.stream()
+                                        .map(FieldModelBuilder::build)
+                                        .collect(Collectors.toList());
+        annotationsMap = getAnnotations().stream()
+                                         .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
+
+        return new MorphiaModel<>(this);
+    }
+
+    @Override
+    public Map<String, TypeParameterMap> getPropertyNameToTypeParameterMap() {
+        return super.getPropertyNameToTypeParameterMap();
+    }
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
+
+    protected List<FieldModel<?>> getFieldModels() {
+        return fieldModels;
+    }
+
+    protected Map<Class<? extends Annotation>, List<Annotation>> getAnnotationsMap() {
+        return annotationsMap;
+    }
+
+    protected List<PropertyModel<?>> getPropertyModels() {
+        return propertyModels;
+    }
+
+    protected PropertyModel<?> getIdPropertyModel() {
+        return idPropertyModel;
+    }
+
+    protected void configureClassModelBuilder() {
+        TypeData<?> parentClassTypeData = null;
+
+        Set<Class<?>> classes = buildHierarchy(getType());
+
+        List<Annotation> annotations = new ArrayList<>();
+        for (Class<?> klass : classes) {
+            List<String> genericTypeNames = processTypeNames(klass);
+
+            annotations.addAll(asList(klass.getDeclaredAnnotations()));
+            processFields(klass,
+                parentClassTypeData, genericTypeNames);
+
+            parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
+        }
+        annotations(annotations);
+    }
+
+    private Set<Class<?>> buildHierarchy(final Class<?> type) {
+        Set<Class<?>> set = new LinkedHashSet<>();
+        if (type != null && !type.isEnum() && !type.equals(Object.class)) {
+            set.addAll(buildHierarchy(type.getSuperclass()));
+            for (Class<?> anInterface : type.getInterfaces()) {
+                set.addAll(buildHierarchy(anInterface));
+            }
+            set.add(type);
+        }
+
+        return set;
+    }
+
+    private List<String> processTypeNames(final Class<?> currentClass) {
+        List<String> genericTypeNames = new ArrayList<>();
+        for (TypeVariable<? extends Class<?>> classTypeVariable : currentClass.getTypeParameters()) {
+            genericTypeNames.add(classTypeVariable.getName());
+        }
+        return genericTypeNames;
+    }
+
+    private void processFields(final Class<?> currentClass, final TypeData<?> parentClassTypeData, final List<String> genericTypeNames) {
+        Map<String, PropertyMetadata<?>> propertyNameMap = new HashMap<>();
+        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
+
+        for (Field field : currentClass.getDeclaredFields()) {
+            PropertyMetadata<?> propertyMetadata = PojoBuilderHelper.getOrCreateFieldPropertyMetadata(field.getName(),
+                getType().getSimpleName(), propertyNameMap, TypeData.newInstance(field), propertyTypeParameterMap, parentClassTypeData,
+                genericTypeNames, field.getGenericType());
+            if (propertyMetadata != null && propertyMetadata.getField() == null) {
+                propertyMetadata.field(field);
+                for (Annotation annotation : field.getDeclaredAnnotations()) {
+                    propertyMetadata.addReadAnnotation(annotation);
+                    propertyMetadata.addWriteAnnotation(annotation);
+                }
+            }
+
+            final TypeData<?> typeData = TypeData.newInstance(field);
+
+            FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData,
+                getTypeParameterMap(genericTypeNames, field.getGenericType()), parentClassTypeData);
+            for (Annotation annotation : field.getDeclaredAnnotations()) {
+                fieldMetadata.addAnnotation(annotation);
+            }
+            fieldModelBuilders.add(createFieldModelBuilder(fieldMetadata));
         }
     }
 }

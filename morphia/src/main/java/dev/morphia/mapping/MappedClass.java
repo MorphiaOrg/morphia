@@ -60,7 +60,7 @@ public class MappedClass {
      * Creates a MappedClass instance
      *
      * @param morphiaModel the ClassModel
-     * @param mapper     the Mapper to use
+     * @param mapper       the Mapper to use
      */
     public MappedClass(final MorphiaModel morphiaModel, final Mapper mapper) {
         this.morphiaModel = morphiaModel;
@@ -81,10 +81,67 @@ public class MappedClass {
     }
 
     /**
+     * Discovers interesting (that we care about) things about the class.
+     */
+    private void discover(final Mapper mapper) {
+        Class<?> superclass = type.getSuperclass();
+        if (superclass != null && !superclass.equals(Object.class)) {
+            superClass = mapper.getMappedClass(superclass);
+        }
+
+        for (Class<?> aClass : type.getInterfaces()) {
+            final MappedClass mappedClass = mapper.getMappedClass(aClass);
+            if (mappedClass != null) {
+                this.interfaces.add(mappedClass);
+            }
+        }
+
+        discoverFields();
+
+        update();
+    }
+
+    private void discoverFields() {
+        morphiaModel.getFieldModels().forEach(model -> {
+            final MappedField field = new MappedField(this, model);
+            if (!field.isTransient()) {
+                fields.add(field);
+            } else {
+                Sofia.logIgnoringTransientField(field.getFullName());
+            }
+        });
+    }
+
+    /**
+     * Update mappings based on fields/annotations.
+     */
+    public void update() {
+        final List<MappedField> fields = getFields(Id.class);
+        if (fields != null && !fields.isEmpty()) {
+            idField = fields.get(0);
+        }
+    }
+
+    /**
+     * Returns fields annotated with the clazz
+     *
+     * @param clazz The Annotation to find.
+     * @return the list of fields
+     */
+    public List<MappedField> getFields(final Class<? extends Annotation> clazz) {
+        final List<MappedField> results = new ArrayList<>();
+        for (final MappedField mf : fields) {
+            if (mf.hasAnnotation(clazz)) {
+                results.add(mf);
+            }
+        }
+        return results;
+    }
+
+    /**
      * This is an internal method subject to change without notice.
      *
      * @return the parent class of this type if there is one null otherwise
-     *
      * @since 1.3
      */
     public MappedClass getSuperClass() {
@@ -121,14 +178,21 @@ public class MappedClass {
         morphiaModel.callLifecycleMethods(event, entity, document, mapper);
     }
 
-    public boolean hasLifecycle(Class<? extends Annotation> klass) {
-        return morphiaModel.hasLifecycle(klass);
+    /**
+     * Checks if this mapped type has the given lifecycle event defined
+     *
+     * @param type the event type
+     * @return true if this annotation has been found
+     */
+    public boolean hasLifecycle(final Class<? extends Annotation> type) {
+        return morphiaModel.hasLifecycle(type);
     }
 
     /**
      * Looks for an annotation of the type given
      *
      * @param clazz the type to search for
+     * @param <T>   the annotation type
      * @return the instance if it was found, if more than one was found, the last one added
      */
     public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
@@ -145,20 +209,6 @@ public class MappedClass {
     @SuppressWarnings("unchecked")
     public <T extends Annotation> List<T> getAnnotations(final Class<T> clazz) {
         return morphiaModel.getAnnotations(clazz);
-    }
-
-    /**
-     * @return the clazz
-     */
-    public Class<?> getType() {
-        return type;
-    }
-
-    /**
-     * @return the collName
-     */
-    public String getCollectionName() {
-       return morphiaModel.getCollectionName();
     }
 
     /**
@@ -190,8 +240,8 @@ public class MappedClass {
      */
     public MappedField getMappedField(final String storedName) {
         return fields.stream()
-                     .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName) ||
-                         mappedField.getJavaFieldName().equals(storedName))
+                     .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName)
+                                            || mappedField.getJavaFieldName().equals(storedName))
                      .findFirst()
                      .orElse(null);
     }
@@ -210,22 +260,6 @@ public class MappedClass {
         }
 
         return null;
-    }
-
-    /**
-     * Returns fields annotated with the clazz
-     *
-     * @param clazz The Annotation to find.
-     * @return the list of fields
-     */
-    public List<MappedField> getFields(final Class<? extends Annotation> clazz) {
-        final List<MappedField> results = new ArrayList<>();
-        for (final MappedField mf : fields) {
-            if (mf.hasAnnotation(clazz)) {
-                results.add(mf);
-            }
-        }
-        return results;
     }
 
     /**
@@ -268,18 +302,18 @@ public class MappedClass {
         return format("%s[%s]", getType().getSimpleName(), getCollectionName());
     }
 
-    boolean isSubType(final MappedClass mc) {
-        return mc.equals(superClass) || interfaces.contains(mc);
+    /**
+     * @return the clazz
+     */
+    public Class<?> getType() {
+        return type;
     }
 
     /**
-     * Update mappings based on fields/annotations.
+     * @return the collName
      */
-    public void update() {
-        final List<MappedField> fields = getFields(Id.class);
-        if (fields != null && !fields.isEmpty()) {
-            idField = fields.get(0);
-        }
+    public String getCollectionName() {
+        return morphiaModel.getCollectionName();
     }
 
     /**
@@ -294,39 +328,14 @@ public class MappedClass {
     }
 
     /**
-     * Discovers interesting (that we care about) things about the class.
+     * @return the underlying model of the type
      */
-    private void discover(final Mapper mapper) {
-        Class<?> superclass = type.getSuperclass();
-        if (superclass != null && !superclass.equals(Object.class)) {
-            superClass = mapper.getMappedClass(superclass);
-        }
-
-        for (Class<?> aClass : type.getInterfaces()) {
-            final MappedClass mappedClass = mapper.getMappedClass(aClass);
-            if (mappedClass != null) {
-                this.interfaces.add(mappedClass);
-            }
-        }
-
-        discoverFields();
-
-        update();
-    }
-
-    private void discoverFields() {
-        morphiaModel.getFieldModels().forEach(model -> {
-            final MappedField field = new MappedField(this, model);
-            if (!field.isTransient()) {
-                fields.add(field);
-            } else {
-                Sofia.logIgnoringTransientField(field.getFullName());
-            }
-        });
-    }
-
     public MorphiaModel<?> getMorphiaModel() {
         return morphiaModel;
+    }
+
+    boolean isSubType(final MappedClass mc) {
+        return mc.equals(superClass) || interfaces.contains(mc);
     }
 
 }

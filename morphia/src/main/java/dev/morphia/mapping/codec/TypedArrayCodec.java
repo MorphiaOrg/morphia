@@ -19,7 +19,7 @@ class TypedArrayCodec implements Codec {
     private Codec codec;
     private Mapper mapper;
 
-    public TypedArrayCodec(final Class type, final Mapper mapper) {
+    TypedArrayCodec(final Class type, final Mapper mapper) {
         this.type = type;
         this.mapper = mapper;
     }
@@ -40,7 +40,7 @@ class TypedArrayCodec implements Codec {
     }
 
     private Codec getCodec() {
-        if(codec == null) {
+        if (codec == null) {
             codec = mapper.getCodecRegistry().get(type);
         }
         return codec;

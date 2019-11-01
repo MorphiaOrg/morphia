@@ -71,6 +71,12 @@ public class MappedField {
         discoverNames();
     }
 
+    private <K, V> Map<K, V> map(final K key, final V value) {
+        final HashMap<K, V> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
+
     private void discoverNames() {
         loadNames = inferLoadNames();
     }
@@ -87,10 +93,45 @@ public class MappedField {
         }
     }
 
-    private <K, V> Map<K, V> map(final K key, final V value) {
-        final HashMap<K, V> map = new HashMap<>();
-        map.put(key, value);
-        return map;
+    /**
+     * @return the name of the field's (key)name for mongodb
+     */
+    public String getMappedFieldName() {
+        if (hasAnnotation(Id.class)) {
+            return "_id";
+        } else if (hasAnnotation(Property.class)) {
+            final Property mv = (Property) annotations.get(Property.class);
+            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mv.value();
+            }
+        } else if (hasAnnotation(Reference.class)) {
+            final Reference mr = (Reference) annotations.get(Reference.class);
+            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mr.value();
+            }
+        } else if (hasAnnotation(Embedded.class)) {
+            final Embedded me = (Embedded) annotations.get(Embedded.class);
+            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return me.value();
+            }
+        } else if (hasAnnotation(Version.class)) {
+            final Version me = (Version) annotations.get(Version.class);
+            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return me.value();
+            }
+        }
+
+        return fieldModel.getName();
+    }
+
+    /**
+     * Indicates whether the annotation is present in the mapping (does not check the java field annotations, just the ones discovered)
+     *
+     * @param ann the annotation to search for
+     * @return true if the annotation was found
+     */
+    public boolean hasAnnotation(final Class ann) {
+        return annotations.containsKey(ann);
     }
 
     /**
@@ -119,30 +160,19 @@ public class MappedField {
         List<String> names = List.of(getMappedFieldName());
         names.addAll(getLoadNames());
         List<String> list = names.stream()
-                                    .filter(name -> document.containsKey(name))
-                                    .collect(Collectors.toList());
-        if(list.size() > 1) {
+                                 .filter(name -> document.containsKey(name))
+                                 .collect(Collectors.toList());
+        if (list.size() > 1) {
             throw new MappingException(format("Found more than one field mapping for ", getFullName()));
         }
         return list.get(0);
     }
 
     /**
-     * Gets the value of the field mapped on the instance given.
-     *
-     * @param instance the instance to use
-     * @return the value stored in the java field
+     * @return the name of the field's (key)name for mongodb, in order of loading.
      */
-    public Object getFieldValue(final Object instance) {
-        try {
-            Object target = instance;
-            if(target instanceof MorphiaProxy) {
-                target = ((MorphiaProxy)instance).unwrap();
-            }
-            return fieldModel.getField().get(target);
-        } catch (ReflectiveOperationException e) {
-            throw new MappingException(e.getMessage(), e);
-        }
+    public List<String> getLoadNames() {
+        return loadNames;
     }
 
     /**
@@ -154,17 +184,28 @@ public class MappedField {
     }
 
     /**
+     * Gets the value of the field mapped on the instance given.
+     *
+     * @param instance the instance to use
+     * @return the value stored in the java field
+     */
+    public Object getFieldValue(final Object instance) {
+        try {
+            Object target = instance;
+            if (target instanceof MorphiaProxy) {
+                target = ((MorphiaProxy) instance).unwrap();
+            }
+            return fieldModel.getField().get(target);
+        } catch (ReflectiveOperationException e) {
+            throw new MappingException(e.getMessage(), e);
+        }
+    }
+
+    /**
      * @return the name of the java field, as declared on the class
      */
     public String getJavaFieldName() {
         return fieldModel.getName();
-    }
-
-    /**
-     * @return the name of the field's (key)name for mongodb, in order of loading.
-     */
-    public List<String> getLoadNames() {
-        return loadNames;
     }
 
     /**
@@ -185,16 +226,6 @@ public class MappedField {
     }
 
     /**
-     * Indicates whether the annotation is present in the mapping (does not check the java field annotations, just the ones discovered)
-     *
-     * @param ann the annotation to search for
-     * @return true if the annotation was found
-     */
-    public boolean hasAnnotation(final Class ann) {
-        return annotations.containsKey(ann);
-    }
-
-    /**
      * @return the type of the underlying java field
      */
     public Class getType() {
@@ -211,24 +242,6 @@ public class MappedField {
     }
 
     /**
-     * @return true if the MappedField is an array
-     */
-    public boolean isArray() {
-        return getType().isArray();
-    }
-
-    /**
-     * @return true if the MappedField is a Map
-     */
-    public boolean isMap() {
-        return Map.class.isAssignableFrom(getTypeData().getType());
-    }
-
-    private boolean isCollection() {
-        return Collection.class.isAssignableFrom(getTypeData().getType());
-    }
-
-    /**
      * @return true if this field is a container type such as a List, Map, Set, or array
      */
     public boolean isMultipleValues() {
@@ -240,6 +253,31 @@ public class MappedField {
      */
     public boolean isScalarValue() {
         return !isMap() && !isArray() && !isCollection();
+    }
+
+    /**
+     * @return true if the MappedField is a Map
+     */
+    public boolean isMap() {
+        return Map.class.isAssignableFrom(getTypeData().getType());
+    }
+
+    /**
+     * @return true if the MappedField is an array
+     */
+    public boolean isArray() {
+        return getType().isArray();
+    }
+
+    private boolean isCollection() {
+        return Collection.class.isAssignableFrom(getTypeData().getType());
+    }
+
+    /**
+     * @return the field's type data
+     */
+    public TypeData<?> getTypeData() {
+        return fieldModel.getTypeData();
     }
 
     /**
@@ -290,44 +328,10 @@ public class MappedField {
     }
 
     /**
-     * @return the name of the field's (key)name for mongodb
+     * Gets the parameterized type of a List or the key type of a Map, e.g.
+     *
+     * @return the type we're interested in
      */
-    public String getMappedFieldName() {
-        if (hasAnnotation(Id.class)) {
-            return "_id";
-        } else if (hasAnnotation(Property.class)) {
-            final Property mv = (Property) annotations.get(Property.class);
-            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mv.value();
-            }
-        } else if (hasAnnotation(Reference.class)) {
-            final Reference mr = (Reference) annotations.get(Reference.class);
-            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mr.value();
-            }
-        } else if (hasAnnotation(Embedded.class)) {
-            final Embedded me = (Embedded) annotations.get(Embedded.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        } else if (hasAnnotation(Version.class)) {
-            final Version me = (Version) annotations.get(Version.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        }
-
-        return fieldModel.getName();
-    }
-
-    public TypeData<?> getTypeData() {
-        return fieldModel.getTypeData();
-    }
-
-    public boolean isParameterized() {
-        return !getTypeData().getTypeParameters().isEmpty();
-    }
-
     public Class getNormalizedType() {
         Class<?> type;
         if (!isParameterized()) {
@@ -340,6 +344,16 @@ public class MappedField {
         return type.isArray() ? type.getComponentType() : type;
     }
 
+    /**
+     * @return true if the field type is parameterized
+     */
+    public boolean isParameterized() {
+        return !getTypeData().getTypeParameters().isEmpty();
+    }
+
+    /**
+     * @return the underlying field model
+     */
     public FieldModel getFieldModel() {
         return fieldModel;
     }

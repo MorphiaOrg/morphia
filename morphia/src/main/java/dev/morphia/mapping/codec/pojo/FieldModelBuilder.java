@@ -36,8 +36,6 @@ import static org.bson.assertions.Assertions.notNull;
 public final class FieldModelBuilder<T> {
     private Field field;
     private String name;
-    private String readName;
-    private String writeName;
     private TypeData<T> typeData;
     private Codec<T> codec;
     private List<Annotation> annotations = emptyList();
@@ -53,46 +51,6 @@ public final class FieldModelBuilder<T> {
     }
 
     /**
-     * @return the name of the field to use as the key when deserializing the data from BSON.
-     */
-    public String getReadName() {
-        return readName;
-    }
-
-    /**
-     * Sets the readName, the key for this field when deserializing the data from BSON.
-     *
-     * <p>Note: A null means this field will not used when deserializing.</p>
-     *
-     * @param readName the name of the field to use as the key when deserializing the data from BSON.
-     * @return this
-     */
-    public FieldModelBuilder<T> readName(final String readName) {
-        this.readName = readName;
-        return this;
-    }
-
-    /**
-     * @return the name of the field to use as the key when serializing the data into BSON.
-     */
-    public String getWriteName() {
-        return writeName;
-    }
-
-    /**
-     * Sets the writeName, the key for this field when serializing the data into BSON.
-     *
-     * <p>Note: A null means this field will not be serialized.</p>
-     *
-     * @param writeName the name of the field to use as the key when serializing the data into BSON.
-     * @return this
-     */
-    public FieldModelBuilder<T> writeName(final String writeName) {
-        this.writeName = writeName;
-        return this;
-    }
-
-    /**
      * Sets a custom codec for the field
      *
      * @param codec the custom codec for the field
@@ -104,13 +62,6 @@ public final class FieldModelBuilder<T> {
     }
 
     /**
-     * @return the custom codec to use if set or null
-     */
-    Codec<T> getCodec() {
-        return codec;
-    }
-
-    /**
      * Returns the read annotations,  to be applied when serializing to BSON
      *
      * @return the read annotations
@@ -119,18 +70,31 @@ public final class FieldModelBuilder<T> {
         return annotations;
     }
 
-    public <A extends Annotation> A getAnnotation(Class<A> klass) {
+    /**
+     * Gets the annotation of this type.
+     *
+     * @param type the annotation class
+     * @param <A>  the annotation type
+     * @return the annotation instance or null if this annotation is on the field
+     */
+    public <A extends Annotation> A getAnnotation(final Class<A> type) {
         for (Annotation annotation : annotations) {
-            if (klass.equals(annotation.annotationType())) {
-                return klass.cast(annotation);
+            if (type.equals(annotation.annotationType())) {
+                return type.cast(annotation);
             }
         }
         return null;
     }
 
-    public boolean hasAnnotation(Class<? extends Annotation> klass) {
+    /**
+     * Checks this field for an annotation of the given type
+     *
+     * @param type the annotation class
+     * @return true if the annotation is used on this field
+     */
+    public boolean hasAnnotation(final Class<? extends Annotation> type) {
         for (Annotation annotation : annotations) {
-            if (klass.equals(annotation.annotationType())) {
+            if (type.equals(annotation.annotationType())) {
                 return true;
             }
         }
@@ -148,27 +112,6 @@ public final class FieldModelBuilder<T> {
         return this;
     }
 
-    //    /**
-    //     * Returns the {@link FieldAccessor}
-    //     *
-    //     * @return the FieldAccessor
-    //     */
-    //    public FieldAccessor<T> getFieldAccessor() {
-    //        return fieldAccessor;
-    //    }
-    //
-    //    /**
-    //     * Sets the {@link FieldAccessor}
-    //     *
-    //     * @param fieldAccessor the FieldAccessor
-    //     * @return this
-    //     */
-    //    public FieldModelBuilder<T> fieldAccessor(final FieldAccessor<T> fieldAccessor) {
-    //        this.fieldAccessor = fieldAccessor;
-    //        return this;
-    //    }
-    //
-
     /**
      * Creates the {@link FieldModel}.
      *
@@ -176,7 +119,7 @@ public final class FieldModelBuilder<T> {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public FieldModel<T> build() {
-        return new FieldModel(field, name, readName, writeName, typeData, annotations, codec);
+        return new FieldModel(field, name, typeData, annotations, codec);
     }
 
     @Override
@@ -184,28 +127,48 @@ public final class FieldModelBuilder<T> {
         return format("FieldModelBuilder{fieldName=%s, typeData=%s}", name, typeData);
     }
 
+    /**
+     * Sets the field used
+     *
+     * @param field the field
+     * @return this
+     */
     public FieldModelBuilder<T> field(final Field field) {
         this.field = notNull("field", field);
         return this;
     }
 
+    /**
+     * @return the field
+     */
     public Field getField() {
         return field;
     }
 
+    /**
+     * Sets the field name
+     *
+     * @param fieldName the name
+     * @return this
+     */
     public FieldModelBuilder<T> fieldName(final String fieldName) {
         this.name = notNull("fieldName", fieldName);
         return this;
     }
 
-    public String getFieldName() {
-        return this.name;
-    }
-
+    /**
+     * @return the type data
+     */
     public TypeData<T> getTypeData() {
         return typeData;
     }
 
+    /**
+     * Sets the type data
+     *
+     * @param typeData the type data
+     * @return this
+     */
     public FieldModelBuilder<T> typeData(final TypeData<T> typeData) {
         this.typeData = notNull("typeData", typeData);
         return this;

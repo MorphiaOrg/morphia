@@ -103,7 +103,6 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param entity the entity to insert
      * @param <T>    the type of the entity
-     * @return the new key of the inserted entity
      */
     <T> void insert(T entity);
 
@@ -118,11 +117,18 @@ public interface AdvancedDatastore extends Datastore {
      * @deprecated use {@link #insert(List, InsertManyOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default
-    <T> void insert(T entity, InsertOptions options) {
+    default <T> void insert(T entity, InsertOptions options) {
         insert(entity, options.toInsertOneOptions());
     }
 
+    /**
+     * Inserts an entity in to the mapped collection.
+     *
+     * @param entity  the entity to insert
+     * @param options the options to apply to the insert operation
+     * @param <T>     the type of the entity
+     * @since 2.0
+     */
     <T> void insert(T entity, InsertOneOptions options);
 
     /**
@@ -130,11 +136,20 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param entities the entities to insert
      * @param <T>      the type of the entities
-     * @return the new keys of the inserted entities
      */
     default <T> void insert(List<T> entities) {
         insert(entities, new InsertManyOptions());
     }
+
+    /**
+     * Inserts entities in to the mapped collection.
+     *
+     * @param entities the entities to insert
+     * @param options  the options to apply to the insert operation
+     * @param <T>      the type of the entity
+     * @since 2.0
+     */
+    <T> void insert(List<T> entities, InsertManyOptions options);
 
     /**
      * Inserts entities in to the mapped collection.
@@ -150,8 +165,6 @@ public interface AdvancedDatastore extends Datastore {
     default <T> void insert(List<T> entities, InsertOptions options) {
         insert(entities, options.toInsertManyOptions());
     }
-
-    <T> void insert(List<T> entities, InsertManyOptions options);
 
     /**
      * Returns a new query based on the example object

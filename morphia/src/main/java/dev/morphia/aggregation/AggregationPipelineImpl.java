@@ -308,7 +308,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
             List<Object> args = toExpressionArgs(projection.getArguments());
             if (target == null) {
                 // Unwrap for single-argument expressions
-                if (args instanceof List<?> && args.size() == 1) {
+                if (args.size() == 1) {
                     Object firstArg = ((List<?>) args).get(0);
                     if (firstArg instanceof Document) {
                         return (Document) firstArg;
@@ -318,7 +318,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 //                return args;
             } else {
                 // Unwrap for single-argument expressions
-                if (args instanceof List<?> && args.size() == 1) {
+                if (args.size() == 1) {
                     return new Document(target, ((List<?>) args).get(0));
                 }
                 return new Document(target, args);

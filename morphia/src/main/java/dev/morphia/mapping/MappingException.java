@@ -13,6 +13,9 @@
 
 package dev.morphia.mapping;
 
+/**
+ * An exception indicating an error mapping a type
+ */
 public class MappingException extends RuntimeException {
     /**
      * Creates an exception with a message

@@ -1,37 +1,30 @@
 package dev.morphia;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
-import dev.morphia.query.UpdateException;
-import dev.morphia.sofia.Sofia;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
+/**
+ * Document used to send update statements to the driver.
+ *
+ * @morphia.internal
+ */
 public class UpdateDocument implements Bson {
-
-
-    public enum Mode {
-        DEFAULT, BODY_ONLY;
-    }
-    private Mapper mapper;
-
     private Object entity;
-    private Mode mode;
-    private boolean skipVersion;
 
-    public <T> UpdateDocument(final Mapper mapper, final T entity, final Mode mode) {
-        this.mapper = mapper;
+    /**
+     * Creates an UpdateDocument for the entity
+     *
+     * @param entity the entity to update
+     * @param <T>    the entity type
+     */
+    public <T> UpdateDocument(final T entity) {
         this.entity = entity;
-        this.mode = mode;
-    }
-
-    public void skipVersion() {
-        skipVersion = true;
     }
 
     @Override
@@ -47,8 +40,7 @@ public class UpdateDocument implements Bson {
         if (versionField != null) {
             document.remove(versionField.getMappedFieldName());
         }
-        return mode == Mode.DEFAULT
-               ? new Document("$set", document).toBsonDocument(Document.class, codecRegistry)
-               : document.toBsonDocument(Document.class, codecRegistry);
+        return document.toBsonDocument(Document.class, codecRegistry);
     }
+
 }

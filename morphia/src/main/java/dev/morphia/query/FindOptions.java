@@ -18,7 +18,6 @@ package dev.morphia.query;
 
 import com.mongodb.CursorType;
 import com.mongodb.ReadPreference;
-import com.mongodb.WriteConcern;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
@@ -27,6 +26,7 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,14 +57,21 @@ public final class FindOptions {
     private boolean showRecordId;
     private boolean snapshot;
     private ReadPreference readPreference;
-    private WriteConcern writeConcern;
     private Projection projection;
     private String queryLogId;
 
+    /**
+     * Creates an instance with default values
+     */
     public FindOptions() {
     }
 
-    FindOptions(FindOptions original) {
+    /**
+     * Creates an copy of the given options
+     *
+     * @param original the orginal to copy
+     */
+    FindOptions(final FindOptions original) {
         this.batchSize = original.batchSize;
         this.limit = original.limit;
         this.modifiers = original.modifiers;
@@ -85,49 +92,92 @@ public final class FindOptions {
         this.showRecordId = original.showRecordId;
         this.snapshot = original.snapshot;
         this.readPreference = original.readPreference;
-        this.writeConcern = original.writeConcern;
+        //        this.writeConcern = original.writeConcern;
         this.projection = original.projection;
     }
 
-    public FindOptions limit(int limit) {
+    /**
+     * Sets the limit
+     *
+     * @param limit the limit
+     * @return this
+     */
+    public FindOptions limit(final int limit) {
         this.limit = limit;
         return this;
     }
 
-    public FindOptions skip(int skip) {
+    /**
+     * Sets how many documents to skip
+     *
+     * @param skip the count
+     * @return this
+     */
+    public FindOptions skip(final int skip) {
         this.skip = skip;
         return this;
     }
 
-    public long getMaxTime(TimeUnit timeUnit) {
+    /**
+     * @param timeUnit the time unit to apply
+     * @return the max time for the operation
+     */
+    public long getMaxTime(final TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         return timeUnit.convert(this.maxTimeMS, TimeUnit.MILLISECONDS);
     }
 
-    public FindOptions maxTime(long maxTime, TimeUnit timeUnit) {
+    /**
+     * Sets the max time
+     *
+     * @param maxTime  the max
+     * @param timeUnit the unit
+     * @return this
+     */
+    public FindOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         Assertions.isTrueArgument("maxTime > = 0", maxTime >= 0L);
         this.maxTimeMS = TimeUnit.MILLISECONDS.convert(maxTime, timeUnit);
         return this;
     }
 
-    public long getMaxAwaitTime(TimeUnit timeUnit) {
+    /**
+     * @param timeUnit the time unit to apply
+     * @return the max await time for the operation
+     */
+    public long getMaxAwaitTime(final TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         return timeUnit.convert(this.maxAwaitTimeMS, TimeUnit.MILLISECONDS);
     }
 
-    public FindOptions maxAwaitTime(long maxAwaitTime, TimeUnit timeUnit) {
+    /**
+     * Sets the max await time
+     *
+     * @param maxAwaitTime the max
+     * @param timeUnit     the unit
+     * @return this
+     */
+    public FindOptions maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         Assertions.isTrueArgument("maxAwaitTime > = 0", maxAwaitTime >= 0L);
         this.maxAwaitTimeMS = TimeUnit.MILLISECONDS.convert(maxAwaitTime, timeUnit);
         return this;
     }
 
-    public FindOptions batchSize(int batchSize) {
+    /**
+     * Sets the batch size
+     *
+     * @param batchSize the size
+     * @return this
+     */
+    public FindOptions batchSize(final int batchSize) {
         this.batchSize = batchSize;
         return this;
     }
 
+    /**
+     * @return the projection
+     */
     public Projection projection() {
         if (projection == null) {
             projection = new Projection(this);
@@ -135,97 +185,159 @@ public final class FindOptions {
         return projection;
     }
 
-    public FindOptions sort(Document sort) {
+    /**
+     * Sets to the sort to use
+     *
+     * @param sort the sort document
+     * @return this
+     */
+    public FindOptions sort(final Document sort) {
         this.sort = sort;
         return this;
     }
 
-    public FindOptions noCursorTimeout(boolean noCursorTimeout) {
+    /**
+     * Sets whether to disable cursor time out
+     *
+     * @param noCursorTimeout true if the time should be disabled
+     * @return this
+     */
+    public FindOptions noCursorTimeout(final boolean noCursorTimeout) {
         this.noCursorTimeout = noCursorTimeout;
         return this;
     }
 
-    public FindOptions oplogReplay(boolean oplogReplay) {
+    /**
+     * Users should not set this under normal circumstances.
+     *
+     * @param oplogReplay if oplog replay is enabled
+     * @return this
+     */
+    public FindOptions oplogReplay(final boolean oplogReplay) {
         this.oplogReplay = oplogReplay;
         return this;
     }
 
-    public FindOptions partial(boolean partial) {
+    /**
+     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
+     *
+     * @param partial if partial results for sharded clusters is enabled
+     * @return this
+     */
+    public FindOptions partial(final boolean partial) {
         this.partial = partial;
         return this;
     }
 
-    public FindOptions cursorType(CursorType cursorType) {
+    /**
+     * Sets the cursor type
+     *
+     * @param cursorType the type
+     * @return this
+     */
+    public FindOptions cursorType(final CursorType cursorType) {
         this.cursorType = Assertions.notNull("cursorType", cursorType);
         return this;
     }
 
-    public FindOptions collation(Collation collation) {
+    /**
+     * Sets the collation to use
+     *
+     * @param collation the collation
+     * @return this
+     */
+    public FindOptions collation(final Collation collation) {
         this.collation = collation;
         return this;
     }
 
-    public FindOptions comment(String comment) {
-        this.comment = comment;
-        return this;
-    }
-
-    public FindOptions hint(Document hint) {
+    /**
+     * Sets the index hint
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hint(final Document hint) {
         this.hint = hint;
         return this;
     }
 
-    public FindOptions max(Document max) {
+    /**
+     * Sets the max index value
+     *
+     * @param max the max
+     * @return this
+     */
+    public FindOptions max(final Document max) {
         this.max = max;
         return this;
     }
 
-    public FindOptions min(Document min) {
+    /**
+     * Sets the min index value
+     *
+     * @param min the min
+     * @return this
+     */
+    public FindOptions min(final Document min) {
         this.min = min;
         return this;
     }
 
-    public FindOptions returnKey(boolean returnKey) {
+    /**
+     * Sets if only the key value should be returned
+     *
+     * @param returnKey true if only the key should be returned
+     * @return this
+     */
+    public FindOptions returnKey(final boolean returnKey) {
         this.returnKey = returnKey;
         return this;
     }
 
-    public FindOptions showRecordId(boolean showRecordId) {
+    /**
+     * Sets if the record ID should be returned
+     *
+     * @param showRecordId true if the record id should be returned
+     * @return this
+     */
+    public FindOptions showRecordId(final boolean showRecordId) {
         this.showRecordId = showRecordId;
         return this;
     }
 
+    /**
+     * Sets the read preference to apply
+     *
+     * @param readPreference the read preference
+     * @return this
+     */
     public FindOptions readPreference(final ReadPreference readPreference) {
         this.readPreference = readPreference;
         return this;
     }
 
-    public FindOptions writeConcern(final WriteConcern writeConcern) {
-        this.writeConcern = writeConcern;
-        return this;
-    }
-
     /**
+     * @param query    the query to execute
+     * @param iterable the iterable to use
+     * @param mapper   the mapper to use
+     * @param type     the result type
+     * @param <T>      the result type
+     * @return the iterable instance for the query results
      * @morphia.internal
-     * @param query
-     * @param iterable
-     * @param mapper
-     * @param clazz
-     * @param <T>
-     * @return
      */
-    public <T> FindIterable<T> apply(final QueryImpl query, final FindIterable<T> iterable, final Mapper mapper, final Class clazz) {
+    public <T> FindIterable<T> apply(final QueryImpl query, final FindIterable<T> iterable, final Mapper mapper, final Class type) {
         Document fieldsObject = query.getFieldsObject();
-        if(fieldsObject != null) {
+        if (fieldsObject != null) {
             iterable.projection(fieldsObject);
-        } else if(projection != null) {
-            iterable.projection(projection.map(mapper, clazz));
+        } else if (projection != null) {
+            iterable.projection(projection.map(mapper, type));
         }
 
         iterable.batchSize(batchSize);
         iterable.collation(collation);
         iterable.comment(comment);
-        if(cursorType != null) {
+        if (cursorType != null) {
             iterable.cursorType(cursorType);
         }
         iterable.hint(hint);
@@ -242,9 +354,9 @@ public final class FindOptions {
         iterable.showRecordId(showRecordId);
         iterable.skip(skip);
         Document querySort = query.getSort();
-        if(querySort != null) {
+        if (querySort != null) {
             iterable.sort(querySort);
-        } else if(sort != null) {
+        } else if (sort != null) {
             iterable.sort(sort);
         }
         return iterable;
@@ -271,7 +383,6 @@ public final class FindOptions {
         result = 31 * result + (isShowRecordId() ? 1 : 0);
         result = 31 * result + (snapshot ? 1 : 0);
         result = 31 * result + (getReadPreference() != null ? getReadPreference().hashCode() : 0);
-        result = 31 * result + (getWriteConcern() != null ? getWriteConcern().hashCode() : 0);
         result = 31 * result + (getProjection() != null ? getProjection().hashCode() : 0);
         return result;
     }
@@ -344,112 +455,159 @@ public final class FindOptions {
         if (getReadPreference() != null ? !getReadPreference().equals(that.getReadPreference()) : that.getReadPreference() != null) {
             return false;
         }
-        if (getWriteConcern() != null ? !getWriteConcern().equals(that.getWriteConcern()) : that.getWriteConcern() != null) {
-            return false;
-        }
         return getProjection() != null ? getProjection().equals(that.getProjection()) : that.getProjection() == null;
-    }
-
-    public int getBatchSize() {
-        return this.batchSize;
-    }
-
-    public int getLimit() {
-        return this.limit;
-    }
-
-    public int getSkip() {
-        return this.skip;
-    }
-
-    public boolean isNoCursorTimeout() {
-        return this.noCursorTimeout;
-    }
-
-    public boolean isOplogReplay() {
-        return this.oplogReplay;
-    }
-
-    public boolean isPartial() {
-        return this.partial;
-    }
-
-    public boolean isReturnKey() {
-        return this.returnKey;
-    }
-
-    public boolean isShowRecordId() {
-        return this.showRecordId;
-    }
-
-    public Document getSort() {
-        return this.sort;
-    }
-
-    public CursorType getCursorType() {
-        return this.cursorType;
-    }
-
-    public Collation getCollation() {
-        return this.collation;
-    }
-
-    public String getComment() {
-        return this.comment;
-    }
-
-    public Document getHint() {
-        return this.hint;
-    }
-
-    public Document getMax() {
-        return this.max;
-    }
-
-    public Document getMin() {
-        return this.min;
-    }
-
-    public ReadPreference getReadPreference() {
-        return readPreference;
-    }
-
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
-    }
-
-    public Projection getProjection() {
-        return this.projection;
     }
 
     @Override
     public String toString() {
-        return "FindOptions{" +
-               "batchSize=" + batchSize +
-               ", collation=" + collation +
-               ", comment='" + comment + '\'' +
-               ", cursorType=" + cursorType +
-               ", hint=" + hint +
-               ", limit=" + limit +
-               ", max=" + max +
-               ", maxAwaitTimeMS=" + maxAwaitTimeMS +
-               ", maxTimeMS=" + maxTimeMS +
-               ", min=" + min +
-               ", modifiers=" + modifiers +
-               ", noCursorTimeout=" + noCursorTimeout +
-               ", oplogReplay=" + oplogReplay +
-               ", partial=" + partial +
-               ", projection=" + projection +
-               ", readPreference=" + readPreference +
-               ", returnKey=" + returnKey +
-               ", showRecordId=" + showRecordId +
-               ", skip=" + skip +
-               ", snapshot=" + snapshot +
-               ", sort=" + sort +
-               ", writeConcern=" + writeConcern +
-               '}';
+        return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")
+                   .add("batchSize=" + batchSize)
+                   .add("limit=" + limit)
+                   .add("modifiers=" + modifiers)
+                   .add("maxTimeMS=" + maxTimeMS)
+                   .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
+                   .add("skip=" + skip)
+                   .add("sort=" + sort)
+                   .add("cursorType=" + cursorType)
+                   .add("noCursorTimeout=" + noCursorTimeout)
+                   .add("oplogReplay=" + oplogReplay)
+                   .add("partial=" + partial)
+                   .add("collation=" + collation)
+                   .add("comment='" + comment + "'")
+                   .add("hint=" + hint)
+                   .add("max=" + max)
+                   .add("min=" + min)
+                   .add("returnKey=" + returnKey)
+                   .add("showRecordId=" + showRecordId)
+                   .add("snapshot=" + snapshot)
+                   .add("readPreference=" + readPreference)
+                   .add("projection=" + projection)
+                   .add("queryLogId='" + queryLogId + "'")
+                   .toString();
     }
 
+    /**
+     * @return the batch size
+     */
+    public int getBatchSize() {
+        return this.batchSize;
+    }
+
+    /**
+     * @return the limit
+     */
+    public int getLimit() {
+        return this.limit;
+    }
+
+    /**
+     * @return the skip count
+     */
+    public int getSkip() {
+        return this.skip;
+    }
+
+    /**
+     * @return the sort criteria
+     */
+    public Document getSort() {
+        return this.sort;
+    }
+
+    /**
+     * @return the cursor type
+     */
+    public CursorType getCursorType() {
+        return this.cursorType;
+    }
+
+    /**
+     * @return is the cursor timeout enabled
+     */
+    public boolean isNoCursorTimeout() {
+        return this.noCursorTimeout;
+    }
+
+    /**
+     * @return is oplog replay enabled
+     */
+    public boolean isOplogReplay() {
+        return this.oplogReplay;
+    }
+
+    /**
+     * @return are partial results enabled
+     */
+    public boolean isPartial() {
+        return this.partial;
+    }
+
+    /**
+     * @return the collation
+     */
+    public Collation getCollation() {
+        return this.collation;
+    }
+
+    /**
+     * @return the comment
+     */
+    public String getComment() {
+        return this.comment;
+    }
+
+    /**
+     * @return the index hint
+     */
+    public Document getHint() {
+        return this.hint;
+    }
+
+    /**
+     * @return the max value
+     */
+    public Document getMax() {
+        return this.max;
+    }
+
+    /**
+     * @return the min value
+     */
+    public Document getMin() {
+        return this.min;
+    }
+
+    /**
+     * @return is return key only enabled
+     */
+    public boolean isReturnKey() {
+        return this.returnKey;
+    }
+
+    /**
+     * @return is showing the record id enabled
+     */
+    public boolean isShowRecordId() {
+        return this.showRecordId;
+    }
+
+    /**
+     * @return the read preference
+     */
+    public ReadPreference getReadPreference() {
+        return readPreference;
+    }
+
+    /**
+     * @return the projection
+     */
+    public Projection getProjection() {
+        return this.projection;
+    }
+
+    /**
+     * @return a copy of this instance
+     */
     public FindOptions copy() {
         return new FindOptions(this);
     }
@@ -457,8 +615,8 @@ public final class FindOptions {
     /**
      * This is an experimental method.  It's implementation and presence are subject to change.
      *
+     * @return this
      * @morphia.internal
-     * @return
      */
     public FindOptions logQuery() {
         queryLogId = new ObjectId().toString();
@@ -467,15 +625,30 @@ public final class FindOptions {
     }
 
     /**
+     * Sets the comment to log with the query
+     *
+     * @param comment the comment
+     * @return this
+     */
+    public FindOptions comment(final String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    /**
      * This is an experimental method.  It's implementation and presence are subject to change.
      *
+     * @return this
      * @morphia.internal
-     * @return
      */
     public boolean isLogQuery() {
         return queryLogId != null;
     }
 
+    /**
+     * @return the query log id used for retrieving the logged query
+     * @morphia.internal
+     */
     public String getQueryLogId() {
         return queryLogId;
     }

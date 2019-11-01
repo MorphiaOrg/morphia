@@ -17,12 +17,16 @@ import java.util.List;
  * @param <T>
  * @morphia.internal
  */
+@SuppressWarnings("unchecked")
 public class SingleReference<T> extends MorphiaReference<T> {
     private MappedClass mappedClass;
     private Object id;
     private T value;
 
     /**
+     * @param datastore   the datastore to use
+     * @param mappedClass the entity's mapped class
+     * @param id          the ID value
      * @morphia.internal
      */
     public SingleReference(final Datastore datastore, final MappedClass mappedClass, final Object id) {
@@ -36,9 +40,34 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     /**
-     * {@inheritDoc}
+     * Decodes a document in to an entity
+     *
+     * @param datastore   the datastore
+     * @param mapper      the mapper
+     * @param mappedField the MappedField
+     * @param paramType   the type of the underlying entity
+     * @param document    the Document to decode
+     * @return the entity
      */
-    @SuppressWarnings("unchecked")
+    public static MorphiaReference<?> decode(final Datastore datastore,
+                                             final Mapper mapper,
+                                             final MappedField mappedField,
+                                             final Class paramType, final Document document) {
+        final MappedClass mappedClass = mapper.getMappedClass(paramType);
+        Object id = document.get(mappedField.getMappedFieldName());
+
+        return new SingleReference(datastore, mappedClass, id);
+    }
+
+    MappedClass getMappedClass(final Mapper mapper) {
+        if (mappedClass == null) {
+            mappedClass = mapper.getMappedClass(get().getClass());
+        }
+
+        return mappedClass;
+    }
+
+    @Override
     public T get() {
         if (!isResolved() && value == null && id != null) {
             value = (T) buildQuery().execute().tryNext();
@@ -71,13 +100,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return query;
     }
 
-    MappedClass getMappedClass(final Mapper mapper) {
-        if(mappedClass == null) {
-            mappedClass = mapper.getMappedClass(get().getClass());
-        }
-
-        return mappedClass;
-    }
 
     @Override
     public List<Object> getIds() {
@@ -86,19 +108,16 @@ public class SingleReference<T> extends MorphiaReference<T> {
 
     @Override
     Object getId(final Mapper mapper, final Datastore datastore, final MappedClass fieldClass) {
-        if(id == null) {
+        if (id == null) {
             MappedClass mappedClass = getMappedClass(mapper);
             id = mappedClass.getIdField().getFieldValue(get());
-            if(!mappedClass.equals(fieldClass)) {
+            if (!mappedClass.equals(fieldClass)) {
                 id = new DBRef(mappedClass.getCollectionName(), id);
             }
         }
         return id;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object encode(final Mapper mapper, final Object value, final MappedField optionalExtraInfo) {
         if (isResolved()) {
@@ -107,25 +126,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
             return null;
         }
 
-    }
-
-    /**
-     * Decodes a document in to an entity
-     * @param datastore the datastore
-     * @param mapper the mapper
-     * @param mappedField the MappedField
-     * @param paramType the type of the underlying entity
-     * @param document the Document to decode
-     * @return the entity
-     */
-    public static MorphiaReference<?> decode(final Datastore datastore,
-                                             final Mapper mapper,
-                                             final MappedField mappedField,
-                                             final Class paramType, final Document document) {
-        final MappedClass mappedClass = mapper.getMappedClass(paramType);
-        Object id = document.get(mappedField.getMappedFieldName());
-
-        return new SingleReference(datastore, mappedClass, id);
     }
 
 }

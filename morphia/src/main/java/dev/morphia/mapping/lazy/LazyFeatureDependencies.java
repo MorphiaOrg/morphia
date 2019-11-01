@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * A utility class for detecting lazy loading support types
+ */
 public final class LazyFeatureDependencies {
 
     private static final Logger LOG = LoggerFactory.getLogger(LazyFeatureDependencies.class);
@@ -23,10 +26,10 @@ public final class LazyFeatureDependencies {
             try {
                 proxyClassesPresent = Class.forName("net.bytebuddy.implementation.InvocationHandlerAdapter") != null;
             } catch (ClassNotFoundException e) {
-                if (!proxyClassesPresent) {
-                    LOG.warn("Lazy loading impossible due to missing dependencies.");
-                }
                 proxyClassesPresent = false;
+            }
+            if (!proxyClassesPresent) {
+                LOG.warn("Lazy loading impossible due to missing dependencies.");
             }
         }
         return proxyClassesPresent;

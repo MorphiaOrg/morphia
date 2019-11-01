@@ -18,13 +18,26 @@ import java.util.UUID;
 
 class ArrayCodec implements Codec<Object> {
 
-    private Mapper mapper;
     private final Class type;
+    private Mapper mapper;
     private BsonTypeCodecMap bsonTypeCodecMap;
 
-    public <T> ArrayCodec(final Mapper mapper, final Class type) {
+    <T> ArrayCodec(final Mapper mapper, final Class type) {
         this.mapper = mapper;
         this.type = type;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void encode(final BsonWriter writer, final Object value, final EncoderContext encoderContext) {
+        writer.writeStartArray();
+        int length = Array.getLength(value);
+        for (int i = 0; i < length; i++) {
+            Object element = Array.get(value, i);
+            Codec codec = mapper.getCodecRegistry().get(element.getClass());
+            codec.encode(writer, element, encoderContext);
+        }
+        writer.writeEndArray();
     }
 
     @Override
@@ -32,34 +45,10 @@ class ArrayCodec implements Codec<Object> {
         return null;
     }
 
-    private BsonTypeCodecMap getBsonTypeCodecMap() {
-        if (bsonTypeCodecMap == null) {
-            this.bsonTypeCodecMap = new BsonTypeCodecMap(new BsonTypeClassMap(), mapper.getCodecRegistry());
-        }
-        return bsonTypeCodecMap;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void encode(final BsonWriter writer, final Object value, final EncoderContext encoderContext) {
-        try {
-            writer.writeStartArray();
-            int length = Array.getLength(value);
-            for (int i = 0; i < length; i++) {
-                Object element = Array.get(value, i);
-                Codec codec = mapper.getCodecRegistry().get(element.getClass());
-                codec.encode(writer, element, encoderContext);
-            }
-            writer.writeEndArray();
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public Object[] decode(final BsonReader reader, final DecoderContext decoderContext) {
         List<Object> list = new ArrayList<>();
-        if(reader.getCurrentBsonType() == BsonType.ARRAY) {
+        if (reader.getCurrentBsonType() == BsonType.ARRAY) {
             reader.readStartArray();
 
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -83,6 +72,13 @@ class ArrayCodec implements Codec<Object> {
             return mapper.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
         }
         return mapper.getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
+    }
+
+    private BsonTypeCodecMap getBsonTypeCodecMap() {
+        if (bsonTypeCodecMap == null) {
+            this.bsonTypeCodecMap = new BsonTypeCodecMap(new BsonTypeClassMap(), mapper.getCodecRegistry());
+        }
+        return bsonTypeCodecMap;
     }
 
 }

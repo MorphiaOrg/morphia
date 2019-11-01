@@ -5,7 +5,6 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
-import dev.morphia.mapping.codec.references.ReferenceCodec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonTypeClassMap;
@@ -22,21 +21,25 @@ import java.util.Set;
 
 import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
 
+/**
+ * Defines a codec for MorphiaReference values
+ */
 @SuppressWarnings("unchecked")
 public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> implements PropertyHandler {
 
     private final Mapper mapper;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
 
-    public MorphiaReferenceCodec(final Datastore datastore, final Field field, final String name,
-                                 final TypeData typeData) {
-        super(datastore, field, name, (TypeData) typeData.getTypeParameters().get(0));
+    /**
+     * Creates a codec
+     *
+     * @param datastore the datastore
+     * @param field     the reference field
+     * @param typeData  the field type data
+     */
+    public MorphiaReferenceCodec(final Datastore datastore, final Field field, final TypeData typeData) {
+        super(datastore, field, (TypeData) typeData.getTypeParameters().get(0));
         mapper = datastore.getMapper();
-    }
-
-    @Override
-    public Class getEncoderClass() {
-        return MorphiaReference.class;
     }
 
     @Override
@@ -51,10 +54,23 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
         } else if (Collection.class.isAssignableFrom(getTypeData().getType())) {
             return new ListReference<>(getDatastore(), getFieldMappedClass(), (List) value);
         } else if (Map.class.isAssignableFrom(getTypeData().getType())) {
-            return new MapReference<>(getDatastore(), getFieldMappedClass(), (Map) value);
+            return new MapReference<>(getDatastore(), (Map) value, getFieldMappedClass());
         } else {
             return new SingleReference<>(getDatastore(), getFieldMappedClass(), value);
         }
+    }
+
+    @Override
+    public Object encode(final Object value) {
+        MorphiaReference<Object> wrap;
+        if (value instanceof MorphiaReference) {
+            wrap = (MorphiaReference<Object>) value;
+        } else {
+            wrap = MorphiaReference.wrap(value);
+        }
+        DocumentWriter writer = new DocumentWriter();
+        encode(writer, wrap, EncoderContext.builder().build());
+        return writer.getRoot();
     }
 
     @Override
@@ -65,15 +81,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
     }
 
     @Override
-    public Object encode(final Object value) {
-        MorphiaReference<Object> wrap;
-        if(!(value instanceof MorphiaReference)) {
-            wrap = MorphiaReference.wrap(value);
-        } else {
-            wrap = (MorphiaReference<Object>) value;
-        }
-        DocumentWriter writer = new DocumentWriter();
-        encode(writer, wrap, EncoderContext.builder().build());
-        return writer.getRoot();
+    public Class getEncoderClass() {
+        return MorphiaReference.class;
     }
 }

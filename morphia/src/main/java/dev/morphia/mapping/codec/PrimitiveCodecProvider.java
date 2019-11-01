@@ -6,10 +6,20 @@ import org.bson.codecs.configuration.CodecRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A provider of codecs for primitive types
+ *
+ * @morphia.internal
+ */
 @SuppressWarnings("unchecked")
 public class PrimitiveCodecProvider implements CodecRegistry {
     private Map<Class, Codec> primitiveCodecs = new HashMap<>();
 
+    /**
+     * Creates the provider
+     *
+     * @param codecRegistry the registry
+     */
     public PrimitiveCodecProvider(final CodecRegistry codecRegistry) {
         primitiveCodecs.put(byte.class, codecRegistry.get(Byte.class));
         primitiveCodecs.put(char.class, codecRegistry.get(Character.class));

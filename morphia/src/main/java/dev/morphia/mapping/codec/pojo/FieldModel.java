@@ -34,19 +34,15 @@ import java.util.Objects;
 public final class FieldModel<T> {
     private final Field field;
     private final String name;
-    private final String readName;
-    private final String writeName;
     private final TypeData<T> typeData;
     private List<Annotation> annotations;
     private final Codec<T> codec;
     private volatile Codec<T> cachedCodec;
 
-    FieldModel(final Field field, final String name, final String readName, final String writeName, final TypeData<T> typeData,
+    FieldModel(final Field field, final String name, final TypeData<T> typeData,
                final List<Annotation> annotations, final Codec<T> codec) {
         this.field = Objects.requireNonNull(field, Sofia.notNull("field"));
         this.name = Objects.requireNonNull(name, Sofia.notNull("name"));
-        this.readName = readName;
-        this.writeName = writeName;
         this.typeData = Objects.requireNonNull(typeData, Sofia.notNull("typeData"));
         this.annotations = annotations;
         this.codec = codec;
@@ -62,7 +58,7 @@ public final class FieldModel<T> {
      * @return the builder
      */
     public static <T> FieldModelBuilder<T> builder() {
-        return new FieldModelBuilder<T>();
+        return new FieldModelBuilder<>();
     }
 
     /**
@@ -70,20 +66,6 @@ public final class FieldModel<T> {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * @return the name of the field to use as the key when deserializing from BSON
-     */
-    public String getWriteName() {
-        return writeName;
-    }
-
-    /**
-     * @return the name of the field to use as the key when serializing into BSON
-     */
-    public String getReadName() {
-        return readName;
     }
 
     /**
@@ -103,14 +85,14 @@ public final class FieldModel<T> {
     /**
      * Find an annotation of a specific type or null if not found.
      *
-     * @param klass the annotation type to find
+     * @param type the annotation type to find
      * @param <A>   the class type
      * @return the annotation instance or null
      */
-    public <A extends Annotation> A getAnnotation(Class<A> klass) {
+    public <A extends Annotation> A getAnnotation(final Class<A> type) {
         for (Annotation annotation : annotations) {
-            if (klass.equals(annotation.annotationType())) {
-                return klass.cast(annotation);
+            if (type.equals(annotation.annotationType())) {
+                return type.cast(annotation);
             }
         }
         return null;
@@ -127,8 +109,6 @@ public final class FieldModel<T> {
     public String toString() {
         return "FieldModel{"
                + "fieldName='" + name + "'"
-               + ", readName='" + readName + "'"
-               + ", writeName='" + writeName + "'"
                + ", typeData=" + typeData
                + "}";
     }
@@ -150,12 +130,6 @@ public final class FieldModel<T> {
         if (!name.equals(that.name)) {
             return false;
         }
-        if (readName != null ? !readName.equals(that.readName) : that.readName != null) {
-            return false;
-        }
-        if (writeName != null ? !writeName.equals(that.writeName) : that.writeName != null) {
-            return false;
-        }
         if (!typeData.equals(that.typeData)) {
             return false;
         }
@@ -169,22 +143,15 @@ public final class FieldModel<T> {
     public int hashCode() {
         int result = field.hashCode();
         result = 31 * result + name.hashCode();
-        result = 31 * result + (readName != null ? readName.hashCode() : 0);
-        result = 31 * result + (writeName != null ? writeName.hashCode() : 0);
         result = 31 * result + typeData.hashCode();
         result = 31 * result + (codec != null ? codec.hashCode() : 0);
         result = 31 * result + (cachedCodec != null ? cachedCodec.hashCode() : 0);
         return result;
     }
 
-    public void cachedCodec(final Codec<T> codec) {
-        this.cachedCodec = codec;
-    }
-
-    public Codec<T> getCachedCodec() {
-        return cachedCodec;
-    }
-
+    /**
+     * @return the field
+     */
     public Field getField() {
         return field;
     }

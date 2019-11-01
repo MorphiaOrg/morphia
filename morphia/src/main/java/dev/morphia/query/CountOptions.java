@@ -24,8 +24,6 @@ import org.bson.conversions.Bson;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.mongodb.assertions.Assertions.notNull;
-
 /**
  * The options for a count operation.
  *
@@ -36,17 +34,11 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     private ReadPreference readPreference;
     private ReadConcern readConcern;
 
-
     /**
-     * @inheritDoc
-     */
-    public CountOptions collation(final Collation collation) {
-        super.collation(collation);
-        return this;
-    }
-
-    /**
-     * @inheritDoc
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
      */
     public CountOptions hint(final String hint) {
         super.hint(new Document(hint, 1));
@@ -54,47 +46,50 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     }
 
     /**
-     * @inheritDoc
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
      */
     public CountOptions hint(final Document hint) {
         super.hint(hint);
         return this;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public CountOptions hint(final Bson hint) {
         super.hint(hint);
         return this;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public CountOptions limit(final int limit) {
         super.limit(limit);
         return this;
     }
 
-    /**
-     * @inheritDoc
-     */
+
+    @Override
+    public CountOptions skip(final int skip) {
+        super.skip(skip);
+        return this;
+    }
+
+    @Override
+    public long getMaxTime(final TimeUnit timeUnit) {
+        return super.getMaxTime(timeUnit);
+    }
+
     @Override
     public CountOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
         super.maxTime(maxTime, timeUnit);
         return this;
     }
 
-    /**
-     * @inheritDoc
-     * @return
-     */
     @Override
-    public long getMaxTime(final TimeUnit timeUnit) {
-        return super.getMaxTime(timeUnit);
+    public CountOptions collation(final Collation collation) {
+        super.collation(collation);
+        return this;
     }
 
     /**
@@ -106,6 +101,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
     public ReadConcern readConcern() {
         return readConcern;
     }
+
     /**
      * Sets the readConcern
      *
@@ -127,7 +123,6 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
         return readPreference;
     }
 
-
     /**
      * Sets the readPreference
      *
@@ -136,15 +131,6 @@ public class CountOptions extends com.mongodb.client.model.CountOptions {
      */
     public CountOptions readPreference(final ReadPreference readPreference) {
         this.readPreference = readPreference;
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public CountOptions skip(final int skip) {
-        super.skip(skip);
         return this;
     }
 }

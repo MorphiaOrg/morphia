@@ -14,27 +14,19 @@ import java.util.List;
  * @morphia.internal
  */
 public class ClassMethodPair {
-    private Class<? extends Annotation> event;
     private final Class<?> type;
     private final Method method;
     private final Datastore datastore;
+    private Class<? extends Annotation> event;
 
-    ClassMethodPair(final Datastore datastore, final Method method, final Class<?> type, Class<? extends Annotation> event) {
+    ClassMethodPair(final Datastore datastore, final Method method, final Class<?> type, final Class<? extends Annotation> event) {
         this.event = event;
         this.type = type;
         this.method = method;
         this.datastore = datastore;
     }
 
-    public Class<?> getType() {
-        return type;
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public void invoke(final Document document, final Object entity) {
+    void invoke(final Document document, final Object entity) {
         try {
             Object instance;
             if (type != null) {
@@ -50,7 +42,7 @@ public class ClassMethodPair {
             List<Object> args = new ArrayList<>();
 
             for (final Class<?> parameterType : method.getParameterTypes()) {
-                if(parameterType.equals(Document.class)) {
+                if (parameterType.equals(Document.class)) {
                     args.add(document);
                 } else {
                     args.add(entity);
@@ -72,5 +64,8 @@ public class ClassMethodPair {
 
     }
 
+    Method getMethod() {
+        return method;
+    }
 
 }

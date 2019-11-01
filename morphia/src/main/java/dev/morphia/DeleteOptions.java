@@ -18,22 +18,28 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.FindOneAndDeleteOptions;
 
 /**
  * The options to apply when removing documents from the DBCollection
  *
- * @since 1.3
  * @mongodb.driver.manual tutorial/remove-documents/ Remove Documents
+ * @since 1.3
  */
-public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions{
+public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions {
     private boolean multi;
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
 
+    /**
+     * @return is this delete for multiple documents
+     */
     public boolean isMulti() {
         return multi;
     }
 
+    /**
+     * @param multi true if this delete should affect multiple documents
+     * @return this
+     */
     public DeleteOptions multi(final boolean multi) {
         this.multi = multi;
         return this;

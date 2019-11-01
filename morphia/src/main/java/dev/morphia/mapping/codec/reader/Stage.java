@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.StringJoiner;
 
 class Stage {
-    DocumentReader reader;
-    ReaderIterator iterator;
     private final String name;
     private final Object value;
-    Stage nextStage;
+    private DocumentReader reader;
+    private ReaderIterator iterator;
+    private Stage nextStage;
 
     Stage(final DocumentReader reader, final ReaderIterator iterator) {
         this.reader = reader;
@@ -25,6 +25,18 @@ class Stage {
         }
     }
 
+    public ReaderIterator getIterator() {
+        return iterator;
+    }
+
+    protected void nextStage(final Stage next) {
+        nextStage = next;
+    }
+
+    public Stage getNextStage() {
+        return nextStage;
+    }
+
     private void processNextStages(final Stage endStage, final ReaderIterator iterator) {
         next(endStage);
         Stage current = this;
@@ -34,12 +46,6 @@ class Stage {
         reader.nextStage(nextStage);
     }
 
-    Stage(final DocumentReader reader, final String name, final Object value) {
-        this.reader = reader;
-        this.name = name;
-        this.value = value;
-    }
-
     Stage next(final Stage next) {
         Stage old = nextStage;
         nextStage = next;
@@ -47,8 +53,19 @@ class Stage {
         return next;
     }
 
-    BsonType getCurrentBsonType() {
-        return value == null ? null : reader.getBsonType(value);
+    Stage(final DocumentReader reader, final String name, final Object value) {
+        this.reader = reader;
+        this.name = name;
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
+                   .add("currentBsonType=" + getCurrentBsonType())
+                   .add("name='" + name + "'")
+                   .add("value=" + value)
+                   .toString();
     }
 
     String name() {
@@ -76,6 +93,10 @@ class Stage {
         }
     }
 
+    BsonType getCurrentBsonType() {
+        return value == null ? null : reader.getBsonType(value);
+    }
+
     void startArray() {
         if (!(value instanceof List)) {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(List.class, getCurrentBsonType()));
@@ -93,32 +114,23 @@ class Stage {
         throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(Document.class, getCurrentBsonType()));
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", getClass().getSimpleName() + "[", "]")
-                   .add("currentBsonType=" + getCurrentBsonType())
-                   .add("name='" + name + "'")
-                   .add("value=" + value)
-                   .toString();
-    }
-
     static class InitialStage extends Stage {
 
         InitialStage(final DocumentReader reader, final DocumentIterator documentIterator) {
             super(reader, documentIterator);
-            DocumentStartStage startStage = new DocumentStartStage(reader, iterator);
-            startStage.nextStage = nextStage;
-            nextStage = startStage;
-        }
-
-        @Override
-        void startDocument() {
-            advance();
+            DocumentStartStage startStage = new DocumentStartStage(reader, getIterator());
+            startStage.nextStage(getNextStage());
+            nextStage(startStage);
         }
 
         @Override
         BsonType getCurrentBsonType() {
             return BsonType.DOCUMENT;
+        }
+
+        @Override
+        void startDocument() {
+            advance();
         }
     }
 
@@ -129,13 +141,13 @@ class Stage {
         }
 
         @Override
-        String name() {
-            return advance().name();
+        BsonType getCurrentBsonType() {
+            return BsonType.DOCUMENT;
         }
 
         @Override
-        BsonType getCurrentBsonType() {
-            return BsonType.DOCUMENT;
+        String name() {
+            return advance().name();
         }
     }
 
@@ -156,7 +168,7 @@ class Stage {
         }
 
         void end(final String message) {
-            if(iterator.hasNext()) {
+            if (getIterator().hasNext()) {
                 throw new BsonInvalidOperationException(message);
             }
             advance();
@@ -169,13 +181,13 @@ class Stage {
         }
 
         @Override
-        void endDocument() {
-            end(Sofia.notDocumentEnd());
+        BsonType getCurrentBsonType() {
+            return BsonType.END_OF_DOCUMENT;
         }
 
         @Override
-        BsonType getCurrentBsonType() {
-            return BsonType.END_OF_DOCUMENT;
+        void endDocument() {
+            end(Sofia.notDocumentEnd());
         }
 
     }

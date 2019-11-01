@@ -13,16 +13,13 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
-import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +43,7 @@ public interface Datastore {
      * Returns a new query bound to the collection (a specific {@link DBCollection})
      *
      * @param type The collection to query
-     * @param <T>        the type of the query
+     * @param <T>  the type of the query
      * @return the query
      * @deprecated use {@link #find(Class)}
      */
@@ -54,6 +51,15 @@ public interface Datastore {
     default <T> Query<T> createQuery(Class<T> type) {
         return find(type);
     }
+
+    /**
+     * Find all instances by type
+     *
+     * @param clazz the class to use for mapping the results
+     * @param <T>   the type to query
+     * @return the query
+     */
+    <T> Query<T> find(Class<T> clazz);
 
     /**
      * The builder for all update operations
@@ -67,6 +73,13 @@ public interface Datastore {
     default <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
         return new UpdateOpsImpl<>(clazz, getMapper());
     }
+
+    /**
+     * @return the Mapper used by this Datastore
+     * @morphia.internal
+     * @since 1.5
+     */
+    Mapper getMapper();
 
     /**
      * Deletes entities based on the query
@@ -92,7 +105,7 @@ public interface Datastore {
      * @deprecated use {@link Query#remove(DeleteOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> DeleteResult delete(Query<T> query, DeleteOptions options){
+    default <T> DeleteResult delete(Query<T> query, DeleteOptions options) {
         return query.remove(options);
     }
 
@@ -150,15 +163,6 @@ public interface Datastore {
     <T> void ensureIndexes(Class<T> clazz);
 
     /**
-     * Find all instances by type
-     *
-     * @param clazz the class to use for mapping the results
-     * @param <T>   the type to query
-     * @return the query
-     */
-    <T> Query<T> find(Class<T> clazz);
-
-    /**
      * Deletes the given entities based on the query (first item only).
      *
      * @param query the query to use when finding entities to delete
@@ -209,8 +213,8 @@ public interface Datastore {
      * @param <T>   the type to fetch
      * @param <V>   the type of the ID
      * @return the query to find the entities
-     * @deprecated use {@link Query} instead.
      * @morphia.inline
+     * @deprecated use {@link Query} instead.
      */
     @Deprecated
     default <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
@@ -223,11 +227,11 @@ public interface Datastore {
      * @param entity The entity to search for
      * @param <T>    the type to fetch
      * @return the matched entity.  may be null.
-     * @deprecated use {@link Query} instead
      * @morphia.inline
+     * @deprecated use {@link Query} instead
      */
     @Deprecated
-    default <T> T get(T entity){
+    default <T> T get(T entity) {
         return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
     }
 
@@ -237,12 +241,11 @@ public interface Datastore {
      * @param clazz the class to use for mapping
      * @param key   the key search with
      * @param <T>   the type to fetch
-     * @deprecated use a {@link Query} instead
      * @return the matched entity.  may be null.
+     * @deprecated use a {@link Query} instead
      */
     @Deprecated
     <T> T getByKey(Class<T> clazz, Key<T> key);
-
 
     /**
      * Find the given entities (by id), verifying they are of the correct type; shorthand for {@code find("_id in", ids)}
@@ -269,6 +272,7 @@ public interface Datastore {
 
     /**
      * @param clazz the class to use for mapping
+     * @param <T>   the type of the collection
      * @return the mapped collection for the collection
      * @morphia.internal
      */
@@ -276,8 +280,8 @@ public interface Datastore {
 
     /**
      * @return the MongoDatabase used by this DataStore
-     * @since 1.5
      * @morphia.internal
+     * @since 1.5
      */
     MongoDatabase getDatabase();
 
@@ -309,7 +313,6 @@ public interface Datastore {
      *
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
-     * @return the key of the entity
      */
     <T> void merge(T entity);
 
@@ -319,7 +322,6 @@ public interface Datastore {
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
      * @param wc     the WriteConcern to use
-     * @return the key of the entity
      */
     <T> void merge(T entity, WriteConcern wc);
 
@@ -351,6 +353,7 @@ public interface Datastore {
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
+     * @return the saved entities
      */
     <T> List<T> save(List<T> entities);
 
@@ -360,6 +363,7 @@ public interface Datastore {
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
+     * @return the saved entities
      * @deprecated use {@link #save(List, InsertManyOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
@@ -375,6 +379,7 @@ public interface Datastore {
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
+     * @return the saved entities
      * @since 2.0
      */
     <T> List<T> save(List<T> entities, InsertManyOptions options);
@@ -384,6 +389,7 @@ public interface Datastore {
      *
      * @param entity the entity to save
      * @param <T>    the type of the entity
+     * @return the saved entity
      */
     <T> T save(T entity);
 
@@ -393,6 +399,7 @@ public interface Datastore {
      * @param entity  the entity to save
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
+     * @return the saved entity
      * @deprecated use {@link #save(T, InsertOneOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
@@ -406,9 +413,9 @@ public interface Datastore {
      * @param entity  the entity to save
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
+     * @return the saved entity
      */
     <T> T save(T entity, InsertOneOptions options);
-
 
     /**
      * Updates all entities found with the operations; this is an atomic operation per entity
@@ -444,19 +451,12 @@ public interface Datastore {
     }
 
     /**
-     * @return the Mapper used by this Datastore
-     * @since 1.5
+     * @param collection   the collection to use
+     * @param clazz        the type
+     * @param writeConcern the write concern to enforce
+     * @param <T>          the collection type
+     * @return a collection reference configured with the given WriteConcern
      * @morphia.internal
-     */
-    Mapper getMapper();
-
-    /**
-     * @morphia.internal
-     * @param collection
-     * @param clazz
-     * @param writeConcern
-     * @param <T>
-     * @return
      */
     <T> MongoCollection<T> enforceWriteConcern(MongoCollection<T> collection, Class<T> clazz, WriteConcern writeConcern);
 }

@@ -161,7 +161,6 @@
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!--<module name="DesignForExtension"/>-->
-        <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier"/>
@@ -174,8 +173,6 @@
         <!-- Too many failures with this while we work on the new API -->
         <!--<module name="TodoComment"/>-->
         <module name="UpperEll"/>
-
-        <module name="FileContentsHolder"/>
 
         <!--System.out.println not allowed-->
         <module name="Regexp">
@@ -197,6 +194,6 @@
             <property name="illegalPattern" value="true"/>
             <property name="ignoreComments" value="true"/>
         </module>
+        <module name="SuppressionCommentFilter"/>
     </module>
-    <module name="SuppressionCommentFilter"/>
 </module>

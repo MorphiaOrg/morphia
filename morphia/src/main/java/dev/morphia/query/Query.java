@@ -118,6 +118,7 @@ public interface Query<T> {
     /**
      * Sorts based on a metadata (defines return order). Example:
      * {@code order(Meta.textScore())}  ({textScore : { $meta: "textScore" }})
+     *
      * @param sort the sort order to apply
      * @return this
      */
@@ -136,7 +137,7 @@ public interface Query<T> {
      * be inclusions or exclusions.  You can not include and exclude fields at the same time with the exception of the _id field.  The
      * _id field is always included unless explicitly suppressed.
      *
-     * @param field the field to project
+     * @param field   the field to project
      * @param include true to include the field in the results
      * @return this
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
@@ -151,8 +152,8 @@ public interface Query<T> {
      * @param field the field to project
      * @param slice the options for projecting an array field
      * @return this
-     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
+     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      * @deprecated use {@link FindOptions#projection()}
      */
     @Deprecated(since = "2.0", forRemoval = true)
@@ -163,8 +164,8 @@ public interface Query<T> {
      *
      * @param meta the metadata option for projecting
      * @return this
-     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      * @mongodb.driver.manual reference/operator/projection/meta/ $meta
+     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      * @deprecated use {@link FindOptions#projection()}
      */
     @Deprecated(since = "2.0", forRemoval = true)
@@ -241,38 +242,29 @@ public interface Query<T> {
 
     /**
      * Execute the query and get the results.
-     *
+     * <p>
      * *note* the return type of this will change in 2.0.
      *
      * @return a MorphiaCursor
-     * @since 1.4
      * @see #execute(FindOptions)
-     */
-    MorphiaCursor<T> execute();
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return a MorphiaCursor
      * @since 1.4
-     */
-    MorphiaCursor<T> execute(FindOptions options);
-
-    /**
-     * Execute the query and get the results.
-     *
-     * *note* the return type of this will change in 2.0.
-     *
-     * @return a MorphiaCursor
-     * @since 1.4
-     * @see #execute(FindOptions)
      * @deprecated use {@link #execute()}
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default MorphiaCursor<T> find() {
         return execute();
     }
+
+    /**
+     * Execute the query and get the results.
+     * <p>
+     * *note* the return type of this will change in 2.0.
+     *
+     * @return a MorphiaCursor
+     * @see #execute(FindOptions)
+     * @since 1.4
+     */
+    MorphiaCursor<T> execute();
 
     /**
      * Execute the query and get the results.
@@ -286,6 +278,15 @@ public interface Query<T> {
     default MorphiaCursor<T> find(FindOptions options) {
         return execute(options);
     }
+
+    /**
+     * Execute the query and get the results.
+     *
+     * @param options the options to apply to the find operation
+     * @return a MorphiaCursor
+     * @since 1.4
+     */
+    MorphiaCursor<T> execute(FindOptions options);
 
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
@@ -306,6 +307,7 @@ public interface Query<T> {
 
     /**
      * Deletes an entity from the database and returns it.
+     *
      * @return the deleted entity
      */
     default T delete() {
@@ -314,7 +316,7 @@ public interface Query<T> {
 
     /**
      * Deletes an entity from the database and returns it.
-
+     *
      * @param options the options to apply
      * @return the deleted entity
      */
@@ -338,42 +340,61 @@ public interface Query<T> {
 
     }
 
+    /**
+     * Create a modify operation based on this query
+     *
+     * @return the modify operation
+     */
     Modify<T> modify();
 
     /**
-     * @morphia.internal
+     * This is only intended for migration of legacy uses of UpdateOperations
+     *
      * @param operations the prebuilt operations
      * @return the Modify instance
+     * @morphia.internal
      * @since 2.0
      * @deprecated
      */
     @Deprecated(since = "2.0", forRemoval = true)
     Modify<T> modify(UpdateOperations<T> operations);
 
+    /**
+     * Deletes elements matching this query
+     *
+     * @return the results
+     * @see DeleteOptions
+     */
     default DeleteResult remove() {
         return remove(new DeleteOptions());
     }
 
     /**
      * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
+     *
      * @param options the options to apply
      * @return the results
      */
     DeleteResult remove(DeleteOptions options);
 
+    /**
+     * Creates an update operation based on this query
+     *
+     * @return the update operation
+     */
     Update<T> update();
 
     /**
+     * @param document the seed document
+     * @return the update operation
      * @morphia.internal
-     * @param document
-     * @return
      */
     Update<T> update(Document document);
 
     /**
-     * @morphia.internal
      * @param operations the prebuilt operations
      * @return the Updates instance
+     * @morphia.internal
      * @since 2.0
      * @deprecated
      */
@@ -381,8 +402,8 @@ public interface Query<T> {
     Update<T> update(UpdateOperations operations);
 
     /**
+     * @return the logged query
      * @morphia.internal
-     * @return
      * @since 2.0
      */
     String getLoggedQuery();

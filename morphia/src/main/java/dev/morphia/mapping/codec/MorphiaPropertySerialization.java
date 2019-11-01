@@ -10,11 +10,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Determines if a property should be serialized or not
+ */
 public class MorphiaPropertySerialization implements PropertySerialization {
     private final List<Annotation> annotations;
     private MapperOptions options;
     private int modifiers;
 
+    /**
+     * @param options the options to apply
+     * @param field   the field in question
+     */
     public MorphiaPropertySerialization(final MapperOptions options, final FieldModelBuilder<?> field) {
         this.options = options;
         annotations = field.getAnnotations();
@@ -30,8 +37,8 @@ public class MorphiaPropertySerialization implements PropertySerialization {
             return false;
         }
         if (!options.isStoreEmpties()) {
-            if (value instanceof Map && ((Map)value).isEmpty()
-                || value instanceof Collection && ((Collection)value).isEmpty()) {
+            if (value instanceof Map && ((Map) value).isEmpty()
+                || value instanceof Collection && ((Collection) value).isEmpty()) {
                 return false;
             }
         }

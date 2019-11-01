@@ -99,10 +99,16 @@ public class Shape {
             this.radius = radius;
         }
 
+        /**
+         * @return the center
+         */
         public Point getCenter() {
             return center;
         }
 
+        /**
+         * @return the radius
+         */
         public double getRadius() {
             return radius;
         }

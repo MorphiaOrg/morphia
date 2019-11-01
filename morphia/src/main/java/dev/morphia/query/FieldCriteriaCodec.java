@@ -4,18 +4,21 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Defines a codec for FieldCriterias
+ */
 public class FieldCriteriaCodec implements Codec<FieldCriteria> {
     private Mapper mapper;
 
+    /**
+     * Creates the codec
+     *
+     * @param mapper the mapper to use
+     */
     public FieldCriteriaCodec(final Mapper mapper) {
         this.mapper = mapper;
     }
@@ -27,6 +30,12 @@ public class FieldCriteriaCodec implements Codec<FieldCriteria> {
 
     @Override
     public void encode(final BsonWriter writer, final FieldCriteria criteria, final EncoderContext encoderContext) {
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
+
+/*
         boolean not = criteria.isNot();
         FilterOperator operator = criteria.getOperator();
         String field = criteria.getField();
@@ -46,7 +55,7 @@ public class FieldCriteriaCodec implements Codec<FieldCriteria> {
             }
 
         } else {
-            final Object object = null; // = obj.get(field); // operator within inner object
+            final Object object = "dummy"; // = obj.get(field); // operator within inner object
             if (!(object instanceof Map)) {
                 writer.writeStartDocument(field);
             } else {
@@ -70,6 +79,7 @@ public class FieldCriteriaCodec implements Codec<FieldCriteria> {
             writer.writeEndDocument();
 
         }
+*/
     }
 
     @Override

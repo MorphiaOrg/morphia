@@ -1,7 +1,8 @@
 package dev.morphia.mapping.lazy.proxy;
 
-import java.util.ConcurrentModificationException;
-
+/**
+ * An exception for use with references.
+ */
 public class ReferenceException extends RuntimeException {
     /**
      * Creates a ReferenceException with the given message

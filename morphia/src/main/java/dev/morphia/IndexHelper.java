@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static dev.morphia.utils.IndexType.fromValue;
-import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 
 final class IndexHelper {

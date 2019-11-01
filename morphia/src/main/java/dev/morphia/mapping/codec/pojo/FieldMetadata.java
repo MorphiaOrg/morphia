@@ -26,60 +26,92 @@ import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
 
+/**
+ * Contains various metadata about a field
+ *
+ * @param <T> the field type
+ * @morphia.internal
+ */
 public final class FieldMetadata<T> {
     private final String name;
     private final TypeData<T> typeData;
-    private final List<Annotation> annotations = new ArrayList<Annotation>();
+    private final List<Annotation> annotations = new ArrayList<>();
     private TypeParameterMap typeParameterMap;
     private List<TypeData<?>> typeParameters;
-
     private Field field;
 
-    public FieldMetadata(final Field field, final TypeData<T> typeData) {
+    /**
+     * Createss an instance for the field
+     *
+     * @param field               the field
+     * @param typeData            the type data
+     * @param typeParameterMap    the type parameter map
+     * @param parentClassTypeData the parent class type data
+     */
+    public FieldMetadata(final Field field,
+                         final TypeData<T> typeData,
+                         final TypeParameterMap typeParameterMap,
+                         final TypeData<?> parentClassTypeData) {
         this.field = field;
         this.name = field.getName();
         this.typeData = typeData;
+
+        if (typeParameterMap != null && parentClassTypeData != null) {
+            this.typeParameterMap = typeParameterMap;
+            this.typeParameters = parentClassTypeData.getTypeParameters();
+        }
     }
 
+    /**
+     * @return the field name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return any annotations defined on the field
+     */
     public List<Annotation> getAnnotations() {
         return unmodifiableList(annotations);
     }
 
+    /**
+     * Adds an annotation to the metadata
+     *
+     * @param annotation the annotation
+     * @return this
+     */
     public FieldMetadata<T> addAnnotation(final Annotation annotation) {
         annotations.add(annotation);
         return this;
     }
 
+    /**
+     * @return the field
+     */
     public Field getField() {
         return field;
     }
 
-    public FieldMetadata<T> field(final Field field) {
-        this.field = field;
-        return this;
-    }
-
+    /**
+     * @return the type data
+     */
     public TypeData<T> getTypeData() {
         return typeData;
     }
 
+    /**
+     * @return the type parameter map
+     */
     public TypeParameterMap getTypeParameterMap() {
         return typeParameterMap;
     }
 
+    /**
+     * @return the type parameters
+     */
     public List<TypeData<?>> getTypeParameters() {
         return typeParameters;
-    }
-
-    public <S> FieldMetadata<T> typeParameterInfo(final TypeParameterMap typeParameterMap, final TypeData<S> parentTypeData) {
-        if (typeParameterMap != null && parentTypeData != null) {
-            this.typeParameterMap = typeParameterMap;
-            this.typeParameters = parentTypeData.getTypeParameters();
-        }
-        return this;
     }
 }

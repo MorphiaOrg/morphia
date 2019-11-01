@@ -5,13 +5,17 @@ import com.mongodb.client.MongoClients;
 import dev.morphia.mapping.MapperOptions;
 
 
+/**
+ * Entry point for working with Morphia
+ */
 public final class Morphia {
-    private Morphia() {}
+    private Morphia() {
+    }
 
     /**
      * Creates a Datastore
      *
-     * @param dbName      the name of the database
+     * @param dbName the name of the database
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(final String dbName) {
@@ -21,7 +25,8 @@ public final class Morphia {
     /**
      * Creates a Datastore
      *
-     * @param dbName      the name of the database
+     * @param dbName  the name of the database
+     * @param options the mapping options to use.
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(final String dbName, final MapperOptions options) {
@@ -31,20 +36,23 @@ public final class Morphia {
     /**
      * It is best to use a Mongo singleton instance here.
      *
-     * @param dbName      the name of the database
+     * @param mongoClient the client to use
+     * @param dbName the name of the database
+     * @param options the mapping options to use.
      * @return a Datastore that you can use to interact with MongoDB
      */
-    public static Datastore createDatastore(final MongoClient mongoClient, final String dbName) {
-        return createDatastore(mongoClient, dbName, MapperOptions.DEFAULT);
+    public static Datastore createDatastore(final MongoClient mongoClient, final String dbName, final MapperOptions options) {
+        return new DatastoreImpl(mongoClient, options, dbName);
     }
 
     /**
      * It is best to use a Mongo singleton instance here.
      *
-     * @param dbName      the name of the database
+     * @param mongoClient the client to use
+     * @param dbName the name of the database
      * @return a Datastore that you can use to interact with MongoDB
      */
-    public static Datastore createDatastore(final MongoClient mongoClient, final String dbName, final MapperOptions options) {
-        return new DatastoreImpl(mongoClient, options, dbName);
+    public static Datastore createDatastore(final MongoClient mongoClient, final String dbName) {
+        return createDatastore(mongoClient, dbName, MapperOptions.DEFAULT);
     }
 }

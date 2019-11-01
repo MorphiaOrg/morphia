@@ -12,11 +12,13 @@ import java.util.Set;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-public
-class SetReference<T> extends CollectionReference<Set<T>> {
+public class SetReference<T> extends CollectionReference<Set<T>> {
     private Set<T> values;
 
     /**
+     * @param datastore   the datastore to use
+     * @param mappedClass the entity's mapped class
+     * @param ids         the IDs
      * @morphia.internal
      */
     public SetReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
@@ -32,6 +34,7 @@ class SetReference<T> extends CollectionReference<Set<T>> {
         return values;
     }
 
+    @Override
     public Set<T> get() {
         if (values == null) {
             values = new LinkedHashSet(find());

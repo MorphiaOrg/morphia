@@ -1,14 +1,9 @@
 package dev.morphia.mapping;
 
 
-import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Options to control mapping behavior.
@@ -16,7 +11,6 @@ import java.util.List;
 public class MapperOptions {
     public static final MapperOptions DEFAULT = MapperOptions.builder().build();
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
-    private final List<Class<? extends Annotation>> propertyHandlers;
     private final boolean ignoreFinals; //ignore final fields.
     private final boolean storeNulls;
     private final boolean storeEmpties;
@@ -34,7 +28,6 @@ public class MapperOptions {
         cacheClassLookups = builder.cacheClassLookups;
         mapSubPackages = builder.mapSubPackages;
         creator = builder.creator;
-        propertyHandlers = builder.propertyHandlers;
         classLoader = builder.classLoader;
     }
 
@@ -43,10 +36,6 @@ public class MapperOptions {
      */
     public MorphiaInstanceCreator getCreator() {
         return creator;
-    }
-
-    public List<Class<? extends Annotation>> getPropertyHandlers() {
-        return propertyHandlers;
     }
 
     /**
@@ -149,16 +138,9 @@ public class MapperOptions {
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private MorphiaInstanceCreator creator;
-        private final List<Class<? extends Annotation>> propertyHandlers = new ArrayList<>();
         private ClassLoader classLoader;
 
         private Builder() {
-            addPropertyHandler(Reference.class);
-        }
-
-        private Builder addPropertyHandler(final Class<? extends Annotation> annotation) {
-            propertyHandlers.add(annotation);
-            return this;
         }
 
         /**

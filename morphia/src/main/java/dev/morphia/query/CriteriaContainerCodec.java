@@ -18,10 +18,18 @@ import java.util.Set;
 
 import static dev.morphia.query.CriteriaJoin.AND;
 
+/**
+ * Defines the codec for CriteriaContainers
+ */
 @SuppressWarnings("unchecked")
 public class CriteriaContainerCodec implements Codec<CriteriaContainerImpl> {
     private Mapper mapper;
 
+    /**
+     * Creates the codec
+     *
+     * @param mapper the Mapper to use
+     */
     public CriteriaContainerCodec(final Mapper mapper) {
         this.mapper = mapper;
     }
@@ -76,12 +84,6 @@ public class CriteriaContainerCodec implements Codec<CriteriaContainerImpl> {
         writer.writeEndDocument();
     }
 
-    private Document getCriteriaDoc(final Criteria child, final EncoderContext encoderContext) {
-        return new DocumentWriter()
-                   .encode(mapper.getCodecRegistry(), child, encoderContext)
-                   .getRoot();
-    }
-
     private void or(final BsonWriter writer, final CriteriaContainerImpl value, final EncoderContext encoderContext) {
 
         Codec<Document> documentCodec = mapper.getCodecRegistry().get(Document.class);
@@ -91,5 +93,11 @@ public class CriteriaContainerCodec implements Codec<CriteriaContainerImpl> {
              .map(child -> getCriteriaDoc(child, encoderContext))
              .forEach(d -> documentCodec.encode(writer, d, encoderContext));
         writer.writeEndArray();
+    }
+
+    private Document getCriteriaDoc(final Criteria child, final EncoderContext encoderContext) {
+        return new DocumentWriter()
+                   .encode(mapper.getCodecRegistry(), child, encoderContext)
+                   .getRoot();
     }
 }

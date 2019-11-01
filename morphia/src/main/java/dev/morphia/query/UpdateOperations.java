@@ -3,8 +3,6 @@ package dev.morphia.query;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-
 
 /**
  * <p> A nicer interface to the update operations in monogodb. All these operations happen at the server and can cause the server and
@@ -141,7 +139,7 @@ public interface UpdateOperations<T> {
      * @return this
      * @mongodb.driver.manual reference/operator/update/push/ $push
      */
-    UpdateOperations<T> push(String field, Object value, final PushOptions options);
+    UpdateOperations<T> push(String field, Object value, PushOptions options);
 
     /**
      * Adds new values to an array field.

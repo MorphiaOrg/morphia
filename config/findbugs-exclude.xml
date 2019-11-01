@@ -14,6 +14,22 @@
         </Not>
     </Match>
     <Match>
+        <Class name="~.*Options.*"/>
+        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
+    </Match>
+    <Match>
+        <Class name="dev.morphia.mapping.Mapper"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    </Match>
+    <Match>
+        <Class name="dev.morphia.mapping.experimental.CollectionReference"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    </Match>
+    <Match>
+        <Class name="dev.morphia.mapping.experimental.MapReference"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    </Match>
+    <Match>
         <!-- Ignore test entities as these will often have unused things -->
         <Package name="~org\.mongodb\.morphia\.testmappackage.*"/>
     </Match>

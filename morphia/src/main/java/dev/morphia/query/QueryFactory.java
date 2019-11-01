@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import org.bson.Document;
 

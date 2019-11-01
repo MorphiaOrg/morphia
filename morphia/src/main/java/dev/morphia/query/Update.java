@@ -4,13 +4,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
-import dev.morphia.annotations.Version;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
-import java.util.List;
-
+/**
+ * Defines an update operation
+ *
+ * @param <T>
+ */
 public class Update<T> extends UpdateBase<T, Update<T>> {
     private Document queryObject;
     private MongoCollection<T> collection;
@@ -22,15 +23,23 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
         this.queryObject = queryObject;
     }
 
+    /**
+     * Executes the update
+     *
+     * @return the results
+     */
     public UpdateResult execute() {
         return execute(new UpdateOptions());
     }
 
+    /**
+     * Executes the update
+     *
+     * @param options the options to apply
+     * @return the results
+     */
     public UpdateResult execute(final UpdateOptions options) {
-
-        final List<MappedField> fields = mapper.getMappedClass(clazz)
-                                               .getFields(Version.class);
-        MongoCollection mongoCollection = datastore.enforceWriteConcern(collection, clazz, options.getWriteConcern());
+        MongoCollection mongoCollection = getDatastore().enforceWriteConcern(collection, getType(), options.getWriteConcern());
         Document updateOperations = toDocument();
         return options.isMulti()
                ? mongoCollection.updateMany(queryObject, updateOperations, options)

@@ -12,7 +12,6 @@ import dev.morphia.mapping.codec.references.MorphiaProxy;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.Convention;
 import org.bson.codecs.pojo.DiscriminatorLookup;
 import org.bson.codecs.pojo.PojoCodec;
@@ -26,8 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Provider for codecs for Morphia entities
+ */
 public class MorphiaCodecProvider implements CodecProvider {
-    private final Map<Class<?>, ClassModel<?>> classModels = new HashMap<>();
     private final Map<Class<?>, PojoCodec<?>> codecs = new HashMap<>();
     private final Mapper mapper;
     private final List<Convention> conventions;
@@ -35,14 +36,59 @@ public class MorphiaCodecProvider implements CodecProvider {
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
     private final Datastore datastore;
 
-    public MorphiaCodecProvider(final Mapper mapper,
-                                final Datastore datastore, final Set<String> packages, final List<Convention> conventions) {
+    /**
+     * Creates a provider
+     *
+     * @param mapper      the mapper to use
+     * @param datastore   the datastore to use
+     * @param packages    the packages to map
+     * @param conventions the conventions to apply
+     */
+    public MorphiaCodecProvider(final Mapper mapper, final Datastore datastore, final Set<String> packages,
+                                final List<Convention> conventions) {
         this.mapper = mapper;
         this.conventions = conventions;
-        this.discriminatorLookup = new DiscriminatorLookup(this.classModels, packages);
+        this.discriminatorLookup = new DiscriminatorLookup(new HashMap<>(), packages);
         propertyCodecProviders.add(new MorphiaMapPropertyCodecProvider());
         propertyCodecProviders.add(new MorphiaCollectionPropertyCodecProvider());
         this.datastore = datastore;
+    }
+
+    /**
+     * Checks if a type is mappable or not
+     *
+     * @param type the class to check
+     * @param <T>  the type
+     * @return true if the type is mappable
+     */
+    public static <T> boolean isMappable(final Class<T> type) {
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
+    }
+
+    private static <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
+        if (clazz == null) {
+            return false;
+        }
+        for (Class<? extends Annotation> annotation : annotations) {
+            if (clazz.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+
+        return hasAnnotation(clazz.getSuperclass(), annotations)
+               || Arrays.stream(clazz.getInterfaces())
+                        .map(i -> hasAnnotation(i, annotations))
+                        .reduce(false, (l, r) -> l || r);
+    }
+
+    private static <T> MorphiaModel<T> createMorphiaModel(final Datastore datastore,
+                                                          final List<Convention> conventions, final Class<T> clazz) {
+        MorphiaModelBuilder<T> builder = new MorphiaModelBuilder<>(datastore, clazz);
+        if (conventions != null) {
+            builder.conventions(conventions);
+        }
+        return builder.build();
     }
 
     @Override
@@ -59,38 +105,6 @@ public class MorphiaCodecProvider implements CodecProvider {
         }
 
         return codec;
-    }
-
-    public static <T> boolean isMappable(final Class<T> type) {
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
-    }
-
-    private static <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
-        if(clazz == null) {
-            return false;
-        }
-        for (Class<? extends Annotation> annotation : annotations) {
-            if(clazz.getAnnotation(annotation) != null) {
-                return true;
-            }
-        }
-
-        return hasAnnotation(clazz.getSuperclass(), annotations)
-               || Arrays.stream(clazz.getInterfaces())
-                             .map(i -> hasAnnotation(i, annotations))
-                             .reduce(false, (l, r) -> l || r);
-    }
-
-
-
-    private static <T> MorphiaModel<T> createMorphiaModel(final Datastore datastore,
-                                                          final List<Convention> conventions, final Class<T> clazz) {
-        MorphiaModelBuilder<T> builder = new MorphiaModelBuilder<>(datastore, datastore.getMapper().getOptions(), clazz);
-        if (conventions != null) {
-            builder.conventions(conventions);
-        }
-        return builder.build();
     }
 
 }

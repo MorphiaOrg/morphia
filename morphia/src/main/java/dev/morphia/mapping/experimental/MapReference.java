@@ -21,16 +21,19 @@ import java.util.Map.Entry;
  * @param <T>
  * @morphia.internal
  */
-public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
+public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private MappedClass valueType;
     private Map<String, Object> ids;
     private Map<Object, T> values;
     private Map<String, List<Object>> collections = new HashMap<>();
 
     /**
+     * @param datastore the datastore to use
+     * @param ids       the IDs of the entities
+     * @param valueType the MappedClass for the entity type
      * @morphia.internal
      */
-    public MapReference(final Datastore datastore, final MappedClass valueType, final Map<String, Object> ids) {
+    public MapReference(final Datastore datastore, final Map<String, Object> ids, final MappedClass valueType) {
         super(datastore);
         this.valueType = valueType;
         Map<String, Object> unwrapped = ids;
@@ -45,6 +48,28 @@ public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
 
     MapReference(final Map<Object, T> values) {
         this.values = values;
+    }
+
+    /**
+     * Decodes a document in to entities
+     *
+     * @param datastore   the datastore
+     * @param mapper      the mapper
+     * @param mappedField the MappedField
+     * @param document    the Document to decode
+     * @return the entities
+     */
+    public static MapReference decode(final Datastore datastore, final Mapper mapper, final MappedField mappedField,
+                                      final Document document) {
+        final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
+
+        final Map<String, Object> ids = (Map<String, Object>) mappedField.getDocumentValue(document);
+        MapReference reference = null;
+        if (ids != null) {
+            reference = new MapReference(datastore, ids, mapper.getMappedClass(subType));
+        }
+
+        return reference;
     }
 
     @Override
@@ -70,7 +95,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
 
     @Override
     public Map<String, Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass field) {
-        if(ids == null) {
+        if (ids == null) {
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
                   .forEach(e -> {
@@ -126,25 +151,4 @@ public class MapReference<T> extends MorphiaReference<Map<Object,T>> {
         }
     }
 
-    /**
-     * Decodes a document in to entities
-     *
-     * @param datastore   the datastore
-     * @param mapper      the mapper
-     * @param mappedField the MappedField
-     * @param document    the Document to decode
-     * @return the entities
-     */
-    public static MapReference decode(final Datastore datastore, final Mapper mapper, final MappedField mappedField,
-                                      final Document document) {
-        final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
-
-        final Map<String, Object> ids = (Map<String, Object>) mappedField.getDocumentValue(document);
-        MapReference reference = null;
-        if (ids != null) {
-            reference = new MapReference(datastore, mapper.getMappedClass(subType), ids);
-        }
-
-        return reference;
-    }
 }

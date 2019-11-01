@@ -42,19 +42,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         this.ids = ids;
     }
 
-    protected CollectionReference() {
-    }
-
-    @Override
-    public List getIds() {
-        return ids;
-    }
-
-    @Override
-    public Class<C> getType() {
-        return (Class<C>) mappedClass.getType();
-    }
-
     static void collate(final MappedClass valueType, final Map<String, List<Object>> collections,
                         final Object o) {
         final String collectionName;
@@ -73,23 +60,15 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
     static List register(final Map<String, List<Object>> collections, final String name) {
         return collections.computeIfAbsent(name, k -> new ArrayList<>());
+    }    @Override
+    public List getIds() {
+        return ids;
     }
 
-    abstract Collection<?> getValues();
-
-    /**
-     * {@inheritDoc}
-     */
-    public abstract C get();
-
-    @Override
-    final List<Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass mappedClass) {
-        if(ids == null) {
-            ids = getValues().stream()
-                             .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, mappedClass))
-                             .collect(Collectors.toList());
-        }
-        return ids;
+    protected CollectionReference() {
+    }    @Override
+    public Class<C> getType() {
+        return (Class<C>) mappedClass.getType();
     }
 
     @SuppressWarnings("unchecked")
@@ -114,7 +93,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 idMap.put(getDatastore().getMapper().getId(entity), entity);
             }
 
-            if(!ignoreMissing() && idMap.size() != collectionIds.size()) {
+            if (!ignoreMissing() && idMap.size() != collectionIds.size()) {
                 throw new ReferenceException(
                     Sofia.missingReferencedEntities(mappedClass.getType().getSimpleName()));
 
@@ -128,6 +107,25 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 }
             }
         }
+    }
+
+    abstract Collection<?> getValues();
+
+    /**
+     * Gets the referenced entities.  This may require at least one request to the server.
+     *
+     * @return the referenced entities
+     */
+    public abstract C get();
+
+    @Override
+    final List<Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass mappedClass) {
+        if (ids == null) {
+            ids = getValues().stream()
+                             .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, mappedClass))
+                             .collect(Collectors.toList());
+        }
+        return ids;
     }
 
     @Override

@@ -15,6 +15,9 @@ import org.bson.codecs.EncoderContext;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Defines the codec for Key types
+ */
 @SuppressWarnings("unchecked")
 public class KeyCodec implements Codec<Key> {
 
@@ -28,7 +31,7 @@ public class KeyCodec implements Codec<Key> {
     public void encode(final BsonWriter writer, final Key value, final EncoderContext encoderContext) {
         writer.writeStartDocument();
         String collection = value.getCollection();
-        if(collection == null) {
+        if (collection == null) {
             collection = mapper.getMappedClass(value.getType()).getCollectionName();
         }
         writer.writeString("$ref", collection);
@@ -54,7 +57,7 @@ public class KeyCodec implements Codec<Key> {
         final Iterator<MappedClass> iterator = classes.iterator();
         Object idValue = null;
         MappedClass mappedClass = null;
-        while(idValue == null && iterator.hasNext()) {
+        while (idValue == null && iterator.hasNext()) {
             mappedClass = iterator.next();
             try {
                 final MappedField idField = mappedClass.getIdField();
@@ -62,12 +65,12 @@ public class KeyCodec implements Codec<Key> {
                     final Class<?> idType = idField.getTypeData().getType();
                     idValue = mapper.getCodecRegistry().get(idType).decode(reader, decoderContext);
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 mark.reset();
             }
         }
 
-        if(idValue == null) {
+        if (idValue == null) {
             throw new MappingException("Could not map the Key to a type.");
         }
         reader.readEndDocument();

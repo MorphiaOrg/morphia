@@ -12,27 +12,34 @@ import org.bson.codecs.pojo.PropertyModel;
 
 import java.util.StringJoiner;
 
-import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
-
+/**
+ * @morphia.internal
+ */
 class OperationTarget {
     private PathTarget target;
     private Object value;
 
-    public OperationTarget(final PathTarget target, final Object value) {
+    OperationTarget(final PathTarget target, final Object value) {
         this.target = target;
         this.value = value;
     }
 
+    /**
+     * @return the PathTarget for this instance
+     */
     public PathTarget getTarget() {
         return target;
     }
 
+    /**
+     * @return the value
+     */
     public Object getValue() {
         return value;
     }
 
     public Object encode(final Mapper mapper) {
-        if(target == null) {
+        if (target == null) {
             return value;
         }
         MappedField mappedField = this.target.getTarget();

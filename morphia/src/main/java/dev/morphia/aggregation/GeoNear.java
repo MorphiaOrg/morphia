@@ -16,7 +16,6 @@
 
 package dev.morphia.aggregation;
 
-import dev.morphia.geo.GeometryShapeConverter.PointCodec;
 import dev.morphia.geo.Point;
 import dev.morphia.query.Query;
 
@@ -130,6 +129,7 @@ public final class GeoNear {
         return copy;
     }
 
+/*
     Object getNearAsDocument(final PointCodec pointCodec) {
         if (nearGeoJson != null) {
             return pointCodec.encode(nearGeoJson, null);
@@ -137,6 +137,7 @@ public final class GeoNear {
             return getNear();
         }
     }
+*/
 
     /**
      * Limits the results to the documents that match the query.

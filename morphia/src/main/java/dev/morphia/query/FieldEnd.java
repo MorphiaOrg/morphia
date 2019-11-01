@@ -210,7 +210,7 @@ public interface FieldEnd<T> {
      * @mongodb.server.release 2.4
      * @since 2.0
      */
-    T intersects(com.mongodb.client.model.geojson.Geometry geometry, final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
+    T intersects(com.mongodb.client.model.geojson.Geometry geometry, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
 
     /**
      * Checks that a field is less than the value given
@@ -442,7 +442,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
      */
-    T startsWithIgnoreCase(final String prefix);
+    T startsWithIgnoreCase(String prefix);
 
     /**
      * Checks the type of a field

@@ -10,12 +10,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ * The proxy for lazy references.
+ *
+ * @morphia.internal
+ */
 public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
-    private static final List<String> NONFETCHES = List.of(
-        "isEmpty", "size");
+    private static final List<String> NONFETCHES = List.of("isEmpty", "size");
     private MorphiaReference<?> reference;
 
-    public ReferenceProxy(final MorphiaReference<?> reference) {
+    ReferenceProxy(final MorphiaReference<?> reference) {
         this.reference = reference;
     }
 
@@ -45,25 +49,25 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
         return (T) reference.get();
     }
 
-    private void fetch(final Method method) {
-        if (!isFetched() && !NONFETCHES.contains(method.getName())) {
-            reference.get();
-        }
-    }
-
     private Object invoke(final Method method, final Object[] args) throws InvocationTargetException, IllegalAccessException {
         if (method.getDeclaringClass().isAssignableFrom(getClass())) {
             return method.invoke(this, args);
         } else {
             if (isFetched()) {
                 Object target = reference.get();
-                if(target == null) {
+                if (target == null) {
                     throw new ReferenceException(Sofia.missingReferencedEntity(reference.getType()));
                 }
                 return method.invoke(target, args);
             } else {
                 return method.invoke(reference.getIds(), args);
             }
+        }
+    }
+
+    private void fetch(final Method method) {
+        if (!isFetched() && !NONFETCHES.contains(method.getName())) {
+            reference.get();
         }
     }
 }

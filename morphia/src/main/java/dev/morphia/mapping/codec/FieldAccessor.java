@@ -11,6 +11,11 @@ import java.lang.reflect.Field;
 public class FieldAccessor implements PropertyAccessor {
     private final Field field;
 
+    /**
+     * Creates the accessor for a field
+     *
+     * @param field the field itself
+     */
     public FieldAccessor(final Field field) {
         this.field = field;
     }

@@ -25,6 +25,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
 
     /**
      * Create
+     *
      * @param cursor     the cursor to use
      * @param mapper     the Mapper to use
      * @param clazz      the original type being iterated
@@ -32,7 +33,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
      */
     public MorphiaKeyCursor(final MongoCursor<Document> cursor, final Mapper mapper, final Class<T> clazz, final String collection) {
         this.wrapped = cursor;
-        if(wrapped == null) {
+        if (wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");
         }
         this.mapper = mapper;
@@ -74,8 +75,27 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         }
     }
 
+    @Override
+    public ServerCursor getServerCursor() {
+        return wrapped.getServerCursor();
+    }
+
+    @Override
+    public ServerAddress getServerAddress() {
+        return wrapped.getServerAddress();
+    }
+
+    private Key<T> convertItem(final Document document) {
+        Object id = document.get("_id");
+        if (id instanceof Document) {
+            id = mapper.fromDocument(clazz, (Document) id);
+        }
+        return new Key<>(clazz, collection, id);
+    }
+
     /**
      * Converts this cursor to a List.  Care should be taken on large datasets as OutOfMemoryErrors are a risk.
+     *
      * @return the list of Entities
      */
     public List<Key<T>> toList() {
@@ -91,25 +111,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     }
 
     @Override
-    public ServerCursor getServerCursor() {
-        return wrapped.getServerCursor();
-    }
-
-    @Override
-    public ServerAddress getServerAddress() {
-        return wrapped.getServerAddress();
-    }
-
-    @Override
     public void remove() {
         wrapped.remove();
-    }
-
-    private Key<T> convertItem(final Document document) {
-        Object id = document.get("_id");
-        if (id instanceof Document) {
-            id = mapper.fromDocument(clazz, (Document) id);
-        }
-        return new Key<>(clazz, collection, id);
     }
 }

@@ -26,9 +26,9 @@ public class LocaleCodec implements Codec<Locale> {
     public void encode(final BsonWriter writer, final Locale value, final EncoderContext encoderContext) {
         if (value == null) {
             writer.writeNull();
+        } else {
+            writer.writeString(value.toString());
         }
-
-        writer.writeString(value.toString());
     }
 
     Locale parseLocale(final String localeString) {

@@ -32,6 +32,9 @@ import java.util.TreeSet;
 import static java.lang.String.format;
 import static java.util.Collections.sort;
 
+/**
+ * Validator for mapped types
+ */
 public class MappingValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);

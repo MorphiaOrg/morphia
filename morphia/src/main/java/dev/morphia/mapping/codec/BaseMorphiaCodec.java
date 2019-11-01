@@ -27,10 +27,24 @@ import java.util.concurrent.ConcurrentMap;
 
 import static java.lang.String.format;
 
+/**
+ * the base of the codec used by Morphia
+ *
+ * @param <T> the entity type
+ */
 public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
     private final Mapper mapper;
     private final Datastore datastore;
 
+    /**
+     * Creates a new codec
+     *
+     * @param datastore              the datastore
+     * @param propertyCodecProviders the codec provider for properties
+     * @param discriminatorLookup    the discriminator lookup
+     * @param classModel             the model of the entity
+     * @param registry               the codec registry for lookups
+     */
     public BaseMorphiaCodec(final Datastore datastore,
                             final List<PropertyCodecProvider> propertyCodecProviders,
                             final DiscriminatorLookup discriminatorLookup, final ClassModel<T> classModel, final CodecRegistry registry) {
@@ -39,26 +53,31 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         this.datastore = datastore;
     }
 
-    public BaseMorphiaCodec(final Datastore datastore,
-                            final PropertyCodecRegistry propertyCodecRegistry,
-                            final DiscriminatorLookup discriminatorLookup,
-                            final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache,
-                            final boolean specialized,
-                            final ClassModel<T> classModel, final CodecRegistry registry) {
+    /**
+     * Creates a new codec
+     *
+     * @param datastore             the datastore
+     * @param propertyCodecRegistry the codec registry for properties
+     * @param discriminatorLookup   the discriminator lookup
+     * @param codecCache            the cache of codecs
+     * @param specialized           has this codec been specialized for a particular instance/field
+     * @param classModel            the model of the entity
+     * @param registry              the codec registry for lookups
+     */
+    public BaseMorphiaCodec(final Datastore datastore, final PropertyCodecRegistry propertyCodecRegistry,
+                            final DiscriminatorLookup discriminatorLookup, final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache,
+                            final boolean specialized, final ClassModel<T> classModel, final CodecRegistry registry) {
         super(classModel, registry, propertyCodecRegistry, discriminatorLookup, codecCache, specialized);
         this.mapper = datastore.getMapper();
         this.datastore = datastore;
     }
 
+    /**
+     * @return the mapper being used
+     */
     public Mapper getMapper() {
         return mapper;
     }
-
-    @Override
-    protected <T1> boolean shouldSpecialize(final ClassModel<T1> classModel) {
-        return true;
-    }
-
 
     @Override
     protected void specialize() {
@@ -94,6 +113,7 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
             specializeCodec((Class<T>) value.getClass()).encode(writer, value, encoderContext);
         }
     }
+
     /**
      * Creates a specialized codec that honors the current useDiscriminator setting.  For use in case where the field's declared type is
      * a parent type but the actual value is a subtype.
@@ -103,18 +123,17 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
      */
     private Codec<T> specializeCodec(final Class<T> type) {
         Codec<T> codec = getRegistry().get(type);
-        if(codec instanceof BaseMorphiaCodec) {
+        if (codec instanceof BaseMorphiaCodec) {
             final BaseMorphiaCodec<T> tCodec = (BaseMorphiaCodec<T>) codec;
             final MorphiaModel<T> morphiaModel = (MorphiaModel<T>) tCodec.getClassModel();
-            final MorphiaModel<T> newModel = new MorphiaModel<>(datastore,
-                mapper.getOptions(), morphiaModel.getInstanceCreatorFactory(), getClassModel().useDiscriminator(),
-                morphiaModel.getDiscriminatorKey(), morphiaModel.getDiscriminator(), morphiaModel.getIdPropertyModelHolder(),
-                morphiaModel.getAnnotations(), morphiaModel.getFieldModels(), morphiaModel.getPropertyModels(), morphiaModel.getType(),
-                morphiaModel.getPropertyNameToTypeParameterMap()
-            );
+            final MorphiaModel<T> newModel = new MorphiaModel<>(morphiaModel, getClassModel().useDiscriminator());
             codec = tCodec.getSpecializedCodec(newModel, datastore);
         }
         return codec;
+    }
+
+    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized, final Datastore datastore) {
+        return new LazyPojoCodec<>(specialized, getRegistry(), getPropertyCodecRegistry(), getDiscriminatorLookup(), getCodecCache());
     }
 
     protected <S> void decodePropertyModel(final BsonReader reader, final DecoderContext decoderContext,
@@ -140,8 +159,9 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         }
     }
 
-    protected <S> PojoCodec<S> getSpecializedCodec(final ClassModel<S> specialized, final Datastore datastore) {
-        return new LazyPojoCodec<>(specialized, getRegistry(), getPropertyCodecRegistry(), getDiscriminatorLookup(), getCodecCache());
+    @Override
+    protected <T1> boolean shouldSpecialize(final ClassModel<T1> classModel) {
+        return true;
     }
 
 }

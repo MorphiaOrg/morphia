@@ -101,6 +101,9 @@ public class InsertManyOptions {
         return options.isOrdered();
     }
 
+    /**
+     * @return the driver version of this instance
+     */
     public com.mongodb.client.model.InsertManyOptions getOptions() {
         return options;
     }

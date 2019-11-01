@@ -15,16 +15,16 @@ import java.util.List;
 import java.util.Set;
 
 class MorphiaCollectionCodec<T> extends CollectionCodec<T> {
-    public MorphiaCollectionCodec(final TypeWithTypeParameters<T> type,
-                                  final PropertyCodecRegistry registry,
-                                  final TypeWithTypeParameters<T> valueType) {
+    MorphiaCollectionCodec(final TypeWithTypeParameters<T> type,
+                           final PropertyCodecRegistry registry,
+                           final TypeWithTypeParameters<T> valueType) {
 
         super((Class<Collection<T>>) type.getType(), registry.get(valueType));
     }
 
     @Override
     public Collection<T> decode(final BsonReader reader, final DecoderContext decoderContext) {
-        if(reader.getCurrentBsonType().equals(BsonType.ARRAY)) {
+        if (reader.getCurrentBsonType().equals(BsonType.ARRAY)) {
             return super.decode(reader, decoderContext);
         }
         final Collection<T> collection = getInstance();

@@ -7,6 +7,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * Defines a codec for Class references
+ */
 public class ClassCodec implements Codec<Class> {
     @Override
     public Class decode(final BsonReader reader, final DecoderContext decoderContext) {

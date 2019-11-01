@@ -12,11 +12,19 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * Defines a generic codec for Objects that will attempt to discover and use the correct codec.
+ */
 public class ObjectCodec implements Codec<Object> {
 
     private Mapper mapper;
     private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
 
+    /**
+     * Creates a codec
+     *
+     * @param mapper the mapper to use
+     */
     public ObjectCodec(final Mapper mapper) {
         this.mapper = mapper;
     }

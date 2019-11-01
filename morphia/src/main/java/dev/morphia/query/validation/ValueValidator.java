@@ -32,5 +32,5 @@ public abstract class ValueValidator implements Validator {
      */
     protected abstract Class<?> getRequiredValueType();
 
-    protected abstract void validate(final Class<?> type, final Object value, final List<ValidationFailure> validationFailures);
+    protected abstract void validate(Class<?> type, Object value, List<ValidationFailure> validationFailures);
 }
