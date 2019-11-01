@@ -14,23 +14,20 @@
 package dev.morphia.issue80;
 
 
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-
-/**
- * @author Scott Hernandez
- */
 public class GenericsMappingTest extends TestBase {
 
     @Test
@@ -59,6 +56,18 @@ public class GenericsMappingTest extends TestBase {
         assertNotNull(ctLoaded.id);
         assertNotNull(ctLoaded.stringThing);
         assertNotNull(ctLoaded.integerThing);
+    }
+
+    @Test
+    public void boundedTypes() {
+        getMapper().map(Status.class, EmailStatus.class);
+
+        Status<EmailItem> status = new EmailStatus();
+        status.items = List.of(new EmailItem("help@example.org"));
+
+        getDs().save(status);
+
+        assertNotNull(getDs().find(EmailStatus.class).first());
     }
 
     @Embedded
@@ -97,5 +106,34 @@ public class GenericsMappingTest extends TestBase {
     }
 
     public static class AudioElement extends Element<Long> {
+    }
+
+    @Entity
+    public abstract static class Status<T extends Item> {
+        @Id
+        private ObjectId id;
+        @Property
+        private List<T> items;
+
+    }
+
+    @Embedded
+    private interface Item {}
+
+    @Embedded
+    private static class EmailItem implements Item {
+        private String to;
+
+        public EmailItem() {
+        }
+
+        public EmailItem(final String to) {
+            this.to = to;
+        }
+    }
+
+    @Entity
+    public static class EmailStatus extends Status<EmailItem> {
+
     }
 }
