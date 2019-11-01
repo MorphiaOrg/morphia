@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 
 @Entity
-public class TestEntity implements Serializable {
+public class TestEntity {
     @Id
     private ObjectId id = new ObjectId();
 

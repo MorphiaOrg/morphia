@@ -15,22 +15,15 @@
  */
 package dev.morphia.mapping;
 
-import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Version;
-import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
-import org.bson.codecs.pojo.ClassModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
