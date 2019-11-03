@@ -136,6 +136,7 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         return new LazyPojoCodec<>(specialized, getRegistry(), getPropertyCodecRegistry(), getDiscriminatorLookup(), getCodecCache());
     }
 
+    @Override
     protected <S> void decodePropertyModel(final BsonReader reader, final DecoderContext decoderContext,
                                            final InstanceCreator<T> instanceCreator, final String name,
                                            final PropertyModel<S> propertyModel) {
@@ -150,7 +151,7 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
                 if (propertyModel.isWritable()) {
                     instanceCreator.set(value, propertyModel);
                 }
-            } catch (IllegalArgumentException | BsonInvalidOperationException | CodecConfigurationException e) {
+            } catch (IllegalArgumentException e) {
                 throw new CodecConfigurationException(format("Failed to decode '%s'. Decoding '%s' errored with: %s",
                     getClassModel().getName(), name, e.getMessage()), e);
             }

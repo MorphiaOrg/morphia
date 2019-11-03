@@ -25,6 +25,7 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.codec.BaseMorphiaCodec;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.reader.DocumentReader;
+import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonValue;
@@ -161,7 +162,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
             final BsonReaderMark mark = reader.getMark();
             try {
                 super.decodePropertyModel(reader, decoderContext, instanceCreator, name, propertyModel);
-            } catch (CodecConfigurationException e) {
+            } catch (BsonInvalidOperationException e) {
                 mark.reset();
                 final Object value = getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
                 instanceCreator.set((S) convert(value, propertyModel.getTypeData().getType()), propertyModel);
@@ -199,26 +200,6 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     @Override
     public MorphiaModel<T> getClassModel() {
         return (MorphiaModel<T>) super.getClassModel();
-    }
-
-    @Override
-    protected CodecRegistry getRegistry() {
-        return super.getRegistry();
-    }
-
-    @Override
-    protected PropertyCodecRegistry getPropertyCodecRegistry() {
-        return super.getPropertyCodecRegistry();
-    }
-
-    @Override
-    protected DiscriminatorLookup getDiscriminatorLookup() {
-        return super.getDiscriminatorLookup();
-    }
-
-    @Override
-    protected ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
-        return super.getCodecCache();
     }
 
     /**

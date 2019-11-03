@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.bson.codecs.pojo.IdPropertyModelHolder.create;
 
 /**
  * A model of metadata about a type
@@ -71,7 +72,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
     MorphiaModel(final MorphiaModelBuilder builder) {
         super(builder.getType(), builder.getPropertyNameToTypeParameterMap(), builder.getInstanceCreatorFactory(),
             builder.useDiscriminator(), builder.getDiscriminatorKey(), builder.getDiscriminator(),
-            IdPropertyModelHolder.create(builder.getType(), builder.getIdPropertyModel(), builder.getIdGenerator()),
+            create(builder.getType(), builder.getIdPropertyModel(), builder.getIdGenerator()),
             builder.getPropertyModels());
 
         this.annotations = builder.getAnnotationsMap();

@@ -166,10 +166,12 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         return new MorphiaModel<>(this);
     }
 
+/*
     @Override
     public Map<String, TypeParameterMap> getPropertyNameToTypeParameterMap() {
         return super.getPropertyNameToTypeParameterMap();
     }
+*/
 
     protected Datastore getDatastore() {
         return datastore;
