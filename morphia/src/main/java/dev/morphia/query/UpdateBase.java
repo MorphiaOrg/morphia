@@ -38,10 +38,6 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
         return type;
     }
 
-    protected Operations getOperations() {
-        return operations;
-    }
-
     protected Datastore getDatastore() {
         return datastore;
     }
