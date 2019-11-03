@@ -3,7 +3,6 @@ package dev.morphia.mapping.codec;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.MorphiaModel;
-import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;

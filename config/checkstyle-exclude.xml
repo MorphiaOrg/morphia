@@ -26,4 +26,5 @@
     <suppress checks="Javadoc*" files=".*test.*"/>
     <suppress checks="" files=".*internal.*"/>
     <suppress checks="" files="Sofia"/>
+    <suppress checks="" files=".*org.bson.*"/>
 </suppressions>

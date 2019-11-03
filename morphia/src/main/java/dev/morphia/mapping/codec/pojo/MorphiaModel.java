@@ -12,7 +12,6 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
-import org.bson.codecs.pojo.IdPropertyModelHolder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
