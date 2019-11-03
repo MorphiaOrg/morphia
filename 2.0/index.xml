@@ -89,7 +89,7 @@ Prerequisites Of course you need to run JRebel (http://zeroturnaround.com) for t
       
       <guid>/1.5/guides/lifecyclemethods/</guid>
       <description>There are various annotations which can be used to register callbacks on certain life cycle events. These include Pre/Post-Persist (Save) , and Pre/Post-Load.
- @PrePersist - Called before save, it can return a DBObject in place of an empty one. @PreSave - Called right before DBCollection.save() is called. Changes made to the entity will not be persisted; the DBObject can be passed as an argument (you can add/remove/change values) @PostPersist - Called after the save call to the database @PreLoad - Called before mapping the document from the database to the entity; the DBObject is passed as an argument (you can add/remove/change values) @PostLoad - Called after populating the entity with the values from the document  See the annotations guide for a full list of the annotations supported.</description>
+ @PrePersist - Called before save, it can return a Document in place of an empty one. @PreSave - Called right before DBCollection.save() is called. Changes made to the entity will not be persisted; the Document can be passed as an argument (you can add/remove/change values) @PostPersist - Called after the save call to the database @PreLoad - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values) @PostLoad - Called after populating the entity with the values from the document  See the annotations guide for a full list of the annotations supported.</description>
     </item>
     
     <item>

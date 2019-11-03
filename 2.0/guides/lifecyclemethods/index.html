@@ -12,17 +12,17 @@
     <title>Life Cycle Methods :: Morphia</title>
 
     
-    <link href="/1.5/css/nucleus.css?1560513533" rel="stylesheet">
-    <link href="/1.5/css/fontawesome-all.min.css?1560513533" rel="stylesheet">
-    <link href="/1.5/css/hybrid.css?1560513533" rel="stylesheet">
-    <link href="/1.5/css/featherlight.min.css?1560513533" rel="stylesheet">
-    <link href="/1.5/css/perfect-scrollbar.min.css?1560513533" rel="stylesheet">
-    <link href="/1.5/css/auto-complete.css?1560513533" rel="stylesheet">
-    <link href="/1.5/css/theme.css?1560513533" rel="stylesheet">
-    <link href="/1.5/css/hugo-theme.css?1560513533" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1572754330" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1572754330" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1572754330" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1572754330" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1572754330" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1572754330" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1572754330" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1572754330" rel="stylesheet">
     
 
-    <script src="/1.5/js/jquery-2.x.min.js?1560513533"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1572754330"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -525,11 +525,11 @@
 , and Pre/Post-Load.</p>
 
 <ul>
-<li><code>@PrePersist</code> - Called before save, it can return a <code>DBObject</code> in place of an empty one.</li>
-<li><code>@PreSave</code> - Called right before <code>DBCollection.save()</code> is called. Changes made to the entity will not be persisted; the <code>DBObject</code> can
+<li><code>@PrePersist</code> - Called before save, it can return a <code>Document</code> in place of an empty one.</li>
+<li><code>@PreSave</code> - Called right before <code>DBCollection.save()</code> is called. Changes made to the entity will not be persisted; the <code>Document</code> can
 be passed as an argument (you can add/remove/change values)</li>
 <li><code>@PostPersist</code> - Called after the save call to the database</li>
-<li><code>@PreLoad</code> - Called before mapping the document from the database to the entity; the DBObject is passed as an argument (you can
+<li><code>@PreLoad</code> - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can
 add/remove/change values)</li>
 <li><code>@PostLoad</code> - Called after populating the entity with the values from the document</li>
 </ul>
@@ -558,7 +558,7 @@ be passed back in just prior to sending the document to the database.</p>
   }
 
   @PrePersist
-  public void prePersist(final DBObject dbObj) {
+  public void prePersist(final Document document) {
     // perform operations on serialized form of the entity
   }
 }
@@ -578,8 +578,8 @@ public class BankAccount {
 
 class DigitalSigner {
   @PrePersist
-  void prePersist(final Object entity, final DBObject dbObject) {
-     dbObject.put(&quot;signature&quot;, sign(dbObject));
+  void prePersist(final Object entity, final Document document) {
+     document.put(&quot;signature&quot;, sign(document));
   }
 
 }
@@ -891,20 +891,20 @@ class DigitalSigner {
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5/js/clipboard.min.js?1560513533"></script>
-    <script src="/1.5/js/perfect-scrollbar.min.js?1560513533"></script>
-    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1560513533"></script>
-    <script src="/1.5/js/jquery.sticky.js?1560513533"></script>
-    <script src="/1.5/js/featherlight.min.js?1560513533"></script>
-    <script src="/1.5/js/html5shiv-printshiv.min.js?1560513533"></script>
-    <script src="/1.5/js/highlight.pack.js?1560513533"></script>
+    <script src="/1.5/js/clipboard.min.js?1572754330"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1572754330"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1572754330"></script>
+    <script src="/1.5/js/jquery.sticky.js?1572754330"></script>
+    <script src="/1.5/js/featherlight.min.js?1572754330"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1572754330"></script>
+    <script src="/1.5/js/highlight.pack.js?1572754330"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5/js/modernizr.custom.71422.js?1560513533"></script>
-    <script src="/1.5/js/learn.js?1560513533"></script>
-    <script src="/1.5/js/hugo-learn.js?1560513533"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1572754330"></script>
+    <script src="/1.5/js/learn.js?1572754330"></script>
+    <script src="/1.5/js/hugo-learn.js?1572754330"></script>
 
-    <link href="/1.5/mermaid/mermaid.css?1560513533" type="text/css" rel="stylesheet" />
-    <script src="/1.5/mermaid/mermaid.js?1560513533"></script>
+    <link href="/1.5/mermaid/mermaid.css?1572754330" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1572754330"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
