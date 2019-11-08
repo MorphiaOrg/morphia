@@ -13,13 +13,11 @@ import org.bson.Document;
 public class Modify<T> extends UpdateBase<T, Modify<T>> {
     private final QueryImpl<T> query;
     private final MongoCollection<T> collection;
-    private final Document queryObject;
 
     Modify(final QueryImpl<T> query) {
         super(query.getDatastore(), query.getDatastore().getMapper(), query.getEntityClass());
         this.query = query;
         this.collection = query.getCollection();
-        this.queryObject = query.getQueryDocument();
     }
 
     /**
@@ -41,7 +39,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      * @return the operation result
      */
     public T execute(final FindOneAndUpdateOptions options) {
-        return collection.findOneAndUpdate(queryObject, toDocument(), options);
+        return collection.findOneAndUpdate(query.prepareQuery(), toDocument(), options);
 
     }
 }

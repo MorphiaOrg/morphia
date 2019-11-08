@@ -207,7 +207,7 @@ class DatastoreImpl implements AdvancedDatastore {
 
         Object id = key.getId();
         if (id instanceof Document) {
-            ((Document) id).remove(mapper.getOptions().getDiscriminatorField());
+            ((Document) id).remove(mapper.getOptions().getDiscriminatorKey());
         }
         return find(clazz).filter("_id", id)
                           .first(new FindOptions().limit(1));

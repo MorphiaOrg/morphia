@@ -93,11 +93,11 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
                                .decode(documentReader, decoderContext);
                 }
                 processed = new DBRef((String) document.get("$ref"), id);
-            } else if (document.containsKey(mapper.getOptions().getDiscriminatorField())) {
+            } else if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
                 DocumentReader documentReader = new DocumentReader(document);
                 try {
                     processed = mapper.getCodecRegistry()
-                                      .get(Class.forName((String) document.get(mapper.getOptions().getDiscriminatorField())))
+                                      .get(Class.forName((String) document.get(mapper.getOptions().getDiscriminatorKey())))
                                       .decode(documentReader, decoderContext);
                 } catch (ClassNotFoundException e) {
                     throw new MappingException(e.getMessage(), e);

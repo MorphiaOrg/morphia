@@ -20,7 +20,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 
 /**
- * The options to apply when removing documents from the DBCollection
+ * The options to apply when removing documents from the MongoCollection
  *
  * @mongodb.driver.manual tutorial/remove-documents/ Remove Documents
  * @since 1.3

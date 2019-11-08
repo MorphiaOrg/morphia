@@ -24,7 +24,7 @@ import org.bson.conversions.Bson;
 import java.util.List;
 
 /**
- * The options to apply when updating documents in the DBCollection
+ * The options to apply when updating documents in the MongoCollection
  *
  * @mongodb.driver.manual tutorial/modify-documents/ Updates
  * @mongodb.driver.manual reference/operator/update/ Update Operators
@@ -54,7 +54,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
     }
 
     /**
-     * The write concern to use for the insertion.  By default the write concern configured for the DBCollection instance will be used.
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      */
@@ -63,7 +63,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
     }
 
     /**
-     * The write concern to use for the insertion.  By default the write concern configured for the DBCollection instance will be used.
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      * @deprecated use {@link #writeConcern()} instead

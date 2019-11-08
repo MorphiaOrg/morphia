@@ -34,12 +34,24 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Embedded {
     /**
-     * @return The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
+     * @return unused
+     * @deprecated
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     String value() default Mapper.IGNORED_FIELDNAME;
 
     /**
      * @return true if the discriminator for this type should be stored
      */
     boolean useDiscriminator() default true;
+
+    /**
+     * @return the discriminator key to use for this type.
+     */
+    String discriminatorKey() default Mapper.IGNORED_FIELDNAME;
+
+    /**
+     * @return the discriminator value to use for this type.
+     */
+    String discriminator() default Mapper.IGNORED_FIELDNAME;
 }

@@ -31,7 +31,7 @@ public class QueryCodec implements Codec<QueryImpl> {
 
     @Override
     public void encode(final BsonWriter writer, final QueryImpl value, final EncoderContext encoderContext) {
-        mapper.getCodecRegistry().get(Document.class).encode(writer, value.getQueryDocument(), encoderContext);
+        mapper.getCodecRegistry().get(Document.class).encode(writer, value.prepareQuery(), encoderContext);
     }
 
     @Override

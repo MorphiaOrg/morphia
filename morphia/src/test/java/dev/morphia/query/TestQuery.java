@@ -408,16 +408,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testCorrectQueryForNotWithSizeEqIssue514() {
-        Query<PhotoWithKeywords> query = getAds()
-                                             .find(PhotoWithKeywords.class)
-                                             .field("keywords").not().sizeEq(3);
-
-        assertEquals("{\"keywords\": {\"$not\": {\"$size\": 3}}}",
-            ((QueryImpl) query).getQueryDocument().toJson());
-    }
-
-    @Test
     public void testDocumentOrQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
@@ -622,7 +612,7 @@ public class TestQuery extends TestBase {
             q.or(q.criteria("keywords.keyword").equal("hernandez")));
 
         assertEquals(1, q.count());
-        assertTrue(((QueryImpl) q).getQueryDocument().containsKey("$and"));
+        assertTrue(((QueryImpl) q).prepareQuery().containsKey("$and"));
     }
 
     @Test
@@ -634,7 +624,7 @@ public class TestQuery extends TestBase {
             q.criteria("keywords.keyword").hasAnyOf(asList("scott", "hernandez")));
 
         assertEquals(1, q.count());
-        assertTrue(((QueryImpl) q).getQueryDocument().containsKey("$and"));
+        assertTrue(((QueryImpl) q).prepareQuery().containsKey("$and"));
 
     }
 
@@ -1012,7 +1002,7 @@ public class TestQuery extends TestBase {
              .not()
              .greaterThan(7);
         assertEquals(Document.parse("{score: {$not: {$gt:7}}}").toJson(),
-            ((QueryImpl) query).getQueryDocument().toJson());
+            ((QueryImpl) query).prepareQuery().toJson());
     }
 
     @Test
@@ -1049,7 +1039,7 @@ public class TestQuery extends TestBase {
                                                          .project("_id", true)
                                                          .project("first_name", true);
         Document fields = ((QueryImpl) project).getFieldsObject();
-        assertNull(fields.get(getMapper().getOptions().getDiscriminatorField()));
+        assertNull(fields.get(getMapper().getOptions().getDiscriminatorKey()));
     }
 
     @Test
@@ -1324,16 +1314,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testSizeEqQuery() {
-        final Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class)
-                                                         .field("keywords")
-                                                         .sizeEq(3);
-        Document expected = new Document("keywords", new HashMap<>(new Document("$size", 3)));
-        Document queryDocument = ((QueryImpl) query).getQueryDocument();
-        assertEquals(expected, queryDocument);
-    }
-
-    @Test
     public void testStartsWithQuery() {
         getDs().save(new Photo());
         assertNotNull(getDs().find(Photo.class).field("keywords").startsWith("amaz")
@@ -1454,29 +1434,14 @@ public class TestQuery extends TestBase {
 
         query.and(query.criteria("fieldF").equal("f"));
 
-        final Document queryObject = ((QueryImpl) query).getQueryDocument();
+        final Document queryObject = ((QueryImpl) query).prepareQuery();
 
         final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
-            + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\"}");
+            + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\"," 
+            + "\"className\": { \"$in\" : [ \"dev.morphia.query.QueryForSubtypeTest$User\"]}}");
 
         Assert.assertEquals(parse, queryObject);
-    }
-
-    @Test
-    public void testSimpleOr() {
-        Query<Rectangle> query = getDs().find(Rectangle.class).disableValidation();
-
-        query.field("version").equal("latest");
-
-        query.or(query.criteria("adds.id").equal("5cb5fa6f8d7bd65e8276cd48"),
-            query.criteria("deletes.id").equal("5cb5fa6f8d7bd65e8276cd48"),
-            query.criteria("mods.id").equal("5cb5fa6f8d7bd65e8276cd48"));
-
-
-        Document expected = parse("{\"version\": \"latest\", \"$or\": [{\"adds._id\": \"5cb5fa6f8d7bd65e8276cd48\"}, {\"deletes._id\": "
-                                  + "\"5cb5fa6f8d7bd65e8276cd48\"}, {\"mods._id\": \"5cb5fa6f8d7bd65e8276cd48\"}]}");
-        Assert.assertEquals(expected, ((QueryImpl) query).getQueryDocument());
     }
 
     @Entity(value = "user", useDiscriminator = false)

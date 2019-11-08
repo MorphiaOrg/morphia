@@ -52,9 +52,18 @@ public @interface Entity {
 
     /**
      * @return the collection name to for this entity.  Defaults to the class's simple name
-     *
      * @see Class#getSimpleName()
      */
     String value() default Mapper.IGNORED_FIELDNAME;
+
+    /**
+     * @return the discriminator key to use for this type.
+     */
+    String discriminatorKey() default Mapper.IGNORED_FIELDNAME;
+
+    /**
+     * @return the discriminator value to use for this type.
+     */
+    String discriminator() default Mapper.IGNORED_FIELDNAME;
 }
 

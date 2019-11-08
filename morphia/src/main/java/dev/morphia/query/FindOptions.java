@@ -92,8 +92,8 @@ public final class FindOptions {
         this.showRecordId = original.showRecordId;
         this.snapshot = original.snapshot;
         this.readPreference = original.readPreference;
-        //        this.writeConcern = original.writeConcern;
         this.projection = original.projection;
+        this.queryLogId = original.queryLogId;
     }
 
     /**

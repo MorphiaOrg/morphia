@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
+import dev.morphia.mapping.MorphiaConvention;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
@@ -134,7 +135,11 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         idPropertyModel = null;
 
         for (Convention convention : getConventions()) {
-            convention.apply(this);
+            if(convention instanceof MorphiaConvention) {
+                ((MorphiaConvention) convention).apply(datastore, this);
+            } else {
+                convention.apply(this);
+            }
         }
 
         if (useDiscriminator()) {

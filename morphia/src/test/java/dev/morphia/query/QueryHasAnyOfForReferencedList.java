@@ -1,13 +1,12 @@
 package dev.morphia.query;
 
-import org.bson.types.ObjectId;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.Serializable;

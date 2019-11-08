@@ -2,8 +2,12 @@ package dev.morphia.mapping;
 
 
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import org.bson.codecs.pojo.Convention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Options to control mapping behavior.
@@ -11,14 +15,18 @@ import org.slf4j.LoggerFactory;
 public class MapperOptions {
     public static final MapperOptions DEFAULT = MapperOptions.builder().build();
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
-    private final boolean ignoreFinals; //ignore final fields.
+
+    private final boolean ignoreFinals;
     private final boolean storeNulls;
     private final boolean storeEmpties;
     private final boolean useLowerCaseCollectionNames;
     private final boolean cacheClassLookups;
     private final boolean mapSubPackages;
     private final MorphiaInstanceCreator creator;
+    private final String discriminatorKey;
+    private final DiscriminatorFunction discriminator;
     private ClassLoader classLoader;
+    private List<Convention> conventions;
 
     private MapperOptions(final Builder builder) {
         ignoreFinals = builder.ignoreFinals;
@@ -29,6 +37,33 @@ public class MapperOptions {
         mapSubPackages = builder.mapSubPackages;
         creator = builder.creator;
         classLoader = builder.classLoader;
+        discriminatorKey = builder.discriminatorKey;
+        discriminator = builder.discriminator;
+        conventions = builder.conventions;
+    }
+
+    /**
+     * @return a builder to set mapping options
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * @param original an existing set of options to use as a starting point
+     * @return a builder to set mapping options
+     */
+    public static Builder builder(final MapperOptions original) {
+        Builder builder = new Builder();
+        builder.ignoreFinals = original.isIgnoreFinals();
+        builder.storeNulls = original.isStoreNulls();
+        builder.storeEmpties = original.isStoreEmpties();
+        builder.useLowerCaseCollectionNames = original.isUseLowerCaseCollectionNames();
+        builder.cacheClassLookups = original.isCacheClassLookups();
+        builder.mapSubPackages = original.isMapSubPackages();
+        builder.creator = original.getCreator();
+        builder.classLoader = original.getClassLoader();
+        return builder;
     }
 
     /**
@@ -83,15 +118,21 @@ public class MapperOptions {
     /**
      * @return the discriminator field name
      */
-    public String getDiscriminatorField() {
-        return Mapper.CLASS_NAME_FIELDNAME;
+    public String getDiscriminatorKey() {
+        return discriminatorKey;
+    }
+
+    /**
+     * @return the function to determine discriminator value
+     */
+    public DiscriminatorFunction getDiscriminator() {
+        return discriminator;
     }
 
     /**
      * Returns the classloader used, in theory, when loading the entity types.
      *
      * @return the classloader
-     *
      * @morphia.internal
      */
     public ClassLoader getClassLoader() {
@@ -101,28 +142,8 @@ public class MapperOptions {
         return classLoader;
     }
 
-    /**
-     * @return a builder to set mapping options
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
-     * @param original an existing set of options to use as a starting point
-     * @return a builder to set mapping options
-     */
-    public static Builder builder(final MapperOptions original) {
-        Builder builder = new Builder();
-        builder.ignoreFinals = original.isIgnoreFinals();
-        builder.storeNulls = original.isStoreNulls();
-        builder.storeEmpties = original.isStoreEmpties();
-        builder.useLowerCaseCollectionNames = original.isUseLowerCaseCollectionNames();
-        builder.cacheClassLookups = original.isCacheClassLookups();
-        builder.mapSubPackages = original.isMapSubPackages();
-        builder.creator = original.getCreator();
-        builder.classLoader = original.getClassLoader();
-        return builder;
+    public List<Convention> getConventions() {
+        return conventions;
     }
 
     /**
@@ -139,6 +160,9 @@ public class MapperOptions {
         private boolean mapSubPackages;
         private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
+        private String discriminatorKey = Mapper.CLASS_NAME_FIELDNAME;
+        private DiscriminatorFunction discriminator = DiscriminatorFunction.className;
+        private List<Convention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
 
         private Builder() {
         }
@@ -221,6 +245,35 @@ public class MapperOptions {
          */
         public Builder classLoader(final ClassLoader classLoader) {
             this.classLoader = classLoader;
+            return this;
+        }
+
+        /**
+         * Defines the discriminator key name
+         *
+         * @param key the key to use, e.g., "_t".  the default/legacy value is "className"
+         * @return this
+         */
+        public Builder discriminatorKey(final String key) {
+            this.discriminatorKey = key;
+            return this;
+        }
+
+        public Builder discriminator(final DiscriminatorFunction function) {
+            this.discriminator = function;
+            return this;
+        }
+
+        /**
+         * Adds a custom convention to the list to be applied to all new MorphiaModels.
+         *
+         * @param convention the new convention
+         * @return this
+         * @since 2.0
+         */
+        public Builder addConvention(final Convention convention) {
+            conventions.add(convention);
+
             return this;
         }
 

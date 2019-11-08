@@ -238,7 +238,7 @@ public class TestMapping extends TestBase {
 
         final Document document = getMapper().toDocument(cea);
         List<Document> res = (List<Document>) document.get("res");
-        assertFalse(res.get(0).containsKey(getMapper().getOptions().getDiscriminatorField()));
+        assertFalse(res.get(0).containsKey(getMapper().getOptions().getDiscriminatorKey()));
     }
 
     @Test
@@ -271,7 +271,7 @@ public class TestMapping extends TestBase {
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
         final Document document = getMapper().toDocument(cee);
-        assertFalse(((Document) document.get("cil")).containsKey(getMapper().getOptions().getDiscriminatorField()));
+        assertFalse(((Document) document.get("cil")).containsKey(getMapper().getOptions().getDiscriminatorKey()));
     }
 
     @Test
@@ -688,7 +688,7 @@ public class TestMapping extends TestBase {
         Document hotelDocument = hotels.find(new Document("_id", borg.getId())).first();
         List<Document> numbers = (List<Document>) hotelDocument.get("phoneNumbers");
         assertFalse(numbers.get(0).containsKey(
-            mapper.getOptions().getDiscriminatorField()));
+            mapper.getOptions().getDiscriminatorKey()));
 
         Hotel borgLoaded = getDs().find(Hotel.class)
                                   .filter("_id", borg.getId())

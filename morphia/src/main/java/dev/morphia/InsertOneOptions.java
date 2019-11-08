@@ -40,7 +40,7 @@ public class InsertOneOptions {
     }
 
     /**
-     * The write concern to use for the insertion.  By default the write concern configured for the DBCollection instance will be used.
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      */
@@ -49,7 +49,7 @@ public class InsertOneOptions {
     }
 
     /**
-     * The write concern to use for the insertion.  By default the write concern configured for the DBCollection instance will be used.
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      * @deprecated use {@link #writeConcern()} instead

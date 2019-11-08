@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -55,6 +56,7 @@ public class MappedClass {
     private MappedField idField;
     private MappedClass superClass;
     private List<MappedClass> interfaces = new ArrayList<>();
+    private List<MappedClass> subtypes = new ArrayList<>();
 
     /**
      * Creates a MappedClass instance
@@ -80,36 +82,8 @@ public class MappedClass {
         }
     }
 
-    /**
-     * Discovers interesting (that we care about) things about the class.
-     */
-    private void discover(final Mapper mapper) {
-        Class<?> superclass = type.getSuperclass();
-        if (superclass != null && !superclass.equals(Object.class)) {
-            superClass = mapper.getMappedClass(superclass);
-        }
-
-        for (Class<?> aClass : type.getInterfaces()) {
-            final MappedClass mappedClass = mapper.getMappedClass(aClass);
-            if (mappedClass != null) {
-                this.interfaces.add(mappedClass);
-            }
-        }
-
-        discoverFields();
-
-        update();
-    }
-
-    private void discoverFields() {
-        morphiaModel.getFieldModels().forEach(model -> {
-            final MappedField field = new MappedField(this, model);
-            if (!field.isTransient()) {
-                fields.add(field);
-            } else {
-                Sofia.logIgnoringTransientField(field.getFullName());
-            }
-        });
+    public List<MappedClass> getSubtypes() {
+        return Collections.unmodifiableList(subtypes);
     }
 
     /**
@@ -332,6 +306,46 @@ public class MappedClass {
      */
     public MorphiaModel<?> getMorphiaModel() {
         return morphiaModel;
+    }
+
+    /**
+     * Discovers interesting (that we care about) things about the class.
+     */
+    private void discover(final Mapper mapper) {
+        Class<?> superclass = type.getSuperclass();
+        if (superclass != null && !superclass.equals(Object.class)) {
+            superClass = mapper.getMappedClass(superclass);
+            if (superClass != null) {
+                superClass.addSubtype(this);
+            }
+        }
+
+        for (Class<?> aClass : type.getInterfaces()) {
+            final MappedClass mappedClass = mapper.getMappedClass(aClass);
+            if (mappedClass != null) {
+                mappedClass.addSubtype(this);
+                this.interfaces.add(mappedClass);
+            }
+        }
+
+        discoverFields();
+
+        update();
+    }
+
+    private void addSubtype(final MappedClass mappedClass) {
+        subtypes.add(mappedClass);
+    }
+
+    private void discoverFields() {
+        morphiaModel.getFieldModels().forEach(model -> {
+            final MappedField field = new MappedField(this, model);
+            if (!field.isTransient()) {
+                fields.add(field);
+            } else {
+                Sofia.logIgnoringTransientField(field.getFullName());
+            }
+        });
     }
 
     boolean isSubType(final MappedClass mc) {

@@ -1,5 +1,6 @@
 package dev.morphia.query;
 
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
@@ -13,14 +14,14 @@ import org.bson.Document;
  * @param <T>
  */
 public class Update<T> extends UpdateBase<T, Update<T>> {
-    private Document queryObject;
+    private QueryImpl query;
     private MongoCollection<T> collection;
 
     Update(final Datastore datastore, final Mapper mapper, final Class<T> clazz, final MongoCollection<T> collection,
-           final Document queryObject) {
+           final QueryImpl query) {
         super(datastore, mapper, clazz);
         this.collection = collection;
-        this.queryObject = queryObject;
+        this.query = query;
     }
 
     /**
@@ -41,6 +42,7 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
     public UpdateResult execute(final UpdateOptions options) {
         MongoCollection mongoCollection = getDatastore().enforceWriteConcern(collection, getType(), options.getWriteConcern());
         Document updateOperations = toDocument();
+        final Document queryObject = query.prepareQuery();
         return options.isMulti()
                ? mongoCollection.updateMany(queryObject, updateOperations, options)
                : mongoCollection.updateOne(queryObject, updateOperations, options);

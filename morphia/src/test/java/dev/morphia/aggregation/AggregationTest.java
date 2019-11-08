@@ -320,7 +320,7 @@ public class AggregationTest extends TestBase {
                                             .group("author", grouping("books", push("title")))
                                             .out(Author.class, options)
                                             .iterator();
-        Assert.assertEquals(2, getDs().getCollection(Author.class).count());
+        Assert.assertEquals(2, getDs().getCollection(Author.class).countDocuments());
         Author author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
         Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
@@ -329,7 +329,7 @@ public class AggregationTest extends TestBase {
                .group("author", grouping("books", push("title")))
                .out("different", Author.class);
 
-        Assert.assertEquals(2, getDatabase().getCollection("different").count());
+        Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
     }
 
     @Test

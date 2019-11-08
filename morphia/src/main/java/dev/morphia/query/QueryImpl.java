@@ -10,6 +10,7 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -21,7 +22,9 @@ import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.mongodb.CursorType.NonTailable;
@@ -61,10 +64,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         mapper = this.datastore.getMapper();
 
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
-    }
-
-    protected Datastore getDatastore() {
-        return datastore;
     }
 
     @Override
@@ -231,53 +230,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    FindOptions getOptions() {
-        if (options == null) {
-            options = new FindOptions();
-        }
-        return options;
-    }
-
-    private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
-        final Document query = getQueryDocument();
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
-        }
-
-        if (findOptions.getCursorType() != NonTailable && (findOptions.getSort() != null)) {
-            LOG.warn("Sorting on tail is not allowed.");
-        }
-
-        FindIterable<E> iterable = collection
-                                       .find(query);
-
-        Document oldProfile = null;
-        if (findOptions.isLogQuery()) {
-            oldProfile = // ds.getDatabase().runCommand(new Document("profile", 2));
-                datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
-        }
-        try {
-            return findOptions
-                       .apply(this, iterable, mapper, clazz)
-                       .iterator();
-        } finally {
-            if (findOptions.isLogQuery()) {
-                datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
-                                                       .append("slowms", oldProfile.get("slowms"))
-                                                       .append("sampleRate", oldProfile.get("sampleRate")));
-            }
-
-        }
-    }
-
-    private String getCollectionName() {
-        if (collectionName == null) {
-            collectionName = getCollection().getNamespace().getCollectionName();
-        }
-        return collectionName;
-    }
-
     @Override
     public T first(final FindOptions options) {
         try (MongoCursor<T> it = this.execute(options.copy().limit(1))) {
@@ -314,7 +266,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Update<T> update() {
-        return new Update<>(datastore, mapper, clazz, getCollection(), getQueryDocument());
+        return new Update<>(datastore, mapper, clazz, getCollection(), this);
     }
 
     @Override
@@ -354,26 +306,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    private MongoCollection<T> enforceWriteConcern(final Class<T> klass, final WriteConcern writeConcern) {
-        WriteConcern concern = writeConcern;
-        if (concern == null) {
-            concern = getWriteConcern(klass);
-        }
-        return concern == null ? getCollection() : getCollection().withWriteConcern(concern);
-    }
-
-    WriteConcern getWriteConcern(final Class clazz) {
-        WriteConcern wc = null;
-        if (clazz != null) {
-            final Entity entityAnn = mapper.getMappedClass(clazz).getEntityAnnotation();
-            if (!entityAnn.concern().isEmpty()) {
-                wc = WriteConcern.valueOf(entityAnn.concern());
-            }
-        }
-
-        return wc;
-    }
-
     /**
      * @return the collection this query targets
      * @morphia.internal
@@ -385,11 +317,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return collection;
     }
 
-    /**
-     * @return the query object
-     * @morphia.internal
-     */
-    public Document getQueryDocument() {
+    private Document getQueryDocument() {
         final Document obj = new Document();
 
         if (baseQuery != null) {
@@ -414,14 +342,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public String getFieldName() {
         throw new UnsupportedOperationException("this method is unused on a Query");
-    }
-
-    /**
-     * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and ==
-     * are EQUAL.
-     */
-    private FilterOperator translate(final String operator) {
-        return FilterOperator.fromString(operator);
     }
 
     @Override
@@ -545,6 +465,109 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         Projection projection = getOptions().getProjection();
 
         return projection != null ? projection.map(mapper, clazz) : null;
+    }
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
+
+    private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
+        final Document query = prepareQuery();
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
+        }
+
+        if (findOptions.getCursorType() != NonTailable && (findOptions.getSort() != null)) {
+            LOG.warn("Sorting on tail is not allowed.");
+        }
+
+        FindIterable<E> iterable = collection
+                                       .find(query);
+
+        Document oldProfile = null;
+        if (findOptions.isLogQuery()) {
+            oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
+        }
+        try {
+            return findOptions
+                       .apply(this, iterable, mapper, clazz)
+                       .iterator();
+        } finally {
+            if (findOptions.isLogQuery()) {
+                datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
+                                                       .append("slowms", oldProfile.get("slowms"))
+                                                       .append("sampleRate", oldProfile.get("sampleRate")));
+            }
+
+        }
+    }
+
+    /**
+     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     * @return th query
+     * @morphia.internal
+     */
+    public Document prepareQuery() {
+        final Document query = getQueryDocument();
+        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
+        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(mappedClass.getMorphiaModel().getDiscriminatorKey())) {
+
+            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(mappedClass.getMorphiaModel().getDiscriminator());
+            for (final MappedClass subtype : subtypes) {
+                values.add(subtype.getMorphiaModel().getDiscriminator());
+            }
+            query.put(mappedClass.getMorphiaModel().getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+        return query;
+    }
+
+    private String getCollectionName() {
+        if (collectionName == null) {
+            collectionName = getCollection().getNamespace().getCollectionName();
+        }
+        return collectionName;
+    }
+
+    private MongoCollection<T> enforceWriteConcern(final Class<T> klass, final WriteConcern writeConcern) {
+        WriteConcern concern = writeConcern;
+        if (concern == null) {
+            concern = getWriteConcern(klass);
+        }
+        return concern == null ? getCollection() : getCollection().withWriteConcern(concern);
+    }
+
+    /**
+     * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and ==
+     * are EQUAL.
+     */
+    private FilterOperator translate(final String operator) {
+        return FilterOperator.fromString(operator);
+    }
+
+    FindOptions getOptions() {
+        if (options == null) {
+            options = new FindOptions();
+        }
+        return options;
+    }
+
+    WriteConcern getWriteConcern(final Class clazz) {
+        WriteConcern wc = null;
+        if (clazz != null) {
+            final Entity entityAnn = mapper.getMappedClass(clazz).getEntityAnnotation();
+            if (!entityAnn.concern().isEmpty()) {
+                wc = WriteConcern.valueOf(entityAnn.concern());
+            }
+        }
+
+        return wc;
     }
 
     class QueryDocument implements Bson {

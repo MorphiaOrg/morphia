@@ -70,7 +70,7 @@ public class Mapper {
 
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
-    private final MapperOptions opts;
+    private final MapperOptions options;
     private CodecRegistry codecRegistry;
     // TODO:  unify with DefaultCreator if it survives the Codec switchover
     private Map<String, Class> classNameCache = new ConcurrentHashMap<>();
@@ -80,18 +80,18 @@ public class Mapper {
      *
      * @param datastore     the datastore to use
      * @param codecRegistry the codec registry
-     * @param opts          the options to use
+     * @param options       the options to use
      * @morphia.internal
      */
-    public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions opts) {
-        this.opts = opts;
+    public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions options) {
+        this.options = options;
         this.codecRegistry = fromRegistries(
             new PrimitiveCodecProvider(codecRegistry),
             codecRegistry,
             fromProviders(
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
-                new MorphiaCodecProvider(this, datastore, Set.of(""), List.of(new MorphiaConvention(datastore, opts)))));
+                new MorphiaCodecProvider(this, datastore, Set.of(""), List.of(new MorphiaDefaultsConvention()))));
     }
 
     /**
@@ -145,7 +145,7 @@ public class Mapper {
      * @return the options used by this Mapper
      */
     public MapperOptions getOptions() {
-        return opts;
+        return options;
     }
 
     /**
@@ -255,16 +255,10 @@ public class Mapper {
      * @param mc the parent type
      * @return the list of subtypes
      * @since 1.3
+     * @morphia.internal
      */
     public List<MappedClass> getSubTypes(final MappedClass mc) {
-        List<MappedClass> subtypes = new ArrayList<>();
-        for (MappedClass mappedClass : getMappedClasses()) {
-            if (mappedClass.isSubType(mc)) {
-                subtypes.add(mappedClass);
-            }
-        }
-
-        return subtypes;
+        return mc.getSubtypes();
     }
 
     /**
@@ -289,7 +283,7 @@ public class Mapper {
         }
 
         Class<T> aClass = type;
-        if (document.containsKey(opts.getDiscriminatorField())) {
+        if (document.containsKey(options.getDiscriminatorKey())) {
             aClass = getClass(document);
         }
 
@@ -313,8 +307,8 @@ public class Mapper {
     public <T> Class<T> getClass(final Document document) {
         // see if there is a className value
         Class c = null;
-        if (document.containsKey(getOptions().getDiscriminatorField())) {
-            final String className = (String) document.get(getOptions().getDiscriminatorField());
+        if (document.containsKey(getOptions().getDiscriminatorKey())) {
+            final String className = (String) document.get(getOptions().getDiscriminatorKey());
             // try to Class.forName(className) as defined in the document first,
             // otherwise return the entityClass
             try {
@@ -553,35 +547,6 @@ public class Mapper {
                           .build());
 
         return writer.getRoot();
-
-/*
-        Document document = new Document();
-
-        if (mc.getEntityAnnotation() == null || mc.getEntityAnnotation().useDiscriminator()) {
-            document.put(opts.getDiscriminatorField(), entity.getClass().getName());
-        }
-
-        if (lifecycle) {
-            mc.callLifecycleMethods(PrePersist.class, entity, document, this);
-        }
-
-        for (final MappedField mf : mc.getFields()) {
-            try {
-                writeMappedField(document, mf, entity, involvedObjects);
-            } catch (Exception e) {
-                throw new MappingException("Error mapping field:" + mf, e);
-            }
-        }
-        if (involvedObjects != null) {
-            involvedObjects.put(entity, document);
-        }
-
-        if (lifecycle) {
-            mc.callLifecycleMethods(PreSave.class, entity, document, this);
-        }
-
-        return document;
-*/
     }
 
     /**

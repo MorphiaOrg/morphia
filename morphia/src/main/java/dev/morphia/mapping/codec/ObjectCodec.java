@@ -35,7 +35,7 @@ public class ObjectCodec implements Codec<Object> {
         Class<?> clazz;
         if (bsonType == BsonType.DOCUMENT) {
             clazz = Document.class;
-            String discriminatorField = mapper.getOptions().getDiscriminatorField();
+            String discriminatorField = mapper.getOptions().getDiscriminatorKey();
 
             BsonReaderMark mark = reader.getMark();
             reader.readStartDocument();

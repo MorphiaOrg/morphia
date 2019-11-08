@@ -98,7 +98,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         putIfNull(geo, "num", geoNear.getMaxDocuments());
         putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
         if (geoNear.getQuery() != null) {
-            geo.put("query", ((QueryImpl) geoNear.getQuery()).getQueryDocument());
+            geo.put("query", ((QueryImpl) geoNear.getQuery()).prepareQuery());
         }
         putIfNull(geo, "spherical", geoNear.getSpherical());
         putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
@@ -161,7 +161,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline match(final Query query) {
-        stages.add(new Document("$match", ((QueryImpl) query).getQueryDocument()));
+        stages.add(new Document("$match", ((QueryImpl) query).prepareQuery()));
         return this;
     }
 

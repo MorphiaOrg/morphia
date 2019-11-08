@@ -84,7 +84,7 @@ public class TestSerializedFormat extends TestBase {
                                             .field("referenceMap.foo").equal(new ReferenceType(1, "chance"))
                                             .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
 
-        Document document = ((QueryImpl) query).getQueryDocument();
+        Document document = ((QueryImpl) query).prepareQuery();
         final Document parse = Document.parse(readFully("/QueryStructure.json"));
         Assert.assertEquals(parse, document);
     }
