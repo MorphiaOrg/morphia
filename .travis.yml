@@ -17,7 +17,7 @@ env:
 #  - MONGODB=4.2 DRIVER=3.7.1
 #  - MONGODB=4.2 DRIVER=3.6.4
 #  - MONGODB=4.2 DRIVER=3.4.3
-  - MONGODB=4.0 DRIVER=3.11.1
+#  - MONGODB=4.0 DRIVER=3.11.1
 #  - MONGODB=4.0 DRIVER=3.10.1
 #  - MONGODB=4.0 DRIVER=3.9.1
 #  - MONGODB=4.0 DRIVER=3.8.2
@@ -60,5 +60,6 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y mongodb-org
   - sudo service mongod start
+  - dpkg --get-selections | grep mongo
 
 script: mvn test
