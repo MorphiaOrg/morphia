@@ -35,8 +35,6 @@ public abstract class TestBase {
         this.mongoClient = mongoClient;
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
-        System.out.println("********************* serverDescriptions = "
-                           + mongoClient.getClusterDescription().getServerDescriptions());
     }
 
     protected static String getMongoURI() {
@@ -74,6 +72,8 @@ public abstract class TestBase {
 
     @After
     public void tearDown() {
+        System.out.println("********************* serverDescriptions = "
+                           + mongoClient.getClusterDescription().getServerDescriptions());
         cleanup();
         getMongoClient().close();
     }
