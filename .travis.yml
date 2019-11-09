@@ -54,7 +54,7 @@ env:
 #  - MONGODB=3.0 DRIVER=3.4.3
 
 
-before_script:
+before_install:
   - wget -qO - https://www.mongodb.org/static/pgp/server-${MONGODB}.asc | sudo apt-key add -
   - echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/${MONGODB} multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-${MONGODB}.list
   - sudo apt-get update
