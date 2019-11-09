@@ -1439,7 +1439,7 @@ public class TestQuery extends TestBase {
         final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
             + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\"," 
-            + "\"className\": { \"$in\" : [ \"dev.morphia.query.QueryForSubtypeTest$User\"]}}");
+            + "\"_t\": { \"$in\" : [ \"User\"]}}");
 
         Assert.assertEquals(parse, queryObject);
     }

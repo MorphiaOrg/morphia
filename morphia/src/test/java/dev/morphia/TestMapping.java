@@ -105,13 +105,6 @@ public class TestMapping extends TestBase {
         }
 
         try {
-            getMapper().map(RenamedEmbedded.class);
-            fail("Validation: @Embedded(\"name\") not caught on Class");
-        } catch (MappingException e) {
-            // good
-        }
-
-        try {
             getMapper().map(MissingIdStill.class);
             fail("Validation: Missing @Id field not not caught");
         } catch (MappingException e) {
@@ -781,7 +774,7 @@ public class TestMapping extends TestBase {
         private ObjectId id;
     }
 
-    @Embedded(value = "no-id", useDiscriminator = false)
+    @Embedded(useDiscriminator = false)
     private static class RenamedEmbedded {
         private String name;
     }

@@ -50,6 +50,15 @@ public class MapperOptions {
     }
 
     /**
+     * @return a builder to set mapping options
+     */
+    public static Builder legacy() {
+        return new Builder()
+            .discriminatorKey(Mapper.CLASS_NAME_FIELDNAME)
+            .discriminator(DiscriminatorFunction.className);
+    }
+
+    /**
      * @param original an existing set of options to use as a starting point
      * @return a builder to set mapping options
      */
@@ -160,8 +169,8 @@ public class MapperOptions {
         private boolean mapSubPackages;
         private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
-        private String discriminatorKey = Mapper.CLASS_NAME_FIELDNAME;
-        private DiscriminatorFunction discriminator = DiscriminatorFunction.className;
+        private String discriminatorKey = "_t";
+        private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName;
         private List<Convention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
 
         private Builder() {

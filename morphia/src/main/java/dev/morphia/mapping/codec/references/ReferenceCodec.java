@@ -32,6 +32,7 @@ import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Field;
@@ -42,8 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
 
 /**
  * @morphia.internal
@@ -87,20 +86,18 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             if (document.containsKey("$ref")) {
                 Object id = document.get("$id");
                 if (id instanceof Document) {
-                    DocumentReader documentReader = new DocumentReader((Document) id);
                     id = mapper.getCodecRegistry()
                                .get(Object.class)
-                               .decode(documentReader, decoderContext);
+                               .decode(new DocumentReader((Document) id), decoderContext);
                 }
                 processed = new DBRef((String) document.get("$ref"), id);
             } else if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
-                DocumentReader documentReader = new DocumentReader(document);
                 try {
                     processed = mapper.getCodecRegistry()
-                                      .get(Class.forName((String) document.get(mapper.getOptions().getDiscriminatorKey())))
-                                      .decode(documentReader, decoderContext);
-                } catch (ClassNotFoundException e) {
-                    throw new MappingException(e.getMessage(), e);
+                                      .get(mapper.getClass(document))
+                                      .decode(new DocumentReader(document), decoderContext);
+                } catch (CodecConfigurationException e) {
+                    throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
                 }
 
             }
@@ -126,7 +123,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         } else {
             idValue = mapper.getId(value);
             if (idValue == null) {
-                return !isMappable(value.getClass()) ? value : null;
+                return !mapper.isMappable(value.getClass()) ? value : null;
             }
             collection = datastore.getCollection(value.getClass());
         }
@@ -156,9 +153,13 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
 
     @Override
     public Object encode(final Object value) {
-        DocumentWriter writer = new DocumentWriter();
-        encode(writer, value, EncoderContext.builder().build());
-        return writer.getRoot();
+        try {
+            DocumentWriter writer = new DocumentWriter();
+            encode(writer, value, EncoderContext.builder().build());
+            return writer.getRoot();
+        } catch (ReferenceException e) {
+            return value;
+        }
     }
 
     @Override

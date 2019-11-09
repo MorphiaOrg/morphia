@@ -11,6 +11,7 @@ import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecConfigurationException;
 
 /**
  * Defines a generic codec for Objects that will attempt to discover and use the correct codec.
@@ -42,8 +43,8 @@ public class ObjectCodec implements Codec<Object> {
             while (clazz.equals(Document.class) && reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 if (reader.readName().equals(discriminatorField)) {
                     try {
-                        clazz = Class.forName(reader.readString());
-                    } catch (ClassNotFoundException e) {
+                        clazz = mapper.getClass(reader.readString());
+                    } catch (CodecConfigurationException e) {
                         throw new MappingException(e.getMessage(), e);
                     }
                 } else {

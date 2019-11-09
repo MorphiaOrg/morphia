@@ -7,13 +7,15 @@ import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecProvider;
-import dev.morphia.mapping.codec.pojo.MorphiaCodec;
+import dev.morphia.mapping.codec.pojo.MorphiaModel;
+import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
@@ -25,11 +27,15 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.DiscriminatorLookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,8 +45,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-import static dev.morphia.mapping.codec.MorphiaCodecProvider.isMappable;
-import static java.lang.Thread.currentThread;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -70,10 +74,10 @@ public class Mapper {
 
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
+    private Datastore datastore;
     private final MapperOptions options;
     private CodecRegistry codecRegistry;
-    // TODO:  unify with DefaultCreator if it survives the Codec switchover
-    private Map<String, Class> classNameCache = new ConcurrentHashMap<>();
+    private final DiscriminatorLookup discriminatorLookup = new DiscriminatorLookup(Collections.emptyMap(), Collections.emptySet());
 
     /**
      * Creates a Mapper with the given options.
@@ -84,6 +88,7 @@ public class Mapper {
      * @morphia.internal
      */
     public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions options) {
+        this.datastore = datastore;
         this.options = options;
         this.codecRegistry = fromRegistries(
             new PrimitiveCodecProvider(codecRegistry),
@@ -91,7 +96,45 @@ public class Mapper {
             fromProviders(
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
-                new MorphiaCodecProvider(this, datastore, Set.of(""), List.of(new MorphiaDefaultsConvention()))));
+                new MorphiaCodecProvider(this, datastore)));
+    }
+
+    /**
+     * Checks if a type is mappable or not
+     *
+     * @param type the class to check
+     * @param <T>  the type
+     * @return true if the type is mappable
+     */
+    public <T> boolean isMappable(final Class<T> type) {
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
+    }
+
+    public DiscriminatorLookup getDiscriminatorLookup() {
+        return discriminatorLookup;
+    }
+
+    private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
+        if (clazz == null) {
+            return false;
+        }
+        for (Class<? extends Annotation> annotation : annotations) {
+            if (clazz.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+
+        return hasAnnotation(clazz.getSuperclass(), annotations)
+               || Arrays.stream(clazz.getInterfaces())
+                        .map(i -> hasAnnotation(i, annotations))
+                        .reduce(false, (l, r) -> l || r);
+    }
+
+    public <T> MorphiaModel<T> createMorphiaModel(final Class<T> clazz) {
+        MorphiaModelBuilder<T> builder = new MorphiaModelBuilder<>(this.datastore, clazz);
+        builder.conventions(options.getConventions());
+        return builder.build();
     }
 
     /**
@@ -194,16 +237,14 @@ public class Mapper {
     /**
      * Creates a MappedClass and validates it.
      *
-     * @param c the Class to map
+     * @param type the Class to map
      * @return the MappedClass for the given Class
      */
-    private MappedClass addMappedClass(final Class c) {
-        MappedClass mappedClass = mappedClasses.get(c);
-        if (mappedClass == null) {
-            final Codec codec1 = codecRegistry.get(c);
-            if (codec1 instanceof MorphiaCodec) {
-                return addMappedClass(((MorphiaCodec) codec1).getMappedClass());
-            }
+    private MappedClass addMappedClass(final Class type) {
+        MappedClass mappedClass = mappedClasses.get(type);
+        if (mappedClass == null && isMappable(type)) {
+            MorphiaModel morphiaModel = createMorphiaModel(type);
+            mappedClass = addMappedClass(new MappedClass(morphiaModel, this));
         }
         return mappedClass;
     }
@@ -214,6 +255,7 @@ public class Mapper {
             mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                                      .add(mc);
         }
+        discriminatorLookup.addClassModel(mc.getMorphiaModel());
 
         if (!mc.isInterface()) {
             mc.validate(this);
@@ -307,25 +349,18 @@ public class Mapper {
     public <T> Class<T> getClass(final Document document) {
         // see if there is a className value
         Class c = null;
-        if (document.containsKey(getOptions().getDiscriminatorKey())) {
-            final String className = (String) document.get(getOptions().getDiscriminatorKey());
-            // try to Class.forName(className) as defined in the document first,
-            // otherwise return the entityClass
-            try {
-                if (getOptions().isCacheClassLookups()) {
-                    c = classNameCache.get(className);
-                    if (c == null) {
-                        c = Class.forName(className, true, currentThread().getContextClassLoader());
-                        classNameCache.put(className, c);
-                    }
-                } else {
-                    c = Class.forName(className, true, currentThread().getContextClassLoader());
-                }
-            } catch (ClassNotFoundException e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Class not found defined in document: ", e);
-                }
-            }
+        String discriminator = (String) document.get(getOptions().getDiscriminatorKey());
+        if (discriminator != null) {
+            c = getClass(discriminator);
+        }
+        return c;
+    }
+
+    public Class getClass(final String discriminator) {
+        final Class c;
+        c = discriminatorLookup.lookup(discriminator);
+        if (c == null) {
+            throw new MappingException(Sofia.cannotFindTypeInDocument());
         }
         return c;
     }

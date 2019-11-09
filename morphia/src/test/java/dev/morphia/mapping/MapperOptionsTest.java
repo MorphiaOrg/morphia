@@ -157,7 +157,7 @@ public class MapperOptionsTest extends TestBase {
         Assert.assertEquals("b", mappedClass.getMorphiaModel().getDiscriminator());
 
         mappedClass = datastore.getMapper().getMappedClass(HasMap.class);
-        Assert.assertEquals("className", mappedClass.getMorphiaModel().getDiscriminatorKey());
+        Assert.assertEquals("_t", mappedClass.getMorphiaModel().getDiscriminatorKey());
         Assert.assertEquals(HasMap.class.getSimpleName().toLowerCase(), mappedClass.getMorphiaModel().getDiscriminator());
     }
 

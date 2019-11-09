@@ -109,11 +109,6 @@ public class MappedField {
             if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
                 return mr.value();
             }
-        } else if (hasAnnotation(Embedded.class)) {
-            final Embedded me = (Embedded) annotations.get(Embedded.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
         } else if (hasAnnotation(Version.class)) {
             final Version me = (Version) annotations.get(Version.class);
             if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {

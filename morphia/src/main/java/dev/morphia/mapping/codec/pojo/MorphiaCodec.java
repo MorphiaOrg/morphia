@@ -62,18 +62,16 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
      * Creates the codec
      *
      * @param datastore              the datastore to use
-     * @param classModel             the model of the type
      * @param registry               the codec registry
      * @param propertyCodecProviders the property codec provider
      * @param discriminatorLookup    the discriminator lookup
      * @param mappedClass            the mapped class
      */
     public MorphiaCodec(final Datastore datastore,
-                        final ClassModel<T> classModel,
                         final CodecRegistry registry,
                         final List<PropertyCodecProvider> propertyCodecProviders,
                         final DiscriminatorLookup discriminatorLookup, final MappedClass mappedClass) {
-        super(datastore, propertyCodecProviders, discriminatorLookup, classModel, registry);
+        super(datastore, propertyCodecProviders, discriminatorLookup, (ClassModel<T>) mappedClass.getMorphiaModel(), registry);
         this.mappedClass = mappedClass;
         idField = mappedClass.getIdField();
     }

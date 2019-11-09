@@ -68,7 +68,6 @@ public class TestEmptyEntityMapping extends TestBase {
     }
 
 
-    @Entity
     public enum Rights {
         ADMIN
     }

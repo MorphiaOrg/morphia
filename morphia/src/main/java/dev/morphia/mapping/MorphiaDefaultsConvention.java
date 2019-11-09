@@ -59,11 +59,6 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
             if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
                 return mr.value();
             }
-        } else if (field.hasAnnotation(Embedded.class)) {
-            final Embedded me = field.getAnnotation(Embedded.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
         } else if (field.hasAnnotation(Version.class)) {
             final Version me = field.getAnnotation(Version.class);
             if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
