@@ -55,7 +55,7 @@ env:
 
 
 before_script:
-  - wget -qO - https://www.mongodb.org/static/pgp/server${MONGODB}.asc | sudo apt-key add -
+  - wget -qO - https://www.mongodb.org/static/pgp/server-${MONGODB}.asc | sudo apt-key add -
   - echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/${MONGODB} multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-${MONGODB}.list
   - sudo apt-get update
   - sudo apt-get install -y mongodb-org
