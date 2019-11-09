@@ -293,14 +293,21 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      */
     public String getLoggedQuery() {
         if (previousOptions != null && previousOptions.isLogQuery()) {
+            String json = "{}";
             Document first = datastore.getDatabase()
                                       .getCollection("system.profile")
                                       .find(new Document("command.comment", "logged query: " + previousOptions.getQueryLogId()),
                                           Document.class)
                                       .projection(new Document("command.filter", 1))
                                       .first();
-            Document command = (Document) first.get("command");
-            return ((Document) command.get("filter")).toJson(mapper.getCodecRegistry().get(Document.class));
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
+                }
+            }
+            return json;
         } else {
             throw new IllegalStateException(Sofia.queryNotLogged());
         }
@@ -315,18 +322,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             collection = datastore.getCollection(clazz);
         }
         return collection;
-    }
-
-    private Document getQueryDocument() {
-        final Document obj = new Document();
-
-        if (baseQuery != null) {
-            obj.putAll(baseQuery);
-        }
-
-        obj.putAll(toDocument());
-
-        return obj;
     }
 
     @Override
@@ -467,8 +462,46 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return projection != null ? projection.map(mapper, clazz) : null;
     }
 
+    /**
+     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     *
+     * @return th query
+     * @morphia.internal
+     */
+    public Document prepareQuery() {
+        final Document query = getQueryDocument();
+        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
+        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(mappedClass.getMorphiaModel().getDiscriminatorKey())) {
+
+            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(mappedClass.getMorphiaModel().getDiscriminator());
+            for (final MappedClass subtype : subtypes) {
+                values.add(subtype.getMorphiaModel().getDiscriminator());
+            }
+            query.put(mappedClass.getMorphiaModel().getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+        return query;
+    }
+
     protected Datastore getDatastore() {
         return datastore;
+    }
+
+    private Document getQueryDocument() {
+        final Document obj = new Document();
+
+        if (baseQuery != null) {
+            obj.putAll(baseQuery);
+        }
+
+        obj.putAll(toDocument());
+
+        return obj;
     }
 
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
@@ -501,31 +534,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             }
 
         }
-    }
-
-    /**
-     * Converts the query to a Document and updates for any discriminator values as my be necessary
-     * @return th query
-     * @morphia.internal
-     */
-    public Document prepareQuery() {
-        final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
-        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getMorphiaModel().getDiscriminatorKey())) {
-
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
-            List<String> values = new ArrayList<>();
-            values.add(mappedClass.getMorphiaModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
-                values.add(subtype.getMorphiaModel().getDiscriminator());
-            }
-            query.put(mappedClass.getMorphiaModel().getDiscriminatorKey(),
-                new Document("$in", values));
-        }
-        return query;
     }
 
     private String getCollectionName() {
@@ -589,4 +597,3 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
     }
 }
-
