@@ -74,10 +74,10 @@ public class Mapper {
 
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
-    private Datastore datastore;
     private final MapperOptions options;
-    private CodecRegistry codecRegistry;
     private final DiscriminatorLookup discriminatorLookup = new DiscriminatorLookup(Collections.emptyMap(), Collections.emptySet());
+    private Datastore datastore;
+    private CodecRegistry codecRegistry;
 
     /**
      * Creates a Mapper with the given options.
@@ -111,26 +111,19 @@ public class Mapper {
         return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
     }
 
+    /**
+     * @return the DiscriminatorLookup in use
+     */
     public DiscriminatorLookup getDiscriminatorLookup() {
         return discriminatorLookup;
     }
 
-    private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
-        if (clazz == null) {
-            return false;
-        }
-        for (Class<? extends Annotation> annotation : annotations) {
-            if (clazz.getAnnotation(annotation) != null) {
-                return true;
-            }
-        }
-
-        return hasAnnotation(clazz.getSuperclass(), annotations)
-               || Arrays.stream(clazz.getInterfaces())
-                        .map(i -> hasAnnotation(i, annotations))
-                        .reduce(false, (l, r) -> l || r);
-    }
-
+    /**
+     * @param clazz the model type
+     * @param <T>   type model type
+     * @return the new model
+     * @morphia.internal
+     */
     public <T> MorphiaModel<T> createMorphiaModel(final Class<T> clazz) {
         MorphiaModelBuilder<T> builder = new MorphiaModelBuilder<>(this.datastore, clazz);
         builder.conventions(options.getConventions());
@@ -162,33 +155,22 @@ public class Mapper {
         }
     }
 
-    private Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
-        throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
-
-        ClassGraph classGraph = new ClassGraph()
-                                    .addClassLoader(loader)
-                                    .enableAllInfo();
-        if (mapSubPackages) {
-            classGraph.whitelistPackages(packageName);
-            classGraph.whitelistPackages(packageName + ".*");
-        } else {
-            classGraph.whitelistPackagesNonRecursive(packageName);
-        }
-
-        try (ScanResult scanResult = classGraph.scan()) {
-            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
-                classes.add(Class.forName(classInfo.getName(), true, loader));
-            }
-        }
-        return classes;
-    }
-
     /**
      * @return the options used by this Mapper
      */
     public MapperOptions getOptions() {
         return options;
+    }
+
+    /**
+     * Sets the options this Mapper should use
+     *
+     * @param options the options to use
+     * @deprecated no longer used
+     */
+    @SuppressWarnings("unused")
+    @Deprecated(since = "2.0", forRemoval = true)
+    public void setOptions(final MapperOptions options) {
     }
 
     /**
@@ -235,47 +217,6 @@ public class Mapper {
     }
 
     /**
-     * Creates a MappedClass and validates it.
-     *
-     * @param type the Class to map
-     * @return the MappedClass for the given Class
-     */
-    private MappedClass addMappedClass(final Class type) {
-        MappedClass mappedClass = mappedClasses.get(type);
-        if (mappedClass == null && isMappable(type)) {
-            MorphiaModel morphiaModel = createMorphiaModel(type);
-            mappedClass = addMappedClass(new MappedClass(morphiaModel, this));
-        }
-        return mappedClass;
-    }
-
-    private MappedClass addMappedClass(final MappedClass mc) {
-        mappedClasses.put(mc.getType(), mc);
-        if (mc.getEntityAnnotation() != null) {
-            mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                     .add(mc);
-        }
-        discriminatorLookup.addClassModel(mc.getMorphiaModel());
-
-        if (!mc.isInterface()) {
-            mc.validate(this);
-        }
-
-        return mc;
-    }
-
-    /**
-     * Sets the options this Mapper should use
-     *
-     * @param options the options to use
-     * @deprecated no longer used
-     */
-    @SuppressWarnings("unused")
-    @Deprecated(since = "2.0", forRemoval = true)
-    public void setOptions(final MapperOptions options) {
-    }
-
-    /**
      * Adds an {@link EntityInterceptor}
      *
      * @param ei the interceptor to add
@@ -296,8 +237,8 @@ public class Mapper {
      *
      * @param mc the parent type
      * @return the list of subtypes
-     * @since 1.3
      * @morphia.internal
+     * @since 1.3
      */
     public List<MappedClass> getSubTypes(final MappedClass mc) {
         return mc.getSubtypes();
@@ -356,6 +297,10 @@ public class Mapper {
         return c;
     }
 
+    /**
+     * @param discriminator the lookup value
+     * @return the class mapped to this discrimiator value
+     */
     public Class getClass(final String discriminator) {
         final Class c;
         c = discriminatorLookup.lookup(discriminator);
@@ -488,10 +433,6 @@ public class Mapper {
         return keys;
     }
 
-    <T> Key<T> manualRefToKey(final String collection, final Object id) {
-        return id == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(collection), collection, id);
-    }
-
     /**
      * Looks up the class mapped to a named collection.
      *
@@ -598,6 +539,78 @@ public class Mapper {
         }
 
         return key.getCollection();
+    }
+
+    private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
+        if (clazz == null) {
+            return false;
+        }
+        for (Class<? extends Annotation> annotation : annotations) {
+            if (clazz.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+
+        return hasAnnotation(clazz.getSuperclass(), annotations)
+               || Arrays.stream(clazz.getInterfaces())
+                        .map(i -> hasAnnotation(i, annotations))
+                        .reduce(false, (l, r) -> l || r);
+    }
+
+    private Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
+        throws ClassNotFoundException {
+        final Set<Class<?>> classes = new HashSet<>();
+
+        ClassGraph classGraph = new ClassGraph()
+                                    .addClassLoader(loader)
+                                    .enableAllInfo();
+        if (mapSubPackages) {
+            classGraph.whitelistPackages(packageName);
+            classGraph.whitelistPackages(packageName + ".*");
+        } else {
+            classGraph.whitelistPackagesNonRecursive(packageName);
+        }
+
+        try (ScanResult scanResult = classGraph.scan()) {
+            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
+                classes.add(Class.forName(classInfo.getName(), true, loader));
+            }
+        }
+        return classes;
+    }
+
+    /**
+     * Creates a MappedClass and validates it.
+     *
+     * @param type the Class to map
+     * @return the MappedClass for the given Class
+     */
+    private MappedClass addMappedClass(final Class type) {
+        MappedClass mappedClass = mappedClasses.get(type);
+        if (mappedClass == null && isMappable(type)) {
+            MorphiaModel morphiaModel = createMorphiaModel(type);
+            mappedClass = addMappedClass(new MappedClass(morphiaModel, this));
+        }
+        return mappedClass;
+    }
+
+    private MappedClass addMappedClass(final MappedClass mc) {
+        mappedClasses.put(mc.getType(), mc);
+        if (mc.getEntityAnnotation() != null) {
+            mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                                     .add(mc);
+        }
+        discriminatorLookup.addClassModel(mc.getMorphiaModel());
+
+        if (!mc.isInterface()) {
+            mc.validate(this);
+        }
+
+        return mc;
+    }
+
+    <T> Key<T> manualRefToKey(final String collection, final Object id) {
+        return id == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(collection), collection, id);
     }
 
 }

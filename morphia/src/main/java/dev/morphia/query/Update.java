@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;

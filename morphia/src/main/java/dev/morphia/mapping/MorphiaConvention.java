@@ -5,10 +5,13 @@ import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
 import org.bson.codecs.pojo.ClassModelBuilder;
 import org.bson.codecs.pojo.Convention;
 
+/**
+ * Applies certain conventions specific for Morphia
+ */
 public interface MorphiaConvention extends Convention {
     @Override
-    default void apply(ClassModelBuilder<?> classModelBuilder) {
-        if(classModelBuilder instanceof MorphiaModelBuilder) {
+    default void apply(final ClassModelBuilder<?> classModelBuilder) {
+        if (classModelBuilder instanceof MorphiaModelBuilder) {
             throw new MappingException("call #apply(Datastore, MorphiaModelBuilder) instead");
         }
     }
@@ -16,8 +19,8 @@ public interface MorphiaConvention extends Convention {
     /**
      * This method applies this Convention to the given builder
      *
-     * @param builder the builder to apply the convention to
+     * @param datastore the datastore to use
+     * @param builder   the builder to apply the convention to
      */
     void apply(Datastore datastore, MorphiaModelBuilder<?> builder);
-
 }

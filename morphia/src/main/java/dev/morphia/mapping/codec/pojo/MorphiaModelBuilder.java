@@ -135,7 +135,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         idPropertyModel = null;
 
         for (Convention convention : getConventions()) {
-            if(convention instanceof MorphiaConvention) {
+            if (convention instanceof MorphiaConvention) {
                 ((MorphiaConvention) convention).apply(datastore, this);
             } else {
                 convention.apply(this);

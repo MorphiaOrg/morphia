@@ -37,6 +37,11 @@ public abstract class DiscriminatorFunction {
         }
     };
 
+    /**
+     * Applies the function to the given model to determine the discriminator value
+     *
+     * @param builder the builder to evaluate
+     */
     public final void apply(final MorphiaModelBuilder builder) {
         String discriminator = Mapper.IGNORED_FIELDNAME;
         Entity entity = (Entity) builder.getAnnotation(Entity.class);
@@ -55,5 +60,5 @@ public abstract class DiscriminatorFunction {
         builder.discriminator(discriminator);
     }
 
-    protected abstract String compute(final MorphiaModelBuilder builder);
+    protected abstract String compute(MorphiaModelBuilder builder);
 }

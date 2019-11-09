@@ -19,7 +19,6 @@ package dev.morphia.mapping;
 import com.mongodb.DBRef;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;

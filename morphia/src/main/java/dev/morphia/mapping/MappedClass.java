@@ -82,6 +82,9 @@ public class MappedClass {
         }
     }
 
+    /**
+     * @return the MappedClasses for all the known subtypes
+     */
     public List<MappedClass> getSubtypes() {
         return Collections.unmodifiableList(subtypes);
     }

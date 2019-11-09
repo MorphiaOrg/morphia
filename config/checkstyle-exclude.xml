@@ -27,4 +27,5 @@
     <suppress checks="" files=".*internal.*"/>
     <suppress checks="" files="Sofia"/>
     <suppress checks="" files=".*org.bson.*"/>
+    <suppress checks="ConstantName" files=".*DiscriminatorFunction.*"/>
 </suppressions>

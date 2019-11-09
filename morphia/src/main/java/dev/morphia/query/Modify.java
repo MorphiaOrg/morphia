@@ -3,7 +3,6 @@ package dev.morphia.query;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
-import org.bson.Document;
 
 /**
  * Represents a modify operation

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -151,8 +152,11 @@ public class MapperOptions {
         return classLoader;
     }
 
+    /**
+     * @return the configured Conventions
+     */
     public List<Convention> getConventions() {
-        return conventions;
+        return Collections.unmodifiableList(conventions);
     }
 
     /**
@@ -268,6 +272,12 @@ public class MapperOptions {
             return this;
         }
 
+        /**
+         * Sets the discriminator function to use
+         *
+         * @param function the function to use
+         * @return this
+         */
         public Builder discriminator(final DiscriminatorFunction function) {
             this.discriminator = function;
             return this;
