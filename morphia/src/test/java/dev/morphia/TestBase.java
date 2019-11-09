@@ -5,18 +5,23 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.connection.ServerDescription;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class TestBase {
+    private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
+
     protected static final String TEST_DB_NAME = "morphia_test";
     private final MongoClient mongoClient;
     private final MongoDatabase database;
@@ -30,6 +35,8 @@ public abstract class TestBase {
         this.mongoClient = mongoClient;
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
+        System.out.println("********************* serverDescriptions = "
+                           + mongoClient.getClusterDescription().getServerDescriptions());
     }
 
     protected static String getMongoURI() {
