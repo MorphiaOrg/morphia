@@ -32,6 +32,7 @@ import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -76,6 +77,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void genericMultiKeyValueQueries() {
+        Assume.assumeTrue(serverIsAtLeastVersion(3.6));
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
@@ -96,6 +98,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
+        Assume.assumeTrue(serverIsAtLeastVersion(3.6));
         getMapper().map(List.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
