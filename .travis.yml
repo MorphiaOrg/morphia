@@ -9,6 +9,9 @@ notifications:
 
 jdk:
   - openjdk11
+  - openjdk12
+  - openjdk13
+
 env:
   - MONGODB=4.2.1 DRIVER=3.11.1
   - MONGODB=4.2.1 DRIVER=3.10.1
