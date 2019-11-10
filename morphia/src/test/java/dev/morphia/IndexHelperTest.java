@@ -34,9 +34,6 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.query.ValidationException;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -53,7 +50,6 @@ import static com.mongodb.client.model.CollationMaxVariable.SPACE;
 import static com.mongodb.client.model.CollationStrength.IDENTICAL;
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -165,18 +161,28 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void index() {
         checkMinServerVersion(3.4);
-        MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
+        MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
-        indexes.drop();
+        collection.drop();
+        IndexOptionsBuilder options = new IndexOptionsBuilder()
+                                          .name("index_name")
+                                          .background(true)
+                                          .collation(collation())
+                                          .disableValidation(true)
+                                          .dropDups(true)
+                                          .language("en")
+                                          .languageOverride("de")
+                                          .sparse(true)
+                                          .unique(true);
         Index index = new IndexBuilder()
             .fields(new FieldBuilder()
                         .value("indexName"),
                     new FieldBuilder()
                         .value("text")
                         .type(IndexType.DESC))
-            .options(indexOptions());
-        indexHelper.createIndex(indexes, mappedClass, index);
+            .options(options);
+        indexHelper.createIndex(collection, mappedClass, index);
         List<Document> indexInfo = getIndexInfo(IndexedClass.class);
         for (Document document : indexInfo) {
             if (document.get("name").equals("indexName")) {
@@ -218,7 +224,17 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void indexOptionsConversion() {
-        IndexOptionsBuilder indexOptions = indexOptions();
+        IndexOptionsBuilder indexOptions = new IndexOptionsBuilder()
+                                               .name("index_name")
+                                               .background(true)
+                                               .collation(collation())
+                                               .disableValidation(true)
+                                               .dropDups(true)
+                                               .expireAfterSeconds(42)
+                                               .language("en")
+                                               .languageOverride("de")
+                                               .sparse(true)
+                                               .unique(true);
         com.mongodb.client.model.IndexOptions options = indexHelper.convert(indexOptions);
         assertEquals("index_name", options.getName());
         assertTrue(options.isBackground());
@@ -380,20 +396,6 @@ public class IndexHelperTest extends TestBase {
             .normalization(true)
             .numericOrdering(true)
             .strength(IDENTICAL);
-    }
-
-    private IndexOptionsBuilder indexOptions() {
-        return new IndexOptionsBuilder()
-            .name("index_name")
-            .background(true)
-            .collation(collation())
-            .disableValidation(true)
-            .dropDups(true)
-            .expireAfterSeconds(42)
-            .language("en")
-            .languageOverride("de")
-            .sparse(true)
-            .unique(true);
     }
 
     @Embedded

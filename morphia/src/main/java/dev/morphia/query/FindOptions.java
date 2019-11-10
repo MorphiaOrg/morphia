@@ -263,6 +263,17 @@ public final class FindOptions {
     }
 
     /**
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hint(final String hint) {
+        hint(new Document(hint, 1));
+        return this;
+    }
+
+    /**
      * Sets the max index value
      *
      * @param max the max
