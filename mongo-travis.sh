@@ -13,7 +13,6 @@ download() {
   fi
   [ -e ${FILE} ] || wget ${URL} -O ${FILE}
   
-  ls ${FILE}
   rm -rf mongodb-linux-*
   tar -xvf ${FILE}
   mkdir -p /tmp/data
