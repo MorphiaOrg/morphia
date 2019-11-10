@@ -17,7 +17,7 @@ download() {
   rm -rf mongodb-linux-*
   tar -xvf ${FILE}
   mkdir -p /tmp/data
-  echo  ${PWD}/mongodb-linux-x86_64-*/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
+  ${PWD}/mongodb-linux-x86_64-*/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
 
 }
 
