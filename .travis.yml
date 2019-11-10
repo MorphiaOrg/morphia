@@ -55,6 +55,6 @@ env:
 
 
 before_install:
-  - ./mongo-travis.sh
+  - sh ./mongo-travis.sh
 
 script: mvn test
