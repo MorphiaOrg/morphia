@@ -37,7 +37,7 @@ else
     eval $(echo $LINE | cut -d" " -f2)
     eval $(echo $LINE | cut -d" " -f3)
 
-    echo SERVER = ${MONGODB}    DRIVER = ${DRIVER}
+    echo SERVER = ${MONGODB}    DRIVER = ${DRIVER} | tee /tmp/morphia.test
     download
     mvn -f morphia/pom.xml test
     killall mongod
