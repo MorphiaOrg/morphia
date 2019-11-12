@@ -61,6 +61,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
         this.annotations = morphiaModel.getAnnotations();
         this.fieldModels = morphiaModel.getFieldModels();
         this.datastore = morphiaModel.datastore;
+        this.collectionName = morphiaModel.collectionName;
     }
 
     /**
@@ -77,6 +78,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
         this.annotations = builder.getAnnotationsMap();
         this.fieldModels = builder.getFieldModels();
         this.datastore = builder.getDatastore();
+        this.collectionName = builder.getCollectionName();
     }
 
     /**
@@ -120,19 +122,6 @@ public class MorphiaModel<T> extends ClassModel<T> {
      * @return the mapped collection name for the type
      */
     public String getCollectionName() {
-        if (collectionName == null) {
-            Entity entityAn = getAnnotation(Entity.class);
-            if (entityAn != null) {
-                collectionName = null;
-                if (entityAn.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                    return datastore.getMapper().getOptions().isUseLowerCaseCollectionNames()
-                           ? getType().getSimpleName().toLowerCase()
-                           : getType().getSimpleName();
-                } else {
-                    return entityAn.value();
-                }
-            }
-        }
         return collectionName;
     }
 

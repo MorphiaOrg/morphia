@@ -125,9 +125,8 @@ public class Mapper {
      * @morphia.internal
      */
     public <T> MorphiaModel<T> createMorphiaModel(final Class<T> clazz) {
-        MorphiaModelBuilder<T> builder = new MorphiaModelBuilder<>(this.datastore, clazz);
-        builder.conventions(options.getConventions());
-        return builder.build();
+        return new MorphiaModelBuilder<>(this.datastore, clazz)
+                   .build();
     }
 
     /**

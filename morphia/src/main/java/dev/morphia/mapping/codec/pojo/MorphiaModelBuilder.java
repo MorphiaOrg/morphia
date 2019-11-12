@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.Entity;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MorphiaConvention;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.ClassModelBuilder;
@@ -134,12 +136,11 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
     public MorphiaModel<T> build() {
         idPropertyModel = null;
 
-        for (Convention convention : getConventions()) {
-            if (convention instanceof MorphiaConvention) {
-                ((MorphiaConvention) convention).apply(datastore, this);
-            } else {
-                convention.apply(this);
-            }
+        for (final Convention convention : getConventions()) {
+            convention.apply(this);
+        }
+        for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
+            convention.apply(datastore, this);
         }
 
         if (useDiscriminator()) {
@@ -171,12 +172,12 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         return new MorphiaModel<>(this);
     }
 
-/*
-    @Override
-    public Map<String, TypeParameterMap> getPropertyNameToTypeParameterMap() {
-        return super.getPropertyNameToTypeParameterMap();
+    protected String getCollectionName() {
+        Entity entityAn = getAnnotation(Entity.class);
+        return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
+               ? entityAn.value()
+               : datastore.getMapper().getOptions().getCollectionNaming().apply(getType().getSimpleName());
     }
-*/
 
     protected Datastore getDatastore() {
         return datastore;

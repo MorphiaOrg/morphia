@@ -22,9 +22,11 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -39,6 +41,7 @@ import dev.morphia.testmodel.Translation;
 import dev.morphia.testmodel.TravelAgency;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -650,6 +653,29 @@ public class TestMapping extends TestBase {
         assertNotNull(loaded);
         assertNotNull(loaded.id);
         assertEquals(before, loaded.id);
+    }
+
+    @Test
+    public void collectionNaming() {
+        MapperOptions options = MapperOptions.builder()
+                                           .collectionNaming(NamingStrategy.lowerCase())
+                                           .build();
+        Datastore datastore1 = Morphia.createDatastore(TEST_DB_NAME, options);
+        List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        Assert.assertEquals("containsmapwithembeddedinterface", map.get(0).getCollectionName());
+        Assert.assertEquals("cil", map.get(1).getCollectionName());
+
+        options = MapperOptions.builder()
+                               .collectionNaming(NamingStrategy.kebabCase())
+                               .build();
+        final Datastore datastore2 = Morphia.createDatastore(TEST_DB_NAME, options);
+        map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        Assert.assertEquals("contains-map-with-embedded-interface", map.get(0).getCollectionName());
+        Assert.assertEquals("cil", map.get(1).getCollectionName());
+
+        datastore2.save(new ContainsMapWithEmbeddedInterface());
     }
 
     @SuppressWarnings("unchecked")

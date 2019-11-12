@@ -1,8 +1,9 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Property;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import org.bson.codecs.pojo.Convention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,20 +21,20 @@ public class MapperOptions {
     private final boolean ignoreFinals;
     private final boolean storeNulls;
     private final boolean storeEmpties;
-    private final boolean useLowerCaseCollectionNames;
     private final boolean cacheClassLookups;
     private final boolean mapSubPackages;
     private final MorphiaInstanceCreator creator;
     private final String discriminatorKey;
     private final DiscriminatorFunction discriminator;
+    private final List<MorphiaConvention> conventions;
+    private final NamingStrategy collectionNaming;
+    private final NamingStrategy fieldNaming;
     private ClassLoader classLoader;
-    private List<Convention> conventions;
 
     private MapperOptions(final Builder builder) {
         ignoreFinals = builder.ignoreFinals;
         storeNulls = builder.storeNulls;
         storeEmpties = builder.storeEmpties;
-        useLowerCaseCollectionNames = builder.useLowerCaseCollectionNames;
         cacheClassLookups = builder.cacheClassLookups;
         mapSubPackages = builder.mapSubPackages;
         creator = builder.creator;
@@ -41,6 +42,8 @@ public class MapperOptions {
         discriminatorKey = builder.discriminatorKey;
         discriminator = builder.discriminator;
         conventions = builder.conventions;
+        collectionNaming = builder.collectionNaming;
+        fieldNaming = builder.fieldNaming;
     }
 
     /**
@@ -55,8 +58,10 @@ public class MapperOptions {
      */
     public static Builder legacy() {
         return new Builder()
-            .discriminatorKey(Mapper.CLASS_NAME_FIELDNAME)
-            .discriminator(DiscriminatorFunction.className);
+                   .discriminatorKey(Mapper.CLASS_NAME_FIELDNAME)
+                   .discriminator(DiscriminatorFunction.className)
+                   .collectionNaming(NamingStrategy.identity())
+                   .fieldNaming(NamingStrategy.identity());
     }
 
     /**
@@ -68,7 +73,6 @@ public class MapperOptions {
         builder.ignoreFinals = original.isIgnoreFinals();
         builder.storeNulls = original.isStoreNulls();
         builder.storeEmpties = original.isStoreEmpties();
-        builder.useLowerCaseCollectionNames = original.isUseLowerCaseCollectionNames();
         builder.cacheClassLookups = original.isCacheClassLookups();
         builder.mapSubPackages = original.isMapSubPackages();
         builder.creator = original.getCreator();
@@ -112,17 +116,31 @@ public class MapperOptions {
     }
 
     /**
-     * @return true if Morphia should use lower case values when calculating collection names
-     */
-    public boolean isUseLowerCaseCollectionNames() {
-        return useLowerCaseCollectionNames;
-    }
-
-    /**
      * @return true if Morphia should map classes from the sub-packages as well
      */
     public boolean isMapSubPackages() {
         return mapSubPackages;
+    }
+
+    /**
+     * Returns the classloader used, in theory, when loading the entity types.
+     *
+     * @return the classloader
+     * @morphia.internal
+     */
+    public ClassLoader getClassLoader() {
+        if (classLoader == null) {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        }
+        return classLoader;
+    }
+
+    /**
+     * @return the naming strategy for collections unless explicitly set via @Entity
+     * @see Entity
+     */
+    public NamingStrategy getCollectionNaming() {
+        return collectionNaming;
     }
 
     /**
@@ -140,23 +158,18 @@ public class MapperOptions {
     }
 
     /**
-     * Returns the classloader used, in theory, when loading the entity types.
-     *
-     * @return the classloader
-     * @morphia.internal
+     * @return the configured Conventions
      */
-    public ClassLoader getClassLoader() {
-        if (classLoader == null) {
-            classLoader = Thread.currentThread().getContextClassLoader();
-        }
-        return classLoader;
+    public List<MorphiaConvention> getConventions() {
+        return Collections.unmodifiableList(conventions);
     }
 
     /**
-     * @return the configured Conventions
+     * @return the naming strategy for fields unless explicitly set via @Property
+     * @see Property
      */
-    public List<Convention> getConventions() {
-        return Collections.unmodifiableList(conventions);
+    public NamingStrategy getFieldNaming() {
+        return fieldNaming;
     }
 
     /**
@@ -168,14 +181,15 @@ public class MapperOptions {
         private boolean ignoreFinals;
         private boolean storeNulls;
         private boolean storeEmpties;
-        private boolean useLowerCaseCollectionNames;
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName;
-        private List<Convention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
+        private List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
+        private NamingStrategy collectionNaming;
+        private NamingStrategy fieldNaming;
 
         private Builder() {
         }
@@ -210,9 +224,13 @@ public class MapperOptions {
         /**
          * @param useLowerCaseCollectionNames if true, generated collections names are lower cased
          * @return this
+         * @deprecated use {@link #collectionNaming(NamingStrategy)} instead
          */
+        @Deprecated(since = "2.0", forRemoval = true)
         public Builder useLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
-            this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
+            if (useLowerCaseCollectionNames) {
+                collectionNaming(NamingStrategy.lowerCase());
+            }
             return this;
         }
 
@@ -284,13 +302,36 @@ public class MapperOptions {
         }
 
         /**
+         * Sets the naming strategy to use for collection names
+         *
+         * @param strategy the strategy to use
+         * @return this
+         */
+        public Builder collectionNaming(final NamingStrategy strategy) {
+            this.collectionNaming = strategy;
+            return this;
+        }
+
+        /**
+         * Sets the naming strategy to use for fields unless expliclity set via @Property
+         *
+         * @param strategy the strategy to use
+         * @return this
+         * @see Property
+         */
+        public Builder fieldNaming(final NamingStrategy strategy) {
+            this.collectionNaming = strategy;
+            return this;
+        }
+
+        /**
          * Adds a custom convention to the list to be applied to all new MorphiaModels.
          *
          * @param convention the new convention
          * @return this
          * @since 2.0
          */
-        public Builder addConvention(final Convention convention) {
+        public Builder addConvention(final MorphiaConvention convention) {
             conventions.add(convention);
 
             return this;

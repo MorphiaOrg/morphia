@@ -72,11 +72,10 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
     @Override
     public void apply(final Datastore datastore, final MorphiaModelBuilder<?> modelBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
-        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(modelBuilder.getType());
-        modelBuilder.instanceCreatorFactory(creatorFactory);
+        modelBuilder.instanceCreatorFactory(new InstanceCreatorFactoryImpl(modelBuilder.getType()));
 
-        final Entity entity = (Entity) modelBuilder.getAnnotation(Entity.class);
-        final Embedded embedded = (Embedded) modelBuilder.getAnnotation(Embedded.class);
+        final Entity entity = modelBuilder.getAnnotation(Entity.class);
+        final Embedded embedded = modelBuilder.getAnnotation(Embedded.class);
         if (entity != null) {
             modelBuilder.enableDiscriminator(entity.useDiscriminator());
             modelBuilder.discriminatorKey(applyDefaults(entity.discriminatorKey(), options.getDiscriminatorKey()));
