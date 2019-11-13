@@ -22,8 +22,8 @@ import org.bson.codecs.pojo.TypeData;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.StringJoiner;
 
-import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.bson.assertions.Assertions.notNull;
@@ -36,6 +36,7 @@ import static org.bson.assertions.Assertions.notNull;
 public final class FieldModelBuilder<T> {
     private Field field;
     private String name;
+    private String mappedName;
     private TypeData<T> typeData;
     private Codec<T> codec;
     private List<Annotation> annotations = emptyList();
@@ -48,6 +49,24 @@ public final class FieldModelBuilder<T> {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Sets the field's mapped name
+     *
+     * @param mappedName the name
+     * @return this
+     */
+    public FieldModelBuilder<T> mappedName(final String mappedName) {
+        this.mappedName = mappedName;
+        return this;
+    }
+
+    /**
+     * @return the field's mapped name
+     */
+    public String mappedName() {
+        return this.mappedName;
     }
 
     /**
@@ -119,12 +138,17 @@ public final class FieldModelBuilder<T> {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public FieldModel<T> build() {
-        return new FieldModel(field, name, typeData, annotations, codec);
+        return new FieldModel(field, name, mappedName, typeData, annotations, codec);
     }
 
     @Override
     public String toString() {
-        return format("FieldModelBuilder{fieldName=%s, typeData=%s}", name, typeData);
+        return new StringJoiner(", ", FieldModelBuilder.class.getSimpleName() + "[", "]")
+                   .add("name='" + name + "'")
+                   .add("mappedName='" + mappedName + "'")
+                   .add("typeData=" + typeData)
+                   .add("annotations=" + annotations)
+                   .toString();
     }
 
     /**

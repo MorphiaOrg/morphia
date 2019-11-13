@@ -119,7 +119,7 @@ public abstract class NamingStrategy {
 
         while (index < length) {
             char current = value.charAt(index);
-            if (Character.isUpperCase(current)) {
+            if (index == 0 || Character.isUpperCase(current)) {
                 if (builder != null) {
                     groups.add(builder.toString());
                 }

@@ -111,7 +111,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
                     builder.typeData(typeData);
                 }
 
-                List<String> names = new ArrayList<>(List.of(getMappedFieldName(builder)));
+                List<String> names = new ArrayList<>(List.of(builder.mappedName()));
                 AlsoLoad alsoLoad = builder.getAnnotation(AlsoLoad.class);
                 if (alsoLoad != null) {
                     names.addAll(Arrays.asList(alsoLoad.value()));

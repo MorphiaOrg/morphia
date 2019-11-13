@@ -2,7 +2,12 @@ package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MorphiaConvention;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.ClassModelBuilder;
@@ -26,7 +31,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
 
@@ -51,22 +55,48 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      */
     public MorphiaModelBuilder(final Datastore datastore, final Class<T> type) {
         super(type);
-        configureClassModelBuilder();
         this.datastore = datastore;
+        configure();
     }
 
-    static <T> FieldModelBuilder<T> createFieldModelBuilder(final FieldMetadata<T> fieldMetadata) {
+    <T> FieldModelBuilder<T> createFieldModelBuilder(final FieldMetadata<T> fieldMetadata) {
         FieldModelBuilder<T> fieldModelBuilder = FieldModel.<T>builder()
                                                      .field(fieldMetadata.getField())
                                                      .fieldName(fieldMetadata.getName())
                                                      .typeData(fieldMetadata.getTypeData())
                                                      .annotations(fieldMetadata.getAnnotations());
 
+        fieldModelBuilder.mappedName(getMappedFieldName(fieldModelBuilder));
+
         if (fieldMetadata.getTypeParameters() != null) {
             specializeFieldModelBuilder(fieldModelBuilder, fieldMetadata);
         }
 
         return fieldModelBuilder;
+    }
+
+    private String getMappedFieldName(final FieldModelBuilder<?> fieldBuilder) {
+        MapperOptions options = datastore.getMapper().getOptions();
+        if (fieldBuilder.hasAnnotation(Id.class)) {
+            return "_id";
+        } else if (fieldBuilder.hasAnnotation(Property.class)) {
+            final Property mv = fieldBuilder.getAnnotation(Property.class);
+            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mv.value();
+            }
+        } else if (fieldBuilder.hasAnnotation(Reference.class)) {
+            final Reference mr = fieldBuilder.getAnnotation(Reference.class);
+            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mr.value();
+            }
+        } else if (fieldBuilder.hasAnnotation(Version.class)) {
+            final Version me = fieldBuilder.getAnnotation(Version.class);
+            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return me.value();
+            }
+        }
+
+        return options.getFieldNaming().apply(fieldBuilder.getName());
     }
 
     @SuppressWarnings("unchecked")
@@ -134,7 +164,6 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      */
     public MorphiaModel<T> build() {
         idPropertyModel = null;
-
         annotationsMap = getAnnotations().stream()
                                          .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
 
@@ -199,9 +228,8 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         return idPropertyModel;
     }
 
-    protected void configureClassModelBuilder() {
+    protected void configure() {
         TypeData<?> parentClassTypeData = null;
-
         Set<Class<?>> classes = buildHierarchy(getType());
 
         List<Annotation> annotations = new ArrayList<>();

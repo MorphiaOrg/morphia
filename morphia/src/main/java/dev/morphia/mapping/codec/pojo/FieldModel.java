@@ -24,6 +24,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Represents a field on a class and stores various metadata such as generic parameters
@@ -35,14 +36,16 @@ public final class FieldModel<T> {
     private final Field field;
     private final String name;
     private final TypeData<T> typeData;
+    private final String mappedName;
     private List<Annotation> annotations;
     private final Codec<T> codec;
     private volatile Codec<T> cachedCodec;
 
-    FieldModel(final Field field, final String name, final TypeData<T> typeData,
+    FieldModel(final Field field, final String name, final String mappedName, final TypeData<T> typeData,
                final List<Annotation> annotations, final Codec<T> codec) {
         this.field = Objects.requireNonNull(field, Sofia.notNull("field"));
         this.name = Objects.requireNonNull(name, Sofia.notNull("name"));
+        this.mappedName = Objects.requireNonNull(mappedName, Sofia.notNull("name"));
         this.typeData = Objects.requireNonNull(typeData, Sofia.notNull("typeData"));
         this.annotations = annotations;
         this.codec = codec;
@@ -66,6 +69,13 @@ public final class FieldModel<T> {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return the mapped name for the model
+     */
+    public String getMappedName() {
+        return mappedName;
     }
 
     /**
@@ -107,10 +117,12 @@ public final class FieldModel<T> {
 
     @Override
     public String toString() {
-        return "FieldModel{"
-               + "fieldName='" + name + "'"
-               + ", typeData=" + typeData
-               + "}";
+        return new StringJoiner(", ", FieldModel.class.getSimpleName() + "[", "]")
+                   .add("name='" + name + "'")
+                   .add("mappedName='" + mappedName + "'")
+                   .add("typeData=" + typeData)
+                   .add("annotations=" + annotations)
+                   .toString();
     }
 
     @Override

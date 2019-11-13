@@ -19,11 +19,8 @@ package dev.morphia.mapping;
 import com.mongodb.DBRef;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
-import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
@@ -96,26 +93,7 @@ public class MappedField {
      * @return the name of the field's (key)name for mongodb
      */
     public String getMappedFieldName() {
-        if (hasAnnotation(Id.class)) {
-            return "_id";
-        } else if (hasAnnotation(Property.class)) {
-            final Property mv = (Property) annotations.get(Property.class);
-            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mv.value();
-            }
-        } else if (hasAnnotation(Reference.class)) {
-            final Reference mr = (Reference) annotations.get(Reference.class);
-            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mr.value();
-            }
-        } else if (hasAnnotation(Version.class)) {
-            final Version me = (Version) annotations.get(Version.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        }
-
-        return fieldModel.getName();
+        return fieldModel.getMappedName();
     }
 
     /**

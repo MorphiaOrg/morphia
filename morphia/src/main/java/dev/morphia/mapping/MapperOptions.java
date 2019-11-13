@@ -320,7 +320,7 @@ public class MapperOptions {
          * @see Property
          */
         public Builder fieldNaming(final NamingStrategy strategy) {
-            this.collectionNaming = strategy;
+            this.fieldNaming = strategy;
             return this;
         }
 

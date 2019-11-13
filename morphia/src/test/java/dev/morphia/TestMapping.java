@@ -23,6 +23,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
@@ -660,8 +661,8 @@ public class TestMapping extends TestBase {
         MapperOptions options = MapperOptions.builder()
                                            .collectionNaming(NamingStrategy.lowerCase())
                                            .build();
-        Datastore datastore1 = Morphia.createDatastore(TEST_DB_NAME, options);
-        List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+        Datastore datastore = Morphia.createDatastore(TEST_DB_NAME, options);
+        List<MappedClass> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         Assert.assertEquals("containsmapwithembeddedinterface", map.get(0).getCollectionName());
         Assert.assertEquals("cil", map.get(1).getCollectionName());
@@ -669,13 +670,45 @@ public class TestMapping extends TestBase {
         options = MapperOptions.builder()
                                .collectionNaming(NamingStrategy.kebabCase())
                                .build();
-        final Datastore datastore2 = Morphia.createDatastore(TEST_DB_NAME, options);
-        map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+        datastore = Morphia.createDatastore(TEST_DB_NAME, options);
+        map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         Assert.assertEquals("contains-map-with-embedded-interface", map.get(0).getCollectionName());
         Assert.assertEquals("cil", map.get(1).getCollectionName());
+    }
 
-        datastore2.save(new ContainsMapWithEmbeddedInterface());
+    @Test
+    public void fieldNaming() {
+        MapperOptions options = MapperOptions.builder()
+                                           .fieldNaming(NamingStrategy.snakeCase())
+                                           .build();
+        Datastore datastore1 = Morphia.createDatastore(TEST_DB_NAME, options);
+        List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        List<MappedField> fields = map.get(0).getFields();
+        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
+        Assert.assertEquals("embedded_values", fields.get(1).getMappedFieldName());
+        Assert.assertEquals("embeddedValues", fields.get(1).getJavaFieldName());
+
+        fields = map.get(1).getFields();
+        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
+        Assert.assertEquals("int_list", fields.get(1).getMappedFieldName());
+        Assert.assertEquals("intList", fields.get(1).getJavaFieldName());
+
+        options = MapperOptions.builder()
+                               .fieldNaming(NamingStrategy.kebabCase())
+                               .build();
+        final Datastore datastore2 = Morphia.createDatastore(TEST_DB_NAME, options);
+        map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        fields = map.get(0).getFields();
+        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
+        Assert.assertEquals("embedded-values", fields.get(1).getMappedFieldName());
+
+        fields = map.get(1).getFields();
+        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
+        Assert.assertEquals("int-list", fields.get(1).getMappedFieldName());
+
     }
 
     @SuppressWarnings("unchecked")
