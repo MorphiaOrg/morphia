@@ -2,7 +2,6 @@ package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
-import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
