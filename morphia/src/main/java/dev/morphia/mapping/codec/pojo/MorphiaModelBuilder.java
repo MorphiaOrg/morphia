@@ -100,10 +100,9 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      * @return the annotation or null if it doesn't exist
      */
     public <A extends Annotation> A getAnnotation(final Class<A> type) {
-        for (Annotation annotation : getAnnotations()) {
-            if (type.equals(annotation.annotationType())) {
-                return type.cast(annotation);
-            }
+        List<A> annotations = (List<A>) annotationsMap.get(type);
+        if (annotations != null && !annotations.isEmpty()) {
+            return annotations.get(annotations.size() - 1);
         }
         return null;
     }
@@ -136,6 +135,9 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
     public MorphiaModel<T> build() {
         idPropertyModel = null;
 
+        annotationsMap = getAnnotations().stream()
+                                         .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
+
         for (final Convention convention : getConventions()) {
             convention.apply(this);
         }
@@ -166,8 +168,6 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         fieldModels = fieldModelBuilders.stream()
                                         .map(FieldModelBuilder::build)
                                         .collect(Collectors.toList());
-        annotationsMap = getAnnotations().stream()
-                                         .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
 
         return new MorphiaModel<>(this);
     }
@@ -208,9 +208,8 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         for (Class<?> klass : classes) {
             List<String> genericTypeNames = processTypeNames(klass);
 
-            annotations.addAll(asList(klass.getDeclaredAnnotations()));
-            processFields(klass,
-                parentClassTypeData, genericTypeNames);
+            annotations.addAll(List.of(klass.getDeclaredAnnotations()));
+            processFields(klass, parentClassTypeData, genericTypeNames);
 
             parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
         }

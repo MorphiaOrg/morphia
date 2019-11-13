@@ -16,7 +16,7 @@ public class TestIdTwice extends TestBase {
     }
 
     @Entity
-    public static class A extends TestEntity {
+    public static class A {
         @Id
         private String extraId;
         @Id
