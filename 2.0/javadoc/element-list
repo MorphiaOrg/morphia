@@ -1,6 +1,7 @@
 dev.morphia
 dev.morphia.aggregation
 dev.morphia.annotations
+dev.morphia.annotations.experimental
 dev.morphia.geo
 dev.morphia.mapping
 dev.morphia.mapping.cache
