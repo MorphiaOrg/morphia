@@ -14,7 +14,6 @@ import java.lang.reflect.Constructor;
  */
 @SuppressWarnings("unchecked")
 public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> {
-    private Constructor<T> noArgsConstructor;
     private MorphiaModel model;
 
     /**
@@ -35,9 +34,7 @@ public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> 
 
             for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
                 if (constructor.getParameterTypes().length == 0) {
-                    noArgsConstructor = (Constructor<T>) constructor;
-                    noArgsConstructor.setAccessible(true);
-                    return new NoArgCreator<>(noArgsConstructor);
+                    return new NoArgCreator<>((Constructor<T>) constructor);
                 }
             }
         }

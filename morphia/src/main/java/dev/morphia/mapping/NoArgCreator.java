@@ -21,6 +21,7 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
      */
     public NoArgCreator(final Constructor<E> noArgsConstructor) {
         this.noArgsConstructor = noArgsConstructor;
+        this.noArgsConstructor.setAccessible(true);
     }
 
     @Override

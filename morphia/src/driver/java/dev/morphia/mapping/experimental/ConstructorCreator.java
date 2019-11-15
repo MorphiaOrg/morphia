@@ -36,6 +36,7 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
         if (constructor == null) {
             throw new MappingException(Sofia.noSuitableConstructor(model.getType()));
         }
+        constructor.setAccessible(true);
 
         final Parameter[] constructorParameters = constructor.getParameters();
         this.parameters = new Object[constructorParameters.length];
