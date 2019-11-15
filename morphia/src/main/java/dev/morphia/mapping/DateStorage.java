@@ -23,6 +23,7 @@ public enum DateStorage {
      * database.  {@link #UTC} should be used and will be the default in 2.0.  In 1.5 it is {@see #SYSTEM_DEFAULT} for backwards
      * compatibility.
      */
+    @Deprecated
     SYSTEM_DEFAULT {
         @Override
         public ZoneId getZone() {

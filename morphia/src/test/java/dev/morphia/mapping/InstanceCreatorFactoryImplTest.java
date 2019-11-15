@@ -7,10 +7,13 @@ import org.bson.codecs.pojo.InstanceCreatorFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 public class InstanceCreatorFactoryImplTest extends TestBase {
     @Test
     public void noarg() {
-        InstanceCreatorFactory factory = new InstanceCreatorFactoryImpl(Rectangle.class);
+        List<MappedClass> list = getDs().getMapper().map(Rectangle.class);
+        InstanceCreatorFactory factory = new InstanceCreatorFactoryImpl(list.get(0).getMorphiaModel());
 
         InstanceCreator creator = factory.create();
 

@@ -72,7 +72,6 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
     @Override
     public void apply(final Datastore datastore, final MorphiaModelBuilder<?> modelBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
-        modelBuilder.instanceCreatorFactory(new InstanceCreatorFactoryImpl(modelBuilder.getType()));
 
         final Entity entity = modelBuilder.getAnnotation(Entity.class);
         final Embedded embedded = modelBuilder.getAnnotation(Embedded.class);

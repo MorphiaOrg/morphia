@@ -29,8 +29,7 @@ public class InternalTaglet extends DocTaglet {
             return null;
         }
 
-        String text = "<div class=\"block\"><span class=\"deprecatedLabel\">%s.</span>&nbsp;<span "
-                      + "class=\"deprecationComment\">%s</span></div>";
+        String text = "<h2 class=\"title\">%s%s</h2>";
 
         return String.format(text, getHeader(), getMessage());
     }
@@ -42,7 +41,7 @@ public class InternalTaglet extends DocTaglet {
 
     @Override
     protected String getHeader() {
-        return "Developer note";
+        return "Developer note.";
     }
 
     @Override

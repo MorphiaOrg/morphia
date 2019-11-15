@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
-import dev.morphia.mapping.InstanceCreatorFactoryImpl;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
@@ -58,9 +58,12 @@ public class ClassMethodPair {
         }
     }
 
-    private Object getOrCreateInstance(final Class<?> clazz, final Datastore datastore) {
-        final InstanceCreatorFactoryImpl creatorFactory = new InstanceCreatorFactoryImpl(clazz);
-        return creatorFactory.create().getInstance();
+    private Object getOrCreateInstance(final Class<?> type, final Datastore datastore) {
+        try {
+            return type.getDeclaredConstructor(new Class[0]).newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new MappingException(Sofia.cannotInstantiate(type, e.getMessage()));
+        }
 
     }
 

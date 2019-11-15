@@ -21,6 +21,8 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.experimental.Constructor;
+import dev.morphia.annotations.experimental.Name;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -28,7 +30,9 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
+import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.testmodel.Address;
@@ -711,82 +715,82 @@ public class TestMapping extends TestBase {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private void performBasicMappingTest() {
-        final MongoCollection<Document> hotels = getDatabase().getCollection("hotels");
+    @Test
+    public void constructors() {
+        getDs().getMapper().map(ConstructorBased.class);
 
-        Mapper mapper = getDs().getMapper();
-        mapper.map(List.of(Hotel.class, TravelAgency.class));
+        ContainsFinalField value = new ContainsFinalField();
+        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", MorphiaReference.wrap(value));
 
-        final Hotel borg = new Hotel();
-        borg.setName("Hotel Borg");
-        borg.setStars(4);
-        borg.setTakesCreditCards(true);
-        borg.setStartDate(new Date());
-        borg.setType(Hotel.Type.LEISURE);
-        borg.getTags().add("Swimming pool");
-        borg.getTags().add("Room service");
-        borg.setTemp("A temporary transient value");
-        borg.getPhoneNumbers().add(new PhoneNumber(354, 5152233, PhoneNumber.Type.PHONE));
-        borg.getPhoneNumbers().add(new PhoneNumber(354, 5152244, PhoneNumber.Type.FAX));
+        getDs().save(List.of(value, instance));
 
-        final Address address = new Address();
-        address.setStreet("Posthusstraeti 11");
-        address.setPostCode("101");
-        borg.setAddress(address);
+        ConstructorBased first = getDs().find(ConstructorBased.class).first();
+        assertNotNull(first);
+        assertEquals(instance, first);
+    }
 
-        getDs().save(borg);
+    @Test(expected = ConstraintViolationException.class)
+    public void badConstructorMapping() {
+        getDs().getMapper().map(BadConstructorBased.class);
+    }
 
-        Document hotelDocument = hotels.find(new Document("_id", borg.getId())).first();
-        List<Document> numbers = (List<Document>) hotelDocument.get("phoneNumbers");
-        assertFalse(numbers.get(0).containsKey(
-            mapper.getOptions().getDiscriminatorKey()));
+    @Entity
+    public static class BadConstructorBased {
+        @Id
+        private ObjectId id;
+        private String name;
 
-        Hotel borgLoaded = getDs().find(Hotel.class)
-                                  .filter("_id", borg.getId())
-                                  .first();
+        @Constructor
+        public BadConstructorBased(@Name("_id") final ObjectId id,
+                                @Name("named") final String name) {
+            this.id = id;
+            this.name = name;
+        }
+    }
 
-        assertEquals(borg.getName(), borgLoaded.getName());
-        assertEquals(borg.getStars(), borgLoaded.getStars());
-        assertEquals(borg.getStartDate(), borgLoaded.getStartDate());
-        assertEquals(borg.getType(), borgLoaded.getType());
-        assertEquals(borg.getAddress().getStreet(), borgLoaded.getAddress().getStreet());
-        assertEquals(borg.getTags().size(), borgLoaded.getTags().size());
-        assertEquals(borg.getTags(), borgLoaded.getTags());
-        assertEquals(borg.getPhoneNumbers().size(), borgLoaded.getPhoneNumbers().size());
-        assertEquals(borg.getPhoneNumbers().get(1), borgLoaded.getPhoneNumbers().get(1));
-        assertNull(borgLoaded.getTemp());
-        assertTrue(borgLoaded.getPhoneNumbers() instanceof Vector);
-        assertNotNull(borgLoaded.getId());
+    @Entity
+    public static class ConstructorBased {
+        @Id
+        private ObjectId id;
+        private String name;
+        private MorphiaReference<ContainsFinalField> reference;
 
-        final TravelAgency agency = new TravelAgency();
-        agency.setName("Lastminute.com");
-        agency.getHotels().add(borgLoaded);
+        @Constructor
+        public ConstructorBased(@Name("id") final ObjectId id,
+                                @Name("name") final String name,
+                                @Name("reference") final MorphiaReference<ContainsFinalField> reference) {
+            this.id = id;
+            this.name = name;
+            this.reference = reference;
+        }
 
-        getDs().save(agency);
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ConstructorBased)) {
+                return false;
+            }
 
-        final TravelAgency agencyLoaded = getDs()
-                                              .find(TravelAgency.class)
-                                              .filter("_id", agency.getId())
-                                              .first();
+            final ConstructorBased that = (ConstructorBased) o;
 
-        assertEquals(agency.getName(), agencyLoaded.getName());
-        assertEquals(1, agency.getHotels().size());
-        assertEquals(agency.getHotels().get(0).getName(), borg.getName());
+            if (id != null ? !id.equals(that.id) : that.id != null) {
+                return false;
+            }
+            if (name != null ? !name.equals(that.name) : that.name != null) {
+                return false;
+            }
+            return reference != null ? reference.equals(that.reference) : that.reference == null;
+        }
 
-        // try clearing values
-        borgLoaded.setAddress(null);
-        borgLoaded.getPhoneNumbers().clear();
-        borgLoaded.setName(null);
-
-        getDs().save(borgLoaded);
-
-        hotelDocument = (Document) hotels.find(new Document("_id", borgLoaded.getId())).first();
-
-        borgLoaded = mapper.fromDocument(Hotel.class, hotelDocument);
-        assertNull(borgLoaded.getAddress());
-        assertEquals(0, borgLoaded.getPhoneNumbers().size());
-        assertNull(borgLoaded.getName());
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            result = 31 * result + (reference != null ? reference.hashCode() : 0);
+            return result;
+        }
     }
 
     public enum Enum1 {

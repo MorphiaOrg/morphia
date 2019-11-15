@@ -30,7 +30,7 @@ public class ClassModel<T> {
     private final String name;
     private final Class<T> type;
     private final boolean hasTypeParameters;
-    private final InstanceCreatorFactory<T> instanceCreatorFactory;
+    private final InstanceCreatorFactory<T> creatorFactory;
     private final boolean discriminatorEnabled;
     private final String discriminatorKey;
     private final String discriminator;
@@ -50,7 +50,7 @@ public class ClassModel<T> {
         this.type = clazz;
         this.hasTypeParameters = clazz.getTypeParameters().length > 0;
         this.propertyNameToTypeParameterMap = Collections.unmodifiableMap(propertyNameToTypeParameterMap);
-        this.instanceCreatorFactory = instanceCreatorFactory;
+        this.creatorFactory = instanceCreatorFactory;
         this.discriminatorEnabled = discriminatorEnabled;
         this.discriminatorKey = discriminatorKey;
         this.discriminator = discriminator;
@@ -73,7 +73,7 @@ public class ClassModel<T> {
      * @return a new InstanceCreator instance for the ClassModel
      */
     public InstanceCreator<T> getInstanceCreator() {
-        return instanceCreatorFactory.create();
+        return creatorFactory.create();
     }
 
     /**
@@ -223,7 +223,7 @@ public class ClassModel<T> {
     }
 
     public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
-        return instanceCreatorFactory;
+        return creatorFactory;
     }
 
     protected Map<String, TypeParameterMap> getPropertyNameToTypeParameterMap() {

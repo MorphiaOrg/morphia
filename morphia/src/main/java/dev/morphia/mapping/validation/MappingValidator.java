@@ -98,6 +98,7 @@ public class MappingValidator {
         constraints.add(new EmbeddedAndValue());
         constraints.add(new EntityCannotBeMapOrIterable());
         constraints.add(new DuplicatedAttributeNames());
+        constraints.add(new ConstructorParameterNameConstraint());
         // constraints.add(new ContainsEmbeddedWithId());
         // field-level
         constraints.add(new ReferenceToUnidentifiable());

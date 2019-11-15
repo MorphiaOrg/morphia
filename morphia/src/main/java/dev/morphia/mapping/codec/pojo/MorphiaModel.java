@@ -7,10 +7,13 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
+import org.bson.codecs.pojo.InstanceCreator;
+import org.bson.codecs.pojo.InstanceCreatorFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -42,13 +45,14 @@ public class MorphiaModel<T> extends ClassModel<T> {
     private final Map<Class<? extends Annotation>, List<Annotation>> annotations;
     private final List<FieldModel<?>> fieldModels;
     private final Datastore datastore;
+    private final InstanceCreatorFactory creatorFactory;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
     private String collectionName;
 
     /**
      * Copies an existing model
      *
-     * @param morphiaModel the model to copy
+     * @param morphiaModel     the model to copy
      * @param useDiscriminator the new use discriminator value
      */
     public MorphiaModel(final MorphiaModel morphiaModel, final boolean useDiscriminator) {
@@ -61,6 +65,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
         this.fieldModels = morphiaModel.getFieldModels();
         this.datastore = morphiaModel.datastore;
         this.collectionName = morphiaModel.collectionName;
+        this.creatorFactory = morphiaModel.creatorFactory;
     }
 
     /**
@@ -69,7 +74,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
      * @param builder the builder to pull values from
      */
     MorphiaModel(final MorphiaModelBuilder builder) {
-        super(builder.getType(), builder.getPropertyNameToTypeParameterMap(), builder.getInstanceCreatorFactory(),
+        super(builder.getType(), builder.getPropertyNameToTypeParameterMap(), null,
             builder.useDiscriminator(), builder.getDiscriminatorKey(), builder.getDiscriminator(),
             create(builder.getType(), builder.getIdPropertyModel(), builder.getIdGenerator()),
             builder.getPropertyModels());
@@ -78,6 +83,70 @@ public class MorphiaModel<T> extends ClassModel<T> {
         this.fieldModels = builder.getFieldModels();
         this.datastore = builder.getDatastore();
         this.collectionName = builder.getCollectionName();
+        creatorFactory = new InstanceCreatorFactoryImpl(this);
+    }
+
+    /**
+     * @return thee creator factory
+     * @morphia.internal
+     */
+    public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
+        return creatorFactory;
+    }
+
+    /**
+     * @return a new InstanceCreator instance for the ClassModel
+     */
+    public InstanceCreator<T> getInstanceCreator() {
+        return creatorFactory.create();
+    }
+
+    @Override
+    public String toString() {
+        String fields = fieldModels.stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
+                                   .collect(Collectors.joining(", "));
+        return format("%s<%s> { %s } ", MorphiaModel.class.getSimpleName(), getName(), fields);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MorphiaModel)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        final MorphiaModel<?> that = (MorphiaModel<?>) o;
+
+        if (getAnnotations() != null ? !getAnnotations().equals(that.getAnnotations()) : that.getAnnotations() != null) {
+            return false;
+        }
+        if (getFieldModels() != null ? !getFieldModels().equals(that.getFieldModels()) : that.getFieldModels() != null) {
+            return false;
+        }
+        if (!Objects.equals(datastore, that.datastore)) {
+            return false;
+        }
+        if (getLifecycleMethods() != null ? !getLifecycleMethods().equals(that.getLifecycleMethods())
+                                          : that.getLifecycleMethods() != null) {
+            return false;
+        }
+        return getCollectionName() != null ? getCollectionName().equals(that.getCollectionName()) : that.getCollectionName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getAnnotations() != null ? getAnnotations().hashCode() : 0);
+        result = 31 * result + (getFieldModels() != null ? getFieldModels().hashCode() : 0);
+        result = 31 * result + (datastore != null ? datastore.hashCode() : 0);
+        result = 31 * result + (getLifecycleMethods() != null ? getLifecycleMethods().hashCode() : 0);
+        result = 31 * result + (getCollectionName() != null ? getCollectionName().hashCode() : 0);
+        return result;
     }
 
     /**
@@ -169,54 +238,6 @@ public class MorphiaModel<T> extends ClassModel<T> {
      */
     public boolean hasLifecycle(final Class<? extends Annotation> type) {
         return getLifecycleMethods().containsKey(type);
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof MorphiaModel)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        final MorphiaModel<?> that = (MorphiaModel<?>) o;
-
-        if (getAnnotations() != null ? !getAnnotations().equals(that.getAnnotations()) : that.getAnnotations() != null) {
-            return false;
-        }
-        if (getFieldModels() != null ? !getFieldModels().equals(that.getFieldModels()) : that.getFieldModels() != null) {
-            return false;
-        }
-        if (!Objects.equals(datastore, that.datastore)) {
-            return false;
-        }
-        if (getLifecycleMethods() != null ? !getLifecycleMethods().equals(that.getLifecycleMethods())
-                                          : that.getLifecycleMethods() != null) {
-            return false;
-        }
-        return getCollectionName() != null ? getCollectionName().equals(that.getCollectionName()) : that.getCollectionName() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getAnnotations() != null ? getAnnotations().hashCode() : 0);
-        result = 31 * result + (getFieldModels() != null ? getFieldModels().hashCode() : 0);
-        result = 31 * result + (datastore != null ? datastore.hashCode() : 0);
-        result = 31 * result + (getLifecycleMethods() != null ? getLifecycleMethods().hashCode() : 0);
-        result = 31 * result + (getCollectionName() != null ? getCollectionName().hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        String fields = fieldModels.stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
-                                   .collect(Collectors.joining(", "));
-        return format("%s<%s> { %s } ", MorphiaModel.class.getSimpleName(), getName(), fields);
     }
 
     private void mapEvent(final Class<?> type, final boolean entityListener) {

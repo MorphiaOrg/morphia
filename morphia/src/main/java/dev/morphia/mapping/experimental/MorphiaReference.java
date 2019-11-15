@@ -125,4 +125,23 @@ public abstract class MorphiaReference<T> {
     Datastore getDatastore() {
         return datastore;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MorphiaReference)) {
+            return false;
+        }
+
+        final MorphiaReference<?> that = (MorphiaReference<?>) o;
+
+        return getIds().equals(that.getIds());
+    }
+
+    @Override
+    public int hashCode() {
+        return (isResolved() ? 1 : 0);
+    }
 }
