@@ -67,28 +67,6 @@ public class MappedField {
         discoverNames();
     }
 
-    private <K, V> Map<K, V> map(final K key, final V value) {
-        final HashMap<K, V> map = new HashMap<>();
-        map.put(key, value);
-        return map;
-    }
-
-    private void discoverNames() {
-        loadNames = inferLoadNames();
-    }
-
-    protected List<String> inferLoadNames() {
-        final AlsoLoad al = (AlsoLoad) annotations.get(AlsoLoad.class);
-        if (al != null && al.value() != null && al.value().length > 0) {
-            final List<String> names = new ArrayList<String>();
-            names.add(getMappedFieldName());
-            names.addAll(asList(al.value()));
-            return names;
-        } else {
-            return Collections.singletonList(getMappedFieldName());
-        }
-    }
-
     /**
      * @return the name of the field's (key)name for mongodb
      */
@@ -122,22 +100,10 @@ public class MappedField {
 
     /**
      * @param document the Document get the value from
-     * @return the value from best mapping of this field
+     * @return the value from first mapping of this field
      */
     public Object getDocumentValue(final Document document) {
         return document.get(getFirstFieldName(document));
-    }
-
-    private String getFirstFieldName(final Document document) {
-        List<String> names = List.of(getMappedFieldName());
-        names.addAll(getLoadNames());
-        List<String> list = names.stream()
-                                 .filter(name -> document.containsKey(name))
-                                 .collect(Collectors.toList());
-        if (list.size() > 1) {
-            throw new MappingException(format("Found more than one field mapping for ", getFullName()));
-        }
-        return list.get(0);
     }
 
     /**
@@ -241,10 +207,6 @@ public class MappedField {
         return getType().isArray();
     }
 
-    private boolean isCollection() {
-        return Collection.class.isAssignableFrom(getTypeData().getType());
-    }
-
     /**
      * @return the field's type data
      */
@@ -302,25 +264,10 @@ public class MappedField {
     /**
      * Gets the parameterized type of a List or the key type of a Map, e.g.
      *
-     * @return the type we're interested in
+     * @return the unwrapped type
      */
     public Class getNormalizedType() {
-        Class<?> type;
-        if (!isParameterized()) {
-            type = getTypeData().getType();
-        } else {
-            List<TypeData<?>> typeParameters = getTypeData().getTypeParameters();
-            TypeData<?> typeData = typeParameters.get(typeParameters.size() - 1);
-            type = typeData.getType();
-        }
-        return type.isArray() ? type.getComponentType() : type;
-    }
-
-    /**
-     * @return true if the field type is parameterized
-     */
-    public boolean isParameterized() {
-        return !getTypeData().getTypeParameters().isEmpty();
+        return fieldModel.getNormalizedType();
     }
 
     /**
@@ -328,5 +275,43 @@ public class MappedField {
      */
     public FieldModel getFieldModel() {
         return fieldModel;
+    }
+
+    protected List<String> inferLoadNames() {
+        final AlsoLoad al = (AlsoLoad) annotations.get(AlsoLoad.class);
+        if (al != null && al.value() != null && al.value().length > 0) {
+            final List<String> names = new ArrayList<>();
+            names.add(getMappedFieldName());
+            names.addAll(asList(al.value()));
+            return names;
+        } else {
+            return Collections.singletonList(getMappedFieldName());
+        }
+    }
+
+    private <K, V> Map<K, V> map(final K key, final V value) {
+        final HashMap<K, V> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
+
+    private void discoverNames() {
+        loadNames = inferLoadNames();
+    }
+
+    private String getFirstFieldName(final Document document) {
+        List<String> names = List.of(getMappedFieldName());
+        names.addAll(getLoadNames());
+        List<String> list = names.stream()
+                                 .filter(name -> document.containsKey(name))
+                                 .collect(Collectors.toList());
+        if (list.size() > 1) {
+            throw new MappingException(format("Found more than one field mapping for ", getFullName()));
+        }
+        return list.get(0);
+    }
+
+    private boolean isCollection() {
+        return Collection.class.isAssignableFrom(getTypeData().getType());
     }
 }

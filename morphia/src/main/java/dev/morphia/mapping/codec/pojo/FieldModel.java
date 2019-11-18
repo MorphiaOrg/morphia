@@ -40,6 +40,7 @@ public final class FieldModel<T> {
     private List<Annotation> annotations;
     private final Codec<T> codec;
     private volatile Codec<T> cachedCodec;
+    private Class<?> normalizedType;
 
     FieldModel(final Field field, final String name, final String mappedName, final TypeData<T> typeData,
                final List<Annotation> annotations, final Codec<T> codec) {
@@ -167,4 +168,40 @@ public final class FieldModel<T> {
     public Field getField() {
         return field;
     }
+
+    /**
+     * Gets the parameterized type of a List or the key type of a Map, e.g.
+     *
+     * @return the unwrapped type
+     */
+    public Class<?> getNormalizedType() {
+        if (normalizedType == null) {
+            normalizedType = normalize(getTypeData());
+        }
+
+        return normalizedType;
+    }
+
+    /**
+     * Gets the parameterized type of a TypeData
+     *
+     * @param toNormalize the type to normalize
+     * @return the unwrapped type
+     * @morphia.internal
+     */
+    public static Class<?> normalize(final TypeData<?> toNormalize) {
+        Class<?> type;
+        TypeData<?> typeData = toNormalize;
+        while (!typeData.getTypeParameters().isEmpty()) {
+            List<TypeData<?>> typeParameters = typeData.getTypeParameters();
+            typeData = typeParameters.get(typeParameters.size() - 1);
+        }
+        type = typeData.getType();
+        while (type.isArray()) {
+            type = type.getComponentType();
+        }
+        //            normalizedType =  normalizedType.isArray() ? normalizedType.getComponentType() : normalizedType;
+        return type;
+    }
+
 }

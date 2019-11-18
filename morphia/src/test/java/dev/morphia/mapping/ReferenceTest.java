@@ -12,6 +12,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.testutil.TestEntity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -19,6 +20,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -220,6 +222,38 @@ public class ReferenceTest extends ProxyTestBase {
         Assert.assertEquals(map, first);
     }
 
+    @Test
+    public final void testArrayPersistence() {
+        ArrayOfReferences a = new ArrayOfReferences();
+        final Ref ref1 = new Ref();
+        final Ref ref2 = new Ref();
+
+        a.refs[0] = ref1;
+        a.refs[1] = ref2;
+
+        getDs().save(asList(ref2, ref1, a));
+
+        getDs().get(a);
+    }
+
+    @Test
+    public final void testMultiDimArrayPersistence() {
+        MultiDimArrayOfReferences a = new MultiDimArrayOfReferences();
+        final Ref ref1 = new Ref();
+        final Ref ref2 = new Ref();
+
+        a.arrays = new Ref[][][] {
+            new Ref[][] {
+                new Ref[] { ref1, ref2 }
+            }
+        };
+        a.lists = List.of(List.of(List.of(ref1),List.of(ref2)));
+        getDs().save(asList(ref2, ref1, a));
+
+        MultiDimArrayOfReferences references = getDs().get(a);
+        assertEquals(a, references);
+    }
+
     private void allNull(final Container container) {
         Assert.assertNull(container.lazyMapRef);
         Assert.assertNull(container.singleRef);
@@ -227,6 +261,41 @@ public class ReferenceTest extends ProxyTestBase {
         Assert.assertNull(container.collectionRef);
         Assert.assertNull(container.lazyCollectionRef);
         Assert.assertNull(container.mapRef);
+    }
+
+    public static class ArrayOfReferences extends TestEntity {
+        @Reference
+        private final Ref[] refs = new Ref[2];
+    }
+
+    public static class MultiDimArrayOfReferences extends TestEntity {
+        @Reference(idOnly = true)
+        private Ref[][][] arrays;
+        private List<List<List<Ref>>> lists;
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof MultiDimArrayOfReferences)) {
+                return false;
+            }
+
+            final MultiDimArrayOfReferences that = (MultiDimArrayOfReferences) o;
+
+            if (!Arrays.deepEquals(arrays, that.arrays)) {
+                return false;
+            }
+            return lists != null ? lists.equals(that.lists) : that.lists == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Arrays.deepHashCode(arrays);
+            result = 31 * result + (lists != null ? lists.hashCode() : 0);
+            return result;
+        }
     }
 
     @Entity

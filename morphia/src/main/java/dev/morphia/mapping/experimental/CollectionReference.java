@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
-
 /**
  * @param <C>
  * @morphia.internal
@@ -42,6 +40,9 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         this.ids = ids;
     }
 
+    protected CollectionReference() {
+    }
+
     static void collate(final MappedClass valueType, final Map<String, List<Object>> collections,
                         final Object o) {
         final String collectionName;
@@ -60,28 +61,89 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
     static List register(final Map<String, List<Object>> collections, final String name) {
         return collections.computeIfAbsent(name, k -> new ArrayList<>());
-    }    @Override
-    public List getIds() {
-        return ids;
     }
 
-    protected CollectionReference() {
-    }    @Override
+    /**
+     * Gets the referenced entities.  This may require at least one request to the server.
+     *
+     * @return the referenced entities
+     */
+    public abstract C get();
+
+    @Override
     public Class<C> getType() {
         return (Class<C>) mappedClass.getType();
     }
 
-    @SuppressWarnings("unchecked")
-    final List<?> find() {
-        final List<Object> values = new ArrayList(asList(new Object[ids.size()]));
-        for (final Entry<String, List<Object>> entry : collections.entrySet()) {
-            query(entry.getKey(), entry.getValue(), values);
-        }
-        resolve();
-        return values.stream().filter(o -> o != null).collect(Collectors.toList());
+    @Override
+    public List getIds() {
+        return ids;
     }
 
-    void query(final String collection, final List<Object> collectionIds, final List<Object> values) {
+    @Override
+    public Object encode(final Mapper mapper, final Object value, final MappedField field) {
+        if (isResolved()) {
+            List ids = new ArrayList();
+            for (final Object entity : get()) {
+                ids.add(wrapId(mapper, field, entity));
+            }
+            return ids;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    final List<Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass mappedClass) {
+        if (ids == null) {
+            ids = getValues().stream()
+                             .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, mappedClass))
+                             .collect(Collectors.toList());
+        }
+        return ids;
+    }
+
+    private List<Object> extractIds(final List<Object> list) {
+        List<Object> ids = new ArrayList<>();
+        list.forEach(i -> {
+            if (i instanceof List) {
+                ids.addAll(extractIds((List<Object>) i));
+            } else {
+                ids.add(i);
+            }
+        });
+        return ids;
+    }
+
+    private List<Object> mapIds(final List list, final Map<Object, Object> idMap) {
+        final List<Object> values = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            final Object id = list.get(i);
+
+            final Object value;
+            if (id instanceof List) {
+                value = mapIds((List) id, idMap);
+            } else {
+                value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
+            }
+            if (value != null) {
+                values.add(value);
+            }
+        }
+
+        return values;
+    }
+
+    final List find() {
+        List values = new ArrayList();
+        for (final Entry<String, List<Object>> entry : collections.entrySet()) {
+            values.addAll(query(entry.getKey(), extractIds(entry.getValue())));
+        }
+        resolve();
+        return values;
+    }
+
+    List<Object> query(final String collection, final List<Object> collectionIds) {
 
         try (MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection)
                                                                          .disableValidation()
@@ -99,45 +161,9 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
             }
 
-            for (int i = 0; i < ids.size(); i++) {
-                final Object id = ids.get(i);
-                final Object value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
-                if (value != null) {
-                    values.set(i, value);
-                }
-            }
+            return mapIds(ids, idMap);
         }
     }
 
     abstract Collection<?> getValues();
-
-    /**
-     * Gets the referenced entities.  This may require at least one request to the server.
-     *
-     * @return the referenced entities
-     */
-    public abstract C get();
-
-    @Override
-    final List<Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass mappedClass) {
-        if (ids == null) {
-            ids = getValues().stream()
-                             .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, mappedClass))
-                             .collect(Collectors.toList());
-        }
-        return ids;
-    }
-
-    @Override
-    public Object encode(final Mapper mapper, final Object value, final MappedField field) {
-        if (isResolved()) {
-            List ids = new ArrayList();
-            for (final Object entity : get()) {
-                ids.add(wrapId(mapper, field, entity));
-            }
-            return ids;
-        } else {
-            return null;
-        }
-    }
 }

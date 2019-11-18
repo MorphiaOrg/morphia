@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.TypeData;
 
@@ -54,13 +55,7 @@ public abstract class PropertyCodec<T> implements Codec<T> {
 
     protected MappedClass getFieldMappedClass() {
         if (mappedClass == null) {
-            Class<?> type = typeData.getTypeParameters().isEmpty()
-                            ? typeData.getType()
-                            : ((TypeData) typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1)).getType();
-            if (type.isArray()) {
-                type = type.getComponentType();
-            }
-            mappedClass = datastore.getMapper().getMappedClass(type);
+            mappedClass = datastore.getMapper().getMappedClass(FieldModel.normalize(typeData));
         }
         return mappedClass;
     }
