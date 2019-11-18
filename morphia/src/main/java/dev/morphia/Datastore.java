@@ -314,7 +314,18 @@ public interface Datastore {
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
      */
-    <T> void merge(T entity);
+    <T> T merge(T entity);
+
+    /**
+     * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
+     *
+     * @param entity  the entity to merge back in to the database
+     * @param options the options to apply
+     * @param <T>     the type of the entity
+     * @return the new merged entity.  NOTE:  this is a database fetch.
+     * @since 2.0
+     */
+    <T> T merge(T entity, InsertOneOptions options);
 
     /**
      * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
@@ -323,6 +334,7 @@ public interface Datastore {
      * @param <T>    the type of the entity
      * @param wc     the WriteConcern to use
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> void merge(T entity, WriteConcern wc);
 
     /**

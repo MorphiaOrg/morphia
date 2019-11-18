@@ -22,6 +22,7 @@ import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class TestDatastoreMerge extends TestBase {
@@ -40,12 +41,11 @@ public class TestDatastoreMerge extends TestBase {
         final Merger te2 = new Merger();
         te2.id = te.id;
         te2.position = 5;
-        getDs().merge(te2);
+        Merger merge = getDs().merge(te2);
 
-        final Merger teLoaded = getDs().get(te);
-        assertEquals(te.name, teLoaded.name);
-        assertEquals(te.foo, teLoaded.foo);
-        assertEquals(te2.position, teLoaded.position);
+        assertEquals(te.name, merge.name);
+        assertEquals(te.foo, merge.foo);
+        assertEquals(te2.position, merge.position);
     }
 
     @Test

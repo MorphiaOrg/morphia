@@ -49,6 +49,7 @@ import static org.bson.Document.parse;
  *
  * @morphia.internal
  */
+@SuppressWarnings("unchecked")
 class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
@@ -149,29 +150,6 @@ class DatastoreImpl implements AdvancedDatastore {
     public void enableDocumentValidation() {
         for (final MappedClass mc : mapper.getMappedClasses()) {
             process(mc, mc.getAnnotation(Validation.class));
-        }
-    }
-
-    void process(final MappedClass mc, final Validation validation) {
-        if (validation != null) {
-            String collectionName = mc.getCollectionName();
-            try {
-                getDatabase().runCommand(new Document("collMod", collectionName)
-                                             .append("validator", parse(validation.value()))
-                                             .append("validationLevel", validation.level().getValue())
-                                             .append("validationAction", validation.action().getValue()));
-            } catch (MongoCommandException e) {
-                if (e.getCode() == 26) {
-                    getDatabase().createCollection(collectionName,
-                        new CreateCollectionOptions()
-                            .validationOptions(new ValidationOptions()
-                                                   .validator(parse(validation.value()))
-                                                   .validationLevel(validation.level())
-                                                   .validationAction(validation.action())));
-                } else {
-                    throw e;
-                }
-            }
         }
     }
 
@@ -290,13 +268,12 @@ class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> void merge(final T entity) {
-        merge(entity, mapper.getWriteConcern(entity.getClass()));
+    public <T> T merge(final T entity) {
+        return merge(entity, new InsertOneOptions());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> void merge(final T entity, final WriteConcern wc) {
+    public <T> T merge(final T entity, final InsertOneOptions options) {
         final Object id = mapper.getId(entity);
         if (id == null) {
             throw new MappingException("Could not get id for " + entity.getClass().getName());
@@ -308,15 +285,22 @@ class DatastoreImpl implements AdvancedDatastore {
         final MappedClass mc = mapper.getMappedClass(entity.getClass());
         final MongoCollection collection = getCollection(entity.getClass());
 
-        if (!tryVersionedUpdate(collection, entity, new InsertOneOptions().writeConcern(wc), mc)) {
-            final Query<T> query = (Query<T>) find(entity.getClass()).filter("_id", id);
+        final Query<T> query = (Query<T>) find(entity.getClass()).filter("_id", id);
+        if (!tryVersionedUpdate(collection, entity, options, mc)) {
             UpdateResult execute = query.update()
                                         .set(entity)
-                                        .execute(new UpdateOptions().writeConcern(wc));
+                                        .execute(new UpdateOptions().writeConcern(options.writeConcern()));
             if (execute.getModifiedCount() != 1) {
                 throw new UpdateException("Nothing updated");
             }
         }
+
+        return query.first();
+    }
+
+    @Override
+    public <T> void merge(final T entity, final WriteConcern wc) {
+        merge(entity, new InsertOneOptions().writeConcern(wc));
     }
 
     @SuppressWarnings("unchecked")
@@ -374,85 +358,6 @@ class DatastoreImpl implements AdvancedDatastore {
         return applied != null
                ? collection.withWriteConcern(applied)
                : collection;
-    }
-
-    private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
-        if (entity == null) {
-            throw new UpdateException("Can not persist a null entity");
-        }
-
-        final MappedClass mc = mapper.getMappedClass(entity.getClass());
-
-        if (!tryVersionedUpdate(collection, entity, options, mc)) {
-            saveDocument(entity, collection, options);
-        }
-    }
-
-    private <T> boolean tryVersionedUpdate(final MongoCollection collection, final T entity,
-                                           final InsertOneOptions options, final MappedClass mc) {
-        if (mc.getVersionField() == null) {
-            return false;
-        }
-
-        MappedField idField = mc.getIdField();
-        final Object idValue = idField.getFieldValue(entity);
-        final MappedField versionField = mc.getVersionField();
-
-        Long oldVersion = (Long) versionField.getFieldValue(entity);
-        long newVersion = oldVersion == null ? 1L : oldVersion + 1;
-
-        if (newVersion == 1) {
-            try {
-                updateVersion(entity, versionField, newVersion);
-                options.apply(collection)
-                       .insertOne(entity, options.getOptions());
-            } catch (MongoWriteException e) {
-                updateVersion(entity, versionField, oldVersion);
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
-                    entity.getClass().getName(), idValue));
-            }
-        } else if (idValue != null) {
-            final UpdateResult res = find(collection.getNamespace().getCollectionName())
-                                         .filter("_id", idValue)
-                                         .filter(versionField.getMappedFieldName(), oldVersion)
-                                         .update()
-                                         .set(entity)
-                                         .execute(new UpdateOptions()
-                                                      .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                      .writeConcern(options.getWriteConcern()));
-
-            if (res.getModifiedCount() != 1) {
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
-                    entity.getClass().getName(), idValue, oldVersion));
-            }
-            updateVersion(entity, versionField, newVersion);
-        }
-
-        return true;
-    }
-
-    private <T> void saveDocument(final T entity,
-                                  final MongoCollection<T> collection,
-                                  final InsertOneOptions options) {
-        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
-        if (id == null) {
-            options.apply(collection)
-                   .insertOne(entity, options.getOptions());
-        } else {
-            ReplaceOptions updateOptions = new ReplaceOptions()
-                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                               .upsert(true);
-            if (options.getWriteConcern() != null) {
-                collection.withWriteConcern(options.getWriteConcern())
-                          .replaceOne(new Document("_id", id), entity, updateOptions);
-            } else {
-                collection.replaceOne(new Document("_id", id), entity, updateOptions);
-            }
-        }
-    }
-
-    private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
-        field.setFieldValue(entity, newVersion);
     }
 
     /**
@@ -548,6 +453,85 @@ class DatastoreImpl implements AdvancedDatastore {
               .insertOne(entity, options.getOptions());
     }
 
+    private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
+        if (entity == null) {
+            throw new UpdateException("Can not persist a null entity");
+        }
+
+        final MappedClass mc = mapper.getMappedClass(entity.getClass());
+
+        if (!tryVersionedUpdate(collection, entity, options, mc)) {
+            saveDocument(entity, collection, options);
+        }
+    }
+
+    private <T> boolean tryVersionedUpdate(final MongoCollection collection, final T entity,
+                                           final InsertOneOptions options, final MappedClass mc) {
+        if (mc.getVersionField() == null) {
+            return false;
+        }
+
+        MappedField idField = mc.getIdField();
+        final Object idValue = idField.getFieldValue(entity);
+        final MappedField versionField = mc.getVersionField();
+
+        Long oldVersion = (Long) versionField.getFieldValue(entity);
+        long newVersion = oldVersion == null ? 1L : oldVersion + 1;
+
+        if (newVersion == 1) {
+            try {
+                updateVersion(entity, versionField, newVersion);
+                options.apply(collection)
+                       .insertOne(entity, options.getOptions());
+            } catch (MongoWriteException e) {
+                updateVersion(entity, versionField, oldVersion);
+                throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
+                    entity.getClass().getName(), idValue));
+            }
+        } else if (idValue != null) {
+            final UpdateResult res = find(collection.getNamespace().getCollectionName())
+                                         .filter("_id", idValue)
+                                         .filter(versionField.getMappedFieldName(), oldVersion)
+                                         .update()
+                                         .set(entity)
+                                         .execute(new UpdateOptions()
+                                                      .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                      .writeConcern(options.getWriteConcern()));
+
+            if (res.getModifiedCount() != 1) {
+                throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
+                    entity.getClass().getName(), idValue, oldVersion));
+            }
+            updateVersion(entity, versionField, newVersion);
+        }
+
+        return true;
+    }
+
+    private <T> void saveDocument(final T entity,
+                                  final MongoCollection<T> collection,
+                                  final InsertOneOptions options) {
+        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
+        if (id == null) {
+            options.apply(collection)
+                   .insertOne(entity, options.getOptions());
+        } else {
+            ReplaceOptions updateOptions = new ReplaceOptions()
+                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                               .upsert(true);
+            if (options.getWriteConcern() != null) {
+                collection.withWriteConcern(options.getWriteConcern())
+                          .replaceOne(new Document("_id", id), entity, updateOptions);
+            } else {
+                collection.replaceOne(new Document("_id", id), entity, updateOptions);
+            }
+        }
+    }
+
+    private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
+        field.setFieldValue(entity, newVersion);
+    }
+
     private <T> void setInitialVersion(final MappedField versionField, final T entity) {
         if (versionField != null) {
             Object value = versionField.getFieldValue(entity);
@@ -573,5 +557,28 @@ class DatastoreImpl implements AdvancedDatastore {
      */
     private <T> Query<T> newQuery(final Class<T> type) {
         return getQueryFactory().createQuery(this, type);
+    }
+
+    void process(final MappedClass mc, final Validation validation) {
+        if (validation != null) {
+            String collectionName = mc.getCollectionName();
+            try {
+                getDatabase().runCommand(new Document("collMod", collectionName)
+                                             .append("validator", parse(validation.value()))
+                                             .append("validationLevel", validation.level().getValue())
+                                             .append("validationAction", validation.action().getValue()));
+            } catch (MongoCommandException e) {
+                if (e.getCode() == 26) {
+                    getDatabase().createCollection(collectionName,
+                        new CreateCollectionOptions()
+                            .validationOptions(new ValidationOptions()
+                                                   .validator(parse(validation.value()))
+                                                   .validationLevel(validation.level())
+                                                   .validationAction(validation.action())));
+                } else {
+                    throw e;
+                }
+            }
+        }
     }
 }
