@@ -30,7 +30,7 @@ public class ClassMethodPair {
         try {
             Object instance;
             if (type != null) {
-                instance = getOrCreateInstance(type, datastore);
+                instance = getOrCreateInstance(type);
             } else {
                 instance = entity;
             }
@@ -44,6 +44,8 @@ public class ClassMethodPair {
             for (final Class<?> parameterType : method.getParameterTypes()) {
                 if (parameterType.equals(Document.class)) {
                     args.add(document);
+                } else if (parameterType.equals(Datastore.class)) {
+                    args.add(datastore);
                 } else {
                     args.add(entity);
                 }
@@ -58,7 +60,7 @@ public class ClassMethodPair {
         }
     }
 
-    private Object getOrCreateInstance(final Class<?> type, final Datastore datastore) {
+    private Object getOrCreateInstance(final Class<?> type) {
         try {
             return type.getDeclaredConstructor(new Class[0]).newInstance();
         } catch (ReflectiveOperationException e) {

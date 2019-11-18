@@ -144,7 +144,6 @@ public class MorphiaModel<T> extends ClassModel<T> {
         result = 31 * result + (getAnnotations() != null ? getAnnotations().hashCode() : 0);
         result = 31 * result + (getFieldModels() != null ? getFieldModels().hashCode() : 0);
         result = 31 * result + (datastore != null ? datastore.hashCode() : 0);
-        result = 31 * result + (getLifecycleMethods() != null ? getLifecycleMethods().hashCode() : 0);
         result = 31 * result + (getCollectionName() != null ? getCollectionName().hashCode() : 0);
         return result;
     }

@@ -170,6 +170,7 @@ public class TestDatastore extends TestBase {
         final LifecycleTestObj life1 = new LifecycleTestObj();
         getMapper().map(List.of(LifecycleTestObj.class));
         getDs().save(life1);
+        assertTrue(LifecycleListener.foundDatastore);
         assertTrue(life1.prePersist);
         assertTrue(life1.prePersistWithParam);
         assertTrue(life1.prePersistWithParamAndReturn);
@@ -661,13 +662,14 @@ public class TestDatastore extends TestBase {
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public static class LifecycleListener {
         private static boolean prePersist;
         private static boolean prePersistWithEntity;
+        private static boolean foundDatastore;
 
         @PrePersist
-        void prePersist() {
+        void prePersist(final Datastore datastore) {
+            foundDatastore = datastore != null;
             prePersist = true;
         }
 
