@@ -63,10 +63,10 @@ public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
         Assert.assertEquals(map, first.map.get());
 
         Assert.assertNotNull(first.list);
-        Assert.assertEquals(list.size(), first.list.get().size());
+        Assert.assertEquals(list, first.list.get());
 
         Assert.assertNotNull(first.set);
-        Assert.assertEquals(set.size(), first.set.get().size());
+        Assert.assertEquals(set, first.set.get());
     }
 
 }

@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+
 /**
  * @param <C>
  * @morphia.internal
@@ -116,7 +118,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     private List<Object> mapIds(final List list, final Map<Object, Object> idMap) {
-        final List<Object> values = new ArrayList<>();
+        final List<Object> values = new ArrayList<>(asList(new Object[list.size()]));
         for (int i = 0; i < list.size(); i++) {
             final Object id = list.get(i);
 
@@ -127,7 +129,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
             }
             if (value != null) {
-                values.add(value);
+                values.set(i, value);
             }
         }
 
@@ -135,21 +137,23 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     final List find() {
-        List values = new ArrayList();
+        HashMap<Object, Object> idMap = new HashMap<>();
         for (final Entry<String, List<Object>> entry : collections.entrySet()) {
-            values.addAll(query(entry.getKey(), extractIds(entry.getValue())));
+            idMap.putAll(query(entry.getKey(), extractIds(entry.getValue())));
         }
+        List values = mapIds(ids, idMap).stream().filter(e -> e != null)
+            .collect(Collectors.toList());
         resolve();
         return values;
     }
 
-    List<Object> query(final String collection, final List<Object> collectionIds) {
+    Map<Object, Object> query(final String collection, final List<Object> collectionIds) {
 
+        final Map<Object, Object> idMap = new HashMap<>();
         try (MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection)
                                                                          .disableValidation()
                                                                          .filter("_id in ", collectionIds)
                                                                          .execute()) {
-            final Map<Object, Object> idMap = new HashMap<>();
             while (cursor.hasNext()) {
                 final Object entity = cursor.next();
                 idMap.put(getDatastore().getMapper().getId(entity), entity);
@@ -160,9 +164,9 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                     Sofia.missingReferencedEntities(mappedClass.getType().getSimpleName()));
 
             }
-
-            return mapIds(ids, idMap);
         }
+
+        return idMap;
     }
 
     abstract Collection<?> getValues();
