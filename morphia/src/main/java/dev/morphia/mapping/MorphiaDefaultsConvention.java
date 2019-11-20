@@ -7,9 +7,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
-import dev.morphia.annotations.Version;
+import dev.morphia.annotations.experimental.IdField;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
@@ -46,29 +45,6 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
                || Modifier.isTransient(field.getField().getModifiers());
     }
 
-    private static String getMappedFieldName(final FieldModelBuilder<?> field) {
-        if (field.hasAnnotation(Id.class)) {
-            return "_id";
-        } else if (field.hasAnnotation(Property.class)) {
-            final Property mv = field.getAnnotation(Property.class);
-            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mv.value();
-            }
-        } else if (field.hasAnnotation(Reference.class)) {
-            final Reference mr = field.getAnnotation(Reference.class);
-            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mr.value();
-            }
-        } else if (field.hasAnnotation(Version.class)) {
-            final Version me = field.getAnnotation(Version.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        }
-
-        return field.getName();
-    }
-
     @Override
     public void apply(final Datastore datastore, final MorphiaModelBuilder<?> modelBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
@@ -83,7 +59,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
             modelBuilder.discriminatorKey(applyDefaults(embedded.discriminatorKey(), options.getDiscriminatorKey()));
         } else {
             modelBuilder.enableDiscriminator(true);
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Types should either have @Entity or @Embedded.  Should 'never' get here.");
         }
 
         options.getDiscriminator().apply(modelBuilder);
@@ -96,6 +72,22 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         }
         modelBuilder.propertyNameToTypeParameterMap(Collections.emptyMap());
 
+        processFields(datastore, modelBuilder, options);
+
+        if (modelBuilder.getIdPropertyName() == null) {
+            IdField idField = modelBuilder.getAnnotation(IdField.class);
+            if (idField != null) {
+                modelBuilder.idPropertyName(idField.value());
+                FieldModelBuilder<?> fieldModelBuilder = modelBuilder.getFieldModelBuilders().stream()
+                                                                     .filter(builder -> builder.getName().equals(idField.value()))
+                                                                     .findFirst().orElseThrow();
+                fieldModelBuilder.mappedName("_id");
+            }
+        }
+
+    }
+
+    void processFields(final Datastore datastore, final MorphiaModelBuilder<?> modelBuilder, final MapperOptions options) {
         Iterator<FieldModelBuilder<?>> iterator = modelBuilder.getFieldModelBuilders().iterator();
         while (iterator.hasNext()) {
             final FieldModelBuilder<?> builder = iterator.next();
@@ -120,7 +112,6 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
                 }
             }
         }
-
     }
 
     private void buildProperty(final Datastore datastore, final MapperOptions options, final MorphiaModelBuilder modelBuilder,

@@ -313,6 +313,7 @@ public interface Datastore {
      *
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
+     * @return the new merged entity.  NOTE:  this is a database fetch.
      */
     <T> T merge(T entity);
 

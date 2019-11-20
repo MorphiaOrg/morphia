@@ -36,7 +36,6 @@ import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
 
 /**
  * Builder for MorphiaModels
- *
  * @param <T> the entity type
  */
 public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
@@ -163,13 +162,14 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      * @return the new instance
      */
     public MorphiaModel<T> build() {
-        idPropertyModel = null;
         annotationsMap = getAnnotations().stream()
                                          .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
 
         for (final Convention convention : getConventions()) {
             convention.apply(this);
         }
+        idPropertyModel = null;
+        idPropertyName(null);
         for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
             convention.apply(datastore, this);
         }
@@ -197,6 +197,10 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
         fieldModels = fieldModelBuilders.stream()
                                         .map(FieldModelBuilder::build)
                                         .collect(Collectors.toList());
+
+        if (getIdPropertyName() == null) {
+            idGenerator(null);
+        }
 
         return new MorphiaModel<>(this);
     }
