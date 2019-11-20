@@ -3,7 +3,7 @@ package dev.morphia.mapping.experimental;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.pojo.MorphiaModel;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.PropertyModel;
 
@@ -24,13 +24,13 @@ import java.util.function.BiFunction;
 public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
     private final Object[] parameters;
     private Constructor<T> constructor;
-    private MorphiaModel model;
+    private EntityModel model;
     private Map<String, BiFunction<Object[], Object, Void>> positions = new LinkedHashMap<>();
 
     /**
      * @param model the model
      */
-    public ConstructorCreator(final MorphiaModel model) {
+    public ConstructorCreator(final EntityModel model) {
         this.model = model;
         constructor = getFullConstructor(model);
         if (constructor == null) {
@@ -64,7 +64,7 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
      * @return the constructor taking all fields if it exists
      * @morphia.internal
      */
-    public static <T> Constructor<T> getFullConstructor(final MorphiaModel model) {
+    public static <T> Constructor<T> getFullConstructor(final EntityModel model) {
         for (Constructor<T> constructor : model.getType().getDeclaredConstructors()) {
             if (constructor.getParameterCount() == model.getFieldModels().size()
                 && constructor.getAnnotation(dev.morphia.annotations.experimental.Constructor.class) != null) {

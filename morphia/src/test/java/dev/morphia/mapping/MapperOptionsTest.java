@@ -149,16 +149,16 @@ public class MapperOptionsTest extends TestBase {
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 
         MappedClass mappedClass = datastore.getMapper().getMappedClass(EntityDiscriminator.class);
-        Assert.assertEquals("_t", mappedClass.getMorphiaModel().getDiscriminatorKey());
-        Assert.assertEquals("h", mappedClass.getMorphiaModel().getDiscriminator());
+        Assert.assertEquals("_t", mappedClass.getEntityModel().getDiscriminatorKey());
+        Assert.assertEquals("h", mappedClass.getEntityModel().getDiscriminator());
 
         mappedClass = datastore.getMapper().getMappedClass(EmbeddedDiscriminator.class);
-        Assert.assertEquals("_e", mappedClass.getMorphiaModel().getDiscriminatorKey());
-        Assert.assertEquals("b", mappedClass.getMorphiaModel().getDiscriminator());
+        Assert.assertEquals("_e", mappedClass.getEntityModel().getDiscriminatorKey());
+        Assert.assertEquals("b", mappedClass.getEntityModel().getDiscriminator());
 
         mappedClass = datastore.getMapper().getMappedClass(HasMap.class);
-        Assert.assertEquals("_t", mappedClass.getMorphiaModel().getDiscriminatorKey());
-        Assert.assertEquals(HasMap.class.getSimpleName().toLowerCase(), mappedClass.getMorphiaModel().getDiscriminator());
+        Assert.assertEquals("_t", mappedClass.getEntityModel().getDiscriminatorKey());
+        Assert.assertEquals(HasMap.class.getSimpleName().toLowerCase(), mappedClass.getEntityModel().getDiscriminator());
     }
 
     @Test

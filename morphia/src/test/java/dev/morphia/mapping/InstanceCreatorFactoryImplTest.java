@@ -13,7 +13,7 @@ public class InstanceCreatorFactoryImplTest extends TestBase {
     @Test
     public void noarg() {
         List<MappedClass> list = getDs().getMapper().map(Rectangle.class);
-        InstanceCreatorFactory factory = new InstanceCreatorFactoryImpl(list.get(0).getMorphiaModel());
+        InstanceCreatorFactory factory = new InstanceCreatorFactoryImpl(list.get(0).getEntityModel());
 
         InstanceCreator creator = factory.create();
 

@@ -13,7 +13,7 @@ import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
-import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
+import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertyMetadata;
 import org.bson.codecs.pojo.PropertyModelBuilder;
@@ -46,7 +46,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
     }
 
     @Override
-    public void apply(final Datastore datastore, final MorphiaModelBuilder<?> modelBuilder) {
+    public void apply(final Datastore datastore, final EntityModelBuilder<?> modelBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
 
         final Entity entity = modelBuilder.getAnnotation(Entity.class);
@@ -87,7 +87,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
 
     }
 
-    void processFields(final Datastore datastore, final MorphiaModelBuilder<?> modelBuilder, final MapperOptions options) {
+    void processFields(final Datastore datastore, final EntityModelBuilder<?> modelBuilder, final MapperOptions options) {
         Iterator<FieldModelBuilder<?>> iterator = modelBuilder.getFieldModelBuilders().iterator();
         while (iterator.hasNext()) {
             final FieldModelBuilder<?> builder = iterator.next();
@@ -114,7 +114,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         }
     }
 
-    private void buildProperty(final Datastore datastore, final MapperOptions options, final MorphiaModelBuilder modelBuilder,
+    private void buildProperty(final Datastore datastore, final MapperOptions options, final EntityModelBuilder modelBuilder,
                                final FieldModelBuilder<?> builder, final Field field, final String mappedName) {
         final PropertyMetadata<?> propertyMetadata = new PropertyMetadata<>(builder.getName(),
             modelBuilder.getType().getName(), builder.getTypeData())

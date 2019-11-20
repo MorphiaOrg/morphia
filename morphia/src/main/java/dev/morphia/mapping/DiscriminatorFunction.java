@@ -2,7 +2,7 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
+import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 
 /**
  * Defines a function to calculate a discriminator value.  This function is only applied if the existing value is the annotation default
@@ -14,25 +14,25 @@ public abstract class DiscriminatorFunction {
      */
     public static final DiscriminatorFunction className = new DiscriminatorFunction() {
         @Override
-        public String compute(final MorphiaModelBuilder builder) {
+        public String compute(final EntityModelBuilder builder) {
             return builder.getType().getName();
         }
     };
     public static final DiscriminatorFunction lowerClassName = new DiscriminatorFunction() {
         @Override
-        public String compute(final MorphiaModelBuilder builder) {
+        public String compute(final EntityModelBuilder builder) {
             return builder.getType().getName().toLowerCase();
         }
     };
     public static final DiscriminatorFunction simpleName = new DiscriminatorFunction() {
         @Override
-        public String compute(final MorphiaModelBuilder builder) {
+        public String compute(final EntityModelBuilder builder) {
             return builder.getType().getSimpleName();
         }
     };
     public static final DiscriminatorFunction lowerSimpleName = new DiscriminatorFunction() {
         @Override
-        public String compute(final MorphiaModelBuilder builder) {
+        public String compute(final EntityModelBuilder builder) {
             return builder.getType().getSimpleName().toLowerCase();
         }
     };
@@ -42,7 +42,7 @@ public abstract class DiscriminatorFunction {
      *
      * @param builder the builder to evaluate
      */
-    public final void apply(final MorphiaModelBuilder builder) {
+    public final void apply(final EntityModelBuilder builder) {
         String discriminator = Mapper.IGNORED_FIELDNAME;
         Entity entity = (Entity) builder.getAnnotation(Entity.class);
         if (entity != null) {
@@ -60,5 +60,5 @@ public abstract class DiscriminatorFunction {
         builder.discriminator(discriminator);
     }
 
-    protected abstract String compute(MorphiaModelBuilder builder);
+    protected abstract String compute(EntityModelBuilder builder);
 }

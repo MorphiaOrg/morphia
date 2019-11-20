@@ -47,7 +47,7 @@ class OperationTarget {
 
         PropertyModel<?> propertyModel = mappedField != null
                                          ? mappedField.getDeclaringClass()
-                                                      .getMorphiaModel()
+                                                      .getEntityModel()
                                                       .getPropertyModel(mappedField.getJavaFieldName())
                                          : null;
 

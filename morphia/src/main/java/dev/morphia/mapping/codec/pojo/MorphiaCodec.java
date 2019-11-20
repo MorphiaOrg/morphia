@@ -71,7 +71,7 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
                         final CodecRegistry registry,
                         final List<PropertyCodecProvider> propertyCodecProviders,
                         final DiscriminatorLookup discriminatorLookup, final MappedClass mappedClass) {
-        super(datastore, propertyCodecProviders, discriminatorLookup, (ClassModel<T>) mappedClass.getMorphiaModel(), registry);
+        super(datastore, propertyCodecProviders, discriminatorLookup, (ClassModel<T>) mappedClass.getEntityModel(), registry);
         this.mappedClass = mappedClass;
         idField = mappedClass.getIdField();
     }
@@ -194,8 +194,8 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
     }
 
     @Override
-    public MorphiaModel<T> getClassModel() {
-        return (MorphiaModel<T>) super.getClassModel();
+    public EntityModel<T> getClassModel() {
+        return (EntityModel<T>) super.getClassModel();
     }
 
     /**

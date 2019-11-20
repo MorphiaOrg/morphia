@@ -2,7 +2,6 @@ package dev.morphia.callbacks;
 
 
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.codec.pojo.MorphiaModel;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,8 +12,6 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.query.FindOptions;
-
-import java.util.Map;
 
 
 public class TestMultipleCallbackMethods extends TestBase {

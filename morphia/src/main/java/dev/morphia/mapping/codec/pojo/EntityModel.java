@@ -36,7 +36,7 @@ import static org.bson.codecs.pojo.IdPropertyModelHolder.create;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-public class MorphiaModel<T> extends ClassModel<T> {
+public class EntityModel<T> extends ClassModel<T> {
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
         PreLoad.class,
         PostPersist.class,
@@ -52,20 +52,20 @@ public class MorphiaModel<T> extends ClassModel<T> {
     /**
      * Copies an existing model
      *
-     * @param morphiaModel     the model to copy
+     * @param entityModel     the model to copy
      * @param useDiscriminator the new use discriminator value
      */
-    public MorphiaModel(final MorphiaModel morphiaModel, final boolean useDiscriminator) {
-        super(morphiaModel.getType(), morphiaModel.getPropertyNameToTypeParameterMap(), morphiaModel.getInstanceCreatorFactory(),
-            useDiscriminator, morphiaModel.getDiscriminatorKey(),
-            morphiaModel.getDiscriminator(),
-            morphiaModel.getIdPropertyModelHolder(), morphiaModel.getPropertyModels());
+    public EntityModel(final EntityModel entityModel, final boolean useDiscriminator) {
+        super(entityModel.getType(), entityModel.getPropertyNameToTypeParameterMap(), entityModel.getInstanceCreatorFactory(),
+            useDiscriminator, entityModel.getDiscriminatorKey(),
+            entityModel.getDiscriminator(),
+            entityModel.getIdPropertyModelHolder(), entityModel.getPropertyModels());
 
-        this.annotations = morphiaModel.getAnnotations();
-        this.fieldModels = morphiaModel.getFieldModels();
-        this.datastore = morphiaModel.datastore;
-        this.collectionName = morphiaModel.collectionName;
-        this.creatorFactory = morphiaModel.creatorFactory;
+        this.annotations = entityModel.getAnnotations();
+        this.fieldModels = entityModel.getFieldModels();
+        this.datastore = entityModel.datastore;
+        this.collectionName = entityModel.collectionName;
+        this.creatorFactory = entityModel.creatorFactory;
     }
 
     /**
@@ -73,7 +73,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
      *
      * @param builder the builder to pull values from
      */
-    MorphiaModel(final MorphiaModelBuilder builder) {
+    EntityModel(final EntityModelBuilder builder) {
         super(builder.getType(), builder.getPropertyNameToTypeParameterMap(), null,
             builder.useDiscriminator(), builder.getDiscriminatorKey(), builder.getDiscriminator(),
             create(builder.getType(), builder.getIdPropertyModel(), builder.getIdGenerator()),
@@ -105,7 +105,7 @@ public class MorphiaModel<T> extends ClassModel<T> {
     public String toString() {
         String fields = fieldModels.stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
                                    .collect(Collectors.joining(", "));
-        return format("%s<%s> { %s } ", MorphiaModel.class.getSimpleName(), getName(), fields);
+        return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), getName(), fields);
     }
 
     @Override
@@ -113,14 +113,14 @@ public class MorphiaModel<T> extends ClassModel<T> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof MorphiaModel)) {
+        if (!(o instanceof EntityModel)) {
             return false;
         }
         if (!super.equals(o)) {
             return false;
         }
 
-        final MorphiaModel<?> that = (MorphiaModel<?>) o;
+        final EntityModel<?> that = (EntityModel<?>) o;
 
         if (getAnnotations() != null ? !getAnnotations().equals(that.getAnnotations()) : that.getAnnotations() != null) {
             return false;

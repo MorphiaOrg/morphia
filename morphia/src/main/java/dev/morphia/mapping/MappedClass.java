@@ -20,7 +20,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.pojo.MorphiaModel;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
@@ -48,7 +48,7 @@ public class MappedClass {
     /**
      * the type we are mapping to/from
      */
-    private final MorphiaModel<?> morphiaModel;
+    private final EntityModel<?> entityModel;
     private final Class<?> type;
     /**
      * special fields representing the Key of the object
@@ -61,12 +61,12 @@ public class MappedClass {
     /**
      * Creates a MappedClass instance
      *
-     * @param morphiaModel the ClassModel
+     * @param entityModel the ClassModel
      * @param mapper       the Mapper to use
      */
-    public MappedClass(final MorphiaModel morphiaModel, final Mapper mapper) {
-        this.morphiaModel = morphiaModel;
-        type = morphiaModel.getType();
+    public MappedClass(final EntityModel entityModel, final Mapper mapper) {
+        this.entityModel = entityModel;
+        type = entityModel.getType();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Creating MappedClass for " + type);
@@ -152,7 +152,7 @@ public class MappedClass {
      */
     public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
                                      final Mapper mapper) {
-        morphiaModel.callLifecycleMethods(event, entity, document, mapper);
+        entityModel.callLifecycleMethods(event, entity, document, mapper);
     }
 
     /**
@@ -162,7 +162,7 @@ public class MappedClass {
      * @return true if this annotation has been found
      */
     public boolean hasLifecycle(final Class<? extends Annotation> type) {
-        return morphiaModel.hasLifecycle(type);
+        return entityModel.hasLifecycle(type);
     }
 
     /**
@@ -173,7 +173,7 @@ public class MappedClass {
      * @return the instance if it was found, if more than one was found, the last one added
      */
     public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
-        return morphiaModel.getAnnotation(clazz);
+        return entityModel.getAnnotation(clazz);
     }
 
     /**
@@ -185,21 +185,21 @@ public class MappedClass {
      */
     @SuppressWarnings("unchecked")
     public <T extends Annotation> List<T> getAnnotations(final Class<T> clazz) {
-        return morphiaModel.getAnnotations(clazz);
+        return entityModel.getAnnotations(clazz);
     }
 
     /**
      * @return the embeddedAn
      */
     public Embedded getEmbeddedAnnotation() {
-        return morphiaModel.getAnnotation(Embedded.class);
+        return entityModel.getAnnotation(Embedded.class);
     }
 
     /**
      * @return the entityAn
      */
     public Entity getEntityAnnotation() {
-        return morphiaModel.getAnnotation(Entity.class);
+        return entityModel.getAnnotation(Entity.class);
     }
 
     /**
@@ -290,7 +290,7 @@ public class MappedClass {
      * @return the collName
      */
     public String getCollectionName() {
-        return morphiaModel.getCollectionName();
+        return entityModel.getCollectionName();
     }
 
     /**
@@ -299,16 +299,16 @@ public class MappedClass {
      * @param mapper the Mapper to use for validation
      */
     public void validate(final Mapper mapper) {
-        MorphiaInstanceCreator factory = (MorphiaInstanceCreator) morphiaModel.getInstanceCreatorFactory()
-                                                                              .create();
+        MorphiaInstanceCreator factory = (MorphiaInstanceCreator) entityModel.getInstanceCreatorFactory()
+                                                                             .create();
         new MappingValidator(factory).validate(mapper, this);
     }
 
     /**
      * @return the underlying model of the type
      */
-    public MorphiaModel<?> getMorphiaModel() {
-        return morphiaModel;
+    public EntityModel<?> getEntityModel() {
+        return entityModel;
     }
 
     /**
@@ -341,7 +341,7 @@ public class MappedClass {
     }
 
     private void discoverFields() {
-        morphiaModel.getFieldModels().forEach(model -> {
+        entityModel.getFieldModels().forEach(model -> {
             final MappedField field = new MappedField(this, model);
             if (!field.isTransient()) {
                 fields.add(field);

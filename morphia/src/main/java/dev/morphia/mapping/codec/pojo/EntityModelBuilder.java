@@ -38,7 +38,7 @@ import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
  * Builder for MorphiaModels
  * @param <T> the entity type
  */
-public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
+public class EntityModelBuilder<T> extends ClassModelBuilder<T> {
     private final List<FieldModelBuilder<?>> fieldModelBuilders = new ArrayList<>();
     private final Datastore datastore;
     private List<FieldModel<?>> fieldModels;
@@ -52,7 +52,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      * @param datastore the datastore to use
      * @param type      the entity type
      */
-    public MorphiaModelBuilder(final Datastore datastore, final Class<T> type) {
+    public EntityModelBuilder(final Datastore datastore, final Class<T> type) {
         super(type);
         this.datastore = datastore;
         configure();
@@ -161,7 +161,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
      *
      * @return the new instance
      */
-    public MorphiaModel<T> build() {
+    public EntityModel<T> build() {
         annotationsMap = getAnnotations().stream()
                                          .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
 
@@ -202,7 +202,7 @@ public class MorphiaModelBuilder<T> extends ClassModelBuilder<T> {
             idGenerator(null);
         }
 
-        return new MorphiaModel<>(this);
+        return new EntityModel<>(this);
     }
 
     protected String getCollectionName() {

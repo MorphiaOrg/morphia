@@ -14,8 +14,8 @@ import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecProvider;
-import dev.morphia.mapping.codec.pojo.MorphiaModel;
-import dev.morphia.mapping.codec.pojo.MorphiaModelBuilder;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
@@ -124,8 +124,8 @@ public class Mapper {
      * @return the new model
      * @morphia.internal
      */
-    public <T> MorphiaModel<T> createMorphiaModel(final Class<T> clazz) {
-        return new MorphiaModelBuilder<>(this.datastore, clazz)
+    public <T> EntityModel<T> createMorphiaModel(final Class<T> clazz) {
+        return new EntityModelBuilder<>(this.datastore, clazz)
                    .build();
     }
 
@@ -587,8 +587,8 @@ public class Mapper {
     private MappedClass addMappedClass(final Class type) {
         MappedClass mappedClass = mappedClasses.get(type);
         if (mappedClass == null && isMappable(type)) {
-            MorphiaModel morphiaModel = createMorphiaModel(type);
-            mappedClass = addMappedClass(new MappedClass(morphiaModel, this));
+            EntityModel entityModel = createMorphiaModel(type);
+            mappedClass = addMappedClass(new MappedClass(entityModel, this));
         }
         return mappedClass;
     }
@@ -599,7 +599,7 @@ public class Mapper {
             mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                                      .add(mc);
         }
-        discriminatorLookup.addClassModel(mc.getMorphiaModel());
+        discriminatorLookup.addClassModel(mc.getEntityModel());
 
         if (!mc.isInterface()) {
             mc.validate(this);

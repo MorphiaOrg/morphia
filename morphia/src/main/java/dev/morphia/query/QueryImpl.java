@@ -474,15 +474,15 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
         if (entityAnnotation != null && entityAnnotation.useDiscriminator()
             && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getMorphiaModel().getDiscriminatorKey())) {
+            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
 
             List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
             List<String> values = new ArrayList<>();
-            values.add(mappedClass.getMorphiaModel().getDiscriminator());
+            values.add(mappedClass.getEntityModel().getDiscriminator());
             for (final MappedClass subtype : subtypes) {
-                values.add(subtype.getMorphiaModel().getDiscriminator());
+                values.add(subtype.getEntityModel().getDiscriminator());
             }
-            query.put(mappedClass.getMorphiaModel().getDiscriminatorKey(),
+            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
                 new Document("$in", values));
         }
         return query;

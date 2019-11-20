@@ -2,7 +2,7 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.MorphiaModel;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -124,8 +124,8 @@ public class BaseMorphiaCodec<T> extends PojoCodecImpl<T> {
         Codec<T> codec = getRegistry().get(type);
         if (codec instanceof BaseMorphiaCodec) {
             final BaseMorphiaCodec<T> tCodec = (BaseMorphiaCodec<T>) codec;
-            final MorphiaModel<T> morphiaModel = (MorphiaModel<T>) tCodec.getClassModel();
-            final MorphiaModel<T> newModel = new MorphiaModel<>(morphiaModel, getClassModel().useDiscriminator());
+            final EntityModel<T> entityModel = (EntityModel<T>) tCodec.getClassModel();
+            final EntityModel<T> newModel = new EntityModel<>(entityModel, getClassModel().useDiscriminator());
             codec = tCodec.getSpecializedCodec(newModel, datastore);
         }
         return codec;
