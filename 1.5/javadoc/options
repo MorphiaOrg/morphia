@@ -28,7 +28,7 @@
 -taglet
 'taglets.ManualTaglet'
 -tagletpath
-'/var/lib/jenkins/.m2/repository/dev/morphia/morphia/util/1.5.8-SNAPSHOT/util-1.5.8-SNAPSHOT.jar'
+'/var/lib/jenkins/.m2/repository/dev/morphia/morphia/util/1.5.8/util-1.5.8.jar'
 -use
 -version
 -windowtitle
