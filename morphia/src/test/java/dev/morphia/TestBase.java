@@ -32,7 +32,7 @@ public abstract class TestBase {
 
     protected TestBase(final MongoClient mongoClient) {
         morphia = new Morphia(new Mapper(MapperOptions
-                                             .builder()
+                                             .legacy()
                                              .build()));
         this.mongoClient = mongoClient;
         this.db = getMongoClient().getDB(TEST_DB_NAME);

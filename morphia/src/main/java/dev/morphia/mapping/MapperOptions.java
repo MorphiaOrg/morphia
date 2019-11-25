@@ -424,8 +424,20 @@ public class MapperOptions {
 
     /**
      * @return a builder to set mapping options
+     * @deprecated continued use of this method will result in different options being applied in 2.0.  To maintain the current settings
+     * please use {@link #legacy()} instead.
+     *
+     * @see #legacy()
      */
+    @Deprecated
     public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * @return a builder to set mapping options
+     */
+    public static Builder legacy() {
         return new Builder();
     }
 
