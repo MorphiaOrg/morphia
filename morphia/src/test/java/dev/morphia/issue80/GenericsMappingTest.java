@@ -64,7 +64,7 @@ public class GenericsMappingTest extends TestBase {
     public void genericField() {
         getMorphia().map(GenericField.class, ParameterizedType.class);
 
-        GenericField test = new GenericField(new ParameterizedType<>("test"));
+        GenericField test = new GenericField(new ParameterizedType<String>("test"));
         getDs().save(test);
 
         GenericField first = getDs().find(GenericField.class).first();
