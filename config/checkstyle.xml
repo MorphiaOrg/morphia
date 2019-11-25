@@ -175,8 +175,6 @@
         <!--<module name="TodoComment"/>-->
         <module name="UpperEll"/>
 
-        <module name="FileContentsHolder"/>
-
         <!--System.out.println not allowed-->
         <module name="Regexp">
             <property name="format" value="System\.out\.println"/>
@@ -197,6 +195,6 @@
             <property name="illegalPattern" value="true"/>
             <property name="ignoreComments" value="true"/>
         </module>
+        <module name="SuppressionCommentFilter"/>
     </module>
-    <module name="SuppressionCommentFilter"/>
 </module>
