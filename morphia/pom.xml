@@ -45,36 +45,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>3.1.8</version>
-                <executions>
-                    <execution>
-                        <id>spotbugs</id>
-                    </execution>
-                </executions>
-                <configuration>
-                    <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
-                    <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>checkstyle</id>
-                    </execution>
-                </executions>
-                <configuration>
-                    <configLocation>../config/checkstyle.xml</configLocation>
-                    <suppressionsLocation>../config/checkstyle-exclude.xml</suppressionsLocation>
-                    <encoding>UTF-8</encoding>
-                    <linkXRef>false</linkXRef>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>com.antwerkz.github</groupId>
                 <artifactId>issues-maven-plugin</artifactId>
                 <version>1.0.3</version>
@@ -90,43 +60,6 @@
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
                     <javadocUrl>https://morphia.dev/1.5/javadoc/</javadocUrl>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.revapi</groupId>
-                <artifactId>revapi-maven-plugin</artifactId>
-                <version>0.10.5</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.revapi</groupId>
-                        <artifactId>revapi-java</artifactId>
-                        <version>${revapi-java.version}</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>revapi</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                    <oldVersion>1.4.1</oldVersion>
-                    <analysisConfigurationFiles>
-                        <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
-                    </analysisConfigurationFiles>
-                    <analysisConfiguration>
-                        <revapi.semver.ignore>
-                            <enabled>true</enabled>
-                            <versionIncreaseAllows>
-                                <major>breaking</major>
-                                <minor>nonBreaking</minor>
-                                <patch>equivalent</patch>
-                            </versionIncreaseAllows>
-                        </revapi.semver.ignore>
-                    </analysisConfiguration>
                 </configuration>
             </plugin>
             <plugin>
@@ -218,4 +151,98 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>quality</id>
+            <activation>
+                <property>
+                    <name>quality</name>
+                </property>
+            </activation>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <build>
+                <defaultGoal>install</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>checkstyle</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <configLocation>../config/checkstyle.xml</configLocation>
+                            <suppressionsLocation>../config/checkstyle-exclude.xml</suppressionsLocation>
+                            <encoding>UTF-8</encoding>
+                            <linkXRef>false</linkXRef>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>3.1.12.2</version>
+                        <executions>
+                            <execution>
+                                <id>spotbugs</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
+                            <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.revapi</groupId>
+                        <artifactId>revapi-maven-plugin</artifactId>
+                        <version>0.11.2</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.revapi</groupId>
+                                <artifactId>revapi-java</artifactId>
+                                <version>${revapi-java.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>revapi</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
+                            <oldVersion>1.4.1</oldVersion>
+                            <analysisConfigurationFiles>
+                                <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
+                            </analysisConfigurationFiles>
+                            <analysisConfiguration>
+                                <revapi.semver.ignore>
+                                    <enabled>true</enabled>
+                                    <versionIncreaseAllows>
+                                        <major>breaking</major>
+                                        <minor>nonBreaking</minor>
+                                        <patch>equivalent</patch>
+                                    </versionIncreaseAllows>
+                                </revapi.semver.ignore>
+                            </analysisConfiguration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
