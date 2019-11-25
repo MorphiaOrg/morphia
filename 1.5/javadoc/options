@@ -18,7 +18,7 @@
 -doctitle
 'Morphia'
 -linkoffline
-'https://docs.oracle.com/javase/8/docs/api' '/var/lib/jenkins/jobs/morphia/workspace/docs/reference/../../morphia/target/javadoc-bundle-options'
+'https://docs.oracle.com/javase/6/docs/api' '/var/lib/jenkins/jobs/morphia/workspace/docs/reference/../../morphia/target/javadoc-bundle-options'
 -taglet
 'taglets.ServerReleaseTaglet'
 -taglet
