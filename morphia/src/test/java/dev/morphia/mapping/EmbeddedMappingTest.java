@@ -48,8 +48,6 @@ public class EmbeddedMappingTest extends TestBase {
 
         EmbeddedArrayFields first = getDs().find(EmbeddedArrayFields.class)
                                            .first();
-
-        System.out.println("********************* first = " + first);
     }
 
     @Test

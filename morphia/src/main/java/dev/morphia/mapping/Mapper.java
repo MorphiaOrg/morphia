@@ -30,6 +30,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Serialized;
 import dev.morphia.converters.CustomConverters;
 import dev.morphia.converters.TypeConverter;
+import dev.morphia.mapping.cache.DefaultEntityCache;
 import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
@@ -178,7 +179,19 @@ public class Mapper {
      * @return the cache
      */
     public EntityCache createEntityCache() {
-        return getOptions().getCacheFactory().createCache();
+        return getOptions().isCachingEnabled()
+               ? getOptions().getCacheFactory().createCache()
+               : new DefaultEntityCache() {
+                   @Override
+                   public <T> void putEntity(final Key<T> k, final T t) {
+                       LOG.info("entity caching disabled");
+                   }
+
+                   @Override
+                   public <T> void putProxy(final Key<T> k, final T t) {
+                       LOG.info("proxy caching disabled");
+                   }
+               };
     }
 
     /**

@@ -22,6 +22,7 @@ public class MapperOptions {
     private boolean cacheClassLookups;
     private boolean mapSubPackages;
     private boolean disableEmbeddedIndexes;
+    private boolean cachingEnabled;
     private DateStorage dateStorage = DateStorage.SYSTEM_DEFAULT;
     private ObjectFactory objectFactory;
     private EntityCacheFactory cacheFactory = new DefaultEntityCacheFactory();
@@ -67,6 +68,7 @@ public class MapperOptions {
         dateStorage = options.dateStorage;
         disableEmbeddedIndexes = options.disableEmbeddedIndexes;
         classLoader = options.getClassLoader();
+        cachingEnabled = options.cachingEnabled;
     }
 
     private MapperOptions(final Builder builder) {
@@ -85,6 +87,7 @@ public class MapperOptions {
         valueMapper = builder.valueMapper;
         dateStorage = builder.dateStorage;
         classLoader = builder.classLoader;
+        cachingEnabled = builder.cachingEnabled;
     }
 
     /**
@@ -244,6 +247,21 @@ public class MapperOptions {
      */
     @Deprecated
     public void setActLikeSerializer(final boolean ignored) {
+    }
+
+    /**
+     * @return true if Morphia should cache entities on lookups
+     */
+    public boolean isCachingEnabled() {
+        return cachingEnabled;
+    }
+
+    /**
+     * @return true if Morphia should cache entities on lookups
+     */
+    public MapperOptions setCachingEnabled(final boolean enabled) {
+        cachingEnabled = enabled;
+        return this;
     }
 
     /**
@@ -461,6 +479,7 @@ public class MapperOptions {
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private boolean disableEmbeddedIndexes;
+        private boolean cachingEnabled = true;
         private DateStorage dateStorage = DateStorage.SYSTEM_DEFAULT;
         private ObjectFactory objectFactory;
         private ClassLoader classLoader;
@@ -518,6 +537,15 @@ public class MapperOptions {
          */
         public Builder useLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
             this.useLowerCaseCollectionNames = useLowerCaseCollectionNames;
+            return this;
+        }
+
+        /**
+         * @param enable if true entities are cached during query result fetching
+         * @return this
+         */
+        public Builder enableCaching(final boolean enable) {
+            this.cachingEnabled = enable;
             return this;
         }
 

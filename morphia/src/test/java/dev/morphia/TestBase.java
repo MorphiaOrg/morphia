@@ -7,6 +7,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -19,7 +21,7 @@ import java.util.List;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private final MongoClient mongoClient;
-    private final Morphia morphia = new Morphia();
+    private final Morphia morphia;
     private final DB db;
     private final MongoDatabase database;
     private final Datastore ds;
@@ -29,6 +31,9 @@ public abstract class TestBase {
     }
 
     protected TestBase(final MongoClient mongoClient) {
+        morphia = new Morphia(new Mapper(MapperOptions
+                                             .builder()
+                                             .build()));
         this.mongoClient = mongoClient;
         this.db = getMongoClient().getDB(TEST_DB_NAME);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
