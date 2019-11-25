@@ -18,6 +18,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
@@ -48,6 +49,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.morphia.query.PushOptions.options;
@@ -885,7 +887,6 @@ public class TestUpdateOps extends TestBase {
             this.log = log;
         }
 
-
         @Override
         public boolean equals(final Object o) {
             if (this == o) {
@@ -920,6 +921,17 @@ public class TestUpdateOps extends TestBase {
             result = 31 * result + (logs != null ? logs.hashCode() : 0);
             result = 31 * result + (raw != null ? raw.hashCode() : 0);
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", LogHolder.class.getSimpleName() + "[", "]")
+                       .add("id=" + id)
+                       .add("uuid='" + uuid + "'")
+                       .add("log=" + log)
+                       .add("logs=" + logs)
+                       .add("raw=" + raw)
+                       .toString();
         }
     }
 

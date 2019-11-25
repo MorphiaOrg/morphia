@@ -489,47 +489,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    @Category(Reference.class)
-    @Ignore("Infinite loop in here somewhere")
-    public void testMaps() {
-        final MongoCollection<Document> articles = getDatabase().getCollection("articles");
-        getMapper().map(Circle.class);
-
-        final Article related = new Article();
-        final Document relatedDocument = getMapper().toDocument(related);
-        articles.insertOne(relatedDocument);
-
-        final Article relatedLoaded = getMapper().fromDocument(Article.class,
-            articles.find(new Document("_id", relatedDocument.get("_id"))).first());
-
-        final Article article = new Article();
-        article.setTranslation("en", new Translation("Hello World", "Just a test"));
-        article.setTranslation("is", new Translation("Halló heimur", "Bara að prófa"));
-
-        article.setAttribute("myDate", new Date());
-        article.setAttribute("myString", "Test");
-        article.setAttribute("myInt", 123);
-
-        article.putRelated("test", relatedLoaded);
-
-        final Document articleDocument = getMapper().toDocument(article);
-        articles.insertOne(articleDocument);
-
-        final Article articleLoaded = getMapper().fromDocument(Article.class,
-            articles.find(new Document("_id", articleDocument.get("_id"))).first());
-
-        assertEquals(article.getTranslations().size(), articleLoaded.getTranslations().size());
-        assertEquals(article.getTranslation("en").getTitle(), articleLoaded.getTranslation("en").getTitle());
-        assertEquals(article.getTranslation("is").getBody(), articleLoaded.getTranslation("is").getBody());
-        assertEquals(article.getAttributes().size(), articleLoaded.getAttributes().size());
-        assertEquals(article.getAttribute("myDate"), articleLoaded.getAttribute("myDate"));
-        assertEquals(article.getAttribute("myString"), articleLoaded.getAttribute("myString"));
-        assertEquals(article.getAttribute("myInt"), articleLoaded.getAttribute("myInt"));
-        assertEquals(article.getRelated().size(), articleLoaded.getRelated().size());
-        assertEquals(article.getRelated("test").getId(), articleLoaded.getRelated("test").getId());
-    }
-
-    @Test
     public void testObjectIdKeyedMap() {
         getMapper().map(ContainsObjectIdKeyMap.class);
         final ContainsObjectIdKeyMap map = new ContainsObjectIdKeyMap();
