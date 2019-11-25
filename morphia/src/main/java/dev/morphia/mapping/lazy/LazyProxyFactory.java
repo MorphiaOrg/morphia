@@ -22,7 +22,7 @@ public interface LazyProxyFactory {
      * @param ignoreMissing     ignore references that don't exist in the database
      * @return the proxy
      */
-    <T extends Collection> T createListProxy(final Datastore datastore, T listToProxy, Class referenceObjClass, boolean ignoreMissing);
+    <T extends Collection> T createListProxy(Datastore datastore, T listToProxy, Class referenceObjClass, boolean ignoreMissing);
 
     /**
      * Creates a proxy for a Map.
@@ -34,8 +34,7 @@ public interface LazyProxyFactory {
      * @param ignoreMissing     ignore references that don't exist in the database
      * @return the proxy
      */
-    <T extends Map> T createMapProxy(final Datastore datastore, final T mapToProxy, final Class referenceObjClass,
-                                     final boolean ignoreMissing);
+    <T extends Map> T createMapProxy(Datastore datastore, T mapToProxy, Class referenceObjClass, boolean ignoreMissing);
 
     /**
      * Creates a proxy for a Class.
@@ -47,6 +46,5 @@ public interface LazyProxyFactory {
      * @param ignoreMissing     ignore references that don't exist in the database
      * @return the proxy
      */
-    <T> T createProxy(final Datastore datastore, Class<T> targetClass, final Key<T> key, final boolean ignoreMissing);
-
+    <T> T createProxy(Datastore datastore, Class<T> targetClass, Key<T> key, boolean ignoreMissing);
 }

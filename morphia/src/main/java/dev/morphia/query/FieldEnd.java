@@ -204,7 +204,7 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/geometry $geometry
      * @mongodb.server.release 2.4
      */
-    T intersects(Geometry geometry, final CoordinateReferenceSystem crs);
+    T intersects(Geometry geometry, CoordinateReferenceSystem crs);
 
     /**
      * Checks that a field is less than the value given
@@ -388,7 +388,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
      */
-    T startsWithIgnoreCase(final String prefix);
+    T startsWithIgnoreCase(String prefix);
 
     /**
      * Checks the type of a field

@@ -257,7 +257,8 @@ public class MapperOptions {
     }
 
     /**
-     * @return true if Morphia should cache entities on lookups
+     * @param enabled true if Morphia should cache entities on lookups
+     * @return this
      */
     public MapperOptions setCachingEnabled(final boolean enabled) {
         cachingEnabled = enabled;

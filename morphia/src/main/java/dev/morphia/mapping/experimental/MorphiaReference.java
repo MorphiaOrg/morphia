@@ -57,7 +57,7 @@ public abstract class MorphiaReference<T> {
      * @return the encoded vale
      * @morphia.internal
      */
-    public abstract Object encode(final Mapper mapper, Object value, MappedField optionalExtraInfo);
+    public abstract Object encode(Mapper mapper, Object value, MappedField optionalExtraInfo);
 
     /**
      * @return the datastore

@@ -18,5 +18,5 @@ public interface ClassConstraint {
      * @param ve     the set of violations
      * @param mapper the Mapper to use for validation
      */
-    void check(final Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve);
+    void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve);
 }

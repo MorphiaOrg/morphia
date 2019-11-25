@@ -23,7 +23,7 @@ public interface CustomMapper {
      * @param cache     the EntityCache to use to prevent multiple loads of the same entities over and over
      * @param mapper    the Mapper to use
      */
-    void fromDBObject(final Datastore datastore, DBObject dbObject, MappedField mf, Object entity, EntityCache cache, Mapper mapper);
+    void fromDBObject(Datastore datastore, DBObject dbObject, MappedField mf, Object entity, EntityCache cache, Mapper mapper);
 
     /**
      * Converts an entity to a DBObject.  This method is primarily an internal method. Reliance on this method may break your application
