@@ -26,6 +26,56 @@ import com.mongodb.WriteConcern;
 public class InsertManyOptions {
     private com.mongodb.client.model.InsertManyOptions options = new com.mongodb.client.model.InsertManyOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+/*
+    private ClientSession clientSession;
+
+    */
+/**
+     * Creates a new options wrapper
+     *//*
+
+    public InsertManyOptions() {
+    }
+
+    */
+/**
+     * Copies options to a new options wrapper
+     *
+     * @param that the options to copy
+     * @morphia.internal
+     *//*
+
+    public InsertManyOptions(final InsertManyOptions that) {
+        this.options = that.options;
+        this.writeConcern = that.writeConcern;
+        this.clientSession = that.clientSession;
+    }
+
+    */
+/**
+     * Set the client session to use for the insert.
+     *
+     * @param clientSession the client session
+     * @return this
+     *//*
+
+    public InsertManyOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    */
+/**
+     * The client session to use for the insertion.
+     *
+     * @return the client session
+     *//*
+
+    public ClientSession clientSession() {
+        return clientSession;
+    }
+
+*/
 
     /**
      * Set the write concern to use for the insert.

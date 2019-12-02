@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.util.Collections.emptyList;
 
-final class IndexHelper {
+public final class IndexHelper {
     private static final Logger LOG = LoggerFactory.getLogger(IndexHelper.class);
 
     private final Mapper mapper;

@@ -1,8 +1,10 @@
 package dev.morphia;
 
 
+import com.mongodb.ClientSessionOptions;
 import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReturnDocument;
@@ -20,6 +22,7 @@ import dev.morphia.query.QueryFactory;
 import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
+import dev.morphia.transactions.experimental.MorphiaTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +30,37 @@ import java.util.List;
 
 /**
  * Datastore interface to get/delete/save objects
- *
- * @author Scott Hernandez
  */
 public interface Datastore {
+    /**
+     * Returns the session this datastore is attached to or null if none is attached.
+     *
+     * @return the session
+     * @since 2.0
+     */
+    default ClientSession getSession() {
+        return null;
+    }
+
+    /**
+     * @param transaction the transaction wrapper
+     * @param <T>         the return type
+     * @return the return value
+     * @since 2.0
+     * @morphia.experimental
+     */
+    <T> T withTransaction(MorphiaTransaction<T> transaction);
+
+    /**
+     * @param transaction the transaction wrapper
+     * @param options     the session options to apply
+     * @param <T>         the return type
+     * @return the return value
+     * @since 2.0
+     * @morphia.experimental
+     */
+    <T> T withTransaction(MorphiaTransaction<T> transaction, final ClientSessionOptions options);
+
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      *

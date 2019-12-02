@@ -19,6 +19,7 @@ package dev.morphia.query;
 import com.mongodb.CursorType;
 import com.mongodb.ReadPreference;
 import com.mongodb.assertions.Assertions;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import dev.morphia.mapping.Mapper;
@@ -59,6 +60,7 @@ public final class FindOptions {
     private ReadPreference readPreference;
     private Projection projection;
     private String queryLogId;
+    private ClientSession clientSession;
 
     /**
      * Creates an instance with default values
@@ -662,5 +664,27 @@ public final class FindOptions {
      */
     public String getQueryLogId() {
         return queryLogId;
+    }
+
+    /**
+     * Set the client session to use for the insert.
+     *
+     * @param clientSession the client session
+     * @return this
+     * @since 2.0
+     */
+    public FindOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    /**
+     * The client session to use for the insertion.
+     *
+     * @return the client session
+     * @since 2.0
+     */
+    public ClientSession clientSession() {
+        return clientSession;
     }
 }

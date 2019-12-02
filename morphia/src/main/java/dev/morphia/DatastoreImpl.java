@@ -1,9 +1,11 @@
 package dev.morphia;
 
+import com.mongodb.ClientSessionOptions;
 import com.mongodb.DBRef;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -16,6 +18,8 @@ import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Validation;
+import dev.morphia.experimental.MorphiaSession;
+import dev.morphia.experimental.MorphiaSessionImpl;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -30,6 +34,7 @@ import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
+import dev.morphia.transactions.experimental.MorphiaTransaction;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,27 +55,53 @@ import static org.bson.Document.parse;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-class DatastoreImpl implements AdvancedDatastore {
+public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
     private final MongoDatabase database;
     private final IndexHelper indexHelper;
+    private final MongoClient mongoClient;
     private Mapper mapper;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
 
-    /**
-     * Create a new DatastoreImpl
-     *
-     * @param mongoClient the connection to the MongoDB instance
-     * @param dbName      the name of the database for this data store.
-     */
-    DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
+    protected DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
+        this.mongoClient = mongoClient;
         MongoDatabase database = mongoClient.getDatabase(dbName);
         this.mapper = new Mapper(this, database.getCodecRegistry(), options);
 
         this.database = database.withCodecRegistry(mapper.getCodecRegistry());
         this.indexHelper = new IndexHelper(mapper, this.database);
+    }
+
+    public DatastoreImpl(final MongoDatabase database,
+                         final IndexHelper indexHelper,
+                         final MongoClient mongoClient,
+                         final Mapper mapper,
+                         final QueryFactory queryFactory) {
+        this.database = database;
+        this.indexHelper = indexHelper;
+        this.mongoClient = mongoClient;
+        this.mapper = mapper;
+        this.queryFactory = queryFactory;
+    }
+
+    @Override
+    public <T> T withTransaction(final MorphiaTransaction<T> body) {
+        return doTransaction(mongoClient.startSession(), body);
+    }
+
+    @Override
+    public <T> T  withTransaction(final MorphiaTransaction<T> transaction, final ClientSessionOptions options) {
+        return doTransaction(mongoClient.startSession(options), transaction);
+    }
+
+    private <T> T doTransaction(final ClientSession session, final MorphiaTransaction<T> body) {
+        return session.withTransaction(() -> {
+            try(MorphiaSession morphiaSession = new MorphiaSessionImpl(session, mongoClient, database, mapper, indexHelper, queryFactory)) {
+                return body.execute(morphiaSession);
+            }
+        });
     }
 
     /**
@@ -508,22 +539,30 @@ class DatastoreImpl implements AdvancedDatastore {
         return true;
     }
 
-    private <T> void saveDocument(final T entity,
+    protected <T> void saveDocument(final T entity,
                                   final MongoCollection<T> collection,
                                   final InsertOneOptions options) {
         Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
         if (id == null) {
-            options.apply(collection)
-                   .insertOne(entity, options.getOptions());
+            if (options.clientSession() == null) {
+                options.apply(collection)
+                       .insertOne(entity, options.getOptions());
+            } else {
+                options.apply(collection)
+                       .insertOne(options.clientSession(), entity, options.getOptions());
+            }
         } else {
             ReplaceOptions updateOptions = new ReplaceOptions()
                                                .bypassDocumentValidation(options.getBypassDocumentValidation())
                                                .upsert(true);
-            if (options.getWriteConcern() != null) {
-                collection.withWriteConcern(options.getWriteConcern())
-                          .replaceOne(new Document("_id", id), entity, updateOptions);
+            MongoCollection<T> updated = collection;
+            if (options.writeConcern() != null) {
+                updated = collection.withWriteConcern(options.writeConcern());
+            }
+            if (options.clientSession() == null) {
+                updated.replaceOne(new Document("_id", id), entity, updateOptions);
             } else {
-                collection.replaceOne(new Document("_id", id), entity, updateOptions);
+                updated.replaceOne(options.clientSession(), new Document("_id", id), entity, updateOptions);
             }
         }
     }
@@ -543,19 +582,11 @@ class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    /**
-     * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
-     */
-    private <T> Query<T> newQuery(final Class<T> type, final Document query) {
+    protected <T> Query<T> newQuery(final Class<T> type, final Document query) {
         return getQueryFactory().createQuery(this, type, query);
     }
 
-    /**
-     * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
-     *
-     * @see QueryFactory#createQuery(Datastore, Class)
-     */
-    private <T> Query<T> newQuery(final Class<T> type) {
+    protected <T> Query<T> newQuery(final Class<T> type) {
         return getQueryFactory().createQuery(this, type);
     }
 

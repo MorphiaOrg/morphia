@@ -42,9 +42,15 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
         MongoCollection mongoCollection = getDatastore().enforceWriteConcern(collection, getType(), options.getWriteConcern());
         Document updateOperations = toDocument();
         final Document queryObject = query.prepareQuery();
-        return options.isMulti()
-               ? mongoCollection.updateMany(queryObject, updateOperations, options)
-               : mongoCollection.updateOne(queryObject, updateOperations, options);
-    }
+        if(getDatastore().getSession() != null) {
+            return options.isMulti()
+                   ? mongoCollection.updateMany(getDatastore().getSession(), queryObject, updateOperations, options)
+                   : mongoCollection.updateOne(getDatastore().getSession(), queryObject, updateOperations, options);
 
+        } else {
+            return options.isMulti()
+                   ? mongoCollection.updateMany(queryObject, updateOperations, options)
+                   : mongoCollection.updateOne(queryObject, updateOperations, options);
+        }
+    }
 }

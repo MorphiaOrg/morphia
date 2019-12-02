@@ -225,9 +225,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T first() {
-        try (MongoCursor<T> iterator = this.execute()) {
-            return iterator.tryNext();
-        }
+        return first(new FindOptions());
     }
 
     @Override
@@ -515,8 +513,9 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
-        FindIterable<E> iterable = collection
-                                       .find(query);
+        FindIterable<E> iterable = findOptions.clientSession() != null
+                                   ? collection.find(findOptions.clientSession(), query)
+                                   : collection.find(query);
 
         Document oldProfile = null;
         if (findOptions.isLogQuery()) {

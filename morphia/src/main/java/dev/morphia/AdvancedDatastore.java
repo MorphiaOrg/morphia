@@ -112,9 +112,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param entity  the entity to insert
      * @param options the options to apply to the insert operation
      * @param <T>     the type of the entity
-     * @morphia.inline
      * @since 1.3
      * @deprecated use {@link #insert(List, InsertManyOptions)} instead
+     * @morphia.inline
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> void insert(T entity, InsertOptions options) {

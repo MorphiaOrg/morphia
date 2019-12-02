@@ -17,6 +17,7 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 
 /**
@@ -27,6 +28,46 @@ import com.mongodb.client.MongoCollection;
 public class InsertOneOptions {
     private com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+    private ClientSession clientSession;
+
+    /**
+     * Creates a new options wrapper
+     */
+    public InsertOneOptions() {
+    }
+
+    /**
+     * @param that the options to copy
+     * @morphia.internal
+     * @since 2.0
+     */
+    public InsertOneOptions(final InsertOneOptions that) {
+        this.options = that.options;
+        this.writeConcern = that.writeConcern;
+        this.clientSession = that.clientSession;
+    }
+
+    /**
+     * Set the client session to use for the insert.
+     *
+     * @param clientSession the client session
+     * @return this
+     * @since 2.0
+     */
+    public InsertOneOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    /**
+     * The client session to use for the insertion.
+     *
+     * @return the client session
+     * @since 2.0
+     */
+    public ClientSession clientSession() {
+        return clientSession;
+    }
 
     /**
      * Set the write concern to use for the insert.

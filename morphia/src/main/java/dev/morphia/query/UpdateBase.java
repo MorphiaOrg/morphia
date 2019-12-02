@@ -4,6 +4,7 @@ import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -81,8 +82,7 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
         if ((value instanceof Double) || (value instanceof Float)) {
             return inc(field, (value.doubleValue() * -1));
         }
-        throw new IllegalArgumentException(
-            "Currently only the following types are allowed: integer, long, double, float.");
+        throw new IllegalArgumentException(Sofia.onlyNumberTypesAllowed());
     }
 
     @Override
@@ -234,7 +234,7 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
      * @param <T> the types of the elements in the Iterable
      * @return the List
      */
-    public static <T> List<T> iterToList(final Iterable<T> it) {
+    static <T> List<T> iterToList(final Iterable<T> it) {
         if (it instanceof List) {
             return (List<T>) it;
         }

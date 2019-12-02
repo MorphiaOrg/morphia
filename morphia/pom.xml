@@ -118,7 +118,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>${driver.version}</version>
+            <version>3.11.1</version>
         </dependency>
         <dependency>
             <groupId>io.github.classgraph</groupId>
