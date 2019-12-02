@@ -3,6 +3,7 @@ package dev.morphia.query;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
+import dev.morphia.DatastoreImpl;
 
 /**
  * Represents a modify operation
@@ -14,7 +15,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
     private final MongoCollection<T> collection;
 
     Modify(final QueryImpl<T> query) {
-        super(query.getDatastore(), query.getDatastore().getMapper(), query.getEntityClass());
+        super((DatastoreImpl) query.getDatastore(), query.getDatastore().getMapper(), query.getEntityClass());
         this.query = query;
         this.collection = query.getCollection();
     }

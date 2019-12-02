@@ -17,8 +17,10 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
+import dev.morphia.internal.SessionConfigurable;
 import org.bson.conversions.Bson;
 
 import java.util.List;
@@ -31,9 +33,21 @@ import java.util.List;
  * @mongodb.driver.manual reference/command/update/ Update Command
  * @since 1.3
  */
-public class UpdateOptions extends com.mongodb.client.model.UpdateOptions {
+public class UpdateOptions extends com.mongodb.client.model.UpdateOptions implements SessionConfigurable<UpdateOptions> {
     private WriteConcern writeConcern;
     private boolean multi;
+    private ClientSession clientSession;
+
+    @Override
+    public UpdateOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    @Override
+    public ClientSession clientSession() {
+        return clientSession;
+    }
 
     /**
      * @return true if the update should affect all entities

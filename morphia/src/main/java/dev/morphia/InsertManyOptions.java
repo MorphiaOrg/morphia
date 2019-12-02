@@ -17,65 +17,56 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
+import dev.morphia.internal.SessionConfigurable;
 
 /**
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
  *
  * @since 1.3
  */
-public class InsertManyOptions {
+public class InsertManyOptions implements SessionConfigurable<InsertManyOptions> {
     private com.mongodb.client.model.InsertManyOptions options = new com.mongodb.client.model.InsertManyOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
-/*
     private ClientSession clientSession;
 
-    */
-/**
+    /**
      * Creates a new options wrapper
-     *//*
-
+     */
     public InsertManyOptions() {
     }
 
-    */
-/**
-     * Copies options to a new options wrapper
-     *
+    /**
      * @param that the options to copy
      * @morphia.internal
-     *//*
-
+     * @since 2.0
+     */
     public InsertManyOptions(final InsertManyOptions that) {
         this.options = that.options;
         this.writeConcern = that.writeConcern;
         this.clientSession = that.clientSession;
     }
 
-    */
-/**
+
+    /**
      * Set the client session to use for the insert.
      *
      * @param clientSession the client session
      * @return this
-     *//*
-
+     */
     public InsertManyOptions clientSession(final ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
 
-    */
-/**
+    /**
      * The client session to use for the insertion.
      *
      * @return the client session
-     *//*
-
+     */
     public ClientSession clientSession() {
         return clientSession;
     }
-
-*/
 
     /**
      * Set the write concern to use for the insert.

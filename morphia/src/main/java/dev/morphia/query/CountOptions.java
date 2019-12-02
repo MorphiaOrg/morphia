@@ -18,7 +18,9 @@ package dev.morphia.query;
 
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
+import dev.morphia.internal.SessionConfigurable;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -30,9 +32,21 @@ import java.util.concurrent.TimeUnit;
  * @mongodb.driver.manual reference/command/count/ Count
  * @since 1.3
  */
-public class CountOptions extends com.mongodb.client.model.CountOptions {
+public class CountOptions extends com.mongodb.client.model.CountOptions implements SessionConfigurable<CountOptions> {
     private ReadPreference readPreference;
     private ReadConcern readConcern;
+    private ClientSession clientSession;
+
+    @Override
+    public CountOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    @Override
+    public ClientSession clientSession() {
+        return clientSession;
+    }
 
     /**
      * Defines the index hint value

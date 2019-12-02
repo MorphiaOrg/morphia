@@ -398,7 +398,9 @@ public interface Datastore {
      * @param <T>      the type of the entity
      * @return the saved entities
      */
-    <T> List<T> save(List<T> entities);
+    default <T> List<T> save(List<T> entities) {
+        return save(entities, new InsertManyOptions());
+    }
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -492,14 +494,4 @@ public interface Datastore {
     default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
         return query.update(operations).execute(options);
     }
-
-    /**
-     * @param collection   the collection to use
-     * @param clazz        the type
-     * @param writeConcern the write concern to enforce
-     * @param <T>          the collection type
-     * @return a collection reference configured with the given WriteConcern
-     * @morphia.internal
-     */
-    <T> MongoCollection<T> enforceWriteConcern(MongoCollection<T> collection, Class<T> clazz, WriteConcern writeConcern);
 }

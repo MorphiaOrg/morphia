@@ -1,8 +1,11 @@
 package dev.morphia.query;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
+import dev.morphia.UpdateOptions;
+import dev.morphia.internal.SessionConfigurable;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -11,25 +14,19 @@ import java.util.concurrent.TimeUnit;
 /**
  * Defines options to use for find and delete operations
  */
-public class FindAndDeleteOptions extends FindOneAndDeleteOptions {
+public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements SessionConfigurable<FindAndDeleteOptions> {
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+    private ClientSession clientSession;
 
-    /**
-     * @return the write concern to use
-     */
-    public WriteConcern writeConcern() {
-        return writeConcern;
+    @Override
+    public FindAndDeleteOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
     }
 
-    /**
-     * Sets the write concern
-     *
-     * @param writeConcern the write concern
-     * @return this
-     */
-    public FindAndDeleteOptions writeConcern(final WriteConcern writeConcern) {
-        this.writeConcern = writeConcern;
-        return this;
+    @Override
+    public ClientSession clientSession() {
+        return clientSession;
     }
 
     @Override
@@ -62,6 +59,24 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions {
      */
     public FindAndDeleteOptions sort(final Document sort) {
         super.sort(sort);
+        return this;
+    }
+
+    /**
+     * @return the write concern to use
+     */
+    public WriteConcern writeConcern() {
+        return writeConcern;
+    }
+
+    /**
+     * Sets the write concern
+     *
+     * @param writeConcern the write concern
+     * @return this
+     */
+    public FindAndDeleteOptions writeConcern(final WriteConcern writeConcern) {
+        this.writeConcern = writeConcern;
         return this;
     }
 }

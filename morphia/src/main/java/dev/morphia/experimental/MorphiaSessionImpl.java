@@ -42,23 +42,25 @@ public class MorphiaSessionImpl extends BaseMorphiaSession {
 
     @Override
     public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
-        throw new UnsupportedOperationException();
+        return super.save(entities, new InsertManyOptions(options)
+                                   .clientSession(findSession(options)));
     }
 
     @Override
     public <T> T save(final T entity, final InsertOneOptions options) {
         return super.save(entity, new InsertOneOptions(options)
-                  .clientSession(getSession()));
+                                      .clientSession(findSession(options)));
     }
 
     @Override
     public <T> void insert(final T entity, final InsertOneOptions options) {
         super.insert(entity, new InsertOneOptions(options)
-                                 .clientSession(getSession()));
+                                 .clientSession(findSession(options)));
     }
 
     @Override
     public <T> void insert(final List<T> entities, final InsertManyOptions options) {
-        throw new UnsupportedOperationException();
+        super.insert(entities, new InsertManyOptions(options)
+                                   .clientSession(findSession(options)));
     }
 }

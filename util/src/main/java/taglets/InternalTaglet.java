@@ -29,7 +29,8 @@ public class InternalTaglet extends DocTaglet {
             return null;
         }
 
-        String text = "<h2 class=\"title\">%s%s</h2>";
+        String text = "<div class=\"deprecationBlock\"><span class=\"deprecatedLabel\">%s</span>"
+                      + " <div class=\"deprecationComment\">%s</div> </div>";
 
         return String.format(text, getHeader(), getMessage());
     }

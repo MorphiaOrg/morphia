@@ -22,6 +22,7 @@ import com.mongodb.assertions.Assertions;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
+import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
@@ -37,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * @mongodb.driver.manual ../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY
  * @since 1.3
  */
-public final class FindOptions {
+public final class FindOptions implements SessionConfigurable<FindOptions> {
     private int batchSize;
     private int limit;
     private Document modifiers;

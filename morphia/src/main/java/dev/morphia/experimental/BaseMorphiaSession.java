@@ -30,8 +30,15 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
         this.session = session;
     }
 
-    public ClientSession getSession() {
-        return session;
+    @Override
+    @Nullable
+    public ServerAddress getPinnedServerAddress() {
+        return session.getPinnedServerAddress();
+    }
+
+    @Override
+    public void setPinnedServerAddress(final ServerAddress address) {
+        session.setPinnedServerAddress(address);
     }
 
     @Override
@@ -67,6 +74,27 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     @Override
     public void abortTransaction() {
         session.abortTransaction();
+    }
+
+    @Override
+    public <T> T withTransaction(final TransactionBody<T> transactionBody) {
+        return session.withTransaction(transactionBody);
+    }
+
+    @Override
+    public <T> T withTransaction(final TransactionBody<T> transactionBody, final TransactionOptions options) {
+        return session.withTransaction(transactionBody, options);
+    }
+
+    @Override
+    @Nullable
+    public BsonDocument getRecoveryToken() {
+        return session.getRecoveryToken();
+    }
+
+    @Override
+    public void setRecoveryToken(final BsonDocument recoveryToken) {
+        session.setRecoveryToken(recoveryToken);
     }
 
     @Override
@@ -114,35 +142,7 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
         session.close();
     }
 
-    @Override
-    @Nullable
-    public ServerAddress getPinnedServerAddress() {
-        return session.getPinnedServerAddress();
-    }
-
-    @Override
-    public void setPinnedServerAddress(final ServerAddress address) {
-        session.setPinnedServerAddress(address);
-    }
-
-    @Override
-    public <T> T withTransaction(final TransactionBody<T> transactionBody) {
-        return session.withTransaction(transactionBody);
-    }
-
-    @Override
-    public <T> T withTransaction(final TransactionBody<T> transactionBody, final TransactionOptions options) {
-        return session.withTransaction(transactionBody, options);
-    }
-
-    @Override
-    @Nullable
-    public BsonDocument getRecoveryToken() {
-        return session.getRecoveryToken();
-    }
-
-    @Override
-    public void setRecoveryToken(final BsonDocument recoveryToken) {
-        session.setRecoveryToken(recoveryToken);
+    public ClientSession getSession() {
+        return session;
     }
 }

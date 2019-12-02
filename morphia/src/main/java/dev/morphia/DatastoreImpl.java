@@ -18,8 +18,8 @@ import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Validation;
-import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.experimental.MorphiaSessionImpl;
+import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -44,9 +44,11 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.groupingBy;
 import static org.bson.Document.parse;
 
 /**
@@ -87,21 +89,125 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public AggregationPipeline createAggregation(final String collection, final Class<?> clazz) {
+        return new AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
+    }
+
+    @Override
+    public <T> Query<T> createQuery(final String collection, final Class<T> type) {
+        return newQuery(type);
+    }
+
+    @Override
+    public <T> Query<T> createQuery(final Class<T> clazz, final Document q) {
+        return newQuery(clazz, q);
+    }
+
+    @Override
+    public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
+        if (id == null) {
+            throw new MappingException("Could not get id for " + clazz.getName());
+        }
+        return new DBRef(getCollection(clazz).getNamespace().getCollectionName(), id);
+    }
+
+    @Override
+    public <T> DBRef createRef(final T entity) {
+        final Object id = mapper.getId(entity);
+        if (id == null) {
+            throw new MappingException("Could not get id for " + entity.getClass().getName());
+        }
+        return createRef(entity.getClass(), id);
+    }
+
+    @Override
+    public <T> UpdateOperations<T> createUpdateOperations(final Class<T> type, final Document ops) {
+        final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(type);
+        upOps.setOps(ops);
+        return upOps;
+    }
+
+    @Override
+    public <T> Query<T> find(final String collection) {
+        return newQuery(mapper.getClassFromCollection(collection));
+    }
+
+    @Override
+    public <T> void insert(final T entity) {
+        insert(entity, new InsertOneOptions()
+                           .writeConcern(mapper.getWriteConcern(entity.getClass())));
+    }
+
+    @Override
+    public <T> void insert(final T entity, final InsertOneOptions options) {
+        insert(getCollection(entity.getClass()), entity, options);
+    }
+
+    @Override
+    public <T> void insert(final List<T> entities, final InsertManyOptions options) {
+        if (!entities.isEmpty()) {
+            Class<?> type = entities.get(0).getClass();
+            MappedClass mappedClass = mapper.getMappedClass(type);
+            final MongoCollection collection = getCollection(type);
+            MappedField versionField = mappedClass.getVersionField();
+            if (versionField != null) {
+                for (final T entity : entities) {
+                    setInitialVersion(versionField, entity);
+                }
+            }
+
+            MongoCollection mongoCollection = enforceWriteConcern(collection, type, options.getWriteConcern());
+            if (options.clientSession() == null) {
+                mongoCollection.insertMany(entities, options.getOptions());
+            } else {
+                mongoCollection.insertMany(options.clientSession(), entities, options.getOptions());
+            }
+        }
+    }
+
+    @Override
+    public <T> Query<T> queryByExample(final String collection, final T ex) {
+        return queryByExample(ex);
+    }
+
+    protected <T> void insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
+        setInitialVersion(mapper.getMappedClass(entity.getClass()).getVersionField(), entity);
+        MongoCollection mongoCollection = mapper.enforceWriteConcern(collection, entity.getClass());
+        ClientSession clientSession = findSession(options);
+        if (clientSession == null) {
+            mongoCollection.insertOne(entity, options.getOptions());
+        } else {
+            mongoCollection.insertOne(clientSession, entity, options.getOptions());
+        }
+    }
+
+    private <T> void setInitialVersion(final MappedField versionField, final T entity) {
+        if (versionField != null) {
+            Object value = versionField.getFieldValue(entity);
+            if (value != null && !value.equals(0)) {
+                throw new ValidationException(Sofia.versionManuallySet());
+            } else {
+                versionField.setFieldValue(entity, 1L);
+            }
+        }
+    }
+
+    protected <T> Query<T> newQuery(final Class<T> type, final Document query) {
+        return getQueryFactory().createQuery(this, type, query);
+    }
+
+    protected <T> Query<T> newQuery(final Class<T> type) {
+        return getQueryFactory().createQuery(this, type);
+    }
+
+    @Override
     public <T> T withTransaction(final MorphiaTransaction<T> body) {
         return doTransaction(mongoClient.startSession(), body);
     }
 
     @Override
-    public <T> T  withTransaction(final MorphiaTransaction<T> transaction, final ClientSessionOptions options) {
+    public <T> T withTransaction(final MorphiaTransaction<T> transaction, final ClientSessionOptions options) {
         return doTransaction(mongoClient.startSession(options), transaction);
-    }
-
-    private <T> T doTransaction(final ClientSession session, final MorphiaTransaction<T> body) {
-        return session.withTransaction(() -> {
-            try(MorphiaSession morphiaSession = new MorphiaSessionImpl(session, mongoClient, database, mapper, indexHelper, queryFactory)) {
-                return body.execute(morphiaSession);
-            }
-        });
     }
 
     /**
@@ -341,37 +447,29 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> List<T> save(final List<T> entities) {
-        return save(entities, new InsertManyOptions());
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
         if (entities.isEmpty()) {
             return List.of();
         }
-        Class<?> first = entities.get(0).getClass();
-        boolean allMatch = entities.stream().map(e -> e.getClass()).allMatch(c -> c.equals(first));
+        Map<Class, List<T>> grouped = entities.stream()
+                                                        .collect(groupingBy(e -> getCollection(e.getClass()).getDocumentClass()));
 
-        if (allMatch) {
-            MongoCollection<T> collection = (MongoCollection<T>) getCollection(entities.get(0).getClass());
-            collection.insertMany(entities, options.getOptions());
-        } else {
-            InsertOneOptions insertOneOptions = new InsertOneOptions()
-                                                    .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                    .writeConcern(options.getWriteConcern());
-            for (final T entity : entities) {
-                save(entity, insertOneOptions);
+        for (Entry<Class, List<T>> entry : grouped.entrySet()) {
+            MongoCollection<T> collection = getCollection(entry.getKey());
+            if (options.clientSession() == null) {
+                collection.insertMany(entry.getValue(), options.getOptions());
+            } else {
+                collection.insertMany(options.clientSession(), entry.getValue(), options.getOptions());
             }
+
         }
         return entities;
     }
 
     @Override
     public <T> T save(final T entity) {
-        save(entity, new InsertOneOptions());
-        return entity;
+        return save(entity, new InsertOneOptions());
     }
 
     @Override
@@ -384,104 +482,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         return entity;
     }
 
-    public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class type, final WriteConcern option) {
+    public <T> MongoCollection<T> enforceWriteConcern(final MongoCollection collection, final Class<T> type, final WriteConcern option) {
         WriteConcern applied = option != null ? option : mapper.getWriteConcern(type);
         return applied != null
                ? collection.withWriteConcern(applied)
                : collection;
-    }
-
-    /**
-     * Sets the Mapper this Datastore uses
-     *
-     * @param mapper the new Mapper
-     */
-    public void setMapper(final Mapper mapper) {
-        this.mapper = mapper;
-    }
-
-    @Override
-    public AggregationPipeline createAggregation(final String collection, final Class<?> clazz) {
-        return new AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
-    }
-
-    @Override
-    public <T> Query<T> createQuery(final String collection, final Class<T> type) {
-        return newQuery(type);
-    }
-
-    @Override
-    public <T> Query<T> createQuery(final Class<T> clazz, final Document q) {
-        return newQuery(clazz, q);
-    }
-
-    @Override
-    public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
-        if (id == null) {
-            throw new MappingException("Could not get id for " + clazz.getName());
-        }
-        return new DBRef(getCollection(clazz).getNamespace().getCollectionName(), id);
-    }
-
-    @Override
-    public <T> DBRef createRef(final T entity) {
-        final Object id = mapper.getId(entity);
-        if (id == null) {
-            throw new MappingException("Could not get id for " + entity.getClass().getName());
-        }
-        return createRef(entity.getClass(), id);
-    }
-
-    @Override
-    public <T> UpdateOperations<T> createUpdateOperations(final Class<T> type, final Document ops) {
-        final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(type);
-        upOps.setOps(ops);
-        return upOps;
-    }
-
-    @Override
-    public <T> Query<T> find(final String collection) {
-        return newQuery(mapper.getClassFromCollection(collection));
-    }
-
-    @Override
-    public <T> void insert(final T entity) {
-        insert(entity, new InsertOneOptions()
-                           .writeConcern(mapper.getWriteConcern(entity.getClass())));
-    }
-
-    @Override
-    public <T> void insert(final T entity, final InsertOneOptions options) {
-        insert(getCollection(entity.getClass()), entity, options);
-    }
-
-    @Override
-    public <T> void insert(final List<T> entities, final InsertManyOptions options) {
-        if (!entities.isEmpty()) {
-            Class<?> type = entities.get(0).getClass();
-            MappedClass mappedClass = mapper.getMappedClass(type);
-            final MongoCollection collection = getCollection(type);
-            MappedField versionField = mappedClass.getVersionField();
-            if (versionField != null) {
-                for (final T entity : entities) {
-                    setInitialVersion(versionField, entity);
-                }
-            }
-
-            enforceWriteConcern(collection, type, options.getWriteConcern())
-                .insertMany(entities, options.getOptions());
-        }
-    }
-
-    @Override
-    public <T> Query<T> queryByExample(final String collection, final T ex) {
-        return queryByExample(ex);
-    }
-
-    protected <T> void insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
-        setInitialVersion(mapper.getMappedClass(entity.getClass()).getVersionField(), entity);
-        mapper.enforceWriteConcern(collection, entity.getClass())
-              .insertOne(entity, options.getOptions());
     }
 
     private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
@@ -540,16 +545,16 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected <T> void saveDocument(final T entity,
-                                  final MongoCollection<T> collection,
-                                  final InsertOneOptions options) {
+                                    final MongoCollection<T> collection,
+                                    final InsertOneOptions options) {
         Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
+        ClientSession clientSession = findSession(options);
+
         if (id == null) {
-            if (options.clientSession() == null) {
-                options.apply(collection)
-                       .insertOne(entity, options.getOptions());
+            if (clientSession == null) {
+                options.apply(collection).insertOne(entity, options.getOptions());
             } else {
-                options.apply(collection)
-                       .insertOne(options.clientSession(), entity, options.getOptions());
+                options.apply(collection).insertOne(clientSession, entity, options.getOptions());
             }
         } else {
             ReplaceOptions updateOptions = new ReplaceOptions()
@@ -559,10 +564,10 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (options.writeConcern() != null) {
                 updated = collection.withWriteConcern(options.writeConcern());
             }
-            if (options.clientSession() == null) {
+            if (clientSession == null) {
                 updated.replaceOne(new Document("_id", id), entity, updateOptions);
             } else {
-                updated.replaceOne(options.clientSession(), new Document("_id", id), entity, updateOptions);
+                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
             }
         }
     }
@@ -571,23 +576,15 @@ public class DatastoreImpl implements AdvancedDatastore {
         field.setFieldValue(entity, newVersion);
     }
 
-    private <T> void setInitialVersion(final MappedField versionField, final T entity) {
-        if (versionField != null) {
-            Object value = versionField.getFieldValue(entity);
-            if (value != null && !value.equals(0)) {
-                throw new ValidationException(Sofia.versionManuallySet());
-            } else {
-                versionField.setFieldValue(entity, 1L);
-            }
-        }
-    }
-
-    protected <T> Query<T> newQuery(final Class<T> type, final Document query) {
-        return getQueryFactory().createQuery(this, type, query);
-    }
-
-    protected <T> Query<T> newQuery(final Class<T> type) {
-        return getQueryFactory().createQuery(this, type);
+    /**
+     * @param configurable the configurable
+     * @return any session found first on the configurable then on this
+     * @morphia.internal
+     */
+    public ClientSession findSession(final SessionConfigurable configurable) {
+        return configurable.clientSession() != null
+               ? configurable.clientSession()
+               : getSession();
     }
 
     void process(final MappedClass mc, final Validation validation) {
@@ -610,6 +607,23 @@ public class DatastoreImpl implements AdvancedDatastore {
                     throw e;
                 }
             }
+        }
+    }
+
+    /**
+     * Sets the Mapper this Datastore uses
+     *
+     * @param mapper the new Mapper
+     */
+    public void setMapper(final Mapper mapper) {
+        this.mapper = mapper;
+    }
+
+    private <T> T doTransaction(final ClientSession session, final MorphiaTransaction<T> body) {
+        try (session) {
+            return session.withTransaction(() -> {
+                return body.execute(new MorphiaSessionImpl(session, mongoClient, database, mapper, indexHelper, queryFactory));
+            });
         }
     }
 }

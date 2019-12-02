@@ -15,7 +15,6 @@
 package dev.morphia.testmodel;
 
 
-import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Property;
 import dev.morphia.testutil.TestEntity;
 
@@ -23,7 +22,6 @@ import static java.lang.String.format;
 
 public class Rectangle extends TestEntity implements Shape {
     @Property("h")
-    @Indexed
     private double height;
     @Property("w")
     private double width;

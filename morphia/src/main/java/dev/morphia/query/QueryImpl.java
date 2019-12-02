@@ -2,11 +2,13 @@ package dev.morphia.query;
 
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
@@ -40,7 +42,7 @@ import static java.lang.String.format;
 @SuppressWarnings("removal")
 public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
-    private final Datastore datastore;
+    private final DatastoreImpl datastore;
     private final Class<T> clazz;
     private final Mapper mapper;
     private boolean validateName = true;
@@ -60,7 +62,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      */
     public QueryImpl(final Class<T> clazz, final Datastore datastore) {
         this.clazz = clazz;
-        this.datastore = datastore;
+        this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();
 
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
@@ -204,12 +206,15 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public long count() {
-        return getCollection().countDocuments(getQueryDocument());
+        return count(new CountOptions());
     }
 
     @Override
     public long count(final CountOptions options) {
-        return getCollection().countDocuments(getQueryDocument(), options);
+        ClientSession session = datastore.findSession(options);
+        return session == null
+        ? getCollection().countDocuments(getQueryDocument(), options)
+               :getCollection().countDocuments(session, getQueryDocument(), options);
     }
 
     @Override
@@ -237,8 +242,11 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T delete(final FindAndDeleteOptions options) {
-        return datastore.enforceWriteConcern(getCollection(), clazz, options.writeConcern())
-                        .findOneAndDelete(getQueryDocument(), options);
+        MongoCollection<T> mongoCollection = datastore.enforceWriteConcern(getCollection(), clazz, options.writeConcern());
+        ClientSession session = datastore.findSession(options);
+        return session == null
+               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
+               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
     }
 
     @Override
@@ -513,8 +521,10 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
-        FindIterable<E> iterable = findOptions.clientSession() != null
-                                   ? collection.find(findOptions.clientSession(), query)
+        ClientSession clientSession = datastore.findSession(findOptions);
+
+        FindIterable<E> iterable = clientSession != null
+                                   ? collection.find(clientSession, query)
                                    : collection.find(query);
 
         Document oldProfile = null;

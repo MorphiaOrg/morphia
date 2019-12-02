@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
@@ -24,10 +25,10 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
     private final Mapper mapper;
     private final Class<T> type;
     private final Operations operations;
-    private Datastore datastore;
+    private DatastoreImpl datastore;
     private boolean validateNames = true;
 
-    UpdateBase(final Datastore datastore, final Mapper mapper, final Class<T> type) {
+    UpdateBase(final DatastoreImpl datastore, final Mapper mapper, final Class<T> type) {
         this.datastore = datastore;
         this.mapper = mapper;
         this.type = type;
@@ -39,7 +40,7 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
         return type;
     }
 
-    protected Datastore getDatastore() {
+    protected DatastoreImpl getDatastore() {
         return datastore;
     }
 

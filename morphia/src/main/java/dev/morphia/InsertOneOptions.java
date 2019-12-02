@@ -19,13 +19,14 @@ package dev.morphia;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
+import dev.morphia.internal.SessionConfigurable;
 
 /**
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
  *
  * @since 1.3
  */
-public class InsertOneOptions {
+public class InsertOneOptions implements SessionConfigurable<InsertOneOptions> {
     private com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
@@ -47,24 +48,13 @@ public class InsertOneOptions {
         this.clientSession = that.clientSession;
     }
 
-    /**
-     * Set the client session to use for the insert.
-     *
-     * @param clientSession the client session
-     * @return this
-     * @since 2.0
-     */
+    @Override
     public InsertOneOptions clientSession(final ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
 
-    /**
-     * The client session to use for the insertion.
-     *
-     * @return the client session
-     * @since 2.0
-     */
+    @Override
     public ClientSession clientSession() {
         return clientSession;
     }

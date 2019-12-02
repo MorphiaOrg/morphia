@@ -1,8 +1,9 @@
 package dev.morphia.query;
 
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.UpdateOptions;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
@@ -16,7 +17,7 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
     private QueryImpl query;
     private MongoCollection<T> collection;
 
-    Update(final Datastore datastore, final Mapper mapper, final Class<T> clazz, final MongoCollection<T> collection,
+    Update(final DatastoreImpl datastore, final Mapper mapper, final Class<T> clazz, final MongoCollection<T> collection,
            final QueryImpl query) {
         super(datastore, mapper, clazz);
         this.collection = collection;
@@ -42,10 +43,11 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
         MongoCollection mongoCollection = getDatastore().enforceWriteConcern(collection, getType(), options.getWriteConcern());
         Document updateOperations = toDocument();
         final Document queryObject = query.prepareQuery();
-        if(getDatastore().getSession() != null) {
+        ClientSession session = getDatastore().findSession(options);
+        if(session != null) {
             return options.isMulti()
-                   ? mongoCollection.updateMany(getDatastore().getSession(), queryObject, updateOperations, options)
-                   : mongoCollection.updateOne(getDatastore().getSession(), queryObject, updateOperations, options);
+                   ? mongoCollection.updateMany(session, queryObject, updateOperations, options)
+                   : mongoCollection.updateOne(session, queryObject, updateOperations, options);
 
         } else {
             return options.isMulti()
