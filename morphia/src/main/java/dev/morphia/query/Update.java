@@ -44,15 +44,13 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
         Document updateOperations = toDocument();
         final Document queryObject = query.prepareQuery();
         ClientSession session = getDatastore().findSession(options);
-        if(session != null) {
-            return options.isMulti()
-                   ? mongoCollection.updateMany(session, queryObject, updateOperations, options)
-                   : mongoCollection.updateOne(session, queryObject, updateOperations, options);
+        if (options.isMulti()) {
+            return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
+                                   : mongoCollection.updateMany(session, queryObject, updateOperations, options);
 
         } else {
-            return options.isMulti()
-                   ? mongoCollection.updateMany(queryObject, updateOperations, options)
-                   : mongoCollection.updateOne(queryObject, updateOperations, options);
+            return session == null ? mongoCollection.updateOne(queryObject, updateOperations, options)
+                                   : mongoCollection.updateOne(session, queryObject, updateOperations, options);
         }
     }
 }

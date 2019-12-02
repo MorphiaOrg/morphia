@@ -17,9 +17,12 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
+import dev.morphia.internal.SessionConfigurable;
 import org.bson.conversions.Bson;
 
 import java.util.List;
@@ -30,20 +33,25 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 1.3
  */
-public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
+public final class FindAndModifyOptions extends FindOneAndUpdateOptions implements SessionConfigurable<FindAndModifyOptions> {
     private WriteConcern writeConcern;
+    private ClientSession clientSession;
 
-    /**
-     * Creates a new options instance.
-     */
-    public FindAndModifyOptions() {
+    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
+        return writeConcern == null
+               ? collection
+               : collection.withWriteConcern(writeConcern);
     }
 
-    /**
-     * @return the write concern to use
-     */
-    public WriteConcern writeConcern() {
-        return writeConcern;
+    @Override
+    public FindAndModifyOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    @Override
+    public ClientSession clientSession() {
+        return clientSession;
     }
 
     /**
@@ -53,15 +61,6 @@ public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
     @Deprecated(since = "2.0", forRemoval = true)
     public WriteConcern getWriteConcern() {
         return writeConcern;
-    }
-
-    /**
-     * @param writeConcern the write concern
-     * @return this
-     */
-    public FindAndModifyOptions writeConcern(final WriteConcern writeConcern) {
-        this.writeConcern = writeConcern;
-        return this;
     }
 
     @Override
@@ -110,5 +109,21 @@ public final class FindAndModifyOptions extends FindOneAndUpdateOptions {
     public FindAndModifyOptions arrayFilters(final List<? extends Bson> arrayFilters) {
         super.arrayFilters(arrayFilters);
         return this;
+    }
+
+    /**
+     * @param writeConcern the write concern
+     * @return this
+     */
+    public FindAndModifyOptions writeConcern(final WriteConcern writeConcern) {
+        this.writeConcern = writeConcern;
+        return this;
+    }
+
+    /**
+     * @return the write concern to use
+     */
+    public WriteConcern writeConcern() {
+        return writeConcern;
     }
 }

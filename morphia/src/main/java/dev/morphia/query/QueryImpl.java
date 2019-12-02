@@ -212,9 +212,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public long count(final CountOptions options) {
         ClientSession session = datastore.findSession(options);
-        return session == null
-        ? getCollection().countDocuments(getQueryDocument(), options)
-               :getCollection().countDocuments(session, getQueryDocument(), options);
+        return session == null ? getCollection().countDocuments(getQueryDocument(), options)
+                               : getCollection().countDocuments(session, getQueryDocument(), options);
     }
 
     @Override
@@ -266,13 +265,13 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public DeleteResult remove(final DeleteOptions options) {
         MongoCollection<T> collection = enforceWriteConcern(clazz, options.getWriteConcern());
         ClientSession session = datastore.findSession(options);
-        if (session == null) {
-            return options.isMulti()
+        if (options.isMulti()) {
+            return session == null
                    ? collection.deleteMany(getQueryDocument(), options)
-                   : collection.deleteOne(getQueryDocument(), options);
+                   : collection.deleteMany(session, getQueryDocument(), options);
         } else {
-            return options.isMulti()
-                   ? collection.deleteMany(session, getQueryDocument(), options)
+            return session == null
+                   ? collection.deleteOne(getQueryDocument(), options)
                    : collection.deleteOne(session, getQueryDocument(), options);
         }
     }

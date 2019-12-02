@@ -1,9 +1,10 @@
 package dev.morphia.query;
 
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.DatastoreImpl;
+import dev.morphia.FindAndModifyOptions;
 
 /**
  * Represents a modify operation
@@ -26,7 +27,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      * @return the operation result
      */
     public T execute() {
-        return execute(new FindOneAndUpdateOptions()
+        return execute(new FindAndModifyOptions()
                            .returnDocument(ReturnDocument.AFTER)
                            .sort(query.getSort())
                            .projection(query.getFieldsObject()));
@@ -38,8 +39,11 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      * @param options the options to apply
      * @return the operation result
      */
-    public T execute(final FindOneAndUpdateOptions options) {
-        return collection.findOneAndUpdate(query.prepareQuery(), toDocument(), options);
+    public T execute(final FindAndModifyOptions options) {
+        ClientSession session = getDatastore().findSession(options);
+        return session == null
+               ? options.apply(collection).findOneAndUpdate(query.prepareQuery(), toDocument(), options)
+               : options.apply(collection).findOneAndUpdate(session, query.prepareQuery(), toDocument(), options);
 
     }
 }

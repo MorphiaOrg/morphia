@@ -8,6 +8,7 @@ import dev.morphia.DeleteOptions;
 import dev.morphia.IndexHelper;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
+import dev.morphia.InsertOptions;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.QueryFactory;
 
@@ -25,8 +26,7 @@ public class MorphiaSessionImpl extends BaseMorphiaSession {
      * @param session the client session
      */
     public MorphiaSessionImpl(final ClientSession session, final MongoClient mongoClient, final MongoDatabase database,
-                              final Mapper mapper, final IndexHelper indexHelper,
-                              final QueryFactory queryFactory) {
+                              final Mapper mapper, final IndexHelper indexHelper, final QueryFactory queryFactory) {
         super(session, database, mongoClient, mapper, indexHelper, queryFactory);
     }
 
