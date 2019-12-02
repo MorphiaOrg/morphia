@@ -31,28 +31,6 @@ public class MorphiaSessionImpl extends BaseMorphiaSession {
     }
 
     @Override
-    public <T> DeleteResult delete(final T entity, final DeleteOptions options) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T> T merge(final T entity, final InsertOneOptions options) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
-        return super.save(entities, new InsertManyOptions(options)
-                                   .clientSession(findSession(options)));
-    }
-
-    @Override
-    public <T> T save(final T entity, final InsertOneOptions options) {
-        return super.save(entity, new InsertOneOptions(options)
-                                      .clientSession(findSession(options)));
-    }
-
-    @Override
     public <T> void insert(final T entity, final InsertOneOptions options) {
         super.insert(entity, new InsertOneOptions(options)
                                  .clientSession(findSession(options)));
@@ -62,5 +40,29 @@ public class MorphiaSessionImpl extends BaseMorphiaSession {
     public <T> void insert(final List<T> entities, final InsertManyOptions options) {
         super.insert(entities, new InsertManyOptions(options)
                                    .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> DeleteResult delete(final T entity, final DeleteOptions options) {
+        return super.delete(entity, new DeleteOptions(options)
+                                        .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> T merge(final T entity, final InsertOneOptions options) {
+        return super.merge(entity, new InsertOneOptions(options)
+                                       .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
+        return super.save(entities, new InsertManyOptions(options)
+                                        .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> T save(final T entity, final InsertOneOptions options) {
+        return super.save(entity, new InsertOneOptions(options)
+                                      .clientSession(findSession(options)));
     }
 }

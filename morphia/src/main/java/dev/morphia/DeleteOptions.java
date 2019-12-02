@@ -17,7 +17,9 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
+import dev.morphia.internal.SessionConfigurable;
 
 /**
  * The options to apply when removing documents from the MongoCollection
@@ -25,9 +27,36 @@ import com.mongodb.client.model.Collation;
  * @mongodb.driver.manual tutorial/remove-documents/ Remove Documents
  * @since 1.3
  */
-public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions {
+public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions implements SessionConfigurable<DeleteOptions> {
     private boolean multi;
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+    private ClientSession clientSession;
+
+    public DeleteOptions() {
+    }
+
+    /**
+     * @param that the options to copy
+     * @morphia.internal
+     * @since 2.0
+     */
+    public DeleteOptions(final DeleteOptions that) {
+        this.multi = that.multi;
+        this.writeConcern = that.writeConcern;
+        this.clientSession = that.clientSession;
+    }
+
+    @Override
+    public DeleteOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    @Override
+    public ClientSession clientSession() {
+        return clientSession;
+    }
+
 
     /**
      * @return is this delete for multiple documents

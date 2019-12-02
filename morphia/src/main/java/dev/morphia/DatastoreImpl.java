@@ -192,6 +192,24 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    /**
+     * @param configurable the configurable
+     * @return any session found first on the configurable then on this
+     * @morphia.internal
+     */
+    public ClientSession findSession(final SessionConfigurable configurable) {
+        return configurable.clientSession() != null
+               ? configurable.clientSession()
+               : getSession();
+    }
+
+    public <T> MongoCollection<T> enforceWriteConcern(final MongoCollection collection, final Class<T> type, final WriteConcern option) {
+        WriteConcern applied = option != null ? option : mapper.getWriteConcern(type);
+        return applied != null
+               ? collection.withWriteConcern(applied)
+               : collection;
+    }
+
     protected <T> Query<T> newQuery(final Class<T> type, final Document query) {
         return getQueryFactory().createQuery(this, type, query);
     }
@@ -248,7 +266,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (entity instanceof Class<?>) {
             throw new MappingException("Did you mean to delete all documents? -- delete(ds.createQuery(???.class))");
         }
-        return find(entity.getClass()).filter("_id", mapper.getId(entity)).remove(options);
+        return find(entity.getClass())
+                   .filter("_id", mapper.getId(entity))
+                   .remove(options);
     }
 
     @Override
@@ -426,7 +446,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (!tryVersionedUpdate(collection, entity, options, mc)) {
             UpdateResult execute = query.update()
                                         .set(entity)
-                                        .execute(new UpdateOptions().writeConcern(options.writeConcern()));
+                                        .execute(new UpdateOptions()
+                                                     .clientSession(findSession(options))
+                                                     .writeConcern(options.writeConcern()));
             if (execute.getModifiedCount() != 1) {
                 throw new UpdateException("Nothing updated");
             }
@@ -453,7 +475,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             return List.of();
         }
         Map<Class, List<T>> grouped = entities.stream()
-                                                        .collect(groupingBy(e -> getCollection(e.getClass()).getDocumentClass()));
+                                              .collect(groupingBy(e -> getCollection(e.getClass()).getDocumentClass()));
 
         for (Entry<Class, List<T>> entry : grouped.entrySet()) {
             MongoCollection<T> collection = getCollection(entry.getKey());
@@ -480,13 +502,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         save(getCollection(entity.getClass()), entity, options);
         return entity;
-    }
-
-    public <T> MongoCollection<T> enforceWriteConcern(final MongoCollection collection, final Class<T> type, final WriteConcern option) {
-        WriteConcern applied = option != null ? option : mapper.getWriteConcern(type);
-        return applied != null
-               ? collection.withWriteConcern(applied)
-               : collection;
     }
 
     private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
@@ -574,17 +589,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
         field.setFieldValue(entity, newVersion);
-    }
-
-    /**
-     * @param configurable the configurable
-     * @return any session found first on the configurable then on this
-     * @morphia.internal
-     */
-    public ClientSession findSession(final SessionConfigurable configurable) {
-        return configurable.clientSession() != null
-               ? configurable.clientSession()
-               : getSession();
     }
 
     void process(final MappedClass mc, final Validation validation) {

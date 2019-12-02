@@ -106,4 +106,44 @@ public class TestTransactions extends TestBase {
         Assert.assertEquals(rectangle.getWidth() + 13, getDs().find(Rectangle.class)
                                                               .first().getWidth(), 0.5);
     }
+    @Test
+    public void delete() {
+        Rectangle rectangle = new Rectangle(1, 1);
+        getDs().save(rectangle);
+
+        getDs().withTransaction((session) -> {
+
+            Assert.assertNotNull(getDs().find(Rectangle.class).first());
+            Assert.assertNotNull(session.find(Rectangle.class).first());
+
+            session.delete(rectangle);
+
+            Assert.assertNotNull(getDs().find(Rectangle.class).first());
+            Assert.assertNull(session.find(Rectangle.class).first());
+            return null;
+        });
+
+        Assert.assertNull(getDs().find(Rectangle.class).first());
+    }
+    @Test
+    public void merge() {
+        Rectangle rectangle = new Rectangle(1, 1);
+        getDs().save(rectangle);
+
+        getDs().withTransaction((session) -> {
+
+            Assert.assertEquals(rectangle, getDs().find(Rectangle.class).first());
+            Assert.assertEquals(rectangle, session.find(Rectangle.class).first());
+
+            rectangle.setWidth(20);
+            session.merge(rectangle);
+
+            Assert.assertEquals(1, getDs().find(Rectangle.class).first().getWidth(), 0.5);
+            Assert.assertEquals(20, session.find(Rectangle.class).first().getWidth(), 0.5);
+
+            return null;
+        });
+
+        Assert.assertEquals(20, getDs().find(Rectangle.class).first().getWidth(), 0.5);
+    }
 }

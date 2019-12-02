@@ -43,8 +43,16 @@ public class Rectangle extends TestEntity implements Shape {
         return height;
     }
 
+    public void setHeight(final double height) {
+        this.height = height;
+    }
+
     public double getWidth() {
         return width;
+    }
+
+    public void setWidth(final double width) {
+        this.width = width;
     }
 
     @Override

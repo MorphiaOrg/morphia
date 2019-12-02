@@ -265,9 +265,16 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public DeleteResult remove(final DeleteOptions options) {
         MongoCollection<T> collection = enforceWriteConcern(clazz, options.getWriteConcern());
-        return options.isMulti()
-               ? collection.deleteMany(getQueryDocument(), options)
-               : collection.deleteOne(getQueryDocument(), options);
+        ClientSession session = datastore.findSession(options);
+        if (session == null) {
+            return options.isMulti()
+                   ? collection.deleteMany(getQueryDocument(), options)
+                   : collection.deleteOne(getQueryDocument(), options);
+        } else {
+            return options.isMulti()
+                   ? collection.deleteMany(session, getQueryDocument(), options)
+                   : collection.deleteOne(session, getQueryDocument(), options);
+        }
     }
 
     @Override
