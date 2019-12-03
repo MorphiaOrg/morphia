@@ -696,7 +696,7 @@ couple of small fixes:
 
 - Tomas Vitvar discovered that TAB replacement doesn't always work when used
   with custom markup in code
-- SQL parsing is even more rigid now and doesn't step over SmallTalk in tests
+- SQL parsing is even more rigid now and doesn't stage over SmallTalk in tests
 
 
 ## Version 5.9
