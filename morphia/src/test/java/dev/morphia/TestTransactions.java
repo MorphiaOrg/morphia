@@ -2,6 +2,7 @@ package dev.morphia;
 
 import dev.morphia.testmodel.Rectangle;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public class TestTransactions extends TestBase {
     @Before
     public void before() {
+        Assume.assumeTrue(isReplicaSet());
         getMapper().map(Rectangle.class);
         getDs().ensureIndexes();
         getDs().save(new Rectangle(1, 1));
