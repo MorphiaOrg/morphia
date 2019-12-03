@@ -59,7 +59,7 @@ public interface Datastore {
      * @since 2.0
      * @morphia.experimental
      */
-    <T> T withTransaction(MorphiaTransaction<T> transaction, final ClientSessionOptions options);
+    <T> T withTransaction(MorphiaTransaction<T> transaction, ClientSessionOptions options);
 
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})

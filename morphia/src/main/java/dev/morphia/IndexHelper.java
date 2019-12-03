@@ -17,7 +17,6 @@
 package dev.morphia;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Index;
@@ -45,15 +44,18 @@ import java.util.concurrent.TimeUnit;
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.util.Collections.emptyList;
 
+/**
+ * A helper class for dealing with index definitions
+ *
+ * @morphia.internal
+ */
 public final class IndexHelper {
     private static final Logger LOG = LoggerFactory.getLogger(IndexHelper.class);
 
     private final Mapper mapper;
-    private final MongoDatabase database;
 
-    IndexHelper(final Mapper mapper, final MongoDatabase database) {
+    IndexHelper(final Mapper mapper) {
         this.mapper = mapper;
-        this.database = database;
     }
 
     private void calculateWeights(final Index index, final com.mongodb.client.model.IndexOptions indexOptions) {

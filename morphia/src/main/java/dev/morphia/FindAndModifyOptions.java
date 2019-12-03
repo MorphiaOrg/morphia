@@ -37,6 +37,13 @@ public final class FindAndModifyOptions extends FindOneAndUpdateOptions implemen
     private WriteConcern writeConcern;
     private ClientSession clientSession;
 
+    /**
+     * Applies the options to the collection
+     *
+     * @param collection the collection to update
+     * @param <T>        the collection type
+     * @return either the passed collection or the updated collection
+     */
     public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
         return writeConcern == null
                ? collection

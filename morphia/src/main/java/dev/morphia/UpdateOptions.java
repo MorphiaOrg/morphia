@@ -33,10 +33,24 @@ import java.util.List;
  * @mongodb.driver.manual reference/command/update/ Update Command
  * @since 1.3
  */
-public class UpdateOptions extends com.mongodb.client.model.UpdateOptions implements SessionConfigurable<UpdateOptions> {
+public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
+    implements SessionConfigurable<UpdateOptions> {
     private WriteConcern writeConcern;
     private boolean multi;
     private ClientSession clientSession;
+
+    /**
+     * Updates the collection with the configured WriteConcern
+     *
+     * @param collection the collection to update
+     * @param <T>        the collection type
+     * @return the potentially updated collection
+     */
+    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
+        return writeConcern == null
+               ? collection
+               : collection.withWriteConcern(writeConcern);
+    }
 
     @Override
     public UpdateOptions clientSession(final ClientSession clientSession) {
@@ -47,6 +61,17 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions implem
     @Override
     public ClientSession clientSession() {
         return clientSession;
+    }
+
+    /**
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
+     *
+     * @return the write concern, or null if the default will be used.
+     * @deprecated use {@link #writeConcern()} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public WriteConcern getWriteConcern() {
+        return writeConcern;
     }
 
     /**
@@ -64,37 +89,6 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions implem
      */
     public UpdateOptions multi(final boolean multi) {
         this.multi = multi;
-        return this;
-    }
-
-    /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
-     *
-     * @return the write concern, or null if the default will be used.
-     */
-    public WriteConcern writeConcern() {
-        return writeConcern;
-    }
-
-    /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
-     *
-     * @return the write concern, or null if the default will be used.
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
-    }
-
-    /**
-     * Sets the write concern
-     *
-     * @param writeConcern the write concern
-     * @return this
-     */
-    public UpdateOptions writeConcern(final WriteConcern writeConcern) {
-        this.writeConcern = writeConcern;
         return this;
     }
 
@@ -123,13 +117,22 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions implem
     }
 
     /**
-     * Updates the collection with the configured WriteConcern
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
      *
-     * @param collection the collection to update
-     * @param <T>        the collection type
-     * @return the potentially updated collection
+     * @return the write concern, or null if the default will be used.
      */
-    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
-        return collection.withWriteConcern(writeConcern);
+    public WriteConcern writeConcern() {
+        return writeConcern;
+    }
+
+    /**
+     * Sets the write concern
+     *
+     * @param writeConcern the write concern
+     * @return this
+     */
+    public UpdateOptions writeConcern(final WriteConcern writeConcern) {
+        this.writeConcern = writeConcern;
+        return this;
     }
 }

@@ -5,10 +5,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
-import dev.morphia.IndexHelper;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
-import dev.morphia.InsertOptions;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.QueryFactory;
 
@@ -17,17 +15,22 @@ import java.util.List;
 /**
  * @morphia.experimental
  * @morphia.internal
+ * @since 2.0
  */
 public class MorphiaSessionImpl extends BaseMorphiaSession {
 
     /**
      * Creates a new session.
      *
-     * @param session the client session
+     * @param session      the client session
+     * @param database     the database
+     * @param mapper       the mapper
+     * @param mongoClient  the client
+     * @param queryFactory the factory
      */
     public MorphiaSessionImpl(final ClientSession session, final MongoClient mongoClient, final MongoDatabase database,
-                              final Mapper mapper, final IndexHelper indexHelper, final QueryFactory queryFactory) {
-        super(session, database, mongoClient, mapper, indexHelper, queryFactory);
+                              final Mapper mapper, final QueryFactory queryFactory) {
+        super(session, mongoClient, database, mapper, queryFactory);
     }
 
     @Override

@@ -241,7 +241,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T delete(final FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = datastore.enforceWriteConcern(getCollection(), clazz, options.writeConcern());
+        MongoCollection<T> mongoCollection = options.apply(getCollection());
         ClientSession session = datastore.findSession(options);
         return session == null
                ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
@@ -263,7 +263,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public DeleteResult remove(final DeleteOptions options) {
-        MongoCollection<T> collection = enforceWriteConcern(clazz, options.getWriteConcern());
+        MongoCollection<T> collection = options.apply(getCollection());
         ClientSession session = datastore.findSession(options);
         if (options.isMulti()) {
             return session == null
@@ -558,12 +558,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return collectionName;
     }
 
-    private MongoCollection<T> enforceWriteConcern(final Class<T> klass, final WriteConcern writeConcern) {
-        WriteConcern concern = writeConcern;
-        if (concern == null) {
-            concern = getWriteConcern(klass);
-        }
-        return concern == null ? getCollection() : getCollection().withWriteConcern(concern);
+    private MongoCollection<T> enforceWriteConcern(final WriteConcern writeConcern) {
+        return writeConcern == null ? getCollection() : getCollection().withWriteConcern(writeConcern);
     }
 
     /**

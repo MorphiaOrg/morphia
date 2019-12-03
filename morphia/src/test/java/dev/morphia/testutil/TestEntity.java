@@ -25,7 +25,7 @@ import java.io.Serializable;
 @Entity
 public class TestEntity {
     @Id
-    private ObjectId id = new ObjectId();
+    private ObjectId id;
 
     public ObjectId getId() {
         return id;

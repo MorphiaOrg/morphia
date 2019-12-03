@@ -10,7 +10,6 @@ import com.mongodb.client.TransactionBody;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
 import dev.morphia.DatastoreImpl;
-import dev.morphia.IndexHelper;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.QueryFactory;
 import org.bson.BsonDocument;
@@ -23,10 +22,12 @@ import org.bson.BsonTimestamp;
 public abstract class BaseMorphiaSession extends DatastoreImpl implements MorphiaSession {
     private ClientSession session;
 
-    BaseMorphiaSession(final ClientSession session, final MongoDatabase database,
-                       final MongoClient mongoClient, final Mapper mapper, final IndexHelper indexHelper,
+    BaseMorphiaSession(final ClientSession session,
+                       final MongoClient mongoClient,
+                       final MongoDatabase database,
+                       final Mapper mapper,
                        final QueryFactory queryFactory) {
-        super(database, indexHelper, mongoClient, mapper, queryFactory);
+        super(database, mongoClient, mapper, queryFactory);
         this.session = session;
     }
 
@@ -142,6 +143,9 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
         session.close();
     }
 
+    /**
+     * @return the session
+     */
     public ClientSession getSession() {
         return session;
     }

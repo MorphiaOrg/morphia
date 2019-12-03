@@ -18,6 +18,7 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoCollection;
 import dev.morphia.internal.SessionConfigurable;
 
 /**
@@ -47,6 +48,31 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
         this.clientSession = that.clientSession;
     }
 
+    /**
+     * Applies the options to the collection
+     *
+     * @param collection the collection to update
+     * @param <T>        the collection type
+     * @return either the passed collection or the updated collection
+     * @since 2.0
+     */
+    public <T> MongoCollection<T> apply(final MongoCollection collection) {
+        return writeConcern == null
+               ? collection
+               : collection.withWriteConcern(writeConcern);
+    }
+
+    /**
+     * Sets whether to bypass document validation.
+     *
+     * @param bypassDocumentValidation whether to bypass document validation, or null if unspecified
+     * @return this
+     * @mongodb.server.release 3.2
+     */
+    public InsertManyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+        options.bypassDocumentValidation(bypassDocumentValidation);
+        return this;
+    }
 
     /**
      * Set the client session to use for the insert.
@@ -69,6 +95,55 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
     }
 
     /**
+     * Gets whether to bypass document validation, or null if unspecified.  The default is null.
+     *
+     * @return whether to bypass document validation, or null if unspecified.
+     * @mongodb.server.release 3.2
+     */
+    public Boolean getBypassDocumentValidation() {
+        return options.getBypassDocumentValidation();
+    }
+
+    /**
+     * @return the driver version of this instance
+     */
+    public com.mongodb.client.model.InsertManyOptions getOptions() {
+        return options;
+    }
+
+    /**
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
+     *
+     * @return the write concern, or null if the default will be used.
+     * @deprecated use {@link #writeConcern()} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public WriteConcern getWriteConcern() {
+        return writeConcern;
+    }
+
+    /**
+     * Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion. The default is true.
+     * If false, the server will attempt to insert all the documents regardless of an failures.
+     *
+     * @return whether the the documents should be inserted in order
+     */
+    public boolean isOrdered() {
+        return options.isOrdered();
+    }
+
+    /**
+     * Sets whether the server should insert the documents in the order provided.
+     *
+     * @param ordered true if documents should be inserted in order
+     * @return this
+     */
+    public InsertManyOptions ordered(final boolean ordered) {
+        options.ordered(ordered);
+        return this;
+    }
+
+    /**
      * Set the write concern to use for the insert.
      *
      * @param writeConcern the write concern
@@ -86,66 +161,5 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      */
     public WriteConcern writeConcern() {
         return writeConcern;
-    }
-
-    /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
-     *
-     * @return the write concern, or null if the default will be used.
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
-    }
-
-    /**
-     * Gets whether to bypass document validation, or null if unspecified.  The default is null.
-     *
-     * @return whether to bypass document validation, or null if unspecified.
-     * @mongodb.server.release 3.2
-     */
-    public Boolean getBypassDocumentValidation() {
-        return options.getBypassDocumentValidation();
-    }
-
-    /**
-     * Sets whether to bypass document validation.
-     *
-     * @param bypassDocumentValidation whether to bypass document validation, or null if unspecified
-     * @return this
-     * @mongodb.server.release 3.2
-     */
-    public InsertManyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
-        options.bypassDocumentValidation(bypassDocumentValidation);
-        return this;
-    }
-
-    /**
-     * Sets whether the server should insert the documents in the order provided.
-     *
-     * @param ordered true if documents should be inserted in order
-     * @return this
-     */
-    public InsertManyOptions ordered(final boolean ordered) {
-        options.ordered(ordered);
-        return this;
-    }
-
-    /**
-     * Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion. The default is true.
-     * If false, the server will attempt to insert all the documents regardless of an failures.
-     *
-     * @return whether the the documents should be inserted in order
-     */
-    public boolean isOrdered() {
-        return options.isOrdered();
-    }
-
-    /**
-     * @return the driver version of this instance
-     */
-    public com.mongodb.client.model.InsertManyOptions getOptions() {
-        return options;
     }
 }

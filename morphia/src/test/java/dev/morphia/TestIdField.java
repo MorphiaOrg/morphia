@@ -59,6 +59,7 @@ public class TestIdField extends TestBase {
     @Test
     public void testIdFieldNameMapping() {
         final Rectangle r = new Rectangle(1, 12);
+        getDs().save(r);
         final Document document = getMapper().toDocument(r);
         assertFalse(document.containsKey("id"));
         assertTrue(document.containsKey("_id"));

@@ -40,7 +40,7 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
      * @return the results
      */
     public UpdateResult execute(final UpdateOptions options) {
-        MongoCollection mongoCollection = getDatastore().enforceWriteConcern(collection, getType(), options.getWriteConcern());
+        MongoCollection mongoCollection = options.apply(collection);
         Document updateOperations = toDocument();
         final Document queryObject = query.prepareQuery();
         ClientSession session = getDatastore().findSession(options);

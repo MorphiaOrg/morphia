@@ -519,27 +519,6 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testEnforceWriteConcern() {
-        DatastoreImpl ds = (DatastoreImpl) getDs();
-        FindAndModifyOptions findAndModifyOptions = new FindAndModifyOptions();
-        assertNull(findAndModifyOptions.getWriteConcern());
-
-        MongoCollection<Document> dummy = getDatabase().getCollection("dummy");
-
-        assertEquals(ACKNOWLEDGED, ds.enforceWriteConcern(dummy, FacebookUser.class, findAndModifyOptions.getWriteConcern())
-                                     .getWriteConcern());
-        findAndModifyOptions.writeConcern(MAJORITY);
-        assertEquals(MAJORITY, ds.enforceWriteConcern(dummy, FacebookUser.class, findAndModifyOptions.getWriteConcern())
-                                 .getWriteConcern());
-
-        InsertOptions insertOptions = new InsertOptions();
-        assertNull(insertOptions.getWriteConcern());
-
-        UpdateOptions updateOptions = new UpdateOptions();
-        assertNull(updateOptions.getWriteConcern());
-    }
-
-    @Test
     public void testFindAndDeleteWithCollation() {
         checkMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();

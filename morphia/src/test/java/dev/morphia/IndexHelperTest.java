@@ -57,7 +57,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class IndexHelperTest extends TestBase {
-    private final IndexHelper indexHelper = new IndexHelper(getMapper(), getDatabase());
+    private final IndexHelper indexHelper = new IndexHelper(getMapper());
 
     @Before
     public void before() {

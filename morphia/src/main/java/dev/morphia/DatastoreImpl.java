@@ -17,6 +17,7 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Validation;
 import dev.morphia.experimental.MorphiaSessionImpl;
 import dev.morphia.internal.SessionConfigurable;
@@ -42,13 +43,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.groupingBy;
 import static org.bson.Document.parse;
 
 /**
@@ -61,7 +62,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
     private final MongoDatabase database;
-    private final IndexHelper indexHelper;
     private final MongoClient mongoClient;
     private Mapper mapper;
 
@@ -73,16 +73,21 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = new Mapper(this, database.getCodecRegistry(), options);
 
         this.database = database.withCodecRegistry(mapper.getCodecRegistry());
-        this.indexHelper = new IndexHelper(mapper, this.database);
     }
 
-    public DatastoreImpl(final MongoDatabase database,
-                         final IndexHelper indexHelper,
-                         final MongoClient mongoClient,
-                         final Mapper mapper,
+    /**
+     * Copy constructor for a datastore
+     *
+     * @param database     the database
+     * @param mongoClient  the client
+     * @param mapper       the mapper
+     * @param queryFactory the query factory
+     * @morphia.internal
+     * @since 2.0
+     */
+    public DatastoreImpl(final MongoDatabase database, final MongoClient mongoClient, final Mapper mapper,
                          final QueryFactory queryFactory) {
         this.database = database;
-        this.indexHelper = indexHelper;
         this.mongoClient = mongoClient;
         this.mapper = mapper;
         this.queryFactory = queryFactory;
@@ -156,7 +161,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             }
 
-            MongoCollection mongoCollection = enforceWriteConcern(collection, type, options.getWriteConcern());
+            MongoCollection mongoCollection = options.apply(collection);
             if (options.clientSession() == null) {
                 mongoCollection.insertMany(entities, options.getOptions());
             } else {
@@ -201,13 +206,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return configurable.clientSession() != null
                ? configurable.clientSession()
                : getSession();
-    }
-
-    public <T> MongoCollection<T> enforceWriteConcern(final MongoCollection collection, final Class<T> type, final WriteConcern option) {
-        WriteConcern applied = option != null ? option : mapper.getWriteConcern(type);
-        return applied != null
-               ? collection.withWriteConcern(applied)
-               : collection;
     }
 
     protected <T> Query<T> newQuery(final Class<T> type, final Document query) {
@@ -315,6 +313,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (mapper.getMappedClasses().isEmpty()) {
             Sofia.logNoMappedClasses();
         }
+        final IndexHelper indexHelper = new IndexHelper(mapper);
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null) {
                 indexHelper.createIndex(getCollection(mc.getType()), mc);
@@ -324,6 +323,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void ensureIndexes(final Class<T> clazz) {
+        final IndexHelper indexHelper = new IndexHelper(mapper);
         indexHelper.createIndex(getCollection(clazz), mapper.getMappedClass(clazz));
     }
 
@@ -385,6 +385,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getByKeys(null, keys);
     }
 
+    /**
+     * @param type the type look up
+     * @param <T>  the class type
+     * @return the collection mapped for this class
+     */
     public <T> MongoCollection<T> getCollection(final Class<T> type) {
         MappedClass mappedClass = mapper.getMappedClass(type);
         if (mappedClass == null) {
@@ -394,10 +399,11 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException(Sofia.noMappedCollection(type.getName()));
         }
 
-        MongoCollection<T> collection = null;
-        if (mappedClass.getEntityAnnotation() != null) {
-            collection = getDatabase().getCollection(mappedClass.getCollectionName(), type);
-            collection = enforceWriteConcern(collection, type, null);
+        MongoCollection<T> collection = getDatabase().getCollection(mappedClass.getCollectionName(), type);
+
+        Entity annotation = mappedClass.getEntityAnnotation();
+        if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
+            collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
         }
         return collection;
     }
@@ -439,11 +445,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         final Document document = mapper.toDocument(entity);
         document.remove("_id");
 
-        final MappedClass mc = mapper.getMappedClass(entity.getClass());
-        final MongoCollection collection = getCollection(entity.getClass());
-
         final Query<T> query = (Query<T>) find(entity.getClass()).filter("_id", id);
-        if (!tryVersionedUpdate(collection, entity, options, mc)) {
+        if (!tryVersionedUpdate(entity, getCollection(entity.getClass()), options)) {
             UpdateResult execute = query.update()
                                         .set(entity)
                                         .execute(new UpdateOptions()
@@ -462,6 +465,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         merge(entity, new InsertOneOptions().writeConcern(wc));
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> Query<T> queryByExample(final T example) {
         final Class<T> type = (Class<T>) example.getClass();
@@ -474,17 +478,33 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (entities.isEmpty()) {
             return List.of();
         }
-        Map<Class, List<T>> grouped = entities.stream()
-                                              .collect(groupingBy(e -> getCollection(e.getClass()).getDocumentClass()));
+
+        Map<Class, List<T>> grouped = new LinkedHashMap<>();
+        List<T> list = new ArrayList<>();
+        for (final T entity : entities) {
+            if (getMapper().getId(entity) != null) {
+                list.add(entity);
+            } else {
+                grouped.computeIfAbsent(getCollection(entity.getClass()).getDocumentClass(), c -> new ArrayList<>())
+                       .add(entity);
+            }
+        }
 
         for (Entry<Class, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = getCollection(entry.getKey());
+            MongoCollection<T> collection = options.apply(getCollection(entry.getKey()));
             if (options.clientSession() == null) {
                 collection.insertMany(entry.getValue(), options.getOptions());
             } else {
                 collection.insertMany(options.clientSession(), entry.getValue(), options.getOptions());
             }
+        }
 
+        InsertOneOptions insertOneOptions = new InsertOneOptions()
+                                                .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                .clientSession(findSession(options))
+                                                .writeConcern(options.writeConcern());
+        for (final T entity : list) {
+            save(entity, insertOneOptions);
         }
         return entities;
     }
@@ -502,93 +522,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         save(getCollection(entity.getClass()), entity, options);
         return entity;
-    }
-
-    private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
-        if (entity == null) {
-            throw new UpdateException("Can not persist a null entity");
-        }
-
-        final MappedClass mc = mapper.getMappedClass(entity.getClass());
-
-        if (!tryVersionedUpdate(collection, entity, options, mc)) {
-            saveDocument(entity, collection, options);
-        }
-    }
-
-    private <T> boolean tryVersionedUpdate(final MongoCollection collection, final T entity,
-                                           final InsertOneOptions options, final MappedClass mc) {
-        if (mc.getVersionField() == null) {
-            return false;
-        }
-
-        MappedField idField = mc.getIdField();
-        final Object idValue = idField.getFieldValue(entity);
-        final MappedField versionField = mc.getVersionField();
-
-        Long oldVersion = (Long) versionField.getFieldValue(entity);
-        long newVersion = oldVersion == null ? 1L : oldVersion + 1;
-
-        if (newVersion == 1) {
-            try {
-                updateVersion(entity, versionField, newVersion);
-                options.apply(collection)
-                       .insertOne(entity, options.getOptions());
-            } catch (MongoWriteException e) {
-                updateVersion(entity, versionField, oldVersion);
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
-                    entity.getClass().getName(), idValue));
-            }
-        } else if (idValue != null) {
-            final UpdateResult res = find(collection.getNamespace().getCollectionName())
-                                         .filter("_id", idValue)
-                                         .filter(versionField.getMappedFieldName(), oldVersion)
-                                         .update()
-                                         .set(entity)
-                                         .execute(new UpdateOptions()
-                                                      .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                      .writeConcern(options.getWriteConcern()));
-
-            if (res.getModifiedCount() != 1) {
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
-                    entity.getClass().getName(), idValue, oldVersion));
-            }
-            updateVersion(entity, versionField, newVersion);
-        }
-
-        return true;
-    }
-
-    protected <T> void saveDocument(final T entity,
-                                    final MongoCollection<T> collection,
-                                    final InsertOneOptions options) {
-        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
-        ClientSession clientSession = findSession(options);
-
-        if (id == null) {
-            if (clientSession == null) {
-                options.apply(collection).insertOne(entity, options.getOptions());
-            } else {
-                options.apply(collection).insertOne(clientSession, entity, options.getOptions());
-            }
-        } else {
-            ReplaceOptions updateOptions = new ReplaceOptions()
-                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                               .upsert(true);
-            MongoCollection<T> updated = collection;
-            if (options.writeConcern() != null) {
-                updated = collection.withWriteConcern(options.writeConcern());
-            }
-            if (clientSession == null) {
-                updated.replaceOne(new Document("_id", id), entity, updateOptions);
-            } else {
-                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
-            }
-        }
-    }
-
-    private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
-        field.setFieldValue(entity, newVersion);
     }
 
     void process(final MappedClass mc, final Validation validation) {
@@ -625,9 +558,96 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private <T> T doTransaction(final ClientSession session, final MorphiaTransaction<T> body) {
         try (session) {
-            return session.withTransaction(() -> {
-                return body.execute(new MorphiaSessionImpl(session, mongoClient, database, mapper, indexHelper, queryFactory));
-            });
+            return session.withTransaction(() -> body.execute(new MorphiaSessionImpl(session, mongoClient, database, mapper,
+                queryFactory)));
         }
+    }
+
+    protected <T> void saveDocument(final T entity, final MongoCollection<T> collection, final InsertOneOptions options) {
+        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
+        ClientSession clientSession = findSession(options);
+
+        if (id == null) {
+            if (clientSession == null) {
+                options.apply(collection).insertOne(entity, options.getOptions());
+            } else {
+                options.apply(collection).insertOne(clientSession, entity, options.getOptions());
+            }
+        } else {
+            ReplaceOptions updateOptions = new ReplaceOptions()
+                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                               .upsert(true);
+            MongoCollection<T> updated = collection;
+            if (options.writeConcern() != null) {
+                updated = collection.withWriteConcern(options.writeConcern());
+            }
+            if (clientSession == null) {
+                updated.replaceOne(new Document("_id", id), entity, updateOptions);
+            } else {
+                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
+            }
+        }
+    }
+
+    private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
+        if (entity == null) {
+            throw new UpdateException("Can not persist a null entity");
+        }
+
+        if (!tryVersionedUpdate(entity, collection, options)) {
+            saveDocument(entity, collection, options);
+        }
+    }
+
+    private <T> boolean tryVersionedUpdate(final T entity, final MongoCollection collection, final InsertOneOptions options) {
+        final MappedClass mc = mapper.getMappedClass(entity.getClass());
+        if (mc.getVersionField() == null) {
+            return false;
+        }
+
+        MappedField idField = mc.getIdField();
+        final Object idValue = idField.getFieldValue(entity);
+        final MappedField versionField = mc.getVersionField();
+
+        Long oldVersion = (Long) versionField.getFieldValue(entity);
+        long newVersion = oldVersion == null ? 1L : oldVersion + 1;
+        ClientSession session = findSession(options);
+
+        if (newVersion == 1) {
+            try {
+                updateVersion(entity, versionField, newVersion);
+                if (session == null) {
+                    options.apply(collection).insertOne(entity, options.getOptions());
+                } else {
+                    options.apply(collection).insertOne(session, entity, options.getOptions());
+                }
+            } catch (MongoWriteException e) {
+                updateVersion(entity, versionField, oldVersion);
+                throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
+                    entity.getClass().getName(), idValue));
+            }
+        } else if (idValue != null) {
+            final UpdateResult res = find(collection.getNamespace().getCollectionName())
+                                         .filter("_id", idValue)
+                                         .filter(versionField.getMappedFieldName(), oldVersion)
+                                         .update()
+                                         .set(entity)
+                                         .execute(new UpdateOptions()
+                                                      .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                      .clientSession(session)
+                                                      .writeConcern(options.getWriteConcern()));
+
+            if (res.getModifiedCount() != 1) {
+                throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
+                    entity.getClass().getName(), idValue, oldVersion));
+            }
+            updateVersion(entity, versionField, newVersion);
+        }
+
+        return true;
+    }
+
+    private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
+        field.setFieldValue(entity, newVersion);
     }
 }

@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;

@@ -18,6 +18,7 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import dev.morphia.internal.SessionConfigurable;
 
@@ -32,6 +33,9 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
 
+    /**
+     * Creates a new options instance
+     */
     public DeleteOptions() {
     }
 
@@ -46,6 +50,20 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
         this.clientSession = that.clientSession;
     }
 
+    /**
+     * Applies the options to the collection
+     *
+     * @param collection the collection to update
+     * @param <T>        the collection type
+     * @return either the passed collection or the updated collection
+     * @since 2.0
+     */
+    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
+        return writeConcern == null
+               ? collection
+               : collection.withWriteConcern(writeConcern);
+    }
+
     @Override
     public DeleteOptions clientSession(final ClientSession clientSession) {
         this.clientSession = clientSession;
@@ -57,6 +75,22 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
         return clientSession;
     }
 
+    @Override
+    public DeleteOptions collation(final Collation collation) {
+        super.collation(collation);
+        return this;
+    }
+
+    /**
+     * The write concern to use for the delete.
+     *
+     * @return the write concern, or null if the default will be used.
+     * @deprecated use {@link #writeConcern()} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public WriteConcern getWriteConcern() {
+        return writeConcern;
+    }
 
     /**
      * @return is this delete for multiple documents
@@ -74,29 +108,12 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
         return this;
     }
 
-    @Override
-    public DeleteOptions collation(final Collation collation) {
-        super.collation(collation);
-        return this;
-    }
-
     /**
      * The write concern to use for the delete.
      *
      * @return the write concern, or null if the default will be used.
      */
     public WriteConcern writeConcern() {
-        return writeConcern;
-    }
-
-    /**
-     * The write concern to use for the delete.
-     *
-     * @return the write concern, or null if the default will be used.
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public WriteConcern getWriteConcern() {
         return writeConcern;
     }
 
