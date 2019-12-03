@@ -137,8 +137,8 @@ public abstract class TestBase {
     }
 
     private Document runIsMaster() {
-        throw new UnsupportedOperationException();
-//        return mongoClient.getDatabase("admin").runCommand(new Document("ismaster", 1));
+        return mongoClient.getDatabase("admin")
+                          .runCommand(new Document("ismaster", 1));
     }
 
     public Document obj(final String key, final Object value) {
