@@ -12,17 +12,17 @@
     <title>Quick Tour :: Morphia</title>
 
     
-    <link href="/1.5/css/nucleus.css?1575430566" rel="stylesheet">
-    <link href="/1.5/css/fontawesome-all.min.css?1575430566" rel="stylesheet">
-    <link href="/1.5/css/hybrid.css?1575430566" rel="stylesheet">
-    <link href="/1.5/css/featherlight.min.css?1575430566" rel="stylesheet">
-    <link href="/1.5/css/perfect-scrollbar.min.css?1575430566" rel="stylesheet">
-    <link href="/1.5/css/auto-complete.css?1575430566" rel="stylesheet">
-    <link href="/1.5/css/theme.css?1575430566" rel="stylesheet">
-    <link href="/1.5/css/hugo-theme.css?1575430566" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1575431157" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1575431157" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1575431157" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1575431157" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1575431157" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1575431157" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1575431157" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1575431157" rel="stylesheet">
     
 
-    <script src="/1.5/js/jquery-2.x.min.js?1575430566"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1575431157"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -637,7 +637,7 @@ as simple as this:</p>
 datastore.save(elmer);
 </code></pre>
 
-<p>Taking it one stage further, lets define some relationships and save those, too.</p>
+<p>Taking it one step further, lets define some relationships and save those, too.</p>
 
 <pre><code class="language-java">final Employee daffy = new Employee(&quot;Daffy Duck&quot;, 40000.0);
 datastore.save(daffy);
@@ -697,7 +697,7 @@ the Java field, Morphia can use either form and will validate against either nam
 <h2 id="updates">Updates</h2>
 
 <p>Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
-of update operations.  In this example, we&rsquo;ll find all the underpaid employees and give them a raise of 10000.  The first stage is to create
+of update operations.  In this example, we&rsquo;ll find all the underpaid employees and give them a raise of 10000.  The first step is to create
  the query to find all the underpaid employees.  This is one we&rsquo;ve already seen:</p>
 
 <pre><code class="language-java">final Query&lt;Employee&gt; underPaidQuery = datastore.createQuery(Employee.class)
@@ -712,7 +712,7 @@ of update operations.  In this example, we&rsquo;ll find all the underpaid emplo
 
 <p>There are many operations on this class but, in this case, we&rsquo;re only updating the <code>salary</code> field by 10000.  This corresponds to the
 <a href="http://docs.mongodb.org/manual/reference/operator/update/inc/
-"><code>$inc</code></a> operator.  There&rsquo;s one last stage involved here:</p>
+"><code>$inc</code></a> operator.  There&rsquo;s one last step involved here:</p>
 
 <pre><code class="language-java">final UpdateResults results = datastore.update(underPaidQuery, updateOperations);
 </code></pre>
@@ -1032,20 +1032,20 @@ is a <code>delete</code> that can take that reference and delete it.  There is m
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5/js/clipboard.min.js?1575430566"></script>
-    <script src="/1.5/js/perfect-scrollbar.min.js?1575430566"></script>
-    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1575430566"></script>
-    <script src="/1.5/js/jquery.sticky.js?1575430566"></script>
-    <script src="/1.5/js/featherlight.min.js?1575430566"></script>
-    <script src="/1.5/js/html5shiv-printshiv.min.js?1575430566"></script>
-    <script src="/1.5/js/highlight.pack.js?1575430566"></script>
+    <script src="/1.5/js/clipboard.min.js?1575431157"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1575431157"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1575431157"></script>
+    <script src="/1.5/js/jquery.sticky.js?1575431157"></script>
+    <script src="/1.5/js/featherlight.min.js?1575431157"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1575431157"></script>
+    <script src="/1.5/js/highlight.pack.js?1575431157"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5/js/modernizr.custom.71422.js?1575430566"></script>
-    <script src="/1.5/js/learn.js?1575430566"></script>
-    <script src="/1.5/js/hugo-learn.js?1575430566"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1575431157"></script>
+    <script src="/1.5/js/learn.js?1575431157"></script>
+    <script src="/1.5/js/hugo-learn.js?1575431157"></script>
 
-    <link href="/1.5/mermaid/mermaid.css?1575430566" type="text/css" rel="stylesheet" />
-    <script src="/1.5/mermaid/mermaid.js?1575430566"></script>
+    <link href="/1.5/mermaid/mermaid.css?1575431157" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1575431157"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
