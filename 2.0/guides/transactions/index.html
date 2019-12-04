@@ -12,17 +12,17 @@
     <title>Transactions :: Morphia</title>
 
     
-    <link href="/1.5/css/nucleus.css?1575502333" rel="stylesheet">
-    <link href="/1.5/css/fontawesome-all.min.css?1575502333" rel="stylesheet">
-    <link href="/1.5/css/hybrid.css?1575502333" rel="stylesheet">
-    <link href="/1.5/css/featherlight.min.css?1575502333" rel="stylesheet">
-    <link href="/1.5/css/perfect-scrollbar.min.css?1575502333" rel="stylesheet">
-    <link href="/1.5/css/auto-complete.css?1575502333" rel="stylesheet">
-    <link href="/1.5/css/theme.css?1575502333" rel="stylesheet">
-    <link href="/1.5/css/hugo-theme.css?1575502333" rel="stylesheet">
+    <link href="/1.5/css/nucleus.css?1575502655" rel="stylesheet">
+    <link href="/1.5/css/fontawesome-all.min.css?1575502655" rel="stylesheet">
+    <link href="/1.5/css/hybrid.css?1575502655" rel="stylesheet">
+    <link href="/1.5/css/featherlight.min.css?1575502655" rel="stylesheet">
+    <link href="/1.5/css/perfect-scrollbar.min.css?1575502655" rel="stylesheet">
+    <link href="/1.5/css/auto-complete.css?1575502655" rel="stylesheet">
+    <link href="/1.5/css/theme.css?1575502655" rel="stylesheet">
+    <link href="/1.5/css/hugo-theme.css?1575502655" rel="stylesheet">
     
 
-    <script src="/1.5/js/jquery-2.x.min.js?1575502333"></script>
+    <script src="/1.5/js/jquery-2.x.min.js?1575502655"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -528,7 +528,7 @@
 
 <p>Starting with MongoDB version 4.0, multi-document transactions are now supported on replica sets.  Morphia 2.0 introduces a simple
  mechanism to access this functionality.  Morphia 2.0 adds the methods <code>withTransaction(MorphiaTransaction&lt;T&gt; transaction)</code> and
- <code>withTransaction(MorphiaTransaction&lt;T&gt; transaction, ClientSessionOptions options)</code> allowing for the execution of logic scoped to a
+ <code>withTransaction(ClientSessionOptions options, MorphiaTransaction&lt;T&gt; transaction)</code> allowing for the execution of logic scoped to a
   transaction.</p>
 
 <p>The API is designed to work with Java 8&rsquo;s lambda syntax for the most convenience.  In this example, let&rsquo;s assume we&rsquo;re building a
@@ -889,20 +889,20 @@ session.close();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5/js/clipboard.min.js?1575502333"></script>
-    <script src="/1.5/js/perfect-scrollbar.min.js?1575502333"></script>
-    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1575502333"></script>
-    <script src="/1.5/js/jquery.sticky.js?1575502333"></script>
-    <script src="/1.5/js/featherlight.min.js?1575502333"></script>
-    <script src="/1.5/js/html5shiv-printshiv.min.js?1575502333"></script>
-    <script src="/1.5/js/highlight.pack.js?1575502333"></script>
+    <script src="/1.5/js/clipboard.min.js?1575502655"></script>
+    <script src="/1.5/js/perfect-scrollbar.min.js?1575502655"></script>
+    <script src="/1.5/js/perfect-scrollbar.jquery.min.js?1575502655"></script>
+    <script src="/1.5/js/jquery.sticky.js?1575502655"></script>
+    <script src="/1.5/js/featherlight.min.js?1575502655"></script>
+    <script src="/1.5/js/html5shiv-printshiv.min.js?1575502655"></script>
+    <script src="/1.5/js/highlight.pack.js?1575502655"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5/js/modernizr.custom.71422.js?1575502333"></script>
-    <script src="/1.5/js/learn.js?1575502333"></script>
-    <script src="/1.5/js/hugo-learn.js?1575502333"></script>
+    <script src="/1.5/js/modernizr.custom.71422.js?1575502655"></script>
+    <script src="/1.5/js/learn.js?1575502655"></script>
+    <script src="/1.5/js/hugo-learn.js?1575502655"></script>
 
-    <link href="/1.5/mermaid/mermaid.css?1575502333" type="text/css" rel="stylesheet" />
-    <script src="/1.5/mermaid/mermaid.js?1575502333"></script>
+    <link href="/1.5/mermaid/mermaid.css?1575502655" type="text/css" rel="stylesheet" />
+    <script src="/1.5/mermaid/mermaid.js?1575502655"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
