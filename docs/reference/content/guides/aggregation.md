@@ -72,7 +72,7 @@ Any existing data in the collection will be replaced by the output of the aggreg
 {{% /note %}}
 
 Using `out()` is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
-framework is writing out to the collection and is done.  Morphia goes one extra stage further and executes an implicit `find` on the output
+framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit `find` on the output
 collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the
 output mode to `CURSOR` with `aggregate()` and your application need not know the difference.  It does, of course, have an impact on your
 database and any existing data.  The use of `$out` and `out()` can be greatly beneficial in scenarios such as precomputed aggregated
