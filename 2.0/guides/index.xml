@@ -94,6 +94,16 @@ Below we have a basic entity definition. Note the new annotation @Validation.
     </item>
     
     <item>
+      <title>Transactions</title>
+      <link>/1.5/guides/transactions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/1.5/guides/transactions/</guid>
+      <description>Starting with MongoDB version 4.0, multi-document transactions are now supported on replica sets. Morphia 2.0 introduces a simple mechanism to access this functionality. Morphia 2.0 adds the methods withTransaction(MorphiaTransaction&amp;lt;T&amp;gt; transaction) and withTransaction(MorphiaTransaction&amp;lt;T&amp;gt; transaction, ClientSessionOptions options) allowing for the execution of logic scoped to a transaction.
+The API is designed to work with Java 8&amp;rsquo;s lambda syntax for the most convenience. In this example, let&amp;rsquo;s assume we&amp;rsquo;re building a shopping site.</description>
+    </item>
+    
+    <item>
       <title>Updating</title>
       <link>/1.5/guides/updating/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
