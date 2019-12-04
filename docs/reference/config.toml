@@ -1,4 +1,4 @@
-baseurl = "/1.5"
+baseurl = "/2.0"
 homePageUrl = "https://morphia.dev/"
 languageCode = "en-us"
 title = "Morphia"
