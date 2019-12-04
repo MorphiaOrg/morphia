@@ -19,6 +19,7 @@ import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Validation;
+import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.experimental.MorphiaSessionImpl;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.MappedClass;
@@ -218,12 +219,23 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T withTransaction(final MorphiaTransaction<T> body) {
-        return doTransaction(mongoClient.startSession(), body);
+        return doTransaction(startSession(), body);
+    }
+
+    @Override
+    public MorphiaSession startSession() {
+        return new MorphiaSessionImpl(mongoClient.startSession(), mongoClient, database, mapper, queryFactory);
+    }
+
+    @Override
+    public MorphiaSession startSession(final ClientSessionOptions options) {
+        return new MorphiaSessionImpl(mongoClient.startSession(options), mongoClient, database, mapper,
+            queryFactory);
     }
 
     @Override
     public <T> T withTransaction(final MorphiaTransaction<T> transaction, final ClientSessionOptions options) {
-        return doTransaction(mongoClient.startSession(options), transaction);
+        return doTransaction(startSession(options), transaction);
     }
 
     /**
@@ -524,71 +536,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return entity;
     }
 
-    void process(final MappedClass mc, final Validation validation) {
-        if (validation != null) {
-            String collectionName = mc.getCollectionName();
-            try {
-                getDatabase().runCommand(new Document("collMod", collectionName)
-                                             .append("validator", parse(validation.value()))
-                                             .append("validationLevel", validation.level().getValue())
-                                             .append("validationAction", validation.action().getValue()));
-            } catch (MongoCommandException e) {
-                if (e.getCode() == 26) {
-                    getDatabase().createCollection(collectionName,
-                        new CreateCollectionOptions()
-                            .validationOptions(new ValidationOptions()
-                                                   .validator(parse(validation.value()))
-                                                   .validationLevel(validation.level())
-                                                   .validationAction(validation.action())));
-                } else {
-                    throw e;
-                }
-            }
-        }
-    }
-
-    /**
-     * Sets the Mapper this Datastore uses
-     *
-     * @param mapper the new Mapper
-     */
-    public void setMapper(final Mapper mapper) {
-        this.mapper = mapper;
-    }
-
-    private <T> T doTransaction(final ClientSession session, final MorphiaTransaction<T> body) {
-        try (session) {
-            return session.withTransaction(() -> body.execute(new MorphiaSessionImpl(session, mongoClient, database, mapper,
-                queryFactory)));
-        }
-    }
-
-    protected <T> void saveDocument(final T entity, final MongoCollection<T> collection, final InsertOneOptions options) {
-        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
-        ClientSession clientSession = findSession(options);
-
-        if (id == null) {
-            if (clientSession == null) {
-                options.apply(collection).insertOne(entity, options.getOptions());
-            } else {
-                options.apply(collection).insertOne(clientSession, entity, options.getOptions());
-            }
-        } else {
-            ReplaceOptions updateOptions = new ReplaceOptions()
-                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                               .upsert(true);
-            MongoCollection<T> updated = collection;
-            if (options.writeConcern() != null) {
-                updated = collection.withWriteConcern(options.writeConcern());
-            }
-            if (clientSession == null) {
-                updated.replaceOne(new Document("_id", id), entity, updateOptions);
-            } else {
-                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
-            }
-        }
-    }
-
     private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
         if (entity == null) {
             throw new UpdateException("Can not persist a null entity");
@@ -647,7 +594,71 @@ public class DatastoreImpl implements AdvancedDatastore {
         return true;
     }
 
+    protected <T> void saveDocument(final T entity, final MongoCollection<T> collection, final InsertOneOptions options) {
+        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
+        ClientSession clientSession = findSession(options);
+
+        if (id == null) {
+            if (clientSession == null) {
+                options.apply(collection).insertOne(entity, options.getOptions());
+            } else {
+                options.apply(collection).insertOne(clientSession, entity, options.getOptions());
+            }
+        } else {
+            ReplaceOptions updateOptions = new ReplaceOptions()
+                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                               .upsert(true);
+            MongoCollection<T> updated = collection;
+            if (options.writeConcern() != null) {
+                updated = collection.withWriteConcern(options.writeConcern());
+            }
+            if (clientSession == null) {
+                updated.replaceOne(new Document("_id", id), entity, updateOptions);
+            } else {
+                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
+            }
+        }
+    }
+
     private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
         field.setFieldValue(entity, newVersion);
+    }
+
+    void process(final MappedClass mc, final Validation validation) {
+        if (validation != null) {
+            String collectionName = mc.getCollectionName();
+            try {
+                getDatabase().runCommand(new Document("collMod", collectionName)
+                                             .append("validator", parse(validation.value()))
+                                             .append("validationLevel", validation.level().getValue())
+                                             .append("validationAction", validation.action().getValue()));
+            } catch (MongoCommandException e) {
+                if (e.getCode() == 26) {
+                    getDatabase().createCollection(collectionName,
+                        new CreateCollectionOptions()
+                            .validationOptions(new ValidationOptions()
+                                                   .validator(parse(validation.value()))
+                                                   .validationLevel(validation.level())
+                                                   .validationAction(validation.action())));
+                } else {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the Mapper this Datastore uses
+     *
+     * @param mapper the new Mapper
+     */
+    public void setMapper(final Mapper mapper) {
+        this.mapper = mapper;
+    }
+
+    private <T> T doTransaction(final MorphiaSession morphiaSession, final MorphiaTransaction<T> body) {
+        try (morphiaSession) {
+            return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
+        }
     }
 }

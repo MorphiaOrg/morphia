@@ -11,6 +11,7 @@ title = "Reference Guides"
 * [Querying]({{< ref "guides/querying.md" >}})
 * [Updating]({{< ref "guides/updating.md" >}})
 * [Aggregation]({{< ref "guides/aggregation.md" >}})
+* [Transactions]({{< ref "guides/transactions.md" >}})
 * [Annotations]({{< ref "guides/annotations.md" >}})
 * [Indexing]({{< ref "guides/indexing.md" >}})
 * [Life Cycle Methods]({{< ref "guides/lifeCycleMethods.md" >}})

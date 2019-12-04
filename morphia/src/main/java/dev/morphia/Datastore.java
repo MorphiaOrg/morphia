@@ -15,6 +15,7 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
+import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.Query;
@@ -32,35 +33,6 @@ import java.util.List;
  * Datastore interface to get/delete/save objects
  */
 public interface Datastore {
-    /**
-     * Returns the session this datastore is attached to or null if none is attached.
-     *
-     * @return the session
-     * @since 2.0
-     */
-    default ClientSession getSession() {
-        return null;
-    }
-
-    /**
-     * @param transaction the transaction wrapper
-     * @param <T>         the return type
-     * @return the return value
-     * @since 2.0
-     * @morphia.experimental
-     */
-    <T> T withTransaction(MorphiaTransaction<T> transaction);
-
-    /**
-     * @param transaction the transaction wrapper
-     * @param options     the session options to apply
-     * @param <T>         the return type
-     * @return the return value
-     * @since 2.0
-     * @morphia.experimental
-     */
-    <T> T withTransaction(MorphiaTransaction<T> transaction, ClientSessionOptions options);
-
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      *
@@ -160,17 +132,17 @@ public interface Datastore {
     <T> DeleteResult delete(T entity, DeleteOptions options);
 
     /**
-     * ensure capped collections for {@code Entity}(s)
-     */
-    void ensureCaps();
-
-    /**
      * Process any {@link Validation} annotations for document validation.
      *
      * @mongodb.driver.manual core/document-validation/
      * @since 1.3
      */
     void enableDocumentValidation();
+
+    /**
+     * ensure capped collections for {@code Entity}(s)
+     */
+    void ensureCaps();
 
     /**
      * Ensures (creating if necessary) the indexes found during class mapping
@@ -339,6 +311,17 @@ public interface Datastore {
     void setQueryFactory(QueryFactory queryFactory);
 
     /**
+     * Returns the session this datastore is attached to or null if none is attached.
+     *
+     * @return the session
+     * @morphia.experimental
+     * @since 2.0
+     */
+    default ClientSession getSession() {
+        return null;
+    }
+
+    /**
      * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
      *
      * @param entity the entity to merge back in to the database
@@ -409,14 +392,9 @@ public interface Datastore {
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
      * @return the saved entities
-     * @deprecated use {@link #save(List, InsertManyOptions)} instead
+     * @since 2.0
      */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default <T> List<T> save(Iterable<T> entities, InsertOptions options) {
-        List<T> list = new ArrayList<>();
-        entities.forEach(e -> list.add(e));
-        return save(list, options.toInsertManyOptions());
-    }
+    <T> List<T> save(List<T> entities, InsertManyOptions options);
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -425,9 +403,14 @@ public interface Datastore {
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
      * @return the saved entities
-     * @since 2.0
+     * @deprecated use {@link #save(List, InsertManyOptions)} instead
      */
-    <T> List<T> save(List<T> entities, InsertManyOptions options);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> List<T> save(Iterable<T> entities, InsertOptions options) {
+        List<T> list = new ArrayList<>();
+        entities.forEach(e -> list.add(e));
+        return save(list, options.toInsertManyOptions());
+    }
 
     /**
      * Saves an entity (Object) and updates the @Id field
@@ -463,6 +446,25 @@ public interface Datastore {
     <T> T save(T entity, InsertOneOptions options);
 
     /**
+     * Starts a new session on the server.
+     *
+     * @return the new session reference
+     * @morphia.experimental
+     * @since 2.0
+     */
+    MorphiaSession startSession();
+
+    /**
+     * Starts a new session on the server.
+     *
+     * @param options the options to apply
+     * @return the new session reference
+     * @morphia.experimental
+     * @since 2.0
+     */
+    MorphiaSession startSession(ClientSessionOptions options);
+
+    /**
      * Updates all entities found with the operations; this is an atomic operation per entity
      *
      * @param query      the query used to match the documents to update
@@ -494,4 +496,23 @@ public interface Datastore {
     default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
         return query.update(operations).execute(options);
     }
+
+    /**
+     * @param transaction the transaction wrapper
+     * @param <T>         the return type
+     * @return the return value
+     * @morphia.experimental
+     * @since 2.0
+     */
+    <T> T withTransaction(MorphiaTransaction<T> transaction);
+
+    /**
+     * @param transaction the transaction wrapper
+     * @param options     the session options to apply
+     * @param <T>         the return type
+     * @return the return value
+     * @morphia.experimental
+     * @since 2.0
+     */
+    <T> T withTransaction(MorphiaTransaction<T> transaction, ClientSessionOptions options);
 }

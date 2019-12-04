@@ -1,21 +1,24 @@
 package dev.morphia;
 
+import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.testmodel.Rectangle;
+import dev.morphia.testmodel.User;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 public class TestTransactions extends TestBase {
     @Before
     public void before() {
         Assume.assumeTrue(isReplicaSet());
-        getMapper().map(Rectangle.class);
-        getDs().ensureIndexes();
         getDs().save(new Rectangle(1, 1));
         getDs().find(Rectangle.class).delete();
+        getDs().save(new User("", new Date()));
+        getDs().find(User.class).delete();
     }
 
     @Test
@@ -69,6 +72,28 @@ public class TestTransactions extends TestBase {
         });
 
         Assert.assertEquals(2, getDs().find(Rectangle.class).count());
+    }
+
+    @Test
+    public void manual() {
+        try (MorphiaSession session = getDs().startSession()) {
+            session.startTransaction();
+
+            Rectangle rectangle = new Rectangle(1, 1);
+            session.save(rectangle);
+
+            session.save(new User("transactions", new Date()));
+
+            Assert.assertNull(getDs().find(Rectangle.class).first());
+            Assert.assertNull(getDs().find(User.class).first());
+            Assert.assertNotNull(session.find(Rectangle.class).first());
+            Assert.assertNotNull(session.find(User.class).first());
+
+            session.commitTransaction();
+        }
+
+        Assert.assertNotNull(getDs().find(Rectangle.class).first());
+        Assert.assertNotNull(getDs().find(User.class).first());
     }
 
     @Test
@@ -197,4 +222,5 @@ public class TestTransactions extends TestBase {
         Assert.assertEquals(rectangle.getWidth() + 13, getDs().find(Rectangle.class)
                                                               .first().getWidth(), 0.5);
     }
+
 }
