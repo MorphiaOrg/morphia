@@ -7,7 +7,7 @@ title = "Transactions"
 
 Starting with MongoDB version 4.0, multi-document transactions are now supported on replica sets.  Morphia 2.0 introduces a simple
  mechanism to access this functionality.  Morphia 2.0 adds the methods `withTransaction(MorphiaTransaction<T> transaction)` and 
- `withTransaction(MorphiaTransaction<T> transaction, ClientSessionOptions options)` allowing for the execution of logic scoped to a
+ `withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction)` allowing for the execution of logic scoped to a
   transaction.   
   
 The API is designed to work with Java 8's lambda syntax for the most convenience.  In this example, let's assume we're building a

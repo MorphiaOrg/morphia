@@ -234,7 +234,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> T withTransaction(final MorphiaTransaction<T> transaction, final ClientSessionOptions options) {
+    public <T> T withTransaction(final ClientSessionOptions options,
+                                 final MorphiaTransaction<T> transaction) {
         return doTransaction(startSession(options), transaction);
     }
 

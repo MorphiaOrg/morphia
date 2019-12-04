@@ -507,12 +507,12 @@ public interface Datastore {
     <T> T withTransaction(MorphiaTransaction<T> transaction);
 
     /**
-     * @param transaction the transaction wrapper
-     * @param options     the session options to apply
      * @param <T>         the return type
+     * @param options     the session options to apply
+     * @param transaction the transaction wrapper
      * @return the return value
      * @morphia.experimental
      * @since 2.0
      */
-    <T> T withTransaction(MorphiaTransaction<T> transaction, ClientSessionOptions options);
+    <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);
 }
