@@ -119,7 +119,8 @@
                 <version>3.1.1</version>
                 <configuration>
                     <failOnError>false</failOnError>
-                    <excludePackageNames>org/bson/**, **/relocated/**, **/internal/**, dev/morphia/utils</excludePackageNames>
+                    <excludePackageNames>org.bson, *.internal, dev.morphia.sofia, dev.morphia.utils</excludePackageNames>
+                    <subpackages>dev.morphia</subpackages>
                     <doclint>none</doclint>
                     <doctitle>Morphia</doctitle>
                     <windowtitle>Morphia</windowtitle>
