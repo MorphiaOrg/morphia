@@ -47,6 +47,7 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 
@@ -205,4 +206,19 @@ public class MorphiaCodec<T> extends BaseMorphiaCodec<T> implements CollectibleC
         return mappedClass;
     }
 
+    protected PropertyCodecRegistry getPropertyCodecRegistry() {
+        return super.getPropertyCodecRegistry();
+    }
+
+    protected ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
+        return super.getCodecCache();
+    }
+
+    protected CodecRegistry getRegistry() {
+        return super.getRegistry();
+    }
+
+    protected DiscriminatorLookup getDiscriminatorLookup() {
+        return super.getDiscriminatorLookup();
+    }
 }

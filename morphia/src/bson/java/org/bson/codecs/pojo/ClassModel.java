@@ -16,7 +16,9 @@
 
 package org.bson.codecs.pojo;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class ClassModel<T> {
     private final String name;
     private final Class<T> type;
     private final boolean hasTypeParameters;
-    private final InstanceCreatorFactory<T> creatorFactory;
+    private final InstanceCreatorFactory<T> instanceCreatorFactory;
     private final boolean discriminatorEnabled;
     private final String discriminatorKey;
     private final String discriminator;
@@ -38,24 +40,21 @@ public class ClassModel<T> {
     private final List<PropertyModel<?>> propertyModels;
     private final Map<String, TypeParameterMap> propertyNameToTypeParameterMap;
 
-    protected ClassModel(final Class<T> clazz,
-                         final Map<String, TypeParameterMap> propertyNameToTypeParameterMap,
-                         final InstanceCreatorFactory<T> instanceCreatorFactory,
-                         final Boolean discriminatorEnabled,
-                         final String discriminatorKey,
-                         final String discriminator,
-                         final IdPropertyModelHolder<?> idPropertyModelHolder,
-                         final List<PropertyModel<?>> propertyModels) {
+    protected ClassModel(final Class<T> clazz, final Map<String, TypeParameterMap> propertyNameToTypeParameterMap,
+               final InstanceCreatorFactory<T> instanceCreatorFactory, final Boolean discriminatorEnabled, final String discriminatorKey,
+               final String discriminator, final IdPropertyModelHolder<?> idPropertyModelHolder,
+               final List<PropertyModel<?>> propertyModels) {
         this.name = clazz.getSimpleName();
         this.type = clazz;
         this.hasTypeParameters = clazz.getTypeParameters().length > 0;
-        this.propertyNameToTypeParameterMap = Collections.unmodifiableMap(propertyNameToTypeParameterMap);
-        this.creatorFactory = instanceCreatorFactory;
+        this.propertyNameToTypeParameterMap = Collections.unmodifiableMap(
+                new HashMap<String, TypeParameterMap>(propertyNameToTypeParameterMap));
+        this.instanceCreatorFactory = instanceCreatorFactory;
         this.discriminatorEnabled = discriminatorEnabled;
         this.discriminatorKey = discriminatorKey;
         this.discriminator = discriminator;
         this.idPropertyModelHolder = idPropertyModelHolder;
-        this.propertyModels = Collections.unmodifiableList(propertyModels);
+        this.propertyModels = Collections.unmodifiableList(new ArrayList<PropertyModel<?>>(propertyModels));
     }
 
     /**
@@ -73,7 +72,7 @@ public class ClassModel<T> {
      * @return a new InstanceCreator instance for the ClassModel
      */
     public InstanceCreator<T> getInstanceCreator() {
-        return creatorFactory.create();
+        return instanceCreatorFactory.create();
     }
 
     /**
@@ -223,7 +222,7 @@ public class ClassModel<T> {
     }
 
     public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
-        return creatorFactory;
+        return instanceCreatorFactory;
     }
 
     protected Map<String, TypeParameterMap> getPropertyNameToTypeParameterMap() {

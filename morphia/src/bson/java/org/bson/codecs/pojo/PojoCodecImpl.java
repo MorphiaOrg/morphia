@@ -387,19 +387,19 @@ public class PojoCodecImpl<T> extends PojoCodec<T> {
         return true;
     }
 
-    public PropertyCodecRegistry getPropertyCodecRegistry() {
+    protected PropertyCodecRegistry getPropertyCodecRegistry() {
         return propertyCodecRegistry;
     }
 
-    public ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
+    protected ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
         return codecCache;
     }
 
-    public CodecRegistry getRegistry() {
+    protected CodecRegistry getRegistry() {
         return registry;
     }
 
-    public DiscriminatorLookup getDiscriminatorLookup() {
+    protected DiscriminatorLookup getDiscriminatorLookup() {
         return discriminatorLookup;
     }
 }
