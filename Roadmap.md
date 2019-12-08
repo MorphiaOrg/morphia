@@ -54,7 +54,9 @@ of 2019 if all goes well.  Development time is split between 1.5 and 2.0 so the 
 
 Much of 1.5.0 development is intended to start the culling process of removing redundant/overlapping methods.  As a result, 2.0's API 
 should be much leaner and much easier reason about.  The hope is that this leaner API will be easier to extend and maintain.
-* **Java 8 minimum support**.  As of 2.0, Morphia will move to requiring Java8+.
+* **Java 11 minimum support**.  As of 2.0, Morphia will move to requiring Java 11+.
+* **Fluent APIs**.  Morphia 2.0 will introduce a much more fluent API.  e.g., for updates, rather than having to pass a `Query` and an
+ `UpdateOperations` reference to a method, `Query` will add new methods to update/modify/remove creating a much more fluent, readable API.
 * **Updated Mapper**.  The keystone feature of 2.0 is the updated mapper.  Using updates to the driver, Morphia will transition off its 
 own mapping code and leverage the infrastructure now provided by the driver.  This means that many of the mapping bugs around generics 
 will begin working, e.g.  However it also means that the shapes of documents in the database might end up looking different.  Work is 
@@ -68,10 +70,6 @@ not seen any updates or apparent use in quite some time.  The entity scanner cod
 vestigial at best.  2.0 will leverage slf4j directly internally and users can choose whatever logging implementation they would like.  
 Any dependence on `dev.morphia.logging.Logger` will need to be updated after 2.0.  Steps should be taken now to migrate away from these 
 types now.  
-
-# 2.1.0
-
-* **Aggregation updates**.  It's a little early to speculate too much about what 2.1.0 will need but there's a sizable back log of 
-aggregation updates to complete.  The current aggregation API was a mild experiment but was sadly not communicated as such as well as it
+* **Aggregation updates**.  The current aggregation API was a mild experiment but was sadly not communicated as such as well as it
  should have been.  The updates will will include both new features and, hopefully, and improved more usable API.  This might come in 
  the form of a parallel, experimental API that evolves and eventually replaces the current API.
