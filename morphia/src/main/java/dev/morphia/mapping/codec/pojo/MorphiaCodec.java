@@ -1,33 +1,20 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.reader.DocumentReader;
-import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
-import org.bson.BsonReaderMark;
-import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.CollectibleCodec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.ClassModel;
 import org.bson.codecs.pojo.DiscriminatorLookup;
-import org.bson.codecs.pojo.IdPropertyModelHolder;
-import org.bson.codecs.pojo.InstanceCreator;
 import org.bson.codecs.pojo.PojoCodec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
@@ -35,14 +22,9 @@ import org.bson.codecs.pojo.PropertyCodecRegistryImpl;
 import org.bson.codecs.pojo.PropertyModel;
 import org.bson.types.ObjectId;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
-import static java.lang.String.format;
 import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -50,6 +32,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * the codec used by Morphia
  *
  * @param <T> the entity type
+ * @morphia.internal
+ * @since 2.0
  */
 public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T> {
     protected final MappedField idField;
@@ -59,16 +43,15 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
-    private final ConcurrentMap<ClassModel<?>, Codec<?>> codecCache;
-    private final Encoder encoder = new Encoder();
-    private final Decoder decoder = new Decoder();
+    private final Encoder<T> encoder = new Encoder<>(this);
+    private final Decoder<T> decoder = new Decoder<>(this);
 
     /**
      * Creates a new codec
      *
      * @param datastore              the datastore
+     * @param mappedClass            the MappedClass backing this codec
      * @param propertyCodecProviders the codec provider for properties
-     * @param discriminatorLookup    the discriminator lookup
      * @param registry               the codec registry for lookups
      */
     @SuppressWarnings("unchecked")
@@ -78,7 +61,6 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
         this.mappedClass = mappedClass;
         this.mapper = datastore.getMapper();
         this.discriminatorLookup = discriminatorLookup;
-        this.codecCache = new ConcurrentHashMap<>();
 
         this.entityModel = (EntityModel<T>) mappedClass.getEntityModel();
         this.registry = fromRegistries(fromCodecs(this), registry);
@@ -90,10 +72,9 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void specializePropertyCodecs() {
         ClassModel<T> classModel = getClassModel();
-        getCodecCache().put(classModel, this);
         for (PropertyModel<?> propertyModel : classModel.getPropertyModels()) {
             Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
-                                                           : getPropertyCodecRegistry().get(propertyModel.getTypeData());
+                                                           : propertyCodecRegistry.get(propertyModel.getTypeData());
             propertyModel.cachedCodec(codec);
         }
     }
@@ -103,24 +84,20 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
         return entityModel;
     }
 
-    public ConcurrentMap<ClassModel<?>, Codec<?>> getCodecCache() {
-        return codecCache;
-    }
-
-    public PropertyCodecRegistry getPropertyCodecRegistry() {
-        return propertyCodecRegistry;
-    }
-
     public MappedClass getMappedClass() {
         return mappedClass;
     }
 
-    public DiscriminatorLookup getDiscriminatorLookup() {
+    DiscriminatorLookup getDiscriminatorLookup() {
         return discriminatorLookup;
     }
 
-    public CodecRegistry getRegistry() {
+    CodecRegistry getRegistry() {
         return registry;
+    }
+
+    PropertyCodecRegistry getPropertyCodecRegistry() {
+        return propertyCodecRegistry;
     }
 
     @Override
@@ -156,7 +133,7 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
     public BsonValue getDocumentId(final T document) {
         final Object id = mappedClass.getIdField().getFieldValue(document);
         final DocumentWriter writer = new DocumentWriter();
-        ((Codec) getRegistry().get(id.getClass()))
+        ((Codec) registry.get(id.getClass()))
             .encode(writer, id, EncoderContext.builder().build());
         return writer.getRoot();
     }
@@ -168,211 +145,4 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
         return mapper;
     }
 
-    class Decoder implements org.bson.codecs.Decoder<T> {
-        @Override
-        public T decode(final BsonReader reader, final DecoderContext decoderContext) {
-            T entity;
-            if (mappedClass.hasLifecycle(PreLoad.class) || mappedClass.hasLifecycle(PostLoad.class) || getMapper().hasInterceptors()) {
-                entity = decodeWithLifecycle(reader, decoderContext);
-            } else {
-                EntityModel<T> classModel = getClassModel();
-                if (decoderContext.hasCheckedDiscriminator()) {
-                    MorphiaInstanceCreator<T> instanceCreator = classModel.getInstanceCreator();
-                    decodeProperties(reader, decoderContext, instanceCreator);
-                    return instanceCreator.getInstance();
-                } else {
-                    entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(), getRegistry(),
-                        getDiscriminatorLookup(), MorphiaCodec.this)
-                                 .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
-                }
-            }
-
-            return entity;
-        }
-
-        protected void decodeProperties(final BsonReader reader, final DecoderContext decoderContext,
-                                        final MorphiaInstanceCreator<T> instanceCreator) {
-            reader.readStartDocument();
-            EntityModel<T> classModel = getClassModel();
-            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                String name = reader.readName();
-                if (classModel.useDiscriminator() && classModel.getDiscriminatorKey().equals(name)) {
-                    reader.readString();
-                } else {
-                    decodePropertyModel(reader, decoderContext, instanceCreator, classModel.getPropertyModel(name));
-                }
-            }
-            reader.readEndDocument();
-        }
-
-        @SuppressWarnings("unchecked")
-        protected <S> void decodePropertyModel(final BsonReader reader, final DecoderContext decoderContext,
-                                               final InstanceCreator<T> instanceCreator, final PropertyModel<S> propertyModel) {
-
-            if (propertyModel != null) {
-                final BsonReaderMark mark = reader.getMark();
-                try {
-                    S value = null;
-                    if (reader.getCurrentBsonType() == BsonType.NULL) {
-                        reader.readNull();
-                    } else {
-                        value = decoderContext.decodeWithChildContext(propertyModel.getCachedCodec(), reader);
-                    }
-                    if (propertyModel.isWritable()) {
-                        instanceCreator.set(value, propertyModel);
-                    }
-                } catch (BsonInvalidOperationException e) {
-                    mark.reset();
-                    final Object value = getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
-                    instanceCreator.set((S) convert(value, propertyModel.getTypeData().getType()), propertyModel);
-                }
-            } else {
-                reader.skipValue();
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        protected Codec<T> getCodecFromDocument(final BsonReader reader, final boolean useDiscriminator, final String discriminatorKey,
-                                                final CodecRegistry registry, final DiscriminatorLookup discriminatorLookup,
-                                                final Codec<T> defaultCodec) {
-            Codec<T> codec = null;
-            if (useDiscriminator) {
-                BsonReaderMark mark = reader.getMark();
-                try {
-                    reader.readStartDocument();
-                    while (codec == null && reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                        if (discriminatorKey.equals(reader.readName())) {
-                            codec = (Codec<T>) registry.get(discriminatorLookup.lookup(reader.readString()));
-                        } else {
-                            reader.skipValue();
-                        }
-                    }
-                } catch (Exception e) {
-                    throw new CodecConfigurationException(format("Failed to decode '%s'. Decoding errored with: %s",
-                        getClassModel().getName(), e.getMessage()), e);
-                } finally {
-                    mark.reset();
-                }
-            }
-            return codec != null ? codec : defaultCodec;
-        }
-
-        private T decodeWithLifecycle(final BsonReader reader, final DecoderContext decoderContext) {
-            final T entity;
-            final MorphiaInstanceCreator<T> instanceCreator = getClassModel().getInstanceCreator();
-            entity = instanceCreator.getInstance();
-
-            Document document = getRegistry().get(Document.class).decode(reader, decoderContext);
-            mappedClass.callLifecycleMethods(PreLoad.class, entity, document, getMapper());
-
-            decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
-
-            mappedClass.callLifecycleMethods(PostLoad.class, entity, document, getMapper());
-            return entity;
-        }
-
-    }
-
-    class Encoder implements org.bson.codecs.Encoder<T> {
-        @Override
-        public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
-            if (mappedClass.hasLifecycle(PostPersist.class)
-                || mappedClass.hasLifecycle(PrePersist.class)
-                || getMapper().hasInterceptors()) {
-
-                encodeWithLifecycle(writer, value, encoderContext);
-            } else {
-                encodeEntity(writer, value, encoderContext);
-            }
-        }
-
-        @Override
-        public Class<T> getEncoderClass() {
-            return MorphiaCodec.this.getEncoderClass();
-        }
-
-        protected <S, V> boolean areEquivalentTypes(final Class<S> t1, final Class<V> t2) {
-            return t1.equals(t2)
-                   || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
-                   || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
-        }
-
-        protected <S> void encodeIdProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
-                                            final IdPropertyModelHolder<S> propertyModelHolder) {
-            if (propertyModelHolder.getPropertyModel() != null) {
-                if (propertyModelHolder.getIdGenerator() == null) {
-                    encodeProperty(writer, instance, encoderContext, propertyModelHolder.getPropertyModel());
-                } else {
-                    S id = propertyModelHolder.getPropertyModel().getPropertyAccessor().get(instance);
-                    if (id == null && encoderContext.isEncodingCollectibleDocument()) {
-                        id = propertyModelHolder.getIdGenerator().generate();
-                        propertyModelHolder.getPropertyModel().getPropertyAccessor().set(instance, id);
-                    }
-                    encodeValue(writer, encoderContext, propertyModelHolder.getPropertyModel(), id);
-                }
-            }
-        }
-
-        protected <S> void encodeProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
-                                          final PropertyModel<S> propertyModel) {
-            if (propertyModel != null && propertyModel.isReadable()) {
-                S propertyValue = propertyModel.getPropertyAccessor().get(instance);
-                encodeValue(writer, encoderContext, propertyModel, propertyValue);
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private void encodeEntity(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
-            if (areEquivalentTypes(value.getClass(), getClassModel().getType())) {
-                writer.writeStartDocument();
-
-                encodeIdProperty(writer, value, encoderContext, getClassModel().getIdPropertyModelHolder());
-
-                if (getClassModel().useDiscriminator()) {
-                    writer.writeString(getClassModel().getDiscriminatorKey(), getClassModel().getDiscriminator());
-                }
-
-                for (PropertyModel<?> propertyModel : getClassModel().getPropertyModels()) {
-                    if (propertyModel.equals(getClassModel().getIdPropertyModel())) {
-                        continue;
-                    }
-                    encodeProperty(writer, value, encoderContext, propertyModel);
-                }
-                writer.writeEndDocument();
-            } else {
-                getRegistry().get((Class<T>) value.getClass())
-                             .encode(writer, value, encoderContext);
-            }
-        }
-
-        private <S> void encodeValue(final BsonWriter writer, final EncoderContext encoderContext, final PropertyModel<S> propertyModel,
-                                     final S propertyValue) {
-            if (propertyModel.shouldSerialize(propertyValue)) {
-                writer.writeName(propertyModel.getReadName());
-                if (propertyValue == null) {
-                    writer.writeNull();
-                } else {
-                    try {
-                        encoderContext.encodeWithChildContext(propertyModel.getCachedCodec(), writer, propertyValue);
-                    } catch (CodecConfigurationException e) {
-                        throw new CodecConfigurationException(format("Failed to encode '%s'. Encoding '%s' errored with: %s",
-                            getClassModel().getName(), propertyModel.getReadName(), e.getMessage()), e);
-                    }
-                }
-            }
-        }
-
-        private void encodeWithLifecycle(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
-            Document document = new Document();
-            mappedClass.callLifecycleMethods(PrePersist.class, value, document, getMapper());
-
-            final DocumentWriter documentWriter = new DocumentWriter(document);
-            encodeEntity(documentWriter, value, encoderContext);
-            document = documentWriter.getRoot();
-            mappedClass.callLifecycleMethods(PostPersist.class, value, document, getMapper());
-
-            getRegistry().get(Document.class).encode(writer, document, encoderContext);
-        }
-
-    }
 }

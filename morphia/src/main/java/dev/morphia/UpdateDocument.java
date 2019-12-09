@@ -13,6 +13,7 @@ import org.bson.conversions.Bson;
  * Document used to send update statements to the driver.
  *
  * @morphia.internal
+ * @since 2.0
  */
 public class UpdateDocument implements Bson {
     private Object entity;

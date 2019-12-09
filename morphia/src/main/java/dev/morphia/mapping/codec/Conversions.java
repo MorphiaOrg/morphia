@@ -97,7 +97,7 @@ public final class Conversions {
      * @param target the target type
      * @return the potentially converted value
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static Object convert(final Object value, final Class<?> target) {
         if (value == null) {
             return convertNull(target);
@@ -108,8 +108,9 @@ public final class Conversions {
             return value;
         }
 
-        final Map<Class<?>, Function<?, ?>> functions = conversions.computeIfAbsent(fromType, (Class f) -> new HashMap<>());
-        final Function function = functions.get(target);
+        final Function function = conversions
+                                      .computeIfAbsent(fromType, (f) -> new HashMap<>())
+                                      .get(target);
         if (function == null) {
             if (target.equals(String.class)) {
                 return value.toString();
