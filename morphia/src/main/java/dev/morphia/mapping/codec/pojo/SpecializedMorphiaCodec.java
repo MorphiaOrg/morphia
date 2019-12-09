@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
+import dev.morphia.mapping.MappedClass;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.DecoderContext;
@@ -10,24 +11,23 @@ import org.bson.codecs.pojo.PojoCodec;
 
 /**
  * A specialized form of a codec
+ *
  * @param <T>
  */
 public class SpecializedMorphiaCodec<T> extends PojoCodec<T> {
 
     private final MorphiaCodec morphiaCodec;
-    private final ClassModel<T> classModel;
+    private final EntityModel<T> classModel;
     private final Datastore datastore;
+    private MappedClass mappedClass;
     private PojoCodec<T> specialized;
 
-    SpecializedMorphiaCodec(final MorphiaCodec morphiaCodec, final ClassModel<T> classModel, final Datastore datastore) {
+    public SpecializedMorphiaCodec(final MorphiaCodec morphiaCodec, final MappedClass mappedClass, final EntityModel<T> classModel,
+                                   final Datastore datastore) {
         this.morphiaCodec = morphiaCodec;
+        this.mappedClass = mappedClass;
         this.classModel = classModel;
         this.datastore = datastore;
-    }
-
-    @Override
-    public ClassModel<T> getClassModel() {
-        return classModel;
     }
 
     @Override
@@ -37,10 +37,8 @@ public class SpecializedMorphiaCodec<T> extends PojoCodec<T> {
 
     private PojoCodec<T> getSpecialized() {
         if (specialized == null) {
-            specialized = new MorphiaCodec<>(datastore, classModel,
-                morphiaCodec.getRegistry(), morphiaCodec.getPropertyCodecRegistry(), morphiaCodec.getDiscriminatorLookup(), true,
-                morphiaCodec.getMappedClass()
-            );
+            specialized = new MorphiaCodec<>(datastore, mappedClass, morphiaCodec.getPropertyCodecRegistry(),
+                morphiaCodec.getDiscriminatorLookup(), morphiaCodec.getCodecCache(), true, morphiaCodec.getRegistry());
         }
         return specialized;
     }
@@ -53,5 +51,10 @@ public class SpecializedMorphiaCodec<T> extends PojoCodec<T> {
     @Override
     public Class<T> getEncoderClass() {
         return classModel.getType();
+    }
+
+    @Override
+    public ClassModel<T> getClassModel() {
+        return classModel;
     }
 }

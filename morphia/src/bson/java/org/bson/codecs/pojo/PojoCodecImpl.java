@@ -131,6 +131,10 @@ public class PojoCodecImpl<T> extends PojoCodec<T> {
         return classModel.getType();
     }
 
+    protected boolean isSpecialized() {
+        return specialized;
+    }
+
     @Override
     public String toString() {
         return format("PojoCodec<%s>", classModel);
@@ -336,9 +340,9 @@ public class PojoCodecImpl<T> extends PojoCodec<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private Codec<T> getCodecFromDocument(final BsonReader reader, final boolean useDiscriminator, final String discriminatorKey,
-                                          final CodecRegistry registry, final DiscriminatorLookup discriminatorLookup,
-                                          final Codec<T> defaultCodec) {
+    protected Codec<T> getCodecFromDocument(final BsonReader reader, final boolean useDiscriminator, final String discriminatorKey,
+                                            final CodecRegistry registry, final DiscriminatorLookup discriminatorLookup,
+                                            final Codec<T> defaultCodec) {
         Codec<T> codec = defaultCodec;
         if (useDiscriminator) {
             BsonReaderMark mark = reader.getMark();

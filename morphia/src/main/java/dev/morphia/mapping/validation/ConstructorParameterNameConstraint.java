@@ -22,7 +22,7 @@ public class ConstructorParameterNameConstraint implements ClassConstraint {
         if (fullConstructor != null) {
             for (final Parameter parameter : fullConstructor.getParameters()) {
                 String name = ConstructorCreator.getParameterName(parameter);
-                if (model.getPropertyModel(name) == null) {
+                if (model.getPropertyModelByName(name) == null) {
                     throw new ConstraintViolationException(
                         new ConstraintViolation(Level.FATAL, mc, getClass(), Sofia.misnamedConstructorParameter(model.getType(), name)));
                 }

@@ -22,11 +22,11 @@ import org.bson.codecs.configuration.CodecRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
+public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
     private final List<PropertyCodecProvider> propertyCodecProviders;
 
-    PropertyCodecRegistryImpl(final PojoCodec<?> pojoCodec, final CodecRegistry codecRegistry,
-                              final List<PropertyCodecProvider> propertyCodecProviders) {
+    public PropertyCodecRegistryImpl(final PojoCodec<?> pojoCodec, final CodecRegistry codecRegistry,
+                                     final List<PropertyCodecProvider> propertyCodecProviders) {
         List<PropertyCodecProvider> augmentedProviders = new ArrayList<PropertyCodecProvider>();
         if (propertyCodecProviders != null) {
             augmentedProviders.addAll(propertyCodecProviders);

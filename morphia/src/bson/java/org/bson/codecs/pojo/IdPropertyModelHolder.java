@@ -45,11 +45,11 @@ public final class IdPropertyModelHolder<I> {
         this.idGenerator = idGenerator;
     }
 
-    PropertyModel<I> getPropertyModel() {
+    public PropertyModel<I> getPropertyModel() {
         return propertyModel;
     }
 
-    IdGenerator<I> getIdGenerator() {
+    public IdGenerator<I> getIdGenerator() {
         return idGenerator;
     }
 

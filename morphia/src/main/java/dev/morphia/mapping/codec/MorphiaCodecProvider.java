@@ -42,8 +42,8 @@ public class MorphiaCodecProvider implements CodecProvider {
     public <T> Codec<T> get(final Class<T> type, final CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && mapper.isMappable(type)) {
-            codec = new MorphiaCodec<>(datastore, registry, propertyCodecProviders, mapper.getDiscriminatorLookup(),
-                mapper.getMappedClass(type));
+            codec = new MorphiaCodec<>(datastore, mapper.getMappedClass(type), propertyCodecProviders,
+                mapper.getDiscriminatorLookup(),  registry);
             codecs.put(type, codec);
         }
 

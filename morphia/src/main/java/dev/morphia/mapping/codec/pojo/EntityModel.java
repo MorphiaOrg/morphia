@@ -9,11 +9,12 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.pojo.ClassModel;
-import org.bson.codecs.pojo.InstanceCreator;
 import org.bson.codecs.pojo.InstanceCreatorFactory;
+import org.bson.codecs.pojo.PropertyModel;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -48,25 +49,7 @@ public class EntityModel<T> extends ClassModel<T> {
     private final InstanceCreatorFactory creatorFactory;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
     private String collectionName;
-
-    /**
-     * Copies an existing model
-     *
-     * @param entityModel     the model to copy
-     * @param useDiscriminator the new use discriminator value
-     */
-    public EntityModel(final EntityModel entityModel, final boolean useDiscriminator) {
-        super(entityModel.getType(), entityModel.getPropertyNameToTypeParameterMap(), entityModel.getInstanceCreatorFactory(),
-            useDiscriminator, entityModel.getDiscriminatorKey(),
-            entityModel.getDiscriminator(),
-            entityModel.getIdPropertyModelHolder(), entityModel.getPropertyModels());
-
-        this.annotations = entityModel.getAnnotations();
-        this.fieldModels = entityModel.getFieldModels();
-        this.datastore = entityModel.datastore;
-        this.collectionName = entityModel.collectionName;
-        this.creatorFactory = entityModel.creatorFactory;
-    }
+    private Map<String, PropertyModel> propertyMap = new HashMap<>();
 
     /**
      * Creates a new instance
@@ -84,21 +67,98 @@ public class EntityModel<T> extends ClassModel<T> {
         this.datastore = builder.getDatastore();
         this.collectionName = builder.getCollectionName();
         creatorFactory = new InstanceCreatorFactoryImpl(this);
+        List<PropertyModel> propertyModels = builder.getPropertyModels();
+        for (final PropertyModel<?> propertyModel : propertyModels) {
+            propertyMap.put(propertyModel.getWriteName(), propertyModel);
+        }
     }
 
     /**
-     * @return thee creator factory
-     * @morphia.internal
+     * Copies an existing model
+     *
+     * @param entityModel      the model to copy
+     * @param useDiscriminator the new use discriminator value
      */
-    public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
-        return creatorFactory;
+    public EntityModel(final EntityModel entityModel, final boolean useDiscriminator) {
+        super(entityModel.getType(), entityModel.getPropertyNameToTypeParameterMap(), entityModel.getInstanceCreatorFactory(),
+            useDiscriminator, entityModel.getDiscriminatorKey(),
+            entityModel.getDiscriminator(),
+            entityModel.getIdPropertyModelHolder(), entityModel.getPropertyModels());
+
+        this.annotations = entityModel.getAnnotations();
+        this.fieldModels = entityModel.getFieldModels();
+        this.datastore = entityModel.datastore;
+        this.collectionName = entityModel.collectionName;
+        this.creatorFactory = entityModel.creatorFactory;
+    }
+
+    /**
+     * Returns all the annotations on this model
+     *
+     * @return the list of annotations
+     */
+    public Map<Class<? extends Annotation>, List<Annotation>> getAnnotations() {
+        return annotations;
+    }
+
+    /**
+     * Returns all the fields on this model
+     *
+     * @return the list of fields
+     */
+    public List<FieldModel<?>> getFieldModels() {
+        return fieldModels;
+    }
+
+    /**
+     * Invokes any lifecycle methods
+     *
+     * @param event    the event to run
+     * @param entity   the entity to use
+     * @param document the document used in persistence
+     * @param mapper   the mapper to use
+     */
+    public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
+                                     final Mapper mapper) {
+        final List<ClassMethodPair> methodPairs = getLifecycleMethods().get(event);
+        if (methodPairs != null) {
+            for (final ClassMethodPair cm : methodPairs) {
+                cm.invoke(document, entity);
+            }
+        }
+
+        callGlobalInterceptors(event, entity, document, mapper);
+    }
+
+    /**
+     * @param clazz the annotation class
+     * @param <A>   the annotation type
+     * @return the annotation instance or null if not found
+     */
+    public <A> A getAnnotation(final Class<? extends Annotation> clazz) {
+        final List<Annotation> found = annotations.get(clazz);
+        return found == null || found.isEmpty() ? null : (A) found.get(found.size() - 1);
+    }
+
+    /**
+     * @param clazz the annotation class
+     * @param <A>   the annotation type
+     * @return all annotation instance of the given type
+     */
+    public <A> List<A> getAnnotations(final Class<? extends Annotation> clazz) {
+        return (List<A>) annotations.get(clazz);
     }
 
     /**
      * @return a new InstanceCreator instance for the ClassModel
      */
-    public InstanceCreator<T> getInstanceCreator() {
-        return creatorFactory.create();
+    public MorphiaInstanceCreator<T> getInstanceCreator() {
+        return (MorphiaInstanceCreator<T>) creatorFactory.create();
+    }
+
+    @Override
+    public PropertyModel<?> getPropertyModel(final String name) {
+        return propertyMap.get(name);
     }
 
     @Override
@@ -149,40 +209,11 @@ public class EntityModel<T> extends ClassModel<T> {
     }
 
     /**
-     * Returns all the annotations on this model
-     *
-     * @return the list of annotations
+     * @return thee creator factory
+     * @morphia.internal
      */
-    public Map<Class<? extends Annotation>, List<Annotation>> getAnnotations() {
-        return annotations;
-    }
-
-    /**
-     * Returns all the fields on this model
-     *
-     * @return the list of fields
-     */
-    public List<FieldModel<?>> getFieldModels() {
-        return fieldModels;
-    }
-
-    /**
-     * @param clazz the annotation class
-     * @param <A>   the annotation type
-     * @return the annotation instance or null if not found
-     */
-    public <A> A getAnnotation(final Class<? extends Annotation> clazz) {
-        final List<Annotation> found = annotations.get(clazz);
-        return found == null || found.isEmpty() ? null : (A) found.get(found.size() - 1);
-    }
-
-    /**
-     * @param clazz the annotation class
-     * @param <A>   the annotation type
-     * @return all annotation instance of the given type
-     */
-    public <A> List<A> getAnnotations(final Class<? extends Annotation> clazz) {
-        return (List<A>) annotations.get(clazz);
+    public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
+        return creatorFactory;
     }
 
     /**
@@ -190,26 +221,6 @@ public class EntityModel<T> extends ClassModel<T> {
      */
     public String getCollectionName() {
         return collectionName;
-    }
-
-    /**
-     * Invokes any lifecycle methods
-     *
-     * @param event    the event to run
-     * @param entity   the entity to use
-     * @param document the document used in persistence
-     * @param mapper   the mapper to use
-     */
-    public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
-                                     final Mapper mapper) {
-        final List<ClassMethodPair> methodPairs = getLifecycleMethods().get(event);
-        if (methodPairs != null) {
-            for (final ClassMethodPair cm : methodPairs) {
-                cm.invoke(document, entity);
-            }
-        }
-
-        callGlobalInterceptors(event, entity, document, mapper);
     }
 
     /**
@@ -231,23 +242,21 @@ public class EntityModel<T> extends ClassModel<T> {
         return lifecycleMethods;
     }
 
+    public PropertyModel<?> getPropertyModelByName(final String name) {
+        for (final PropertyModel<?> propertyModel : getPropertyModels()) {
+            if(propertyModel.getName().equals(name)) {
+                return propertyModel;
+            }
+        }
+        return null;
+    }
+
     /**
      * @param type the lifecycle event type
      * @return true if that even has been configured
      */
     public boolean hasLifecycle(final Class<? extends Annotation> type) {
         return getLifecycleMethods().containsKey(type);
-    }
-
-    private void mapEvent(final Class<?> type, final boolean entityListener) {
-        for (final Method method : getDeclaredAndInheritedMethods(type)) {
-            for (final Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
-                if (method.isAnnotationPresent(annotationClass)) {
-                    lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
-                                    .add(new ClassMethodPair(datastore, method, entityListener ? type : null, annotationClass));
-                }
-            }
-        }
     }
 
     private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final Document document,
@@ -283,5 +292,16 @@ public class EntityModel<T> extends ClassModel<T> {
         }
 
         return methods;
+    }
+
+    private void mapEvent(final Class<?> type, final boolean entityListener) {
+        for (final Method method : getDeclaredAndInheritedMethods(type)) {
+            for (final Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
+                if (method.isAnnotationPresent(annotationClass)) {
+                    lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
+                                    .add(new ClassMethodPair(datastore, method, entityListener ? type : null, annotationClass));
+                }
+            }
+        }
     }
 }
