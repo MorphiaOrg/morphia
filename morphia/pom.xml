@@ -27,7 +27,6 @@
                         <configuration>
                             <sources>
                                 <source>src/bson/java</source>
-                                <source>src/driver/java</source>
                                 <source>target/generated-sources/sofia</source>
                             </sources>
                         </configuration>
