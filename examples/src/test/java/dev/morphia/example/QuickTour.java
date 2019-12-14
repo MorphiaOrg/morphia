@@ -1,21 +1,20 @@
 package dev.morphia.example;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
+import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.Query;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public final class QuickTour {
     }
 
     public static void main(final String[] args) {
-        final Datastore datastore = Morphia.createDatastore(new MongoClient(), "morphia_example");
+        final Datastore datastore = Morphia.createDatastore(MongoClients.create(), "morphia_example");
 
         // tell morphia where to find your classes
         // can be called multiple times with different packages or classes
