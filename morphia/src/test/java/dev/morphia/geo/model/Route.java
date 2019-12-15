@@ -1,35 +1,35 @@
-package dev.morphia.geo;
+package dev.morphia.geo.model;
 
+import com.mongodb.client.model.geojson.LineString;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
 import org.bson.types.ObjectId;
-import com.mongodb.client.model.geojson.Polygon;
 
 @Entity
-public final class Area {
+public final class Route {
     @Id
     private ObjectId id;
     private String name;
 
     @Indexed(IndexDirection.GEO2DSPHERE)
-    private Polygon area;
+    private LineString route;
 
     @SuppressWarnings("UnusedDeclaration")
-        // Used by Morphia
-    Area() {
+        // needed by Morphia
+    Route() {
     }
 
-    public Area(final String name, final Polygon area) {
+    public Route(final String name, final LineString route) {
         this.name = name;
-        this.area = area;
+        this.route = route;
     }
 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (area != null ? area.hashCode() : 0);
+        result = 31 * result + (route != null ? route.hashCode() : 0);
         return result;
     }
 
@@ -42,12 +42,12 @@ public final class Area {
             return false;
         }
 
-        Area area1 = (Area) o;
+        Route route1 = (Route) o;
 
-        if (area != null ? !area.equals(area1.area) : area1.area != null) {
+        if (name != null ? !name.equals(route1.name) : route1.name != null) {
             return false;
         }
-        if (name != null ? !name.equals(area1.name) : area1.name != null) {
+        if (route != null ? !route.equals(route1.route) : route1.route != null) {
             return false;
         }
 
@@ -56,9 +56,9 @@ public final class Area {
 
     @Override
     public String toString() {
-        return "Area{"
+        return "Route{"
                + "name='" + name + '\''
-               + ", area=" + area
+               + ", route=" + route
                + '}';
     }
 }

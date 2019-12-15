@@ -27,7 +27,7 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.geo.City;
+import dev.morphia.geo.model.City;
 import dev.morphia.geo.PlaceWithLegacyCoords;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;

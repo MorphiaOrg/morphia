@@ -1,4 +1,4 @@
-package dev.morphia.geo;
+package dev.morphia.geo.model;
 
 import com.mongodb.client.model.geojson.MultiPoint;
 import dev.morphia.annotations.Entity;
@@ -15,7 +15,7 @@ public final class Stores {
     Stores() {
     }
 
-    Stores(final String name, final MultiPoint locations) {
+    public Stores(final String name, final MultiPoint locations) {
         this.name = name;
         this.locations = locations;
     }

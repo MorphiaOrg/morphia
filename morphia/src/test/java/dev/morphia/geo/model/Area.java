@@ -1,33 +1,35 @@
-package dev.morphia.geo;
+package dev.morphia.geo.model;
 
-import com.mongodb.client.model.geojson.MultiPolygon;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
 import org.bson.types.ObjectId;
+import com.mongodb.client.model.geojson.Polygon;
 
 @Entity
-public final class Regions {
+public final class Area {
     @Id
     private ObjectId id;
     private String name;
 
     @Indexed(IndexDirection.GEO2DSPHERE)
-    private MultiPolygon regions;
+    private Polygon area;
 
-    Regions() {
+    @SuppressWarnings("UnusedDeclaration")
+        // Used by Morphia
+    Area() {
     }
 
-    public Regions(final String name, final MultiPolygon regions) {
+    public Area(final String name, final Polygon area) {
         this.name = name;
-        this.regions = regions;
+        this.area = area;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + regions.hashCode();
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (area != null ? area.hashCode() : 0);
         return result;
     }
 
@@ -40,12 +42,12 @@ public final class Regions {
             return false;
         }
 
-        Regions regions1 = (Regions) o;
+        Area area1 = (Area) o;
 
-        if (!name.equals(regions1.name)) {
+        if (area != null ? !area.equals(area1.area) : area1.area != null) {
             return false;
         }
-        if (!regions.equals(regions1.regions)) {
+        if (name != null ? !name.equals(area1.name) : area1.name != null) {
             return false;
         }
 
@@ -54,9 +56,9 @@ public final class Regions {
 
     @Override
     public String toString() {
-        return "Regions{"
+        return "Area{"
                + "name='" + name + '\''
-               + ", regions=" + regions
+               + ", area=" + area
                + '}';
     }
 }

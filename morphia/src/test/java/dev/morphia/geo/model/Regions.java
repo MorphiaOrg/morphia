@@ -1,6 +1,6 @@
-package dev.morphia.geo;
+package dev.morphia.geo.model;
 
-import com.mongodb.client.model.geojson.LineString;
+import com.mongodb.client.model.geojson.MultiPolygon;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
@@ -8,28 +8,26 @@ import dev.morphia.utils.IndexDirection;
 import org.bson.types.ObjectId;
 
 @Entity
-public final class Route {
+public final class Regions {
     @Id
     private ObjectId id;
     private String name;
 
     @Indexed(IndexDirection.GEO2DSPHERE)
-    private LineString route;
+    private MultiPolygon regions;
 
-    @SuppressWarnings("UnusedDeclaration")
-        // needed by Morphia
-    Route() {
+    Regions() {
     }
 
-    public Route(final String name, final LineString route) {
+    public Regions(final String name, final MultiPolygon regions) {
         this.name = name;
-        this.route = route;
+        this.regions = regions;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (route != null ? route.hashCode() : 0);
+        int result = name.hashCode();
+        result = 31 * result + regions.hashCode();
         return result;
     }
 
@@ -42,12 +40,12 @@ public final class Route {
             return false;
         }
 
-        Route route1 = (Route) o;
+        Regions regions1 = (Regions) o;
 
-        if (name != null ? !name.equals(route1.name) : route1.name != null) {
+        if (!name.equals(regions1.name)) {
             return false;
         }
-        if (route != null ? !route.equals(route1.route) : route1.route != null) {
+        if (!regions.equals(regions1.regions)) {
             return false;
         }
 
@@ -56,9 +54,9 @@ public final class Route {
 
     @Override
     public String toString() {
-        return "Route{"
+        return "Regions{"
                + "name='" + name + '\''
-               + ", route=" + route
+               + ", regions=" + regions
                + '}';
     }
 }

@@ -1,10 +1,16 @@
-package dev.morphia.geo;
+package dev.morphia.geo.model;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.utils.IndexDirection;
 import com.mongodb.client.model.geojson.GeometryCollection;
+import org.bson.types.ObjectId;
 
+@Entity
 public final class AllTheThings {
+    @Id
+    private ObjectId id;
     private String name;
 
     @Indexed(IndexDirection.GEO2DSPHERE)

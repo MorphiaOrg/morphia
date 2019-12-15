@@ -1,4 +1,4 @@
-package dev.morphia.geo;
+package dev.morphia.geo.model;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
