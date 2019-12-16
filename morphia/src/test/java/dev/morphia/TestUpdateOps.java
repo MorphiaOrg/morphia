@@ -470,7 +470,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("infinite loop somewhere")
     public void testRemoveAllSingleValue() {
         LogHolder logs = new LogHolder();
         Date date = new Date();
@@ -494,9 +493,10 @@ public class TestUpdateOps extends TestBase {
                               .execute(new FindOptions().limit(1))
                               .next();
         assertEquals(4, updated.logs.size());
-        for (int i = 0; i < 4; i++) {
-            assertEquals(new Log(i + 1), updated.logs.get(i));
-        }
+        assertTrue(updated.logs.stream()
+                               .allMatch(log ->
+                                             log.equals(new Log(1))
+                                             || log.equals(new Log(2))));
     }
 
     @Test
