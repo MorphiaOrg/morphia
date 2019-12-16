@@ -37,6 +37,8 @@ LINUX=ubuntu1604
 if [ "${MONGODB}" ]
 then
   download
+  mvn -f morphia/pom.xml test
+  killall -9 mongod
 else
   sudo service mongodb stop
   killall -9  mongod || true

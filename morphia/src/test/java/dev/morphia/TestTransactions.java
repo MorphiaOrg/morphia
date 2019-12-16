@@ -14,6 +14,7 @@ import java.util.List;
 public class TestTransactions extends TestBase {
     @Before
     public void before() {
+        checkMinServerVersion(4.0);
         Assume.assumeTrue(isReplicaSet());
         getDs().save(new Rectangle(1, 1));
         getDs().find(Rectangle.class).delete();
