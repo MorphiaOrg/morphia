@@ -25,7 +25,7 @@ download() {
     --bind_ip 127.0.0.1 \
     --logpath /tmp/mongodb-${MONGODB}.log &> /dev/null &
 
-  sleep 1
+  sleep 3
   ${PWD}/mongodb-linux-x86_64-*/bin/mongo --eval "rs.initiate()"
 }
 
