@@ -18,7 +18,7 @@ out/
 docs/landing/public
 docs/reference/public
 docs/reference/server
-
+mongodb-linux*
 
 # User-specific stuff
 .idea/**/workspace.xml

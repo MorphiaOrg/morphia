@@ -18,10 +18,15 @@ download() {
   tar -xvf ${FILE}
   rm -rf /tmp/data
   mkdir -p /tmp/data
+
   ${PWD}/mongodb-linux-x86_64-*/bin/mongod --quiet \
+    --replSet morphia \
     --dbpath /tmp/data \
     --bind_ip 127.0.0.1 \
     --logpath /tmp/mongodb-${MONGODB}.log &> /dev/null &
+
+  sleep 1
+  ${PWD}/mongodb-linux-x86_64-*/bin/mongo --eval "rs.initiate()"
 }
 
 LINUX=ubuntu1604
