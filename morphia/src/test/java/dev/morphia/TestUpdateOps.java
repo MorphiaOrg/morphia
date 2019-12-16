@@ -150,7 +150,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("infinite loop somewhere")
     public void testAddAll() {
         getMapper().map(LogHolder.class, Log.class);
         String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
@@ -830,7 +829,7 @@ public class TestUpdateOps extends TestBase {
     private void validateClassName(final LogHolder loaded) {
         List<Document> logs = (List<Document>) loaded.raw.get("logs");
         for (Document o : logs) {
-            Assert.assertNotNull(o.get("className"));
+            Assert.assertNotNull(o.toString(), o.get(getMapper().getOptions().getDiscriminatorKey()));
         }
     }
 
@@ -867,7 +866,7 @@ public class TestUpdateOps extends TestBase {
         private List<Log> logs = new ArrayList<>();
         private Document raw;
 
-//        @PreLoad
+        @PreLoad
         public void preload(final Document raw) {
             this.raw = raw;
         }

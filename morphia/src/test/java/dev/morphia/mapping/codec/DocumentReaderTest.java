@@ -121,21 +121,6 @@ public class DocumentReaderTest extends TestBase {
         Assert.assertEquals(parent, decode);
     }
 
-    @Test
-    public void databaseRead() {
-        getDs().getMapper().map(LogHolder.class, Log.class);
-        LogHolder holder = new LogHolder();
-        holder.setLog(new Log(1));
-        getDs().save(holder);
-        MongoCollection<Document> collection = getDatabase()
-                                                   .getCollection(LogHolder.class.getSimpleName());
-
-        LogHolder decode = getMapper().getCodecRegistry().get(LogHolder.class)
-                                      .decode(new DocumentReader(collection.find().first()), DecoderContext.builder().build());
-
-        Assert.assertEquals(holder, decode);
-    }
-
     private void setup(final Document document) {
         reader = new DocumentReader(document);
     }

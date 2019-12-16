@@ -1,14 +1,13 @@
 package dev.morphia.issue172;
 
 
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.entities.SimpleEnum;
+import org.bson.types.ObjectId;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.Serializable;
 
