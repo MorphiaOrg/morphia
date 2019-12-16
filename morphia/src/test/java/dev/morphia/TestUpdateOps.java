@@ -63,6 +63,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestUpdateOps extends TestBase {
@@ -499,7 +500,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    @Ignore("infinite loop somewhere")
     public void testRemoveAllList() {
         LogHolder logs = new LogHolder();
         Date date = new Date();
@@ -507,9 +507,9 @@ public class TestUpdateOps extends TestBase {
             new Log(1),
             new Log(2),
             new Log(3),
-            new Log(4),
-            new Log(5),
-            new Log(6)));
+            new Log(1),
+            new Log(2),
+            new Log(3)));
 
         Datastore ds = getDs();
         ds.save(logs);
@@ -520,12 +520,13 @@ public class TestUpdateOps extends TestBase {
 
         assertEquals(1, results.getModifiedCount());
         LogHolder updated = ds.find(LogHolder.class)
-                              .execute(/*new FindOptions().limit(1)*/)
+                              .execute(new FindOptions().limit(1))
                               .next();
         assertEquals(4, updated.logs.size());
-        for (int i = 0; i < 4; i++) {
-            assertEquals(new Log(i + 1), updated.logs.get(i));
-        }
+        assertTrue(updated.logs.stream()
+                               .allMatch(log ->
+                                             log.equals(new Log(1))
+                                             || log.equals(new Log(2))));
     }
 
     @Test

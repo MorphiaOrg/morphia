@@ -17,20 +17,6 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public class TestEmptyEntityMapping extends TestBase {
-    @Test
-    @Ignore("Questionable test.  Probably to be delete")
-    public void testEmptyEmbeddedNotNullAfterReload() {
-        A a = new A();
-        a.b = new B();
-
-        getDs().save(a);
-        Assert.assertNotNull(a.b);
-
-        a = getDs().find(A.class).filter("_id", a.getId())
-                   .execute(new FindOptions().limit(1))
-                   .tryNext();
-        Assert.assertNull(a.b);
-    }
 
     @Test
     public void testSizeOnEmptyElements() {
