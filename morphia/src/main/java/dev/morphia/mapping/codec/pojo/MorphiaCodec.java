@@ -36,15 +36,15 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * @since 2.0
  */
 public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T> {
-    protected final MappedField idField;
+    private final MappedField idField;
     private final Mapper mapper;
     private final EntityModel<T> entityModel;
     private final MappedClass mappedClass;
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
-    private final Encoder<T> encoder = new Encoder<>(this);
-    private final Decoder<T> decoder = new Decoder<>(this);
+    private final EntityEncoder<T> encoder = new EntityEncoder<>(this);
+    private final EntityDecoder<T> decoder = new EntityDecoder<>(this);
 
     /**
      * Creates a new codec
@@ -53,6 +53,7 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
      * @param mappedClass            the MappedClass backing this codec
      * @param propertyCodecProviders the codec provider for properties
      * @param registry               the codec registry for lookups
+     * @param discriminatorLookup    the discriminator to type lookup
      */
     @SuppressWarnings("unchecked")
     public MorphiaCodec(final Datastore datastore, final MappedClass mappedClass,
@@ -82,22 +83,6 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
     @Override
     public EntityModel<T> getClassModel() {
         return entityModel;
-    }
-
-    public MappedClass getMappedClass() {
-        return mappedClass;
-    }
-
-    DiscriminatorLookup getDiscriminatorLookup() {
-        return discriminatorLookup;
-    }
-
-    CodecRegistry getRegistry() {
-        return registry;
-    }
-
-    PropertyCodecRegistry getPropertyCodecRegistry() {
-        return propertyCodecRegistry;
     }
 
     @Override
@@ -139,10 +124,25 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
     }
 
     /**
+     * @return the MappedClass for this codec
+     */
+    public MappedClass getMappedClass() {
+        return mappedClass;
+    }
+
+    /**
      * @return the mapper being used
      */
     public Mapper getMapper() {
         return mapper;
+    }
+
+    DiscriminatorLookup getDiscriminatorLookup() {
+        return discriminatorLookup;
+    }
+
+    CodecRegistry getRegistry() {
+        return registry;
     }
 
 }

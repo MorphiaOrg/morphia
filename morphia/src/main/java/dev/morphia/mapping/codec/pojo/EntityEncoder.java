@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -13,17 +14,18 @@ import org.bson.codecs.pojo.PropertyModel;
 import java.util.Collection;
 import java.util.Map;
 
-class Encoder<T> implements org.bson.codecs.Encoder<T> {
+class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     private final MorphiaCodec<T> morphiaCodec;
 
-    public Encoder(final MorphiaCodec<T> morphiaCodec) {
+    EntityEncoder(final MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
     }
 
     @Override
     public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
-        if (morphiaCodec.getMappedClass().hasLifecycle(PostPersist.class)
-            || morphiaCodec.getMappedClass().hasLifecycle(PrePersist.class)
+        MappedClass mappedClass = morphiaCodec.getMappedClass();
+        if (mappedClass.hasLifecycle(PostPersist.class)
+            || mappedClass.hasLifecycle(PrePersist.class)
             || morphiaCodec.getMapper().hasInterceptors()) {
 
             encodeWithLifecycle(writer, value, encoderContext);
@@ -37,13 +39,13 @@ class Encoder<T> implements org.bson.codecs.Encoder<T> {
         return morphiaCodec.getEncoderClass();
     }
 
-    protected <S, V> boolean areEquivalentTypes(final Class<S> t1, final Class<V> t2) {
+    private <S, V> boolean areEquivalentTypes(final Class<S> t1, final Class<V> t2) {
         return t1.equals(t2)
                || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
     }
 
-    protected <S> void encodeIdProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
+    private <S> void encodeIdProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
                                         final IdPropertyModelHolder<S> propertyModelHolder) {
         if (propertyModelHolder.getPropertyModel() != null) {
             if (propertyModelHolder.getIdGenerator() == null) {
@@ -59,7 +61,7 @@ class Encoder<T> implements org.bson.codecs.Encoder<T> {
         }
     }
 
-    protected <S> void encodeProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
+    private <S> void encodeProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
                                       final PropertyModel<S> propertyModel) {
         if (propertyModel != null && propertyModel.isReadable()) {
             S propertyValue = propertyModel.getPropertyAccessor().get(instance);

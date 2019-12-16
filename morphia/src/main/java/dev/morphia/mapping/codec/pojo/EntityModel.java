@@ -242,9 +242,13 @@ public class EntityModel<T> extends ClassModel<T> {
         return lifecycleMethods;
     }
 
+    /**
+     * @param name the property name
+     * @return the named PropertyModel or null if it does not exist
+     */
     public PropertyModel<?> getPropertyModelByName(final String name) {
         for (final PropertyModel<?> propertyModel : getPropertyModels()) {
-            if(propertyModel.getName().equals(name)) {
+            if (propertyModel.getName().equals(name)) {
                 return propertyModel;
             }
         }

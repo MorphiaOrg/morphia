@@ -2,16 +2,10 @@ package dev.morphia.query;
 
 
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.pojo.PropertyModel;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -40,6 +34,35 @@ class FieldCriteria extends AbstractCriteria {
         this.operator = op;
         this.value = ((Document) new OperationTarget(pathTarget, value).encode(mapper)).get(this.field);
         this.not = not;
+    }
+
+    /**
+     * @return the field
+     */
+    public String getField() {
+        return field;
+    }
+
+    /**
+     * @return the operator used against this field
+     * @see FilterOperator
+     */
+    public FilterOperator getOperator() {
+        return operator;
+    }
+
+    /**
+     * @return the value used in the Criteria
+     */
+    public Object getValue() {
+        return value;
+    }
+
+    /**
+     * @return true if 'not' has been applied against this Criteria
+     */
+    public boolean isNot() {
+        return not;
     }
 
     @Override
@@ -77,41 +100,12 @@ class FieldCriteria extends AbstractCriteria {
         return field;
     }
 
-    /**
-     * @return the field
-     */
-    public String getField() {
-        return field;
-    }
-
-    /**
-     * @return the operator used against this field
-     * @see FilterOperator
-     */
-    public FilterOperator getOperator() {
-        return operator;
-    }
-
-    /**
-     * @return the value used in the Criteria
-     */
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * @return true if 'not' has been applied against this Criteria
-     */
-    public boolean isNot() {
-        return not;
+    @Override
+    public String toString() {
+        return field + " " + operator.val() + " " + value;
     }
 
     protected Mapper getMapper() {
         return mapper;
-    }
-
-    @Override
-    public String toString() {
-        return field + " " + operator.val() + " " + value;
     }
 }

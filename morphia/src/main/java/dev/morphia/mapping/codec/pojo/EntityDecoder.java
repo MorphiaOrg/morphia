@@ -19,10 +19,10 @@ import org.bson.codecs.pojo.PropertyModel;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 
-class Decoder<T> implements org.bson.codecs.Decoder<T> {
+class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
     private final MorphiaCodec<T> morphiaCodec;
 
-    public Decoder(final MorphiaCodec<T> morphiaCodec) {
+    EntityDecoder(final MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
     }
 
@@ -40,8 +40,8 @@ class Decoder<T> implements org.bson.codecs.Decoder<T> {
                 decodeProperties(reader, decoderContext, instanceCreator);
                 return instanceCreator.getInstance();
             } else {
-                entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(), morphiaCodec.getRegistry(),
-                    morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
+                entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
+                    morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
                              .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
             }
         }
