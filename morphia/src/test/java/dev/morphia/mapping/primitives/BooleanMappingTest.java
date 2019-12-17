@@ -2,7 +2,6 @@ package dev.morphia.mapping.primitives;
 
 
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +11,8 @@ import dev.morphia.annotations.Id;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.lang.String.format;
 
 
 public class BooleanMappingTest extends TestBase {
@@ -32,7 +33,9 @@ public class BooleanMappingTest extends TestBase {
                                                  {Boolean.FALSE, Boolean.FALSE, Boolean.TRUE}};
         getDs().save(ent);
 
-        final Booleans loaded = getDs().get(ent);
+        final Booleans loaded = getDs().find(Booleans.class)
+                                       .filter("_id", ent.id)
+                                       .first();
 
         Assert.assertNotNull(loaded.id);
 
@@ -45,21 +48,21 @@ public class BooleanMappingTest extends TestBase {
 
         compare("primitiveArray", ent.primitiveArray, loaded.primitiveArray);
         Assert.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
-        compare("nestedPrimitiveArray", ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
+        compare(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
     private void compare(final String property, final boolean[] expected, final boolean[] received) {
-        Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
+        Assert.assertEquals(format("%s lengths should match", property), expected.length, received.length);
         for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals(String.format("%s[%s] should match", property, i), expected[i], received[i]);
+            Assert.assertEquals(format("%s[%s] should match", property, i), expected[i], received[i]);
         }
     }
 
-    private void compare(final String property, final boolean[][] expected, final boolean[][] received) {
-        Assert.assertEquals(String.format("%s lengths should match", property), expected.length, received.length);
+    private void compare(final boolean[][] expected, final boolean[][] received) {
+        Assert.assertEquals("nestedPrimitiveArray lengths should match", expected.length, received.length);
         for (int i = 0; i < expected.length; i++) {
-            compare(property + "[" + i + "]", expected[i], received[i]);
+            compare("nestedPrimitiveArray" + "[" + i + "]", expected[i], received[i]);
         }
     }
 

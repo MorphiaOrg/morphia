@@ -15,15 +15,14 @@
 package dev.morphia;
 
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.TestInheritanceMappings.MapLike;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.experimental.Constructor;
 import dev.morphia.annotations.experimental.Name;
-import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -36,13 +35,10 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.testmodel.Address;
-import dev.morphia.testmodel.Article;
-import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.PhoneNumber;
 import dev.morphia.testmodel.RecursiveChild;
 import dev.morphia.testmodel.RecursiveParent;
-import dev.morphia.testmodel.Translation;
 import dev.morphia.testmodel.TravelAgency;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -74,6 +70,83 @@ import static org.junit.Assert.fail;
 
 @SuppressWarnings({"unchecked", "unchecked"})
 public class TestMapping extends TestBase {
+
+    @Test(expected = ConstraintViolationException.class)
+    public void badConstructorMapping() {
+        getDs().getMapper().map(BadConstructorBased.class);
+    }
+
+    @Test
+    public void collectionNaming() {
+        MapperOptions options = MapperOptions.builder()
+                                             .collectionNaming(NamingStrategy.lowerCase())
+                                             .build();
+        Datastore datastore = Morphia.createDatastore(TEST_DB_NAME, options);
+        List<MappedClass> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        Assert.assertEquals("containsmapwithembeddedinterface", map.get(0).getCollectionName());
+        Assert.assertEquals("cil", map.get(1).getCollectionName());
+
+        options = MapperOptions.builder()
+                               .collectionNaming(NamingStrategy.kebabCase())
+                               .build();
+        datastore = Morphia.createDatastore(TEST_DB_NAME, options);
+        map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        Assert.assertEquals("contains-map-with-embedded-interface", map.get(0).getCollectionName());
+        Assert.assertEquals("cil", map.get(1).getCollectionName());
+    }
+
+    @Test
+    public void constructors() {
+        getDs().getMapper().map(ConstructorBased.class);
+
+        ContainsFinalField value = new ContainsFinalField();
+        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", MorphiaReference.wrap(value));
+
+        getDs().save(List.of(value, instance));
+
+        ConstructorBased first = getDs().find(ConstructorBased.class).first();
+        assertNotNull(first);
+        assertEquals(instance, first);
+    }
+
+    @Test
+    public void fieldNaming() {
+        MapperOptions options = MapperOptions.builder()
+                                             .fieldNaming(NamingStrategy.snakeCase())
+                                             .build();
+        Datastore datastore1 = Morphia.createDatastore(TEST_DB_NAME, options);
+        List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        List<MappedField> fields = map.get(0).getFields();
+        validateField(fields, "_id", "id");
+        validateField(fields, "embedded_values","embeddedValues");
+
+        fields = map.get(1).getFields();
+        validateField(fields, "_id", "id");
+        validateField(fields, "int_list","intList");
+
+        options = MapperOptions.builder()
+                               .fieldNaming(NamingStrategy.kebabCase())
+                               .build();
+        final Datastore datastore2 = Morphia.createDatastore(TEST_DB_NAME, options);
+        map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+        fields = map.get(0).getFields();
+        validateField(fields, "_id", "id");
+        validateField(fields, "embedded-values","embeddedValues");
+
+        fields = map.get(1).getFields();
+        validateField(fields, "_id", "id");
+        validateField(fields, "int-list","intList");
+
+    }
+
+    private void validateField(final List<MappedField> fields, final String mapped, final String java) {
+        Assert.assertNotNull(mapped, fields.stream().filter(f -> f.getMappedFieldName().equals(mapped)
+                                                           && f.getJavaFieldName().equals(java)));
+    }
 
     @Test
     public void testAlsoLoad() {
@@ -164,7 +237,7 @@ public class TestMapping extends TestBase {
         getDs().save(borg);
 
         Query<Hotel> query = getDs().find(Hotel.class)
-                                 .filter("_id", borg.getId());
+                                    .filter("_id", borg.getId());
         Hotel borgLoaded = query.first();
 
         assertEquals(borg.getName(), borgLoaded.getName());
@@ -409,7 +482,9 @@ public class TestMapping extends TestBase {
     public void testIntLists() {
         ContainsIntegerList cil = new ContainsIntegerList();
         getDs().save(cil);
-        ContainsIntegerList cilLoaded = getDs().get(cil);
+        ContainsIntegerList cilLoaded = getDs().find(ContainsIntegerList.class)
+                                               .filter("_id", cil.id)
+                                               .first();
         assertNotNull(cilLoaded);
         assertNotNull(cilLoaded.intList);
         assertEquals(cilLoaded.intList.size(), cil.intList.size());
@@ -418,7 +493,9 @@ public class TestMapping extends TestBase {
         cil = new ContainsIntegerList();
         cil.intList = null;
         getDs().save(cil);
-        cilLoaded = getDs().get(cil);
+        cilLoaded = getDs().find(ContainsIntegerList.class)
+                           .filter("_id", cil.id)
+                           .first();
         assertNotNull(cilLoaded);
         assertNotNull(cilLoaded.intList);
         assertEquals(0, cilLoaded.intList.size());
@@ -426,7 +503,9 @@ public class TestMapping extends TestBase {
         cil = new ContainsIntegerList();
         cil.intList.add(1);
         getDs().save(cil);
-        cilLoaded = getDs().get(cil);
+        cilLoaded = getDs().find(ContainsIntegerList.class)
+                           .filter("_id", cil.id)
+                           .first();
         assertNotNull(cilLoaded);
         assertNotNull(cilLoaded.intList);
         assertEquals(1, cilLoaded.intList.size());
@@ -447,7 +526,9 @@ public class TestMapping extends TestBase {
         array.strings = new String[]{"a", "B", "c"};
         array.longs = new Long[]{4L, 5L, 4L};
         getDs().save(array);
-        loaded = getDs().getByKey(ContainsLongAndStringArray.class, getMapper().getKey(array));
+        loaded = getDs().find(ContainsLongAndStringArray.class)
+                        .filter("_id", array.id)
+                        .first();
         assertArrayEquals(loaded.longs, array.longs);
         assertArrayEquals(loaded.strings, array.strings);
 
@@ -571,11 +652,11 @@ public class TestMapping extends TestBase {
         getDs().save(childLoaded);
 
         final RecursiveParent finalParentLoaded = getDs().find(RecursiveParent.class)
-                                                    .filter("_id", parent.getId())
-                                                    .first();
+                                                         .filter("_id", parent.getId())
+                                                         .first();
         final RecursiveChild finalChildLoaded = getDs().find(RecursiveChild.class)
-                                                  .filter("_id", child.getId())
-                                                  .first();
+                                                       .filter("_id", child.getId())
+                                                       .first();
 
 
         assertNotNull(finalParentLoaded.getChild());
@@ -619,78 +700,13 @@ public class TestMapping extends TestBase {
         assertEquals(before, loaded.id);
     }
 
-    @Test
-    public void collectionNaming() {
-        MapperOptions options = MapperOptions.builder()
-                                           .collectionNaming(NamingStrategy.lowerCase())
-                                           .build();
-        Datastore datastore = Morphia.createDatastore(TEST_DB_NAME, options);
-        List<MappedClass> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        Assert.assertEquals("containsmapwithembeddedinterface", map.get(0).getCollectionName());
-        Assert.assertEquals("cil", map.get(1).getCollectionName());
-
-        options = MapperOptions.builder()
-                               .collectionNaming(NamingStrategy.kebabCase())
-                               .build();
-        datastore = Morphia.createDatastore(TEST_DB_NAME, options);
-        map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        Assert.assertEquals("contains-map-with-embedded-interface", map.get(0).getCollectionName());
-        Assert.assertEquals("cil", map.get(1).getCollectionName());
+    public enum Enum1 {
+        A,
+        B
     }
 
-    @Test
-    public void fieldNaming() {
-        MapperOptions options = MapperOptions.builder()
-                                           .fieldNaming(NamingStrategy.snakeCase())
-                                           .build();
-        Datastore datastore1 = Morphia.createDatastore(TEST_DB_NAME, options);
-        List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        List<MappedField> fields = map.get(0).getFields();
-        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
-        Assert.assertEquals("embedded_values", fields.get(1).getMappedFieldName());
-        Assert.assertEquals("embeddedValues", fields.get(1).getJavaFieldName());
-
-        fields = map.get(1).getFields();
-        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
-        Assert.assertEquals("int_list", fields.get(1).getMappedFieldName());
-        Assert.assertEquals("intList", fields.get(1).getJavaFieldName());
-
-        options = MapperOptions.builder()
-                               .fieldNaming(NamingStrategy.kebabCase())
-                               .build();
-        final Datastore datastore2 = Morphia.createDatastore(TEST_DB_NAME, options);
-        map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        fields = map.get(0).getFields();
-        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
-        Assert.assertEquals("embedded-values", fields.get(1).getMappedFieldName());
-
-        fields = map.get(1).getFields();
-        Assert.assertEquals("_id", fields.get(0).getMappedFieldName());
-        Assert.assertEquals("int-list", fields.get(1).getMappedFieldName());
-
-    }
-
-    @Test
-    public void constructors() {
-        getDs().getMapper().map(ConstructorBased.class);
-
-        ContainsFinalField value = new ContainsFinalField();
-        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", MorphiaReference.wrap(value));
-
-        getDs().save(List.of(value, instance));
-
-        ConstructorBased first = getDs().find(ConstructorBased.class).first();
-        assertNotNull(first);
-        assertEquals(instance, first);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void badConstructorMapping() {
-        getDs().getMapper().map(BadConstructorBased.class);
+    @Embedded
+    private interface Foo {
     }
 
     @Entity
@@ -701,9 +717,23 @@ public class TestMapping extends TestBase {
 
         @Constructor
         public BadConstructorBased(@Name("_id") final ObjectId id,
-                                @Name("named") final String name) {
+                                   @Name("named") final String name) {
             this.id = id;
             this.name = name;
+        }
+    }
+
+    @Entity
+    public abstract static class BaseEntity {
+        @Id
+        private ObjectId id;
+
+        public String getId() {
+            return id.toString();
+        }
+
+        public void setId(final String id) {
+            this.id = new ObjectId(id);
         }
     }
 
@@ -721,6 +751,14 @@ public class TestMapping extends TestBase {
             this.id = id;
             this.name = name;
             this.reference = reference;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            result = 31 * result + (reference != null ? reference.hashCode() : 0);
+            return result;
         }
 
         @Override
@@ -742,71 +780,32 @@ public class TestMapping extends TestBase {
             }
             return reference != null ? reference.equals(that.reference) : that.reference == null;
         }
-
-        @Override
-        public int hashCode() {
-            int result = id != null ? id.hashCode() : 0;
-            result = 31 * result + (name != null ? name.hashCode() : 0);
-            result = 31 * result + (reference != null ? reference.hashCode() : 0);
-            return result;
-        }
-    }
-
-    public enum Enum1 {
-        A,
-        B
-    }
-
-    @Embedded
-    private interface Foo {
     }
 
     @Entity
-    public abstract static class BaseEntity {
-        @Id
-        private ObjectId id;
-
-        public String getId() {
-            return id.toString();
-        }
-
-        public void setId(final String id) {
-            this.id = new ObjectId(id);
-        }
-    }
-
-    @Entity
-    public static class MissingId {
-        private String id;
-    }
-
-    @Entity
-    private static class MissingIdStill {
-        private String id;
-    }
-
-    @Entity("no-id")
-    private static class MissingIdRenamed {
-        private String id;
-    }
-
-    @Embedded
-    private static class IdOnEmbedded {
+    private static class ContainsByteArray {
+        private final byte[] bytes = "Scott".getBytes();
         @Id
         private ObjectId id;
     }
 
-    @Embedded(useDiscriminator = false)
-    private static class RenamedEmbedded {
-        private String name;
+    @Entity
+    private static final class ContainsCollection {
+        private final Collection<String> coll = new ArrayList<>();
+        @Id
+        private ObjectId id;
+
+        private ContainsCollection() {
+            coll.add("hi");
+            coll.add("Scott");
+        }
     }
 
     @Entity
-    private static class StrangelyNamedIdField {
-        //CHECKSTYLE:OFF
+    private static class ContainsDocument {
         @Id
-        private ObjectId id_ = new ObjectId();
-        //CHECKSTYLE:ON
+        private ObjectId id;
+        private Document document = new Document("field", "val");
     }
 
     @Entity
@@ -814,6 +813,130 @@ public class TestMapping extends TestBase {
         @Id
         private ObjectId id = new ObjectId();
         private RenamedEmbedded[] res;
+    }
+
+    @Entity
+    private static class ContainsEmbeddedEntity {
+        @Id
+        private final ObjectId id = new ObjectId();
+        private ContainsIntegerList cil = new ContainsIntegerList();
+    }
+
+    @Entity
+    private static class ContainsEnum1KeyMap {
+        private final Map<Enum1, String> values = new HashMap<>();
+        private final Map<Enum1, String> embeddedValues = new HashMap<>();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class ContainsFinalField {
+        private final String name;
+        @Id
+        private ObjectId id;
+
+        protected ContainsFinalField() {
+            name = "foo";
+        }
+
+        ContainsFinalField(final String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity
+    private static class ContainsIntKeyMap {
+        private final Map<Integer, String> values = new HashMap<>();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class ContainsIntKeySetStringMap {
+        private final Map<Integer, Set<String>> values = new HashMap<>();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity(value = "cil", useDiscriminator = false)
+    private static class ContainsIntegerList {
+        @Id
+        private ObjectId id;
+        private List<Integer> intList = new ArrayList<>();
+    }
+
+    @Entity(value = "cil", useDiscriminator = false)
+    private static class ContainsIntegerListNew {
+        @AlsoLoad("intList")
+        private final List<Integer> integers = new ArrayList<>();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class ContainsLongAndStringArray {
+        @Id
+        private ObjectId id;
+        private Long[] longs = {0L, 1L, 2L};
+        private String[] strings = {"Scott", "Rocks"};
+    }
+
+    @Entity
+    private static class ContainsMapLike {
+        private final MapLike m = new MapLike();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class ContainsMapWithEmbeddedInterface {
+        private final Map<String, Foo> embeddedValues = new HashMap<>();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class ContainsObjectIdKeyMap {
+        private final Map<ObjectId, String> values = new HashMap<>();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class ContainsPrimitiveMap {
+        private final Map<String, Long> embeddedValues = new HashMap<>();
+        private final Map<String, Long> values = new HashMap<>();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity(useDiscriminator = false)
+    private static class ContainsUUID {
+        private final UUID uuid = UUID.randomUUID();
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity(useDiscriminator = false)
+    private static class ContainsUuidId {
+        @Id
+        private final UUID id = UUID.randomUUID();
+    }
+
+    @Entity
+    private static class ContainsXKeyMap<T> {
+        private final Map<T, String> values = new HashMap<>();
+        @Id
+        private ObjectId id;
+    }
+
+    private static class Foo1 implements Foo {
+        private String s;
+    }
+
+    private static class Foo2 implements Foo {
+        private int i;
     }
 
     @Entity
@@ -831,165 +954,49 @@ public class TestMapping extends TestBase {
         }
     }
 
-    @Entity
-    private static class ContainsFinalField {
+    @Embedded
+    private static class IdOnEmbedded {
         @Id
         private ObjectId id;
-        private final String name;
-
-        protected ContainsFinalField() {
-            name = "foo";
-        }
-
-        ContainsFinalField(final String name) {
-            this.name = name;
-        }
-    }
-
-    @Entity
-    private static class ContainsDocument {
-        @Id
-        private ObjectId id;
-        private Document document = new Document("field", "val");
-    }
-
-    @Entity
-    private static class ContainsByteArray {
-        @Id
-        private ObjectId id;
-        private final byte[] bytes = "Scott".getBytes();
-    }
-
-    @Entity
-    private static class ContainsLongAndStringArray {
-        @Id
-        private ObjectId id;
-        private Long[] longs = {0L, 1L, 2L};
-        private String[] strings = {"Scott", "Rocks"};
-    }
-
-    @Entity
-    private static final class ContainsCollection {
-        @Id
-        private ObjectId id;
-        private final Collection<String> coll = new ArrayList<>();
-
-        private ContainsCollection() {
-            coll.add("hi");
-            coll.add("Scott");
-        }
-    }
-
-    @Entity
-    private static class ContainsPrimitiveMap {
-        @Id
-        private ObjectId id;
-        private final Map<String, Long> embeddedValues = new HashMap<>();
-        private final Map<String, Long> values = new HashMap<>();
-    }
-
-    private static class Foo1 implements Foo {
-        private String s;
-    }
-
-    private static class Foo2 implements Foo {
-        private int i;
-    }
-
-    @Entity
-    private static class ContainsMapWithEmbeddedInterface {
-        @Id
-        private ObjectId id;
-        private final Map<String, Foo> embeddedValues = new HashMap<>();
-    }
-
-    @Entity
-    private static class ContainsEmbeddedEntity {
-        @Id
-        private final ObjectId id = new ObjectId();
-        private ContainsIntegerList cil = new ContainsIntegerList();
-    }
-
-    @Entity(value = "cil", useDiscriminator = false)
-    private static class ContainsIntegerList {
-        @Id
-        private ObjectId id;
-        private List<Integer> intList = new ArrayList<>();
-    }
-
-    @Entity(value = "cil", useDiscriminator = false)
-    private static class ContainsIntegerListNew {
-        @Id
-        private ObjectId id;
-        @AlsoLoad("intList")
-        private final List<Integer> integers = new ArrayList<>();
-    }
-
-    @Entity(useDiscriminator = false)
-    private static class ContainsUUID {
-        @Id
-        private ObjectId id;
-        private final UUID uuid = UUID.randomUUID();
-    }
-
-    @Entity(useDiscriminator = false)
-    private static class ContainsUuidId {
-        @Id
-        private final UUID id = UUID.randomUUID();
-    }
-
-    @Entity
-    private static class ContainsEnum1KeyMap {
-        @Id
-        private ObjectId id;
-        private final Map<Enum1, String> values = new HashMap<>();
-        private final Map<Enum1, String> embeddedValues = new HashMap<>();
-    }
-
-    @Entity
-    private static class ContainsIntKeyMap {
-        @Id
-        private ObjectId id;
-        private final Map<Integer, String> values = new HashMap<>();
-    }
-
-    @Entity
-    private static class ContainsIntKeySetStringMap {
-        @Id
-        private ObjectId id;
-        private final Map<Integer, Set<String>> values = new HashMap<>();
-    }
-
-    @Entity
-    private static class ContainsObjectIdKeyMap {
-        @Id
-        private ObjectId id;
-        private final Map<ObjectId, String> values = new HashMap<>();
-    }
-
-    @Entity
-    private static class ContainsXKeyMap<T> {
-        @Id
-        private ObjectId id;
-        private final Map<T, String> values = new HashMap<>();
-    }
-
-    @Entity
-    private static class ContainsMapLike {
-        @Id
-        private ObjectId id;
-        private final MapLike m = new MapLike();
-    }
-
-    @Entity
-    private static class UsesBaseEntity extends BaseEntity {
-
     }
 
     @Entity
     private static class MapSubclass extends LinkedHashMap<String, Object> {
         @Id
         private ObjectId id;
+    }
+
+    @Entity
+    public static class MissingId {
+        private String id;
+    }
+
+    @Entity("no-id")
+    private static class MissingIdRenamed {
+        private String id;
+    }
+
+    @Entity
+    private static class MissingIdStill {
+        private String id;
+    }
+
+    @Embedded(useDiscriminator = false)
+    private static class RenamedEmbedded {
+        private String name;
+    }
+
+    @Entity
+    private static class StrangelyNamedIdField {
+        //CHECKSTYLE:OFF
+        @Id
+        private ObjectId id_ = new ObjectId();
+        //CHECKSTYLE:ON
+    }
+
+    @Entity
+    private static class UsesBaseEntity extends BaseEntity {
+
     }
 
     @Entity

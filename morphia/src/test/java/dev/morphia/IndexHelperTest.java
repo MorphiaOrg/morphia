@@ -105,7 +105,6 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void createIndex() {
-        checkMinServerVersion(3.4);
         String collectionName = getDs().getCollection(IndexedClass.class).getNamespace().getCollectionName();
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         Mapper mapper = getMapper();
@@ -160,7 +159,6 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void index() {
-        checkMinServerVersion(3.4);
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 

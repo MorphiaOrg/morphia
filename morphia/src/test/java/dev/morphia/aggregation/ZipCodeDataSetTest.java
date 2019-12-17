@@ -74,7 +74,7 @@ public class ZipCodeDataSetTest extends TestBase {
                 }
             }
             MongoCollection<Document> zips = getDatabase().getCollection("zips");
-            if (zips.count() == 0) {
+            if (zips.countDocuments() == 0) {
                 new ProcessExecutor().command(MONGO_IMPORT,
                     "--db", getDatabase().getName(),
                     "--collection", "zipcodes",
@@ -174,7 +174,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
                 if (population.getState().equals(state)) {
                     found = true;
-                    Assert.assertEquals(new Long(value), population.getPopulation());
+                    Assert.assertEquals(Long.valueOf(value), population.getPopulation());
                 }
                 LOG.debug("population = " + population);
             }

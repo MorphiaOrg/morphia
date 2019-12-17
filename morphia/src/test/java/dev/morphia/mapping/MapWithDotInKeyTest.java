@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -31,7 +32,10 @@ public class MapWithDotInKeyTest extends TestBase {
         }
 
         Assert.assertFalse("Should have got rejection for dot in field names", true);
-        e = getDs().get(e);
+        final Datastore datastore = getDs();
+        e = datastore.find(E.class)
+                     .filter("_id", e.id)
+                     .first();
         Assert.assertEquals("a", e.mymap.get("a.b"));
         Assert.assertEquals("b", e.mymap.get("c.e.g"));
     }

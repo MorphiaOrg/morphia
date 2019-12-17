@@ -28,7 +28,9 @@ public class TestLazySingleReference extends ProxyTestBase {
         final ObjectId id = getDs().save(reference).getId();
         getDs().save(root);
 
-        RootEntity loaded = getDs().get(root);
+        RootEntity loaded = getDs().find(RootEntity.class)
+                                   .filter("_id", root.getId())
+                                   .first();
 
         final ReferencedEntity p = loaded.r;
 
@@ -54,7 +56,9 @@ public class TestLazySingleReference extends ProxyTestBase {
         reference.setFoo("bar");
         getDs().save(root);
 
-        root = getDs().get(root);
+        root = getDs().find(RootEntity.class)
+                      .filter("_id", root.getId())
+                      .first();
 
         final ReferencedEntity p = root.r;
 
@@ -90,7 +94,9 @@ public class TestLazySingleReference extends ProxyTestBase {
         getDs().save(reference);
         getDs().save(root);
 
-        root = getDs().get(root);
+        root = getDs().find(RootEntity.class)
+                      .filter("_id", root.getId())
+                      .first();
         Assert.assertSame(root.r, root.secondReference);
     }
 
@@ -110,7 +116,9 @@ public class TestLazySingleReference extends ProxyTestBase {
         getDs().save(second);
         getDs().save(root);
 
-        root = getDs().get(root);
+        root = getDs().find(RootEntity.class)
+                      .filter("_id", root.getId())
+                      .first();
 
         ReferencedEntity referenced = root.r;
 
@@ -124,7 +132,9 @@ public class TestLazySingleReference extends ProxyTestBase {
         root.secondReference.getFoo();
         assertFetched(root.secondReference);
 
-        root = getDs().get(root);
+        root = getDs().find(RootEntity.class)
+                      .filter("_id", root.getId())
+                      .first();
         assertNotFetched(root.r);
         assertNotFetched(root.secondReference);
     }

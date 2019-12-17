@@ -2,6 +2,7 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.BasicDBList;
+import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -36,7 +37,9 @@ public class CollectionOfValuesTest extends TestBase {
         }
 
         getDs().save(city);
-        City loaded = getDs().get(city);
+        City loaded = getDs().find(City.class)
+                             .filter("_id", city.id)
+                             .first();
         Assert.assertEquals(city.name, loaded.name);
         compare(city.array, loaded.array);
         for (int i = 0; i < city.cells.length; i++) {
@@ -77,7 +80,10 @@ public class CollectionOfValuesTest extends TestBase {
         entity.integers.add(Collections.singletonList(3));
         getDs().save(entity);
 
-        final ContainsListOfList loaded = getDs().get(entity);
+        final Datastore datastore = getDs();
+        final ContainsListOfList loaded = datastore.find(ContainsListOfList.class)
+                                                   .filter("_id", entity.id)
+                                                   .first();
 
         Assert.assertNotNull(loaded.strings);
         Assert.assertEquals(entity.strings, loaded.strings);

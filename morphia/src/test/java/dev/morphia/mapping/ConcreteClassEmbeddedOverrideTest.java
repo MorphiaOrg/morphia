@@ -1,16 +1,15 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.Datastore;
+import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Id;
-
-import java.util.List;
 
 
 public class ConcreteClassEmbeddedOverrideTest extends TestBase {
@@ -24,22 +23,16 @@ public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
         getDs().save(e1);
 
-        final E e2 = getDs().get(e1);
+        final Datastore datastore = getDs();
+        final E e2 = datastore.find(E.class)
+                              .filter("_id", e1.id)
+                              .first();
 
         Assert.assertEquals("A", e2.a1.s);
         Assert.assertEquals("B", e2.a2.s);
         Assert.assertEquals(B.class, e2.a2.getClass());
         Assert.assertEquals(A.class, e2.a1.getClass());
 
-    }
-
-    @Entity
-    public static class E {
-        @Id
-        private ObjectId id;
-        private final A a1 = new A();
-        @Property(concreteClass = B.class)
-        private final A a2 = new B();
     }
 
     @Embedded
@@ -59,5 +52,14 @@ public class ConcreteClassEmbeddedOverrideTest extends TestBase {
         public B() {
             setS("B");
         }
+    }
+
+    @Entity
+    public static class E {
+        private final A a1 = new A();
+        @Property(concreteClass = B.class)
+        private final A a2 = new B();
+        @Id
+        private ObjectId id;
     }
 }

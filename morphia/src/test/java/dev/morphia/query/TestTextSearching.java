@@ -21,13 +21,6 @@ import static java.util.Arrays.asList;
 
 @Ignore("text searches need work")
 public class TestTextSearching extends TestBase {
-    @Override
-    @Before
-    public void setUp() {
-        checkMinServerVersion(2.6);
-        super.setUp();
-    }
-
     @Test
     public void testTextSearch() {
         getMapper().map(Greeting.class);

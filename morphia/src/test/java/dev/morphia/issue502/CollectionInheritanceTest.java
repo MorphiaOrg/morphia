@@ -44,7 +44,7 @@ public class CollectionInheritanceTest extends TestBase {
         // Test saving
         getDs().save(newBook());
 
-        assertEquals(1, getDs().getCollection(Book.class).count());
+        assertEquals(1, getDs().getCollection(Book.class).countDocuments());
     }
 
     @Embedded

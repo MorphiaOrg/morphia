@@ -49,11 +49,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestDocumentValidation extends TestBase {
-    @Before
-    public void versionCheck() {
-        checkMinServerVersion(3.2);
-    }
-
     @Test
     public void createValidation() {
         getMapper().map(DocumentValidation.class);
@@ -219,7 +214,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void testBypassDocumentValidation() {
-        checkMinServerVersion(3.2);
         getMapper().map(User.class);
         getDs().enableDocumentValidation();
 

@@ -36,7 +36,6 @@ import dev.morphia.testmodel.Translation;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
@@ -101,36 +100,33 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testAdd() {
-        checkMinServerVersion(2.6);
-
         ContainsIntArray cIntArray = new ContainsIntArray();
-        Datastore ds = getDs();
-        ds.save(cIntArray);
+        getDs().save(cIntArray);
 
-        assertThat(ds.get(cIntArray).values, is((new ContainsIntArray()).values));
+        assertThat(get(cIntArray), is((new ContainsIntArray()).values));
 
-        Query<ContainsIntArray> query = ds.createQuery(ContainsIntArray.class);
+        Query<ContainsIntArray> query = getDs().createQuery(ContainsIntArray.class);
         //add 4 to array
         assertUpdated(query.update()
                            .addToSet("values", 4)
                            .execute(),
             1);
 
-        assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4}));
 
         //add unique (4) -- noop
         assertEquals(1, query.update().addToSet("values", 4).execute().getMatchedCount());
-        assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4}));
 
         //add dup 4
         assertUpdated(query.update().push("values", 4).execute(), 1);
-        assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 4}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4}));
 
         //cleanup for next tests
-        ds.delete(ds.find(ContainsIntArray.class));
-        cIntArray = ds.find(ContainsIntArray.class)
-                      .filter("_id", ds.save(new ContainsIntArray()).id)
-                      .first();
+        getDs().find(ContainsIntArray.class).delete();
+        cIntArray = getDs().find(ContainsIntArray.class)
+                           .filter("_id", getDs().save(new ContainsIntArray()).id)
+                           .first();
 
         //add [4,5]
         final List<Integer> newValues = new ArrayList<>();
@@ -138,15 +134,22 @@ public class TestUpdateOps extends TestBase {
         newValues.add(5);
 
         assertUpdated(query.update().addToSet("values", newValues).execute(), 1);
-        assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add them again... noop
         assertEquals(1, query.update().addToSet("values", newValues).execute().getMatchedCount());
-        assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add dups [4,5]
         assertUpdated(query.update().push("values", newValues).execute(), 1);
-        assertThat(ds.get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 5, 4, 5}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 5, 4, 5}));
+    }
+
+    private Integer[] get(final ContainsIntArray array) {
+        return getDs().find(ContainsIntArray.class)
+                      .filter("_id", array.id)
+                      .first()
+            .values;
     }
 
     @Test
@@ -269,12 +272,24 @@ public class TestUpdateOps extends TestBase {
 
     private void doUpdates(final ContainsIntArray updated, final ContainsIntArray control, final Update update, final Integer[] target) {
         assertUpdated(update.execute(new UpdateOptions()), 1);
-        assertThat(getDs().get(updated).values, is(target));
-        assertThat(getDs().get(control).values, is(new Integer[]{1, 2, 3}));
+        assertThat((getDs().find(ContainsIntArray.class)
+                           .filter("_id", updated.id)
+                           .first()).values,
+            is(target));
+        assertThat((getDs().find(ContainsIntArray.class)
+                           .filter("_id", control.id)
+                           .first()).values,
+            is(new Integer[]{1, 2, 3}));
 
         assertEquals(1, update.execute(new UpdateOptions()).getMatchedCount());
-        assertThat(getDs().get(updated).values, is(target));
-        assertThat(getDs().get(control).values, is(new Integer[]{1, 2, 3}));
+        assertThat((getDs().find(ContainsIntArray.class)
+                           .filter("_id", updated.id)
+                           .first()).values,
+            is(target));
+        assertThat((getDs().find(ContainsIntArray.class)
+                           .filter("_id", control.id)
+                           .first()).values,
+            is(new Integer[]{1, 2, 3}));
     }
 
     @Test
@@ -413,7 +428,6 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testMaxKeepsCurrentDocumentValueWhenThisIsLargerThanSuppliedValue() {
-        checkMinServerVersion(2.6);
         final ObjectId id = new ObjectId();
         final double originalValue = 2D;
 
@@ -433,39 +447,38 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testPush() {
-        checkMinServerVersion(2.6);
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
-        assertThat(getDs().get(cIntArray).values, is((new ContainsIntArray()).values));
+        assertThat(get(cIntArray), is((new ContainsIntArray()).values));
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
         query.update()
              .push("values", 4)
              .execute();
 
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4}));
 
         query.update()
              .push("values", 4)
              .execute();
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 4}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4}));
 
         query.update()
              .push("values", asList(5, 6))
              .execute();
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 3, 4, 4, 5, 6}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4, 5, 6}));
 
         query.update()
              .push("values", 12, options().position(2))
              .execute();
 
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 12, 3, 4, 4, 5, 6}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 12, 3, 4, 4, 5, 6}));
 
 
         query.update()
              .push("values", asList(99, 98, 97), options().position(4))
              .execute();
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{1, 2, 12, 3, 99, 98, 97, 4, 4, 5, 6}));
+        assertThat(get(cIntArray), is(new Integer[]{1, 2, 12, 3, 99, 98, 97, 4, 4, 5, 6}));
     }
 
     @Test
@@ -571,21 +584,20 @@ public class TestUpdateOps extends TestBase {
     public void testRemoveFirst() {
         final ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
-        ContainsIntArray cIALoaded = getDs().get(cIntArray);
-        assertThat(cIALoaded.values.length, is(3));
-        assertThat(cIALoaded.values, is((new ContainsIntArray()).values));
+        Integer[] values = get(cIntArray);
+        assertThat(values.length, is(3));
+        assertThat(values, is((new ContainsIntArray()).values));
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
         assertUpdated(query.update().removeFirst("values").execute(), 1);
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{2, 3}));
+        assertThat(get(cIntArray), is(new Integer[]{2, 3}));
 
         assertUpdated(query.update().removeLast("values").execute(), 1);
-        assertThat(getDs().get(cIntArray).values, is(new Integer[]{2}));
+        assertThat(get(cIntArray), is(new Integer[]{2}));
     }
 
     @Test
     public void testSetOnInsertWhenInserting() {
-        checkMinServerVersion(2.4);
         ObjectId id = new ObjectId();
 
         Query<Circle> query = getDs().find(Circle.class).field("id").equal(id);
@@ -601,7 +613,6 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testSetOnInsertWhenUpdating() {
-        checkMinServerVersion(2.4);
         ObjectId id = new ObjectId();
 
         Query<Circle> query = getDs()

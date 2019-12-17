@@ -40,7 +40,6 @@ import org.junit.experimental.categories.Category;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Collation.builder;
 import static dev.morphia.query.Sort.ascending;
@@ -77,7 +75,6 @@ public class TestQuery extends TestBase {
 
     @Test
     public void genericMultiKeyValueQueries() {
-        Assume.assumeTrue(serverIsAtLeastVersion(3.6));
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
@@ -98,7 +95,6 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        Assume.assumeTrue(serverIsAtLeastVersion(3.6));
         getMapper().map(List.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
@@ -130,7 +126,9 @@ public class TestQuery extends TestBase {
 
         final ReferenceKeyValue key = getDs().save(value);
 
-        final ReferenceKeyValue byKey = getDs().getByKey(ReferenceKeyValue.class, getMapper().getKey(key));
+        final ReferenceKeyValue byKey = getDs().find(ReferenceKeyValue.class)
+                                               .filter("_id", key.id)
+                                               .first();
         assertEquals(value.id, byKey.id);
     }
 
@@ -253,8 +251,6 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCollations() {
-        checkMinServerVersion(3.4);
-
         getMapper().map(ContainsRenamedFields.class);
         getDs().save(asList(new ContainsRenamedFields("first", "last"),
             new ContainsRenamedFields("First", "Last")));
@@ -555,15 +551,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testExplainPlan() {
-        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
-        Map<String, Object> explainResult = getDs().find(Pic.class).explain();
-        assertEquals(explainResult.toString(), 4, serverIsAtMostVersion(2.7)
-                                                  ? explainResult.get("n")
-                                                  : ((Map) explainResult.get("executionStats")).get("nReturned"));
-    }
-
-    @Test
     public void testKeys() {
         PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
         PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
@@ -653,27 +640,6 @@ public class TestQuery extends TestBase {
             q.criteria("keywords.keyword").equal("ralph"));
 
         assertEquals(1, q.count());
-    }
-
-    @Test
-    public void testGetByKeysHetero() {
-        List<Object> entities = getDs().save(asList(new FacebookUser(1, "scott"), new Rectangle(1, 1)));
-        List<Key<Object>> keys = entities.stream().map(e -> getMapper().getKey(e)).collect(Collectors.toList());
-
-        entities = getDs().getByKeys(keys);
-        assertNotNull(entities);
-        assertEquals(2, entities.size());
-        int userCount = 0;
-        int rectCount = 0;
-        for (final Object o : entities) {
-            if (o instanceof Rectangle) {
-                rectCount++;
-            } else if (o instanceof FacebookUser) {
-                userCount++;
-            }
-        }
-        assertEquals(1, rectCount);
-        assertEquals(1, userCount);
     }
 
     @Test
@@ -775,8 +741,12 @@ public class TestQuery extends TestBase {
         final Keys keys = getDs().save(k1);
         assertEquals(k1.getId(), keys.getId());
 
-        final Keys k1Reloaded = getDs().get(k1);
-        final Keys k1Loaded = getDs().getByKey(Keys.class, getMapper().getKey(keys));
+        final Keys k1Reloaded = getDs().find(Keys.class)
+                                       .filter("_id", k1.getId())
+                                       .first();
+        final Keys k1Loaded = getDs().find(Keys.class)
+                                     .filter("_id", keys.getId())
+                                     .first();
         assertNotNull(k1Reloaded);
         assertNotNull(k1Loaded);
         for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
@@ -817,17 +787,17 @@ public class TestQuery extends TestBase {
         final Keys keys = getDs().save(k1);
         assertEquals(k1.getId(), keys.getId());
 
-        final Keys k1Reloaded = getDs().get(k1);
-        final Keys k1Loaded = getDs().getByKey(Keys.class, getMapper().getKey(keys));
+        final Keys k1Reloaded = getDs().find(Keys.class)
+                                       .filter("_id", k1.getId())
+                                       .first();
         assertNotNull(k1Reloaded);
-        assertNotNull(k1Loaded);
-        for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
+        for (final Key<FacebookUser> key : k1Reloaded.getUsers()) {
             assertNotNull(key.getId());
         }
 
-        assertEquals(4, k1Loaded.getUsers().size());
+        assertEquals(4, k1Reloaded.getUsers().size());
 
-        final List<FacebookUser> fbUsers = getDs().getByKeys(FacebookUser.class, k1Loaded.getUsers());
+        final List<FacebookUser> fbUsers = getDs().getByKeys(FacebookUser.class, k1Reloaded.getUsers());
         assertEquals(4, fbUsers.size());
         for (final FacebookUser fbUser : fbUsers) {
             assertNotNull(fbUser);
@@ -884,7 +854,6 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleConstraintsOnOneField() {
-        checkMinServerVersion(3.0);
         getMapper().map(ContainsPic.class);
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);

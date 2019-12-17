@@ -40,14 +40,6 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         new Position(43.40, -10.24)));
     private final MultiPolygon europeanCountries = new MultiPolygon(asList(uk, spain));
 
-    @Override
-    @Before
-    public void setUp() {
-        // Multi-polygon is server 2.6 and onwards
-        checkMinServerVersion(2.6);
-        super.setUp();
-    }
-
     @Test
     public void shouldFindAreasCompletelyWithinRequiredEuropeanCountries() {
         Area sevilla = new Area("Spain", new Polygon(asList(new Position(37.40759155713022, -5.964911067858338),

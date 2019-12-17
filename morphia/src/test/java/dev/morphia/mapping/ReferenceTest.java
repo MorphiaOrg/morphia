@@ -233,7 +233,9 @@ public class ReferenceTest extends ProxyTestBase {
 
         getDs().save(asList(ref2, ref1, a));
 
-        getDs().get(a);
+        getDs().find(ArrayOfReferences.class)
+               .filter("_id", a.getId())
+               .first();
     }
 
     @Test
@@ -250,8 +252,9 @@ public class ReferenceTest extends ProxyTestBase {
         a.lists = List.of(List.of(List.of(ref1),List.of(ref2)));
         getDs().save(asList(ref2, ref1, a));
 
-        MultiDimArrayOfReferences references = getDs().get(a);
-        assertEquals(a, references);
+        assertEquals(a, getDs().find(MultiDimArrayOfReferences.class)
+                               .filter("_id", a.getId())
+                               .first());
     }
 
     private void allNull(final Container container) {

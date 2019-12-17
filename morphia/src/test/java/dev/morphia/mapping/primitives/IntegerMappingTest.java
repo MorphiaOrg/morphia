@@ -1,8 +1,8 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,7 +31,9 @@ public class IntegerMappingTest extends TestBase {
         ent.nestedWrapperArray = new Integer[][]{{55, 16, 99}, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {0}};
         getDs().save(ent);
 
-        final Integers loaded = getDs().get(ent);
+        final Integers loaded = getDs().find(Integers.class)
+                                       .filter("_id", ent.id)
+                                       .first();
 
         Assert.assertNotNull(loaded.id);
 

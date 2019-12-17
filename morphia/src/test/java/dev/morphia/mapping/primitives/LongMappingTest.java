@@ -1,8 +1,8 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +29,9 @@ public class LongMappingTest extends TestBase {
         ent.nestedPrimitiveArray = new long[][]{{0}, {5, 93}};
         ent.nestedWrapperArray = new Long[][]{{99L, 1L}, {55L, 16L, 99L}};
         getDs().save(ent);
-        final Longs loaded = getDs().get(ent);
+        final Longs loaded = getDs().find(Longs.class)
+                                    .filter("_id", ent.id)
+                                    .first();
 
         Assert.assertNotNull(loaded.id);
 

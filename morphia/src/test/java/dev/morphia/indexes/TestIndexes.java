@@ -23,14 +23,12 @@ import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Collation;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.Builder;
 import dev.morphia.utils.IndexType;
@@ -66,27 +64,25 @@ public class TestIndexes extends TestBase {
         hashIndexColl.drop();
         assertEquals(0, getIndexInfo(TestWithHashedIndex.class).size());
 
-        if (serverIsAtLeastVersion(3.4)) {
-            datastore.ensureIndexes(TestWithIndexOption.class);
-            List<Document> indexInfo = getIndexInfo(TestWithIndexOption.class);
-            assertEquals(2, indexInfo.size());
-            assertBackground(indexInfo);
-            for (Document document : indexInfo) {
-                if (document.get("name").equals("collated")) {
-                    assertEquals(Document.parse("{ name : { $exists : true } }"),
-                        document.get("partialFilterExpression"));
-                    Document collation = (Document) document.get("collation");
-                    assertEquals("en_US", collation.get("locale"));
-                    assertEquals("upper", collation.get("caseFirst"));
-                    assertEquals("shifted", collation.get("alternate"));
-                    Assert.assertTrue(collation.getBoolean("backwards"));
-                    assertEquals("upper", collation.get("caseFirst"));
-                    Assert.assertTrue(collation.getBoolean("caseLevel"));
-                    assertEquals("space", collation.get("maxVariable"));
-                    Assert.assertTrue(collation.getBoolean("normalization"));
-                    Assert.assertTrue(collation.getBoolean("numericOrdering"));
-                    assertEquals(5, collation.get("strength"));
-                }
+        datastore.ensureIndexes(TestWithIndexOption.class);
+        List<Document> indexInfo = getIndexInfo(TestWithIndexOption.class);
+        assertEquals(2, indexInfo.size());
+        assertBackground(indexInfo);
+        for (Document document : indexInfo) {
+            if (document.get("name").equals("collated")) {
+                assertEquals(Document.parse("{ name : { $exists : true } }"),
+                    document.get("partialFilterExpression"));
+                Document collation = (Document) document.get("collation");
+                assertEquals("en_US", collation.get("locale"));
+                assertEquals("upper", collation.get("caseFirst"));
+                assertEquals("shifted", collation.get("alternate"));
+                Assert.assertTrue(collation.getBoolean("backwards"));
+                assertEquals("upper", collation.get("caseFirst"));
+                Assert.assertTrue(collation.getBoolean("caseLevel"));
+                assertEquals("space", collation.get("maxVariable"));
+                Assert.assertTrue(collation.getBoolean("normalization"));
+                Assert.assertTrue(collation.getBoolean("numericOrdering"));
+                assertEquals(5, collation.get("strength"));
             }
         }
 

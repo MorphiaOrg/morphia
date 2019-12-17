@@ -1,12 +1,12 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
@@ -28,7 +28,10 @@ public class LocaleMappingTest extends TestBase {
         e.l3 = new Locale[]{Locale.TRADITIONAL_CHINESE, Locale.FRENCH};
 
         getDs().save(e);
-        e = getDs().get(e);
+        final Datastore datastore = getDs();
+        e = datastore.find(E.class)
+                     .filter("_id", e.id)
+                     .first();
 
         Assert.assertEquals(Locale.CANADA_FRENCH, e.l1);
 

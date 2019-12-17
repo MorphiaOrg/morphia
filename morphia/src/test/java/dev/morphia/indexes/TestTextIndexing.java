@@ -22,13 +22,6 @@ import java.util.List;
 import static dev.morphia.utils.IndexType.TEXT;
 
 public class TestTextIndexing extends TestBase {
-    @Override
-    @Before
-    public void setUp() {
-        checkMinServerVersion(2.6);
-        super.setUp();
-    }
-
     @Test(expected = MongoCommandException.class)
     public void shouldNotAllowMultipleTextIndexes() {
         Class<MultipleTextIndexes> clazz = MultipleTextIndexes.class;

@@ -12,7 +12,7 @@ public class IntegerTypeValidatorTest {
     @Test
     public void shouldAllowIntValueWhenTypeIsInt() {
         // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        List<ValidationFailure> validationFailures = new ArrayList<>();
         // when
         boolean validationApplied = IntegerTypeValidator.getInstance().apply(int.class, 1, validationFailures);
         // then
@@ -23,7 +23,7 @@ public class IntegerTypeValidatorTest {
     @Test
     public void shouldAllowIntValueWhenTypeIsInteger() {
         // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        List<ValidationFailure> validationFailures = new ArrayList<>();
         // when
         boolean validationApplied = IntegerTypeValidator.getInstance().apply(Integer.class, 1, validationFailures);
         // then
@@ -34,9 +34,9 @@ public class IntegerTypeValidatorTest {
     @Test
     public void shouldAllowIntegerValueWhenTypeIsInt() {
         // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        List<ValidationFailure> validationFailures = new ArrayList<>();
         // when
-        boolean validationApplied = IntegerTypeValidator.getInstance().apply(int.class, new Integer(1), validationFailures);
+        boolean validationApplied = IntegerTypeValidator.getInstance().apply(int.class, 1, validationFailures);
         // then
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(0));
@@ -45,9 +45,9 @@ public class IntegerTypeValidatorTest {
     @Test
     public void shouldAllowIntegerValueWhenTypeIsInteger() {
         // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        List<ValidationFailure> validationFailures = new ArrayList<>();
         // when
-        boolean validationApplied = IntegerTypeValidator.getInstance().apply(Integer.class, new Integer(1), validationFailures);
+        boolean validationApplied = IntegerTypeValidator.getInstance().apply(Integer.class, 1, validationFailures);
         // then
         assertThat(validationApplied, is(true));
         assertThat(validationFailures.size(), is(0));
@@ -56,9 +56,9 @@ public class IntegerTypeValidatorTest {
     @Test
     public void shouldNotApplyValidationIfTypeIsNotIntegerOrLong() {
         // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        List<ValidationFailure> validationFailures = new ArrayList<>();
         // when
-        boolean validationApplied = IntegerTypeValidator.getInstance().apply(String.class, new Integer(1), validationFailures);
+        boolean validationApplied = IntegerTypeValidator.getInstance().apply(String.class, 1, validationFailures);
         // then
         assertThat(validationApplied, is(false));
         assertThat(validationFailures.size(), is(0));
@@ -67,7 +67,7 @@ public class IntegerTypeValidatorTest {
     @Test
     public void shouldRejectLongValueIfTypeIsInteger() {
         // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        List<ValidationFailure> validationFailures = new ArrayList<>();
         // when
         boolean validationApplied = IntegerTypeValidator.getInstance().apply(Integer.class, 1L, validationFailures);
         // then
@@ -78,7 +78,7 @@ public class IntegerTypeValidatorTest {
     @Test
     public void shouldRejectNonIntegerValueIfTypeIsInteger() {
         // given
-        List<ValidationFailure> validationFailures = new ArrayList<ValidationFailure>();
+        List<ValidationFailure> validationFailures = new ArrayList<>();
         // when
         boolean validationApplied = IntegerTypeValidator.getInstance().apply(Integer.class, "some non int value", validationFailures);
         // then

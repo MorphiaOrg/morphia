@@ -28,14 +28,6 @@ import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
 public class GeoIntersectsQueriesWithPointTest extends TestBase {
-    @Override
-    @Before
-    public void setUp() {
-        // this whole test class is designed for "modern" geo queries
-        checkMinServerVersion(2.4);
-        super.setUp();
-    }
-
     @Test
     public void shouldFindAPointThatExactlyMatchesTheQueryPoint() {
         // given
@@ -97,7 +89,6 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
 
     @Test
     public void shouldFindGeometryCollectionsWhereTheGivenPointIntersectsWithOneOfTheEntities() {
-        checkMinServerVersion(2.6);
         // given
         AllTheThings sevilla = new AllTheThings("Spain", new GeometryCollection(asList(
             new MultiPoint(asList(
@@ -158,7 +149,6 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
 
     @Test
     public void shouldFindRegionsWhereTheGivenPointIsOnABoundary() {
-        checkMinServerVersion(2.6);
         // given
         Regions sevilla = new Regions("Spain", new MultiPolygon(asList(
             new PolygonCoordinates(asList(

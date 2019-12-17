@@ -16,7 +16,6 @@ package dev.morphia;
 
 
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +25,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
-/**
- * @author Scott Hernandez
- */
 public class TestDatatypes extends TestBase {
 
     @Before
@@ -42,7 +38,9 @@ public class TestDatatypes extends TestBase {
     public void testByte() {
         final ContainsByte cb = new ContainsByte();
         getDs().save(cb);
-        final ContainsByte loaded = getDs().get(cb);
+        final ContainsByte loaded = getDs().find(ContainsByte.class)
+                                           .filter("_id", cb.id)
+                                           .first();
 
         assertNotNull(loaded);
         assertTrue(loaded.val0 == cb.val0);
@@ -53,7 +51,9 @@ public class TestDatatypes extends TestBase {
     public void testFloat() {
         final ContainsFloat cf = new ContainsFloat();
         getDs().save(cf);
-        final ContainsFloat loaded = getDs().get(cf);
+        final ContainsFloat loaded = getDs().find(ContainsFloat.class)
+                                             .filter("_id", cf.id)
+                                             .first();
 
         assertNotNull(loaded);
         assertTrue(loaded.val0 == cf.val0);
@@ -64,7 +64,9 @@ public class TestDatatypes extends TestBase {
     public void testShort() {
         final ContainsShort cs = new ContainsShort();
         getDs().save(cs);
-        final ContainsShort loaded = getDs().get(cs);
+        final ContainsShort loaded = getDs().find(ContainsShort.class)
+                                            .filter("_id", cs.id)
+                                            .first();
 
         assertNotNull(loaded);
         assertTrue(loaded.val0 == cs.val0);

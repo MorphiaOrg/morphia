@@ -16,8 +16,6 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -30,14 +28,6 @@ import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
 public class GeoWithinQueriesWithPolygonTest extends TestBase {
-    @Before
-    @Override
-    public void setUp() {
-        // this whole test class is designed for "modern" geo queries
-        checkMinServerVersion(2.4);
-        super.setUp();
-    }
-
     @Test
     public void shouldFindAreasWithinTheUK() {
         // given
@@ -84,13 +74,10 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         assertThat(areasInTheUK.next(), is(london));
         assertFalse(areasInTheUK.hasNext());
 
-        if (serverIsAtLeastVersion(3.0)) {
-            // should not error
-            getDs().find(Area.class)
-                   .field("area")
-                   .within(uk, NamedCoordinateReferenceSystem.EPSG_4326_STRICT_WINDING)
-                   .execute();
-        }
+        getDs().find(Area.class)
+               .field("area")
+               .within(uk, NamedCoordinateReferenceSystem.EPSG_4326_STRICT_WINDING)
+               .execute();
     }
 
     @Test
@@ -123,7 +110,6 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
     @Test
     public void shouldFindGeometryCollectionsWithinTheUK() {
-        checkMinServerVersion(2.6);
         // given
         Polygon uk = new Polygon(asList(new Position(49.78, -10.5),
             new Position(49.78, 1.78),
@@ -190,7 +176,6 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
     @Test
     public void shouldFindRegionsWithinTheUK() {
-        checkMinServerVersion(2.6);
         // given
         Polygon uk = new Polygon(asList(
             new Position(49.78, -10.5),

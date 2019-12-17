@@ -1,6 +1,7 @@
 package dev.morphia.mapping.lazy;
 
 
+import dev.morphia.Datastore;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -36,14 +37,18 @@ public class TestReferenceCollection extends ProxyTestBase {
 
         getDs().save(origin);
 
-        Origin reloaded = getDs().get(origin);
+        Origin reloaded = getDs().find(Origin.class)
+                                 .filter("_id", origin.getId())
+                                 .first();
         Assert.assertEquals("b1", reloaded.lazyList.iterator().next().foo);
         Collections.swap(reloaded.lazyList, 0, 1);
         Assert.assertEquals("b2", reloaded.lazyList.iterator().next().foo);
 
         getDs().save(reloaded);
 
-        reloaded = getDs().get(reloaded);
+        reloaded = getDs().find(Origin.class)
+                          .filter("_id", origin.getId())
+                          .first();
         final Collection<Endpoint> lbs = reloaded.lazyList;
         Assert.assertEquals(2, lbs.size());
         final Iterator<Endpoint> iterator = lbs.iterator();

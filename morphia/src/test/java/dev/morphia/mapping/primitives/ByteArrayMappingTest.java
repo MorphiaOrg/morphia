@@ -1,8 +1,8 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +21,9 @@ public class ByteArrayMappingTest extends TestBase {
         final Byte[] test = new Byte[]{6, 9, 1, -122};
         entity.ba = test;
         getDs().save(entity);
-        final ContainsByteArray loaded = getDs().get(entity);
+        final ContainsByteArray loaded = getDs().find(ContainsByteArray.class)
+                                                .filter("_id", entity.id)
+                                                .first();
 
         for (int i = 0; i < test.length; i++) {
             final Byte c = test[i];

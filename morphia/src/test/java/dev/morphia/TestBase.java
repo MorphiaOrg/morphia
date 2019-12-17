@@ -5,23 +5,18 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
-import com.mongodb.connection.ServerDescription;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class TestBase {
-    private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-
     protected static final String TEST_DB_NAME = "morphia_test";
     private final MongoClient mongoClient;
     private final MongoDatabase database;
@@ -103,14 +98,6 @@ public abstract class TestBase {
      */
     protected boolean serverIsAtLeastVersion(final double version) {
         return getServerVersion() >= version;
-    }
-
-    /**
-     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
-     * @return true if server is at least specified version
-     */
-    protected boolean serverIsAtMostVersion(final double version) {
-        return getServerVersion() <= version;
     }
 
     protected List<Document> getIndexInfo(final Class<?> clazz) {

@@ -1,8 +1,8 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +29,9 @@ public class DoubleMappingTest extends TestBase {
         ent.nestedWrapperArray = new Double[][]{{42.0, 49152.0}, {5.0, 93.5}};
         getDs().save(ent);
 
-        final Doubles loaded = getDs().get(ent);
+        final Doubles loaded = getDs().find(Doubles.class)
+                                      .filter("_id", ent.id)
+                                      .first();
         Assert.assertNotNull(loaded.id);
 
         Assert.assertArrayEquals(ent.listWrapperArray.get(0), loaded.listWrapperArray.get(0));

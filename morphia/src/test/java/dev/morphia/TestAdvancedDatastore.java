@@ -30,10 +30,10 @@ public class TestAdvancedDatastore extends TestBase {
     public void testInsert() {
         MongoCollection collection = getDs().getCollection(TestEntity.class);
         this.getAds().insert(new TestEntity());
-        Assert.assertEquals(1, collection.count());
+        Assert.assertEquals(1, collection.countDocuments());
         this.getAds().insert(new TestEntity(), new InsertOptions()
             .writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(2, collection.count());
+        Assert.assertEquals(2, collection.countDocuments());
     }
 
     @Test
@@ -42,13 +42,13 @@ public class TestAdvancedDatastore extends TestBase {
         MongoCollection collection = getDs().getCollection(TestEntity.class);
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                              new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(5, collection.count());
+        Assert.assertEquals(5, collection.countDocuments());
 
         collection.drop();
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                              new InsertOptions()
                                  .writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(5, collection.count());
+        Assert.assertEquals(5, collection.countDocuments());
     }
 
     @Test

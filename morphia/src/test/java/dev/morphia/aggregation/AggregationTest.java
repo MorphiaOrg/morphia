@@ -72,7 +72,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testCollation() {
-        checkMinServerVersion(3.4);
         getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
         Query query = getDs().find(User.class).field("name").equal("john doe");
@@ -128,7 +127,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testDateToString() throws ParseException {
-        checkMinServerVersion(3.0);
         Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");
         getDs().save(new User("John Doe", joined));
         AggregationPipeline pipeline = getDs()
@@ -281,7 +279,6 @@ public class AggregationTest extends TestBase {
      */
     @Test
     public void testLookup() {
-        checkMinServerVersion(3.2);
         getDs().save(asList(new Order(1, "abc", 12, 2),
             new Order(2, "jkl", 20, 1),
             new Order(3)));
@@ -307,7 +304,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testOut() {
-        checkMinServerVersion(2.6);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),
@@ -334,7 +330,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testOutNamedCollection() {
-        checkMinServerVersion(2.6);
         getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
             new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
             new Book("Eclogues", "Dante", 2, "Italian", ""),
@@ -507,7 +502,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testSortByCount() {
-        checkMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),
@@ -530,7 +524,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testBucketWithoutOptions() {
-        checkMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),
@@ -577,7 +570,6 @@ public class AggregationTest extends TestBase {
 
     @Test(expected = RuntimeException.class)
     public void testBucketWithUnsortedBoundaries() {
-        checkMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),
@@ -597,7 +589,6 @@ public class AggregationTest extends TestBase {
 
     @Test(expected = RuntimeException.class)
     public void testBucketWithBoundariesWithSizeLessThanTwo() {
-        checkMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),

@@ -1,6 +1,7 @@
 package dev.morphia.issue155;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -17,7 +18,9 @@ public class EnumBehindAnInterfaceTest extends TestBase {
         getMapper().map(ContainerEntity.class);
         ContainerEntity n = new ContainerEntity();
         getDs().save(n);
-        n = getDs().get(n);
+        n = getDs().find(ContainerEntity.class)
+                   .filter("_id", n.getId())
+                   .first();
         Assert.assertSame(EnumBehindAnInterface.A, n.foo);
     }
 

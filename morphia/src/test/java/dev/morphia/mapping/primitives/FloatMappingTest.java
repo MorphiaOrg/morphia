@@ -1,8 +1,8 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +28,9 @@ public class FloatMappingTest extends TestBase {
         ent.nestedPrimitiveArray = new float[][]{{}, {5.0f, 93.5f}};
         ent.nestedWrapperArray = new Float[][]{{55.7f, 16.2f, 99.9999f}, {}};
         getDs().save(ent);
-        final Floats loaded = getDs().get(ent);
+        final Floats loaded = getDs().find(Floats.class)
+                                     .filter("_id", ent.id)
+                                     .first();
 
         Assert.assertNotNull(loaded.id);
 

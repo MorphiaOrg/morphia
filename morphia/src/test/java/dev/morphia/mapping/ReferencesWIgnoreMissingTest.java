@@ -1,9 +1,9 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.Datastore;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -31,7 +31,9 @@ public class ReferencesWIgnoreMissingTest extends TestBase {
         Assert.assertNotNull(reloadedContainer.refs);
         Assert.assertEquals(1, reloadedContainer.refs.length);
 
-        reloadedContainer = getDs().get(c);
+        reloadedContainer = getDs().find(Container.class)
+                                   .filter("_id", c.id)
+                                   .first();
         Assert.assertNotNull(reloadedContainer);
         Assert.assertNotNull(reloadedContainer.refs);
         Assert.assertEquals(1, reloadedContainer.refs.length);

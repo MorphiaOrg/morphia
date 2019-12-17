@@ -1,6 +1,7 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -28,7 +29,9 @@ public class CharacterMappingTest extends TestBase {
         entity.nestedWrapperArray = new Character[][]{{'*', '$', '\u4824'}, {'X', 'y', 'Z'}};
         getDs().save(entity);
 
-        final Characters loaded = getDs().get(entity);
+        final Characters loaded = getDs().find(Characters.class)
+                                         .filter("_id", entity.id)
+                                         .first();
         Assert.assertNotNull(loaded.id);
         Assert.assertArrayEquals(entity.listWrapperArray.get(0), loaded.listWrapperArray.get(0));
         Assert.assertArrayEquals(entity.listPrimitiveArray.get(0), loaded.listPrimitiveArray.get(0));

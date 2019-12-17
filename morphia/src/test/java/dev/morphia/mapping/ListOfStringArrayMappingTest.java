@@ -1,12 +1,13 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.Datastore;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,10 @@ public class ListOfStringArrayMappingTest extends TestBase {
         ent.string = "raw string";
 
         getDs().save(ent);
-        final ContainsListStringArray loaded = getDs().get(ent);
+        final Datastore datastore = getDs();
+        final ContainsListStringArray loaded = datastore.find(ContainsListStringArray.class)
+                                                        .filter("_id", ent.id)
+                                                        .first();
         Assert.assertNotNull(loaded.id);
         Assert.assertArrayEquals(ent.listOfStrings.get(0), loaded.listOfStrings.get(0));
         Assert.assertArrayEquals(ent.arrayOfStrings, loaded.arrayOfStrings);
@@ -34,9 +38,9 @@ public class ListOfStringArrayMappingTest extends TestBase {
 
     @Entity
     private static class ContainsListStringArray {
+        private final List<String[]> listOfStrings = new ArrayList<String[]>();
         @Id
         private ObjectId id;
-        private final List<String[]> listOfStrings = new ArrayList<String[]>();
         private String[] arrayOfStrings;
         private String string;
     }

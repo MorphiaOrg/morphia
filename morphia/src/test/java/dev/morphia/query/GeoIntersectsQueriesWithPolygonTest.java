@@ -25,14 +25,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
-    @Override
-    @Before
-    public void setUp() {
-        // this whole test class is designed for "modern" geo queries
-        checkMinServerVersion(2.4);
-        super.setUp();
-    }
-
     @Test
     public void shouldFindAPointThatLiesInAQueryPolygon() {
         // given
@@ -103,7 +95,6 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
     @Test
     @Ignore("counts are off.  revisit later")
     public void shouldFindGeometryCollectionsWhereTheGivenPointIntersectsWithOneOfTheEntities() {
-        checkMinServerVersion(2.6);
         // given
         AllTheThings sevilla = new AllTheThings("Spain", new GeometryCollection(asList(
             new MultiPoint(asList(
@@ -163,7 +154,6 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
 
     @Test
     public void shouldFindRegionsThatAPolygonCrosses() {
-        checkMinServerVersion(2.6);
         // given
         Regions sevilla = new Regions("Spain", new MultiPolygon(asList(
             new PolygonCoordinates(asList(

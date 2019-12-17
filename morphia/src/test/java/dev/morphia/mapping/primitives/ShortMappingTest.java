@@ -1,8 +1,8 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +29,9 @@ public class ShortMappingTest extends TestBase {
         ent.nestedPrimitiveArray = new short[][]{{5, 93}, {88}};
         ent.nestedWrapperArray = new Short[][]{{55, 16, 99}, {-47}};
         getDs().save(ent);
-        final Shorts loaded = getDs().get(ent);
+        final Shorts loaded = getDs().find(Shorts.class)
+                                     .filter("_id", ent.id)
+                                     .first();
 
         Assert.assertNotNull(loaded.id);
 

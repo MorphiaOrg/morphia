@@ -2,6 +2,7 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.client.MongoCollection;
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -14,7 +15,6 @@ import dev.morphia.annotations.Id;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -118,7 +118,10 @@ public class MapImplTest extends TestBase {
 
         getDs().save(e);
 
-        e = getDs().get(e);
+        final Datastore datastore = getDs();
+        e = datastore.find(E.class)
+                     .filter("_id", e.id)
+                     .first();
         Assert.assertEquals("a", e.mymap.get("1"));
         Assert.assertEquals("b", e.mymap.get("2"));
     }

@@ -2,6 +2,7 @@ package dev.morphia.issue172;
 
 
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.entities.SimpleEnum;
@@ -19,22 +20,21 @@ public class NameValuePairTest extends TestBase {
     public void testNameValuePairWithDoubleIn() {
         getMapper().map(NameValuePairContainer.class);
         final NameValuePairContainer container = new NameValuePairContainer();
-        container.pair = new NameValuePair<SimpleEnum, Double>(SimpleEnum.FOO, 1.2d);
+        container.pair = new NameValuePair<>(SimpleEnum.FOO, 1.2d);
         getDs().save(container);
 
-        getDs().get(container);
+        getDs().find(NameValuePairContainer.class)
+               .filter("_id", container.id)
+               .first();
     }
 
-    @Entity
-    private static class NameValuePairContainer {
-        @Id
-        private ObjectId id;
-        private NameValuePair<SimpleEnum, Double> pair;
-    }
-
+    @Embedded
     private static class NameValuePair<T1 extends Enum<?>, T2> implements Serializable {
-        private final T2 value;
-        private final T1 name;
+        private T2 value;
+        private T1 name;
+
+        public NameValuePair() {
+        }
 
         NameValuePair(final T1 name, final T2 value) {
             this.name = name;
@@ -79,6 +79,13 @@ public class NameValuePairTest extends TestBase {
             return true;
         }
 
+    }
+
+    @Entity
+    private static class NameValuePairContainer {
+        @Id
+        private ObjectId id;
+        private NameValuePair<SimpleEnum, Double> pair;
     }
 
 }

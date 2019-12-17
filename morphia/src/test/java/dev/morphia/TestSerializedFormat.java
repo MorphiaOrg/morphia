@@ -50,7 +50,7 @@ public class TestSerializedFormat extends TestBase {
     @Test
     public void testQueryFormat() {
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
-                                            .field("id").equal(ObjectId.createFromLegacyFormat(0, 0, 0))
+                                            .field("id").equal(new ObjectId(0, 0))
                                             .field("referenceType").equal(new ReferenceType(2, "far"))
                                             .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
 

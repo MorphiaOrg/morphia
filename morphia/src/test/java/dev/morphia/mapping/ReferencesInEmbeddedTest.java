@@ -1,14 +1,13 @@
 package dev.morphia.mapping;
 
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 
@@ -26,8 +25,9 @@ public class ReferencesInEmbeddedTest extends TestBase {
         container.embed.lazyRef = referencedEntity;
         getDs().save(container);
 
-        final Container reloadedContainer = getDs().get(container);
-        Assert.assertNotNull(reloadedContainer);
+        Assert.assertNotNull(getDs().find(Container.class)
+                                    .filter("_id", container.getId())
+                                    .first());
     }
 
     @Test
@@ -48,8 +48,9 @@ public class ReferencesInEmbeddedTest extends TestBase {
         container.embed.ref = referencedEntity;
         getDs().save(container);
 
-        final Container reloadedContainer = getDs().get(container);
-        Assert.assertNotNull(reloadedContainer);
+        Assert.assertNotNull(getDs().find(Container.class)
+                                    .filter("_id", container.getId())
+                                    .first());
     }
 
     @Entity

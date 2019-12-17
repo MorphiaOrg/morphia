@@ -2,14 +2,14 @@ package dev.morphia.mapping;
 
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,9 @@ public class EnumMappingTest extends TestBase {
         customer.add(WebTemplateType.CrewContractHeader, new WebTemplate("template #2"));
 
         getDs().save(customer);
-        Customer loaded = getDs().get(customer);
+        Customer loaded = getDs().find(Customer.class)
+                                 .filter("_id", customer.id)
+                                 .first();
         Assert.assertEquals(customer.map, loaded.map);
     }
 
@@ -69,7 +71,10 @@ public class EnumMappingTest extends TestBase {
         customer.add(WebTemplateType.CrewContractHeader, templates2);
 
         getDs().save(customer);
-        CustomerWithArrayList loaded = getDs().get(customer);
+        final Datastore datastore1 = getDs();
+        CustomerWithArrayList loaded = datastore1.find(CustomerWithArrayList.class)
+                                                 .filter("_id", customer.id)
+                                                 .first();
 
         Assert.assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
     }
@@ -98,7 +103,10 @@ public class EnumMappingTest extends TestBase {
         customer.add(WebTemplateType.CrewContractHeader, templates2);
 
         getDs().save(customer);
-        CustomerWithList loaded = getDs().get(customer);
+        final Datastore datastore1 = getDs();
+        CustomerWithList loaded = datastore1.find(CustomerWithList.class)
+                                            .filter("_id", customer.id)
+                                            .first();
 
         Assert.assertEquals(customer.mapWithList, loaded.mapWithList);
     }
@@ -157,6 +165,41 @@ public class EnumMappingTest extends TestBase {
         private Foo foo = Foo.BAR;
     }
 
+    @Entity(useDiscriminator = false)
+    public static class Customer {
+        private final Map<WebTemplateType, WebTemplate> map = new HashMap<>();
+        @Id
+        private ObjectId id;
+
+        public void add(final WebTemplateType type, final WebTemplate template) {
+            map.put(type, template);
+        }
+
+    }
+
+    @Entity(useDiscriminator = false)
+    public static class CustomerWithArrayList {
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
+            = new HashMap<>();
+        @Id
+        private ObjectId id;
+
+        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
+            mapWithArrayList.put(type, templates);
+        }
+    }
+
+    @Entity(useDiscriminator = false)
+    public static class CustomerWithList {
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
+        @Id
+        private ObjectId id;
+
+        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
+            mapWithList.put(type, templates);
+        }
+    }
+
     @Embedded
     public static class WebTemplate {
         private ObjectId id = new ObjectId();
@@ -201,41 +244,6 @@ public class EnumMappingTest extends TestBase {
             }
 
             return true;
-        }
-    }
-
-    @Entity(useDiscriminator = false)
-    public static class Customer {
-        private final Map<WebTemplateType, WebTemplate> map = new HashMap<>();
-        @Id
-        private ObjectId id;
-
-        public void add(final WebTemplateType type, final WebTemplate template) {
-            map.put(type, template);
-        }
-
-    }
-
-    @Entity(useDiscriminator = false)
-    public static class CustomerWithList {
-        @Id
-        private ObjectId id;
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
-
-        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
-            mapWithList.put(type, templates);
-        }
-    }
-
-    @Entity(useDiscriminator = false)
-    public static class CustomerWithArrayList {
-        @Id
-        private ObjectId id;
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
-            = new HashMap<>();
-
-        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
-            mapWithArrayList.put(type, templates);
         }
     }
 

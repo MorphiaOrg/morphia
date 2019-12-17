@@ -2,7 +2,6 @@ package dev.morphia.optimisticlocks;
 
 
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.mapping.Mapper;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,7 +17,6 @@ import dev.morphia.testutil.TestEntity;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -54,7 +52,9 @@ public class VersionTest extends TestBase {
         Assert.assertNull(a.v);
         getDs().save(a);
 
-        getDs().save(getDs().get(a));
+        getDs().save(getDs().find(ALong.class)
+                            .filter("_id", a.getId())
+                            .first());
 
         getDs().save(a);
     }
@@ -66,7 +66,9 @@ public class VersionTest extends TestBase {
         getDs().save(a);
 
         a.text = " foosdfds ";
-        final ALong a2 = getDs().get(a);
+        final ALong a2 = getDs().find(ALong.class)
+                                .filter("_id", a.getId())
+                                .first();
         getDs().save(a2);
 
         getDs().merge(a);
