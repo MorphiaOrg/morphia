@@ -37,7 +37,7 @@ LINUX=ubuntu1604
 if [ "${MONGODB}" ]
 then
   download
-  mvn -f morphia/pom.xml test
+  mvn install
   killall -9 mongod
 else
   sudo service mongodb stop
@@ -50,7 +50,7 @@ else
 
     echo SERVER = ${MONGODB}    DRIVER = ${DRIVER} | tee /tmp/morphia.test
     download
-    mvn -f morphia/pom.xml test
+    mvn install
     killall mongod
   done
   sudo service mongodb start
