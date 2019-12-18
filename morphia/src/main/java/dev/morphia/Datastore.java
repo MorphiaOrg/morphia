@@ -57,11 +57,11 @@ public interface Datastore {
     /**
      * Find all instances by type
      *
-     * @param clazz the class to use for mapping the results
+     * @param type the class to use for mapping the results
      * @param <T>   the type to query
      * @return the query
      */
-    <T> Query<T> find(Class<T> clazz);
+    <T> Query<T> find(Class<T> type);
 
     /**
      * The builder for all update operations

@@ -16,6 +16,7 @@ import static java.util.Collections.singletonList;
 /**
  * @param <T> the type to update
  */
+@SuppressWarnings("removal")
 public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     private final Mapper mapper;
     private final Class<T> clazz;
@@ -211,7 +212,6 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
      *
      * @param ops the operations
      */
-    @SuppressWarnings("unchecked")
     public void setOps(final Document ops) {
         this.ops = ops;
     }

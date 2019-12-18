@@ -183,7 +183,6 @@ public class MappedClass {
      * @param <T>   the type of annotation to find
      * @return the instance if it was found, if more than one was found, the last one added
      */
-    @SuppressWarnings("unchecked")
     public <T extends Annotation> List<T> getAnnotations(final Class<T> clazz) {
         return entityModel.getAnnotations(clazz);
     }

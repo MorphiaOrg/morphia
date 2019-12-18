@@ -100,16 +100,19 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public <T> Query<T> createQuery(final String collection, final Class<T> type) {
         return newQuery(type);
     }
 
     @Override
+    @SuppressWarnings("removal")
     public <T> Query<T> createQuery(final Class<T> clazz, final Document q) {
         return newQuery(clazz, q);
     }
 
     @Override
+    @SuppressWarnings("removal")
     public <T, V> DBRef createRef(final Class<T> clazz, final V id) {
         if (id == null) {
             throw new MappingException("Could not get id for " + clazz.getName());
@@ -118,6 +121,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public <T> DBRef createRef(final T entity) {
         final Object id = mapper.getId(entity);
         if (id == null) {
@@ -173,6 +177,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public <T> Query<T> queryByExample(final String collection, final T ex) {
         return queryByExample(ex);
     }
@@ -250,8 +255,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Query<T> find(final Class<T> clazz) {
-        return newQuery(clazz);
+    public <T> Query<T> find(final Class<T> type) {
+        return newQuery(type);
     }
 
     /**
@@ -535,7 +540,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> T save(final T entity, final InsertOneOptions options) {
         if (entity == null) {
-            throw new UpdateException("Can not persist a null entity");
+            throw new UpdateException(Sofia.cannotPersistNullEntity());
         }
 
         save(getCollection(entity.getClass()), entity, options);
@@ -544,7 +549,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
         if (entity == null) {
-            throw new UpdateException("Can not persist a null entity");
+            throw new UpdateException(Sofia.cannotPersistNullEntity());
         }
 
         if (!tryVersionedUpdate(entity, collection, options)) {
@@ -576,8 +581,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             } catch (MongoWriteException e) {
                 updateVersion(entity, versionField, oldVersion);
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s') was concurrently saved.",
-                    entity.getClass().getName(), idValue));
+                throw new ConcurrentModificationException(Sofia.concurrentModification(entity.getClass().getName(), idValue));
             }
         } else if (idValue != null) {
             final UpdateResult res = find(collection.getNamespace().getCollectionName())
@@ -591,8 +595,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                       .writeConcern(options.writeConcern()));
 
             if (res.getModifiedCount() != 1) {
-                throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
-                    entity.getClass().getName(), idValue, oldVersion));
+                throw new ConcurrentModificationException(Sofia.concurrentModification(entity.getClass().getName(), idValue));
             }
             updateVersion(entity, versionField, newVersion);
         }
@@ -651,15 +654,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             }
         }
-    }
-
-    /**
-     * Sets the Mapper this Datastore uses
-     *
-     * @param mapper the new Mapper
-     */
-    public void setMapper(final Mapper mapper) {
-        this.mapper = mapper;
     }
 
     private <T> T doTransaction(final MorphiaSession morphiaSession, final MorphiaTransaction<T> body) {

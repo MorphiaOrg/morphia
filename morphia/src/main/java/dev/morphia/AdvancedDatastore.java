@@ -32,6 +32,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param clazz      the class of objects to be returned
      * @return Query for the specified class clazz
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> Query<T> createQuery(String collection, Class<T> clazz);
 
     /**
@@ -40,6 +41,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param q     the query which will be passed to a {@link dev.morphia.query.QueryFactory}
      * @return Query for the specified class clazz
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> Query<T> createQuery(Class<T> clazz, Document q);
 
     /**
@@ -51,6 +53,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param <V>   The type of the ID value
      * @return the DBRef for the entity
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T, V> DBRef createRef(Class<T> clazz, V id);
 
     /**
@@ -60,6 +63,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param entity the entity to create a DBRef for
      * @return the DBRef for the entity
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> DBRef createRef(T entity);
 
     /**
@@ -71,6 +75,7 @@ public interface AdvancedDatastore extends Datastore {
      * @return the UpdateOperations instance
      * @deprecated use {@link Query#update()} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateOperations<T> createUpdateOperations(Class<T> type, DBObject ops) {
         return createUpdateOperations(type, new Document(ops.toMap()));
@@ -114,9 +119,10 @@ public interface AdvancedDatastore extends Datastore {
      * @param options the options to apply to the insert operation
      * @param <T>     the type of the entity
      * @since 1.3
-     * @deprecated use {@link #insert(List, InsertManyOptions)} instead
+     * @deprecated use {@link #insert(T, InsertOneOptions)} instead
      * @morphia.inline
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> void insert(T entity, InsertOptions options) {
         insert(entity, options.toInsertOneOptions());
@@ -162,6 +168,7 @@ public interface AdvancedDatastore extends Datastore {
      * @since 1.3
      * @deprecated use {@link #insert(List, InsertManyOptions)} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> void insert(List<T> entities, InsertOptions options) {
         insert(entities, options.toInsertManyOptions());
@@ -175,5 +182,6 @@ public interface AdvancedDatastore extends Datastore {
      * @param <T>        the type of the entity
      * @return the query
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> Query<T> queryByExample(String collection, T example);
 }

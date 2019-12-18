@@ -14,20 +14,4 @@ public abstract class AbstractCriteria implements Criteria {
 
         attachedTo = container;
     }
-
-    /**
-     * @return the CriteriaContainer this Criteria is attached to
-     */
-    public CriteriaContainer getAttachedTo() {
-        return attachedTo;
-    }
-
-    /**
-     * Sets the parents CriteriaContainer for this Criteria
-     *
-     * @param attachedTo the CriteriaContainer
-     */
-    public void setAttachedTo(final CriteriaContainer attachedTo) {
-        this.attachedTo = attachedTo;
-    }
 }

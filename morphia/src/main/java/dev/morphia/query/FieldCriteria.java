@@ -22,7 +22,6 @@ class FieldCriteria extends AbstractCriteria {
         this(mapper, query, field, op, value, false);
     }
 
-    @SuppressWarnings("deprecation")
     FieldCriteria(final Mapper mapper, final QueryImpl<?> query, final String fieldName, final FilterOperator op, final Object value,
                   final boolean not) {
         this.mapper = mapper;

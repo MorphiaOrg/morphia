@@ -2,16 +2,15 @@ package dev.morphia.callbacks;
 
 
 import dev.morphia.EntityInterceptor;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.PrePersist;
+import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.AbstractEntityInterceptor;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PrePersist;
-import dev.morphia.mapping.Mapper;
 
 
 public class TestEntityInterceptorMoment extends TestBase {
