@@ -19,7 +19,6 @@ package dev.morphia;
 import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
-import com.mongodb.WriteConcernException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationAction;
@@ -35,7 +34,6 @@ import dev.morphia.query.Update;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
@@ -298,8 +296,8 @@ public class TestDocumentValidation extends TestBase {
     }
 
     private void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
-        ((DatastoreImpl) getDs()).process(mappedClass, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
-                                                                              .level(level)
-                                                                              .action(action));
+        ((DatastoreImpl) getDs()).enableValidation(mappedClass, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
+                                                                                       .level(level)
+                                                                                       .action(action));
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Defines a query projection
  */
-@SuppressWarnings("unchecked")
 public class Projection {
     private FindOptions options;
     private List<String> includes;
@@ -47,10 +46,7 @@ public class Projection {
         if ((includes != null || excludes != null) && (slice != null || meta != null)) {
             throw new ValidationException(Sofia.mixedModeProjections());
         }
-        if (slice != null && (includes != null || excludes != null || meta != null)) {
-            throw new ValidationException(Sofia.mixedModeProjections());
-        }
-        if (meta != null && (includes != null || excludes != null || slice != null)) {
+        if (slice != null && meta != null) {
             throw new ValidationException(Sofia.mixedModeProjections());
         }
         if (includes != null && excludes != null) {
@@ -93,7 +89,7 @@ public class Projection {
      * @param type   the entity type
      * @return this
      */
-    public Document map(final Mapper mapper, final Class type) {
+    public Document map(final Mapper mapper, final Class<?> type) {
         if (includes != null || excludes != null) {
             return project(mapper, type);
         } else if (arrayField != null && slice != null) {
@@ -107,7 +103,7 @@ public class Projection {
         return null;
     }
 
-    private Document project(final Mapper mapper, final Class clazz) {
+    private Document project(final Mapper mapper, final Class<?> clazz) {
         Document projection = new Document();
         iterate(mapper, projection, clazz, includes, 1);
         iterate(mapper, projection, clazz, excludes, 0);
@@ -122,17 +118,17 @@ public class Projection {
         return projection;
     }
 
-    private Document slice(final Mapper mapper, final Class clazz) {
+    private Document slice(final Mapper mapper, final Class<?> clazz) {
         String fieldName = new PathTarget(mapper, mapper.getMappedClass(clazz), arrayField).translatedPath();
         return new Document(fieldName, slice.toDatabase());
     }
 
-    private Document meta(final Mapper mapper, final Class clazz) {
+    private Document meta(final Mapper mapper, final Class<?> clazz) {
         String fieldName = new PathTarget(mapper, clazz, meta.getField(), false).translatedPath();
         return new Document(fieldName, meta.toDatabase());
     }
 
-    private Document knownFields(final Mapper mapper, final Class clazz) {
+    private Document knownFields(final Mapper mapper, final Class<?> clazz) {
         Document projection = new Document();
         mapper.getMappedClass(clazz).getFields()
               .stream()
@@ -142,7 +138,7 @@ public class Projection {
         return projection;
     }
 
-    private void iterate(final Mapper mapper, final Document projection, final Class clazz, final List<String> fields, final int include) {
+    private void iterate(final Mapper mapper, final Document projection, final Class<?> clazz, final List<String> fields, final int include) {
         if (fields != null) {
             for (final String field : fields) {
                 projection.put(new PathTarget(mapper, mapper.getMappedClass(clazz), field).translatedPath(), include);

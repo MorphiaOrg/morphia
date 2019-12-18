@@ -3,8 +3,10 @@ package dev.morphia;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import dev.morphia.aggregation.AggregationPipeline;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
+import dev.morphia.query.UpdateOpsImpl;
 import org.bson.Document;
 
 import java.util.List;
@@ -29,20 +31,24 @@ public interface AdvancedDatastore extends Datastore {
     /**
      * @param <T>        The type of the entity
      * @param collection the collection to query
-     * @param clazz      the class of objects to be returned
-     * @return Query for the specified class clazz
+     * @param type       the class of objects to be returned
+     * @return Query for the specified class type
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> Query<T> createQuery(String collection, Class<T> clazz);
+    default <T> Query<T> createQuery(String collection, Class<T> type) {
+        return getQueryFactory().createQuery(this, type);
+    }
 
     /**
-     * @param <T>   The type of the entity
-     * @param clazz the class of objects to be returned
-     * @param q     the query which will be passed to a {@link dev.morphia.query.QueryFactory}
-     * @return Query for the specified class clazz
+     * @param <T>  The type of the entity
+     * @param type the class of objects to be returned
+     * @param q    the query which will be passed to a {@link dev.morphia.query.QueryFactory}
+     * @return Query for the specified class type
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> Query<T> createQuery(Class<T> clazz, Document q);
+    default <T> Query<T> createQuery(Class<T> type, Document q) {
+        return getQueryFactory().createQuery(this, type, q);
+    }
 
     /**
      * Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)
@@ -54,7 +60,12 @@ public interface AdvancedDatastore extends Datastore {
      * @return the DBRef for the entity
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T, V> DBRef createRef(Class<T> clazz, V id);
+    default <T, V> DBRef createRef(Class<T> clazz, V id) {
+        if (id == null) {
+            throw new MappingException("Could not get id for " + clazz.getName());
+        }
+        return new DBRef(getCollection(clazz).getNamespace().getCollectionName(), id);
+    }
 
     /**
      * Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)
@@ -64,7 +75,13 @@ public interface AdvancedDatastore extends Datastore {
      * @return the DBRef for the entity
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> DBRef createRef(T entity);
+    default <T> DBRef createRef(T entity)  {
+        final Object id = getMapper().getId(entity);
+        if (id == null) {
+            throw new MappingException("Could not get id for " + entity.getClass().getName());
+        }
+        return createRef(entity.getClass(), id);
+    }
 
     /**
      * Creates an UpdateOperations instance for the given type.
@@ -92,8 +109,11 @@ public interface AdvancedDatastore extends Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> UpdateOperations<T> createUpdateOperations(Class<T> type, Document ops);
-
+    default <T> UpdateOperations<T> createUpdateOperations(Class<T> type, Document ops){
+        final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(type);
+        upOps.setOps(ops);
+        return upOps;
+    }
     /**
      * Find all instances by type in a different collection than what is mapped on the class given.
      *

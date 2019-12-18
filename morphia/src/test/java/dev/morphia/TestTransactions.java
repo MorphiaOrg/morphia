@@ -176,6 +176,12 @@ public class TestTransactions extends TestBase {
             Assert.assertNull(getDs().find(Rectangle.class).first());
             Assert.assertNotNull(session.find(Rectangle.class).first());
 
+            rectangle.setWidth(42);
+            session.save(rectangle);
+
+            Assert.assertNull(getDs().find(Rectangle.class).first());
+            Assert.assertEquals(42, session.find(Rectangle.class).first().getWidth(), 0.5);
+
             return null;
         });
 

@@ -340,7 +340,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
      * @return the iterable instance for the query results
      * @morphia.internal
      */
-    public <T> FindIterable<T> apply(final QueryImpl query, final FindIterable<T> iterable, final Mapper mapper, final Class type) {
+    public <T> FindIterable<T> apply(final QueryImpl query, final FindIterable<T> iterable, final Mapper mapper, final Class<?> type) {
         Document fieldsObject = query.getFieldsObject();
         if (fieldsObject != null) {
             iterable.projection(fieldsObject);

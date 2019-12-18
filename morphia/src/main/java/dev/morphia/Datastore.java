@@ -39,6 +39,7 @@ public interface Datastore {
      * @param source The class to create aggregation against
      * @return the aggregation pipeline
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     AggregationPipeline createAggregation(Class source);
 
     /**

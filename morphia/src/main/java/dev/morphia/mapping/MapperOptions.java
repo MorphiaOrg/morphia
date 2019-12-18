@@ -58,7 +58,7 @@ public class MapperOptions {
      */
     public static Builder legacy() {
         return new Builder()
-                   .discriminatorKey(Mapper.CLASS_NAME_FIELDNAME)
+                   .discriminatorKey("className")
                    .discriminator(DiscriminatorFunction.className)
                    .collectionNaming(NamingStrategy.identity())
                    .fieldNaming(NamingStrategy.identity());

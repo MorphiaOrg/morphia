@@ -39,7 +39,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
             for (Method method : annotationType().getDeclaredMethods()) {
                 values.put(method.getName(), method.invoke(original));
             }
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }

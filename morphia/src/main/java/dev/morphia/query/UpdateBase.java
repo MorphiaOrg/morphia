@@ -35,10 +35,6 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
         operations = new Operations(mapper, mc);
     }
 
-    protected Class<T> getType() {
-        return type;
-    }
-
     protected DatastoreImpl getDatastore() {
         return datastore;
     }
@@ -46,7 +42,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater addToSet(final String field, final Object value) {
         if (value == null) {
-            throw new QueryException("Value cannot be null.");
+            throw new UpdateException(Sofia.valueCannotBeNull());
         }
 
         add(UpdateOperator.ADD_TO_SET, field, value);
@@ -56,7 +52,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater addToSet(final String field, final List<?> values) {
         if (values == null || values.isEmpty()) {
-            throw new UpdateException("Values cannot be null or empty.");
+            throw new UpdateException(Sofia.valuesCannotBeNullOrEmpty());
         }
         PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(type), field, validateNames);
 
@@ -105,7 +101,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater inc(final String field, final Number value) {
         if (value == null) {
-            throw new QueryException("Value cannot be null.");
+            throw new UpdateException(Sofia.valueCannotBeNull());
         }
         add(UpdateOperator.INC, field, value);
         return (Updater) this;
@@ -126,7 +122,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater pull(final String field, final Object value) {
         if (value == null) {
-            throw new QueryException("Value cannot be null.");
+            throw new UpdateException(Sofia.valueCannotBeNull());
         }
         add(UpdateOperator.PULL, field, value);
         return (Updater) this;
@@ -135,7 +131,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater pullAll(final String field, final List<?> values) {
         if (values == null || values.isEmpty()) {
-            throw new QueryException("Value cannot be null or empty.");
+            throw new UpdateException(Sofia.valuesCannotBeNullOrEmpty());
         }
 
         add(UpdateOperator.PULL_ALL, field, values);
@@ -160,7 +156,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater push(final String field, final List<?> values, final PushOptions options) {
         if (values == null || values.isEmpty()) {
-            throw new QueryException("Values cannot be null or empty.");
+            throw new UpdateException(Sofia.valuesCannotBeNullOrEmpty());
         }
 
         Document document = new Document(UpdateOperator.EACH.val(), values);
@@ -183,7 +179,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater set(final String field, final Object value) {
         if (value == null) {
-            throw new QueryException("Value for field [" + field + "] cannot be null.");
+            throw new UpdateException(Sofia.valueCannotBeNull());
         }
 
         add(UpdateOperator.SET, field, value);
@@ -199,7 +195,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
     @Override
     public Updater setOnInsert(final String field, final Object value) {
         if (value == null) {
-            throw new QueryException("Value cannot be null.");
+            throw new UpdateException(Sofia.valueCannotBeNull());
         }
 
         add(UpdateOperator.SET_ON_INSERT, field, value);
@@ -217,13 +213,6 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
         return (Updater) this;
     }
 
-    /**
-     * Converts an Iterable to a List
-     *
-     * @param it  the Iterable
-     * @param <T> the types of the elements in the Iterable
-     * @return the List
-     */
     static <T> List<T> iterToList(final Iterable<T> it) {
         if (it instanceof List) {
             return (List<T>) it;
@@ -242,7 +231,7 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
 
     private void add(final UpdateOperator op, final String field, final Object value) {
         if (value == null) {
-            throw new QueryException("Val cannot be null");
+            throw new UpdateException(Sofia.valueCannotBeNull());
         }
 
         addOperation(op, new PathTarget(mapper, type, field, validateNames), value);
@@ -277,7 +266,5 @@ public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements
                 add(op, valueEntry.getKey(), valueEntry.getValue());
             }
         }
-
-        //        this.ops = ops;
     }
 }

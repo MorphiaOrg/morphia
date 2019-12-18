@@ -1,6 +1,9 @@
 package dev.morphia.query;
 
 
+import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
+import com.mongodb.client.model.geojson.MultiPolygon;
+import com.mongodb.client.model.geojson.Polygon;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.utils.Assert;
 import org.slf4j.Logger;
@@ -162,7 +165,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T intersects(final com.mongodb.client.model.geojson.Geometry geometry,
-                        final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
+                        final CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, INTERSECTS, geometry)
                                       .addCoordinateReferenceSystem(crs));
         return target;
@@ -281,28 +284,26 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T within(final com.mongodb.client.model.geojson.Polygon boundary) {
+    public T within(final Polygon boundary) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundary));
         return target;
     }
 
     @Override
-    public T within(final com.mongodb.client.model.geojson.MultiPolygon boundaries) {
+    public T within(final MultiPolygon boundaries) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundaries));
         return target;
     }
 
     @Override
-    public T within(final com.mongodb.client.model.geojson.Polygon boundary,
-                    final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
+    public T within(final Polygon boundary, final CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundary)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
 
     @Override
-    public T within(final com.mongodb.client.model.geojson.MultiPolygon boundaries,
-                    final com.mongodb.client.model.geojson.CoordinateReferenceSystem crs) {
+    public T within(final MultiPolygon boundaries, final CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, query, field, GEO_WITHIN, boundaries)
                                       .addCoordinateReferenceSystem(crs));
         return target;

@@ -14,25 +14,25 @@ public abstract class DiscriminatorFunction {
      */
     public static final DiscriminatorFunction className = new DiscriminatorFunction() {
         @Override
-        public String compute(final EntityModelBuilder builder) {
+        public String compute(final EntityModelBuilder<?> builder) {
             return builder.getType().getName();
         }
     };
     public static final DiscriminatorFunction lowerClassName = new DiscriminatorFunction() {
         @Override
-        public String compute(final EntityModelBuilder builder) {
+        public String compute(final EntityModelBuilder<?> builder) {
             return builder.getType().getName().toLowerCase();
         }
     };
     public static final DiscriminatorFunction simpleName = new DiscriminatorFunction() {
         @Override
-        public String compute(final EntityModelBuilder builder) {
+        public String compute(final EntityModelBuilder<?> builder) {
             return builder.getType().getSimpleName();
         }
     };
     public static final DiscriminatorFunction lowerSimpleName = new DiscriminatorFunction() {
         @Override
-        public String compute(final EntityModelBuilder builder) {
+        public String compute(final EntityModelBuilder<?> builder) {
             return builder.getType().getSimpleName().toLowerCase();
         }
     };
@@ -42,13 +42,13 @@ public abstract class DiscriminatorFunction {
      *
      * @param builder the builder to evaluate
      */
-    public final void apply(final EntityModelBuilder builder) {
+    public final void apply(final EntityModelBuilder<?> builder) {
         String discriminator = Mapper.IGNORED_FIELDNAME;
-        Entity entity = (Entity) builder.getAnnotation(Entity.class);
+        Entity entity = builder.getAnnotation(Entity.class);
         if (entity != null) {
             discriminator = entity.discriminator();
         } else {
-            Embedded embedded = (Embedded) builder.getAnnotation(Embedded.class);
+            Embedded embedded = builder.getAnnotation(Embedded.class);
             if (embedded != null) {
                 discriminator = embedded.discriminator();
             }
@@ -60,5 +60,5 @@ public abstract class DiscriminatorFunction {
         builder.discriminator(discriminator);
     }
 
-    protected abstract String compute(EntityModelBuilder builder);
+    protected abstract String compute(EntityModelBuilder<?> builder);
 }

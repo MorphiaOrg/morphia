@@ -62,8 +62,6 @@ public class Mapper {
      */
     public static final String IGNORED_FIELDNAME = ".";
 
-    static final String CLASS_NAME_FIELDNAME = "className";
-
     private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
 
     /**
