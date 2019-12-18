@@ -30,6 +30,7 @@ import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
+import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
