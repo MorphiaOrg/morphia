@@ -164,22 +164,14 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Query<T> search(final String search) {
-
-        final Document op = new Document("$search", search);
-
-        this.criteria("$text").equal(op);
-
+        this.criteria("$text").equal(new Document("$search", search));
         return this;
     }
 
     @Override
     public Query<T> search(final String search, final String language) {
-
-        final Document op = new Document("$search", search)
-                                .append("$language", language);
-
-        this.criteria("$text").equal(op);
-
+        this.criteria("$text").equal(new Document("$search", search)
+                                .append("$language", language));
         return this;
     }
 
