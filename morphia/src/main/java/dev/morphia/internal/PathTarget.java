@@ -24,8 +24,8 @@ import dev.morphia.sofia.Sofia;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringJoiner;
 
-import static dev.morphia.internal.MorphiaUtils.join;
 import static java.util.Arrays.asList;
 
 /**
@@ -104,7 +104,9 @@ public class PathTarget {
         if (!resolved) {
             resolve();
         }
-        return join(segments, '.');
+        StringJoiner joiner = new StringJoiner(".");
+        segments.forEach(s -> joiner.add(s));
+        return joiner.toString();
     }
 
     /**
@@ -162,7 +164,8 @@ public class PathTarget {
     }
 
     private void failValidation() {
-        throw new ValidationException(Sofia.invalidPathTarget(join(segments, '.'), root.getType().getName()));
+        resolved = true;
+        throw new ValidationException(Sofia.invalidPathTarget(translatedPath(), root.getType().getName()));
     }
 
     private void translate(final String nameToStore) {

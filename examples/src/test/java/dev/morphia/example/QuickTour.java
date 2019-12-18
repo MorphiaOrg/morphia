@@ -74,9 +74,9 @@ public final class QuickTour {
 
         Assert.assertEquals(1, results.getModifiedCount());
 
-        final Query<Employee> overPaidQuery = datastore.find(Employee.class)
-                                                       .filter("salary >", 100000);
-        datastore.delete(overPaidQuery);
+        datastore.find(Employee.class)
+                 .filter("salary >", 100000)
+                 .delete();
     }
 }
 
@@ -90,7 +90,7 @@ class Employee {
     @Reference
     private Employee manager;
     @Reference
-    private List<Employee> directReports = new ArrayList<Employee>();
+    private List<Employee> directReports = new ArrayList<>();
     @Property("wage")
     private Double salary;
 

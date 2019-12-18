@@ -19,7 +19,7 @@ import static java.util.Collections.singletonList;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-public abstract class UpdateBase<T, Updater extends Updates> implements Updates<Updater> {
+public abstract class UpdateBase<T, Updater extends Updates<Updater>> implements Updates<Updater> {
 
     private final Mapper mapper;
     private final Class<T> type;
@@ -168,16 +168,6 @@ public abstract class UpdateBase<T, Updater extends Updates> implements Updates<
         addOperation(UpdateOperator.PUSH, new PathTarget(mapper, mapper.getMappedClass(type), field, validateNames), document);
 
         return (Updater) this;
-    }
-
-    @Override
-    public Updater removeAll(final String field, final Object value) {
-        return pull(field, value);
-    }
-
-    @Override
-    public Updater removeAll(final String field, final List<?> values) {
-        return pullAll(field, values);
     }
 
     @Override

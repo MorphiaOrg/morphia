@@ -28,6 +28,55 @@ public class Projection {
     }
 
     /**
+     * Adds a field to the projection clause. The _id field is always included unless explicitly suppressed.
+     *
+     * @param fields the fields to exclude
+     * @return this
+     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
+     */
+    public FindOptions exclude(final String... fields) {
+        if (excludes == null) {
+            excludes = new ArrayList<>();
+        }
+        excludes.addAll(List.of(fields));
+        validateProjections();
+        return options;
+    }
+
+    private void validateProjections() {
+        if ((includes != null || excludes != null) && (slice != null || meta != null)) {
+            throw new ValidationException(Sofia.mixedModeProjections());
+        }
+        if (slice != null && (includes != null || excludes != null || meta != null)) {
+            throw new ValidationException(Sofia.mixedModeProjections());
+        }
+        if (meta != null && (includes != null || excludes != null || slice != null)) {
+            throw new ValidationException(Sofia.mixedModeProjections());
+        }
+        if (includes != null && excludes != null) {
+            if (excludes.size() > 1 || !"_id".equals(excludes.get(0))) {
+                throw new ValidationException(Sofia.mixedProjections());
+            }
+        }
+    }
+
+    /**
+     * Adds a field to the projection clause. The _id field is always included unless explicitly suppressed.
+     *
+     * @param fields the fields to include
+     * @return this
+     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
+     */
+    public FindOptions include(final String... fields) {
+        if (includes == null) {
+            includes = new ArrayList<>();
+        }
+        includes.addAll(List.of(fields));
+        validateProjections();
+        return options;
+    }
+
+    /**
      * Configure the project to only return known, mapped fields
      *
      * @return this
@@ -106,55 +155,6 @@ public class Projection {
     }
 
     /**
-     * Adds a field to the projection clause. The _id field is always included unless explicitly suppressed.
-     *
-     * @param fields the fields to exclude
-     * @return this
-     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
-     */
-    FindOptions exclude(final String... fields) {
-        if (excludes == null) {
-            excludes = new ArrayList<>();
-        }
-        excludes.addAll(List.of(fields));
-        validateProjections();
-        return options;
-    }
-
-    private void validateProjections() {
-        if ((includes != null || excludes != null) && (slice != null || meta != null)) {
-            throw new ValidationException(Sofia.mixedModeProjections());
-        }
-        if (slice != null && (includes != null || excludes != null || meta != null)) {
-            throw new ValidationException(Sofia.mixedModeProjections());
-        }
-        if (meta != null && (includes != null || excludes != null || slice != null)) {
-            throw new ValidationException(Sofia.mixedModeProjections());
-        }
-        if (includes != null && excludes != null) {
-            if (excludes.size() > 1 || !"_id".equals(excludes.get(0))) {
-                throw new ValidationException(Sofia.mixedProjections());
-            }
-        }
-    }
-
-    /**
-     * Adds a field to the projection clause. The _id field is always included unless explicitly suppressed.
-     *
-     * @param fields the fields to include
-     * @return this
-     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
-     */
-    FindOptions include(final String... fields) {
-        if (includes == null) {
-            includes = new ArrayList<>();
-        }
-        includes.addAll(List.of(fields));
-        validateProjections();
-        return options;
-    }
-
-    /**
      * Adds an sliced array field to a projection.
      *
      * @param field the field to project
@@ -163,7 +163,7 @@ public class Projection {
      * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      */
-    FindOptions project(final String field, final ArraySlice slice) {
+    public FindOptions project(final String field, final ArraySlice slice) {
         this.arrayField = field;
         this.slice = slice;
         validateProjections();
@@ -178,7 +178,7 @@ public class Projection {
      * @mongodb.driver.manual reference/operator/projection/meta/ $meta
      * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
      */
-    FindOptions project(final Meta meta) {
+    public FindOptions project(final Meta meta) {
         this.meta = meta;
         validateProjections();
         return options;

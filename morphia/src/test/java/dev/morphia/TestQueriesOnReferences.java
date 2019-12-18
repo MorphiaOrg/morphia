@@ -22,11 +22,15 @@ public class TestQueriesOnReferences extends TestBase {
 
         Assert.assertNotNull(getDs().find(ContainsPic.class)
                                     .field("pic").exists()
-                                    .project("pic", true).execute(new FindOptions().limit(1))
+                                    .execute(new FindOptions()
+                                                 .projection().include("pic")
+                                                 .limit(1))
                                     .tryNext());
         Assert.assertNull(getDs().find(ContainsPic.class)
                                  .field("pic").doesNotExist()
-                                 .project("pic", true).execute(new FindOptions().limit(1))
+                                 .execute(new FindOptions()
+                                              .projection().include("pic")
+                                              .limit(1))
                                  .tryNext());
     }
 

@@ -16,7 +16,9 @@ import java.util.List;
  * The factory for creating a MultiPoint is the {@code GeoJson.multiPoint} method.
  *
  * @see dev.morphia.geo.GeoJson
+ * @deprecated
  */
+@Deprecated(since = "2.0", forRemoval = true)
 @Entity
 public class GeometryCollection {
     @Id

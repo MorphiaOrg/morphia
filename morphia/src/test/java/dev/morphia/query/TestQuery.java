@@ -32,7 +32,6 @@ import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -812,9 +811,9 @@ public class TestQuery extends TestBase {
 
         try {
             getDs().find(ContainsRenamedFields.class)
-                   .project("first_name", true)
-                   .project("last_name", false)
-                   .execute();
+                   .execute(new FindOptions()
+                                .projection().include("first_name")
+                                .projection().exclude("last_name"));
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -822,20 +821,18 @@ public class TestQuery extends TestBase {
 
         try {
             getDs().find(ContainsRenamedFields.class)
-                   .project("first_name", true)
-                   .project("last_name", true)
-                   .project("_id", false)
-                   .execute();
+                   .execute(new FindOptions()
+                                .projection().include("first_name", "last_name")
+                                .projection().exclude("_id"));
         } catch (ValidationException e) {
             fail("An exception should not have been thrown indication a mixed projection because _id suppression is a special case");
         }
 
         try {
             getDs().find(ContainsRenamedFields.class)
-                   .project("first_name", false)
-                   .project("last_name", false)
-                   .project("_id", true)
-                   .execute();
+                   .execute(new FindOptions()
+                                .projection().exclude("first_name", "last_name")
+                                .projection().include("_id"));
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -843,9 +840,9 @@ public class TestQuery extends TestBase {
 
         try {
             getDs().find(IntVector.class)
-                   .project("name", false)
-                   .project("scalars", new ArraySlice(5))
-                   .execute();
+                   .execute(new FindOptions()
+                                .projection().exclude("name")
+                                .projection().project("scalars", new ArraySlice(5)));
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -982,15 +979,17 @@ public class TestQuery extends TestBase {
         getDs().save(new ContainsRenamedFields("Frank", "Zappa"));
 
         ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class)
-                                             .project("first_name", true)
-                                             .execute(new FindOptions().limit(1))
+                                             .execute(new FindOptions()
+                                                          .projection().include("first_name")
+                                                          .limit(1))
                                              .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
         found = getDs().find(ContainsRenamedFields.class)
-                       .project("firstName", true)
-                       .execute(new FindOptions().limit(1))
+                       .execute(new FindOptions()
+                                    .projection().include("first_name")
+                                    .limit(1))
                        .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
@@ -998,8 +997,9 @@ public class TestQuery extends TestBase {
         try {
             getDs()
                 .find(ContainsRenamedFields.class)
-                .project("bad field name", true)
-                .execute(new FindOptions().limit(1))
+                .execute(new FindOptions()
+                             .projection().include("bad field name")
+                             .limit(1))
                 .tryNext();
             fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
@@ -1021,29 +1021,31 @@ public class TestQuery extends TestBase {
         getDs().save(vector);
 
         assertArrayEquals(copy(ints, 0, 4), getDs().find(IntVector.class)
-                                                   .project("scalars", new ArraySlice(4))
-
-                                                   .execute(new FindOptions().limit(1))
+                                                   .execute(new FindOptions()
+                                                                .projection().project("scalars", new ArraySlice(4))
+                                                                .limit(1))
                                                    .next()
                                                 .scalars);
         assertArrayEquals(copy(ints, 5, 4), getDs().find(IntVector.class)
-                                                   .project("scalars", new ArraySlice(5, 4))
-
-                                                   .execute(new FindOptions().limit(1))
+                                                   .execute(new FindOptions()
+                                                                .projection().project("scalars", new ArraySlice(5, 4))
+                                                                .limit(1))
                                                    .next()
                                                 .scalars);
-        assertArrayEquals(copy(ints, ints.length - 10, 6), getDs().find(IntVector.class)
-                                                                  .project("scalars", new ArraySlice(-10, 6))
-
-                                                                  .execute(new FindOptions().limit(1))
-                                                                  .next()
-                                                               .scalars);
-        assertArrayEquals(copy(ints, ints.length - 12, 12), getDs().find(IntVector.class)
-                                                                   .project("scalars", new ArraySlice(-12))
-
-                                                                   .execute(new FindOptions().limit(1))
-                                                                   .next()
-                                                                .scalars);
+        assertArrayEquals(copy(ints, ints.length - 10, 6),
+            getDs().find(IntVector.class)
+                   .execute(new FindOptions()
+                                .projection().project("scalars", new ArraySlice(-10, 6))
+                                .limit(1))
+                   .next()
+                .scalars);
+        assertArrayEquals(copy(ints, ints.length - 12, 12),
+            getDs().find(IntVector.class)
+                   .execute(new FindOptions()
+                                .projection().project("scalars", new ArraySlice(-12))
+                                .limit(1))
+                   .next()
+                .scalars);
     }
 
     @Test

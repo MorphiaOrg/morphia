@@ -114,27 +114,6 @@ public interface Updates<Updater extends Updates> {
     Updater min(String field, Number value);
 
     /**
-     * removes the value from the array field
-     *
-     * @param field the field to update
-     * @param value the value to use
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/pull/ $pull
-     */
-    Updater pull(String field, Object value);
-
-    /**
-     * removes the values from the array field
-     *
-     * @param field  the field to update
-     * @param values the values to use
-     * @return this
-     * @mongodb.driver.manual reference/operator/update/pullAll/ $pullAll
-     */
-    Updater pullAll(String field, List<?> values);
-
-
-    /**
      * Adds new values to an array field.
      *
      * @param field the field to updated
@@ -186,7 +165,19 @@ public interface Updates<Updater extends Updates> {
      * @deprecated use {@link #pull(String, Object)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Updater removeAll(String field, Object value);
+    default Updater removeAll(String field, Object value) {
+        return pull(field, value);
+    }
+
+    /**
+     * removes the value from the array field
+     *
+     * @param field the field to update
+     * @param value the value to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/pull/ $pull
+     */
+    Updater pull(String field, Object value);
 
     /**
      * removes the values from the array field
@@ -198,7 +189,19 @@ public interface Updates<Updater extends Updates> {
      * @deprecated use {@link #pullAll(String, List)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Updater removeAll(String field, List<?> values);
+    default Updater removeAll(String field, List<?> values) {
+        return pullAll(field, values);
+    }
+
+    /**
+     * removes the values from the array field
+     *
+     * @param field  the field to update
+     * @param values the values to use
+     * @return this
+     * @mongodb.driver.manual reference/operator/update/pullAll/ $pullAll
+     */
+    Updater pullAll(String field, List<?> values);
 
     /**
      * removes the first value from the array

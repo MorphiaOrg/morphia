@@ -85,6 +85,7 @@ public interface AdvancedDatastore extends Datastore {
      * @return the UpdateOperations instance
      * @deprecated use {@link Query#update()} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     <T> UpdateOperations<T> createUpdateOperations(Class<T> type, Document ops);
 

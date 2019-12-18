@@ -32,12 +32,13 @@ public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> 
                 return new ConstructorCreator(model);
             }
 
-            for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
-                if (constructor.getParameterTypes().length == 0) {
-                    return new NoArgCreator<>((Constructor<T>) constructor);
-                }
+            try {
+                return new NoArgCreator<>((Constructor<T>) model.getType().getDeclaredConstructor(new Class[0]));
+            } catch (NoSuchMethodException e) {
+                throw new MappingException(Sofia.noargConstructorNotFound(model.getType().getName()));
+
             }
         }
-        throw new MappingException(Sofia.cannotInstantiate(model.getType().getName(), null));
+        throw new MappingException(Sofia.noargConstructorNotFound(model.getType().getName()));
     }
 }

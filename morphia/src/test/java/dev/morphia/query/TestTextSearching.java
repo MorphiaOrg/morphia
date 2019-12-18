@@ -82,9 +82,11 @@ public class TestTextSearching extends TestBase {
                             new Book("Iliad", "Homer")));
 
         List<Book> books = getDs().find(Book.class)
-                                  .search("Dante Comedy").project(Meta.textScore("score"))
+                                  .search("Dante Comedy")
                                   .order(Meta.textScore("score"))
-                                  .execute().toList();
+                                  .execute(new FindOptions()
+                                          .projection().project(Meta.textScore("score")))
+                                  .toList();
         Assert.assertEquals(3, books.size());
         Assert.assertEquals("Divine Comedy", books.get(0).title);
     }
@@ -101,9 +103,11 @@ public class TestTextSearching extends TestBase {
                             new Book("Iliad", "Homer")));
 
         List<Book> books = getDs().find(Book.class)
-                                  .search("Dante").project(Meta.textScore())
+                                  .search("Dante")
                                   .order(Meta.textScore())
-                                  .execute().toList();
+                                  .execute(new FindOptions()
+                                               .projection().project(Meta.textScore()))
+                                  .toList();
         Assert.assertEquals(3, books.size());
         Assert.assertEquals("Dante", books.get(0).author);
     }
@@ -120,9 +124,11 @@ public class TestTextSearching extends TestBase {
                             new Book("Iliad", "Homer")));
 
         List<Book> books = getDs().find(Book.class)
-                                  .search("Dante").project(Meta.textScore("score"))
+                                  .search("Dante")
                                   .order(Meta.textScore("score"))
-                                  .execute().toList();
+                                  .execute(new FindOptions()
+                                               .projection().project(Meta.textScore("score")))
+                                  .toList();
         Assert.assertEquals(3, books.size());
         for (Book book : books) {
             Assert.assertEquals("Dante", book.author);

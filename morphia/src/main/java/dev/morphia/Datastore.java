@@ -71,6 +71,7 @@ public interface Datastore {
      * @return the new UpdateOperations instance
      * @deprecated use {@link Query#update()} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
         return new UpdateOpsImpl<>(clazz, getMapper());
@@ -187,6 +188,7 @@ public interface Datastore {
      * @since 1.3
      * @deprecated use {@link Query#delete(FindAndDeleteOptions)} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
         return query.delete(options);
@@ -201,6 +203,7 @@ public interface Datastore {
      * @return The modified Entity (the result of the update)
      * @deprecated use {@link Query#modify()} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, UpdateOperations<T> operations) {
         return query.modify(operations).execute(new FindAndModifyOptions()
@@ -347,6 +350,7 @@ public interface Datastore {
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
      * @param wc     the WriteConcern to use
+     * @deprecated use {@link #merge(Object, InsertOneOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     <T> void merge(T entity, WriteConcern wc);
@@ -405,6 +409,7 @@ public interface Datastore {
      * @return the saved entities
      * @deprecated use {@link #save(List, InsertManyOptions)} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> List<T> save(Iterable<T> entities, InsertOptions options) {
         List<T> list = new ArrayList<>();
@@ -430,6 +435,7 @@ public interface Datastore {
      * @return the saved entity
      * @deprecated use {@link #save(T, InsertOneOptions)} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T save(T entity, InsertOptions options) {
         return save(entity, options.toInsertOneOptions());
@@ -473,6 +479,7 @@ public interface Datastore {
      * @return the results of the updates
      * @deprecated use {@link Query#update()} instead.  Please note the default has changed from multi- to single- document updates.
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations) {
         return query.update(operations).execute(new UpdateOptions()
@@ -492,6 +499,7 @@ public interface Datastore {
      * @since 1.3
      * @deprecated use {@link Query#update()} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
         return query.update(operations).execute(options);

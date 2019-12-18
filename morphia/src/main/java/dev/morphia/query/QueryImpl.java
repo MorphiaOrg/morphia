@@ -48,6 +48,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private boolean validateName = true;
     private boolean validateType = true;
     private Document baseQuery;
+    @Deprecated
     private FindOptions options;
     private CriteriaContainer compoundContainer;
     private String collectionName;

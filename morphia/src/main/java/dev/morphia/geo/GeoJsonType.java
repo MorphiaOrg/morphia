@@ -4,8 +4,10 @@ import java.util.List;
 
 /**
  * Enumerates all the GeoJson types that are currently supported by Morphia.
+ * @deprecated use the driver defined types
  */
-@SuppressWarnings("unchecked") // can't know, or define generics for, the Lists in the factory
+@SuppressWarnings({"unchecked", "removal"}) // can't know, or define generics for, the Lists in the factory
+@Deprecated(since = "2.0", forRemoval = true)
 public enum GeoJsonType implements GeometryFactory {
     POINT("Point", Point.class) {
         @Override
@@ -52,42 +54,4 @@ public enum GeoJsonType implements GeometryFactory {
         this.typeClass = typeClass;
     }
 
-    /**
-     * Allows you to turn String values of types into the Enum that corresponds to this type.
-     *
-     * @param type a String, one of the values from <a href="http://docs.mongodb
-     *             .org/manual/applications/geospatial-indexes/#geojson-objects">this
-     *             list</a> of supported types
-     * @return the GeoJsonType that corresponds to this type String
-     */
-    public static GeoJsonType fromString(final String type) {
-        if (type != null) {
-            for (final GeoJsonType geoJsonType : values()) {
-                if (type.equalsIgnoreCase(geoJsonType.getType())) {
-                    return geoJsonType;
-                }
-            }
-        }
-        throw new IllegalArgumentException(String.format("Cannot decode type into GeoJsonType. Type= '%s'", type));
-    }
-
-    /**
-     * Returns the value that needs to be stored with the GeoJson values in the database to declare which GeoJson type the coordinates
-     * represent. See <a href="http://docs.mongodb.org/manual/applications/geospatial-indexes/#geojson-objects">the documentation</a> for a
-     * list of the GeoJson objects supported by MongoDB.
-     *
-     * @return a String of the GeoJson type.
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Returns a concrete class that implements Geometry, the class that represents this GeoJsonType.
-     *
-     * @return the Geometry class for this GeoJsonType
-     */
-    public Class<? extends Geometry> getTypeClass() {
-        return typeClass;
-    }
 }

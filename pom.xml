@@ -55,6 +55,7 @@
                         <source>11</source>
                         <target>11</target>
                         <compilerArgument>-proc:none</compilerArgument>
+                        <compilerArgument>-Xlint:deprecation</compilerArgument>
                     </configuration>
                 </plugin>
                 <plugin>

@@ -58,7 +58,7 @@ import static org.bson.Document.parse;
  *
  * @morphia.internal
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
@@ -127,6 +127,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public <T> UpdateOperations<T> createUpdateOperations(final Class<T> type, final Document ops) {
         final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(type);
         upOps.setOps(ops);
@@ -341,11 +342,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
         return find(clazz).disableValidation().filter("_id" + " in", ids).enableValidation();
     }
 
     @Override
+    @SuppressWarnings({"deprecated"})
     public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
         final String collectionName = mapper.getMappedClass(clazz).getCollectionName();
         final String keyCollection = mapper.updateCollection(key);
@@ -362,7 +365,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "deprecated"})
     public <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
 
         final Map<String, List<Key>> kindMap = new HashMap<>();
@@ -394,6 +397,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings({"deprecated"})
     public <T> List<T> getByKeys(final Iterable<Key<T>> keys) {
         return getByKeys(null, keys);
     }
@@ -474,6 +478,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public <T> void merge(final T entity, final WriteConcern wc) {
         merge(entity, new InsertOneOptions().writeConcern(wc));
     }
@@ -583,7 +588,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                          .execute(new UpdateOptions()
                                                       .bypassDocumentValidation(options.getBypassDocumentValidation())
                                                       .clientSession(session)
-                                                      .writeConcern(options.getWriteConcern()));
+                                                      .writeConcern(options.writeConcern()));
 
             if (res.getModifiedCount() != 1) {
                 throw new ConcurrentModificationException(format("Entity of class %s (id='%s',version='%d') was concurrently updated.",
