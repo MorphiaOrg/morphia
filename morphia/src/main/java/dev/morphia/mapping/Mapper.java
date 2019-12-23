@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
+import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.codec.DocumentWriter;
@@ -94,6 +95,7 @@ public class Mapper {
             fromProviders(
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
+                new AggregationCodecProvider(),
                 new MorphiaCodecProvider(this, datastore)));
     }
 

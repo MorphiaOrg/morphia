@@ -273,10 +273,10 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeStartDocument(final String name) {
+        writeName(name);
         final Document document = new Document();
         value(document);
         push(document);
-        writeName(name);
     }
 
     @Override

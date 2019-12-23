@@ -13,6 +13,8 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import dev.morphia.aggregation.experimental.Aggregation;
+import dev.morphia.aggregation.experimental.AggregationImpl;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.annotations.CappedAt;
@@ -30,7 +32,6 @@ import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
@@ -198,10 +199,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         return doTransaction(startSession(options), transaction);
     }
 
-    /**
-     * @param source the initial type/collection to aggregate against
-     * @return a new query bound to the kind (a specific {@link MongoCollection})
-     */
+    @Override
+    public <T> Aggregation<T> aggregate(final Class<T> source) {
+        return new AggregationImpl(this, getCollection(source), source);
+    }
+
     @Override
     public AggregationPipeline createAggregation(final Class source) {
         return new AggregationPipelineImpl(this, getCollection(source), source);

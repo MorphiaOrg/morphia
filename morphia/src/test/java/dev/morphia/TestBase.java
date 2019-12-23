@@ -82,6 +82,15 @@ public abstract class TestBase {
         }
     }
 
+    protected int count(final MongoCursor<?> cursor) {
+        int count = 0;
+        while (cursor.hasNext()) {
+            count++;
+            System.out.println("******************* cursor.next() = " + cursor.next());;
+        }
+        return count;
+    }
+
     protected int count(final MongoIterable<?> iterable) {
         MongoCursor<?> iterator = iterable.iterator();
         int count = 0;

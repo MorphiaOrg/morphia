@@ -1,6 +1,5 @@
 package dev.morphia;
 
-
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
@@ -10,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
@@ -28,7 +28,6 @@ import dev.morphia.transactions.experimental.MorphiaTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Datastore interface to get/delete/save objects
  */
@@ -37,7 +36,18 @@ public interface Datastore {
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      *
      * @param source The class to create aggregation against
+     * @param <T>    the source type
      * @return the aggregation pipeline
+     * @morphia.experimental
+     */
+    <T> Aggregation<T> aggregate(final Class<T> source);
+
+    /**
+     * Returns a new query bound to the kind (a specific {@link DBCollection})
+     *
+     * @param source The class to create aggregation against
+     * @return the aggregation pipeline
+     * @deprecated use {@link #aggregate(Class)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     AggregationPipeline createAggregation(Class source);

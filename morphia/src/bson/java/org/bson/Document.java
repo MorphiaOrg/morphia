@@ -527,8 +527,6 @@ public class Document implements Map<String, Object>, Serializable, Bson {
 
     @Override
     public String toString() {
-        return "Document{"
-               + documentAsMap
-               + '}';
+        return documentAsMap.toString();
     }
 }
