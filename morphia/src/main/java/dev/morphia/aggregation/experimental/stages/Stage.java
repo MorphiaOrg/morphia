@@ -1,4 +1,14 @@
 package dev.morphia.aggregation.experimental.stages;
 
-public interface Stage {
+public abstract class Stage {
+    private String name;
+
+    protected Stage(final String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }

@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import java.util.List;
+
 public abstract class Expression {
     protected final String operation;
     protected final String name;
@@ -9,6 +11,10 @@ public abstract class Expression {
         this.operation = operation;
         this.name = name;
         this.value = value;
+    }
+
+    public static Expression field(final String name) {
+        return new Literal(name);
     }
 
     public String getOperation() {
@@ -21,5 +27,11 @@ public abstract class Expression {
 
     public Object getValue() {
         return value;
+    }
+
+    public static class Literal extends Expression {
+        public Literal(final String field) {
+            super(null, null, field);
+        }
     }
 }

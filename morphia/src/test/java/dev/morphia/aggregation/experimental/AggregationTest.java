@@ -18,6 +18,8 @@ package dev.morphia.aggregation.experimental;
 
 import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -41,7 +43,6 @@ import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-@Ignore("aggregation needs work")
 public class AggregationTest extends TestBase {
 
     @Test
@@ -69,11 +70,25 @@ public class AggregationTest extends TestBase {
                                          .group(id(
                                              month("month", "$date"),
                                              year("year", "$date"))
-                                                    .expressions(sum("count", 1))
+                                                    .fields(sum("count", 1))
                                                                 );
         pipeline.execute(User.class);
     }
 
+    @Test
+    public void testNullGroupId() {
+        Aggregation<User> pipeline = getDs()
+                                           .aggregate(User.class)
+                                           .group(Group.nullId()
+                                                       .fields(sum("count", 1))
+                                                 );
+
+        Group group = pipeline.getStage("$group");
+        Assert.assertNull(group.getId());
+        Assert.assertEquals(1, group.getFields().size());
+
+        pipeline.execute(User.class);
+    }
 /*
     @Test
     public void testSampleStage() {
@@ -84,17 +99,7 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(new Document("size", 1), sample.get("$sample"));
     }
 
-    @Test
-    public void testNullGroupId() {
-        AggregationPipeline pipeline = getDs()
-                                           .createAggregation(User.class)
-                                           .group(grouping("count", accumulator("$sum", 1)));
 
-        final Document group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
-        Assert.assertNull(group.get("_id"));
-
-        pipeline.aggregate(User.class);
-    }
 
     @Test
     public void testDateToString() throws ParseException {
@@ -692,397 +697,4 @@ public class AggregationTest extends TestBase {
         pipeline.aggregate(User.class);
     }
 */
-
-    private Document getDocument(final Document document, final String... path) {
-        Document current = document;
-        for (String step : path) {
-            Object next = current.get(step);
-            Assert.assertNotNull(format("Could not find %s in \n%s", step, current), next);
-            current = (Document) next;
-        }
-        return current;
-    }
-
-    @Entity("authors")
-    public static class Author {
-        @Id
-        private String name;
-        private List<String> books;
-    }
-
-    @Entity(value = "books", useDiscriminator = false)
-    public static final class Book {
-        @Id
-        private ObjectId id;
-        private String title;
-        private String author;
-        private Integer copies;
-        private List<String> tags;
-
-        private Book() {
-        }
-
-        public Book(final String title, final String author, final Integer copies, final String... tags) {
-            this.title = title;
-            this.author = author;
-            this.copies = copies;
-            this.tags = asList(tags);
-        }
-
-        @Override
-        public String toString() {
-            return format("Book{title='%s', author='%s', copies=%d, tags=%s}", title, author, copies, tags);
-        }
-    }
-
-    public static class BooksBucketResult extends BucketAutoResult {
-        private Set<String> authors;
-
-        public Set<String> getAuthors() {
-            return authors;
-        }
-
-        public void setAuthors(final Set<String> authors) {
-            this.authors = authors;
-        }
-    }
-
-    @Entity
-    public static class BucketAutoResult {
-
-        @Id
-        private MinMax id;
-        private int count;
-
-        public int getCount() {
-            return count;
-        }
-
-        public void setCount(final int count) {
-            this.count = count;
-        }
-
-        public MinMax getId() {
-            return id;
-        }
-
-        public void setId(final MinMax id) {
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            return "BucketAutoResult{"
-                   + "id=" + id
-                   + ", count=" + count
-                   + '}';
-        }
-
-        public static class MinMax {
-            private int min;
-            private int max;
-
-            public int getMax() {
-                return max;
-            }
-
-            public void setMax(final int max) {
-                this.max = max;
-            }
-
-            public int getMin() {
-                return min;
-            }
-
-            public void setMin(final int min) {
-                this.min = min;
-            }
-
-            @Override
-            public String toString() {
-                return "MinMax{"
-                       + "min=" + min
-                       + ", max=" + max
-                       + '}';
-            }
-        }
-    }
-
-    public static class BucketResult {
-        @Id
-        private String id;
-        private int count;
-
-        public int getCount() {
-            return count;
-        }
-
-        public void setCount(final int count) {
-            this.count = count;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(final String id) {
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            return "BucketResult{"
-                   + "id="
-                   + id
-                   + ", count=" + count
-                   + '}';
-        }
-    }
-
-    @Entity("counts")
-    public static class CountResult {
-
-        @Id
-        private String author;
-        @AlsoLoad("value")
-        private int count;
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public int getCount() {
-            return count;
-        }
-    }
-
-    @Entity(value = "inventory", useDiscriminator = false)
-    public static class Inventory {
-        @Id
-        private int id;
-        private String sku;
-        private String description;
-        private int instock;
-
-        public Inventory() {
-        }
-
-        Inventory(final int id) {
-            this.id = id;
-        }
-
-        Inventory(final int id, final String sku, final String description) {
-            this.id = id;
-            this.sku = sku;
-            this.description = description;
-        }
-
-        Inventory(final int id, final String sku, final String description, final int instock) {
-            this.id = id;
-            this.sku = sku;
-            this.description = description;
-            this.instock = instock;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(final String description) {
-            this.description = description;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(final int id) {
-            this.id = id;
-        }
-
-        public int getInstock() {
-            return instock;
-        }
-
-        public void setInstock(final int instock) {
-            this.instock = instock;
-        }
-
-        public String getSku() {
-            return sku;
-        }
-
-        public void setSku(final String sku) {
-            this.sku = sku;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id;
-            result = 31 * result + (sku != null ? sku.hashCode() : 0);
-            result = 31 * result + (description != null ? description.hashCode() : 0);
-            result = 31 * result + instock;
-            return result;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Inventory)) {
-                return false;
-            }
-
-            final Inventory inventory = (Inventory) o;
-
-            if (id != inventory.id) {
-                return false;
-            }
-            if (instock != inventory.instock) {
-                return false;
-            }
-            if (sku != null ? !sku.equals(inventory.sku) : inventory.sku != null) {
-                return false;
-            }
-            return description != null ? description.equals(inventory.description) : inventory.description == null;
-
-        }
-    }
-
-    @Entity("orders")
-    private static class Order {
-        @Id
-        private int id;
-        private String item;
-        private int price;
-        private int quantity;
-        private List<Inventory> inventoryDocs;
-
-        private Order() {
-        }
-
-        Order(final int id) {
-            this.id = id;
-        }
-
-        Order(final int id, final String item, final int price, final int quantity) {
-            this.id = id;
-            this.item = item;
-            this.price = price;
-            this.quantity = quantity;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(final int id) {
-            this.id = id;
-        }
-
-        public List<Inventory> getInventoryDocs() {
-            return inventoryDocs;
-        }
-
-        public void setInventoryDocs(final List<Inventory> inventoryDocs) {
-            this.inventoryDocs = inventoryDocs;
-        }
-
-        public String getItem() {
-            return item;
-        }
-
-        public void setItem(final String item) {
-            this.item = item;
-        }
-
-        public int getPrice() {
-            return price;
-        }
-
-        public void setPrice(final int price) {
-            this.price = price;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(final int quantity) {
-            this.quantity = quantity;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id;
-            result = 31 * result + (item != null ? item.hashCode() : 0);
-            result = 31 * result + price;
-            result = 31 * result + quantity;
-            return result;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Order)) {
-                return false;
-            }
-
-            final Order order = (Order) o;
-
-            if (id != order.id) {
-                return false;
-            }
-            if (price != order.price) {
-                return false;
-            }
-            if (quantity != order.quantity) {
-                return false;
-            }
-            return item != null ? item.equals(order.item) : order.item == null;
-
-        }
-
-    }
-
-    @Entity
-    public static class SortByCountResult {
-        @Id
-        private String id;
-        private int count;
-
-        public int getCount() {
-            return count;
-        }
-
-        public void setCount(final int count) {
-            this.count = count;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(final String id) {
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            return "SortByCountResult{"
-                   + "id=" + id
-                   + ", count=" + count
-                   + '}';
-        }
-    }
-
-    @Entity
-    private static class StringDates {
-        @Id
-        private ObjectId id;
-        private String string;
-    }
 }

@@ -31,20 +31,21 @@ public class GroupCodec implements Codec<Group> {
         writer.writeName("$group");
         writer.writeStartDocument();
         String name = group.getName();
-        List<Expression> id = group.getCompoundId();
-        if (name != null && id != null) {
-            throw new BsonInvalidOperationException(Sofia.mixedGroupIdDefinition());
-        }
-        if (name != null) {
-            writer.writeString("_id", name);
-        }
+        List<Expression> id = group.getId();
         if (id != null) {
-            writer.writeStartDocument("_id");
-            encodeExpressions(writer, id, encoderContext);
-            writer.writeEndDocument();
+            writer.writeName("_id");
+            if(id.size() > 1) {
+                writer.writeStartDocument();
+                encodeExpressions(writer, id, encoderContext);
+                writer.writeEndDocument();
+            } else {
+                encodeExpressions(writer, id, encoderContext);
+            }
+        } else {
+            writer.writeNull("_id");
         }
 
-        encodeExpressions(writer, group.getExpressions(), encoderContext);
+        encodeExpressions(writer, group.getFields(), encoderContext);
 
         writer.writeEndDocument();
         writer.writeEndDocument();

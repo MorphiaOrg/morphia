@@ -13,7 +13,17 @@ import java.util.List;
  * @since 2.0
  */
 public interface Aggregation<T> {
+    /**
+     * @morphia.internal
+     * @return the stage in this aggregation
+     */
     List<Stage> getStages();
+
+    /**
+     * @morphia.internal
+     * @return the named stage or stages in this aggregation
+     */
+    <S> S getStage(String name);
 
     Aggregation<T> group(Group group);
 

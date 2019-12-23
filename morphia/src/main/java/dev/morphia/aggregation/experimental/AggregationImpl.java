@@ -36,6 +36,17 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <S> S getStage(final String name) {
+        List<Stage> list = stages.stream()
+                                 .filter(s -> s.getName().equals(name))
+                                 .collect(Collectors.toList());
+        return ((S) (list.size() == 1
+                     ? list.get(0)
+                     : list));
+    }
+
+    @Override
     public Aggregation<T> group(final Group group) {
         stages.add(group);
         return this;
