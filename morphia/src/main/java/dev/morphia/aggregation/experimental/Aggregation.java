@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental;
 
-import dev.morphia.aggregation.experimental.stages.Expression;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -13,18 +13,6 @@ import java.util.List;
  * @since 2.0
  */
 public interface Aggregation<T> {
-    /**
-     * @morphia.internal
-     * @return the stage in this aggregation
-     */
-    List<Stage> getStages();
-
-    /**
-     * @morphia.internal
-     * @return the named stage or stages in this aggregation
-     */
-    <S> S getStage(String name);
-
     Aggregation<T> group(Group group);
 
     /**
@@ -36,6 +24,32 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/match $match
      */
     Aggregation<T> match(Query<?> query);
+
+    /**
+     * Randomly selects the specified number of documents from the previous pipeline stage.
+     *
+     * @param sample the sample definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/match $sample
+     */
+    Aggregation<T> sample(Sample sample);
+
+    /**
+     * @morphia.internal
+     * @return the named stage or stages in this aggregation
+     */
+    <S> S getStage(String name);
+
+    /**
+     * @morphia.internal
+     * @return the stage in this aggregation
+     */
+    List<Stage> getStages();
+
+    /**
+     * @morphia.internal
+     */
+    List<Document> getDocuments();
 
     /**
      * Execute the aggregation and get the results.
@@ -53,9 +67,4 @@ public interface Aggregation<T> {
      * @return a MorphiaCursor
      */
     <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options);
-
-    /**
-     * @morphia.internal
-     */
-    List<Document> getDocuments();
 }

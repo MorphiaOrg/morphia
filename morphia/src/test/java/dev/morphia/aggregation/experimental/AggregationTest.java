@@ -19,28 +19,19 @@ package dev.morphia.aggregation.experimental;
 import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.stages.Group;
-import dev.morphia.aggregation.experimental.stages.Stage;
-import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
+import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.query.Query;
 import dev.morphia.testmodel.User;
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.stages.Accumulator.sum;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.month;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.year;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 public class AggregationTest extends TestBase {
@@ -70,18 +61,16 @@ public class AggregationTest extends TestBase {
                                          .group(id(
                                              month("month", "$date"),
                                              year("year", "$date"))
-                                                    .fields(sum("count", 1))
-                                                                );
+                                                    .fields(sum("count", 1)));
         pipeline.execute(User.class);
     }
 
     @Test
     public void testNullGroupId() {
         Aggregation<User> pipeline = getDs()
-                                           .aggregate(User.class)
-                                           .group(Group.nullId()
-                                                       .fields(sum("count", 1))
-                                                 );
+                                         .aggregate(User.class)
+                                         .group(Group.nullId()
+                                                     .fields(sum("count", 1)));
 
         Group group = pipeline.getStage("$group");
         Assert.assertNull(group.getId());
@@ -89,18 +78,19 @@ public class AggregationTest extends TestBase {
 
         pipeline.execute(User.class);
     }
-/*
+
     @Test
     public void testSampleStage() {
-        AggregationPipeline pipeline = getDs()
-                                           .createAggregation(User.class)
-                                           .sample(1);
-        final Document sample = ((AggregationPipelineImpl) pipeline).getStages().get(0);
-        Assert.assertEquals(new Document("size", 1), sample.get("$sample"));
+        Aggregation<User> pipeline = getDs()
+                                         .aggregate(User.class)
+                                         .sample(Sample.of(1));
+        Sample sample = pipeline.getStage("$sample");
+        Assert.assertEquals(1, sample.getSize());
+
+        pipeline.execute(User.class);
     }
 
-
-
+/*
     @Test
     public void testDateToString() throws ParseException {
         Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");

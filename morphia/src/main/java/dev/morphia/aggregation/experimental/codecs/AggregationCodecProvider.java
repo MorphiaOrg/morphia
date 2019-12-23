@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.codecs;
 import dev.morphia.aggregation.experimental.stages.Expression;
 import dev.morphia.aggregation.experimental.stages.Expression.Literal;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Sample;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -18,6 +19,8 @@ public class AggregationCodecProvider implements CodecProvider {
             codec = new ExpressionLiteralCodec(registry);
         } else if(Expression.class.isAssignableFrom(clazz)) {
             codec = new ExpressionCodec(registry);
+        } else if(Sample.class.isAssignableFrom(clazz)) {
+            codec = new SampleCodec();
         }
 
         return codec;
