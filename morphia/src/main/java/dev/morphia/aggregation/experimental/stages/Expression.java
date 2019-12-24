@@ -14,7 +14,11 @@ public abstract class Expression {
     }
 
     public static Expression field(final String name) {
-        return new Literal(name);
+        return new Literal(name.startsWith("$") ? name : "$" + name);
+    }
+
+    public static Expression literal(final Object value) {
+        return new Literal(value);
     }
 
     public String getOperation() {
@@ -30,8 +34,8 @@ public abstract class Expression {
     }
 
     public static class Literal extends Expression {
-        public Literal(final String field) {
-            super(null, null, field);
+        public Literal(final Object value) {
+            super(null, null, value);
         }
     }
 }

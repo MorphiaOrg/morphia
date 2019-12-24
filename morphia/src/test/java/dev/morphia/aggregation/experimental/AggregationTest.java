@@ -18,21 +18,29 @@ package dev.morphia.aggregation.experimental;
 
 import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.model.StringDates;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.query.Query;
+import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.User;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.stages.Accumulator.sum;
+import static dev.morphia.aggregation.experimental.stages.DateExpression.dateToString;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.month;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.year;
+import static dev.morphia.aggregation.experimental.stages.Expression.field;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
+import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 
 public class AggregationTest extends TestBase {
 
@@ -44,9 +52,9 @@ public class AggregationTest extends TestBase {
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .match(query);
-        Assert.assertEquals(1, count(pipeline.execute(User.class)));
+        assertEquals(1, count(pipeline.execute(User.class)));
 
-        Assert.assertEquals(2, count(pipeline.execute(User.class,
+        assertEquals(2, count(pipeline.execute(User.class,
             new dev.morphia.aggregation.experimental.AggregationOptions()
                 .collation(Collation.builder()
                                     .locale("en")
@@ -74,7 +82,7 @@ public class AggregationTest extends TestBase {
 
         Group group = pipeline.getStage("$group");
         Assert.assertNull(group.getId());
-        Assert.assertEquals(1, group.getFields().size());
+        assertEquals(1, group.getFields().size());
 
         pipeline.execute(User.class);
     }
@@ -85,28 +93,29 @@ public class AggregationTest extends TestBase {
                                          .aggregate(User.class)
                                          .sample(Sample.of(1));
         Sample sample = pipeline.getStage("$sample");
-        Assert.assertEquals(1, sample.getSize());
+        assertEquals(1, sample.getSize());
 
         pipeline.execute(User.class);
     }
 
-/*
     @Test
     public void testDateToString() throws ParseException {
         Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");
         getDs().save(new User("John Doe", joined));
-        AggregationPipeline pipeline = getDs()
-                                           .createAggregation(User.class)
-                                           .project(projection("string", expression("$dateToString",
-                                               new Document("format", "%Y-%m-%d")
-                                                   .append("date", "$joined"))));
+        Aggregation<User> pipeline = getDs()
+                                         .aggregate(User.class)
+                                           .project(of()
+                                                        .include("string", dateToString("%Y-%m-%d", field("joined"))));
 
-        for (final StringDates next : pipeline.aggregate(StringDates.class, builder().build())) {
-            assertEquals("2016-05-01", next.string);
+        MorphiaCursor<StringDates> it = pipeline.execute(StringDates.class);
+        while (it.hasNext()) {
+            final StringDates next = it.next();
+            assertEquals("2016-05-01", next.getString());
         }
     }
 
-    @Test
+/*
+   @Test
     public void testGenericAccumulatorUsage() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),

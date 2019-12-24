@@ -28,7 +28,7 @@ public class Group extends Stage {
     }
 
     public static Group id(final String name) {
-        return new Group(List.of(Expression.field(name.startsWith("$") ? name : "$" + name)));
+        return new Group(List.of(Expression.field(name)));
     }
 
     public static Group nullId() {

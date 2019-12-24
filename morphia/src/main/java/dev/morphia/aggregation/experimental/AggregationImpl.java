@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.mapping.codec.DocumentWriter;
@@ -56,6 +57,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public AggregationImpl match(final Query query) {
         stages.add(Match.of(query));
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> project(final Projection projection) {
+        stages.add(projection);
         return this;
     }
 
