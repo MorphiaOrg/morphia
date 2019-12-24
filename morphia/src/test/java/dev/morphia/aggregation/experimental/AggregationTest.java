@@ -18,6 +18,8 @@ package dev.morphia.aggregation.experimental;
 
 import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.model.Book;
+import dev.morphia.aggregation.experimental.model.CountResult;
 import dev.morphia.aggregation.experimental.model.StringDates;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -37,8 +39,10 @@ import static dev.morphia.aggregation.experimental.stages.DateExpression.dateToS
 import static dev.morphia.aggregation.experimental.stages.DateExpression.month;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.year;
 import static dev.morphia.aggregation.experimental.stages.Expression.field;
+import static dev.morphia.aggregation.experimental.stages.Expression.literal;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
+import static dev.morphia.aggregation.experimental.stages.Sort.on;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -105,7 +109,8 @@ public class AggregationTest extends TestBase {
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                            .project(of()
-                                                        .include("string", dateToString("%Y-%m-%d", field("joined"))));
+                                                        .include("string",
+                                                            dateToString("%Y-%m-%d", field("joined"))));
 
         MorphiaCursor<StringDates> it = pipeline.execute(StringDates.class);
         while (it.hasNext()) {
@@ -114,29 +119,49 @@ public class AggregationTest extends TestBase {
         }
     }
 
-/*
    @Test
     public void testGenericAccumulatorUsage() {
+       getDs().save(asList(new Book("The Banquet", "Dante", 2),
+           new Book("Divine Comedy", "Dante", 1),
+           new Book("Eclogues", "Dante", 2),
+           new Book("The Odyssey", "Homer", 10),
+           new Book("Iliad", "Homer", 10)));
+
+       MorphiaCursor<CountResult> aggregation = getDs().aggregate(Book.class)
+                                                       .group(id("author")
+                                                                  .fields(sum("count", literal(1))))
+                                                       .sort(on().ascending("_id"))
+                                                       .execute(CountResult.class);
+
+       CountResult result1 = aggregation.next();
+       CountResult result2 = aggregation.next();
+       Assert.assertFalse("Expecting two results", aggregation.hasNext());
+       Assert.assertEquals("Dante", result1.getAuthor());
+       Assert.assertEquals(3, result1.getCount());
+       Assert.assertEquals("Homer", result2.getAuthor());
+       Assert.assertEquals(2, result2.getCount());
+   }
+
+    @Test
+    public void testLimit() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),
             new Book("The Odyssey", "Homer", 10),
             new Book("Iliad", "Homer", 10)));
 
-        Iterator<CountResult> aggregation = getDs().createAggregation(Book.class)
-                                                   .group("author", grouping("count", accumulator("$sum", 1)))
-                                                   .sort(ascending("_id"))
-                                                   .aggregate(CountResult.class).iterator();
-
-        CountResult result1 = aggregation.next();
-        CountResult result2 = aggregation.next();
-        Assert.assertFalse("Expecting two results", aggregation.hasNext());
-        Assert.assertEquals("Dante", result1.getAuthor());
-        Assert.assertEquals(3, result1.getCount());
-        Assert.assertEquals("Homer", result2.getAuthor());
-        Assert.assertEquals(2, result2.getCount());
+        MorphiaCursor<Book> aggregate = getDs().aggregate(Book.class)
+                                               .limit(2)
+                                               .execute(Book.class);
+        int count = 0;
+        while (aggregate.hasNext()) {
+            aggregate.next();
+            count++;
+        }
+        Assert.assertEquals(2, count);
     }
 
+/*
     @Test
     public void testGeoNearWithGeoJson() {
         // given
@@ -227,26 +252,6 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
         Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
         Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
-    }
-
-    @Test
-    public void testLimit() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        Iterator<Book> aggregate = getDs().createAggregation(Book.class)
-                                          .limit(2)
-                                          .aggregate(Book.class)
-                                          .iterator();
-        int count = 0;
-        while (aggregate.hasNext()) {
-            aggregate.next();
-            count++;
-        }
-        Assert.assertEquals(2, count);
     }
 
     // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/

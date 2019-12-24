@@ -95,7 +95,7 @@ public class Mapper {
             fromProviders(
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
-                new AggregationCodecProvider(),
+                new AggregationCodecProvider(this),
                 new MorphiaCodecProvider(this, datastore)));
     }
 

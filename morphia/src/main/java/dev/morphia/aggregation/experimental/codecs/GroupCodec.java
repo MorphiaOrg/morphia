@@ -30,7 +30,6 @@ public class GroupCodec implements Codec<Group> {
         writer.writeStartDocument();
         writer.writeName("$group");
         writer.writeStartDocument();
-        String name = group.getName();
         List<Expression> id = group.getId();
         if (id != null) {
             writer.writeName("_id");

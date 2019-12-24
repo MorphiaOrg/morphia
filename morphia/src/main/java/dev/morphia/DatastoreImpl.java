@@ -63,7 +63,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private final MongoDatabase database;
     private final MongoClient mongoClient;
-    private Mapper mapper;
+    private final Mapper mapper;
 
     private volatile QueryFactory queryFactory = new DefaultQueryFactory();
 

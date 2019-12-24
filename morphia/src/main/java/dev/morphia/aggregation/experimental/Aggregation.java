@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
+import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -49,6 +50,10 @@ public interface Aggregation<T> {
     List<Stage> getStages();
 
     Aggregation<T> group(Group group);
+
+    Aggregation<T> limit(int limit);
+
+    Aggregation<T> sort(Sort sort);
 
     /**
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard
