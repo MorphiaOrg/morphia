@@ -85,8 +85,8 @@ public abstract class TestBase {
     protected int count(final MongoCursor<?> cursor) {
         int count = 0;
         while (cursor.hasNext()) {
+            cursor.next();
             count++;
-            System.out.println("******************* cursor.next() = " + cursor.next());;
         }
         return count;
     }

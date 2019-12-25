@@ -470,7 +470,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     /**
      * Converts the query to a Document and updates for any discriminator values as my be necessary
      *
-     * @return th query
+     * @return the query
      * @morphia.internal
      */
     public Document prepareQuery() {

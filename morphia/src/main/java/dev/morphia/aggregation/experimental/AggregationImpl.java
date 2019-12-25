@@ -62,6 +62,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public Aggregation<T> lookup(final Lookup lookup) {
+        stages.add(lookup);
+        return this;
+    }
+
+    @Override
     public AggregationImpl match(final Query query) {
         stages.add(Match.of(query));
         return this;

@@ -15,17 +15,17 @@ public class Inventory {
     public Inventory() {
     }
 
-    Inventory(final int id) {
+    public Inventory(final int id) {
         this.id = id;
     }
 
-    Inventory(final int id, final String sku, final String description) {
+    public Inventory(final int id, final String sku, final String description) {
         this.id = id;
         this.sku = sku;
         this.description = description;
     }
 
-    Inventory(final int id, final String sku, final String description, final int instock) {
+    public Inventory(final int id, final String sku, final String description, final int instock) {
         this.id = id;
         this.sku = sku;
         this.description = description;

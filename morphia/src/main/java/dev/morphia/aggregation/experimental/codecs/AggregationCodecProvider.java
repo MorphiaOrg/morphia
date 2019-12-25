@@ -1,11 +1,14 @@
 package dev.morphia.aggregation.experimental.codecs;
 
 import dev.morphia.aggregation.experimental.Limit;
+import dev.morphia.aggregation.experimental.Lookup;
 import dev.morphia.aggregation.experimental.stages.Accumulator;
+import dev.morphia.aggregation.experimental.stages.DateExpression;
 import dev.morphia.aggregation.experimental.stages.DateExpression.DateToStringExpression;
 import dev.morphia.aggregation.experimental.stages.Expression;
 import dev.morphia.aggregation.experimental.stages.Expression.Literal;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Sort;
@@ -34,12 +37,15 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs.put(Group.class, new GroupCodec(codecRegistry));
             codecs.put(Accumulator.class, new ExpressionCodec(codecRegistry));
             codecs.put(Expression.class, new ExpressionCodec(codecRegistry));
+            codecs.put(DateExpression.class, new ExpressionCodec(codecRegistry));
             codecs.put(Literal.class, new ExpressionLiteralCodec(codecRegistry));
             codecs.put(Sample.class, new SampleCodec());
             codecs.put(DateToStringExpression.class, new DateToStringExpressionCodec(codecRegistry));
             codecs.put(Projection.class, new ProjectionCodec(codecRegistry));
             codecs.put(Sort.class, new SortCodec());
             codecs.put(Limit.class, new LimitCodec());
+            codecs.put(Lookup.class, new LookupCodec(mapper));
+            codecs.put(Match.class, new MatchCodec(mapper));
         }
         return codecs;
     }

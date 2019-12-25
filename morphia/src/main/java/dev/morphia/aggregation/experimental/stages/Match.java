@@ -10,6 +10,10 @@ public class Match extends Stage {
         this.query = query;
     }
 
+    public Query getQuery() {
+        return query;
+    }
+
     public static Match of(final Query<?> query) {
         return new Match(query);
     }

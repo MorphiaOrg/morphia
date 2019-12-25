@@ -53,6 +53,8 @@ public interface Aggregation<T> {
 
     Aggregation<T> limit(int limit);
 
+    Aggregation<T> lookup(Lookup lookup);
+
     Aggregation<T> sort(Sort sort);
 
     /**

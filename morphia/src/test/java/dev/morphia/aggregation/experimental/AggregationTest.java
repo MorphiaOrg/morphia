@@ -20,6 +20,8 @@ import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.model.Book;
 import dev.morphia.aggregation.experimental.model.CountResult;
+import dev.morphia.aggregation.experimental.model.Inventory;
+import dev.morphia.aggregation.experimental.model.Order;
 import dev.morphia.aggregation.experimental.model.StringDates;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -32,8 +34,10 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
+import static dev.morphia.aggregation.experimental.Lookup.from;
 import static dev.morphia.aggregation.experimental.stages.Accumulator.sum;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.dateToString;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.month;
@@ -161,6 +165,33 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(2, count);
     }
 
+    // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
+    @Test
+    public void testLookup() {
+        getDs().save(asList(new Order(1, "abc", 12, 2),
+            new Order(2, "jkl", 20, 1),
+            new Order(3)));
+        List<Inventory> inventories = asList(new Inventory(1, "abc", "product 1", 120),
+            new Inventory(2, "def", "product 2", 80),
+            new Inventory(3, "ijk", "product 3", 60),
+            new Inventory(4, "jkl", "product 4", 70),
+            new Inventory(5, null, "Incomplete"),
+            new Inventory(6));
+        getDs().save(inventories);
+
+        List<Order> lookups = getDs().aggregate(Order.class)
+                                     .lookup(from(Inventory.class)
+                                                 .localField("item")
+                                                 .foreignField("sku")
+                                                 .as("inventoryDocs"))
+                                     .sort(on().ascending("_id"))
+                                     .execute(Order.class)
+                                     .toList();
+        Assert.assertEquals(inventories.get(0), lookups.get(0).getInventoryDocs().get(0));
+        Assert.assertEquals(inventories.get(3), lookups.get(1).getInventoryDocs().get(0));
+        Assert.assertEquals(inventories.get(4), lookups.get(2).getInventoryDocs().get(0));
+        Assert.assertEquals(inventories.get(5), lookups.get(2).getInventoryDocs().get(1));
+    }
 /*
     @Test
     public void testGeoNearWithGeoJson() {
@@ -254,31 +285,7 @@ public class AggregationTest extends TestBase {
         Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
     }
 
-    // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
-    @Test
-    public void testLookup() {
-        getDs().save(asList(new Order(1, "abc", 12, 2),
-            new Order(2, "jkl", 20, 1),
-            new Order(3)));
-        List<Inventory> inventories = asList(new Inventory(1, "abc", "product 1", 120),
-            new Inventory(2, "def", "product 2", 80),
-            new Inventory(3, "ijk", "product 3", 60),
-            new Inventory(4, "jkl", "product 4", 70),
-            new Inventory(5, null, "Incomplete"),
-            new Inventory(6));
-        getDs().save(inventories);
 
-        getDs().createAggregation(Order.class)
-               .lookup("inventory", "item", "sku", "inventoryDocs")
-               .out("lookups", Order.class);
-        List<Order> lookups = getAds().createQuery("lookups", Order.class)
-                                      .order(ascending("_id"))
-                                      .execute().toList();
-        Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
-        Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
-        Assert.assertEquals(inventories.get(4), lookups.get(2).inventoryDocs.get(0));
-        Assert.assertEquals(inventories.get(5), lookups.get(2).inventoryDocs.get(1));
-    }
 
     @Test
     public void testOut() {

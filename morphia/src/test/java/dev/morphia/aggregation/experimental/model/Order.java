@@ -17,11 +17,11 @@ public class Order {
     private Order() {
     }
 
-    Order(final int id) {
+    public Order(final int id) {
         this.id = id;
     }
 
-    Order(final int id, final String item, final int price, final int quantity) {
+    public Order(final int id, final String item, final int price, final int quantity) {
         this.id = id;
         this.item = item;
         this.price = price;

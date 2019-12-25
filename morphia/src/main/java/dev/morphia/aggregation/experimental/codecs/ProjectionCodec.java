@@ -1,16 +1,13 @@
 package dev.morphia.aggregation.experimental.codecs;
 
-import dev.morphia.aggregation.experimental.stages.Expression;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Projection.ProjectionField;
-import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-public class ProjectionCodec implements Codec<Projection> {
+public class ProjectionCodec extends StageCodec<Projection> {
     private CodecRegistry codecRegistry;
 
     public ProjectionCodec(final CodecRegistry codecRegistry) {
@@ -18,18 +15,11 @@ public class ProjectionCodec implements Codec<Projection> {
     }
 
     @Override
-    public Projection decode(final BsonReader reader, final DecoderContext decoderContext) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void encode(final BsonWriter writer, final Projection value, final EncoderContext encoderContext) {
+    protected void encodeStage(final BsonWriter writer, final Projection value, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeStartDocument("$project");
         for (final ProjectionField field : value.getFields()) {
             write(writer, field, encoderContext);
         }
-        writer.writeEndDocument();
         writer.writeEndDocument();
     }
 
