@@ -105,7 +105,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void createIndex() {
-        String collectionName = getDs().getCollection(IndexedClass.class).getNamespace().getCollectionName();
+        String collectionName = getMapper().getCollection(IndexedClass.class).getNamespace().getCollectionName();
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         Mapper mapper = getMapper();
 
@@ -131,7 +131,7 @@ public class IndexHelperTest extends TestBase {
         }
         Assert.assertTrue("Should be empty: " + names, names.isEmpty());
 
-        collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getNamespace().getCollectionName());
+        collection = getDatabase().getCollection(getMapper().getCollection(AbstractParent.class).getNamespace().getCollectionName());
         indexHelper.createIndex(collection, mapper.getMappedClass(AbstractParent.class));
         indexInfo = getIndexInfo(AbstractParent.class);
         assertTrue("Shouldn't find any indexes: " + indexInfo, indexInfo.isEmpty());

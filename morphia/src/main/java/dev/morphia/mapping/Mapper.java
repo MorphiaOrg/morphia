@@ -452,6 +452,30 @@ public class Mapper {
     }
 
     /**
+     * @param type the type look up
+     * @param <T>  the class type
+     * @return the collection mapped for this class
+     */
+    public <T> MongoCollection<T> getCollection(final Class<T> type) {
+        MappedClass mappedClass = getMappedClass(type);
+        if (mappedClass == null) {
+            throw new MappingException(Sofia.notMappable(type.getName()));
+        }
+        if (mappedClass.getCollectionName() == null) {
+            throw new MappingException(Sofia.noMappedCollection(type.getName()));
+        }
+
+        MongoCollection<T> collection = datastore.getDatabase().getCollection(mappedClass.getCollectionName(), type);
+
+        Entity annotation = mappedClass.getEntityAnnotation();
+        if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
+            collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
+        }
+        return collection;
+    }
+
+
+    /**
      * Finds all the types mapped to a named collection
      *
      * @param collection the collection to check

@@ -316,7 +316,7 @@ public class AggregationTest extends TestBase {
                                             .group("author", grouping("books", push("title")))
                                             .out(Author.class, options)
                                             .iterator();
-        Assert.assertEquals(2, getDs().getCollection(Author.class).countDocuments());
+        Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
         Author author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
         Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);

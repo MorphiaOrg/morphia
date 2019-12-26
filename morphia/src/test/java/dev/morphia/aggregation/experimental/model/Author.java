@@ -10,4 +10,12 @@ public class Author {
     @Id
     private String name;
     private List<String> books;
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getBooks() {
+        return books;
+    }
 }

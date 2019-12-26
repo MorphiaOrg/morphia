@@ -18,6 +18,7 @@ package dev.morphia.aggregation.experimental;
 
 import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.model.Author;
 import dev.morphia.aggregation.experimental.model.Book;
 import dev.morphia.aggregation.experimental.model.CountResult;
 import dev.morphia.aggregation.experimental.model.Inventory;
@@ -44,6 +45,7 @@ import static dev.morphia.aggregation.experimental.stages.DateExpression.month;
 import static dev.morphia.aggregation.experimental.stages.DateExpression.year;
 import static dev.morphia.aggregation.experimental.stages.Expression.field;
 import static dev.morphia.aggregation.experimental.stages.Expression.literal;
+import static dev.morphia.aggregation.experimental.stages.Expression.push;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
@@ -165,9 +167,9 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(2, count);
     }
 
-    // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
     @Test
     public void testLookup() {
+        // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
         getDs().save(asList(new Order(1, "abc", 12, 2),
             new Order(2, "jkl", 20, 1),
             new Order(3)));
@@ -192,6 +194,31 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(inventories.get(4), lookups.get(2).getInventoryDocs().get(0));
         Assert.assertEquals(inventories.get(5), lookups.get(2).getInventoryDocs().get(1));
     }
+
+    @Test
+    public void testOut() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        AggregationOptions options = new AggregationOptions();
+        Aggregation<Book> aggregation = getDs().aggregate(Book.class)
+                                               .group(id("author")
+                                                          .fields(push("books")
+                                                                      .source("title")));
+        aggregation.out(Author.class, options);
+        Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
+        Author author = aggregation.execute(Author.class).next();
+        Assert.assertEquals("Homer", author.getName());
+        Assert.assertEquals(asList("The Odyssey", "Iliad"), author.getBooks());
+
+//        aggregation.out("different", Author.class);
+
+//        Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
+    }
+
 /*
     @Test
     public void testGeoNearWithGeoJson() {
@@ -287,31 +314,6 @@ public class AggregationTest extends TestBase {
 
 
 
-    @Test
-    public void testOut() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        AggregationOptions options = builder()
-                                         .build();
-        Iterator<Author> aggregate = getDs().createAggregation(Book.class)
-                                            .group("author", grouping("books", push("title")))
-                                            .out(Author.class, options)
-                                            .iterator();
-        Assert.assertEquals(2, getDs().getCollection(Author.class).countDocuments());
-        Author author = aggregate.next();
-        Assert.assertEquals("Homer", author.name);
-        Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
-
-        getDs().createAggregation(Book.class)
-               .group("author", grouping("books", push("title")))
-               .out("different", Author.class);
-
-        Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
-    }
 
     @Test
     public void testOutNamedCollection() {

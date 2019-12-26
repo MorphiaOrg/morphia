@@ -55,6 +55,21 @@ public interface Aggregation<T> {
 
     Aggregation<T> lookup(Lookup lookup);
 
+    /**
+     * Execute the aggregation and get the results.
+     *
+     * @param <O> the output type used to determine the target collection
+     */
+    <O> void out(Class<O> type);
+
+    /**
+     * Execute the aggregation and get the results.
+     *
+     * @param <O> the output type used to determine the target collection
+     * @param options the options to apply
+     */
+    <O> void out(Class<O> type, AggregationOptions options);
+
     Aggregation<T> sort(Sort sort);
 
     /**

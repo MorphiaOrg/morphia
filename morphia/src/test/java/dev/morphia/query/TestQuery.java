@@ -305,7 +305,7 @@ public class TestQuery extends TestBase {
         assertNotEquals(0, profileCollection.countDocuments());
 
         Document query = new Document("op", "query")
-                              .append("ns", getDs().getCollection(Pic.class).getNamespace().getFullName());
+                              .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName());
         Document profileRecord = profileCollection.find(query).first();
 
         assertEquals(profileRecord.toString(), expectedComment, getCommentFromProfileRecord(profileRecord));

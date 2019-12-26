@@ -110,7 +110,7 @@ public abstract class TestBase {
     }
 
     protected List<Document> getIndexInfo(final Class<?> clazz) {
-        return getDs().getCollection(clazz).listIndexes().into(new ArrayList<>());
+        return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
 
     protected MappedClass getMappedClass(final Class<?> aClass) {

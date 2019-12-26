@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental;
 
+import com.mongodb.MongoCommandException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
@@ -12,6 +13,7 @@ import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -24,13 +26,11 @@ import java.util.stream.Collectors;
 public class AggregationImpl<T> implements Aggregation<T> {
     private final Datastore datastore;
     private final MongoCollection<T> collection;
-    private final Class<T> type;
     private final List<Stage> stages = new ArrayList<>();
 
-    public AggregationImpl(final Datastore datastore, final MongoCollection<T> collection, final Class<T> type) {
+    public AggregationImpl(final Datastore datastore, final MongoCollection<T> collection) {
         this.datastore = datastore;
         this.collection = collection;
-        this.type = type;
     }
 
     @Override
@@ -105,6 +105,32 @@ public class AggregationImpl<T> implements Aggregation<T> {
                                                 .collation(options.collation())
                                                 .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
         return new MorphiaCursor<>(aggregate.iterator());
+    }
+
+    @Override
+    public <O> void out(final Class<O> resultType) {
+        List<Document> documents = getDocuments();
+        documents.add(new Document("$out", datastore.getMapper().getMappedClass(resultType).getCollectionName()));
+        collection.aggregate(getDocuments(), resultType)
+                  .toCollection();
+    }
+
+    @Override
+    public <O> void out(final Class<O> resultType, final AggregationOptions options) {
+        List<Document> documents = getDocuments();
+        documents.add(new Document("$out", datastore.getMapper().getMappedClass(resultType).getCollectionName()));
+        try {
+            options.apply(collection)
+                   .aggregate(documents, resultType)
+                   .allowDiskUse(options.allowDiskUse())
+                   .batchSize(options.batchSize())
+                   .bypassDocumentValidation(options.bypassDocumentValidation())
+                   .collation(options.collation())
+                   .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+                   .toCollection();
+        } catch (MongoCommandException e) {
+            throw new AggregationException(Sofia.aggregationFailed(documents), e);
+        }
     }
 
     @Override

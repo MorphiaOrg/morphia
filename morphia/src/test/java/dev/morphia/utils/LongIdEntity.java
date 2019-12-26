@@ -55,7 +55,7 @@ public abstract class LongIdEntity {
     @PrePersist
     void prePersist() {
         if (myLongId == null) {
-            final String collName = ds.getCollection(getClass()).getNamespace().getCollectionName();
+            final String collName = ds.getMapper().getCollection(getClass()).getNamespace().getCollectionName();
             final Query<StoredId> q = ds.find(StoredId.class).filter("_id", collName);
             StoredId newId = q.modify().inc("value").execute();
             if (newId == null) {

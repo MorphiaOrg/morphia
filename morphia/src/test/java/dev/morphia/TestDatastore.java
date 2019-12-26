@@ -238,7 +238,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testSaveAndRemove() {
-        getDs().getCollection(Rectangle.class).drop();
+        getMapper().getCollection(Rectangle.class).drop();
 
         final Rectangle rect = new Rectangle(10, 10);
         ObjectId id = new ObjectId();
@@ -291,7 +291,7 @@ public class TestDatastore extends TestBase {
         assertEquals(2, getDs().find(rect.getClass()).count());
         getDs().find(rect.getClass()).filter("_id in", singletonList(id1)).delete();
         assertEquals(1, getDs().find(rect.getClass()).count());
-        getDs().getCollection(Rectangle.class).drop();
+        getMapper().getCollection(Rectangle.class).drop();
 
         //test delete(Class, {id}) with one left
         id1 = getDs().save(new Rectangle(20, 20)).getId();
@@ -303,7 +303,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testUpdateWithCollation() {
-        getDs().getCollection(FacebookUser.class).drop();
+        getMapper().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
             new FacebookUser(2, "john doe")));
 
@@ -423,7 +423,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testFindAndModifyWithOptions() {
-        getDs().getCollection(FacebookUser.class).drop();
+        getMapper().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
             new FacebookUser(2, "john doe")));
 
@@ -499,7 +499,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testDeleteWithCollation() {
-        getDs().getCollection(FacebookUser.class).drop();
+        getMapper().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
             new FacebookUser(2, "john doe")));
 
@@ -517,7 +517,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testFindAndDeleteWithCollation() {
-        getDs().getCollection(FacebookUser.class).drop();
+        getMapper().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
             new FacebookUser(2, "john doe")));
 

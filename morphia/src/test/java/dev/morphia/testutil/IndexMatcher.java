@@ -12,7 +12,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Hamcrest matcher that can be used with a List of Documents representing the indexes on a Collection.  This list, for example, might be
- * from a call like {@code getDs().getCollection(Entity.class).getIndexInfo()}
+ * from a call like {@code getMapper().getCollection(Entity.class).getIndexInfo()}
  */
 public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
     private final String indexName;

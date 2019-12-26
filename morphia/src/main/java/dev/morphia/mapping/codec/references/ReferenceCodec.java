@@ -125,7 +125,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             if (idValue == null) {
                 return !mapper.isMappable(value.getClass()) ? value : null;
             }
-            collection = datastore.getCollection(value.getClass());
+            collection = mapper.getCollection(value.getClass());
         }
 
         String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;

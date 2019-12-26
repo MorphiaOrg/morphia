@@ -1,16 +1,16 @@
-package dev.morphia.aggregation.experimental.codecs;
+package dev.morphia.aggregation.experimental.codecs.stages;
 
 import dev.morphia.aggregation.experimental.stages.Sort;
-import dev.morphia.aggregation.experimental.stages.Sort.Direction;
 import dev.morphia.aggregation.experimental.stages.Sort.SortType;
-import org.bson.BsonReader;
+import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 
 public class SortCodec extends StageCodec<Sort> {
+    public SortCodec(final Mapper mapper) {
+        super(mapper);
+    }
+
     @Override
     protected void encodeStage(final BsonWriter writer, final Sort value, final EncoderContext encoderContext) {
         writer.writeStartDocument();

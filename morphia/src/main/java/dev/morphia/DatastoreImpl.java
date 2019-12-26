@@ -13,12 +13,11 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.aggregation.experimental.Aggregation;
-import dev.morphia.aggregation.experimental.AggregationImpl;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.AggregationPipelineImpl;
+import dev.morphia.aggregation.experimental.Aggregation;
+import dev.morphia.aggregation.experimental.AggregationImpl;
 import dev.morphia.annotations.CappedAt;
-import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Validation;
 import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.experimental.MorphiaSessionImpl;
@@ -48,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.bson.Document.parse;
 
@@ -111,7 +109,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void insert(final T entity, final InsertOneOptions options) {
-        insert(getCollection(entity.getClass()), entity, options);
+        insert(mapper.getCollection(entity.getClass()), entity, options);
     }
 
     @Override
@@ -119,7 +117,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (!entities.isEmpty()) {
             Class<?> type = entities.get(0).getClass();
             MappedClass mappedClass = mapper.getMappedClass(type);
-            final MongoCollection collection = getCollection(type);
+            final MongoCollection collection = mapper.getCollection(type);
             MappedField versionField = mappedClass.getVersionField();
             if (versionField != null) {
                 for (final T entity : entities) {
@@ -201,12 +199,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Aggregation<T> aggregate(final Class<T> source) {
-        return new AggregationImpl(this, getCollection(source), source);
+        return new AggregationImpl(this, mapper.getCollection(source));
     }
 
     @Override
     public AggregationPipeline createAggregation(final Class source) {
-        return new AggregationPipelineImpl(this, getCollection(source), source);
+        return new AggregationPipelineImpl(this, mapper.getCollection(source), source);
     }
 
     @Override
@@ -290,7 +288,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final IndexHelper indexHelper = new IndexHelper(mapper);
         for (final MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null) {
-                indexHelper.createIndex(getCollection(mc.getType()), mc);
+                indexHelper.createIndex(mapper.getCollection(mc.getType()), mc);
             }
         }
     }
@@ -298,7 +296,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndexes(final Class<T> clazz) {
         final IndexHelper indexHelper = new IndexHelper(mapper);
-        indexHelper.createIndex(getCollection(clazz), mapper.getMappedClass(clazz));
+        indexHelper.createIndex(mapper.getCollection(clazz), mapper.getMappedClass(clazz));
     }
 
     @Override
@@ -362,29 +360,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getByKeys(null, keys);
     }
 
-    /**
-     * @param type the type look up
-     * @param <T>  the class type
-     * @return the collection mapped for this class
-     */
-    public <T> MongoCollection<T> getCollection(final Class<T> type) {
-        MappedClass mappedClass = mapper.getMappedClass(type);
-        if (mappedClass == null) {
-            throw new MappingException(Sofia.notMappable(type.getName()));
-        }
-        if (mappedClass.getCollectionName() == null) {
-            throw new MappingException(Sofia.noMappedCollection(type.getName()));
-        }
-
-        MongoCollection<T> collection = getDatabase().getCollection(mappedClass.getCollectionName(), type);
-
-        Entity annotation = mappedClass.getEntityAnnotation();
-        if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
-            collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
-        }
-        return collection;
-    }
-
     @Override
     public MongoDatabase getDatabase() {
         return database;
@@ -423,7 +398,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         document.remove("_id");
 
         final Query<T> query = (Query<T>) find(entity.getClass()).filter("_id", id);
-        if (!tryVersionedUpdate(entity, getCollection(entity.getClass()), options)) {
+        if (!tryVersionedUpdate(entity, mapper.getCollection(entity.getClass()), options)) {
             UpdateResult execute = query.update()
                                         .set(entity)
                                         .execute(new UpdateOptions()
@@ -462,13 +437,13 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (getMapper().getId(entity) != null) {
                 list.add(entity);
             } else {
-                grouped.computeIfAbsent(getCollection(entity.getClass()).getDocumentClass(), c -> new ArrayList<>())
+                grouped.computeIfAbsent(mapper.getCollection(entity.getClass()).getDocumentClass(), c -> new ArrayList<>())
                        .add(entity);
             }
         }
 
         for (Entry<Class, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = options.apply(getCollection(entry.getKey()));
+            MongoCollection<T> collection = options.apply(mapper.getCollection(entry.getKey()));
             if (options.clientSession() == null) {
                 collection.insertMany(entry.getValue(), options.getOptions());
             } else {
@@ -497,7 +472,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException(Sofia.cannotPersistNullEntity());
         }
 
-        save(getCollection(entity.getClass()), entity, options);
+        save(mapper.getCollection(entity.getClass()), entity, options);
         return entity;
     }
 

@@ -324,7 +324,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      */
     public MongoCollection<T> getCollection() {
         if (collection == null) {
-            collection = datastore.getCollection(clazz);
+            collection = mapper.getCollection(clazz);
         }
         return collection;
     }

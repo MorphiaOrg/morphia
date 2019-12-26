@@ -28,7 +28,7 @@ import static java.util.Collections.emptyList;
 public class TestAdvancedDatastore extends TestBase {
     @Test
     public void testInsert() {
-        MongoCollection collection = getDs().getCollection(TestEntity.class);
+        MongoCollection collection = getMapper().getCollection(TestEntity.class);
         this.getAds().insert(new TestEntity());
         Assert.assertEquals(1, collection.countDocuments());
         this.getAds().insert(new TestEntity(), new InsertOptions()
@@ -39,7 +39,7 @@ public class TestAdvancedDatastore extends TestBase {
     @Test
     public void testBulkInsert() {
 
-        MongoCollection collection = getDs().getCollection(TestEntity.class);
+        MongoCollection collection = getMapper().getCollection(TestEntity.class);
         this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                              new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
         Assert.assertEquals(5, collection.countDocuments());

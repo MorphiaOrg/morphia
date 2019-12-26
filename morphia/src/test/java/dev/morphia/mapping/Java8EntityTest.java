@@ -78,7 +78,7 @@ public class Java8EntityTest extends TestBase {
         LocalDate localDate = LocalDate.of(1995, 10, 15);
         LocalDateTime localDateTime = LocalDateTime.of(2016, 4, 10, 2, 15, 16, 123 * 1000000);
 
-        final MongoCollection<Java8Entity> collection = getDs().getCollection(Java8Entity.class);
+        final MongoCollection<Java8Entity> collection = getMapper().getCollection(Java8Entity.class);
 
         Java8Entity created = createEntity(getDs(), null, localDate, localDateTime, null);
         final Java8Entity loaded = getDs().createQuery(Java8Entity.class).first();

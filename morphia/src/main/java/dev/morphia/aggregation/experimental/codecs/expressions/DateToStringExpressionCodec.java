@@ -1,7 +1,8 @@
-package dev.morphia.aggregation.experimental.codecs;
+package dev.morphia.aggregation.experimental.codecs.expressions;
 
 import dev.morphia.aggregation.experimental.stages.DateExpression.DateToStringExpression;
 import dev.morphia.aggregation.experimental.stages.Expression;
+import dev.morphia.mapping.Mapper;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -9,16 +10,9 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-public class DateToStringExpressionCodec implements Codec<DateToStringExpression> {
-    private CodecRegistry codecRegistry;
-
-    public DateToStringExpressionCodec(final CodecRegistry codecRegistry) {
-        this.codecRegistry = codecRegistry;
-    }
-
-    @Override
-    public DateToStringExpression decode(final BsonReader reader, final DecoderContext decoderContext) {
-        throw new UnsupportedOperationException();
+public class DateToStringExpressionCodec extends ExpressionCodec<DateToStringExpression> {
+    public DateToStringExpressionCodec(final Mapper mapper) {
+        super(mapper, DateToStringExpression.class);
     }
 
     @Override
@@ -40,13 +34,8 @@ public class DateToStringExpressionCodec implements Codec<DateToStringExpression
         if (expression != null) {
             writer.writeName(name);
             Object value = expression.getValue();
-            Codec codec = codecRegistry.get(value.getClass());
+            Codec codec = getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
         }
-    }
-
-    @Override
-    public Class<DateToStringExpression> getEncoderClass() {
-        return DateToStringExpression.class;
     }
 }

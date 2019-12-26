@@ -22,8 +22,8 @@ public class TestIssue463 extends TestBase {
         getDs().save(class2);
 
         final Document query = new Document("_id", class2.getId());
-        Assert.assertNull(getDs().getCollection(Class1.class).find(query).first());
-        Assert.assertNotNull(getDs().getCollection(Class2.class).find(query).first());
+        Assert.assertNull(getMapper().getCollection(Class1.class).find(query).first());
+        Assert.assertNotNull(getMapper().getCollection(Class2.class).find(query).first());
     }
 
     @Entity(value = "class1", useDiscriminator = false)

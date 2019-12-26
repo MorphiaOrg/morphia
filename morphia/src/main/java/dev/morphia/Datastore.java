@@ -287,14 +287,6 @@ public interface Datastore {
     <T> List<T> getByKeys(Iterable<Key<T>> keys);
 
     /**
-     * @param clazz the class to use for mapping
-     * @param <T>   the type of the collection
-     * @return the mapped collection for the collection
-     * @morphia.internal
-     */
-    <T> MongoCollection<T> getCollection(Class<T> clazz);
-
-    /**
      * @return the MongoDatabase used by this DataStore
      * @morphia.internal
      * @since 1.5

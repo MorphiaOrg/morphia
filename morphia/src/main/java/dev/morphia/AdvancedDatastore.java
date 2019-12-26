@@ -64,7 +64,7 @@ public interface AdvancedDatastore extends Datastore {
         if (id == null) {
             throw new MappingException("Could not get id for " + clazz.getName());
         }
-        return new DBRef(getCollection(clazz).getNamespace().getCollectionName(), id);
+        return new DBRef(getMapper().getCollection(clazz).getNamespace().getCollectionName(), id);
     }
 
     /**

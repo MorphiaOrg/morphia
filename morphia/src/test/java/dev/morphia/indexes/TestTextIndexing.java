@@ -26,7 +26,7 @@ public class TestTextIndexing extends TestBase {
     public void shouldNotAllowMultipleTextIndexes() {
         Class<MultipleTextIndexes> clazz = MultipleTextIndexes.class;
         getMapper().map(clazz);
-        getDs().getCollection(clazz).drop();
+        getMapper().getCollection(clazz).drop();
         getDs().ensureIndexes();
     }
 
@@ -49,7 +49,7 @@ public class TestTextIndexing extends TestBase {
     @Test
     public void testSingleAnnotation() {
         getMapper().map(CompoundTextIndex.class);
-        getDs().getCollection(CompoundTextIndex.class).drop();
+        getMapper().getCollection(CompoundTextIndex.class).drop();
         getDs().ensureIndexes();
 
         List<Document> indexInfo = getIndexInfo(CompoundTextIndex.class);
@@ -73,7 +73,7 @@ public class TestTextIndexing extends TestBase {
         Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
 
         getMapper().map(clazz);
-        getDs().getCollection(clazz).drop();
+        getMapper().getCollection(clazz).drop();
         getDs().ensureIndexes();
 
         List<Document> indexInfo = getIndexInfo(clazz);

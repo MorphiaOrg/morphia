@@ -69,7 +69,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public <U> MongoIterable<U> aggregate(final Class<U> target, final AggregationOptions options,
                                           final ReadPreference readPreference) {
-        return aggregate(datastore.getCollection(target).getNamespace().getCollectionName(), target, options, readPreference);
+        return aggregate(mapper.getCollection(target).getNamespace().getCollectionName(), target, options, readPreference);
     }
 
     @Override
@@ -173,12 +173,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public <U> MongoIterable<U> out(final Class<U> target) {
-        return out(datastore.getCollection(target).getNamespace().getCollectionName(), target);
+        return out(mapper.getCollection(target).getNamespace().getCollectionName(), target);
     }
 
     @Override
     public <U> MongoIterable<U> out(final Class<U> target, final AggregationOptions options) {
-        return out(datastore.getCollection(target).getNamespace().getCollectionName(), target, options);
+        return out(mapper.getCollection(target).getNamespace().getCollectionName(), target, options);
     }
 
     @Override

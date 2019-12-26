@@ -2,11 +2,23 @@ package dev.morphia.aggregation.experimental.codecs;
 
 import dev.morphia.aggregation.experimental.Limit;
 import dev.morphia.aggregation.experimental.Lookup;
+import dev.morphia.aggregation.experimental.codecs.expressions.DateToStringExpressionCodec;
+import dev.morphia.aggregation.experimental.codecs.expressions.ExpressionCodec;
+import dev.morphia.aggregation.experimental.codecs.expressions.ExpressionLiteralCodec;
+import dev.morphia.aggregation.experimental.codecs.expressions.PushExpressionCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.GroupCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.LimitCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.LookupCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.MatchCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.ProjectionCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.SampleCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.SortCodec;
 import dev.morphia.aggregation.experimental.stages.Accumulator;
 import dev.morphia.aggregation.experimental.stages.DateExpression;
 import dev.morphia.aggregation.experimental.stages.DateExpression.DateToStringExpression;
 import dev.morphia.aggregation.experimental.stages.Expression;
 import dev.morphia.aggregation.experimental.stages.Expression.Literal;
+import dev.morphia.aggregation.experimental.stages.Expression.PushExpression;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -32,20 +44,24 @@ public class AggregationCodecProvider implements CodecProvider {
 
     private Map<Class, Codec> getCodecs() {
         if (codecs == null) {
-            CodecRegistry codecRegistry = mapper.getCodecRegistry();
             codecs = new HashMap<>();
-            codecs.put(Group.class, new GroupCodec(codecRegistry));
-            codecs.put(Accumulator.class, new ExpressionCodec(codecRegistry));
-            codecs.put(Expression.class, new ExpressionCodec(codecRegistry));
-            codecs.put(DateExpression.class, new ExpressionCodec(codecRegistry));
-            codecs.put(Literal.class, new ExpressionLiteralCodec(codecRegistry));
-            codecs.put(Sample.class, new SampleCodec());
-            codecs.put(DateToStringExpression.class, new DateToStringExpressionCodec(codecRegistry));
-            codecs.put(Projection.class, new ProjectionCodec(codecRegistry));
-            codecs.put(Sort.class, new SortCodec());
-            codecs.put(Limit.class, new LimitCodec());
+
+            // Stages
+            codecs.put(Group.class, new GroupCodec(mapper));
+            codecs.put(Sample.class, new SampleCodec(mapper));
+            codecs.put(Projection.class, new ProjectionCodec(mapper));
+            codecs.put(Sort.class, new SortCodec(mapper));
+            codecs.put(Limit.class, new LimitCodec(mapper));
             codecs.put(Lookup.class, new LookupCodec(mapper));
             codecs.put(Match.class, new MatchCodec(mapper));
+
+            // Expressions
+            codecs.put(Accumulator.class, new ExpressionCodec(mapper, Accumulator.class));
+            codecs.put(Expression.class, new ExpressionCodec(mapper, Expression.class));
+            codecs.put(DateExpression.class, new ExpressionCodec(mapper, DateExpression.class));
+            codecs.put(Literal.class, new ExpressionLiteralCodec(mapper));
+            codecs.put(DateToStringExpression.class, new DateToStringExpressionCodec(mapper));
+            codecs.put(PushExpression.class, new PushExpressionCodec(mapper));
         }
         return codecs;
     }
