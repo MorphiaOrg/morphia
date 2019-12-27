@@ -109,19 +109,29 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public <O> void out(final Class<O> resultType) {
+        out(datastore.getMapper().getMappedClass(resultType).getCollectionName());
+    }
+
+    @Override
+    public void out(final String collectionName) {
         List<Document> documents = getDocuments();
-        documents.add(new Document("$out", datastore.getMapper().getMappedClass(resultType).getCollectionName()));
-        collection.aggregate(getDocuments(), resultType)
+        documents.add(new Document("$out", collectionName));
+        collection.aggregate(documents)
                   .toCollection();
     }
 
     @Override
     public <O> void out(final Class<O> resultType, final AggregationOptions options) {
+        out(datastore.getMapper().getMappedClass(resultType).getCollectionName(), options);
+    }
+
+    @Override
+    public void out(final String collectionName, final AggregationOptions options) {
         List<Document> documents = getDocuments();
-        documents.add(new Document("$out", datastore.getMapper().getMappedClass(resultType).getCollectionName()));
+        documents.add(new Document("$out", collectionName));
         try {
             options.apply(collection)
-                   .aggregate(documents, resultType)
+                   .aggregate(documents)
                    .allowDiskUse(options.allowDiskUse())
                    .batchSize(options.batchSize())
                    .bypassDocumentValidation(options.bypassDocumentValidation())
@@ -136,13 +146,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Document> getDocuments() {
-        return stages.stream()
-                     .map(s -> {
-                         Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
-                         DocumentWriter writer = new DocumentWriter();
-                         codec.encode(writer, s, EncoderContext.builder().build());
-                         return writer.<Document>getRoot();
-                     })
-                     .collect(Collectors.toList());
+        List<Document> collect = stages.stream()
+                                       .map(s -> {
+                                           Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
+                                           DocumentWriter writer = new DocumentWriter();
+                                           codec.encode(writer, s, EncoderContext.builder().build());
+                                           return writer.<Document>getRoot();
+                                       })
+                                       .collect(Collectors.toList());
+        return collect;
     }
 }

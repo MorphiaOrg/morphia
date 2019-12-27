@@ -27,9 +27,7 @@ public class ProjectionCodec extends StageCodec<Projection> {
         writer.writeName(field.getName());
         Class aClass = field.getValue().getClass();
         Codec codec = getCodecRegistry().get(aClass);
-        writer.writeStartDocument();
         encoderContext.encodeWithChildContext(codec, writer, field.getValue());
-        writer.writeEndDocument();
     }
 
     @Override

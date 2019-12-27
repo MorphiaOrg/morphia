@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import dev.morphia.aggregation.experimental.expressions.Expression;
+
 import java.util.ArrayList;
 import java.util.List;
 

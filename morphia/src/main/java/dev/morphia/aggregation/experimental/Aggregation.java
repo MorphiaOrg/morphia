@@ -56,23 +56,6 @@ public interface Aggregation<T> {
     Aggregation<T> lookup(Lookup lookup);
 
     /**
-     * Execute the aggregation and get the results.
-     *
-     * @param <O> the output type used to determine the target collection
-     */
-    <O> void out(Class<O> type);
-
-    /**
-     * Execute the aggregation and get the results.
-     *
-     * @param <O> the output type used to determine the target collection
-     * @param options the options to apply
-     */
-    <O> void out(Class<O> type, AggregationOptions options);
-
-    Aggregation<T> sort(Sort sort);
-
-    /**
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard
      * MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
      *
@@ -81,6 +64,42 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/match $match
      */
     Aggregation<T> match(Query<?> query);
+
+    /**
+     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
+     * with the results if it already exists.
+     *
+     * @param <O> the output type used to determine the target collection
+     */
+    <O> void out(Class<O> type);
+
+    /**
+     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
+     * with the results if it already exists.
+     *
+     * @param collection the collection to create/overwrite
+     */
+    <O> void out(String collection);
+
+    /**
+     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
+     * with the results if it already exists.
+     *
+     * @param collection the collection to create/overwrite
+     * @param options    the options to apply
+     */
+    void out(String collection, AggregationOptions options);
+
+    /**
+     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
+     * with the results if it already exists.
+     *
+     * @param <O>     the output type used to determine the target collection
+     * @param options the options to apply
+     */
+    <O> void out(Class<O> type, AggregationOptions options);
+
+    Aggregation<T> sort(Sort sort);
 
     Aggregation<T> project(Projection projection);
 

@@ -1,6 +1,6 @@
-package dev.morphia.aggregation.experimental.codecs.expressions;
+package dev.morphia.aggregation.experimental.codecs;
 
-import dev.morphia.aggregation.experimental.stages.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -11,11 +11,9 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 public class ExpressionCodec<T extends Expression> implements Codec<T> {
     private final Mapper mapper;
-    private final Class<T> encoderClass;
 
-    public ExpressionCodec(final Mapper mapper, final Class<T> encoderClass) {
+    public ExpressionCodec(final Mapper mapper) {
         this.mapper = mapper;
-        this.encoderClass = encoderClass;
     }
 
     @Override
@@ -25,17 +23,12 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
 
     @Override
     public void encode(final BsonWriter writer, final T expression, final EncoderContext encoderContext) {
-        writer.writeStartDocument(expression.getName());
-        writer.writeName(expression.getOperation());
-        Object value = expression.getValue();
-        Codec codec = getCodecRegistry().get(value.getClass());
-        encoderContext.encodeWithChildContext(codec, writer, value);
-        writer.writeEndDocument();
+        expression.encode(mapper, writer, encoderContext);
     }
 
     @Override
     public final Class<T> getEncoderClass() {
-        return encoderClass;
+        return (Class<T>) Expression.class;
     }
 
     protected CodecRegistry getCodecRegistry() {

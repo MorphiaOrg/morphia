@@ -28,6 +28,26 @@ public final class Book {
         this.tags = asList(tags);
     }
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public Integer getCopies() {
+        return copies;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
     @Override
     public String toString() {
         return format("Book{title='%s', author='%s', copies=%d, tags=%s}", title, author, copies, tags);

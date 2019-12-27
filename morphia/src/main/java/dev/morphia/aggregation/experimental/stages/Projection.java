@@ -1,11 +1,12 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.stages.Expression.literal;
+import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 
 public class Projection extends Stage {
     private List<ProjectionField> includes;
