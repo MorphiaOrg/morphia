@@ -188,7 +188,7 @@ public class MapperOptions {
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName;
         private List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
-        private NamingStrategy collectionNaming = NamingStrategy.identity();
+        private NamingStrategy collectionNaming = NamingStrategy.camelCase();
         private NamingStrategy fieldNaming = NamingStrategy.identity();
 
         private Builder() {

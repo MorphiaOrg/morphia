@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2014 MongoDB, Inc.
+ * Copyright 2008-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,28 @@
 package taglets;
 
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.UnknownBlockTagTree;
 import jdk.javadoc.doclet.Taglet;
 
 import javax.lang.model.element.Element;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Provides a general base class for Morphia taglets
- */
+import static java.util.Arrays.asList;
+import static jdk.javadoc.doclet.Taglet.Location.CONSTRUCTOR;
+import static jdk.javadoc.doclet.Taglet.Location.FIELD;
+import static jdk.javadoc.doclet.Taglet.Location.METHOD;
+import static jdk.javadoc.doclet.Taglet.Location.OVERVIEW;
+import static jdk.javadoc.doclet.Taglet.Location.PACKAGE;
+import static jdk.javadoc.doclet.Taglet.Location.TYPE;
+
 public abstract class DocTaglet implements Taglet {
+
+    @Override
+    public Set<Location> getAllowedLocations() {
+        return new HashSet<>(asList(CONSTRUCTOR, METHOD, FIELD, OVERVIEW, PACKAGE, TYPE));
+    }
 
     @Override
     public boolean isInlineTag() {
@@ -34,22 +46,20 @@ public abstract class DocTaglet implements Taglet {
     }
 
     @Override
-    public Set<Location> getAllowedLocations() {
-        return Set.of(Location.TYPE, Location.METHOD, Location.FIELD);
-    }
-
-    @Override
-    public String toString(final List<? extends DocTree> tags, final Element element) {
-        if (tags.isEmpty()) {
+    public String toString(List<? extends DocTree> tags, Element element) {
+        if (tags.size() == 0) {
             return null;
         }
 
-        StringBuilder buf = new StringBuilder(String.format("\n<dl><dt><span class=\"strong\">%s</span></dt>\n", getHeader()));
-        for (DocTree t : tags) {
-            buf.append("   <dd>").append(genLink(t.toString())).append("</dd>\n");
+        StringBuilder buf = new StringBuilder(String.format("<dl><dt><span class=\"strong\">%s</span></dt>", getHeader()));
+        for (DocTree tag : tags) {
+            String text = ((UnknownBlockTagTree) tag).getContent().get(0).toString();
+            buf.append("<dd>").append(genLink(text)).append("</dd>");
         }
         return buf.toString();
     }
+
+    protected abstract String getHeader();
 
     protected String genLink(final String text) {
         String relativePath = text;
@@ -58,13 +68,11 @@ public abstract class DocTaglet implements Taglet {
         int firstSpace = text.indexOf(' ');
         if (firstSpace != -1) {
             relativePath = text.substring(0, firstSpace);
-            display = text.substring(firstSpace).trim();
+            display = text.substring(firstSpace, text.length()).trim();
         }
 
         return String.format("<a href='%s%s'>%s</a>", getBaseDocURI(), relativePath, display);
     }
-
-    protected abstract String getHeader();
 
     protected abstract String getBaseDocURI();
 }

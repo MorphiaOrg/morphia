@@ -147,7 +147,7 @@ public class MappedField {
     }
 
     /**
-     * If the java field is a list/array/map then the sub-type T is returned (ex. List<T>, T[], Map<?,T>
+     * If the java field is a list/array/map then the sub-type T is returned (ex. List&lt;T&gt;, T[], Map&lt;?,T&gt;)
      *
      * @return the parameterized type of the field
      */

@@ -436,7 +436,7 @@ public interface Datastore {
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
      * @return the saved entity
-     * @deprecated use {@link #save(T, InsertOneOptions)} instead
+     * @deprecated use {@link #save(Object, InsertOneOptions)} instead
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)

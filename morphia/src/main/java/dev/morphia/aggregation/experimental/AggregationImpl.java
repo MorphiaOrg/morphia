@@ -40,7 +40,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <S> S getStage(final String name) {
+    public <S extends Stage> S getStage(final String name) {
         List<Stage> list = stages.stream()
                                  .filter(s -> s.getName().equals(name))
                                  .collect(Collectors.toList());

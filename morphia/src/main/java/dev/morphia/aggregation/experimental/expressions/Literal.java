@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 
 public class Literal extends Expression {
     public Literal(final Object value) {
-        super(null, null, value);
+        super(null, value);
     }
 
     @Override

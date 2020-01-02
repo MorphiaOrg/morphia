@@ -1,7 +1,8 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Group.GroupId;
+import dev.morphia.aggregation.experimental.stages.PipelineField;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -18,30 +19,31 @@ public class GroupCodec extends StageCodec<Group> {
     @Override
     protected void encodeStage(final BsonWriter writer, final Group group, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        List<Expression> id = group.getId();
+        GroupId id = group.getId();
         if (id != null) {
-            writer.writeName("_id");
-            if(id.size() > 1) {
+            if(id.getFields().size() > 1) {
+                writer.writeName("_id");
                 writer.writeStartDocument();
-                encodeExpressions(writer, id, encoderContext);
+                encodeFields(writer, id.getFields(), encoderContext);
                 writer.writeEndDocument();
             } else {
-                encodeExpressions(writer, id, encoderContext);
+                encodeFields(writer, id.getFields(), encoderContext);
             }
         } else {
             writer.writeNull("_id");
         }
 
-        encodeExpressions(writer, group.getFields(), encoderContext);
+        encodeFields(writer, group.getFields(), encoderContext);
 
         writer.writeEndDocument();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void encodeExpressions(final BsonWriter writer, final List<Expression> expressions, final EncoderContext encoderContext) {
-        for (final Expression expression : expressions) {
-            Codec codec = getCodecRegistry().get(expression.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, expression);
+    private void encodeFields(final BsonWriter writer, final List<PipelineField> fields, final EncoderContext encoderContext) {
+        for (final PipelineField field : fields) {
+            writer.writeName(field.getName());
+            Codec codec = getCodecRegistry().get(field.getValue().getClass());
+            encoderContext.encodeWithChildContext(codec, writer, field.getValue());
         }
     }
 

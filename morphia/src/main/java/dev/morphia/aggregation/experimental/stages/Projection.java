@@ -9,8 +9,8 @@ import java.util.List;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 
 public class Projection extends Stage {
-    private List<ProjectionField> includes;
-    private List<ProjectionField> excludes;
+    private List<PipelineField> includes;
+    private List<PipelineField> excludes;
     private boolean suppressId;
 
     protected Projection() {
@@ -22,11 +22,11 @@ public class Projection extends Stage {
     }
 
     public Projection exclude(String name) {
-        exclude(new ProjectionField(name, literal(false)));
+        exclude(new PipelineField(name, literal(false)));
         return this;
     }
 
-    private void exclude(final ProjectionField field) {
+    private void exclude(final PipelineField field) {
         if (includes != null) {
             throw new RuntimeException(Sofia.mixedModeProjections());
         }
@@ -36,8 +36,8 @@ public class Projection extends Stage {
         excludes.add(field);
     }
 
-    public List<ProjectionField> getFields() {
-        List<ProjectionField> fields = new ArrayList<>();
+    public List<PipelineField> getFields() {
+        List<PipelineField> fields = new ArrayList<>();
 
         if (includes != null) {
             fields.addAll(includes);
@@ -46,23 +46,23 @@ public class Projection extends Stage {
             fields.addAll(excludes);
         }
         if (suppressId) {
-            fields.add(new ProjectionField("_id", literal(false)));
+            fields.add(new PipelineField("_id", literal(false)));
         }
         return fields;
     }
 
     public Projection include(final String name, final Expression expression) {
-        include(new ProjectionField(name, expression));
+        include(new PipelineField(name, expression));
         return this;
     }
 
     public Projection include(String name) {
-        include(new ProjectionField(name, literal(true)));
+        include(new PipelineField(name, literal(true)));
         ;
         return this;
     }
 
-    private void include(final ProjectionField field) {
+    private void include(final PipelineField field) {
         if (excludes != null) {
             throw new RuntimeException(Sofia.mixedModeProjections());
         }
@@ -77,23 +77,4 @@ public class Projection extends Stage {
         return this;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static class ProjectionField {
-        private String name;
-        private Expression value;
-
-
-        public ProjectionField(final String name, final Expression value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Expression getValue() {
-            return value;
-        }
-    }
 }

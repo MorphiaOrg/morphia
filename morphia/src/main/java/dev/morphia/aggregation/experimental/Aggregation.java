@@ -41,7 +41,7 @@ public interface Aggregation<T> {
      * @return the named stage or stages in this aggregation
      * @morphia.internal
      */
-    <S> S getStage(String name);
+    <S extends Stage> S getStage(String name);
 
     /**
      * @return the stage in this aggregation
@@ -49,10 +49,35 @@ public interface Aggregation<T> {
      */
     List<Stage> getStages();
 
+    /**
+     * Groups input documents by the specified _id expression and for each distinct grouping, outputs a document. The _id field of each
+     * output document contains the unique group by value. The output documents can also contain computed fields that hold the values of
+     * some accumulator expression.
+     *
+     * @param group the group definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/group $group
+     */
     Aggregation<T> group(Group group);
 
+    /**
+     * Limits the number of documents passed to the next stage in the pipeline.
+     *
+     * @param limit the maximum docs to pass along to the next stage
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/limit $limit
+     */
     Aggregation<T> limit(int limit);
 
+    /**
+     * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
+     * processing. To each input document, the $lookup stage adds a new array field whose elements are the matching documents from the
+     * “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
+     *
+     * @param lookup the lookup specification
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/lookup $lookup
+     */
     Aggregation<T> lookup(Lookup lookup);
 
     /**
@@ -70,6 +95,7 @@ public interface Aggregation<T> {
      * with the results if it already exists.
      *
      * @param <O> the output type used to determine the target collection
+     * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
     <O> void out(Class<O> type);
 
@@ -78,6 +104,7 @@ public interface Aggregation<T> {
      * with the results if it already exists.
      *
      * @param collection the collection to create/overwrite
+     * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
     <O> void out(String collection);
 
@@ -87,6 +114,7 @@ public interface Aggregation<T> {
      *
      * @param collection the collection to create/overwrite
      * @param options    the options to apply
+     * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
     void out(String collection, AggregationOptions options);
 
@@ -96,11 +124,18 @@ public interface Aggregation<T> {
      *
      * @param <O>     the output type used to determine the target collection
      * @param options the options to apply
+     * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
     <O> void out(Class<O> type, AggregationOptions options);
 
-    Aggregation<T> sort(Sort sort);
-
+    /**
+     * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields
+     * from the input documents or newly computed fields.
+     *
+     * @param projection
+     * @return
+     * @mongodb.driver.manual reference/operator/aggregation/project $project
+     */
     Aggregation<T> project(Projection projection);
 
     /**
@@ -108,7 +143,16 @@ public interface Aggregation<T> {
      *
      * @param sample the sample definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/match $sample
+     * @mongodb.driver.manual reference/operator/aggregation/sample $sample
      */
     Aggregation<T> sample(Sample sample);
+
+    /**
+     * Sorts all input documents and returns them to the pipeline in sorted order.
+     *
+     * @param sort the sort definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/sort $sort
+     */
+    Aggregation<T> sort(Sort sort);
 }

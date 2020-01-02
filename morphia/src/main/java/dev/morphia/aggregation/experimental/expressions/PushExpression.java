@@ -11,8 +11,8 @@ public class PushExpression extends Expression {
     private List<Field> fields = new ArrayList<>();
     private String source;
 
-    public PushExpression(final String name) {
-        super("$push", name);
+    public PushExpression() {
+        super("$push");
     }
 
     public PushExpression source(final String source) {
@@ -27,7 +27,7 @@ public class PushExpression extends Expression {
 
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
-        writer.writeStartDocument(name);
+        writer.writeStartDocument();
         writer.writeName(operation);
         if (source != null) {
             writer.writeString(source.startsWith("$") ? source : "$" + source);

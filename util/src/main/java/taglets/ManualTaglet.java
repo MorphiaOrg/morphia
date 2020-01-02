@@ -16,11 +16,19 @@
 
 package taglets;
 
+import com.sun.source.doctree.DocTree;
+import jdk.javadoc.doclet.Taglet;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.UnknownBlockTagTree;
+import jdk.javadoc.doclet.Taglet;
+
+import javax.lang.model.element.Element;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Provides a taglet for linking to the MongoDB manual pages
- * 
+ *
  * @see <a href="http://docs.mongodb.org/manual/">the MongoDB manual</a>
  */
 public class ManualTaglet extends DocTaglet {
@@ -41,3 +49,4 @@ public class ManualTaglet extends DocTaglet {
     }
 
 }
+

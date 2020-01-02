@@ -139,7 +139,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param options the options to apply to the insert operation
      * @param <T>     the type of the entity
      * @since 1.3
-     * @deprecated use {@link #insert(T, InsertOneOptions)} instead
+     * @deprecated use {@link #insert(Object, InsertOneOptions)} instead
      * @morphia.inline
      */
     @SuppressWarnings("removal")
