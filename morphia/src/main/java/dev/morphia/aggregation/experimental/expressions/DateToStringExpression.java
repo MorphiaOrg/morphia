@@ -5,13 +5,13 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-public class DateToStringExpression extends Expression {
+class DateToStringExpression extends Expression {
     private final String format;
     private final Expression expression;
     private Expression timeZone;
     private Expression onNull;
 
-    public DateToStringExpression(final String format,
+    protected DateToStringExpression(final String format,
                                   final Expression expression) {
         super("$dateToString");
         this.format = format;

@@ -263,9 +263,9 @@ public class AggregationTest extends TestBase {
 
         AggregationOptions options = new AggregationOptions();
         Aggregation<Book> aggregation = getDs().aggregate(Book.class)
-                                               .group(Group.of(id("author")
+                                               .group(Group.of(id("author"))
                                                           .fields("books", push()
-                                                                      .source("title"))));
+                                                                      .source("title")));
         aggregation.out(Author.class, options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
         Author author = aggregation.execute(Author.class).next();
