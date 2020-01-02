@@ -25,10 +25,27 @@ public abstract class Expression {
         return new Literal(name.startsWith("$") ? name : "$" + name);
     }
 
+    /**
+     * Returns a value without parsing. Use for values that the aggregation pipeline may interpret as an expression.
+     *
+     * @return the new expression
+     *
+     * @mongodb.driver.manual reference/operator/aggregation/literal $literal
+     */
     public static Expression literal(final Object value) {
         return new Literal(value);
     }
 
+    /**
+     * Returns an array of all values that result from applying an expression to each document in a group of documents that share the
+     * same group by key.
+     *
+     * $push is only available in the $group stage.
+     *
+     * @return the new expression
+     *
+     * @mongodb.driver.manual reference/operator/aggregation/push $push
+     */
     public static PushExpression push() {
         return new PushExpression();
     }

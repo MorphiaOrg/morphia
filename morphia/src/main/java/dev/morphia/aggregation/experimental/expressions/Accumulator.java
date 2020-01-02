@@ -33,6 +33,15 @@ public class Accumulator extends Expression {
         writer.writeEndDocument();
     }
 
+    /**
+     * Calculates and returns the sum of numeric values. $sum ignores non-numeric values.
+     *
+     * @param value the first expression to sum
+     * @param additional any subsequent expressions to include in the sum
+     * @return the new expression
+     *
+     * @mongodb.driver.manual reference/operator/aggregation/sum $sum
+     */
     public static Accumulator sum(final Expression value, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(value);
@@ -40,6 +49,16 @@ public class Accumulator extends Expression {
         return new Accumulator("$sum", expressions);
     }
 
+    /**
+     * Adds numbers together or adds numbers and a date. If one of the arguments is a date, $add treats the other arguments as
+     *  milliseconds to add to the date.
+     *
+     * @param value the first expression to sum
+     * @param additional any subsequent expressions to include in the sum
+     * @return the new expression
+     *
+     * @mongodb.driver.manual reference/operator/aggregation/add $add
+     */
     public static Accumulator add(final Expression value, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(value);

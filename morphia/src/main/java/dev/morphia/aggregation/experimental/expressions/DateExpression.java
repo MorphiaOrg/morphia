@@ -15,7 +15,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfMonth $dayOfMonth
      */
     public static DateExpression dayOfMonth(Expression value) {
@@ -27,7 +27,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfYear $dayOfYear
      */
     public static DateExpression dayOfYear(Expression value) {
@@ -39,7 +39,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfWeek $dayOfWeek
      */
     public static DateExpression dayOfWeek(Expression value) {
@@ -51,7 +51,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/month $month
      */
     public static DateExpression month(Expression value) {
@@ -63,7 +63,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/hour $hour
      */
     public static DateExpression hour(Expression value) {
@@ -75,7 +75,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/minute $minute
      */
     public static DateExpression minute(Expression value) {
@@ -87,7 +87,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/second $second
      */
     public static DateExpression second(Expression value) {
@@ -100,7 +100,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/week $week
      */
     public static DateExpression week(Expression value) {
@@ -112,7 +112,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/millisecond $millisecond
      */
     public static DateExpression milliseconds(Expression value) {
@@ -124,7 +124,7 @@ public class DateExpression extends Expression {
      *
      * @param value the expression containing the date value
      *
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/year $year
      */
     public static DateExpression year(Expression value) {
@@ -136,7 +136,7 @@ public class DateExpression extends Expression {
      *
      * @param format The date format specification
      * @param value  the expression containing the date value
-     * @return the DateExpression
+     * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dateToString $dateToString
      */
     public static DateToStringExpression dateToString(final String format, final Expression value) {
