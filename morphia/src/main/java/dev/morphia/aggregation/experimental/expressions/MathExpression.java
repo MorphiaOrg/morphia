@@ -14,6 +14,13 @@ public abstract class MathExpression extends Expression {
         this.operands = operands;
     }
 
+    /**
+     * Returns the result of dividing the first number by the second. Accepts two argument expressions.
+     *
+     * @return the new expression
+     *
+     * @mongodb.driver.manual reference/operator/aggregation/divide $divide
+     */
     public static MathExpression divide(final Expression numerator, final Expression divisor) {
         return new MathExpression("$divide", List.of(numerator, divisor)) {
             @Override
