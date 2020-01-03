@@ -139,8 +139,18 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dateToString $dateToString
      */
-    public static DateToStringExpression dateToString(final String format, final Expression value) {
-        return new DateToStringExpression(format, value);
+    public static DateToString dateToString(final String format, final Expression value) {
+        return new DateToString(format, value);
+    }
+
+    /**
+     * Constructs and returns a Date object given the date’s constituent properties.
+     *
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/dateFromParts $dateFromParts
+     */
+    public static DateFromParts dateFromParts() {
+        return new DateFromParts();
     }
 
     @Override

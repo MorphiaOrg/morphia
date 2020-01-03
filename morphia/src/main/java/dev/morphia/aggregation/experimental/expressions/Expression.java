@@ -72,6 +72,16 @@ public abstract class Expression {
                    .toString();
     }
 
+    protected void writeNamedExpression(final Mapper mapper, final BsonWriter writer, final String name, final Expression expression,
+                                        final EncoderContext encoderContext) {
+        if (expression != null) {
+            writer.writeName(name);
+            Object value = expression.getValue();
+            Codec codec = mapper.getCodecRegistry().get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
+        }
+    }
+
     protected void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression operand,
                                           final EncoderContext encoderContext) {
         Codec codec = mapper.getCodecRegistry().get(operand.getClass());

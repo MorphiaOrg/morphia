@@ -121,54 +121,6 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testDateAggregation() {
-        getDatabase().getCollection("sales").insertOne(
-            parse("{\"_id\" : 1,\"item\" : \"abc\",\"price\" : 10,\"quantity\" : 2,\"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")"
-                  + "\n}"));
-        Aggregation<Sales> pipeline = getDs()
-                                          .aggregate(Sales.class)
-                                          .project(of()
-                                                       .include("year", year(field("date")))
-                                                       .include("month", month(field("date")))
-                                                       .include("day", dayOfMonth(field("date")))
-                                                       .include("hour", hour(field("date")))
-                                                       .include("minutes", minute(field("date")))
-                                                       .include("seconds", second(field("date")))
-                                                       .include("milliseconds", milliseconds(field("date")))
-                                                       .include("dayOfYear", dayOfYear(field("date")))
-                                                       .include("dayOfWeek", dayOfWeek(field("date")))
-                                                       .include("week", week(field("date"))));
-        Document dates = pipeline.execute(Document.class).tryNext();
-        assertEquals(1, dates.getInteger("_id").intValue());
-        assertEquals(2014, dates.getInteger("year").intValue());
-        assertEquals(1, dates.getInteger("month").intValue());
-        assertEquals(1, dates.getInteger("day").intValue());
-        assertEquals(8, dates.getInteger("hour").intValue());
-        assertEquals(15, dates.getInteger("minutes").intValue());
-        assertEquals(39, dates.getInteger("seconds").intValue());
-        assertEquals(736, dates.getInteger("milliseconds").intValue());
-        assertEquals(1, dates.getInteger("dayOfYear").intValue());
-        assertEquals(4, dates.getInteger("dayOfWeek").intValue());
-        assertEquals(0, dates.getInteger("week").intValue());
-    }
-
-    @Test
-    public void testDateToString() throws ParseException {
-        Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");
-        getDs().save(new User("John Doe", joined));
-        Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .project(of()
-                                                      .include("string",
-                                                          dateToString("%Y-%m-%d", field("joined"))));
-
-        MorphiaCursor<StringDates> it = pipeline.execute(StringDates.class);
-        while (it.hasNext()) {
-            assertEquals("2016-05-01", it.next().getString());
-        }
-    }
-
-    @Test
     public void testGenericAccumulatorUsage() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
