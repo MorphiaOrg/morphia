@@ -51,10 +51,10 @@ public class Group extends Stage {
     public static class GroupId {
         private final List<PipelineField> fields = new ArrayList<>();
 
-        public GroupId() {
+        protected GroupId() {
         }
 
-        private GroupId(final Expression value) {
+        protected GroupId(final Expression value) {
             fields.add(new PipelineField("_id", value));
         }
 

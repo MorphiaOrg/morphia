@@ -134,13 +134,11 @@ public class DateExpression extends Expression {
     /**
      * Returns the date as a formatted string.
      *
-     * @param format The date format specification
-     * @param value  the expression containing the date value
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dateToString $dateToString
      */
-    public static DateToString dateToString(final String format, final Expression value) {
-        return new DateToString(format, value);
+    public static DateToString dateToString() {
+        return new DateToString();
     }
 
     /**

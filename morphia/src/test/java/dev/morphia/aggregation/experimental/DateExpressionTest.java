@@ -105,9 +105,10 @@ public class DateExpressionTest extends TestBase {
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
-                                         .project(of()
-                                                      .include("string",
-                                                          dateToString("%Y-%m-%d", field("joined"))));
+                                         .project(of().include("string",
+                                             dateToString()
+                                                 .format("%Y-%m-%d")
+                                                 .date(field("joined"))));
 
         MorphiaCursor<StringDates> it = pipeline.execute(StringDates.class);
         while (it.hasNext()) {
