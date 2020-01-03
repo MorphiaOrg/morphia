@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.codecs;
 import dev.morphia.aggregation.experimental.Limit;
 import dev.morphia.aggregation.experimental.Lookup;
 import dev.morphia.aggregation.experimental.codecs.stages.AddFieldsCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.AutoBucketCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.BucketCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.GroupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LimitCodec;
@@ -14,6 +15,7 @@ import dev.morphia.aggregation.experimental.codecs.stages.SortCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.StageCodec;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
@@ -56,15 +58,16 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs = new HashMap<>();
 
             // Stages
+            codecs.put(AddFields.class, new AddFieldsCodec(mapper));
+            codecs.put(AutoBucket.class, new AutoBucketCodec(mapper));
+            codecs.put(Bucket.class, new BucketCodec(mapper));
             codecs.put(Group.class, new GroupCodec(mapper));
-            codecs.put(Sample.class, new SampleCodec(mapper));
-            codecs.put(Projection.class, new ProjectionCodec(mapper));
-            codecs.put(Sort.class, new SortCodec(mapper));
             codecs.put(Limit.class, new LimitCodec(mapper));
             codecs.put(Lookup.class, new LookupCodec(mapper));
             codecs.put(Match.class, new MatchCodec(mapper));
-            codecs.put(AddFields.class, new AddFieldsCodec(mapper));
-            codecs.put(Bucket.class, new BucketCodec(mapper));
+            codecs.put(Projection.class, new ProjectionCodec(mapper));
+            codecs.put(Sample.class, new SampleCodec(mapper));
+            codecs.put(Sort.class, new SortCodec(mapper));
         }
         return codecs;
     }

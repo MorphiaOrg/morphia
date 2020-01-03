@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental;
 
 import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -50,6 +51,20 @@ public interface Aggregation<T> {
      * @morphia.internal
      */
     List<Stage> getStages();
+
+    /**
+     * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
+     * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
+     *
+     * Each bucket is represented as a document in the output. The document for each bucket contains an _id field, whose value specifies
+     * the inclusive lower bound and the exclusive upper bound for the bucket, and a count field that contains the number of documents in
+     * the bucket. The count field is included by default when the output is not specified.
+     *
+     * @param bucket the bucket definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/autoBucket $autoBucket
+     */
+    Aggregation<T> autoBucket(AutoBucket bucket);
 
     /**
      * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.

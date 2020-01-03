@@ -5,6 +5,7 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
@@ -84,6 +85,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> addFields(final AddFields fields) {
         stages.add(fields);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> autoBucket(final AutoBucket bucket) {
+        stages.add(bucket);
         return this;
     }
 
