@@ -2,7 +2,6 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import java.util.StringJoiner;
@@ -50,6 +49,10 @@ public abstract class Expression {
         return new PushExpression();
     }
 
+    public static <T> Fields<T> fields(final T owner) {
+        return new Fields<>(owner);
+    }
+
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(operation);
@@ -85,15 +88,14 @@ public abstract class Expression {
                                             final EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
-            Object value = expression.getValue();
-            Codec codec = mapper.getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
+            expression.encode(mapper, writer, encoderContext);
         }
     }
 
-    protected static void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression operand,
-                                          final EncoderContext encoderContext) {
-        Codec codec = mapper.getCodecRegistry().get(operand.getClass());
-        encoderContext.encodeWithChildContext(codec, writer, operand);
+    protected static void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression expression,
+                                                 final EncoderContext encoderContext) {
+        if (expression != null) {
+            expression.encode(mapper, writer, encoderContext);
+        }
     }
 }

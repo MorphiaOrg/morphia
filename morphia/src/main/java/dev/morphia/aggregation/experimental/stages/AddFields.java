@@ -1,12 +1,10 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
-
-import java.util.ArrayList;
-import java.util.List;
+import dev.morphia.aggregation.experimental.expressions.Fields;
 
 public class AddFields extends Stage {
-    private List<PipelineField> fields = new ArrayList<>();
+    private Fields<AddFields> fields = Expression.fields(this);
     protected AddFields() {
         super("$addFields");
     }
@@ -16,7 +14,7 @@ public class AddFields extends Stage {
     }
 
     public AddFields field(final String name, final Expression value) {
-        fields.add(new PipelineField(name, value));
+        fields.add(name, value);
         return this;
     }
 
@@ -25,7 +23,7 @@ public class AddFields extends Stage {
      *
      * @morphia.internal
      */
-    public List<PipelineField> getFields() {
+    public Fields<AddFields> getFields() {
         return fields;
     }
 }

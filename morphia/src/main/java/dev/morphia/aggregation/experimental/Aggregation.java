@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental;
 
 import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -49,6 +50,21 @@ public interface Aggregation<T> {
      * @morphia.internal
      */
     List<Stage> getStages();
+
+    /**
+     * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
+     * <p>
+     * Each bucket is represented as a document in the output. The document for each bucket contains an _id field, whose value specifies
+     * the inclusive lower bound of the bucket and a count field that contains the number of documents in the bucket. The count field is
+     * included by default when the output is not specified.
+     * <p>
+     * $bucket only produces output documents for buckets that contain at least one input document.
+     *
+     * @param bucket the bucket definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/bucket $bucket
+     */
+    Aggregation<T> bucket(Bucket bucket);
 
     /**
      * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly

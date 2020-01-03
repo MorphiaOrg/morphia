@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.codecs;
 import dev.morphia.aggregation.experimental.Limit;
 import dev.morphia.aggregation.experimental.Lookup;
 import dev.morphia.aggregation.experimental.codecs.stages.AddFieldsCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.BucketCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.GroupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LimitCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LookupCodec;
@@ -10,8 +11,10 @@ import dev.morphia.aggregation.experimental.codecs.stages.MatchCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.ProjectionCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SampleCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SortCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.StageCodec;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -28,7 +31,7 @@ import java.util.Map;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class AggregationCodecProvider implements CodecProvider {
 
-    private Map<Class, Codec> codecs;
+    private Map<Class, StageCodec> codecs;
     private Codec expressionCodec;
     private Mapper mapper;
 
@@ -48,7 +51,7 @@ public class AggregationCodecProvider implements CodecProvider {
         return codec;
     }
 
-    private Map<Class, Codec> getCodecs() {
+    private Map<Class, StageCodec> getCodecs() {
         if (codecs == null) {
             codecs = new HashMap<>();
 
@@ -61,6 +64,7 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs.put(Lookup.class, new LookupCodec(mapper));
             codecs.put(Match.class, new MatchCodec(mapper));
             codecs.put(AddFields.class, new AddFieldsCodec(mapper));
+            codecs.put(Bucket.class, new BucketCodec(mapper));
         }
         return codecs;
     }

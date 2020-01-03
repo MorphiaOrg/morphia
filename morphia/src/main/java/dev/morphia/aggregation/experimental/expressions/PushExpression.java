@@ -11,7 +11,7 @@ public class PushExpression extends Expression {
     private List<Field> fields = new ArrayList<>();
     private String source;
 
-    public PushExpression() {
+    protected PushExpression() {
         super("$push");
     }
 

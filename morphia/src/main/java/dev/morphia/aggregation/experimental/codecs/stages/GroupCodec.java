@@ -1,8 +1,9 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.aggregation.experimental.expressions.Fields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Group.GroupId;
-import dev.morphia.aggregation.experimental.stages.PipelineField;
+import dev.morphia.aggregation.experimental.expressions.PipelineField;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -21,30 +22,25 @@ public class GroupCodec extends StageCodec<Group> {
         writer.writeStartDocument();
         GroupId id = group.getId();
         if (id != null) {
-            if(id.getFields().size() > 1) {
+            Fields<GroupId> fields = id.getFields();
+            if(fields.size() > 1) {
                 writer.writeName("_id");
                 writer.writeStartDocument();
-                encodeFields(writer, id.getFields(), encoderContext);
+                fields.encode(getMapper(), writer, encoderContext);
                 writer.writeEndDocument();
             } else {
-                encodeFields(writer, id.getFields(), encoderContext);
+                fields.encode(getMapper(), writer, encoderContext);
             }
         } else {
             writer.writeNull("_id");
         }
 
-        encodeFields(writer, group.getFields(), encoderContext);
+        Fields<Group> fields = group.getFields();
+        if(fields != null) {
+            fields.encode(getMapper(), writer, encoderContext);
+        }
 
         writer.writeEndDocument();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void encodeFields(final BsonWriter writer, final List<PipelineField> fields, final EncoderContext encoderContext) {
-        for (final PipelineField field : fields) {
-            writer.writeName(field.getName());
-            Codec codec = getCodecRegistry().get(field.getValue().getClass());
-            encoderContext.encodeWithChildContext(codec, writer, field.getValue());
-        }
     }
 
     @Override

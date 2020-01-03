@@ -25,6 +25,7 @@ import dev.morphia.aggregation.experimental.model.Inventory;
 import dev.morphia.aggregation.experimental.model.Order;
 import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.annotations.Entity;
@@ -118,7 +119,7 @@ public class AggregationTest extends TestBase {
 
         MorphiaCursor<CountResult> aggregation = getDs().aggregate(Book.class)
                                                         .group(Group.of(id("author")
-                                                                   .fields("count", sum(literal(1)))))
+                                                                   .field("count", sum(literal(1)))))
                                                         .sort(on().ascending("_id"))
                                                         .execute(CountResult.class);
 
@@ -157,6 +158,36 @@ public class AggregationTest extends TestBase {
                   + "'totalQuiz' : 16, 'totalScore' : 40 }"));
 
         assertEquals(list, result);
+    }
+
+    @Test
+    public void testBucket() {
+        List<Document> list = List.of(
+            parse("{'_id': 1, 'title': 'The Pillars of Society', 'artist': 'Grosz', 'year': 1926, 'price': NumberDecimal('199.99') }"),
+            parse("{'_id': 2, 'title': 'Melancholy III', 'artist': 'Munch', 'year': 1902, 'price': NumberDecimal('280.00') }"),
+            parse("{'_id': 3, 'title': 'Dancer', 'artist': 'Miro', 'year': 1925, 'price': NumberDecimal('76.04') }"),
+            parse("{'_id': 4, 'title': 'The Great Wave off Kanagawa', 'artist': 'Hokusai', 'price': NumberDecimal('167.30') }"),
+            parse("{'_id': 5, 'title': 'The Persistence of Memory', 'artist': 'Dali', 'year': 1931, 'price': NumberDecimal('483.00') }"),
+            parse("{'_id': 6, 'title': 'Composition VII', 'artist': 'Kandinsky', 'year': 1913, 'price': NumberDecimal('385.00') }"),
+            parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893}"),
+            parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42') }"));
+
+        getDatabase().getCollection("artwork").insertMany(list);
+
+        List<Document> results = getDs().aggregate(Artwork.class).bucket(Bucket.of()
+                                                                                  .groupBy(field("price"))
+                                                                                  .boundaries(literal(0), literal(200), literal(400))
+                                                                                  .defaultValue("Other")
+                                                                                  .outputField("count", sum(literal(1)))
+                                                                                  .outputField("titles", push().source("title")))
+                                           .execute(Document.class)
+                                           .toList();
+
+        List<Document> documents = List.of(
+            parse("{'_id': 0, 'count': 4, 'titles': ['The Pillars of Society', 'Dancer', 'The Great Wave off Kanagawa', 'Blue Flower']}"),
+            parse("{'_id': 200, 'count': 2, 'titles': ['Melancholy III', 'Composition VII']}"),
+            parse("{'_id': 'Other', 'count': 2, 'titles': ['The Persistence of Memory', 'The Scream']}"));
+        assertEquals(documents, results);
     }
 
     @Test
@@ -724,6 +755,12 @@ public class AggregationTest extends TestBase {
 
     @Entity("scores")
     private static class Score {
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    public static class Artwork {
         @Id
         private ObjectId id;
     }

@@ -1,15 +1,17 @@
-package dev.morphia.aggregation.experimental.stages;
+package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * @morphia.internal
+ */
 public class PipelineField {
     private String name;
     private Expression value;
 
-    PipelineField(final String name, final Expression value) {
+    public PipelineField(final String name, final Expression value) {
         this.name = name;
         this.value = value;
     }

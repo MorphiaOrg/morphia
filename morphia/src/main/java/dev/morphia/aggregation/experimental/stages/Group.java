@@ -1,13 +1,12 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
-
-import java.util.ArrayList;
-import java.util.List;
+import dev.morphia.aggregation.experimental.expressions.Fields;
+import dev.morphia.aggregation.experimental.expressions.PipelineField;
 
 public class Group extends Stage {
     private GroupId id;
-    protected final List<PipelineField> fields = new ArrayList<>();
+    protected Fields<Group> fields;
 
     protected Group() {
         super("$group");
@@ -24,11 +23,14 @@ public class Group extends Stage {
     }
 
     public Group fields(final String name, final Expression expression) {
-        fields.add(new PipelineField(name, expression));
+        if(fields == null) {
+            fields = Expression.fields(this);
+        }
+        fields.add(name, expression);
         return this;
     }
 
-    public List<PipelineField> getFields() {
+    public Fields<Group> getFields() {
         return fields;
     }
 
@@ -49,21 +51,23 @@ public class Group extends Stage {
     }
 
     public static class GroupId {
-        private final List<PipelineField> fields = new ArrayList<>();
+        private Fields<GroupId> fields;
 
         protected GroupId() {
         }
 
         protected GroupId(final Expression value) {
-            fields.add(new PipelineField("_id", value));
+            field("_id", value);
         }
 
-        public GroupId fields(final String name, final Expression expression) {
-            fields.add(new PipelineField(name, expression));
-            return this;
+        public GroupId field(final String name, final Expression expression) {
+            if(fields == null) {
+                fields = Expression.fields(this);
+            }
+            return fields.add(name, expression);
         }
 
-        public List<PipelineField> getFields() {
+        public Fields<GroupId> getFields() {
             return fields;
         }
     }
