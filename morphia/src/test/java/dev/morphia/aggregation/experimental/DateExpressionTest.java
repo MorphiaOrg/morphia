@@ -3,16 +3,21 @@ package dev.morphia.aggregation.experimental;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.model.StringDates;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.DateExpression.dateFromParts;
+import static dev.morphia.aggregation.experimental.expressions.DateExpression.dateFromString;
 import static dev.morphia.aggregation.experimental.expressions.DateExpression.dateToString;
 import static dev.morphia.aggregation.experimental.expressions.DateExpression.dayOfMonth;
 import static dev.morphia.aggregation.experimental.expressions.DateExpression.dayOfWeek;
@@ -108,5 +113,52 @@ public class DateExpressionTest extends TestBase {
         while (it.hasNext()) {
             assertEquals("2016-05-01", it.next().getString());
         }
+    }
+
+    @Test
+    public void testDateFromString() {
+        List<Document> list = List.of(
+            parse("{ _id: 1, date: '2017-02-08T12:10:40.787', timezone: 'America/New_York', message:  'Step 1: Started' }"),
+            parse("{ _id: 2, date: '2017-02-08', timezone: '-05:00', message:  'Step 1: Ended' }"),
+            parse("{ _id: 3, message:  ' Step 1: Ended ' }"),
+            parse("{ _id: 4, date: '2017-02-09', timezone: 'Europe/London', message: 'Step 2: Started'}"),
+            parse("{ _id: 5, date: '2017-02-09T03:35:02.055', timezone: '+0530', message: 'Step 2: In Progress'}"));
+
+        getDatabase().getCollection("logmessages", Document.class)
+                     .insertMany(list);
+
+        List<Document> result = getDs().aggregate(LogMessage.class)
+                                       .project(of().include("date", dateFromString()
+                                                                         .dateString(field("date"))
+                                                                         .timeZone("America/New_York")))
+                                       .execute(Document.class)
+                                       .toList();
+        assertEquals(List.of(
+            parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
+            parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
+            parse("{ '_id' : 3, 'date' : null }"),
+            parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T05:00:00Z') }"),
+            parse("{ '_id' : 5, 'date' : ISODate('2017-02-09T08:35:02.055Z') }")), result);
+
+
+        result = getDs().aggregate(LogMessage.class)
+                        .project(of().include("date", dateFromString()
+                                                          .dateString(field("date"))
+                                                          .timeZone(field("timezone"))))
+                        .execute(Document.class)
+                        .toList();
+
+        assertEquals(List.of(
+            parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
+            parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
+            parse(" { '_id' : 3, 'date' : null }"),
+            parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T00:00:00Z') }"),
+            parse(" { '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")), result);
+    }
+
+    @Entity("logmessages")
+    private static class LogMessage {
+        @Id
+        private ObjectId id;
     }
 }

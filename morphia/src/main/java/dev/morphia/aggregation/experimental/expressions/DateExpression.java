@@ -144,6 +144,16 @@ public class DateExpression extends Expression {
     }
 
     /**
+     * Converts a date/time string to a date object.
+     *
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/dateFromString $dateFromString
+     */
+    public static DateFromString dateFromString() {
+        return new DateFromString();
+    }
+
+    /**
      * Constructs and returns a Date object given the date’s constituent properties.
      *
      * @return the new expression
