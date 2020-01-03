@@ -4,6 +4,7 @@ import com.mongodb.MongoCommandException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -34,8 +35,33 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public List<Stage> getStages() {
-        return stages;
+    public <S> MorphiaCursor<S> execute(final Class<S> resultType) {
+        return new MorphiaCursor<>(collection.aggregate(getDocuments(), resultType).iterator());
+    }
+
+    @Override
+    public <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options) {
+        AggregateIterable<S> aggregate = options.apply(collection).aggregate(getDocuments(), resultType)
+                                                .allowDiskUse(options.allowDiskUse())
+                                                .batchSize(options.batchSize())
+                                                .bypassDocumentValidation(options.bypassDocumentValidation())
+                                                .collation(options.collation())
+                                                .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
+        return new MorphiaCursor<>(aggregate.iterator());
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public List<Document> getDocuments() {
+        List<Document> collect = stages.stream()
+                                       .map(s -> {
+                                           Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
+                                           DocumentWriter writer = new DocumentWriter();
+                                           codec.encode(writer, s, EncoderContext.builder().build());
+                                           return writer.<Document>getRoot();
+                                       })
+                                       .collect(Collectors.toList());
+        return collect;
     }
 
     @Override
@@ -47,6 +73,17 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return ((S) (list.size() == 1
                      ? list.get(0)
                      : list));
+    }
+
+    @Override
+    public List<Stage> getStages() {
+        return stages;
+    }
+
+    @Override
+    public Aggregation<T> addFields(final AddFields fields) {
+        stages.add(fields);
+        return this;
     }
 
     @Override
@@ -74,40 +111,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> project(final Projection projection) {
-        stages.add(projection);
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> sample(final Sample sample) {
-        stages.add(sample);
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> sort(final Sort sort) {
-        stages.add(sort);
-        return this;
-    }
-
-    @Override
-    public <S> MorphiaCursor<S> execute(final Class<S> resultType) {
-        return new MorphiaCursor<>(collection.aggregate(getDocuments(), resultType).iterator());
-    }
-
-    @Override
-    public <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options) {
-        AggregateIterable<S> aggregate = options.apply(collection).aggregate(getDocuments(), resultType)
-                                                .allowDiskUse(options.allowDiskUse())
-                                                .batchSize(options.batchSize())
-                                                .bypassDocumentValidation(options.bypassDocumentValidation())
-                                                .collation(options.collation())
-                                                .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
-        return new MorphiaCursor<>(aggregate.iterator());
-    }
-
-    @Override
     public <O> void out(final Class<O> resultType) {
         out(datastore.getMapper().getMappedClass(resultType).getCollectionName());
     }
@@ -118,11 +121,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
         documents.add(new Document("$out", collectionName));
         collection.aggregate(documents)
                   .toCollection();
-    }
-
-    @Override
-    public <O> void out(final Class<O> resultType, final AggregationOptions options) {
-        out(datastore.getMapper().getMappedClass(resultType).getCollectionName(), options);
     }
 
     @Override
@@ -144,16 +142,25 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<Document> getDocuments() {
-        List<Document> collect = stages.stream()
-                                       .map(s -> {
-                                           Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
-                                           DocumentWriter writer = new DocumentWriter();
-                                           codec.encode(writer, s, EncoderContext.builder().build());
-                                           return writer.<Document>getRoot();
-                                       })
-                                       .collect(Collectors.toList());
-        return collect;
+    public <O> void out(final Class<O> resultType, final AggregationOptions options) {
+        out(datastore.getMapper().getMappedClass(resultType).getCollectionName(), options);
+    }
+
+    @Override
+    public Aggregation<T> project(final Projection projection) {
+        stages.add(projection);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> sample(final Sample sample) {
+        stages.add(sample);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> sort(final Sort sort) {
+        stages.add(sort);
+        return this;
     }
 }

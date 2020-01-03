@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental;
 
+import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -48,6 +49,8 @@ public interface Aggregation<T> {
      * @morphia.internal
      */
     List<Stage> getStages();
+
+    Aggregation<T> addFields(AddFields fields);
 
     /**
      * Groups input documents by the specified _id expression and for each distinct grouping, outputs a document. The _id field of each

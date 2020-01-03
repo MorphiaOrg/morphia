@@ -1,8 +1,10 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.mapping.Mapper;
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class PipelineField {
     private String name;
     private Expression value;
@@ -18,5 +20,10 @@ public class PipelineField {
 
     public Expression getValue() {
         return value;
+    }
+
+    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+        writer.writeName(name);
+        value.encode(mapper, writer, encoderContext);
     }
 }

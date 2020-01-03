@@ -11,6 +11,19 @@ public class DateExpression extends Expression {
     }
 
     /**
+     * Converts a value to a date. If the value cannot be converted to a date, $toDate errors. If the value is null or missing,
+     * $toDate returns null.
+     *
+     * @param value the expression containing the date value
+     *
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/toDate $toDate
+     */
+    public static DateExpression toDate(Expression value) {
+        return new DateExpression("$toDate", value);
+    }
+
+    /**
      * Returns the day of the month for a date as a number between 1 and 31.
      *
      * @param value the expression containing the date value

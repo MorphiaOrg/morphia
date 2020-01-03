@@ -24,11 +24,15 @@ import dev.morphia.aggregation.experimental.model.CountResult;
 import dev.morphia.aggregation.experimental.model.Inventory;
 import dev.morphia.aggregation.experimental.model.Order;
 import dev.morphia.aggregation.experimental.model.Sales;
+import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Sample;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -125,6 +129,34 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(3, result1.getCount());
         Assert.assertEquals("Homer", result2.getAuthor());
         Assert.assertEquals(2, result2.getCount());
+    }
+
+    @Test
+    public void testAddFields() {
+        List<Document> list = List.of(
+            parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
+            parse("{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }"));
+
+        getDatabase().getCollection("scores").insertMany(list);
+
+        List<Document> result = getDs().aggregate(Score.class)
+                                       .addFields(AddFields.of()
+                                                           .field("totalHomework", sum(field("homework")))
+                                                           .field("totalQuiz", sum(field("quiz")))
+                                                 )
+                                       .addFields(AddFields.of()
+                                                           .field("totalScore", add(field("totalHomework"),
+                                                               field("totalQuiz"), field("extraCredit"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        list = List.of(
+            parse("{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
+                  + " 'totalQuiz' : 18, 'totalScore' : 43 }"),
+            parse("{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
+                  + "'totalQuiz' : 16, 'totalScore' : 40 }"));
+
+        assertEquals(list, result);
     }
 
     @Test
@@ -689,4 +721,10 @@ public class AggregationTest extends TestBase {
     }
 
 */
+
+    @Entity("scores")
+    private static class Score {
+        @Id
+        private ObjectId id;
+    }
 }

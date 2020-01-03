@@ -1,8 +1,11 @@
 package dev.morphia.aggregation.experimental;
 
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.expressions.DateExpression;
 import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.model.StringDates;
+import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -152,13 +155,45 @@ public class DateExpressionTest extends TestBase {
         assertEquals(List.of(
             parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
             parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
-            parse(" { '_id' : 3, 'date' : null }"),
+            parse("{ '_id' : 3, 'date' : null }"),
             parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T00:00:00Z') }"),
-            parse(" { '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")), result);
+            parse("{ '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")), result);
+    }
+
+    @Test
+    public void testToDate() {
+        getDatabase().getCollection("orders")
+                     .insertMany(List.of(
+                         parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
+                         parse("{ _id: 2, item: 'pie', qty: 10,  order_date: '2018-03-12'}"),
+                         parse("{ _id: 3, item: 'ice cream', qty: 2, price: '4.99', order_date: '2018-03-05' }"),
+                         parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
+
+        List<Document> result = getDs().aggregate(Order.class)
+                                          .addFields(AddFields.of()
+                                                              .field("convertedDate", DateExpression.toDate(field("order_date"))))
+                                          .sort(Sort.on()
+                                                    .ascending("convertedDate"))
+                                          .execute(Document.class)
+                                          .toList();
+
+        List<Document> documents = List.of(
+            parse("{'_id': 4, 'item': 'almonds', 'qty': 5, 'price': 5, 'order_date': '2018-03-05 +10:00', 'convertedDate': ISODate('2018-03-04T14:00:00Z')}"),
+            parse("{'_id': 3, 'item': 'ice cream', 'qty': 2, 'price': '4.99', 'order_date': '2018-03-05', 'convertedDate': ISODate('2018-03-05T00:00:00Z')}"),
+            parse("{'_id': 1, 'item': 'apple', 'qty': 5, 'order_date': '2018-03-10', 'convertedDate': ISODate('2018-03-10T00:00:00Z')}"),
+            parse("{'_id': 2, 'item': 'pie', 'qty': 10, 'order_date': '2018-03-12', 'convertedDate': ISODate('2018-03-12T00:00:00Z')}"));
+
+        assertEquals(documents, result);
     }
 
     @Entity("logmessages")
     private static class LogMessage {
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity("orders")
+    private static class Order {
         @Id
         private ObjectId id;
     }

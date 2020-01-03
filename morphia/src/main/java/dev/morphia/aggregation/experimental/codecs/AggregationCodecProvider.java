@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.codecs;
 
 import dev.morphia.aggregation.experimental.Limit;
 import dev.morphia.aggregation.experimental.Lookup;
+import dev.morphia.aggregation.experimental.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.GroupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LimitCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LookupCodec;
@@ -10,6 +11,7 @@ import dev.morphia.aggregation.experimental.codecs.stages.ProjectionCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SampleCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SortCodec;
 import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -58,6 +60,7 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs.put(Limit.class, new LimitCodec(mapper));
             codecs.put(Lookup.class, new LookupCodec(mapper));
             codecs.put(Match.class, new MatchCodec(mapper));
+            codecs.put(AddFields.class, new AddFieldsCodec(mapper));
         }
         return codecs;
     }

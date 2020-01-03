@@ -72,8 +72,17 @@ public abstract class Expression {
                    .toString();
     }
 
-    protected void writeNamedExpression(final Mapper mapper, final BsonWriter writer, final String name, final Expression expression,
-                                        final EncoderContext encoderContext) {
+    /**
+     * @param mapper
+     * @param writer
+     * @param name
+     * @param expression
+     * @param encoderContext
+     *
+     * @morphia.internal
+     */
+    public static void writeNamedExpression(final Mapper mapper, final BsonWriter writer, final String name, final Expression expression,
+                                            final EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
             Object value = expression.getValue();
@@ -82,7 +91,7 @@ public abstract class Expression {
         }
     }
 
-    protected void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression operand,
+    protected static void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression operand,
                                           final EncoderContext encoderContext) {
         Codec codec = mapper.getCodecRegistry().get(operand.getClass());
         encoderContext.encodeWithChildContext(codec, writer, operand);
