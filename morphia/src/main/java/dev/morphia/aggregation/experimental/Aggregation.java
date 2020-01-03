@@ -50,6 +50,17 @@ public interface Aggregation<T> {
      */
     List<Stage> getStages();
 
+    /**
+     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+     * added fields.
+     * <p>
+     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+     * adds the new fields.
+     *
+     * @param fields the stage specification
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/addFields $addFields
+     */
     Aggregation<T> addFields(AddFields fields);
 
     /**
