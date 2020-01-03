@@ -32,7 +32,7 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
     @Override
     public final void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeName(value.getName());
+        writer.writeName(value.getStageName());
         encodeStage(writer, value, encoderContext);
         writer.writeEndDocument();
     }

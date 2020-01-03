@@ -222,6 +222,27 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testCount() {
+        List<Document> list = List.of(
+            parse("{ '_id' : 1, 'subject' : 'History', 'score' : 88 }"),
+            parse("{ '_id' : 2, 'subject' : 'History', 'score' : 92 }"),
+            parse("{ '_id' : 3, 'subject' : 'History', 'score' : 97 }"),
+            parse("{ '_id' : 4, 'subject' : 'History', 'score' : 71 }"),
+            parse("{ '_id' : 5, 'subject' : 'History', 'score' : 79 }"),
+            parse("{ '_id' : 6, 'subject' : 'History', 'score' : 83 }"));
+
+        getDatabase().getCollection("scores").insertMany(list);
+
+        Document scores = getDs().aggregate(Score.class)
+                                         .match(getDs().find(Score.class)
+                                                       .filter("score >", 80))
+                                         .count("passing_scores")
+                                         .execute(Document.class)
+                                         .next();
+        assertEquals(parse("{ \"passing_scores\" : 4 }"), scores);
+    }
+
+    @Test
     public void testLimit() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
@@ -356,10 +377,11 @@ public class AggregationTest extends TestBase {
         assertEquals(1, list.size());
     }
 
-    @Entity("scores")
+    @Entity(value = "scores", useDiscriminator = false)
     private static class Score {
         @Id
         private ObjectId id;
+        private int score;
     }
 
     @Entity

@@ -7,6 +7,7 @@ import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.Count;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -70,7 +71,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @SuppressWarnings("unchecked")
     public <S extends Stage> S getStage(final String name) {
         List<Stage> list = stages.stream()
-                                 .filter(s -> s.getName().equals(name))
+                                 .filter(s -> s.getStageName().equals(name))
                                  .collect(Collectors.toList());
         return ((S) (list.size() == 1
                      ? list.get(0)
@@ -121,6 +122,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public AggregationImpl match(final Query query) {
         stages.add(Match.of(query));
+        return this;
+    }
+
+    @Override
+    public AggregationImpl count(final String name) {
+        stages.add(new Count(name));
         return this;
     }
 

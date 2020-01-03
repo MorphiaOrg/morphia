@@ -136,6 +136,15 @@ public interface Aggregation<T> {
     Aggregation<T> match(Query<?> query);
 
     /**
+     * Passes a document to the next stage that contains a count of the number of documents input to the stage.
+     *
+     * @param name the field name for the resulting count value
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/count $count
+     */
+    Aggregation<T> count(String name);
+
+    /**
      * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
      * with the results if it already exists.
      *
