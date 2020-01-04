@@ -14,7 +14,9 @@ import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Sort;
+import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -79,6 +81,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public AggregationImpl facet(final Facet facet) {
+        stages.add(facet);
+        return this;
+    }
+
+    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Document> getDocuments() {
         List<Document> collect = stages.stream()
@@ -115,6 +123,18 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public Aggregation<T> unwind(final Unwind unwind) {
+        stages.add(unwind);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> sortByCount(final SortByCount sort) {
+        stages.add(sort);
+        return this;
+    }
+
+    @Override
     public Aggregation<T> limit(final int limit) {
         stages.add(Limit.of(limit));
         return this;
@@ -129,12 +149,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public AggregationImpl match(final Query query) {
         stages.add(Match.of(query));
-        return this;
-    }
-
-    @Override
-    public AggregationImpl facet(final Facet facet) {
-        stages.add(facet);
         return this;
     }
 

@@ -13,8 +13,10 @@ import dev.morphia.aggregation.experimental.codecs.stages.LookupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.MatchCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.ProjectionCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SampleCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.SortByCountCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SortCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.StageCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.UnwindCodec;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
@@ -26,6 +28,8 @@ import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Sort;
+import dev.morphia.aggregation.experimental.stages.SortByCount;
+import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.Mapper;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -74,6 +78,8 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs.put(Projection.class, new ProjectionCodec(mapper));
             codecs.put(Sample.class, new SampleCodec(mapper));
             codecs.put(Sort.class, new SortCodec(mapper));
+            codecs.put(SortByCount.class, new SortByCountCodec(mapper));
+            codecs.put(Unwind.class, new UnwindCodec(mapper));
         }
         return codecs;
     }

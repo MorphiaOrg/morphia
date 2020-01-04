@@ -8,7 +8,9 @@ import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Sort;
+import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.Document;
@@ -131,6 +133,30 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/group $group
      */
     Aggregation<T> group(Group group);
+
+    /**
+     * Deconstructs an array field from the input documents to output a document for each element. Each output document is the input
+     * document with the value of the array field replaced by the element.
+     *
+     * @param unwind the unwind definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/unwind $unwind
+     */
+    Aggregation<T> unwind(Unwind unwind);
+
+    /**
+     * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
+     *
+     * Each output document contains two fields: an _id field containing the distinct grouping value, and a count field containing the
+     * number of documents belonging to that grouping or category.
+     *
+     * The documents are sorted by count in descending order.
+     *
+     * @param sort the sort definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/sortByCount $sortByCount
+     */
+    Aggregation<T> sortByCount(SortByCount sort);
 
     /**
      * Limits the number of documents passed to the next stage in the pipeline.

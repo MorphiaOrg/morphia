@@ -31,6 +31,8 @@ import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Sample;
+import dev.morphia.aggregation.experimental.stages.SortByCount;
+import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -243,25 +245,24 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("artwork").insertMany(list);
 
         Document result = getDs().aggregate(Artwork.class)
-                               .facet(Facet.of()
-                                           //                           .field( "categorizedByTags",
-                                           //                               { $unwind: "$tags" },
-                                           //                               { $sortByCount: "$tags" }
-                                           //      )
-                                           .field("categorizedByPrice",
-                                               Match.of(getDs().find(Artwork.class)
-                                                               .field("price").exists()),
-                                               Bucket.of()
-                                                     .groupBy(field("price"))
-                                                     .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
-                                                     .defaultValue("Other")
-                                                     .outputField("count", sum(literal(1)))
-                                                     .outputField("titles", push().single(field("title"))))
-                                           .field("categorizedByYears(Auto)", AutoBucket.of()
-                                                                                        .groupBy(field("year"))
-                                                                                        .buckets(4)))
-                               .execute(Document.class)
-                               .next();
+                                 .facet(Facet.of()
+                                             .field("categorizedByTags",
+                                                 Unwind.on("tags"),
+                                                 SortByCount.on(field("tags")))
+                                             .field("categorizedByPrice",
+                                                 Match.of(getDs().find(Artwork.class)
+                                                                 .field("price").exists()),
+                                                 Bucket.of()
+                                                       .groupBy(field("price"))
+                                                       .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
+                                                       .defaultValue("Other")
+                                                       .outputField("count", sum(literal(1)))
+                                                       .outputField("titles", push().single(field("title"))))
+                                             .field("categorizedByYears(Auto)", AutoBucket.of()
+                                                                                          .groupBy(field("year"))
+                                                                                          .buckets(4)))
+                                 .execute(Document.class)
+                                 .next();
 
         Document document = parse("{"
                                + "    'categorizedByYears(Auto)' : ["
@@ -277,18 +278,18 @@ public class AggregationTest extends TestBase {
                                + "    { '_id' : 300, 'count' : 1, 'titles' : ['Composition VII']},"
                                + "    { '_id' : 'Other', 'count' : 1, 'titles' : ['The Persistence of Memory']}"
                                + "    ],"
-//                               + "    'categorizedByTags' : ["
-//                               + "    { '_id' : 'painting', 'count' : 6 },"
-//                               + "    { '_id' : 'oil', 'count' : 4 },"
-//                               + "    { '_id' : 'Expressionism', 'count' : 3 },"
-//                               + "    { '_id' : 'Surrealism', 'count' : 2 },"
-//                               + "    { '_id' : 'abstract', 'count' : 2 },"
-//                               + "    { '_id' : 'woodblock', 'count' : 1 },"
-//                               + "    { '_id' : 'woodcut', 'count' : 1 },"
-//                               + "    { '_id' : 'ukiyo-e', 'count' : 1 },"
-//                               + "    { '_id' : 'satire', 'count' : 1 },"
-//                               + "    { '_id' : 'caricature', 'count' : 1 }"
-//                               + "    ]"
+                               + "    'categorizedByTags' : ["
+                               + "    { '_id' : 'painting', 'count' : 6 },"
+                               + "    { '_id' : 'oil', 'count' : 4 },"
+                               + "    { '_id' : 'Expressionism', 'count' : 3 },"
+                               + "    { '_id' : 'Surrealism', 'count' : 2 },"
+                               + "    { '_id' : 'abstract', 'count' : 2 },"
+                               + "    { '_id' : 'woodblock', 'count' : 1 },"
+                               + "    { '_id' : 'woodcut', 'count' : 1 },"
+                               + "    { '_id' : 'ukiyo-e', 'count' : 1 },"
+                               + "    { '_id' : 'satire', 'count' : 1 },"
+                               + "    { '_id' : 'caricature', 'count' : 1 }"
+                               + "    ]"
                                + "}");
 
         assertEquals(document, result);

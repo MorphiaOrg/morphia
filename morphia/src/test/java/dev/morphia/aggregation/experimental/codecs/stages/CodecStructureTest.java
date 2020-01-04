@@ -5,7 +5,9 @@ import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -68,5 +70,19 @@ public class CodecStructureTest extends TestBase {
                                .single(field("title"));
 
         evaluate(expression, parse("{ $push: '$title' }"));
+    }
+
+    @Test
+    public void testUnwind() {
+        Stage stage = Unwind.on("sizes");
+
+        evaluate(stage, parse("{ $unwind : \"$sizes\" }"));
+    }
+
+    @Test
+    public void testSortByCount() {
+        Stage stage = SortByCount.on(field("tags"));
+
+        evaluate(stage, parse("{ $sortByCount: \"$tags\" }"));
     }
 }
