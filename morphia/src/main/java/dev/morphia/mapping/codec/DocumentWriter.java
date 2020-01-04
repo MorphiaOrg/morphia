@@ -26,17 +26,32 @@ import java.util.Stack;
 
 /**
  * Utility to write out to a Document
+ * @morphia.internal
  */
 @SuppressWarnings("unchecked")
 public class DocumentWriter implements BsonWriter {
     private Stack<Object> state = new Stack<>();
     private Object root;
+    private int arraysLevel;
+    private int docsLevel;
 
     /**
      * Creates a new Writer
      */
     public DocumentWriter() {
         push(new RootSlab());
+    }
+
+    public int getArraysLevel() {
+        return arraysLevel;
+    }
+
+    public int getDocsLevel() {
+        return docsLevel;
+    }
+
+    public Stack<Object> getState() {
+        return state;
     }
 
     private void push(final Object o) {
@@ -132,11 +147,13 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeEndArray() {
+        arraysLevel--;
         pop();
     }
 
     @Override
     public void writeEndDocument() {
+        docsLevel--;
         pop();
     }
 
@@ -253,6 +270,7 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeStartArray() {
+        arraysLevel++;
         final List<Object> list = new ArrayList<>();
         value(list);
         push(new ListSlab(list));
@@ -266,6 +284,7 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeStartDocument() {
+        docsLevel++;
         final Document document = new Document();
         value(document);
         push(document);
@@ -274,9 +293,7 @@ public class DocumentWriter implements BsonWriter {
     @Override
     public void writeStartDocument(final String name) {
         writeName(name);
-        final Document document = new Document();
-        value(document);
-        push(document);
+        writeStartDocument();
     }
 
     @Override

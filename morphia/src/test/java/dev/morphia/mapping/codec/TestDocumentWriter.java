@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import static org.junit.Assert.assertEquals;
+
 public class TestDocumentWriter extends TestBase {
     @Test
     public void nesting() throws JSONException {
@@ -44,6 +46,30 @@ public class TestDocumentWriter extends TestBase {
         writer.writeEndDocument();
         String s = writer.<Document>getRoot().toJson();
         JSONAssert.assertEquals(expected, s, false);
+    }
+
+    @Test
+    public void testArrays() {
+        DocumentWriter writer = new DocumentWriter();
+
+        writer.writeStartDocument();
+        check(writer, 1, 0);
+        writer.writeStartArray("stuff");
+        check(writer, 1, 1);
+        writer.writeString("hello");
+        writer.writeInt32(42);
+        writer.writeEndArray();
+        check(writer, 1, 0);
+        writer.writeName("next");
+        writer.writeString("something simple");
+        writer.writeEndDocument();
+        check(writer, 0, 0);
+        System.out.println(writer.getRoot().toString());
+    }
+
+    private void check(final DocumentWriter writer, final int docs, final int arrays) {
+        assertEquals(docs, writer.getDocsLevel());
+        assertEquals(arrays, writer.getArraysLevel());
     }
 
 }

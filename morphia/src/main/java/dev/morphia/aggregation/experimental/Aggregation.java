@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -19,50 +20,29 @@ import java.util.List;
  */
 public interface Aggregation<T> {
     /**
-     * Execute the aggregation and get the results.
+     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+     * added fields.
+     * <p>
+     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+     * adds the new fields.
      *
-     * @param <S> the output type
-     * @return a MorphiaCursor
+     * @param fields the stage definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/addFields $addFields
      */
-    <S> MorphiaCursor<S> execute(final Class<S> resultType);
-
-    /**
-     * Execute the aggregation and get the results.
-     *
-     * @param <S>     the output type
-     * @param options the options to apply
-     * @return a MorphiaCursor
-     */
-    <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options);
-
-    /**
-     * @morphia.internal
-     */
-    List<Document> getDocuments();
-
-    /**
-     * @return the named stage or stages in this aggregation
-     * @morphia.internal
-     */
-    <S extends Stage> S getStage(String name);
-
-    /**
-     * @return the stage in this aggregation
-     * @morphia.internal
-     */
-    List<Stage> getStages();
+    Aggregation<T> addFields(AddFields fields);
 
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
      * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
-     *
+     * <p>
      * Each bucket is represented as a document in the output. The document for each bucket contains an _id field, whose value specifies
      * the inclusive lower bound and the exclusive upper bound for the bucket, and a count field that contains the number of documents in
      * the bucket. The count field is included by default when the output is not specified.
      *
      * @param bucket the bucket definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/autoBucket $autoBucket
+     * @mongodb.driver.manual reference/operator/aggregation/bucketAuto $bucketAuto
      */
     Aggregation<T> autoBucket(AutoBucket bucket);
 
@@ -82,17 +62,64 @@ public interface Aggregation<T> {
     Aggregation<T> bucket(Bucket bucket);
 
     /**
-     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
-     * added fields.
-     * <p>
-     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
-     * adds the new fields.
+     * Passes a document to the next stage that contains a count of the number of documents input to the stage.
      *
-     * @param fields the stage specification
+     * @param name the field name for the resulting count value
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/addFields $addFields
+     * @mongodb.driver.manual reference/operator/aggregation/count $count
      */
-    Aggregation<T> addFields(AddFields fields);
+    Aggregation<T> count(String name);
+
+    /**
+     * Execute the aggregation and get the results.
+     *
+     * @param <S> the output type
+     * @return a MorphiaCursor
+     */
+    <S> MorphiaCursor<S> execute(final Class<S> resultType);
+
+    /**
+     * Execute the aggregation and get the results.
+     *
+     * @param <S>     the output type
+     * @param options the options to apply
+     * @return a MorphiaCursor
+     */
+    <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options);
+
+    /**
+     * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Each sub-pipeline has its own
+     * field in the output document where its results are stored as an array of documents.
+     * <p>
+     * The $facet stage allows you to create multi-faceted aggregations which characterize data across multiple dimensions, or facets,
+     * within a single aggregation stage. Multi-faceted aggregations provide multiple filters and categorizations to guide data browsing
+     * and analysis. Retailers commonly use faceting to narrow search results by creating filters on product price, manufacturer, size, etc.
+     * <p>
+     * Input documents are passed to the $facet stage only once. $facet enables various aggregations on the same set of input documents,
+     * without needing to retrieve the input documents multiple times.
+     *
+     * @param facet the facet definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/facet $facet
+     */
+    Aggregation<T> facet(Facet facet);
+
+    /**
+     * @morphia.internal
+     */
+    List<Document> getDocuments();
+
+    /**
+     * @return the named stage or stages in this aggregation
+     * @morphia.internal
+     */
+    <S extends Stage> S getStage(String name);
+
+    /**
+     * @return the stage in this aggregation
+     * @morphia.internal
+     */
+    List<Stage> getStages();
 
     /**
      * Groups input documents by the specified _id expression and for each distinct grouping, outputs a document. The _id field of each
@@ -119,7 +146,7 @@ public interface Aggregation<T> {
      * processing. To each input document, the $lookup stage adds a new array field whose elements are the matching documents from the
      * “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
      *
-     * @param lookup the lookup specification
+     * @param lookup the lookup definition
      * @return this
      * @mongodb.driver.manual reference/operator/aggregation/lookup $lookup
      */
@@ -134,15 +161,6 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/match $match
      */
     Aggregation<T> match(Query<?> query);
-
-    /**
-     * Passes a document to the next stage that contains a count of the number of documents input to the stage.
-     *
-     * @param name the field name for the resulting count value
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/count $count
-     */
-    Aggregation<T> count(String name);
 
     /**
      * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced

@@ -45,8 +45,8 @@ public abstract class Expression {
      *
      * @mongodb.driver.manual reference/operator/aggregation/push $push
      */
-    public static PushExpression push() {
-        return new PushExpression();
+    public static Push push() {
+        return new Push();
     }
 
     public static <T> Fields<T> fields(final T owner) {

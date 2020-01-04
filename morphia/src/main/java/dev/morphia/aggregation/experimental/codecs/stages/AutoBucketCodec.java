@@ -33,12 +33,4 @@ public class AutoBucketCodec extends StageCodec<AutoBucket> {
             writer.writeEndDocument();
         }
     }
-
-    private void writeNamedValue(final BsonWriter writer, final String name, final Object value, final EncoderContext encoderContext) {
-        if (value != null) {
-            writer.writeName(name);
-            Codec codec = getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
-        }
-    }
 }

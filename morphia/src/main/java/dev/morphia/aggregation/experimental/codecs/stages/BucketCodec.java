@@ -4,7 +4,6 @@ import dev.morphia.aggregation.experimental.expressions.Fields;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.expressions.Expression.writeNamedExpression;
@@ -31,13 +30,7 @@ public class BucketCodec extends StageCodec<Bucket> {
             output.encode(getMapper(), writer, encoderContext);
             writer.writeEndDocument();
         }
+        writer.writeEndDocument();
     }
 
-    private void writeNamedValue(final BsonWriter writer, final String name, final Object value, final EncoderContext encoderContext) {
-        if (value != null) {
-            writer.writeName(name);
-            Codec codec = getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
-        }
-    }
 }

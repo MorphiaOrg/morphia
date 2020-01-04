@@ -38,4 +38,12 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
     }
 
     protected abstract void encodeStage(final BsonWriter writer, final T value, final EncoderContext encoderContext);
+
+    protected void writeNamedValue(final BsonWriter writer, final String name, final Object value, final EncoderContext encoderContext) {
+        if (value != null) {
+            writer.writeName(name);
+            Codec codec = getCodecRegistry().get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
+        }
+    }
 }

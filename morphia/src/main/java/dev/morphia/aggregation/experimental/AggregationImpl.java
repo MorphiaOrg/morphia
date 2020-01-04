@@ -8,6 +8,7 @@ import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Count;
+import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -35,6 +36,30 @@ public class AggregationImpl<T> implements Aggregation<T> {
     public AggregationImpl(final Datastore datastore, final MongoCollection<T> collection) {
         this.datastore = datastore;
         this.collection = collection;
+    }
+
+    @Override
+    public Aggregation<T> addFields(final AddFields fields) {
+        stages.add(fields);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> autoBucket(final AutoBucket bucket) {
+        stages.add(bucket);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> bucket(final Bucket bucket) {
+        stages.add(bucket);
+        return this;
+    }
+
+    @Override
+    public AggregationImpl count(final String name) {
+        stages.add(new Count(name));
+        return this;
     }
 
     @Override
@@ -84,24 +109,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> addFields(final AddFields fields) {
-        stages.add(fields);
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> autoBucket(final AutoBucket bucket) {
-        stages.add(bucket);
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> bucket(final Bucket bucket) {
-        stages.add(bucket);
-        return this;
-    }
-
-    @Override
     public Aggregation<T> group(final Group group) {
         stages.add(group);
         return this;
@@ -126,8 +133,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public AggregationImpl count(final String name) {
-        stages.add(new Count(name));
+    public AggregationImpl facet(final Facet facet) {
+        stages.add(facet);
         return this;
     }
 

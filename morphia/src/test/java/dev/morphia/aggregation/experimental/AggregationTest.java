@@ -27,7 +27,9 @@ import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -70,7 +72,7 @@ public class AggregationTest extends TestBase {
                                           .aggregate(Sales.class)
                                           .project(of()
                                                        .include("item")
-                                                       .include("total", 
+                                                       .include("total",
                                                            add(field("price"), field("fee"))));
 
         List<Document> list = pipeline.execute(Document.class).toList();
@@ -90,47 +92,6 @@ public class AggregationTest extends TestBase {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     private Document find(final int id, final List<Document> documents) {
         return documents.stream().filter(d -> d.getInteger("_id").equals(id)).findFirst().get();
-    }
-
-    @Test
-    public void testCollation() {
-        getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
-
-        Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .match(getDs().find(User.class)
-                                                       .field("name").equal("john doe"));
-        assertEquals(1, count(pipeline.execute(User.class)));
-
-        assertEquals(2, count(pipeline.execute(User.class,
-            new dev.morphia.aggregation.experimental.AggregationOptions()
-                .collation(Collation.builder()
-                                    .locale("en")
-                                    .collationStrength(SECONDARY)
-                                    .build()))));
-    }
-
-    @Test
-    public void testGenericAccumulatorUsage() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        MorphiaCursor<CountResult> aggregation = getDs().aggregate(Book.class)
-                                                        .group(Group.of(id("author")
-                                                                   .field("count", sum(literal(1)))))
-                                                        .sort(on().ascending("_id"))
-                                                        .execute(CountResult.class);
-
-        CountResult result1 = aggregation.next();
-        CountResult result2 = aggregation.next();
-        Assert.assertFalse("Expecting two results", aggregation.hasNext());
-        Assert.assertEquals("Dante", result1.getAuthor());
-        Assert.assertEquals(3, result1.getCount());
-        Assert.assertEquals("Homer", result2.getAuthor());
-        Assert.assertEquals(2, result2.getCount());
     }
 
     @Test
@@ -159,36 +120,6 @@ public class AggregationTest extends TestBase {
                   + "'totalQuiz' : 16, 'totalScore' : 40 }"));
 
         assertEquals(list, result);
-    }
-
-    @Test
-    public void testBucket() {
-        List<Document> list = List.of(
-            parse("{'_id': 1, 'title': 'The Pillars of Society', 'artist': 'Grosz', 'year': 1926, 'price': NumberDecimal('199.99') }"),
-            parse("{'_id': 2, 'title': 'Melancholy III', 'artist': 'Munch', 'year': 1902, 'price': NumberDecimal('280.00') }"),
-            parse("{'_id': 3, 'title': 'Dancer', 'artist': 'Miro', 'year': 1925, 'price': NumberDecimal('76.04') }"),
-            parse("{'_id': 4, 'title': 'The Great Wave off Kanagawa', 'artist': 'Hokusai', 'price': NumberDecimal('167.30') }"),
-            parse("{'_id': 5, 'title': 'The Persistence of Memory', 'artist': 'Dali', 'year': 1931, 'price': NumberDecimal('483.00') }"),
-            parse("{'_id': 6, 'title': 'Composition VII', 'artist': 'Kandinsky', 'year': 1913, 'price': NumberDecimal('385.00') }"),
-            parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893}"),
-            parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42') }"));
-
-        getDatabase().getCollection("artwork").insertMany(list);
-
-        List<Document> results = getDs().aggregate(Artwork.class).bucket(Bucket.of()
-                                                                                  .groupBy(field("price"))
-                                                                                  .boundaries(literal(0), literal(200), literal(400))
-                                                                                  .defaultValue("Other")
-                                                                                  .outputField("count", sum(literal(1)))
-                                                                                  .outputField("titles", push().source("title")))
-                                           .execute(Document.class)
-                                           .toList();
-
-        List<Document> documents = List.of(
-            parse("{'_id': 0, 'count': 4, 'titles': ['The Pillars of Society', 'Dancer', 'The Great Wave off Kanagawa', 'Blue Flower']}"),
-            parse("{'_id': 200, 'count': 2, 'titles': ['Melancholy III', 'Composition VII']}"),
-            parse("{'_id': 'Other', 'count': 2, 'titles': ['The Persistence of Memory', 'The Scream']}"));
-        assertEquals(documents, results);
     }
 
     @Test
@@ -222,6 +153,54 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testBucket() {
+        List<Document> list = List.of(
+            parse("{'_id': 1, 'title': 'The Pillars of Society', 'artist': 'Grosz', 'year': 1926, 'price': NumberDecimal('199.99') }"),
+            parse("{'_id': 2, 'title': 'Melancholy III', 'artist': 'Munch', 'year': 1902, 'price': NumberDecimal('280.00') }"),
+            parse("{'_id': 3, 'title': 'Dancer', 'artist': 'Miro', 'year': 1925, 'price': NumberDecimal('76.04') }"),
+            parse("{'_id': 4, 'title': 'The Great Wave off Kanagawa', 'artist': 'Hokusai', 'price': NumberDecimal('167.30') }"),
+            parse("{'_id': 5, 'title': 'The Persistence of Memory', 'artist': 'Dali', 'year': 1931, 'price': NumberDecimal('483.00') }"),
+            parse("{'_id': 6, 'title': 'Composition VII', 'artist': 'Kandinsky', 'year': 1913, 'price': NumberDecimal('385.00') }"),
+            parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893}"),
+            parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42') }"));
+
+        getDatabase().getCollection("artwork").insertMany(list);
+
+        List<Document> results = getDs().aggregate(Artwork.class).bucket(Bucket.of()
+                                                                               .groupBy(field("price"))
+                                                                               .boundaries(literal(0), literal(200), literal(400))
+                                                                               .defaultValue("Other")
+                                                                               .outputField("count", sum(literal(1)))
+                                                                               .outputField("titles", push().single(field("title"))))
+                                        .execute(Document.class)
+                                        .toList();
+
+        List<Document> documents = List.of(
+            parse("{'_id': 0, 'count': 4, 'titles': ['The Pillars of Society', 'Dancer', 'The Great Wave off Kanagawa', 'Blue Flower']}"),
+            parse("{'_id': 200, 'count': 2, 'titles': ['Melancholy III', 'Composition VII']}"),
+            parse("{'_id': 'Other', 'count': 2, 'titles': ['The Persistence of Memory', 'The Scream']}"));
+        assertEquals(documents, results);
+    }
+
+    @Test
+    public void testCollation() {
+        getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
+
+        Aggregation<User> pipeline = getDs()
+                                         .aggregate(User.class)
+                                         .match(getDs().find(User.class)
+                                                       .field("name").equal("john doe"));
+        assertEquals(1, count(pipeline.execute(User.class)));
+
+        assertEquals(2, count(pipeline.execute(User.class,
+            new dev.morphia.aggregation.experimental.AggregationOptions()
+                .collation(Collation.builder()
+                                    .locale("en")
+                                    .collationStrength(SECONDARY)
+                                    .build()))));
+    }
+
+    @Test
     public void testCount() {
         List<Document> list = List.of(
             parse("{ '_id' : 1, 'subject' : 'History', 'score' : 88 }"),
@@ -234,12 +213,108 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("scores").insertMany(list);
 
         Document scores = getDs().aggregate(Score.class)
-                                         .match(getDs().find(Score.class)
-                                                       .filter("score >", 80))
-                                         .count("passing_scores")
-                                         .execute(Document.class)
-                                         .next();
+                                 .match(getDs().find(Score.class)
+                                               .filter("score >", 80))
+                                 .count("passing_scores")
+                                 .execute(Document.class)
+                                 .next();
         assertEquals(parse("{ \"passing_scores\" : 4 }"), scores);
+    }
+
+    @Test
+    public void testFacet() {
+        List<Document> list = List.of(
+            parse("{'_id': 1, 'title': 'The Pillars of Society', 'artist': 'Grosz', 'year': 1926, 'price': NumberDecimal('199.99'),"
+                  + " 'tags': [ 'painting', 'satire', 'Expressionism', 'caricature' ] }"),
+            parse("{'_id': 2, 'title': 'Melancholy III', 'artist': 'Munch', 'year': 1902, 'price': NumberDecimal('280.00'),"
+                  + " 'tags': [ 'woodcut', 'Expressionism' ] }"),
+            parse("{'_id': 3, 'title': 'Dancer', 'artist': 'Miro', 'year': 1925, 'price': NumberDecimal('76.04'),"
+                  + " 'tags': [ 'oil', 'Surrealism', 'painting' ] }"),
+            parse("{'_id': 4, 'title': 'The Great Wave off Kanagawa', 'artist': 'Hokusai', 'price': NumberDecimal('167.30'),"
+                  + " 'tags': [ 'woodblock', 'ukiyo-e' ] }"),
+            parse("{'_id': 5, 'title': 'The Persistence of Memory', 'artist': 'Dali', 'year': 1931, 'price': NumberDecimal('483.00'),"
+                + " 'tags': [ 'Surrealism', 'painting', 'oil' ] }"),
+            parse("{'_id': 6, 'title': 'Composition VII', 'artist': 'Kandinsky', 'year': 1913, 'price': NumberDecimal('385.00'), "
+                + "'tags': [ 'oil', 'painting', 'abstract' ] }"),
+            parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893, 'tags': [ 'Expressionism', 'painting', 'oil' ] }"),
+            parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42'),"
+                  + " 'tags': [ 'abstract', 'painting' ] }"));
+
+        getDatabase().getCollection("artwork").insertMany(list);
+
+        Document result = getDs().aggregate(Artwork.class)
+                               .facet(Facet.of()
+                                           //                           .field( "categorizedByTags",
+                                           //                               { $unwind: "$tags" },
+                                           //                               { $sortByCount: "$tags" }
+                                           //      )
+                                           .field("categorizedByPrice",
+                                               Match.of(getDs().find(Artwork.class)
+                                                               .field("price").exists()),
+                                               Bucket.of()
+                                                     .groupBy(field("price"))
+                                                     .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
+                                                     .defaultValue("Other")
+                                                     .outputField("count", sum(literal(1)))
+                                                     .outputField("titles", push().single(field("title"))))
+                                           .field("categorizedByYears(Auto)", AutoBucket.of()
+                                                                                        .groupBy(field("year"))
+                                                                                        .buckets(4)))
+                               .execute(Document.class)
+                               .next();
+
+        Document document = parse("{"
+                               + "    'categorizedByYears(Auto)' : ["
+                               + "    { '_id' : { 'min' : null, 'max' : 1902 }, 'count' : 2 },"
+                               + "    { '_id' : { 'min' : 1902, 'max' : 1918 }, 'count' : 2 },"
+                               + "    { '_id' : { 'min' : 1918, 'max' : 1926 }, 'count' : 2 },"
+                               + "    { '_id' : { 'min' : 1926, 'max' : 1931 }, 'count' : 2 }"
+                               + "    ],"
+                               + "    'categorizedByPrice' : ["
+                               + "    { '_id' : 0, 'count' : 2, 'titles' : ['Dancer', 'Blue Flower']},"
+                               + "    { '_id' : 150, 'count' : 2, 'titles' : ['The Pillars of Society', 'The Great Wave off Kanagawa']},"
+                               + "    { '_id' : 200, 'count' : 1, 'titles' : ['Melancholy III']},"
+                               + "    { '_id' : 300, 'count' : 1, 'titles' : ['Composition VII']},"
+                               + "    { '_id' : 'Other', 'count' : 1, 'titles' : ['The Persistence of Memory']}"
+                               + "    ],"
+//                               + "    'categorizedByTags' : ["
+//                               + "    { '_id' : 'painting', 'count' : 6 },"
+//                               + "    { '_id' : 'oil', 'count' : 4 },"
+//                               + "    { '_id' : 'Expressionism', 'count' : 3 },"
+//                               + "    { '_id' : 'Surrealism', 'count' : 2 },"
+//                               + "    { '_id' : 'abstract', 'count' : 2 },"
+//                               + "    { '_id' : 'woodblock', 'count' : 1 },"
+//                               + "    { '_id' : 'woodcut', 'count' : 1 },"
+//                               + "    { '_id' : 'ukiyo-e', 'count' : 1 },"
+//                               + "    { '_id' : 'satire', 'count' : 1 },"
+//                               + "    { '_id' : 'caricature', 'count' : 1 }"
+//                               + "    ]"
+                               + "}");
+
+        assertEquals(document, result);
+    }
+
+    @Test
+    public void testGenericAccumulatorUsage() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        MorphiaCursor<CountResult> aggregation = getDs().aggregate(Book.class)
+                                                        .group(Group.of(id("author")
+                                                                            .field("count", sum(literal(1)))))
+                                                        .sort(on().ascending("_id"))
+                                                        .execute(CountResult.class);
+
+        CountResult result1 = aggregation.next();
+        CountResult result2 = aggregation.next();
+        Assert.assertFalse("Expecting two results", aggregation.hasNext());
+        Assert.assertEquals("Dante", result1.getAuthor());
+        Assert.assertEquals(3, result1.getCount());
+        Assert.assertEquals("Homer", result2.getAuthor());
+        Assert.assertEquals(2, result2.getCount());
     }
 
     @Test
@@ -315,8 +390,8 @@ public class AggregationTest extends TestBase {
         AggregationOptions options = new AggregationOptions();
         Aggregation<Book> aggregation = getDs().aggregate(Book.class)
                                                .group(Group.of(id("author"))
-                                                          .fields("books", push()
-                                                                      .source("title")));
+                                                           .fields("books", push()
+                                                                                .single(field("title"))));
         aggregation.out(Author.class, options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
         Author author = aggregation.execute(Author.class).next();
@@ -335,9 +410,9 @@ public class AggregationTest extends TestBase {
 
         getDatabase().getCollection("books").insertOne(doc);
         Aggregation<Book> pipeline = getDs().aggregate(Book.class)
-                                                  .project(of()
-                                                               .include("title")
-                                                               .include("author"));
+                                            .project(of()
+                                                         .include("title")
+                                                         .include("author"));
         MorphiaCursor<Document> aggregate = pipeline.execute(Document.class);
         doc = parse("{ '_id' : 1, title: 'abc123', author: { last: 'zzz', first: 'aaa' }}");
         Assert.assertEquals(doc, aggregate.next());
@@ -377,16 +452,17 @@ public class AggregationTest extends TestBase {
         assertEquals(1, list.size());
     }
 
+    @Entity(useDiscriminator = false)
+    public static class Artwork {
+        @Id
+        private ObjectId id;
+        private Double price;
+    }
+
     @Entity(value = "scores", useDiscriminator = false)
     private static class Score {
         @Id
         private ObjectId id;
         private int score;
-    }
-
-    @Entity
-    public static class Artwork {
-        @Id
-        private ObjectId id;
     }
 }

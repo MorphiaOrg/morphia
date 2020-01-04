@@ -1,5 +1,8 @@
 package dev.morphia.aggregation.experimental.stages;
 
+/**
+ * @morphia.internal
+ */
 public class Count extends Stage {
     private String name;
 
