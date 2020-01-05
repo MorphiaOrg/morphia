@@ -9,6 +9,7 @@ import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Count;
+import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
@@ -44,8 +45,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> addFields(final AddFields fields) {
-        stages.add(fields);
+    public Aggregation<T> autoBucket(final AutoBucket bucket) {
+        stages.add(bucket);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> bucket(final Bucket bucket) {
+        stages.add(bucket);
         return this;
     }
 
@@ -56,14 +63,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> autoBucket(final AutoBucket bucket) {
-        stages.add(bucket);
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> bucket(final Bucket bucket) {
-        stages.add(bucket);
+    public Aggregation<T> currentOp(final CurrentOp currentOp) {
+        stages.add(currentOp);
         return this;
     }
 
@@ -194,6 +195,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> sample(final Sample sample) {
         stages.add(sample);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> addFields(final AddFields fields) {
+        stages.add(fields);
         return this;
     }
 

@@ -4,6 +4,7 @@ import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
+import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -24,16 +25,6 @@ import java.util.List;
  * @since 2.0
  */
 public interface Aggregation<T> {
-    /**
-     * Returns statistics regarding a collection or view.
-     *
-     * @param stats the stats configuration
-     *
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/collstats $collstats
-     */
-    Aggregation<T> collstats(CollectionStats stats);
-
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
      * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
@@ -63,6 +54,33 @@ public interface Aggregation<T> {
      */
     Aggregation<T> bucket(Bucket bucket);
 
+    /**
+     * Returns statistics regarding a collection or view.
+     *
+     * @param stats the stats configuration
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/collstats $collstats
+     */
+    Aggregation<T> collstats(CollectionStats stats);
+
+    /**
+     * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
+     * holding locks as part of a transaction. The stage returns a document for each operation or session. To run $currentOp, use the
+     * db.aggregate() helper on the admin database.
+     * <p>
+     * The $currentOp aggregation stage is preferred over the currentOp command and its mongo shell helper db.currentOp(). Because
+     * currentOp command and db.currentOp() helper returns the results in a single document, the total size of the currentOp result
+     * set is subject to the maximum 16MB BSON size limit for documents. The $currentOp stage returns a cursor over a stream of
+     * documents, each of which reports a single operation. Each operation document is subject to the 16MB BSON limit, but unlike the
+     * currentOp command, there is no limit on the overall size of the result set.
+     * <p>
+     * $currentOp also enables you to perform arbitrary transformations of the results as the documents pass through the pipeline.
+     *
+     * @param currentOp the configuration
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/currentOp $currentOp
+     */
+    Aggregation<T> currentOp(CurrentOp currentOp);
     /**
      * Passes a document to the next stage that contains a count of the number of documents input to the stage.
      *

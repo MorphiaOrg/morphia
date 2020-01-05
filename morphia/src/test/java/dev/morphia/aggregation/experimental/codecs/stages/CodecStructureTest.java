@@ -5,6 +5,7 @@ import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
+import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
@@ -30,7 +31,7 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testBucket() {
         evaluate(parse("{ $bucket: { groupBy: '$price', boundaries: [  0, 150, 200, 300, 400 ], default: 'Other', output: { 'count': { "
-                        + "$sum: 1 },'titles': { $push: '$title' } } } }"),
+                       + "$sum: 1 },'titles': { $push: '$title' } } } }"),
             Bucket.of()
                   .groupBy(field("price"))
                   .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
@@ -54,6 +55,47 @@ public class CodecStructureTest extends TestBase {
     }
 
     @Test
+    public void testCollectionStats() {
+        evaluate(parse("{ $collStats: { latencyStats: { histograms: true }, storageStats: { scale: 42 }, count: {} } }"),
+            CollectionStats.with()
+                           .histogram(true)
+                           .scale(42)
+                           .count(true));
+
+    }
+
+    @Test
+    public void testCurrentOp() {
+        evaluate(parse("{ $currentOp: { allUsers: true, idleConnections: true, idleCursors: true, idleSessions: true, localOps: true } }"),
+            CurrentOp.of()
+                     .allUsers(true)
+                     .idleConnections(true)
+                     .idleCursors(true)
+                     .idleSessions(true)
+                     .localOps(true));
+        evaluate(parse("{ $currentOp: { idleConnections: true, idleCursors: true, idleSessions: true, localOps: true } }"),
+            CurrentOp.of()
+                     .idleConnections(true)
+                     .idleCursors(true)
+                     .idleSessions(true)
+                     .localOps(true));
+        evaluate(parse("{ $currentOp: { idleCursors: true, idleSessions: true, localOps: true } }"),
+            CurrentOp.of()
+                     .idleCursors(true)
+                     .idleSessions(true)
+                     .localOps(true));
+        evaluate(parse("{ $currentOp: { idleSessions: true, localOps: true } }"),
+            CurrentOp.of()
+                     .idleSessions(true)
+                     .localOps(true));
+        evaluate(parse("{ $currentOp: { localOps: true } }"),
+            CurrentOp.of()
+                     .localOps(true));
+        evaluate(parse("{ $currentOp: {  } }"),
+            CurrentOp.of());
+    }
+
+    @Test
     public void testMatch() {
         evaluate(parse("{ $match: { price: { $exists: true } } }"),
             Match.of(getDs().find(Artwork.class)
@@ -70,6 +112,18 @@ public class CodecStructureTest extends TestBase {
         evaluate(parse("{ $push: '$title' }"),
             Expression.push()
                       .single(field("title")));
+    }
+
+    @Test
+    public void testSample() {
+        evaluate(parse("{ $sample : { size: 15 } }"),
+            Sample.of(15));
+    }
+
+    @Test
+    public void testSkip() {
+        evaluate(parse("{ $skip : 15 }"),
+            Skip.of(15));
     }
 
     @Test
@@ -91,27 +145,6 @@ public class CodecStructureTest extends TestBase {
     public void testUnwind() {
         evaluate(parse("{ $unwind : \"$sizes\" }"),
             Unwind.on("sizes"));
-    }
-    @Test
-    public void testSkip() {
-        evaluate(parse("{ $skip : 15 }"),
-            Skip.of(15));
-    }
-
-    @Test
-    public void testSample() {
-        evaluate(parse("{ $sample : { size: 15 } }"),
-            Sample.of(15));
-    }
-
-    @Test
-    public void testCollectionStats() {
-        evaluate(parse("{ $collStats: { latencyStats: { histograms: true }, storageStats: { scale: 42 }, count: {} } }"),
-            CollectionStats.with()
-                .histogram(true)
-                .scale(42)
-                .count(true));
-    
     }
 
 }
