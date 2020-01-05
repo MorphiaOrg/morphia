@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
 
 public class Fields<T> {
     private T owner;

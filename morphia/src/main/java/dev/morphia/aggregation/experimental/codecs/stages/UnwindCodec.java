@@ -5,7 +5,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
 
 public class UnwindCodec extends StageCodec<Unwind> {
     public UnwindCodec(final Mapper mapper) {

@@ -27,7 +27,6 @@ import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
-import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
@@ -208,6 +207,19 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testCollectionStats() {
+        getDs().save(new Author());
+        Document execute = getDs().aggregate(Author.class)
+                                  .collStats(CollectionStats.with()
+                                                            .histogram(true)
+                                                            .scale(42)
+                                                            .count(true))
+                                  .execute(Document.class)
+                                  .next();
+        System.out.println(execute);
+    }
+
+    @Test
     public void testCount() {
         List<Document> list = List.of(
             parse("{ '_id' : 1, 'subject' : 'History', 'score' : 88 }"),
@@ -298,6 +310,41 @@ public class AggregationTest extends TestBase {
                                   + "}");
 
         assertDocumentEquals(document, result);
+    }
+
+    @Test
+    public void testGraphLookup() {
+        List<Document> list = List.of(parse("{ '_id' : 1, 'name' : 'Dev' }"),
+            parse("{ '_id' : 2, 'name' : 'Eliot', 'reportsTo' : 'Dev' }"),
+            parse("{ '_id' : 3, 'name' : 'Ron', 'reportsTo' : 'Eliot' }"),
+            parse("{ '_id' : 4, 'name' : 'Andrew', 'reportsTo' : 'Eliot' }"),
+            parse("{ '_id' : 5, 'name' : 'Asya', 'reportsTo' : 'Ron' }"),
+            parse("{ '_id' : 6, 'name' : 'Dan', 'reportsTo' : 'Andrew' }"));
+
+        getDatabase().getCollection("employees").insertMany(list);
+
+        List<Document> actual = getDs().aggregate(Employee.class)
+                                          .graphLookup(GraphLookup.with()
+                                                                  .from("employees")
+                                                                  .startWith(field("reportsTo"))
+                                                                  .connectFromField("reportsTo")
+                                                                  .connectToField("name")
+                                                                  .as("reportingHierarchy"))
+                                          .execute(Document.class)
+                                          .toList();
+
+        List<Document> expected = List.of(parse("{'_id': 1, 'name': 'Dev', 'reportingHierarchy': []}"),
+            parse("{'_id': 2, 'name': 'Eliot', 'reportsTo': 'Dev', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'}]}"),
+            parse("{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+                + "'Eliot', 'reportsTo': 'Dev'}]}"),
+            parse("{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+                + "'Eliot', 'reportsTo': 'Dev'}]}"),
+            parse("{'_id': 5, 'name': 'Asya', 'reportsTo': 'Ron', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+                + "'Eliot', 'reportsTo': 'Dev'},{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot'}]}"),
+            parse("{'_id': 6, 'name': 'Dan', 'reportsTo': 'Andrew', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+                + "'Eliot', 'reportsTo': 'Dev'},{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot'}]}"));
+
+        assertDocumentEquals(expected, actual);
     }
 
     @Test
@@ -459,19 +506,6 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testCollectionStats() {
-        getDs().save(new Author());
-        Document execute = getDs().aggregate(Author.class)
-                                  .collstats(CollectionStats.with()
-                                                            .histogram(true)
-                                                            .scale(42)
-                                                            .count(true))
-                                  .execute(Document.class)
-                                  .next();
-        System.out.println(execute);
-    }
-
-    @Test
     public void testUnset() {
         List<Document> documents = List.of(
             parse("{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
@@ -494,7 +528,7 @@ public class AggregationTest extends TestBase {
 
     }
 
-    private void assertDocumentEquals(final Document document, final Document result) {
+    private void assertDocumentEquals(final Object document, final Object result) {
         assertDocumentEquals("", document, result);
     }
 
@@ -538,5 +572,11 @@ public class AggregationTest extends TestBase {
         @Id
         private ObjectId id;
         private int score;
+    }
+
+    @Entity(value = "employees", useDiscriminator = false)
+    private static class Employee {
+        @Id
+        private ObjectId id;
     }
 }

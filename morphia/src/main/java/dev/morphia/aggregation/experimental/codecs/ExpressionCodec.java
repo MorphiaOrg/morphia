@@ -16,6 +16,36 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
         this.mapper = mapper;
     }
 
+    /**
+     * @param mapper
+     * @param writer
+     * @param name
+     * @param expression
+     * @param encoderContext
+     * @morphia.internal
+     */
+    public static void writeNamedExpression(final Mapper mapper, final BsonWriter writer, final String name, final Expression expression,
+                                            final EncoderContext encoderContext) {
+        if (expression != null) {
+            writer.writeName(name);
+            expression.encode(mapper, writer, encoderContext);
+        }
+    }
+
+    /**
+     * @param mapper
+     * @param writer
+     * @param expression
+     * @param encoderContext
+     * @morphia.internal
+     */
+    public static void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression expression,
+                                              final EncoderContext encoderContext) {
+        if (expression != null) {
+            expression.encode(mapper, writer, encoderContext);
+        }
+    }
+
     @Override
     public final T decode(final BsonReader reader, final DecoderContext decoderContext) {
         throw new UnsupportedOperationException();

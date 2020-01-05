@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -56,7 +57,7 @@ public abstract class Expression {
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(operation);
-        writeUnnamedExpression(mapper, writer, (Expression) value, encoderContext);
+        ExpressionCodec.writeUnnamedExpression(mapper, writer, (Expression) value, encoderContext);
         writer.writeEndDocument();
     }
 
@@ -75,27 +76,4 @@ public abstract class Expression {
                    .toString();
     }
 
-    /**
-     * @param mapper
-     * @param writer
-     * @param name
-     * @param expression
-     * @param encoderContext
-     *
-     * @morphia.internal
-     */
-    public static void writeNamedExpression(final Mapper mapper, final BsonWriter writer, final String name, final Expression expression,
-                                            final EncoderContext encoderContext) {
-        if (expression != null) {
-            writer.writeName(name);
-            expression.encode(mapper, writer, encoderContext);
-        }
-    }
-
-    protected static void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression expression,
-                                                 final EncoderContext encoderContext) {
-        if (expression != null) {
-            expression.encode(mapper, writer, encoderContext);
-        }
-    }
 }

@@ -57,7 +57,13 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> collstats(final CollectionStats stats) {
+    public Aggregation<T> graphLookup(final GraphLookup lookup) {
+        stages.add(lookup);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> collStats(final CollectionStats stats) {
         stages.add(stats);
         return this;
     }

@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -178,7 +179,7 @@ public class DateExpression extends Expression {
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(operation);
-        writeUnnamedExpression(mapper, writer, (Expression) value, encoderContext);
+        ExpressionCodec.writeUnnamedExpression(mapper, writer, (Expression) value, encoderContext);
         writer.writeEndDocument();
     }
 

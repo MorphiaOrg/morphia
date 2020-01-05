@@ -2,13 +2,11 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Fields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
-import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
 
 public class AutoBucketCodec extends StageCodec<AutoBucket> {
     public AutoBucketCodec(final Mapper mapper) {

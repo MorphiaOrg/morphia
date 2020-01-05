@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -28,7 +29,7 @@ public abstract class MathExpression extends Expression {
                 writer.writeStartDocument();
                 writer.writeStartArray(getOperation());
                 for (final Expression operand : operands) {
-                    writeUnnamedExpression(mapper, writer, operand, encoderContext);
+                    ExpressionCodec.writeUnnamedExpression(mapper, writer, operand, encoderContext);
                 }
                 writer.writeEndArray();
                 writer.writeEndDocument();

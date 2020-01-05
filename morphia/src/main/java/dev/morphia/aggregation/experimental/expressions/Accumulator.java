@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -25,7 +26,7 @@ public class Accumulator extends Expression {
             writer.writeStartArray();
         }
         for (final Expression expression : expressions) {
-            writeUnnamedExpression(mapper, writer, expression, encoderContext);
+            ExpressionCodec.writeUnnamedExpression(mapper, writer, expression, encoderContext);
         }
         if(expressions.size() >1 ) {
             writer.writeEndArray();

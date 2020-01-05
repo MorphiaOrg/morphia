@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs;
 
+import dev.morphia.aggregation.experimental.GraphLookup;
 import dev.morphia.aggregation.experimental.Limit;
 import dev.morphia.aggregation.experimental.Lookup;
 import dev.morphia.aggregation.experimental.codecs.stages.AddFieldsCodec;
@@ -9,6 +10,7 @@ import dev.morphia.aggregation.experimental.codecs.stages.CollectionStatsCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.CountCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.CurrentOpCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.FacetCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.GraphLookupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.GroupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LimitCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LookupCodec;
@@ -78,9 +80,10 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs.put(AutoBucket.class, new AutoBucketCodec(mapper));
             codecs.put(Bucket.class, new BucketCodec(mapper));
             codecs.put(CollectionStats.class, new CollectionStatsCodec(mapper));
-            codecs.put(CurrentOp.class, new CurrentOpCodec(mapper));
             codecs.put(Count.class, new CountCodec(mapper));
+            codecs.put(CurrentOp.class, new CurrentOpCodec(mapper));
             codecs.put(Facet.class, new FacetCodec(mapper));
+            codecs.put(GraphLookup.class, new GraphLookupCodec(mapper));
             codecs.put(Group.class, new GroupCodec(mapper));
             codecs.put(Limit.class, new LimitCodec(mapper));
             codecs.put(Lookup.class, new LookupCodec(mapper));

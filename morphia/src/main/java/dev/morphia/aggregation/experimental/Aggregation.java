@@ -59,9 +59,18 @@ public interface Aggregation<T> {
      *
      * @param stats the stats configuration
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/collstats $collstats
+     * @mongodb.driver.manual reference/operator/aggregation/collStats $collStats
      */
-    Aggregation<T> collstats(CollectionStats stats);
+    Aggregation<T> collStats(CollectionStats stats);
+
+    /**
+     * Passes a document to the next stage that contains a count of the number of documents input to the stage.
+     *
+     * @param name the field name for the resulting count value
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/count $count
+     */
+    Aggregation<T> count(String name);
 
     /**
      * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
@@ -81,14 +90,6 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/currentOp $currentOp
      */
     Aggregation<T> currentOp(CurrentOp currentOp);
-    /**
-     * Passes a document to the next stage that contains a count of the number of documents input to the stage.
-     *
-     * @param name the field name for the resulting count value
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/count $count
-     */
-    Aggregation<T> count(String name);
 
     /**
      * Execute the aggregation and get the results.
@@ -140,6 +141,15 @@ public interface Aggregation<T> {
      * @morphia.internal
      */
     List<Stage> getStages();
+
+    /**
+     * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.
+     *
+     * @param lookup the lookup configuration
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/graphLookup $graphLookup
+     */
+    Aggregation<T> graphLookup(GraphLookup lookup);
 
     /**
      * Groups input documents by the specified _id expression and for each distinct grouping, outputs a document. The _id field of each

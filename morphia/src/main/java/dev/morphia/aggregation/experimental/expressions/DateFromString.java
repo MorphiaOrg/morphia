@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -20,11 +21,11 @@ public class DateFromString extends Expression {
         writer.writeStartDocument();
         writer.writeStartDocument(operation);
 
-        writeNamedExpression(mapper, writer, "dateString", dateString, encoderContext);
-        writeNamedExpression(mapper, writer, "format", format, encoderContext);
-        writeNamedExpression(mapper, writer, "timezone", timeZone, encoderContext);
-        writeNamedExpression(mapper, writer, "onError", onError, encoderContext);
-        writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
+        ExpressionCodec.writeNamedExpression(mapper, writer, "dateString", dateString, encoderContext);
+        ExpressionCodec.writeNamedExpression(mapper, writer, "format", format, encoderContext);
+        ExpressionCodec.writeNamedExpression(mapper, writer, "timezone", timeZone, encoderContext);
+        ExpressionCodec.writeNamedExpression(mapper, writer, "onError", onError, encoderContext);
+        ExpressionCodec.writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
 
         writer.writeEndDocument();
         writer.writeEndDocument();

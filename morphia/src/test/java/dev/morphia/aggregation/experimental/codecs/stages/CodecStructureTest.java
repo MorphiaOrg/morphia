@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
+import dev.morphia.aggregation.experimental.GraphLookup;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
@@ -93,6 +94,19 @@ public class CodecStructureTest extends TestBase {
                      .localOps(true));
         evaluate(parse("{ $currentOp: {  } }"),
             CurrentOp.of());
+    }
+
+    @Test
+    public void testGraphLookup() {
+        Document document = parse("{$graphLookup: {from: 'employees',startWith: '$reportsTo',connectFromField: 'reportsTo',"
+                                   + "connectToField: 'name',as: 'reportingHierarchy' }}");
+        evaluate(document,
+            GraphLookup.with()
+                       .from("employees")
+                       .startWith(field("reportsTo"))
+                       .connectFromField("reportsTo")
+                       .connectToField("name")
+                       .as("reportingHierarchy"));
     }
 
     @Test
