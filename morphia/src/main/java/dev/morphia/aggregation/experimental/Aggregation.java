@@ -7,6 +7,7 @@ import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
+import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
@@ -223,6 +224,16 @@ public interface Aggregation<T> {
     Aggregation<T> sample(Sample sample);
 
     /**
+     * Skips over the specified number of documents that pass into the stage and passes the remaining documents to the next stage in the
+     * pipeline.
+     *
+     * @param skip the skip definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/skip $skip
+     */
+    Aggregation<T> skip(Skip skip);
+
+    /**
      * Sorts all input documents and returns them to the pipeline in sorted order.
      *
      * @param sort the sort definition
@@ -246,7 +257,7 @@ public interface Aggregation<T> {
     Aggregation<T> sortByCount(SortByCount sort);
 
     /**
-     * Removes/excludes fields from documents.
+     * Removes/excludes fields from documents.  Names must not start with '$'.
      *
      * @param unset the unset definition
      * @return this

@@ -9,7 +9,7 @@ public class Sample extends Stage {
     }
 
     public static Sample of(final int i) {
-        return new Sample(1);
+        return new Sample(i);
     }
 
     public int getSize() {

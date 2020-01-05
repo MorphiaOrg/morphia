@@ -13,6 +13,7 @@ import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
+import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
@@ -186,6 +187,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> sample(final Sample sample) {
         stages.add(sample);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> skip(final Skip skip) {
+        stages.add(skip);
         return this;
     }
 

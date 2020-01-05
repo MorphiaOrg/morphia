@@ -5,6 +5,8 @@ import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Sample;
+import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
@@ -88,6 +90,16 @@ public class CodecStructureTest extends TestBase {
     public void testUnwind() {
         evaluate(parse("{ $unwind : \"$sizes\" }"),
             Unwind.on("sizes"));
+    }
+    @Test
+    public void testSkip() {
+        evaluate(parse("{ $skip : 15 }"),
+            Skip.of(15));
+    }
+    @Test
+    public void testSample() {
+        evaluate(parse("{ $sample : { size: 15 } }"),
+            Sample.of(15));
     }
 
 }

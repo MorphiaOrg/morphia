@@ -40,7 +40,6 @@ import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 import java.util.Date;
@@ -239,9 +238,9 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 4, 'title': 'The Great Wave off Kanagawa', 'artist': 'Hokusai', 'price': NumberDecimal('167.30'),"
                   + " 'tags': [ 'woodblock', 'ukiyo-e' ] }"),
             parse("{'_id': 5, 'title': 'The Persistence of Memory', 'artist': 'Dali', 'year': 1931, 'price': NumberDecimal('483.00'),"
-                + " 'tags': [ 'Surrealism', 'painting', 'oil' ] }"),
+                  + " 'tags': [ 'Surrealism', 'painting', 'oil' ] }"),
             parse("{'_id': 6, 'title': 'Composition VII', 'artist': 'Kandinsky', 'year': 1913, 'price': NumberDecimal('385.00'), "
-                + "'tags': [ 'oil', 'painting', 'abstract' ] }"),
+                  + "'tags': [ 'oil', 'painting', 'abstract' ] }"),
             parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893, 'tags': [ 'Expressionism', 'painting', 'oil' ] }"),
             parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42'),"
                   + " 'tags': [ 'abstract', 'painting' ] }"));
@@ -297,38 +296,6 @@ public class AggregationTest extends TestBase {
                                   + "}");
 
         assertDocumentEquals(document, result);
-    }
-
-    private void assertDocumentEquals(final Document document, final Document result) {
-        assertDocumentEquals("", document, result);
-    }
-
-    private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
-        if(expected instanceof Document) {
-            for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
-                final String key = entry.getKey();
-                assertDocumentEquals(path.isEmpty() ? key : (path + "." + key), entry.getValue(), ((Document) actual).get(key));
-            }
-        } else if(expected instanceof List) {
-            List list = (List) expected;
-            for (int i = 0; i < list.size(); i++) {
-                final Object o = list.get(i);
-                boolean found = false;
-                final Iterator actualIterator = ((List) actual).iterator();
-                while(!found && actualIterator.hasNext()) {
-                    try {
-                        assertDocumentEquals(format("%s[%d]", path, i), o, actualIterator.next());
-                        found = true;
-                    } catch (AssertionError ignore) {
-                    }
-                }
-                if(!found) {
-                    fail(format("mismatch found at %s:%n%s", path));
-                }
-            }
-        } else {
-            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
-        }
     }
 
     @Test
@@ -454,12 +421,12 @@ public class AggregationTest extends TestBase {
             new User("Ringo", new Date())));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
-                                         .sample(Sample.of(1));
+                                         .sample(Sample.of(3));
         Sample sample = pipeline.getStage("$sample");
-        assertEquals(1, sample.getSize());
+        assertEquals(3, sample.getSize());
 
         List<User> list = pipeline.execute(User.class).toList();
-        assertEquals(1, list.size());
+        assertEquals(3, list.size());
     }
 
     @Test
@@ -483,6 +450,38 @@ public class AggregationTest extends TestBase {
 
         assertEquals(documents, copies);
 
+    }
+
+    private void assertDocumentEquals(final Document document, final Document result) {
+        assertDocumentEquals("", document, result);
+    }
+
+    private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
+        if (expected instanceof Document) {
+            for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
+                final String key = entry.getKey();
+                assertDocumentEquals(path.isEmpty() ? key : (path + "." + key), entry.getValue(), ((Document) actual).get(key));
+            }
+        } else if (expected instanceof List) {
+            List list = (List) expected;
+            for (int i = 0; i < list.size(); i++) {
+                final Object o = list.get(i);
+                boolean found = false;
+                final Iterator actualIterator = ((List) actual).iterator();
+                while (!found && actualIterator.hasNext()) {
+                    try {
+                        assertDocumentEquals(format("%s[%d]", path, i), o, actualIterator.next());
+                        found = true;
+                    } catch (AssertionError ignore) {
+                    }
+                }
+                if (!found) {
+                    fail(format("mismatch found at %s:%n%s", path));
+                }
+            }
+        } else {
+            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
+        }
     }
 
     @Entity(useDiscriminator = false)
