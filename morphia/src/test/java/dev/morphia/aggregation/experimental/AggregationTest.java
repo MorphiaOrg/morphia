@@ -26,6 +26,7 @@ import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
@@ -454,6 +455,19 @@ public class AggregationTest extends TestBase {
                   + "'totalQuiz' : 16, 'totalScore' : 40 }"));
 
         assertEquals(list, result);
+    }
+
+    @Test
+    public void testCollectionStats() {
+        getDs().save(new Author());
+        Document execute = getDs().aggregate(Author.class)
+                                  .collstats(CollectionStats.with()
+                                                            .histogram(true)
+                                                            .scale(42)
+                                                            .count(true))
+                                  .execute(Document.class)
+                                  .next();
+        System.out.println(execute);
     }
 
     @Test

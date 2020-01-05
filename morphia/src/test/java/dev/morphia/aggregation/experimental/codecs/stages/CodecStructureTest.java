@@ -4,6 +4,7 @@ import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
@@ -96,10 +97,21 @@ public class CodecStructureTest extends TestBase {
         evaluate(parse("{ $skip : 15 }"),
             Skip.of(15));
     }
+
     @Test
     public void testSample() {
         evaluate(parse("{ $sample : { size: 15 } }"),
             Sample.of(15));
+    }
+
+    @Test
+    public void testCollectionStats() {
+        evaluate(parse("{ $collStats: { latencyStats: { histograms: true }, storageStats: { scale: 42 }, count: {} } }"),
+            CollectionStats.with()
+                .histogram(true)
+                .scale(42)
+                .count(true));
+    
     }
 
 }

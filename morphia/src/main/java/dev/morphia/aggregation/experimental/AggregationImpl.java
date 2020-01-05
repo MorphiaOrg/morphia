@@ -7,6 +7,7 @@ import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Count;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
@@ -45,6 +46,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> addFields(final AddFields fields) {
         stages.add(fields);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> collstats(final CollectionStats stats) {
+        stages.add(stats);
         return this;
     }
 

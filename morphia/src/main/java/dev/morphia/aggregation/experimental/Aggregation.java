@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -23,6 +24,16 @@ import java.util.List;
  * @since 2.0
  */
 public interface Aggregation<T> {
+    /**
+     * Returns statistics regarding a collection or view.
+     *
+     * @param stats the stats configuration
+     *
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/collstats $collstats
+     */
+    Aggregation<T> collstats(CollectionStats stats);
+
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
      * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
