@@ -24,19 +24,6 @@ import java.util.List;
  */
 public interface Aggregation<T> {
     /**
-     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
-     * added fields.
-     * <p>
-     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
-     * adds the new fields.
-     *
-     * @param fields the stage definition
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/addFields $addFields
-     */
-    Aggregation<T> addFields(AddFields fields);
-
-    /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
      * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
      * <p>
@@ -222,6 +209,34 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/sample $sample
      */
     Aggregation<T> sample(Sample sample);
+
+    /**
+     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+     * added fields.
+     * <p>
+     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+     * adds the new fields.
+     *
+     * @param fields the stage definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/set $set
+     */
+    default Aggregation<T> set(AddFields fields) {
+        return addFields(fields);
+    }
+
+    /**
+     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+     * added fields.
+     * <p>
+     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+     * adds the new fields.
+     *
+     * @param fields the stage definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/addFields $addFields
+     */
+    Aggregation<T> addFields(AddFields fields);
 
     /**
      * Skips over the specified number of documents that pass into the stage and passes the remaining documents to the next stage in the

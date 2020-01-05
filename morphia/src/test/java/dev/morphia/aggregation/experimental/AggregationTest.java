@@ -430,6 +430,33 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testSet() {
+        List<Document> list = List.of(
+            parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
+            parse("{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }"));
+
+        getDatabase().getCollection("scores").insertMany(list);
+
+        List<Document> result = getDs().aggregate(Score.class)
+                                       .set(AddFields.of()
+                                                     .field("totalHomework", sum(field("homework")))
+                                                     .field("totalQuiz", sum(field("quiz"))))
+                                       .set(AddFields.of()
+                                                     .field("totalScore", add(field("totalHomework"),
+                                                         field("totalQuiz"), field("extraCredit"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        list = List.of(
+            parse("{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
+                  + " 'totalQuiz' : 18, 'totalScore' : 43 }"),
+            parse("{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
+                  + "'totalQuiz' : 16, 'totalScore' : 40 }"));
+
+        assertEquals(list, result);
+    }
+
+    @Test
     public void testUnset() {
         List<Document> documents = List.of(
             parse("{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
