@@ -16,6 +16,7 @@ import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.Query;
@@ -123,18 +124,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> unwind(final Unwind unwind) {
-        stages.add(unwind);
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> sortByCount(final SortByCount sort) {
-        stages.add(sort);
-        return this;
-    }
-
-    @Override
     public Aggregation<T> limit(final int limit) {
         stages.add(Limit.of(limit));
         return this;
@@ -203,6 +192,24 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> sort(final Sort sort) {
         stages.add(sort);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> sortByCount(final SortByCount sort) {
+        stages.add(sort);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> unset(final Unset unset) {
+        stages.add(unset);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> unwind(final Unwind unwind) {
+        stages.add(unwind);
         return this;
     }
 }

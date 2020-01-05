@@ -20,7 +20,6 @@ import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.model.Author;
 import dev.morphia.aggregation.experimental.model.Book;
-import dev.morphia.aggregation.experimental.model.CountResult;
 import dev.morphia.aggregation.experimental.model.Inventory;
 import dev.morphia.aggregation.experimental.model.Order;
 import dev.morphia.aggregation.experimental.model.Sales;
@@ -32,6 +31,7 @@ import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
+import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -40,10 +40,13 @@ import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.Lookup.from;
@@ -55,9 +58,11 @@ import static dev.morphia.aggregation.experimental.expressions.Expression.push;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class AggregationTest extends TestBase {
 
@@ -107,8 +112,7 @@ public class AggregationTest extends TestBase {
         List<Document> result = getDs().aggregate(Score.class)
                                        .addFields(AddFields.of()
                                                            .field("totalHomework", sum(field("homework")))
-                                                           .field("totalQuiz", sum(field("quiz")))
-                                                 )
+                                                           .field("totalQuiz", sum(field("quiz"))))
                                        .addFields(AddFields.of()
                                                            .field("totalScore", add(field("totalHomework"),
                                                                field("totalQuiz"), field("extraCredit"))))
@@ -265,57 +269,66 @@ public class AggregationTest extends TestBase {
                                  .next();
 
         Document document = parse("{"
-                               + "    'categorizedByYears(Auto)' : ["
-                               + "    { '_id' : { 'min' : null, 'max' : 1902 }, 'count' : 2 },"
-                               + "    { '_id' : { 'min' : 1902, 'max' : 1918 }, 'count' : 2 },"
-                               + "    { '_id' : { 'min' : 1918, 'max' : 1926 }, 'count' : 2 },"
-                               + "    { '_id' : { 'min' : 1926, 'max' : 1931 }, 'count' : 2 }"
-                               + "    ],"
-                               + "    'categorizedByPrice' : ["
-                               + "    { '_id' : 0, 'count' : 2, 'titles' : ['Dancer', 'Blue Flower']},"
-                               + "    { '_id' : 150, 'count' : 2, 'titles' : ['The Pillars of Society', 'The Great Wave off Kanagawa']},"
-                               + "    { '_id' : 200, 'count' : 1, 'titles' : ['Melancholy III']},"
-                               + "    { '_id' : 300, 'count' : 1, 'titles' : ['Composition VII']},"
-                               + "    { '_id' : 'Other', 'count' : 1, 'titles' : ['The Persistence of Memory']}"
-                               + "    ],"
-                               + "    'categorizedByTags' : ["
-                               + "    { '_id' : 'painting', 'count' : 6 },"
-                               + "    { '_id' : 'oil', 'count' : 4 },"
-                               + "    { '_id' : 'Expressionism', 'count' : 3 },"
-                               + "    { '_id' : 'Surrealism', 'count' : 2 },"
-                               + "    { '_id' : 'abstract', 'count' : 2 },"
-                               + "    { '_id' : 'woodblock', 'count' : 1 },"
-                               + "    { '_id' : 'woodcut', 'count' : 1 },"
-                               + "    { '_id' : 'ukiyo-e', 'count' : 1 },"
-                               + "    { '_id' : 'satire', 'count' : 1 },"
-                               + "    { '_id' : 'caricature', 'count' : 1 }"
-                               + "    ]"
-                               + "}");
+                                  + "    'categorizedByTags' : ["
+                                  + "    { '_id' : 'painting', 'count' : 6 },"
+                                  + "    { '_id' : 'oil', 'count' : 4 },"
+                                  + "    { '_id' : 'Expressionism', 'count' : 3 },"
+                                  + "    { '_id' : 'Surrealism', 'count' : 2 },"
+                                  + "    { '_id' : 'abstract', 'count' : 2 },"
+                                  + "    { '_id' : 'woodblock', 'count' : 1 },"
+                                  + "    { '_id' : 'woodcut', 'count' : 1 },"
+                                  + "    { '_id' : 'ukiyo-e', 'count' : 1 },"
+                                  + "    { '_id' : 'satire', 'count' : 1 },"
+                                  + "    { '_id' : 'caricature', 'count' : 1 }"
+                                  + "    ],"
+                                  + "    'categorizedByYears(Auto)' : ["
+                                  + "    { '_id' : { 'min' : null, 'max' : 1902 }, 'count' : 2 },"
+                                  + "    { '_id' : { 'min' : 1902, 'max' : 1918 }, 'count' : 2 },"
+                                  + "    { '_id' : { 'min' : 1918, 'max' : 1926 }, 'count' : 2 },"
+                                  + "    { '_id' : { 'min' : 1926, 'max' : 1931 }, 'count' : 2 }"
+                                  + "    ],"
+                                  + "    'categorizedByPrice' : ["
+                                  + "    { '_id' : 0, 'count' : 2, 'titles' : ['Dancer', 'Blue Flower']},"
+                                  + "    { '_id' : 150, 'count' : 2, 'titles' : ['The Pillars of Society', 'The Great Wave off Kanagawa']},"
+                                  + "    { '_id' : 200, 'count' : 1, 'titles' : ['Melancholy III']},"
+                                  + "    { '_id' : 300, 'count' : 1, 'titles' : ['Composition VII']},"
+                                  + "    { '_id' : 'Other', 'count' : 1, 'titles' : ['The Persistence of Memory']}"
+                                  + "    ],"
+                                  + "}");
 
-        assertEquals(document, result);
+        assertDocumentEquals(document, result);
     }
 
-    @Test
-    public void testGenericAccumulatorUsage() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
+    private void assertDocumentEquals(final Document document, final Document result) {
+        assertDocumentEquals("", document, result);
+    }
 
-        MorphiaCursor<CountResult> aggregation = getDs().aggregate(Book.class)
-                                                        .group(Group.of(id("author")
-                                                                            .field("count", sum(literal(1)))))
-                                                        .sort(on().ascending("_id"))
-                                                        .execute(CountResult.class);
-
-        CountResult result1 = aggregation.next();
-        CountResult result2 = aggregation.next();
-        Assert.assertFalse("Expecting two results", aggregation.hasNext());
-        Assert.assertEquals("Dante", result1.getAuthor());
-        Assert.assertEquals(3, result1.getCount());
-        Assert.assertEquals("Homer", result2.getAuthor());
-        Assert.assertEquals(2, result2.getCount());
+    private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
+        if(expected instanceof Document) {
+            for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
+                final String key = entry.getKey();
+                assertDocumentEquals(path.isEmpty() ? key : (path + "." + key), entry.getValue(), ((Document) actual).get(key));
+            }
+        } else if(expected instanceof List) {
+            List list = (List) expected;
+            for (int i = 0; i < list.size(); i++) {
+                final Object o = list.get(i);
+                boolean found = false;
+                final Iterator actualIterator = ((List) actual).iterator();
+                while(!found && actualIterator.hasNext()) {
+                    try {
+                        assertDocumentEquals(format("%s[%d]", path, i), o, actualIterator.next());
+                        found = true;
+                    } catch (AssertionError ignore) {
+                    }
+                }
+                if(!found) {
+                    fail(format("mismatch found at %s:%n%s", path));
+                }
+            }
+        } else {
+            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
+        }
     }
 
     @Test
@@ -395,12 +408,8 @@ public class AggregationTest extends TestBase {
                                                                                 .single(field("title"))));
         aggregation.out(Author.class, options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
-        Author author = aggregation.execute(Author.class).next();
-        Assert.assertEquals("Homer", author.getName());
-        Assert.assertEquals(asList("The Odyssey", "Iliad"), author.getBooks());
 
         aggregation.out("different");
-
         Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
     }
 
@@ -438,7 +447,7 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testSampleStage() {
+    public void testSample() {
         getDs().save(asList(new User("John", new Date()),
             new User("Paul", new Date()),
             new User("George", new Date()),
@@ -451,6 +460,29 @@ public class AggregationTest extends TestBase {
 
         List<User> list = pipeline.execute(User.class).toList();
         assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testUnset() {
+        List<Document> documents = List.of(
+            parse("{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
+                  + "[ {warehouse: 'A', qty: 5 }, {warehouse: 'B', qty: 15 } ] }"),
+            parse("{'_id': 2, title: 'Bees Babble', isbn: '999999999333', author: {last:'Bumble', first: 'Bee' }, copies: [ "
+                  + "{warehouse: 'A', qty: 2 }, {warehouse: 'B', qty: 5 } ] }"));
+        getDatabase().getCollection("books")
+                     .insertMany(documents);
+
+        for (final Document document : documents) {
+            document.remove("copies");
+        }
+
+        List<Document> copies = getDs().aggregate(Book.class)
+                                       .unset(Unset.fields("copies"))
+                                       .execute(Document.class)
+                                       .toList();
+
+        assertEquals(documents, copies);
+
     }
 
     @Entity(useDiscriminator = false)

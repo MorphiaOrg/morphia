@@ -6,7 +6,7 @@ import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
-import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.Document;
@@ -26,22 +26,22 @@ import static org.junit.Assert.assertTrue;
 public class CodecStructureTest extends TestBase {
     @Test
     public void testBucket() {
-        Stage stage = Bucket.of()
-                            .groupBy(field("price"))
-                            .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
-                            .defaultValue("Other")
-                            .outputField("count", sum(literal(1)))
-                            .outputField("titles", push().single(field("title")));
-
-        evaluate(stage, parse(
-            "{ $bucket: { groupBy: '$price', boundaries: [  0, 150, 200, 300, 400 ], default: 'Other', output: { 'count': { $sum: 1 },"
-            + "'titles': { $push: '$title' } } } }"));
+        evaluate(parse("{ $bucket: { groupBy: '$price', boundaries: [  0, 150, 200, 300, 400 ], default: 'Other', output: { 'count': { "
+                        + "$sum: 1 },'titles': { $push: '$title' } } } }"),
+            Bucket.of()
+                  .groupBy(field("price"))
+                  .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
+                  .defaultValue("Other")
+                  .outputField("count", sum(literal(1)))
+                  .outputField("titles", push().single(field("title"))));
     }
 
-    private void evaluate(final Object value, final Document expected) {
-        Codec codec = getMapper().getCodecRegistry().get(value.getClass());
+    @SuppressWarnings("unchecked")
+    private void evaluate(final Document expected, final Object value) {
         DocumentWriter writer = new DocumentWriter();
-        codec.encode(writer, value, EncoderContext.builder().build());
+        ((Codec) getMapper().getCodecRegistry()
+                            .get(value.getClass()))
+            .encode(writer, value, EncoderContext.builder().build());
         Document root = writer.getRoot();
         assertEquals(0, writer.getDocsLevel());
         assertEquals(0, writer.getArraysLevel());
@@ -52,37 +52,42 @@ public class CodecStructureTest extends TestBase {
 
     @Test
     public void testMatch() {
-        Stage stage = Match.of(getDs().find(Artwork.class)
-                                      .field("price").exists());
-
-        evaluate(stage, parse("{ $match: { price: { $exists: true } } }"));
+        evaluate(parse("{ $match: { price: { $exists: true } } }"),
+            Match.of(getDs().find(Artwork.class)
+                            .field("price").exists()));
     }
 
     @Test
     public void testPush() {
-        Expression expression = Expression.push()
-                                          .field("item", field("item"))
-                                          .field("quantity", field("quantity"));
+        evaluate(parse("{ $push:  { item: \"$item\", quantity: \"$quantity\" } }"),
+            Expression.push()
+                      .field("item", field("item"))
+                      .field("quantity", field("quantity")));
 
-        evaluate(expression, parse("{ $push:  { item: \"$item\", quantity: \"$quantity\" } }"));
-
-        expression = Expression.push()
-                               .single(field("title"));
-
-        evaluate(expression, parse("{ $push: '$title' }"));
-    }
-
-    @Test
-    public void testUnwind() {
-        Stage stage = Unwind.on("sizes");
-
-        evaluate(stage, parse("{ $unwind : \"$sizes\" }"));
+        evaluate(parse("{ $push: '$title' }"),
+            Expression.push()
+                      .single(field("title")));
     }
 
     @Test
     public void testSortByCount() {
-        Stage stage = SortByCount.on(field("tags"));
-
-        evaluate(stage, parse("{ $sortByCount: \"$tags\" }"));
+        evaluate(parse("{ $sortByCount: \"$tags\" }"),
+            SortByCount.on(field("tags")));
     }
+
+    @Test
+    public void testUnset() {
+        evaluate(parse("{ $unset:  'single' }"),
+            Unset.fields("single"));
+
+        evaluate(parse("{ $unset:  [\"more\", \"than\", \"one\"] }"),
+            Unset.fields("more", "than", "one"));
+    }
+
+    @Test
+    public void testUnwind() {
+        evaluate(parse("{ $unwind : \"$sizes\" }"),
+            Unwind.on("sizes"));
+    }
+
 }
