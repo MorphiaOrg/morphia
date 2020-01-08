@@ -16,6 +16,8 @@ import dev.morphia.aggregation.experimental.codecs.stages.LimitCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LookupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.MatchCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.ProjectionCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.ReplaceWith;
+import dev.morphia.aggregation.experimental.codecs.stages.ReplaceWithCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SampleCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SkipCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.SortByCountCodec;
@@ -89,6 +91,7 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs.put(Lookup.class, new LookupCodec(mapper));
             codecs.put(Match.class, new MatchCodec(mapper));
             codecs.put(Projection.class, new ProjectionCodec(mapper));
+            codecs.put(ReplaceWith.class, new ReplaceWithCodec(mapper));
             codecs.put(Sample.class, new SampleCodec(mapper));
             codecs.put(Skip.class, new SkipCodec(mapper));
             codecs.put(Sort.class, new SortCodec(mapper));

@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import java.util.StringJoiner;
@@ -50,14 +50,15 @@ public abstract class Expression {
         return new Push();
     }
 
-    public static <T> Fields<T> fields(final T owner) {
-        return new Fields<>(owner);
+    public static DocumentExpression of() {
+        return new DocumentExpression();
     }
 
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(operation);
-        ExpressionCodec.writeUnnamedExpression(mapper, writer, (Expression) value, encoderContext);
+        Codec codec = mapper.getCodecRegistry().get(value.getClass());
+        encoderContext.encodeWithChildContext(codec, writer, value);
         writer.writeEndDocument();
     }
 
@@ -74,6 +75,31 @@ public abstract class Expression {
         return new StringJoiner(", ", Expression.class.getSimpleName() + "[", "]")
                    .add("operation='" + operation + "'")
                    .toString();
+    }
+
+    public static class DocumentExpression extends Expression implements FieldHolder<DocumentExpression> {
+        private Fields<DocumentExpression> fields = Fields.on(this);
+        private DocumentExpression() {
+            super(null);
+        }
+
+        @Override
+        public DocumentExpression field(final String name, final Expression expression) {
+            return fields.add(name, expression);
+        }
+
+        public void encode(final String name, final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+            writer.writeStartDocument(name);
+            fields.encode(mapper, writer, encoderContext);
+            writer.writeEndDocument();
+        }
+
+        @Override
+        public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+            writer.writeStartDocument();
+            fields.encode(mapper, writer, encoderContext);
+            writer.writeEndDocument();
+        }
     }
 
 }

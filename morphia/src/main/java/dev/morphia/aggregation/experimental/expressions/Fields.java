@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 
 public class Fields<T> {
     private T owner;
@@ -15,6 +16,18 @@ public class Fields<T> {
 
     protected Fields(final T owner) {
         this.owner = owner;
+    }
+
+    private Fields() {
+    }
+
+    public static <T> Fields<T> on(final T owner) {
+        return new Fields<>(owner);
+    }
+
+    public T add(final String name) {
+        fields.add(new PipelineField(name, field(name)));
+        return owner;
     }
 
     public T add(final String name, final Expression expression) {
@@ -35,4 +48,5 @@ public class Fields<T> {
     public int size() {
         return fields.size();
     }
+
 }

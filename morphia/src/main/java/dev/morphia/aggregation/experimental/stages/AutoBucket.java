@@ -2,12 +2,12 @@ package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.BucketGranularity;
 import dev.morphia.aggregation.experimental.expressions.Expression;
-import dev.morphia.aggregation.experimental.expressions.Fields;
+import dev.morphia.aggregation.experimental.expressions.Expression.DocumentExpression;
 
 public class AutoBucket extends Stage {
     private Expression groupBy;
     private Integer buckets;
-    private Fields<AutoBucket> output;
+    private DocumentExpression output;
     private BucketGranularity granularity;
 
     protected AutoBucket() {
@@ -35,7 +35,7 @@ public class AutoBucket extends Stage {
         return groupBy;
     }
 
-    public Fields<AutoBucket> getOutput() {
+    public DocumentExpression getOutput() {
         return output;
     }
 
@@ -51,8 +51,9 @@ public class AutoBucket extends Stage {
 
     public AutoBucket outputField(final String name, final Expression value) {
         if (output == null) {
-            output = Expression.fields(this);
+            output = Expression.of();
         }
-        return output.add(name, value);
+        output.field(name, value);
+        return this;
     }
 }

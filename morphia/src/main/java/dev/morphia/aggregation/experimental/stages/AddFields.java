@@ -1,10 +1,10 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
-import dev.morphia.aggregation.experimental.expressions.Fields;
+import dev.morphia.aggregation.experimental.expressions.Expression.DocumentExpression;
 
 public class AddFields extends Stage {
-    private Fields<AddFields> fields = Expression.fields(this);
+    private DocumentExpression document = Expression.of();
     protected AddFields() {
         super("$addFields");
     }
@@ -14,7 +14,7 @@ public class AddFields extends Stage {
     }
 
     public AddFields field(final String name, final Expression value) {
-        fields.add(name, value);
+        document.field(name, value);
         return this;
     }
 
@@ -23,7 +23,7 @@ public class AddFields extends Stage {
      *
      * @morphia.internal
      */
-    public Fields<AddFields> getFields() {
-        return fields;
+    public DocumentExpression getDocument() {
+        return document;
     }
 }

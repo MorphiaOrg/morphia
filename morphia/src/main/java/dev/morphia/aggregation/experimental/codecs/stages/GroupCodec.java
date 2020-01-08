@@ -3,13 +3,9 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 import dev.morphia.aggregation.experimental.expressions.Fields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Group.GroupId;
-import dev.morphia.aggregation.experimental.expressions.PipelineField;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
 
 public class GroupCodec extends StageCodec<Group> {
 
@@ -22,14 +18,11 @@ public class GroupCodec extends StageCodec<Group> {
         writer.writeStartDocument();
         GroupId id = group.getId();
         if (id != null) {
-            Fields<GroupId> fields = id.getFields();
-            if(fields.size() > 1) {
-                writer.writeName("_id");
-                writer.writeStartDocument();
-                fields.encode(getMapper(), writer, encoderContext);
-                writer.writeEndDocument();
+            writer.writeName("_id");
+            if(id.getDocument() != null) {
+                id.getDocument().encode(getMapper(), writer, encoderContext);
             } else {
-                fields.encode(getMapper(), writer, encoderContext);
+                id.getField().encode(getMapper(), writer, encoderContext);
             }
         } else {
             writer.writeNull("_id");

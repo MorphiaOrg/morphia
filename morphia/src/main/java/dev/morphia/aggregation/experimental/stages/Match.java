@@ -14,7 +14,7 @@ public class Match extends Stage {
         return query;
     }
 
-    public static Match of(final Query<?> query) {
+    public static Match on(final Query<?> query) {
         return new Match(query);
     }
 }

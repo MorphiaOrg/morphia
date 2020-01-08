@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental;
 
+import dev.morphia.aggregation.experimental.codecs.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
@@ -170,6 +171,19 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/limit $limit
      */
     Aggregation<T> limit(int limit);
+
+    /**
+     * Replaces the input document with the specified document. The operation replaces all existing fields in the input document,
+     * including the _id field. With $replaceWith, you can promote an embedded document to the top-level. You can also specify a new
+     * document as the replacement.
+     * <p>
+     * The $replaceWith is an alias for $replaceRoot.
+     *
+     * @param with the replacement definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/replaceWith $replaceWith
+     */
+    Aggregation<T> replaceWith(ReplaceWith with);
 
     /**
      * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for

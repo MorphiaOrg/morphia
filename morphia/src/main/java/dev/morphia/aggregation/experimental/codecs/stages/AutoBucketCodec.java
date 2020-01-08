@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.aggregation.experimental.expressions.Expression.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.Fields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.mapping.Mapper;
@@ -24,11 +25,9 @@ public class AutoBucketCodec extends StageCodec<AutoBucket> {
         writeNamedExpression(getMapper(), writer, "groupBy", value.getGroupBy(), encoderContext);
         writeNamedValue(writer, "buckets", value.getBuckets(), encoderContext);
         writeNamedValue(writer, "granularity", value.getGranularity(), encoderContext);
-        Fields<AutoBucket> output = value.getOutput();
+        DocumentExpression output = value.getOutput();
         if (output != null) {
-            writer.writeStartDocument("output");
-            output.encode(getMapper(), writer, encoderContext);
-            writer.writeEndDocument();
+            output.encode("output", getMapper(), writer, encoderContext);
         }
     }
 }

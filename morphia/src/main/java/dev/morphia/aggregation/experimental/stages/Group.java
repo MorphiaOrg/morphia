@@ -1,12 +1,13 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expression.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.Fields;
-import dev.morphia.aggregation.experimental.expressions.PipelineField;
+import dev.morphia.sofia.Sofia;
 
 public class Group extends Stage {
-    private GroupId id;
     protected Fields<Group> fields;
+    private GroupId id;
 
     protected Group() {
         super("$group");
@@ -16,22 +17,6 @@ public class Group extends Stage {
     protected Group(final GroupId id) {
         super("$group");
         this.id = id;
-    }
-
-    public GroupId getId() {
-        return id;
-    }
-
-    public Group fields(final String name, final Expression expression) {
-        if(fields == null) {
-            fields = Expression.fields(this);
-        }
-        fields.add(name, expression);
-        return this;
-    }
-
-    public Fields<Group> getFields() {
-        return fields;
     }
 
     public static Group of() {
@@ -50,25 +35,53 @@ public class Group extends Stage {
         return new GroupId();
     }
 
+    public Group field(final String name, final Expression expression) {
+        if (fields == null) {
+            fields = Fields.on(this);
+        }
+        fields.add(name, expression);
+        return this;
+    }
+
+    public Fields<Group> getFields() {
+        return fields;
+    }
+
+    public GroupId getId() {
+        return id;
+    }
+
     public static class GroupId {
-        private Fields<GroupId> fields;
+        private Expression field;
+        private DocumentExpression document;
 
         protected GroupId() {
+            document = Expression.of();
         }
 
         protected GroupId(final Expression value) {
-            field("_id", value);
+            if(value instanceof DocumentExpression) {
+                document = (DocumentExpression) value;
+            } else {
+                field = value;
+            }
         }
 
         public GroupId field(final String name, final Expression expression) {
-            if(fields == null) {
-                fields = Expression.fields(this);
+            if (field != null) {
+                throw new IllegalStateException(Sofia.mixedModesNotAllowed("_id"));
             }
-            return fields.add(name, expression);
+            document.field(name, expression);
+
+            return this;
         }
 
-        public Fields<GroupId> getFields() {
-            return fields;
+        public DocumentExpression getDocument() {
+            return document;
+        }
+
+        public Expression getField() {
+            return field;
         }
     }
 }

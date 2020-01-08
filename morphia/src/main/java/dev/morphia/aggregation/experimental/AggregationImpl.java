@@ -4,6 +4,7 @@ import com.mongodb.MongoCommandException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.codecs.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
@@ -57,26 +58,20 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> graphLookup(final GraphLookup lookup) {
-        stages.add(lookup);
-        return this;
-    }
-
-    @Override
     public Aggregation<T> collStats(final CollectionStats stats) {
         stages.add(stats);
         return this;
     }
 
     @Override
-    public Aggregation<T> currentOp(final CurrentOp currentOp) {
-        stages.add(currentOp);
+    public AggregationImpl count(final String name) {
+        stages.add(new Count(name));
         return this;
     }
 
     @Override
-    public AggregationImpl count(final String name) {
-        stages.add(new Count(name));
+    public Aggregation<T> currentOp(final CurrentOp currentOp) {
+        stages.add(currentOp);
         return this;
     }
 
@@ -133,6 +128,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public Aggregation<T> graphLookup(final GraphLookup lookup) {
+        stages.add(lookup);
+        return this;
+    }
+
+    @Override
     public Aggregation<T> group(final Group group) {
         stages.add(group);
         return this;
@@ -145,6 +146,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public Aggregation<T> replaceWith(final ReplaceWith with) {
+        stages.add(with);
+        return this;
+    }
+
+    @Override
     public Aggregation<T> lookup(final Lookup lookup) {
         stages.add(lookup);
         return this;
@@ -152,7 +159,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public AggregationImpl match(final Query query) {
-        stages.add(Match.of(query));
+        stages.add(Match.on(query));
         return this;
     }
 

@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.aggregation.experimental.expressions.Expression.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.Fields;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.mapping.Mapper;
@@ -24,11 +25,9 @@ public class BucketCodec extends StageCodec<Bucket> {
         writeNamedExpression(getMapper(), writer, "groupBy", value.getGroupBy(), encoderContext);
         writeNamedValue(writer, "boundaries", value.getBoundaries(), encoderContext);
         writeNamedValue(writer, "default", value.getDefaultValue(), encoderContext);
-        Fields<Bucket> output = value.getOutput();
+        DocumentExpression output = value.getOutput();
         if (output != null) {
-            writer.writeStartDocument("output");
-            output.encode(getMapper(), writer, encoderContext);
-            writer.writeEndDocument();
+            output.encode("output", getMapper(), writer, encoderContext);
         }
         writer.writeEndDocument();
     }

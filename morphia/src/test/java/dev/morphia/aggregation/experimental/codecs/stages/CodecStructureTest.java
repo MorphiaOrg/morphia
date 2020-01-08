@@ -3,7 +3,11 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.GraphLookup;
+import dev.morphia.aggregation.experimental.expressions.ArrayExpressions;
+import dev.morphia.aggregation.experimental.expressions.ConditionalExpression;
 import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.MathExpression;
+import dev.morphia.aggregation.experimental.expressions.ObjectExpressions;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
@@ -47,12 +51,12 @@ public class CodecStructureTest extends TestBase {
         ((Codec) getMapper().getCodecRegistry()
                             .get(value.getClass()))
             .encode(writer, value, EncoderContext.builder().build());
-        Document root = writer.getRoot();
+        Document actual = writer.getRoot();
         assertEquals(0, writer.getDocsLevel());
         assertEquals(0, writer.getArraysLevel());
         assertTrue(writer.getState().isEmpty());
 
-        assertEquals(expected, root);
+        assertDocumentEquals(expected, actual);
     }
 
     @Test
@@ -112,7 +116,7 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testMatch() {
         evaluate(parse("{ $match: { price: { $exists: true } } }"),
-            Match.of(getDs().find(Artwork.class)
+            Match.on(getDs().find(Artwork.class)
                             .field("price").exists()));
     }
 
@@ -126,6 +130,23 @@ public class CodecStructureTest extends TestBase {
         evaluate(parse("{ $push: '$title' }"),
             Expression.push()
                       .single(field("title")));
+    }
+
+    @Test
+    public void testReplaceWith() {
+        evaluate(parse("{ $replaceWith: \"$grades\" }"),
+            ReplaceWith.with()
+                       .value(field("grades")));
+
+        evaluate(parse("{ $replaceWith: { _id: \"$_id\", item: \"$item\", amount: { $multiply: [ \"$price\", \"$quantity\"]}, status: \"Complete\", "
+                       + "asofDate: \"$$NOW\" } }}"),
+            ReplaceWith.with()
+                       .field("_id", field("_id"))
+                       .field("item", field("item"))
+                       .field("amount", MathExpression.multiply(field("price"), field("quantity")))
+                       .field("status", literal("Complete"))
+                       .field("asofDate", literal("$$NOW"))
+                );
     }
 
     @Test
@@ -159,6 +180,23 @@ public class CodecStructureTest extends TestBase {
     public void testUnwind() {
         evaluate(parse("{ $unwind : \"$sizes\" }"),
             Unwind.on("sizes"));
+    }
+
+    @Test
+    public void testIfNull() {
+        evaluate(parse("{ $ifNull: [ \"$name\", { _id: \"$_id\", missingName: true} ] }"),
+            ConditionalExpression.ifNull()
+            .target(field("name"))
+            .field("_id", field("_id"))
+            .field("missingName", literal(true)));
+    }
+
+    @Test
+    public void testMergeObjects() {
+        evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
+            ObjectExpressions.mergeObjects()
+                .add(ArrayExpressions.elementAt(field("fromItems"), literal(0)))
+                .add(literal("$$ROOT")));
     }
 
 }

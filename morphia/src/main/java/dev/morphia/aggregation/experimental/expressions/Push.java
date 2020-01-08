@@ -5,30 +5,33 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-public class Push extends Expression {
+public class Push extends Expression implements FieldHolder<Push> {
     private Expression field;
-    private Fields<Push> fields;
+    private DocumentExpression document;
 
     protected Push() {
         super("$push");
     }
 
     public Push single(final Expression source) {
-        if(fields != null) {
-            throw new IllegalStateException(Sofia.mixedPushModes());
+        if(document != null) {
+            throw new IllegalStateException(Sofia.mixedModesNotAllowed(getOperation()));
         }
         this.field = source;
         return this;
     }
 
+    @Override
     public Push field(final String name, final Expression expression) {
         if(field != null) {
-            throw new IllegalStateException(Sofia.mixedPushModes());
+            throw new IllegalStateException(Sofia.mixedModesNotAllowed(getOperation()));
         }
-        if(fields == null) {
-            fields = Expression.fields(this);
+        if(document == null) {
+            document = Expression.of();
         }
-        return fields.add(name, expression);
+        document.field(name, expression);
+
+        return this;
     }
 
     @Override
@@ -37,10 +40,8 @@ public class Push extends Expression {
         writer.writeName(operation);
         if (field != null) {
             field.encode(mapper, writer, encoderContext);
-        } else if(fields.size() != 0) {
-            writer.writeStartDocument();
-            fields.encode(mapper, writer, encoderContext);
-            writer.writeEndDocument();
+        } else if(document != null) {
+            document.encode(mapper, writer, encoderContext);
         }
         writer.writeEndDocument();
     }

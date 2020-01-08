@@ -18,6 +18,7 @@ package dev.morphia.aggregation.experimental;
 
 import com.mongodb.client.model.Collation;
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.model.Author;
 import dev.morphia.aggregation.experimental.model.Book;
 import dev.morphia.aggregation.experimental.model.Inventory;
@@ -36,6 +37,7 @@ import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.query.Type;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
@@ -44,25 +46,25 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.Lookup.from;
+import static dev.morphia.aggregation.experimental.codecs.stages.ReplaceWith.with;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
+import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.ifNull;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
+import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class AggregationTest extends TestBase {
 
@@ -267,7 +269,7 @@ public class AggregationTest extends TestBase {
                                                  Unwind.on("tags"),
                                                  SortByCount.on(field("tags")))
                                              .field("categorizedByPrice",
-                                                 Match.of(getDs().find(Artwork.class)
+                                                 Match.on(getDs().find(Artwork.class)
                                                                  .field("price").exists()),
                                                  Bucket.of()
                                                        .groupBy(field("price"))
@@ -324,25 +326,25 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("employees").insertMany(list);
 
         List<Document> actual = getDs().aggregate(Employee.class)
-                                          .graphLookup(GraphLookup.with()
-                                                                  .from("employees")
-                                                                  .startWith(field("reportsTo"))
-                                                                  .connectFromField("reportsTo")
-                                                                  .connectToField("name")
-                                                                  .as("reportingHierarchy"))
-                                          .execute(Document.class)
-                                          .toList();
+                                       .graphLookup(GraphLookup.with()
+                                                               .from("employees")
+                                                               .startWith(field("reportsTo"))
+                                                               .connectFromField("reportsTo")
+                                                               .connectToField("name")
+                                                               .as("reportingHierarchy"))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(parse("{'_id': 1, 'name': 'Dev', 'reportingHierarchy': []}"),
             parse("{'_id': 2, 'name': 'Eliot', 'reportsTo': 'Dev', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'}]}"),
             parse("{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                + "'Eliot', 'reportsTo': 'Dev'}]}"),
+                  + "'Eliot', 'reportsTo': 'Dev'}]}"),
             parse("{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                + "'Eliot', 'reportsTo': 'Dev'}]}"),
+                  + "'Eliot', 'reportsTo': 'Dev'}]}"),
             parse("{'_id': 5, 'name': 'Asya', 'reportsTo': 'Ron', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                + "'Eliot', 'reportsTo': 'Dev'},{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot'}]}"),
+                  + "'Eliot', 'reportsTo': 'Dev'},{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot'}]}"),
             parse("{'_id': 6, 'name': 'Dan', 'reportsTo': 'Andrew', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                + "'Eliot', 'reportsTo': 'Dev'},{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot'}]}"));
+                  + "'Eliot', 'reportsTo': 'Dev'},{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot'}]}"));
 
         assertDocumentEquals(expected, actual);
     }
@@ -399,7 +401,7 @@ public class AggregationTest extends TestBase {
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .group(Group.of()
-                                                     .fields("count", sum(literal(1))));
+                                                     .field("count", sum(literal(1))));
 
         Group group = pipeline.getStage("$group");
         Assert.assertNull(group.getId());
@@ -420,7 +422,7 @@ public class AggregationTest extends TestBase {
         AggregationOptions options = new AggregationOptions();
         Aggregation<Book> aggregation = getDs().aggregate(Book.class)
                                                .group(Group.of(id("author"))
-                                                           .fields("books", push()
+                                                           .field("books", push()
                                                                                 .single(field("title"))));
         aggregation.out(Author.class, options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
@@ -460,6 +462,70 @@ public class AggregationTest extends TestBase {
 
         doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}");
         Assert.assertEquals(doc, aggregate.next());
+    }
+
+    @Test
+    public void testReplaceWith() {
+        List<Document> documents = List.of(
+            parse("{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}"),
+            parse("{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}"),
+            parse("{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}"),
+            parse("{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}"));
+
+        getDatabase().getCollection("authors").insertMany(documents);
+
+        List<Document> actual = getDs().aggregate(Author.class)
+                                           .match(getDs().find(Document.class)
+                                                         .disableValidation()
+                                                         .field("name").exists()
+                                                         .field("name").not().type(Type.ARRAY)
+                                                         .field("name").type(Type.OBJECT))
+                                           .replaceWith(with()
+                                                                   .value(field("name")))
+                                           .execute(Document.class)
+                                           .toList();
+        List<Document> expected = documents.subList(0, 3)
+                                           .stream()
+                                           .map(d -> (Document) d.get("name"))
+                                           .collect(toList());
+        assertDocumentEquals(expected, actual);
+
+        actual = getDs().aggregate(Author.class)
+                                           .replaceWith(with()
+                                                                   .value(ifNull().target(field("name"))
+                                                                         .field("_id", field("_id"))
+                                                                         .field("missingName", literal(true))))
+                                           .execute(Document.class)
+                                           .toList();
+        expected = documents.subList(0, 3)
+                            .stream()
+                            .map(d -> (Document) d.get("name"))
+                            .collect(toList());
+        expected.add(new Document("_id", 4)
+                    .append("missingName", true));
+        assertDocumentEquals(expected, actual);
+
+        actual = getDs().aggregate(Author.class)
+                        .replaceWith(with()
+                                         .value(mergeObjects()
+                                                    .add(Expression.of()
+                                                                   .field("_id", field("_id"))
+                                                                   .field("first", literal(""))
+                                                                   .field("last", literal("")))
+                                                    .add(field("name"))))
+                        .execute(Document.class)
+                        .toList();
+        expected = documents.subList(0, 3)
+                            .stream()
+                            .map(d -> {
+                                d.putAll((Document) d.remove("name"));
+                                return d;
+                            })
+                            .collect(toList());
+        expected.add(new Document("_id", 4)
+                    .append("first", "")
+                    .append("last", ""));
+        assertDocumentEquals(expected, actual);
     }
 
     @Test
@@ -528,38 +594,6 @@ public class AggregationTest extends TestBase {
 
     }
 
-    private void assertDocumentEquals(final Object document, final Object result) {
-        assertDocumentEquals("", document, result);
-    }
-
-    private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
-        if (expected instanceof Document) {
-            for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
-                final String key = entry.getKey();
-                assertDocumentEquals(path.isEmpty() ? key : (path + "." + key), entry.getValue(), ((Document) actual).get(key));
-            }
-        } else if (expected instanceof List) {
-            List list = (List) expected;
-            for (int i = 0; i < list.size(); i++) {
-                final Object o = list.get(i);
-                boolean found = false;
-                final Iterator actualIterator = ((List) actual).iterator();
-                while (!found && actualIterator.hasNext()) {
-                    try {
-                        assertDocumentEquals(format("%s[%d]", path, i), o, actualIterator.next());
-                        found = true;
-                    } catch (AssertionError ignore) {
-                    }
-                }
-                if (!found) {
-                    fail(format("mismatch found at %s:%n%s", path));
-                }
-            }
-        } else {
-            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
-        }
-    }
-
     @Entity(useDiscriminator = false)
     public static class Artwork {
         @Id
@@ -567,16 +601,16 @@ public class AggregationTest extends TestBase {
         private Double price;
     }
 
+    @Entity(value = "employees", useDiscriminator = false)
+    private static class Employee {
+        @Id
+        private ObjectId id;
+    }
+
     @Entity(value = "scores", useDiscriminator = false)
     private static class Score {
         @Id
         private ObjectId id;
         private int score;
-    }
-
-    @Entity(value = "employees", useDiscriminator = false)
-    private static class Employee {
-        @Id
-        private ObjectId id;
     }
 }

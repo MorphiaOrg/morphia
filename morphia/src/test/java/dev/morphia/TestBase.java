@@ -13,7 +13,13 @@ import org.junit.Assume;
 import org.junit.Before;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+
+import static java.lang.String.format;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class TestBase {
@@ -71,6 +77,10 @@ public abstract class TestBase {
         getMongoClient().close();
     }
 
+    protected void assertDocumentEquals(final Object document, final Object result) {
+        assertDocumentEquals("", document, result);
+    }
+
     protected void checkMinServerVersion(final double version) {
         Assume.assumeTrue(serverIsAtLeastVersion(version));
     }
@@ -122,6 +132,42 @@ public abstract class TestBase {
 
     protected String toString(final Document document) {
         return document.toJson(getMapper().getCodecRegistry().get(Document.class));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
+        /*if(expected.getClass().equals(actual.getClass())) {
+            assertEquals(format("mismatch found at %s:%s%n%s", path, expected, actual), expected, actual);
+        } else */if (expected instanceof Document) {
+            for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
+                final String key = entry.getKey();
+                assertDocumentEquals(path.isEmpty() ? key : (path + "." + key), entry.getValue(), ((Document) actual).get(key));
+            }
+        } else if (expected instanceof List) {
+            List list = (List) expected;
+            List copy = new ArrayList<>((List) actual);
+
+            Object o;
+            for (int i = 0; i < list.size(); i++) {
+                o = list.get(i);
+                boolean found = false;
+                final Iterator other = copy.iterator();
+                while (!found && other.hasNext()) {
+                    try {
+                        String newPath = format("%s[%d]", path, i);
+                        assertDocumentEquals(newPath, o, other.next());
+                        other.remove();
+                        found = true;
+                    } catch (AssertionError ignore) {
+                    }
+                }
+                if (!found) {
+                    fail(format("mismatch found at %s", path));
+                }
+            }
+        } else {
+            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
+        }
     }
 
     private double getServerVersion() {

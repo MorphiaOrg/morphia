@@ -8,6 +8,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeUnnamedExpression;
 import static java.util.Arrays.asList;
 
 public class Accumulator extends Expression {
@@ -26,7 +27,7 @@ public class Accumulator extends Expression {
             writer.writeStartArray();
         }
         for (final Expression expression : expressions) {
-            ExpressionCodec.writeUnnamedExpression(mapper, writer, expression, encoderContext);
+            writeUnnamedExpression(mapper, writer, expression, encoderContext);
         }
         if(expressions.size() >1 ) {
             writer.writeEndArray();

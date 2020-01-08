@@ -33,7 +33,7 @@ public class Projection extends Stage {
             throw new RuntimeException(Sofia.mixedModeProjections());
         }
         if (excludes == null) {
-            excludes = Expression.fields(this);
+            excludes = Fields.on(this);
         }
         excludes.add(name, value);
     }
@@ -63,7 +63,7 @@ public class Projection extends Stage {
             throw new RuntimeException(Sofia.mixedModeProjections());
         }
         if (includes == null) {
-            includes = Expression.fields(this);
+            includes = Fields.on(this);
         }
         return includes.add(name, value);
     }
