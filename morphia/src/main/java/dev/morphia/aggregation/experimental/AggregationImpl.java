@@ -13,7 +13,9 @@ import dev.morphia.aggregation.experimental.stages.Count;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.IndexStats;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.PlanCacheStats;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
@@ -154,6 +156,18 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> lookup(final Lookup lookup) {
         stages.add(lookup);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> indexStats() {
+        stages.add(IndexStats.of());
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> planCacheStats() {
+        stages.add(PlanCacheStats.of());
         return this;
     }
 

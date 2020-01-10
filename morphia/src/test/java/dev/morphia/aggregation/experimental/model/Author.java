@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.model;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Indexed;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
 public class Author {
     @Id
     private String name;
+    @Indexed
     private List<String> books;
 
     public String getName() {

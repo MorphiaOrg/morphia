@@ -93,6 +93,25 @@ public interface Aggregation<T> {
     Aggregation<T> currentOp(CurrentOp currentOp);
 
     /**
+     * Execute the aggregation and get the results as Document instances.
+     *
+     * @return a MorphiaCursor
+     */
+    default MorphiaCursor<Document> execute() {
+        return execute(Document.class);
+    };
+
+    /**
+     * Execute the aggregation and get the results as Document instances.
+     *
+     * @param options the options to apply
+     * @return a MorphiaCursor
+     */
+    default MorphiaCursor<Document> execute(final AggregationOptions options) {
+        return execute(Document.class, options);
+    }
+
+    /**
      * Execute the aggregation and get the results.
      *
      * @param <S> the output type
@@ -195,6 +214,23 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/lookup $lookup
      */
     Aggregation<T> lookup(Lookup lookup);
+
+    /**
+     * Returns statistics regarding the use of each index for the collection. If running with access control, the user must have
+     * privileges that include indexStats action.
+     *
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/indexStats $indexStats
+     */
+    Aggregation<T> indexStats();
+
+    /**
+     * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
+     *
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/planCacheStats $planCacheStats
+     */
+    Aggregation<T> planCacheStats();
 
     /**
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard

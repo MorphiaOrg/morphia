@@ -24,6 +24,7 @@ import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,13 @@ public interface Datastore {
     default <T> Query<T> createQuery(Class<T> type) {
         return find(type);
     }
+
+    /**
+     * Creates a "typeless" query suitable for using in aggregation pipelines.
+     *
+     * @return the query
+     */
+    Query<Document> find();
 
     /**
      * Find all instances by type

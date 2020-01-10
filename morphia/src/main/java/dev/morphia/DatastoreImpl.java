@@ -208,6 +208,12 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public Query<Document> find() {
+        return newQuery(Document.class)
+            .disableValidation();
+    }
+
+    @Override
     public <T> Query<T> find(final Class<T> type) {
         return newQuery(type);
     }
