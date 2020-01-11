@@ -8,6 +8,7 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
@@ -99,7 +100,7 @@ public interface Aggregation<T> {
      */
     default MorphiaCursor<Document> execute() {
         return execute(Document.class);
-    };
+    }
 
     /**
      * Execute the aggregation and get the results as Document instances.
@@ -281,10 +282,18 @@ public interface Aggregation<T> {
     <O> void out(Class<O> type, AggregationOptions options);
 
     /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
+     *
+     * @param merge the merge definition
+     * @mongodb.driver.manual reference/operator/aggregation/merge $merge
+     */
+    Aggregation<T> merge(Merge merge);
+
+    /**
      * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields
      * from the input documents or newly computed fields.
      *
-     * @param projection
+     * @param projection the project definition
      * @return
      * @mongodb.driver.manual reference/operator/aggregation/project $project
      */

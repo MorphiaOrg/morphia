@@ -38,6 +38,7 @@ import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.IndexStats;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.PlanCacheStats;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -92,6 +93,7 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs.put(GraphLookup.class, new GraphLookupCodec(mapper));
             codecs.put(Group.class, new GroupCodec(mapper));
             codecs.put(IndexStats.class, new IndexStatsCodec(mapper));
+            codecs.put(Merge.class, new MergeCodec(mapper));
             codecs.put(PlanCacheStats.class, new PlanCacheStatsCodec(mapper));
             codecs.put(Limit.class, new LimitCodec(mapper));
             codecs.put(Lookup.class, new LookupCodec(mapper));

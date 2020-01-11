@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import com.mongodb.client.model.MergeOptions.WhenMatched;
+import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.GraphLookup;
@@ -8,10 +10,12 @@ import dev.morphia.aggregation.experimental.expressions.ConditionalExpression;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.expressions.MathExpression;
 import dev.morphia.aggregation.experimental.expressions.ObjectExpressions;
+import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
@@ -23,6 +27,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.junit.Test;
 
+import java.util.List;
+
+import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
@@ -197,6 +204,30 @@ public class CodecStructureTest extends TestBase {
             ObjectExpressions.mergeObjects()
                 .add(ArrayExpressions.elementAt(field("fromItems"), literal(0)))
                 .add(literal("$$ROOT")));
+    }
+
+    @Test
+    public void testMerge() {
+        evaluate(parse("{ $merge : { into: { db: 'reporting', coll: 'budgets' }, on: '_id',  whenMatched: 'replace', "
+                       + "whenNotMatched: 'insert' } }"),
+            Merge.merge()
+                 .into("reporting", "budgets")
+                 .on("_id")
+                 .whenMatched(WhenMatched.REPLACE)
+                 .whenNotMatched(WhenNotMatched.INSERT));
+
+
+        evaluate(parse("{ $merge: { into: 'monthlytotals', on: '_id', whenMatched:  [ { $addFields: { thumbsup: { $add:[ '$thumbsup', "
+                       + "'$$new.thumbsup' ] }, thumbsdown: { $add: [ '$thumbsdown', '$$new.thumbsdown' ] } } } ], whenNotMatched: "
+                       + "'insert' } }"),
+            Merge.merge()
+                 .into("monthlytotals")
+                 .on("_id")
+                 .whenMatched(List.of(
+                     AddFields.of()
+                              .field("thumbsup", add(field("thumbsup"), literal("$$new.thumbsup")))
+                              .field("thumbsdown", add(field("$thumbsdown"), literal("$$new.thumbsdown")))))
+                .whenNotMatched(WhenNotMatched.INSERT));
     }
 
 }

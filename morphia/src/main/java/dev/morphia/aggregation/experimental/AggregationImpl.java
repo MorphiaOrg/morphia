@@ -15,6 +15,7 @@ import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.IndexStats;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.PlanCacheStats;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -66,7 +67,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public AggregationImpl count(final String name) {
+    public Aggregation<T> count(final String name) {
         stages.add(new Count(name));
         return this;
     }
@@ -94,7 +95,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public AggregationImpl facet(final Facet facet) {
+    public Aggregation<T> facet(final Facet facet) {
         stages.add(facet);
         return this;
     }
@@ -172,7 +173,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public AggregationImpl match(final Query query) {
+    public Aggregation<T> match(final Query query) {
         stages.add(Match.on(query));
         return this;
     }
@@ -211,6 +212,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <O> void out(final Class<O> resultType, final AggregationOptions options) {
         out(datastore.getMapper().getMappedClass(resultType).getCollectionName(), options);
+    }
+
+    @Override
+    public Aggregation<T> merge(final Merge merge) {
+        stages.add(merge);
+        return this;
     }
 
     @Override

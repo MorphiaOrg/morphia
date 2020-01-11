@@ -23,7 +23,7 @@ public class Group extends Stage {
         return new Group();
     }
 
-    public static Group of(final GroupId id) {
+    public static Group group(final GroupId id) {
         return new Group(id);
     }
 
@@ -33,6 +33,10 @@ public class Group extends Stage {
 
     public static GroupId id() {
         return new GroupId();
+    }
+
+    public Group field(final String name) {
+        return field(name, Expression.field(name));
     }
 
     public Group field(final String name, final Expression expression) {
@@ -65,6 +69,10 @@ public class Group extends Stage {
             } else {
                 field = value;
             }
+        }
+
+        public GroupId field(final String name) {
+            return field(name, Expression.field(name));
         }
 
         public GroupId field(final String name, final Expression expression) {

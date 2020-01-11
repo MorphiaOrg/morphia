@@ -20,6 +20,8 @@ import com.mongodb.ReadConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.MergeOptions.WhenMatched;
+import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.model.Author;
@@ -61,7 +63,9 @@ import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
+import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
+import static dev.morphia.aggregation.experimental.stages.Merge.merge;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
 import static java.util.Arrays.asList;
@@ -476,7 +480,7 @@ public class AggregationTest extends TestBase {
 
         AggregationOptions options = new AggregationOptions();
         Aggregation<Book> aggregation = getDs().aggregate(Book.class)
-                                               .group(Group.of(id("author"))
+                                               .group(group(id("author"))
                                                            .field("books", push()
                                                                                .single(field("title"))));
         aggregation.out(Author.class, options);
@@ -647,6 +651,51 @@ public class AggregationTest extends TestBase {
 
     }
 
+    @Test
+    public void testMerge() {
+        MongoCollection<Document> salaries = getDatabase().getCollection("salaries");
+
+        salaries.insertMany(List.of(
+            parse("{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }"),
+            parse("{ '_id' : 2, employee: 'Bee', dept: 'A', salary: 120000, fiscal_year: 2017 }"),
+            parse("{ '_id' : 3, employee: 'Cat', dept: 'Z', salary: 115000, fiscal_year: 2017 }"),
+            parse("{ '_id' : 4, employee: 'Ant', dept: 'A', salary: 115000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 5, employee: 'Bee', dept: 'Z', salary: 145000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 6, employee: 'Cat', dept: 'Z', salary: 135000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 7, employee: 'Gecko', dept: 'A', salary: 100000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 8, employee: 'Ant', dept: 'A', salary: 125000, fiscal_year: 2019 }"),
+            parse("{ '_id' : 9, employee: 'Bee', dept: 'Z', salary: 160000, fiscal_year: 2019 }"),
+            parse("{ '_id' : 10, employee: 'Cat', dept: 'Z', salary: 150000, fiscal_year: 2019 }")));
+
+        List<Document> actual = getDs().aggregate(Salary.class)
+                                          .group(group(id()
+                                                           .field("fiscal_year")
+                                                           .field("dept"))
+                                                     .field("salaries", sum(field("salary"))))
+                                          .merge(merge()
+                                                     .into("budgets")
+                                                     .on("_id")
+                                                     .whenMatched(WhenMatched.REPLACE)
+                                                     .whenNotMatched(WhenNotMatched.INSERT))
+                                          .execute()
+                                          .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'A' }, 'salaries' : 220000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'Z' }, 'salaries' : 115000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'A' }, 'salaries' : 215000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'Z' }, 'salaries' : 280000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'A' }, 'salaries' : 125000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }"));
+
+        assertDocumentEquals(expected, actual);
+    }
+
+    @Entity("salaries")
+    public static class Salary {
+        @Id
+        private ObjectId id;
+    }
     @Entity(useDiscriminator = false)
     public static class Artwork {
         @Id
