@@ -36,6 +36,15 @@ public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
      *
+     * @param source The collection aggregation against
+     * @return the aggregation pipeline
+     * @morphia.experimental
+     */
+    Aggregation<Document> aggregate(final String source);
+
+    /**
+     * Returns a new query bound to the kind (a specific {@link DBCollection})
+     *
      * @param source The class to create aggregation against
      * @param <T>    the source type
      * @return the aggregation pipeline

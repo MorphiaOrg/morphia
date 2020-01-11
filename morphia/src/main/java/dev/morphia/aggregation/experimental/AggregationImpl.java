@@ -17,6 +17,7 @@ import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.PlanCacheStats;
 import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -224,6 +225,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> replaceRoot(final ReplaceRoot root) {
         stages.add(root);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> redact(final Redact redact) {
+        stages.add(redact);
         return this;
     }
 

@@ -36,6 +36,7 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
@@ -58,11 +59,16 @@ import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.Lookup.from;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.array;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.size;
+import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
+import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.ifNull;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
+import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
 import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Merge.merge;
@@ -751,6 +757,32 @@ public class AggregationTest extends TestBase {
 
         assertEquals(documents, copies);
 
+    }
+
+    @Test
+    public void testRedact() {
+        Document document = parse(
+            "{ _id: 1, title: '123 Department Report', tags: [ 'G', 'STLW' ],year: 2014, subsections: [{ subtitle: 'Section 1: Overview',"
+            + " tags: [ 'SI', 'G' ],content:  'Section 1: This is the content of section 1.' },{ subtitle: 'Section 2: Analysis', tags: "
+            + "[ 'STLW' ], content: 'Section 2: This is the content of section 2.' },{ subtitle: 'Section 3: Budgeting', tags: [ 'TK' ],"
+            + "content: { text: 'Section 3: This is the content of section3.', tags: [ 'HCS' ]} }]}");
+
+        getDatabase().getCollection("forecasts").insertOne(document);
+
+        Document actual = getDs().aggregate("forecasts")
+                               .match(getDs().find().filter("year", 2014))
+                               .redact(Redact.on(condition(
+                                   gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
+                                   literal("$$DESCEND"),
+                                   literal("$$PRUNE"))))
+                               .execute()
+                               .next();
+        Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"
+                                 + " [{ 'subtitle' : 'Section 1: Overview', 'tags' : [ 'SI', 'G' ],'content' : 'Section 1: This is the "
+                                + "content of section 1.' },{ 'subtitle' : 'Section 2: Analysis', 'tags' : [ 'STLW' ],'content' : "
+                                + "'Section 2: This is the content of section 2.' }]}");
+
+        assertEquals(expected, actual);
     }
 
     @Entity(useDiscriminator = false)

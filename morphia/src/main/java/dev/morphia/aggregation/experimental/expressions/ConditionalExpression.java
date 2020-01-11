@@ -5,11 +5,30 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.*;
+import java.util.List;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeUnnamedExpression;
 
 public class ConditionalExpression extends Expression {
     protected ConditionalExpression(final String operation) {
         super(operation);
+    }
+
+    protected ConditionalExpression(final String operation, final Object value) {
+        super(operation, value);
+    }
+
+    /**
+     * Evaluates a boolean expression to return one of the two specified return expressions.
+     *
+     * @param condition the condition to evaluate
+     * @param then      the expression for the true branch
+     * @param otherwise the expresion for the else branch
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/if $if
+     */
+    public static ConditionalExpression condition(final Expression condition, final Expression then, final Expression otherwise) {
+        return new ConditionalExpression("$cond", List.of(condition, then, otherwise));
     }
 
     /**
@@ -34,19 +53,6 @@ public class ConditionalExpression extends Expression {
         }
 
         @Override
-        public IfNull field(final String name, final Expression expression) {
-            if(replacement != null) {
-                throw new IllegalStateException(Sofia.mixedModesNotAllowed(getOperation()));
-            }
-            if(document == null) {
-                document = Expression.of();
-            }
-            document.field(name, expression);
-
-            return this;
-        }
-
-        @Override
         public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
             writer.writeStartDocument();
             writer.writeName(operation);
@@ -56,6 +62,19 @@ public class ConditionalExpression extends Expression {
             writeUnnamedExpression(mapper, writer, document, encoderContext);
             writer.writeEndArray();
             writer.writeEndDocument();
+        }
+
+        @Override
+        public IfNull field(final String name, final Expression expression) {
+            if (replacement != null) {
+                throw new IllegalStateException(Sofia.mixedModesNotAllowed(getOperation()));
+            }
+            if (document == null) {
+                document = Expression.of();
+            }
+            document.field(name, expression);
+
+            return this;
         }
 
         public DocumentExpression getDocument() {

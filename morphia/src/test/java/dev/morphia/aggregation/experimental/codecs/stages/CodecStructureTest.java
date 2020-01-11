@@ -5,7 +5,7 @@ import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.GraphLookup;
-import dev.morphia.aggregation.experimental.expressions.ArrayExpressions;
+import dev.morphia.aggregation.experimental.expressions.ArrayExpression;
 import dev.morphia.aggregation.experimental.expressions.ConditionalExpression;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.expressions.MathExpression;
@@ -16,6 +16,7 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
+import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
@@ -32,9 +33,14 @@ import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.array;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.size;
+import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
+import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
+import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -146,8 +152,8 @@ public class CodecStructureTest extends TestBase {
             ReplaceWith.with()
                        .value(field("grades")));
 
-        evaluate(parse("{ $replaceWith: { _id: \"$_id\", item: \"$item\", amount: { $multiply: [ \"$price\", \"$quantity\"]}, status: \"Complete\", "
-                       + "asofDate: \"$$NOW\" } }}"),
+        evaluate(parse("{ $replaceWith: { _id: '$_id', item: '$item', amount: { $multiply: [ '$price', '$quantity']}, status: 'Complete', "
+                       + "asofDate: '$$NOW' } }"),
             ReplaceWith.with()
                        .field("_id", field("_id"))
                        .field("item", field("item"))
@@ -203,7 +209,7 @@ public class CodecStructureTest extends TestBase {
     public void testMergeObjects() {
         evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
             ObjectExpressions.mergeObjects()
-                .add(ArrayExpressions.elementAt(field("fromItems"), literal(0)))
+                .add(ArrayExpression.elementAt(field("fromItems"), literal(0)))
                 .add(literal("$$ROOT")));
     }
 
@@ -229,6 +235,16 @@ public class CodecStructureTest extends TestBase {
                               .field("thumbsup", add(field("thumbsup"), literal("$$new.thumbsup")))
                               .field("thumbsdown", add(field("$thumbsdown"), literal("$$new.thumbsdown")))))
                 .whenNotMatched(WhenNotMatched.INSERT));
+    }
+
+    @Test
+    public void testRedact() {
+        evaluate(parse("{ $redact: { $cond: [ { $gt: [ { $size: { $setIntersection: [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] }, "
+                       + "'$$DESCEND', '$$PRUNE']}}"),
+            Redact.on(condition(
+                gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
+                literal("$$DESCEND"),
+                literal("$$PRUNE"))));
     }
 
 }

@@ -9,6 +9,7 @@ import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -296,6 +297,16 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/replaceRoot $replaceRoot
      */
     Aggregation<T> replaceRoot(ReplaceRoot root);
+
+    /**
+     * Restricts the contents of the documents based on information stored in the documents themselves.
+     *
+     * @param redact the redaction definition
+     *
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/redact $redact
+     */
+    Aggregation<T> redact(Redact redact);
 
     /**
      * Replaces the input document with the specified document. The operation replaces all existing fields in the input document,

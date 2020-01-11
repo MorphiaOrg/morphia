@@ -198,6 +198,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public Aggregation<Document> aggregate(final String source) {
+        return new AggregationImpl(this, getDatabase().getCollection(source));
+    }
+
+    @Override
     public <T> Aggregation<T> aggregate(final Class<T> source) {
         return new AggregationImpl(this, mapper.getCollection(source));
     }
