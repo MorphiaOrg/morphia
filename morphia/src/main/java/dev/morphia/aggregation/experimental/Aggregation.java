@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.experimental;
 
-import dev.morphia.aggregation.experimental.codecs.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
@@ -10,6 +9,8 @@ import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
+import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.Sort;
@@ -103,6 +104,14 @@ public interface Aggregation<T> {
     }
 
     /**
+     * Execute the aggregation and get the results.
+     *
+     * @param <S> the output type
+     * @return a MorphiaCursor
+     */
+    <S> MorphiaCursor<S> execute(final Class<S> resultType);
+
+    /**
      * Execute the aggregation and get the results as Document instances.
      *
      * @param options the options to apply
@@ -111,14 +120,6 @@ public interface Aggregation<T> {
     default MorphiaCursor<Document> execute(final AggregationOptions options) {
         return execute(Document.class, options);
     }
-
-    /**
-     * Execute the aggregation and get the results.
-     *
-     * @param <S> the output type
-     * @return a MorphiaCursor
-     */
-    <S> MorphiaCursor<S> execute(final Class<S> resultType);
 
     /**
      * Execute the aggregation and get the results.
@@ -184,6 +185,15 @@ public interface Aggregation<T> {
     Aggregation<T> group(Group group);
 
     /**
+     * Returns statistics regarding the use of each index for the collection. If running with access control, the user must have
+     * privileges that include indexStats action.
+     *
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/indexStats $indexStats
+     */
+    Aggregation<T> indexStats();
+
+    /**
      * Limits the number of documents passed to the next stage in the pipeline.
      *
      * @param limit the maximum docs to pass along to the next stage
@@ -191,19 +201,6 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/limit $limit
      */
     Aggregation<T> limit(int limit);
-
-    /**
-     * Replaces the input document with the specified document. The operation replaces all existing fields in the input document,
-     * including the _id field. With $replaceWith, you can promote an embedded document to the top-level. You can also specify a new
-     * document as the replacement.
-     * <p>
-     * The $replaceWith is an alias for $replaceRoot.
-     *
-     * @param with the replacement definition
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/replaceWith $replaceWith
-     */
-    Aggregation<T> replaceWith(ReplaceWith with);
 
     /**
      * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
@@ -217,23 +214,6 @@ public interface Aggregation<T> {
     Aggregation<T> lookup(Lookup lookup);
 
     /**
-     * Returns statistics regarding the use of each index for the collection. If running with access control, the user must have
-     * privileges that include indexStats action.
-     *
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/indexStats $indexStats
-     */
-    Aggregation<T> indexStats();
-
-    /**
-     * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
-     *
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/planCacheStats $planCacheStats
-     */
-    Aggregation<T> planCacheStats();
-
-    /**
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard
      * MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
      *
@@ -242,6 +222,14 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/match $match
      */
     Aggregation<T> match(Query<?> query);
+
+    /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
+     *
+     * @param merge the merge definition
+     * @mongodb.driver.manual reference/operator/aggregation/merge $merge
+     */
+    Aggregation<T> merge(Merge merge);
 
     /**
      * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
@@ -282,12 +270,12 @@ public interface Aggregation<T> {
     <O> void out(Class<O> type, AggregationOptions options);
 
     /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
+     * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
      *
-     * @param merge the merge definition
-     * @mongodb.driver.manual reference/operator/aggregation/merge $merge
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/planCacheStats $planCacheStats
      */
-    Aggregation<T> merge(Merge merge);
+    Aggregation<T> planCacheStats();
 
     /**
      * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields
@@ -298,6 +286,29 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/project $project
      */
     Aggregation<T> project(Projection projection);
+
+    /**
+     * Replaces the input document with the specified document. The operation replaces all existing fields in the input document,
+     * including the _id field. You can promote an existing embedded document to the top level, or create a new document for promotion
+     *
+     * @param root the new root definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/replaceRoot $replaceRoot
+     */
+    Aggregation<T> replaceRoot(ReplaceRoot root);
+
+    /**
+     * Replaces the input document with the specified document. The operation replaces all existing fields in the input document,
+     * including the _id field. With $replaceWith, you can promote an embedded document to the top-level. You can also specify a new
+     * document as the replacement.
+     * <p>
+     * The $replaceWith is an alias for $replaceRoot.
+     *
+     * @param with the replacement definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/replaceWith $replaceWith
+     */
+    Aggregation<T> replaceWith(ReplaceWith with);
 
     /**
      * Randomly selects the specified number of documents from the previous pipeline stage.

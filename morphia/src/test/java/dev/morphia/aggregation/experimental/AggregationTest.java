@@ -36,6 +36,7 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
@@ -55,7 +56,6 @@ import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.Lookup.from;
-import static dev.morphia.aggregation.experimental.codecs.stages.ReplaceWith.with;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.ifNull;
@@ -67,6 +67,7 @@ import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Merge.merge;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
+import static dev.morphia.aggregation.experimental.stages.ReplaceWith.with;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -371,44 +372,6 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testPlanCacheStats() {
-        List<Document> list = List.of(
-            parse("{ '_id' : 1, 'item' : 'abc', 'price' : NumberDecimal('12'), 'quantity' : 2, 'type': 'apparel' }"),
-            parse("{ '_id' : 2, 'item' : 'jkl', 'price' : NumberDecimal('20'), 'quantity' : 1, 'type': 'electronics' }"),
-            parse("{ '_id' : 3, 'item' : 'abc', 'price' : NumberDecimal('10'), 'quantity' : 5, 'type': 'apparel' }"),
-            parse("{ '_id' : 4, 'item' : 'abc', 'price' : NumberDecimal('8'), 'quantity' : 10, 'type': 'apparel' }"),
-            parse("{ '_id' : 5, 'item' : 'jkl', 'price' : NumberDecimal('15'), 'quantity' : 15, 'type': 'electronics' }"));
-
-        MongoCollection<Document> orders = getDatabase().getCollection("orders");
-        orders.insertMany(list);
-
-        Assert.assertNotNull(orders.createIndex(new Document("item", 1)));
-        Assert.assertNotNull(orders.createIndex(new Document("item", 1)
-                          .append("quantity", 1)));
-        Assert.assertNotNull(orders.createIndex(new Document("item", 1)
-                          .append("price", 1),
-            new IndexOptions()
-                          .partialFilterExpression(new Document("price", new Document("$gte", 10)))));
-        Assert.assertNotNull(orders.createIndex(new Document("quantity", 1)));
-        Assert.assertNotNull(orders.createIndex(new Document("quantity", 1)
-                          .append("type", 1)));
-
-        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('10') } }"));
-        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('5') } }"));
-        orders.find(parse(" { quantity: { $gte: 20 } } "));
-        orders.find(parse(" { quantity: { $gte: 5 }, type: 'apparel' } "));
-
-        List<Document> stats = getDs().aggregate(Order.class)
-                                      .planCacheStats()
-                                      .execute(Document.class, new AggregationOptions()
-                                              .readConcern(ReadConcern.LOCAL))
-                                      .toList();
-
-        System.out.println("******************* stats = " + stats);
-        Assert.assertNotNull(stats);
-    }
-
-    @Test
     public void testLimit() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
@@ -452,6 +415,46 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testMerge() {
+        MongoCollection<Document> salaries = getDatabase().getCollection("salaries");
+
+        salaries.insertMany(List.of(
+            parse("{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }"),
+            parse("{ '_id' : 2, employee: 'Bee', dept: 'A', salary: 120000, fiscal_year: 2017 }"),
+            parse("{ '_id' : 3, employee: 'Cat', dept: 'Z', salary: 115000, fiscal_year: 2017 }"),
+            parse("{ '_id' : 4, employee: 'Ant', dept: 'A', salary: 115000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 5, employee: 'Bee', dept: 'Z', salary: 145000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 6, employee: 'Cat', dept: 'Z', salary: 135000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 7, employee: 'Gecko', dept: 'A', salary: 100000, fiscal_year: 2018 }"),
+            parse("{ '_id' : 8, employee: 'Ant', dept: 'A', salary: 125000, fiscal_year: 2019 }"),
+            parse("{ '_id' : 9, employee: 'Bee', dept: 'Z', salary: 160000, fiscal_year: 2019 }"),
+            parse("{ '_id' : 10, employee: 'Cat', dept: 'Z', salary: 150000, fiscal_year: 2019 }")));
+
+        List<Document> actual = getDs().aggregate(Salary.class)
+                                       .group(group(id()
+                                                        .field("fiscal_year")
+                                                        .field("dept"))
+                                                  .field("salaries", sum(field("salary"))))
+                                       .merge(merge()
+                                                  .into("budgets")
+                                                  .on("_id")
+                                                  .whenMatched(WhenMatched.REPLACE)
+                                                  .whenNotMatched(WhenNotMatched.INSERT))
+                                       .execute()
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'A' }, 'salaries' : 220000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'Z' }, 'salaries' : 115000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'A' }, 'salaries' : 215000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'Z' }, 'salaries' : 280000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'A' }, 'salaries' : 125000 }"),
+            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }"));
+
+        assertDocumentEquals(expected, actual);
+    }
+
+    @Test
     public void testNullGroupId() {
         getDs().save(asList(new User("John", new Date()),
             new User("Paul", new Date()),
@@ -481,13 +484,50 @@ public class AggregationTest extends TestBase {
         AggregationOptions options = new AggregationOptions();
         Aggregation<Book> aggregation = getDs().aggregate(Book.class)
                                                .group(group(id("author"))
-                                                           .field("books", push()
-                                                                               .single(field("title"))));
+                                                          .field("books", push()
+                                                                              .single(field("title"))));
         aggregation.out(Author.class, options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
 
         aggregation.out("different");
         Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
+    }
+
+    @Test
+    public void testPlanCacheStats() {
+        List<Document> list = List.of(
+            parse("{ '_id' : 1, 'item' : 'abc', 'price' : NumberDecimal('12'), 'quantity' : 2, 'type': 'apparel' }"),
+            parse("{ '_id' : 2, 'item' : 'jkl', 'price' : NumberDecimal('20'), 'quantity' : 1, 'type': 'electronics' }"),
+            parse("{ '_id' : 3, 'item' : 'abc', 'price' : NumberDecimal('10'), 'quantity' : 5, 'type': 'apparel' }"),
+            parse("{ '_id' : 4, 'item' : 'abc', 'price' : NumberDecimal('8'), 'quantity' : 10, 'type': 'apparel' }"),
+            parse("{ '_id' : 5, 'item' : 'jkl', 'price' : NumberDecimal('15'), 'quantity' : 15, 'type': 'electronics' }"));
+
+        MongoCollection<Document> orders = getDatabase().getCollection("orders");
+        orders.insertMany(list);
+
+        Assert.assertNotNull(orders.createIndex(new Document("item", 1)));
+        Assert.assertNotNull(orders.createIndex(new Document("item", 1)
+                                                    .append("quantity", 1)));
+        Assert.assertNotNull(orders.createIndex(new Document("item", 1)
+                                                    .append("price", 1),
+            new IndexOptions()
+                .partialFilterExpression(new Document("price", new Document("$gte", 10)))));
+        Assert.assertNotNull(orders.createIndex(new Document("quantity", 1)));
+        Assert.assertNotNull(orders.createIndex(new Document("quantity", 1)
+                                                    .append("type", 1)));
+
+        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('10') } }"));
+        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('5') } }"));
+        orders.find(parse(" { quantity: { $gte: 20 } } "));
+        orders.find(parse(" { quantity: { $gte: 5 }, type: 'apparel' } "));
+
+        List<Document> stats = getDs().aggregate(Order.class)
+                                      .planCacheStats()
+                                      .execute(Document.class, new AggregationOptions()
+                                                                   .readConcern(ReadConcern.LOCAL))
+                                      .toList();
+
+        Assert.assertNotNull(stats);
     }
 
     @Test
@@ -521,6 +561,68 @@ public class AggregationTest extends TestBase {
 
         doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}");
         Assert.assertEquals(doc, aggregate.next());
+    }
+
+    @Test
+    public void testReplaceRoot() {
+        List<Document> documents = List.of(
+            parse("{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}"),
+            parse("{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}"),
+            parse("{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}"),
+            parse("{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}"));
+
+        getDatabase().getCollection("authors").insertMany(documents);
+
+        List<Document> actual = getDs().aggregate(Author.class)
+                                       .match(getDs().find()
+                                                     .field("name").exists()
+                                                     .field("name").not().type(Type.ARRAY)
+                                                     .field("name").type(Type.OBJECT))
+                                       .replaceRoot(ReplaceRoot.with().value(field("name")))
+                                       .execute()
+                                       .toList();
+        List<Document> expected = documents.subList(0, 3)
+                                           .stream()
+                                           .map(d -> (Document) d.get("name"))
+                                           .collect(toList());
+        assertDocumentEquals(expected, actual);
+
+        actual = getDs().aggregate(Author.class)
+                        .replaceRoot(ReplaceRoot.with()
+                                                .value(ifNull().target(field("name"))
+                                                               .field("_id", field("_id"))
+                                                               .field("missingName", literal(true))))
+                        .execute()
+                        .toList();
+        expected = documents.subList(0, 3)
+                            .stream()
+                            .map(d -> (Document) d.get("name"))
+                            .collect(toList());
+        expected.add(new Document("_id", 4)
+                         .append("missingName", true));
+        assertDocumentEquals(expected, actual);
+
+        actual = getDs().aggregate(Author.class)
+                        .replaceRoot(ReplaceRoot.with()
+                                                .value(mergeObjects()
+                                                           .add(Expression.of()
+                                                                          .field("_id", field("_id"))
+                                                                          .field("first", literal(""))
+                                                                          .field("last", literal("")))
+                                                           .add(field("name"))))
+                        .execute()
+                        .toList();
+        expected = documents.subList(0, 3)
+                            .stream()
+                            .map(d -> {
+                                d.putAll((Document) d.remove("name"));
+                                return d;
+                            })
+                            .collect(toList());
+        expected.add(new Document("_id", 4)
+                         .append("first", "")
+                         .append("last", ""));
+        assertDocumentEquals(expected, actual);
     }
 
     @Test
@@ -651,51 +753,6 @@ public class AggregationTest extends TestBase {
 
     }
 
-    @Test
-    public void testMerge() {
-        MongoCollection<Document> salaries = getDatabase().getCollection("salaries");
-
-        salaries.insertMany(List.of(
-            parse("{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }"),
-            parse("{ '_id' : 2, employee: 'Bee', dept: 'A', salary: 120000, fiscal_year: 2017 }"),
-            parse("{ '_id' : 3, employee: 'Cat', dept: 'Z', salary: 115000, fiscal_year: 2017 }"),
-            parse("{ '_id' : 4, employee: 'Ant', dept: 'A', salary: 115000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 5, employee: 'Bee', dept: 'Z', salary: 145000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 6, employee: 'Cat', dept: 'Z', salary: 135000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 7, employee: 'Gecko', dept: 'A', salary: 100000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 8, employee: 'Ant', dept: 'A', salary: 125000, fiscal_year: 2019 }"),
-            parse("{ '_id' : 9, employee: 'Bee', dept: 'Z', salary: 160000, fiscal_year: 2019 }"),
-            parse("{ '_id' : 10, employee: 'Cat', dept: 'Z', salary: 150000, fiscal_year: 2019 }")));
-
-        List<Document> actual = getDs().aggregate(Salary.class)
-                                          .group(group(id()
-                                                           .field("fiscal_year")
-                                                           .field("dept"))
-                                                     .field("salaries", sum(field("salary"))))
-                                          .merge(merge()
-                                                     .into("budgets")
-                                                     .on("_id")
-                                                     .whenMatched(WhenMatched.REPLACE)
-                                                     .whenNotMatched(WhenNotMatched.INSERT))
-                                          .execute()
-                                          .toList();
-
-        List<Document> expected = List.of(
-            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'A' }, 'salaries' : 220000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'Z' }, 'salaries' : 115000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'A' }, 'salaries' : 215000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'Z' }, 'salaries' : 280000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'A' }, 'salaries' : 125000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }"));
-
-        assertDocumentEquals(expected, actual);
-    }
-
-    @Entity("salaries")
-    public static class Salary {
-        @Id
-        private ObjectId id;
-    }
     @Entity(useDiscriminator = false)
     public static class Artwork {
         @Id
@@ -705,6 +762,12 @@ public class AggregationTest extends TestBase {
 
     @Entity(value = "employees", useDiscriminator = false)
     private static class Employee {
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity("salaries")
+    public static class Salary {
         @Id
         private ObjectId id;
     }

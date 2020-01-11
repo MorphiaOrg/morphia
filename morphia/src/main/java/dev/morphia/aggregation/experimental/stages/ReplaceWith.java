@@ -1,8 +1,7 @@
-package dev.morphia.aggregation.experimental.codecs.stages;
+package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.expressions.Expression.DocumentExpression;
-import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.sofia.Sofia;
 
 public class ReplaceWith extends Stage {

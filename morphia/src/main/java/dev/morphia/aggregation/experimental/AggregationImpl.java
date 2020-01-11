@@ -4,7 +4,6 @@ import com.mongodb.MongoCommandException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
-import dev.morphia.aggregation.experimental.codecs.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
@@ -18,6 +17,8 @@ import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.PlanCacheStats;
 import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
+import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.Sort;
@@ -143,14 +144,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> limit(final int limit) {
-        stages.add(Limit.of(limit));
+    public Aggregation<T> indexStats() {
+        stages.add(IndexStats.of());
         return this;
     }
 
     @Override
-    public Aggregation<T> replaceWith(final ReplaceWith with) {
-        stages.add(with);
+    public Aggregation<T> limit(final int limit) {
+        stages.add(Limit.of(limit));
         return this;
     }
 
@@ -161,20 +162,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> indexStats() {
-        stages.add(IndexStats.of());
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> planCacheStats() {
-        stages.add(PlanCacheStats.of());
-        return this;
-    }
-
-    @Override
     public Aggregation<T> match(final Query query) {
         stages.add(Match.on(query));
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> merge(final Merge merge) {
+        stages.add(merge);
         return this;
     }
 
@@ -215,14 +210,26 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> merge(final Merge merge) {
-        stages.add(merge);
+    public Aggregation<T> planCacheStats() {
+        stages.add(PlanCacheStats.of());
         return this;
     }
 
     @Override
     public Aggregation<T> project(final Projection projection) {
         stages.add(projection);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> replaceRoot(final ReplaceRoot root) {
+        stages.add(root);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> replaceWith(final ReplaceWith with) {
+        stages.add(with);
         return this;
     }
 

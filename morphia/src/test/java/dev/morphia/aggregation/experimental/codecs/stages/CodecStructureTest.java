@@ -16,6 +16,7 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
+import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
