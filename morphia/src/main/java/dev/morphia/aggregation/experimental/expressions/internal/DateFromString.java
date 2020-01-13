@@ -1,6 +1,7 @@
-package dev.morphia.aggregation.experimental.expressions;
+package dev.morphia.aggregation.experimental.expressions.internal;
 
 import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
+import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -12,7 +13,7 @@ public class DateFromString extends Expression {
     private Expression onError;
     private Expression onNull;
 
-    protected DateFromString() {
+    public DateFromString() {
         super("$dateFromString");
     }
 

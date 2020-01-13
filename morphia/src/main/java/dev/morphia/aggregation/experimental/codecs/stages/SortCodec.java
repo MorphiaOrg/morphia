@@ -16,7 +16,7 @@ public class SortCodec extends StageCodec<Sort> {
         writer.writeStartDocument();
         for (final SortType sort : value.getSorts()) {
             writer.writeName(sort.getField());
-            sort.getDirection().write(writer);
+            sort.getDirection().encode(writer);
         }
         writer.writeEndDocument();
     }

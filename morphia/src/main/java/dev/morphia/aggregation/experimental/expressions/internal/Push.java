@@ -1,5 +1,7 @@
-package dev.morphia.aggregation.experimental.expressions;
+package dev.morphia.aggregation.experimental.expressions.internal;
 
+import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.FieldHolder;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
@@ -9,7 +11,7 @@ public class Push extends Expression implements FieldHolder<Push> {
     private Expression field;
     private DocumentExpression document;
 
-    protected Push() {
+    public Push() {
         super("$push");
     }
 

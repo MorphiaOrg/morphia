@@ -1,6 +1,9 @@
 package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
+import dev.morphia.aggregation.experimental.expressions.internal.DateFromParts;
+import dev.morphia.aggregation.experimental.expressions.internal.DateFromString;
+import dev.morphia.aggregation.experimental.expressions.internal.DateToString;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;

@@ -2,6 +2,8 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 
 import com.mongodb.client.model.MergeOptions.WhenMatched;
 import com.mongodb.client.model.MergeOptions.WhenNotMatched;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.GraphLookup;
@@ -41,6 +43,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
 import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
+import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -115,9 +118,19 @@ public class CodecStructureTest extends TestBase {
     }
 
     @Test
+    public void testGeoNear() {
+        evaluate(parse("{ $geoNear: { near: { type: 'Point', coordinates: [ -73.98142 , 40.71782 ] }, key: 'location', distanceField: "
+                       + "'dist.calculated', query: { 'category': 'Parks' } } }"),
+            to(new Point(new Position(-73.98142, 40.71782)))
+                .key("location")
+                .distanceField("dist.calculated")
+                .query(getDs().find().filter("category", "Parks")));
+    }
+
+    @Test
     public void testGraphLookup() {
         Document document = parse("{$graphLookup: {from: 'employees',startWith: '$reportsTo',connectFromField: 'reportsTo',"
-                                   + "connectToField: 'name',as: 'reportingHierarchy' }}");
+                                  + "connectToField: 'name',as: 'reportingHierarchy' }}");
         evaluate(document,
             GraphLookup.with()
                        .from("employees")
@@ -128,10 +141,51 @@ public class CodecStructureTest extends TestBase {
     }
 
     @Test
+    public void testIfNull() {
+        evaluate(parse("{ $ifNull: [ \"$name\", { _id: \"$_id\", missingName: true} ] }"),
+            ConditionalExpression.ifNull()
+                                 .target(field("name"))
+                                 .field("_id", field("_id"))
+                                 .field("missingName", literal(true)));
+    }
+
+    @Test
     public void testMatch() {
         evaluate(parse("{ $match: { price: { $exists: true } } }"),
             Match.on(getDs().find(Artwork.class)
                             .field("price").exists()));
+    }
+
+    @Test
+    public void testMerge() {
+        evaluate(parse("{ $merge : { into: { db: 'reporting', coll: 'budgets' }, on: '_id',  whenMatched: 'replace', "
+                       + "whenNotMatched: 'insert' } }"),
+            Merge.merge()
+                 .into("reporting", "budgets")
+                 .on("_id")
+                 .whenMatched(WhenMatched.REPLACE)
+                 .whenNotMatched(WhenNotMatched.INSERT));
+
+
+        evaluate(parse("{ $merge: { into: 'monthlytotals', on: '_id', whenMatched:  [ { $addFields: { thumbsup: { $add:[ '$thumbsup', "
+                       + "'$$new.thumbsup' ] }, thumbsdown: { $add: [ '$thumbsdown', '$$new.thumbsdown' ] } } } ], whenNotMatched: "
+                       + "'insert' } }"),
+            Merge.merge()
+                 .into("monthlytotals")
+                 .on("_id")
+                 .whenMatched(List.of(
+                     AddFields.of()
+                              .field("thumbsup", add(field("thumbsup"), literal("$$new.thumbsup")))
+                              .field("thumbsdown", add(field("$thumbsdown"), literal("$$new.thumbsdown")))))
+                 .whenNotMatched(WhenNotMatched.INSERT));
+    }
+
+    @Test
+    public void testMergeObjects() {
+        evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
+            ObjectExpressions.mergeObjects()
+                             .add(ArrayExpression.elementAt(field("fromItems"), literal(0)))
+                             .add(literal("$$ROOT")));
     }
 
     @Test
@@ -144,6 +198,16 @@ public class CodecStructureTest extends TestBase {
         evaluate(parse("{ $push: '$title' }"),
             Expression.push()
                       .single(field("title")));
+    }
+
+    @Test
+    public void testRedact() {
+        evaluate(parse("{ $redact: { $cond: [ { $gt: [ { $size: { $setIntersection: [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] }, "
+                       + "'$$DESCEND', '$$PRUNE']}}"),
+            Redact.on(condition(
+                gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
+                literal("$$DESCEND"),
+                literal("$$PRUNE"))));
     }
 
     @Test
@@ -194,57 +258,6 @@ public class CodecStructureTest extends TestBase {
     public void testUnwind() {
         evaluate(parse("{ $unwind : \"$sizes\" }"),
             Unwind.on("sizes"));
-    }
-
-    @Test
-    public void testIfNull() {
-        evaluate(parse("{ $ifNull: [ \"$name\", { _id: \"$_id\", missingName: true} ] }"),
-            ConditionalExpression.ifNull()
-            .target(field("name"))
-            .field("_id", field("_id"))
-            .field("missingName", literal(true)));
-    }
-
-    @Test
-    public void testMergeObjects() {
-        evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
-            ObjectExpressions.mergeObjects()
-                .add(ArrayExpression.elementAt(field("fromItems"), literal(0)))
-                .add(literal("$$ROOT")));
-    }
-
-    @Test
-    public void testMerge() {
-        evaluate(parse("{ $merge : { into: { db: 'reporting', coll: 'budgets' }, on: '_id',  whenMatched: 'replace', "
-                       + "whenNotMatched: 'insert' } }"),
-            Merge.merge()
-                 .into("reporting", "budgets")
-                 .on("_id")
-                 .whenMatched(WhenMatched.REPLACE)
-                 .whenNotMatched(WhenNotMatched.INSERT));
-
-
-        evaluate(parse("{ $merge: { into: 'monthlytotals', on: '_id', whenMatched:  [ { $addFields: { thumbsup: { $add:[ '$thumbsup', "
-                       + "'$$new.thumbsup' ] }, thumbsdown: { $add: [ '$thumbsdown', '$$new.thumbsdown' ] } } } ], whenNotMatched: "
-                       + "'insert' } }"),
-            Merge.merge()
-                 .into("monthlytotals")
-                 .on("_id")
-                 .whenMatched(List.of(
-                     AddFields.of()
-                              .field("thumbsup", add(field("thumbsup"), literal("$$new.thumbsup")))
-                              .field("thumbsdown", add(field("$thumbsdown"), literal("$$new.thumbsdown")))))
-                .whenNotMatched(WhenNotMatched.INSERT));
-    }
-
-    @Test
-    public void testRedact() {
-        evaluate(parse("{ $redact: { $cond: [ { $gt: [ { $size: { $setIntersection: [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] }, "
-                       + "'$$DESCEND', '$$PRUNE']}}"),
-            Redact.on(condition(
-                gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
-                literal("$$DESCEND"),
-                literal("$$PRUNE"))));
     }
 
 }

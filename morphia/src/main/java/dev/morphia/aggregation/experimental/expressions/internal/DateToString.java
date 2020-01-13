@@ -1,6 +1,7 @@
-package dev.morphia.aggregation.experimental.expressions;
+package dev.morphia.aggregation.experimental.expressions.internal;
 
 import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
+import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -11,7 +12,7 @@ public class DateToString extends Expression {
     private Expression timeZone;
     private Expression onNull;
 
-    protected DateToString() {
+    public DateToString() {
         super("$dateToString");
     }
 

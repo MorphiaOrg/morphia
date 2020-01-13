@@ -4,13 +4,12 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.AggregationPipeline;
+import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
@@ -40,7 +39,7 @@ public interface Datastore {
      * @return the aggregation pipeline
      * @morphia.experimental
      */
-    Aggregation<Document> aggregate(final String source);
+    Aggregation<Document> aggregate(String source);
 
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -50,7 +49,7 @@ public interface Datastore {
      * @return the aggregation pipeline
      * @morphia.experimental
      */
-    <T> Aggregation<T> aggregate(final Class<T> source);
+    <T> Aggregation<T> aggregate(Class<T> source);
 
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -76,17 +75,10 @@ public interface Datastore {
     }
 
     /**
-     * Creates a "typeless" query suitable for using in aggregation pipelines.
-     *
-     * @return the query
-     */
-    Query<Document> find();
-
-    /**
      * Find all instances by type
      *
      * @param type the class to use for mapping the results
-     * @param <T>   the type to query
+     * @param <T>  the type to query
      * @return the query
      */
     <T> Query<T> find(Class<T> type);
@@ -192,6 +184,13 @@ public interface Datastore {
      * @see Text
      */
     <T> void ensureIndexes(Class<T> clazz);
+
+    /**
+     * Creates a "typeless" query suitable for using in aggregation pipelines.
+     *
+     * @return the query
+     */
+    Query<Document> find();
 
     /**
      * Deletes the given entities based on the query (first item only).

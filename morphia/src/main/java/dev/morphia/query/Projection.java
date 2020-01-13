@@ -138,7 +138,8 @@ public class Projection {
         return projection;
     }
 
-    private void iterate(final Mapper mapper, final Document projection, final Class<?> clazz, final List<String> fields, final int include) {
+    private void iterate(final Mapper mapper, final Document projection, final Class<?> clazz, final List<String> fields,
+                         final int include) {
         if (fields != null) {
             for (final String field : fields) {
                 projection.put(new PathTarget(mapper, mapper.getMappedClass(clazz), field).translatedPath(), include);

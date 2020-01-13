@@ -1,4 +1,4 @@
-package dev.morphia.aggregation.experimental.expressions.arrays;
+package dev.morphia.aggregation.experimental.expressions.internal;
 
 import dev.morphia.aggregation.experimental.expressions.ArrayExpression;
 import dev.morphia.aggregation.experimental.expressions.Expression;

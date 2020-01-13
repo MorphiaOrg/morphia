@@ -1,6 +1,7 @@
-package dev.morphia.aggregation.experimental.expressions;
+package dev.morphia.aggregation.experimental.expressions.internal;
 
 import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
+import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -20,7 +21,7 @@ public class DateFromParts extends Expression {
 
     private Expression timezone;
 
-    protected DateFromParts() {
+    public DateFromParts() {
         super("$dateFromParts");
     }
 

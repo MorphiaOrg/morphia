@@ -3,54 +3,93 @@ package dev.morphia.aggregation.experimental;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import dev.morphia.internal.SessionConfigurable;
+import org.bson.Document;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Defines options to be applied to an aggregation pipeline.
+ */
+@SuppressWarnings("unused")
 public class AggregationOptions implements SessionConfigurable<AggregationOptions> {
     private boolean allowDiskUse;
-    private int batchSize;
+    private Integer batchSize;
     private boolean bypassDocumentValidation;
     private Collation collation;
-    private long maxTimeMS;
+    private Long maxTimeMS;
     private ClientSession clientSession;
     private ReadPreference readPreference;
     private ReadConcern readConcern;
     private WriteConcern writeConcern;
 
+    /**
+     * @return the configuration value
+     */
     public boolean allowDiskUse() {
         return allowDiskUse;
     }
 
-    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
-        MongoCollection<T> bound = collection;
-        if(readConcern != null) {
-            bound = bound.withReadConcern(readConcern);
-        }
-        if(readPreference != null) {
-            bound = bound.withReadPreference(readPreference);
-        }
-
-        return bound;
-    }
-
-    public boolean getAllowDiskUse() {
-        return allowDiskUse;
-    }
-
+    /**
+     * Enables writing to temporary files.
+     *
+     * @param allowDiskUse true to enable
+     * @return this
+     */
     public AggregationOptions allowDiskUse(final boolean allowDiskUse) {
         this.allowDiskUse = allowDiskUse;
         return this;
     }
 
-    public int batchSize() {
-        return batchSize;
+    /**
+     * Applies the configured options to the collection.
+     *
+     * @param collection the collection to configure
+     * @param <T>        the collection type
+     * @return the updated collection
+     * @morphia.internal
+     */
+    public <S, T> AggregateIterable<S> apply(final List<Document> documents, final MongoCollection<T> collection,
+                                             final Class<S> resultType) {
+        MongoCollection<T> bound = collection;
+        if (readConcern != null) {
+            bound = bound.withReadConcern(readConcern);
+        }
+        if (readPreference != null) {
+            bound = bound.withReadPreference(readPreference);
+        }
+        AggregateIterable<S> aggregate = bound.aggregate(documents, resultType)
+                                              .allowDiskUse(allowDiskUse)
+                                              .bypassDocumentValidation(bypassDocumentValidation);
+        if (batchSize != null) {
+            aggregate.batchSize(batchSize);
+        }
+        if (collation != null) {
+            aggregate.collation(collation);
+        }
+        if (maxTimeMS != null) {
+            aggregate.maxTime(getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
+        }
+
+        return aggregate;
     }
 
-    public int getBatchSize() {
+    /**
+     * @return the configuration value
+     */
+    public long getMaxTime(TimeUnit unit) {
+        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * @return the configuration value
+     */
+    public int batchSize() {
         return batchSize;
     }
 
@@ -59,10 +98,22 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
         return this;
     }
 
+    /**
+     * @return the configuration value
+     */
     public boolean bypassDocumentValidation() {
         return bypassDocumentValidation;
     }
 
+    /**
+     * Enables the aggregation to bypass document validation during the operation. This lets you insert documents that do not
+     * meet the validation requirements.
+     * <p>
+     * Applicable only if you specify the $out or $merge aggregation stages.
+     *
+     * @param bypassDocumentValidation true to enable the bypass
+     * @return this
+     */
     public AggregationOptions bypassDocumentValidation(final boolean bypassDocumentValidation) {
         this.bypassDocumentValidation = bypassDocumentValidation;
         return this;
@@ -79,74 +130,150 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
         return clientSession;
     }
 
+    /**
+     * @return the configuration value
+     */
     public Collation collation() {
         return collation;
     }
 
+    /**
+     * Specifies the collation to use for the operation.
+     * <p>
+     * Collation allows users to specify language-specific rules for string comparison, such as rules for letter case and accent marks.
+     *
+     * @param collation the collation to use
+     * @return this
+     */
     public AggregationOptions collation(final Collation collation) {
         this.collation = collation;
         return this;
     }
 
+    /**
+     * @return the configuration value
+     */
+    public boolean getAllowDiskUse() {
+        return allowDiskUse;
+    }
+
+    /**
+     * @return the configuration value
+     */
+    public int getBatchSize() {
+        return batchSize;
+    }
+
+    /**
+     * @return the configuration value
+     */
     public boolean getBypassDocumentValidation() {
         return bypassDocumentValidation;
     }
 
+    /**
+     * @return the configuration value
+     */
     public Collation getCollation() {
         return collation;
     }
 
-    public long getMaxTime(TimeUnit unit) {
-        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
-    }
-
+    /**
+     * @return the configuration value
+     */
     public long getMaxTimeMS() {
         return maxTimeMS;
     }
 
+    /**
+     * @return the configuration value
+     */
+    public ReadConcern getReadConcern() {
+        return readConcern;
+    }
+
+    /**
+     * @return the configuration value
+     */
+    public ReadPreference getReadPreference() {
+        return readPreference;
+    }
+
+    /**
+     * @return the configuration value
+     */
+    public WriteConcern getWriteConcern() {
+        return writeConcern;
+    }
+
+    /**
+     * @return the configuration value
+     */
     public long maxTimeMS() {
         return maxTimeMS;
     }
 
+    /**
+     * Specifies a time limit in milliseconds for processing operations on a cursor. If you do not specify a value for maxTimeMS,
+     * operations will not time out. A value of 0 explicitly specifies the default unbounded behavior.
+     *
+     * @param maxTimeMS the max time in milliseconds
+     * @return this
+     */
     public AggregationOptions maxTimeMS(final long maxTimeMS) {
         this.maxTimeMS = maxTimeMS;
         return this;
     }
 
-    public ReadPreference readPreference() {
-        return readPreference;
-    }
-
-    public ReadPreference getReadPreference() {
-        return readPreference;
-    }
-
-    public AggregationOptions readPreference(final ReadPreference readPreference) {
-        this.readPreference = readPreference;
-        return this;
-    }
-
+    /**
+     * @return the configuration value
+     */
     public ReadConcern readConcern() {
         return readConcern;
     }
 
-    public ReadConcern getReadConcern() {
-        return readConcern;
-    }
-
+    /**
+     * Specifies the read concern.
+     *
+     * @param readConcern the read concern to use
+     * @return this
+     */
     public AggregationOptions readConcern(final ReadConcern readConcern) {
         this.readConcern = readConcern;
         return this;
     }
 
+    /**
+     * @return the configuration value
+     */
+    public ReadPreference readPreference() {
+        return readPreference;
+    }
+
+    /**
+     * Sets the read preference to use
+     *
+     * @param readPreference the read preference
+     * @return this
+     */
+    public AggregationOptions readPreference(final ReadPreference readPreference) {
+        this.readPreference = readPreference;
+        return this;
+    }
+
+    /**
+     * @return the configuration value
+     */
     public WriteConcern writeConcern() {
         return writeConcern;
     }
 
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
-    }
-
+    /**
+     * Sets the write concern to use
+     *
+     * @param writeConcern the write concern
+     * @return this
+     */
     public AggregationOptions writeConcern(final WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;

@@ -1,7 +1,6 @@
 package dev.morphia.aggregation.experimental;
 
 import com.mongodb.MongoCommandException;
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.AddFields;
@@ -11,10 +10,12 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Count;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
+import dev.morphia.aggregation.experimental.stages.GeoNear;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.IndexStats;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
+import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.PlanCacheStats;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
@@ -37,7 +38,6 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class AggregationImpl<T> implements Aggregation<T> {
@@ -87,18 +87,19 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options) {
-        AggregateIterable<S> aggregate = options.apply(collection).aggregate(getDocuments(), resultType)
-                                                .allowDiskUse(options.allowDiskUse())
-                                                .batchSize(options.batchSize())
-                                                .bypassDocumentValidation(options.bypassDocumentValidation())
-                                                .collation(options.collation())
-                                                .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
-        return new MorphiaCursor<>(aggregate.iterator());
+        return new MorphiaCursor<>(options.apply(getDocuments(), collection, resultType)
+                                          .iterator());
     }
 
     @Override
     public Aggregation<T> facet(final Facet facet) {
         stages.add(facet);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> geoNear(final GeoNear near) {
+        stages.add(near);
         return this;
     }
 
@@ -174,40 +175,10 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return this;
     }
 
-    @Override
-    public <O> void out(final Class<O> resultType) {
-        out(datastore.getMapper().getMappedClass(resultType).getCollectionName());
-    }
-
-    @Override
-    public void out(final String collectionName) {
-        List<Document> documents = getDocuments();
-        documents.add(new Document("$out", collectionName));
-        collection.aggregate(documents)
-                  .toCollection();
-    }
-
-    @Override
-    public void out(final String collectionName, final AggregationOptions options) {
-        List<Document> documents = getDocuments();
-        documents.add(new Document("$out", collectionName));
-        try {
-            options.apply(collection)
-                   .aggregate(documents)
-                   .allowDiskUse(options.allowDiskUse())
-                   .batchSize(options.batchSize())
-                   .bypassDocumentValidation(options.bypassDocumentValidation())
-                   .collation(options.collation())
-                   .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-                   .toCollection();
-        } catch (MongoCommandException e) {
-            throw new AggregationException(Sofia.aggregationFailed(documents), e);
-        }
-    }
-
-    @Override
-    public <O> void out(final Class<O> resultType, final AggregationOptions options) {
-        out(datastore.getMapper().getMappedClass(resultType).getCollectionName(), options);
+    @SuppressWarnings("unchecked")
+    public <O> Aggregation<O> out(final Out<O> out) {
+        stages.add(out);
+        return (Aggregation<O>) this;
     }
 
     @Override
@@ -223,14 +194,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> replaceRoot(final ReplaceRoot root) {
-        stages.add(root);
+    public Aggregation<T> redact(final Redact redact) {
+        stages.add(redact);
         return this;
     }
 
     @Override
-    public Aggregation<T> redact(final Redact redact) {
-        stages.add(redact);
+    public Aggregation<T> replaceRoot(final ReplaceRoot root) {
+        stages.add(root);
         return this;
     }
 

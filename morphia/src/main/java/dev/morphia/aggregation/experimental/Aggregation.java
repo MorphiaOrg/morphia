@@ -6,8 +6,10 @@ import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
+import dev.morphia.aggregation.experimental.stages.GeoNear;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Merge;
+import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
@@ -26,6 +28,7 @@ import org.bson.Document;
 import java.util.List;
 
 /**
+ * @param <T> The initial type of the aggregation.  Used for collection name resolution.
  * @since 2.0
  */
 public interface Aggregation<T> {
@@ -110,7 +113,7 @@ public interface Aggregation<T> {
      * @param <S> the output type
      * @return a MorphiaCursor
      */
-    <S> MorphiaCursor<S> execute(final Class<S> resultType);
+    <S> MorphiaCursor<S> execute(Class<S> resultType);
 
     /**
      * Execute the aggregation and get the results as Document instances.
@@ -129,7 +132,7 @@ public interface Aggregation<T> {
      * @param options the options to apply
      * @return a MorphiaCursor
      */
-    <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options);
+    <S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options);
 
     /**
      * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Each sub-pipeline has its own
@@ -149,6 +152,16 @@ public interface Aggregation<T> {
     Aggregation<T> facet(Facet facet);
 
     /**
+     * Outputs documents in order of nearest to farthest from a specified point.
+     *
+     * @param near the geo query definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/geoNear $geoNear
+     */
+    Aggregation<T> geoNear(GeoNear near);
+
+    /**
+     * @return the stage documents
      * @morphia.internal
      */
     List<Document> getDocuments();
@@ -233,42 +246,12 @@ public interface Aggregation<T> {
     Aggregation<T> merge(Merge merge);
 
     /**
-     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
-     * with the results if it already exists.
+     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
      *
-     * @param <O> the output type used to determine the target collection
+     * @param out the out definition
      * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
-    <O> void out(Class<O> type);
-
-    /**
-     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
-     * with the results if it already exists.
-     *
-     * @param collection the collection to create/overwrite
-     * @mongodb.driver.manual reference/operator/aggregation/out $out
-     */
-    <O> void out(String collection);
-
-    /**
-     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
-     * with the results if it already exists.
-     *
-     * @param collection the collection to create/overwrite
-     * @param options    the options to apply
-     * @mongodb.driver.manual reference/operator/aggregation/out $out
-     */
-    void out(String collection, AggregationOptions options);
-
-    /**
-     * Execute the aggregation and write the results to a collection.  The target collection will be created if it's missing or replaced
-     * with the results if it already exists.
-     *
-     * @param <O>     the output type used to determine the target collection
-     * @param options the options to apply
-     * @mongodb.driver.manual reference/operator/aggregation/out $out
-     */
-    <O> void out(Class<O> type, AggregationOptions options);
+    <O> Aggregation<O> out(Out<O> out);
 
     /**
      * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
@@ -289,6 +272,15 @@ public interface Aggregation<T> {
     Aggregation<T> project(Projection projection);
 
     /**
+     * Restricts the contents of the documents based on information stored in the documents themselves.
+     *
+     * @param redact the redaction definition
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/redact $redact
+     */
+    Aggregation<T> redact(Redact redact);
+
+    /**
      * Replaces the input document with the specified document. The operation replaces all existing fields in the input document,
      * including the _id field. You can promote an existing embedded document to the top level, or create a new document for promotion
      *
@@ -297,16 +289,6 @@ public interface Aggregation<T> {
      * @mongodb.driver.manual reference/operator/aggregation/replaceRoot $replaceRoot
      */
     Aggregation<T> replaceRoot(ReplaceRoot root);
-
-    /**
-     * Restricts the contents of the documents based on information stored in the documents themselves.
-     *
-     * @param redact the redaction definition
-     *
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/redact $redact
-     */
-    Aggregation<T> redact(Redact redact);
 
     /**
      * Replaces the input document with the specified document. The operation replaces all existing fields in the input document,

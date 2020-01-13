@@ -36,6 +36,7 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -371,7 +372,7 @@ public class AggregationTest extends TestBase {
                                 .indexStats()
                                 .match(getDs().find()
                                               .filter("name", "books_1"))
-                                .execute()
+                                .execute(Document.class)
                                 .next();
 
         Assert.assertNotNull(stats);
@@ -492,10 +493,16 @@ public class AggregationTest extends TestBase {
                                                .group(group(id("author"))
                                                           .field("books", push()
                                                                               .single(field("title"))));
-        aggregation.out(Author.class, options);
+        aggregation.out(Out.to(Author.class))
+                   .execute(options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
 
-        aggregation.out("different");
+        getDs().aggregate(Book.class)
+               .group(group(id("author"))
+                          .field("books", push()
+                                              .single(field("title"))))
+               .out(Out.to("different"))
+               .execute();
         Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
     }
 
@@ -567,6 +574,32 @@ public class AggregationTest extends TestBase {
 
         doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}");
         Assert.assertEquals(doc, aggregate.next());
+    }
+
+    @Test
+    public void testRedact() {
+        Document document = parse(
+            "{ _id: 1, title: '123 Department Report', tags: [ 'G', 'STLW' ],year: 2014, subsections: [{ subtitle: 'Section 1: Overview',"
+            + " tags: [ 'SI', 'G' ],content:  'Section 1: This is the content of section 1.' },{ subtitle: 'Section 2: Analysis', tags: "
+            + "[ 'STLW' ], content: 'Section 2: This is the content of section 2.' },{ subtitle: 'Section 3: Budgeting', tags: [ 'TK' ],"
+            + "content: { text: 'Section 3: This is the content of section3.', tags: [ 'HCS' ]} }]}");
+
+        getDatabase().getCollection("forecasts").insertOne(document);
+
+        Document actual = getDs().aggregate("forecasts")
+                                 .match(getDs().find().filter("year", 2014))
+                                 .redact(Redact.on(condition(
+                                     gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
+                                     literal("$$DESCEND"),
+                                     literal("$$PRUNE"))))
+                                 .execute()
+                                 .next();
+        Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"
+                                  + " [{ 'subtitle' : 'Section 1: Overview', 'tags' : [ 'SI', 'G' ],'content' : 'Section 1: This is the "
+                                  + "content of section 1.' },{ 'subtitle' : 'Section 2: Analysis', 'tags' : [ 'STLW' ],'content' : "
+                                  + "'Section 2: This is the content of section 2.' }]}");
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -757,32 +790,6 @@ public class AggregationTest extends TestBase {
 
         assertEquals(documents, copies);
 
-    }
-
-    @Test
-    public void testRedact() {
-        Document document = parse(
-            "{ _id: 1, title: '123 Department Report', tags: [ 'G', 'STLW' ],year: 2014, subsections: [{ subtitle: 'Section 1: Overview',"
-            + " tags: [ 'SI', 'G' ],content:  'Section 1: This is the content of section 1.' },{ subtitle: 'Section 2: Analysis', tags: "
-            + "[ 'STLW' ], content: 'Section 2: This is the content of section 2.' },{ subtitle: 'Section 3: Budgeting', tags: [ 'TK' ],"
-            + "content: { text: 'Section 3: This is the content of section3.', tags: [ 'HCS' ]} }]}");
-
-        getDatabase().getCollection("forecasts").insertOne(document);
-
-        Document actual = getDs().aggregate("forecasts")
-                               .match(getDs().find().filter("year", 2014))
-                               .redact(Redact.on(condition(
-                                   gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
-                                   literal("$$DESCEND"),
-                                   literal("$$PRUNE"))))
-                               .execute()
-                               .next();
-        Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"
-                                 + " [{ 'subtitle' : 'Section 1: Overview', 'tags' : [ 'SI', 'G' ],'content' : 'Section 1: This is the "
-                                + "content of section 1.' },{ 'subtitle' : 'Section 2: Analysis', 'tags' : [ 'STLW' ],'content' : "
-                                + "'Section 2: This is the content of section 2.' }]}");
-
-        assertEquals(expected, actual);
     }
 
     @Entity(useDiscriminator = false)

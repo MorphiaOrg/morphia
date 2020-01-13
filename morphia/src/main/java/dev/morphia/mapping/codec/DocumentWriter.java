@@ -42,14 +42,26 @@ public class DocumentWriter implements BsonWriter {
         push(new RootSlab());
     }
 
+    /**
+     * @return a number
+     * @morphia.internal
+     */
     public int getArraysLevel() {
         return arraysLevel;
     }
 
+    /**
+     * @return a number
+     * @morphia.internal
+     */
     public int getDocsLevel() {
         return docsLevel;
     }
 
+    /**
+     * @return the stack
+     * @morphia.internal
+     */
     public Stack<Object> getState() {
         return state;
     }
