@@ -8,6 +8,11 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * Base class for the date expressions
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/#date-expression-operators Date Expressions
+ */
 public class DateExpression extends Expression {
 
     protected DateExpression(final String operation, final Expression value) {
@@ -23,7 +28,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/toDate $toDate
      */
-    public static DateExpression toDate(Expression value) {
+    public static DateExpression toDate(final Expression value) {
         return new DateExpression("$toDate", value);
     }
 
@@ -35,7 +40,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfMonth $dayOfMonth
      */
-    public static DateExpression dayOfMonth(Expression value) {
+    public static DateExpression dayOfMonth(final Expression value) {
         return new DateExpression("$dayOfMonth", value);
     }
 
@@ -47,7 +52,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfYear $dayOfYear
      */
-    public static DateExpression dayOfYear(Expression value) {
+    public static DateExpression dayOfYear(final Expression value) {
         return new DateExpression("$dayOfYear", value);
     }
 
@@ -59,7 +64,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfWeek $dayOfWeek
      */
-    public static DateExpression dayOfWeek(Expression value) {
+    public static DateExpression dayOfWeek(final Expression value) {
         return new DateExpression("$dayOfWeek", value);
     }
 
@@ -71,7 +76,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/month $month
      */
-    public static DateExpression month(Expression value) {
+    public static DateExpression month(final Expression value) {
         return new DateExpression("$month", value);
     }
 
@@ -83,7 +88,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/hour $hour
      */
-    public static DateExpression hour(Expression value) {
+    public static DateExpression hour(final Expression value) {
         return new DateExpression("$hour", value);
     }
 
@@ -95,7 +100,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/minute $minute
      */
-    public static DateExpression minute(Expression value) {
+    public static DateExpression minute(final Expression value) {
         return new DateExpression("$minute", value);
     }
 
@@ -107,7 +112,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/second $second
      */
-    public static DateExpression second(Expression value) {
+    public static DateExpression second(final Expression value) {
         return new DateExpression("$second", value);
     }
 
@@ -120,7 +125,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/week $week
      */
-    public static DateExpression week(Expression value) {
+    public static DateExpression week(final Expression value) {
         return new DateExpression("$week", value);
     }
 
@@ -132,7 +137,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/millisecond $millisecond
      */
-    public static DateExpression milliseconds(Expression value) {
+    public static DateExpression milliseconds(final Expression value) {
         return new DateExpression("$millisecond", value);
     }
 
@@ -144,7 +149,7 @@ public class DateExpression extends Expression {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/year $year
      */
-    public static DateExpression year(Expression value) {
+    public static DateExpression year(final Expression value) {
         return new DateExpression("$year", value);
     }
 
@@ -181,8 +186,8 @@ public class DateExpression extends Expression {
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeName(operation);
-        ExpressionCodec.writeUnnamedExpression(mapper, writer, (Expression) value, encoderContext);
+        writer.writeName(getOperation());
+        ExpressionCodec.writeUnnamedExpression(mapper, writer, (Expression) getValue(), encoderContext);
         writer.writeEndDocument();
     }
 

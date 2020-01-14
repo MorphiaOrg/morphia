@@ -4,6 +4,12 @@ import dev.morphia.aggregation.experimental.expressions.Expression;
 
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 
+/**
+ * Deconstructs an array field from the input documents to output a document for each element. Each output document is the input document
+ * with the value of the array field replaced by the element.
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/unwind/ $unwind
+ */
 public class Unwind extends Stage {
     private Expression path;
     private String includeArrayIndex;
@@ -13,38 +19,75 @@ public class Unwind extends Stage {
         super("$unwind");
     }
 
-    public static Unwind on(final String path) {
+    /**
+     * Creates a stage with the named array field
+     *
+     * @param name the array field
+     * @return this
+     */
+    public static Unwind on(final String name) {
         return new Unwind()
-            .path(path);
+                   .path(name);
     }
 
-    public String getIncludeArrayIndex() {
-        return includeArrayIndex;
-    }
-
-    public Expression getPath() {
-        return path;
-    }
-
-    public Boolean getPreserveNullAndEmptyArrays() {
-        return preserveNullAndEmptyArrays;
-    }
-
-    public Unwind includeArrayIndex(final String includeArrayIndex) {
-        this.includeArrayIndex = includeArrayIndex;
-        return this;
-    }
-
-    public boolean optionsPresent() {
-        return includeArrayIndex != null
-            || preserveNullAndEmptyArrays != null;
-    }
-
-    public Unwind path(final String path) {
+    private Unwind path(final String path) {
         this.path = field(path);
         return this;
     }
 
+    /**
+     * @return the value
+     * @morphia.internal
+     */
+    public String getIncludeArrayIndex() {
+        return includeArrayIndex;
+    }
+
+    /**
+     * @return the value
+     * @morphia.internal
+     */
+    public Expression getPath() {
+        return path;
+    }
+
+    /**
+     * @return the value
+     * @morphia.internal
+     */
+    public Boolean getPreserveNullAndEmptyArrays() {
+        return preserveNullAndEmptyArrays;
+    }
+
+    /**
+     * Optional. The name of a new field to hold the array index of the element. The name cannot start with a dollar sign $.
+     *
+     * @param name the new name
+     * @return this
+     */
+    public Unwind includeArrayIndex(final String name) {
+        this.includeArrayIndex = name;
+        return this;
+    }
+
+    /**
+     * @return the value
+     * @morphia.internal
+     */
+    public boolean optionsPresent() {
+        return includeArrayIndex != null
+               || preserveNullAndEmptyArrays != null;
+    }
+
+    /**
+     * Optional.
+     *
+     * <li>If true, if the path is null, missing, or an empty array, $unwind outputs the document.
+     * <li>If false, if path is null, missing, or an empty array, $unwind does not output a document.
+     *
+     * @param preserveNullAndEmptyArrays true to preserve
+     * @return this
+     */
     public Unwind preserveNullAndEmptyArrays(final Boolean preserveNullAndEmptyArrays) {
         this.preserveNullAndEmptyArrays = preserveNullAndEmptyArrays;
         return this;

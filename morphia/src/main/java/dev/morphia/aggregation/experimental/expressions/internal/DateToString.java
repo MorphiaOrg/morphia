@@ -28,7 +28,7 @@ public class DateToString extends Expression {
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeStartDocument(operation);
+        writer.writeStartDocument(getOperation());
         ExpressionCodec.writeNamedExpression(mapper, writer, "date", date, encoderContext);
         ExpressionCodec.writeNamedExpression(mapper, writer, "format", format, encoderContext);
         ExpressionCodec.writeNamedExpression(mapper, writer, "timezone", timeZone, encoderContext);

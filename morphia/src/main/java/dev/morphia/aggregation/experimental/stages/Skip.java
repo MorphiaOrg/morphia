@@ -1,5 +1,10 @@
 package dev.morphia.aggregation.experimental.stages;
 
+/**
+ * Randomly selects the specified number of documents from its input.
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/skip/ $skip
+ */
 public class Skip extends Stage {
     private int size;
 
@@ -8,10 +13,20 @@ public class Skip extends Stage {
         this.size = size;
     }
 
-    public static Skip of(final int i) {
-        return new Skip(i);
+    /**
+     * Creates a new stage with the given skip size
+     *
+     * @param size the skip size
+     * @return the new stage
+     */
+    public static Skip of(final int size) {
+        return new Skip(size);
     }
 
+    /**
+     * @return the size
+     * @morphia.internal
+     */
     public int getSize() {
         return size;
     }

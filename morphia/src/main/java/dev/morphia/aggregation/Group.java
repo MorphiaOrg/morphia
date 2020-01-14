@@ -1,6 +1,5 @@
 package dev.morphia.aggregation;
 
-import java.beans.Expression;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,7 @@ public final class Group {
         this.name = name;
         this.sourceField = "$" + sourceField;
     }
+
     /**
      * Creates a new Group
      *
@@ -70,6 +70,17 @@ public final class Group {
     }
 
     /**
+     * Creates a named grouping on a field
+     *
+     * @param name        the group name
+     * @param sourceField the field name
+     * @return the Group
+     */
+    public static Group grouping(final String name, final String sourceField) {
+        return new Group(name, sourceField);
+    }
+
+    /**
      * Creates a named grouping
      *
      * @param name        the field name
@@ -79,26 +90,16 @@ public final class Group {
     public static Group grouping(final String name, final Projection... projections) {
         return new Group(name, projections);
     }
+
     /**
      * Creates a named grouping
      *
-     * @param name        the field name
+     * @param name  the field name
      * @param group the fields to create
      * @return the Group
      */
     public static Group grouping(final String name, final Group group) {
         return new Group(name, group);
-    }
-
-    /**
-     * Creates a named grouping on a field
-     *
-     * @param name        the group name
-     * @param sourceField the field name
-     * @return the Group
-     */
-    public static Group grouping(final String name, final String sourceField) {
-        return new Group(name, sourceField);
     }
 
     /**
@@ -226,10 +227,10 @@ public final class Group {
     }
 
     /**
-     * @return the source field for the group
+     * @return the nested group
      */
-    public String getSourceField() {
-        return sourceField;
+    public Group getNested() {
+        return nested;
     }
 
     /**
@@ -240,9 +241,9 @@ public final class Group {
     }
 
     /**
-     * @return the nested group
+     * @return the source field for the group
      */
-    public Group getNested() {
-        return nested;
+    public String getSourceField() {
+        return sourceField;
     }
 }

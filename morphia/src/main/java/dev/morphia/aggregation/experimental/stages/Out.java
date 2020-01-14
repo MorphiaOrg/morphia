@@ -2,6 +2,13 @@ package dev.morphia.aggregation.experimental.stages;
 
 import org.bson.Document;
 
+/**
+ * Takes the documents returned by the aggregation pipeline and writes them to a specified collection. The $out operator must be the last
+ * stage in the pipeline. The $out operator lets the aggregation framework return result sets of any size.
+ *
+ * @param <O> the output type used to lookup the collection name
+ * @mongodb.driver.manual reference/operator/aggregation/out/ $out
+ */
 public class Out<O> extends Stage {
     private Class<?> type;
     private String collection;
@@ -14,6 +21,7 @@ public class Out<O> extends Stage {
      * Creates a $out stage with target type/collection
      *
      * @param type the type to use to determine the target collection
+     * @param <O>  the output type used to lookup the collection name
      * @return the new stage
      */
     public static <O> Out<O> to(final Class<O> type) {

@@ -2,6 +2,11 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Base class for the set expressions
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/#set-expression-operators Set Expressions
+ */
 public class SetExpression extends Expression {
     protected SetExpression(final String operation, final Object value) {
         super(operation, value);

@@ -25,6 +25,7 @@
     <suppress checks="Javadoc*" files="QuickTour"/>
     <suppress checks="Javadoc*" files=".*test.*"/>
     <suppress checks="" files=".*internal.*"/>
+    <suppress checks="" files=".*codecs.*"/>
     <suppress checks="" files="Sofia"/>
     <suppress checks="" files=".*org.bson.*"/>
     <suppress checks="ConstantName" files=".*DiscriminatorFunction.*"/>

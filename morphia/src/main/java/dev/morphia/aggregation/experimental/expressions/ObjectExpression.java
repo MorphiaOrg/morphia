@@ -7,7 +7,15 @@ import org.bson.codecs.EncoderContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectExpressions {
+/**
+ * Base class for the object expressions
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/#object-expression-operators Object Expressions
+ */
+public final class ObjectExpression {
+    private ObjectExpression() {
+    }
+
     /**
      * Combines multiple documents into a single document.
      *
@@ -18,12 +26,21 @@ public class ObjectExpressions {
         return new MergeObjects();
     }
 
+    /**
+     * Defines the values to be merged.
+     */
     public static class MergeObjects extends Expression {
 
         protected MergeObjects() {
             super("$mergeObjects", new ArrayList<Expression>());
         }
 
+        /**
+         * Adds an expression to be merged
+         *
+         * @param expression the expression
+         * @return this
+         */
         @SuppressWarnings("unchecked")
         public MergeObjects add(final Expression expression) {
             ((List<Expression>) getValue()).add(expression);

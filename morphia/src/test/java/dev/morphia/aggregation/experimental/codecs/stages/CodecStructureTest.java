@@ -6,12 +6,12 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
-import dev.morphia.aggregation.experimental.GraphLookup;
+import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.expressions.ArrayExpression;
 import dev.morphia.aggregation.experimental.expressions.ConditionalExpression;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.expressions.MathExpression;
-import dev.morphia.aggregation.experimental.expressions.ObjectExpressions;
+import dev.morphia.aggregation.experimental.expressions.ObjectExpression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
@@ -132,8 +132,7 @@ public class CodecStructureTest extends TestBase {
         Document document = parse("{$graphLookup: {from: 'employees',startWith: '$reportsTo',connectFromField: 'reportsTo',"
                                   + "connectToField: 'name',as: 'reportingHierarchy' }}");
         evaluate(document,
-            GraphLookup.with()
-                       .from("employees")
+            GraphLookup.from("employees")
                        .startWith(field("reportsTo"))
                        .connectFromField("reportsTo")
                        .connectToField("name")
@@ -160,8 +159,7 @@ public class CodecStructureTest extends TestBase {
     public void testMerge() {
         evaluate(parse("{ $merge : { into: { db: 'reporting', coll: 'budgets' }, on: '_id',  whenMatched: 'replace', "
                        + "whenNotMatched: 'insert' } }"),
-            Merge.merge()
-                 .into("reporting", "budgets")
+            Merge.into("reporting", "budgets")
                  .on("_id")
                  .whenMatched(WhenMatched.REPLACE)
                  .whenNotMatched(WhenNotMatched.INSERT));
@@ -170,8 +168,7 @@ public class CodecStructureTest extends TestBase {
         evaluate(parse("{ $merge: { into: 'monthlytotals', on: '_id', whenMatched:  [ { $addFields: { thumbsup: { $add:[ '$thumbsup', "
                        + "'$$new.thumbsup' ] }, thumbsdown: { $add: [ '$thumbsdown', '$$new.thumbsdown' ] } } } ], whenNotMatched: "
                        + "'insert' } }"),
-            Merge.merge()
-                 .into("monthlytotals")
+            Merge.into("monthlytotals")
                  .on("_id")
                  .whenMatched(List.of(
                      AddFields.of()
@@ -183,9 +180,9 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testMergeObjects() {
         evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
-            ObjectExpressions.mergeObjects()
-                             .add(ArrayExpression.elementAt(field("fromItems"), literal(0)))
-                             .add(literal("$$ROOT")));
+            ObjectExpression.mergeObjects()
+                            .add(ArrayExpression.elementAt(field("fromItems"), literal(0)))
+                            .add(literal("$$ROOT")));
     }
 
     @Test
@@ -214,7 +211,7 @@ public class CodecStructureTest extends TestBase {
     public void testReplaceWith() {
         evaluate(parse("{ $replaceWith: \"$grades\" }"),
             ReplaceWith.with()
-                       .value(field("grades")));
+                       .with(field("grades")));
 
         evaluate(parse("{ $replaceWith: { _id: '$_id', item: '$item', amount: { $multiply: [ '$price', '$quantity']}, status: 'Complete', "
                        + "asofDate: '$$NOW' } }"),

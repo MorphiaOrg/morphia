@@ -49,8 +49,11 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     /**
      * Applies the configured options to the collection.
      *
+     * @param documents  the stage documents
      * @param collection the collection to configure
+     * @param resultType the result type
      * @param <T>        the collection type
+     * @param <S>        the result type
      * @return the updated collection
      * @morphia.internal
      */
@@ -80,9 +83,10 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     }
 
     /**
+     * @param unit the target unit type
      * @return the configuration value
      */
-    public long getMaxTime(TimeUnit unit) {
+    public long getMaxTime(final TimeUnit unit) {
         return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
     }
 
@@ -93,6 +97,12 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
         return batchSize;
     }
 
+    /**
+     * Sets the batch size for fetching results.
+     *
+     * @param batchSize the size
+     * @return this
+     */
     public AggregationOptions batchSize(final int batchSize) {
         this.batchSize = batchSize;
         return this;

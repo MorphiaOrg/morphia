@@ -7,7 +7,9 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.GeoNear;
+import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.Projection;
@@ -99,37 +101,32 @@ public interface Aggregation<T> {
     Aggregation<T> currentOp(CurrentOp currentOp);
 
     /**
-     * Execute the aggregation and get the results as Document instances.
-     *
-     * @return a MorphiaCursor
+     * Execute the aggregation.
      */
-    default MorphiaCursor<Document> execute() {
-        return execute(Document.class);
-    }
+    void execute();
 
     /**
      * Execute the aggregation and get the results.
      *
+     * @param resultType the type of the result
      * @param <S> the output type
      * @return a MorphiaCursor
      */
     <S> MorphiaCursor<S> execute(Class<S> resultType);
 
     /**
-     * Execute the aggregation and get the results as Document instances.
+     * Execute the aggregation.
      *
      * @param options the options to apply
-     * @return a MorphiaCursor
      */
-    default MorphiaCursor<Document> execute(final AggregationOptions options) {
-        return execute(Document.class, options);
-    }
+    void execute(AggregationOptions options);
 
     /**
      * Execute the aggregation and get the results.
      *
-     * @param <S>     the output type
+     * @param resultType the type of the result
      * @param options the options to apply
+     * @param <S>     the output type
      * @return a MorphiaCursor
      */
     <S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options);
@@ -167,6 +164,8 @@ public interface Aggregation<T> {
     List<Document> getDocuments();
 
     /**
+     * @param name the name of the stage to fetch
+     * @param <S> the type of the stage
      * @return the named stage or stages in this aggregation
      * @morphia.internal
      */
@@ -241,6 +240,7 @@ public interface Aggregation<T> {
      * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
      *
      * @param merge the merge definition
+     * @return this
      * @mongodb.driver.manual reference/operator/aggregation/merge $merge
      */
     Aggregation<T> merge(Merge merge);
@@ -249,6 +249,8 @@ public interface Aggregation<T> {
      * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
      *
      * @param out the out definition
+     * @param <O> the output collection type
+     * @return this
      * @mongodb.driver.manual reference/operator/aggregation/out $out
      */
     <O> Aggregation<O> out(Out<O> out);
@@ -266,7 +268,7 @@ public interface Aggregation<T> {
      * from the input documents or newly computed fields.
      *
      * @param projection the project definition
-     * @return
+     * @return this
      * @mongodb.driver.manual reference/operator/aggregation/project $project
      */
     Aggregation<T> project(Projection projection);

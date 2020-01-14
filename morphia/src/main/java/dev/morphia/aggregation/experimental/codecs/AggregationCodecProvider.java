@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.codecs;
 
-import dev.morphia.aggregation.experimental.GraphLookup;
-import dev.morphia.aggregation.experimental.Limit;
-import dev.morphia.aggregation.experimental.Lookup;
+import dev.morphia.aggregation.experimental.stages.GraphLookup;
+import dev.morphia.aggregation.experimental.stages.Limit;
+import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.aggregation.experimental.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.AutoBucketCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.BucketCodec;

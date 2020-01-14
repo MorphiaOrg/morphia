@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.experimental;
 
-import com.mongodb.MongoCommandException;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.AddFields;
@@ -11,8 +10,11 @@ import dev.morphia.aggregation.experimental.stages.Count;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.GeoNear;
+import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.IndexStats;
+import dev.morphia.aggregation.experimental.stages.Limit;
+import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Out;
@@ -31,7 +33,6 @@ import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
-import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -40,11 +41,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @param <T>
+ * @morphia.internal
+ * @since 2.0
+ */
 public class AggregationImpl<T> implements Aggregation<T> {
     private final Datastore datastore;
     private final MongoCollection<T> collection;
     private final List<Stage> stages = new ArrayList<>();
 
+    /**
+     * Creates an instance.
+     *
+     * @param datastore  the datastore
+     * @param collection the source collection
+     * @morphia.internal
+     */
     public AggregationImpl(final Datastore datastore, final MongoCollection<T> collection) {
         this.datastore = datastore;
         this.collection = collection;
@@ -81,8 +94,20 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public void execute() {
+        collection.aggregate(getDocuments())
+                  .toCollection();
+    }
+
+    @Override
     public <S> MorphiaCursor<S> execute(final Class<S> resultType) {
         return new MorphiaCursor<>(collection.aggregate(getDocuments(), resultType).iterator());
+    }
+
+    @Override
+    public void execute(final AggregationOptions options) {
+        options.apply(getDocuments(), collection, Document.class)
+               .toCollection();
     }
 
     @Override
@@ -175,6 +200,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return this;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <O> Aggregation<O> out(final Out<O> out) {
         stages.add(out);

@@ -2,6 +2,11 @@ package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.query.Query;
 
+/**
+ * Limits the number of documents passed to the next stage in the pipeline.
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/match/ $match
+ */
 public class Match extends Stage {
     private Query query;
 
@@ -10,11 +15,21 @@ public class Match extends Stage {
         this.query = query;
     }
 
-    public Query getQuery() {
-        return query;
-    }
-
+    /**
+     * Creates the new stage using the query for matching
+     *
+     * @param query the query
+     * @return this
+     */
     public static Match on(final Query<?> query) {
         return new Match(query);
+    }
+
+    /**
+     * @return the query
+     * @morphia.internal
+     */
+    public Query getQuery() {
+        return query;
     }
 }

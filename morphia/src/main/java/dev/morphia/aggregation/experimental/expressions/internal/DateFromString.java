@@ -20,7 +20,7 @@ public class DateFromString extends Expression {
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeStartDocument(operation);
+        writer.writeStartDocument(getOperation());
 
         ExpressionCodec.writeNamedExpression(mapper, writer, "dateString", dateString, encoderContext);
         ExpressionCodec.writeNamedExpression(mapper, writer, "format", format, encoderContext);

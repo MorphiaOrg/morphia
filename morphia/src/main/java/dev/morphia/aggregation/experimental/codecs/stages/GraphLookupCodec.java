@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
-import dev.morphia.aggregation.experimental.GraphLookup;
+import com.mongodb.client.MongoCollection;
+import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -18,16 +19,22 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void encodeStage(final BsonWriter writer, final GraphLookup value, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writeNamedValue(writer, "from", value.getFrom(), encoderContext);
+        if(value.getFrom() != null) {
+            writeNamedValue(writer, "from", value.getFrom(), encoderContext);
+        } else {
+            MongoCollection collection = getMapper().getCollection(value.getFromType());
+            writer.writeString("from", collection.getNamespace().getCollectionName());
+        }
         writeNamedExpression(getMapper(), writer, "startWith", value.getStartWith(), encoderContext);
         writeNamedValue(writer, "connectFromField", value.getConnectFromField(), encoderContext);
         writeNamedValue(writer, "connectToField", value.getConnectToField(), encoderContext);
         writeNamedValue(writer, "as", value.getAs(), encoderContext);
         writeNamedValue(writer, "maxDepth", value.getMaxDepth(), encoderContext);
         writeNamedValue(writer, "depthField", value.getDepthField(), encoderContext);
-        writeNamedValue(writer, "restrictSearchWithMatch", value.getRestrictWithMatch(), encoderContext);
+        writeNamedValue(writer, "restrictSearchWithMatch", value.getRestriction(), encoderContext);
 
         writer.writeEndDocument();
     }

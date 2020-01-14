@@ -34,8 +34,10 @@ import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
+import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
+import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
@@ -57,7 +59,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
-import static dev.morphia.aggregation.experimental.Lookup.from;
+import static dev.morphia.aggregation.experimental.stages.Lookup.from;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
 import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.array;
@@ -68,11 +70,10 @@ import static dev.morphia.aggregation.experimental.expressions.ConditionalExpres
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
-import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
+import static dev.morphia.aggregation.experimental.expressions.ObjectExpression.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
 import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
-import static dev.morphia.aggregation.experimental.stages.Merge.merge;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static dev.morphia.aggregation.experimental.stages.ReplaceWith.with;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
@@ -81,6 +82,7 @@ import static java.util.stream.Collectors.toList;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("unused")
 public class AggregationTest extends TestBase {
 
     @Test
@@ -99,7 +101,7 @@ public class AggregationTest extends TestBase {
                                                        .include("total",
                                                            add(field("price"), field("fee"))));
 
-        List<Document> list = pipeline.execute().toList();
+        List<Document> list = pipeline.execute(Document.class).toList();
         List<Document> expected = asList(
             parse("{ '_id' : 1, 'item' : 'abc', 'total' : 12 }"),
             parse("{ '_id' : 2, 'item' : 'jkl', 'total' : 21 }"),
@@ -133,7 +135,7 @@ public class AggregationTest extends TestBase {
                                        .addFields(AddFields.of()
                                                            .field("totalScore", add(field("totalHomework"),
                                                                field("totalQuiz"), field("extraCredit"))))
-                                       .execute()
+                                       .execute(Document.class)
                                        .toList();
 
         list = List.of(
@@ -163,7 +165,7 @@ public class AggregationTest extends TestBase {
                                         .autoBucket(AutoBucket.of()
                                                               .groupBy(field("price"))
                                                               .buckets(4))
-                                        .execute()
+                                        .execute(Document.class)
                                         .toList();
 
         List<Document> documents = List.of(
@@ -189,13 +191,14 @@ public class AggregationTest extends TestBase {
 
         getDatabase().getCollection("artwork").insertMany(list);
 
-        List<Document> results = getDs().aggregate(Artwork.class).bucket(Bucket.of()
-                                                                               .groupBy(field("price"))
-                                                                               .boundaries(literal(0), literal(200), literal(400))
-                                                                               .defaultValue("Other")
-                                                                               .outputField("count", sum(literal(1)))
-                                                                               .outputField("titles", push().single(field("title"))))
-                                        .execute()
+        List<Document> results = getDs().aggregate(Artwork.class)
+                                        .bucket(Bucket.of()
+                                                      .groupBy(field("price"))
+                                                      .boundaries(literal(0), literal(200), literal(400))
+                                                      .defaultValue("Other")
+                                                      .outputField("count", sum(literal(1)))
+                                                      .outputField("titles", push().single(field("title"))))
+                                        .execute(Document.class)
                                         .toList();
 
         List<Document> documents = List.of(
@@ -231,7 +234,7 @@ public class AggregationTest extends TestBase {
                                                             .histogram(true)
                                                             .scale(42)
                                                             .count(true))
-                                  .execute()
+                                  .execute(Document.class)
                                   .next();
         System.out.println(execute);
     }
@@ -252,7 +255,7 @@ public class AggregationTest extends TestBase {
                                  .match(getDs().find(Score.class)
                                                .filter("score >", 80))
                                  .count("passing_scores")
-                                 .execute()
+                                 .execute(Document.class)
                                  .next();
         assertEquals(parse("{ \"passing_scores\" : 4 }"), scores);
     }
@@ -295,7 +298,7 @@ public class AggregationTest extends TestBase {
                                              .field("categorizedByYears(Auto)", AutoBucket.of()
                                                                                           .groupBy(field("year"))
                                                                                           .buckets(4)))
-                                 .execute()
+                                 .execute(Document.class)
                                  .next();
 
         Document document = parse("{"
@@ -341,13 +344,12 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("employees").insertMany(list);
 
         List<Document> actual = getDs().aggregate(Employee.class)
-                                       .graphLookup(GraphLookup.with()
-                                                               .from("employees")
+                                       .graphLookup(GraphLookup.from("employees")
                                                                .startWith(field("reportsTo"))
                                                                .connectFromField("reportsTo")
                                                                .connectToField("name")
                                                                .as("reportingHierarchy"))
-                                       .execute()
+                                       .execute(Document.class)
                                        .toList();
 
         List<Document> expected = List.of(parse("{'_id': 1, 'name': 'Dev', 'reportingHierarchy': []}"),
@@ -442,12 +444,11 @@ public class AggregationTest extends TestBase {
                                                         .field("fiscal_year")
                                                         .field("dept"))
                                                   .field("salaries", sum(field("salary"))))
-                                       .merge(merge()
-                                                  .into("budgets")
-                                                  .on("_id")
-                                                  .whenMatched(WhenMatched.REPLACE)
-                                                  .whenNotMatched(WhenNotMatched.INSERT))
-                                       .execute()
+                                       .merge(Merge.into("budgets")
+                                                   .on("_id")
+                                                   .whenMatched(WhenMatched.REPLACE)
+                                                   .whenNotMatched(WhenNotMatched.INSERT))
+                                       .execute(Document.class)
                                        .toList();
 
         List<Document> expected = List.of(
@@ -476,7 +477,7 @@ public class AggregationTest extends TestBase {
         Assert.assertNull(group.getId());
         assertEquals(1, group.getFields().size());
 
-        Document execute = pipeline.execute().tryNext();
+        Document execute = pipeline.execute(Document.class).tryNext();
         assertEquals(Integer.valueOf(4), execute.getInteger("count"));
     }
 
@@ -502,7 +503,7 @@ public class AggregationTest extends TestBase {
                           .field("books", push()
                                               .single(field("title"))))
                .out(Out.to("different"))
-               .execute();
+               .execute(Document.class);
         Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
     }
 
@@ -553,16 +554,16 @@ public class AggregationTest extends TestBase {
                                             .project(of()
                                                          .include("title")
                                                          .include("author"));
-        MorphiaCursor<Document> aggregate = pipeline.execute();
+        MorphiaCursor<Document> aggregate = pipeline.execute(Document.class);
         doc = parse("{ '_id' : 1, title: 'abc123', author: { last: 'zzz', first: 'aaa' }}");
         Assert.assertEquals(doc, aggregate.next());
 
         pipeline = getDs().aggregate(Book.class)
                           .project(of()
-                                       .supressId()
+                                       .suppressId()
                                        .include("title")
                                        .include("author"));
-        aggregate = pipeline.execute();
+        aggregate = pipeline.execute(Document.class);
 
         doc = parse("{title: 'abc123', author: { last: 'zzz', first: 'aaa' }}");
         Assert.assertEquals(doc, aggregate.next());
@@ -570,7 +571,7 @@ public class AggregationTest extends TestBase {
         pipeline = getDs().aggregate(Book.class)
                           .project(of()
                                        .exclude("lastModified"));
-        aggregate = pipeline.execute();
+        aggregate = pipeline.execute(Document.class);
 
         doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}");
         Assert.assertEquals(doc, aggregate.next());
@@ -592,7 +593,7 @@ public class AggregationTest extends TestBase {
                                      gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
                                      literal("$$DESCEND"),
                                      literal("$$PRUNE"))))
-                                 .execute()
+                                 .execute(Document.class)
                                  .next();
         Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"
                                   + " [{ 'subtitle' : 'Section 1: Overview', 'tags' : [ 'SI', 'G' ],'content' : 'Section 1: This is the "
@@ -617,8 +618,8 @@ public class AggregationTest extends TestBase {
                                                      .field("name").exists()
                                                      .field("name").not().type(Type.ARRAY)
                                                      .field("name").type(Type.OBJECT))
-                                       .replaceRoot(ReplaceRoot.with().value(field("name")))
-                                       .execute()
+                                       .replaceRoot(ReplaceRoot.with().with(field("name")))
+                                       .execute(Document.class)
                                        .toList();
         List<Document> expected = documents.subList(0, 3)
                                            .stream()
@@ -628,10 +629,10 @@ public class AggregationTest extends TestBase {
 
         actual = getDs().aggregate(Author.class)
                         .replaceRoot(ReplaceRoot.with()
-                                                .value(ifNull().target(field("name"))
-                                                               .field("_id", field("_id"))
-                                                               .field("missingName", literal(true))))
-                        .execute()
+                                                .with(ifNull().target(field("name"))
+                                                              .field("_id", field("_id"))
+                                                              .field("missingName", literal(true))))
+                        .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
                             .stream()
@@ -643,20 +644,17 @@ public class AggregationTest extends TestBase {
 
         actual = getDs().aggregate(Author.class)
                         .replaceRoot(ReplaceRoot.with()
-                                                .value(mergeObjects()
+                                                .with(mergeObjects()
                                                            .add(Expression.of()
                                                                           .field("_id", field("_id"))
                                                                           .field("first", literal(""))
                                                                           .field("last", literal("")))
                                                            .add(field("name"))))
-                        .execute()
+                        .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
                             .stream()
-                            .map(d -> {
-                                d.putAll((Document) d.remove("name"));
-                                return d;
-                            })
+                            .peek(d -> d.putAll((Document) d.remove("name")))
                             .collect(toList());
         expected.add(new Document("_id", 4)
                          .append("first", "")
@@ -679,8 +677,8 @@ public class AggregationTest extends TestBase {
                                                      .field("name").exists()
                                                      .field("name").not().type(Type.ARRAY)
                                                      .field("name").type(Type.OBJECT))
-                                       .replaceWith(with().value(field("name")))
-                                       .execute()
+                                       .replaceWith(with().with(field("name")))
+                                       .execute(Document.class)
                                        .toList();
         List<Document> expected = documents.subList(0, 3)
                                            .stream()
@@ -690,10 +688,10 @@ public class AggregationTest extends TestBase {
 
         actual = getDs().aggregate(Author.class)
                         .replaceWith(with()
-                                         .value(ifNull().target(field("name"))
-                                                        .field("_id", field("_id"))
-                                                        .field("missingName", literal(true))))
-                        .execute()
+                                         .with(ifNull().target(field("name"))
+                                                       .field("_id", field("_id"))
+                                                       .field("missingName", literal(true))))
+                        .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
                             .stream()
@@ -705,20 +703,17 @@ public class AggregationTest extends TestBase {
 
         actual = getDs().aggregate(Author.class)
                         .replaceWith(with()
-                                         .value(mergeObjects()
+                                         .with(mergeObjects()
                                                     .add(Expression.of()
                                                                    .field("_id", field("_id"))
                                                                    .field("first", literal(""))
                                                                    .field("last", literal("")))
                                                     .add(field("name"))))
-                        .execute()
+                        .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
                             .stream()
-                            .map(d -> {
-                                d.putAll((Document) d.remove("name"));
-                                return d;
-                            })
+                            .peek(d -> d.putAll((Document) d.remove("name")))
                             .collect(toList());
         expected.add(new Document("_id", 4)
                          .append("first", "")
@@ -757,7 +752,7 @@ public class AggregationTest extends TestBase {
                                        .set(AddFields.of()
                                                      .field("totalScore", add(field("totalHomework"),
                                                          field("totalQuiz"), field("extraCredit"))))
-                                       .execute()
+                                       .execute(Document.class)
                                        .toList();
 
         list = List.of(
@@ -785,7 +780,7 @@ public class AggregationTest extends TestBase {
 
         List<Document> copies = getDs().aggregate(Book.class)
                                        .unset(Unset.fields("copies"))
-                                       .execute()
+                                       .execute(Document.class)
                                        .toList();
 
         assertEquals(documents, copies);

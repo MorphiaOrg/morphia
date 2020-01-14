@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Fields;
+import dev.morphia.aggregation.experimental.expressions.internal.Fields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Group.GroupId;
 import dev.morphia.mapping.Mapper;

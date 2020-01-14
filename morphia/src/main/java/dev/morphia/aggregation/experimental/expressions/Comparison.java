@@ -2,6 +2,11 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import java.util.List;
 
+/**
+ * Base class for the comparison expressions
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/#comparison-expression-operators Comparison Expressions
+ */
 public class Comparison extends Expression {
 
     protected Comparison(final String operation, final Object value) {

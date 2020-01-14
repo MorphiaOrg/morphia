@@ -13,7 +13,7 @@ public class Literal extends Expression {
 
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
-        Codec codec = mapper.getCodecRegistry().get(value.getClass());
-        encoderContext.encodeWithChildContext(codec, writer, value);
+        Codec codec = mapper.getCodecRegistry().get(getValue().getClass());
+        encoderContext.encodeWithChildContext(codec, writer, getValue());
     }
 }

@@ -1,7 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression.DocumentExpression;
-import dev.morphia.aggregation.experimental.expressions.Fields;
+import dev.morphia.aggregation.experimental.expressions.internal.DocumentExpression;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;

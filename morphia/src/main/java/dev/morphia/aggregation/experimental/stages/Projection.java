@@ -1,7 +1,8 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import dev.morphia.aggregation.experimental.AggregationException;
 import dev.morphia.aggregation.experimental.expressions.Expression;
-import dev.morphia.aggregation.experimental.expressions.Fields;
+import dev.morphia.aggregation.experimental.expressions.internal.Fields;
 import dev.morphia.aggregation.experimental.expressions.internal.PipelineField;
 import dev.morphia.sofia.Sofia;
 
@@ -10,6 +11,12 @@ import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
 
+/**
+ * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields
+ * from the input documents or newly computed fields.
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/projection/ $projection
+ */
 public class Projection extends Stage {
     private Fields<Projection> includes;
     private Fields<Projection> excludes;
@@ -19,18 +26,29 @@ public class Projection extends Stage {
         super("$project");
     }
 
+    /**
+     * Creates a new stage
+     *
+     * @return the new stage
+     */
     public static Projection of() {
         return new Projection();
     }
 
-    public Projection exclude(String name) {
+    /**
+     * Excludes a field.
+     *
+     * @param name the field name
+     * @return this
+     */
+    public Projection exclude(final String name) {
         exclude(name, literal(false));
         return this;
     }
 
-    public void exclude(final String name, final Expression value) {
+    private void exclude(final String name, final Expression value) {
         if (includes != null) {
-            throw new RuntimeException(Sofia.mixedModeProjections());
+            throw new AggregationException(Sofia.mixedModeProjections());
         }
         if (excludes == null) {
             excludes = Fields.on(this);
@@ -38,6 +56,10 @@ public class Projection extends Stage {
         excludes.add(name, value);
     }
 
+    /**
+     * @return the fields
+     * @morphia.internal
+     */
     public List<PipelineField> getFields() {
         List<PipelineField> fields = new ArrayList<>();
 
@@ -54,13 +76,26 @@ public class Projection extends Stage {
     }
 
 
-    public Projection include(String name) {
+    /**
+     * Includes a field.
+     *
+     * @param name the field name
+     * @return this
+     */
+    public Projection include(final String name) {
         return include(name, literal(true));
     }
 
+    /**
+     * Includes a field.
+     *
+     * @param name  the field name
+     * @param value the value expression
+     * @return this
+     */
     public Projection include(final String name, final Expression value) {
         if (excludes != null) {
-            throw new RuntimeException(Sofia.mixedModeProjections());
+            throw new AggregationException(Sofia.mixedModeProjections());
         }
         if (includes == null) {
             includes = Fields.on(this);
@@ -68,7 +103,12 @@ public class Projection extends Stage {
         return includes.add(name, value);
     }
 
-    public Projection supressId() {
+    /**
+     * Suppresses the _id field in the resulting document.
+     *
+     * @return this
+     */
+    public Projection suppressId() {
         suppressId = true;
         return this;
     }

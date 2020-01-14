@@ -2,22 +2,30 @@ package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.sofia.Sofia;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Removes/excludes fields from documents.
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/unset/ $unset
+ */
 public class Unset extends Stage {
-    private static final Logger LOG = LoggerFactory.getLogger(Unset.class);
-
     private List<Expression> fields = new ArrayList<>();
 
     protected Unset() {
         super("$unset");
     }
 
-    public static Unset fields(String name, String... names) {
+    /**
+     * Creates a new stage with the given fields
+     *
+     * @param name  the first field
+     * @param names the others
+     * @return this
+     */
+    public static Unset fields(final String name, final String... names) {
         Unset unset = new Unset()
                           .add(name);
         for (final String additional : names) {
@@ -26,9 +34,9 @@ public class Unset extends Stage {
         return unset;
     }
 
-    public Unset add(final String name) {
+    private Unset add(final String name) {
         final String fieldName = name;
-        if(fieldName.startsWith("$")) {
+        if (fieldName.startsWith("$")) {
             fieldName.substring(1);
             Sofia.logUnsetNamesDollarSign();
         }
@@ -36,6 +44,10 @@ public class Unset extends Stage {
         return this;
     }
 
+    /**
+     * @return the fields
+     * @morphia.internal
+     */
     public List<Expression> getFields() {
         return fields;
     }
