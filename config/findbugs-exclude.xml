@@ -15,6 +15,10 @@
         </Not>
     </Match>
     <Match>
+        <Class name="~.*\.*GeoNear"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
         <Class name="~.*\.*Test.*"/>
         <Not>
             <Bug pattern="SE_BAD_FIELD, EI_EXPOSE_REP, EI_EXPOSE_REP2"/>

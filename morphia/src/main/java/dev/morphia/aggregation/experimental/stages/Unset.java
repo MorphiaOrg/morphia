@@ -35,12 +35,12 @@ public class Unset extends Stage {
     }
 
     private Unset add(final String name) {
-        final String fieldName = name;
+        String fieldName = name;
         if (fieldName.startsWith("$")) {
-            fieldName.substring(1);
+            fieldName = fieldName.substring(1);
             Sofia.logUnsetNamesDollarSign();
         }
-        fields.add(Expression.literal(name));
+        fields.add(Expression.literal(fieldName));
         return this;
     }
 

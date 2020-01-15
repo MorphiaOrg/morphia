@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.query.CriteriaJoin.AND;
@@ -171,7 +172,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public Query<T> search(final String search, final String language) {
         this.criteria("$text").equal(new Document("$search", search)
-                                .append("$language", language));
+                                         .append("$language", language));
         return this;
     }
 
@@ -318,197 +319,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    /**
-     * @return the collection this query targets
-     * @morphia.internal
-     */
-    public MongoCollection<T> getCollection() {
-        if (collection == null) {
-            collection = mapper.getCollection(clazz);
-        }
-        return collection;
-    }
-
-    @Override
-    public Document toDocument() {
-        return compoundContainer.toDocument();
-    }
-
-    @Override
-    public void attach(final CriteriaContainer container) {
-        compoundContainer.attach(container);
-    }
-
-    @Override
-    public String getFieldName() {
-        throw new UnsupportedOperationException("this method is unused on a Query");
-    }
-
-    @Override
-    public void add(final Criteria... criteria) {
-        for (final Criteria c : criteria) {
-            c.attach(this);
-            compoundContainer.add(c);
-        }
-    }
-
-    @Override
-    public CriteriaContainer and(final Criteria... criteria) {
-        return compoundContainer.and(criteria);
-    }
-
-    @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
-        add(container);
-
-        return new FieldEndImpl<CriteriaContainer>(mapper, this, field, container);
-    }
-
-    @Override
-    public CriteriaContainer or(final Criteria... criteria) {
-        return compoundContainer.or(criteria);
-    }
-
-    @Override
-    public void remove(final Criteria criteria) {
-        compoundContainer.remove(criteria);
-    }
-
-    /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
-     */
-    public Class<T> getEntityClass() {
-        return clazz;
-    }
-
-    /**
-     * Sets query structure directly
-     *
-     * @param query the Document containing the query
-     */
-    public void setQueryObject(final Document query) {
-        baseQuery = new Document(query);
-    }
-
-    /**
-     * @return the Mongo sort {@link Document}.
-     * @morphia.internal
-     */
-    public Document getSort() {
-        return options != null ? options.getSort() : null;
-    }
-
-    /**
-     * @return true if field names are being validated
-     */
-    public boolean isValidatingNames() {
-        return validateName;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getCollection() != null ? getCollection().hashCode() : 0;
-        result = 31 * result + (clazz != null ? clazz.hashCode() : 0);
-        result = 31 * result + (validateName ? 1 : 0);
-        result = 31 * result + (validateType ? 1 : 0);
-        result = 31 * result + (baseQuery != null ? baseQuery.hashCode() : 0);
-        result = 31 * result + (options != null ? options.hashCode() : 0);
-        result = 31 * result + (compoundContainer != null ? compoundContainer.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof QueryImpl)) {
-            return false;
-        }
-
-        final QueryImpl<?> query = (QueryImpl<?>) o;
-
-        if (validateName != query.validateName) {
-            return false;
-        }
-        if (validateType != query.validateType) {
-            return false;
-        }
-        if (getCollection() != null ? !getCollection().equals(query.getCollection()) : query.getCollection() != null) {
-            return false;
-        }
-        if (clazz != null ? !clazz.equals(query.clazz) : query.clazz != null) {
-            return false;
-        }
-        if (baseQuery != null ? !baseQuery.equals(query.baseQuery) : query.baseQuery != null) {
-            return false;
-        }
-        if (options != null ? !options.equals(query.options) : query.options != null) {
-            return false;
-        }
-        return compoundContainer != null ? compoundContainer.equals(query.compoundContainer) : query.compoundContainer == null;
-    }
-
-    @Override
-    public String toString() {
-        return getOptions().getProjection() == null ? getQueryDocument().toString()
-                                                    : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
-    }
-
-    /**
-     * @return the Mongo fields {@link Document}.
-     * @morphia.internal
-     */
-    public Document getFieldsObject() {
-        Projection projection = getOptions().getProjection();
-
-        return projection != null ? projection.map(mapper, clazz) : null;
-    }
-
-    /**
-     * Converts the query to a Document and updates for any discriminator values as my be necessary
-     *
-     * @return the query
-     * @morphia.internal
-     */
-    public Document prepareQuery() {
-        final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
-        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
-
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
-            List<String> values = new ArrayList<>();
-            values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
-                values.add(subtype.getEntityModel().getDiscriminator());
-            }
-            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
-                new Document("$in", values));
-        }
-        return query;
-    }
-
-    protected Datastore getDatastore() {
-        return datastore;
-    }
-
-    private Document getQueryDocument() {
-        final Document obj = new Document();
-
-        if (baseQuery != null) {
-            obj.putAll(baseQuery);
-        }
-
-        obj.putAll(toDocument());
-
-        return obj;
-    }
-
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
         final Document query = prepareQuery();
 
@@ -544,6 +354,32 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         }
     }
 
+    /**
+     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     *
+     * @return the query
+     * @morphia.internal
+     */
+    public Document prepareQuery() {
+        final Document query = getQueryDocument();
+        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
+        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
+
+            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(mappedClass.getEntityModel().getDiscriminator());
+            for (final MappedClass subtype : subtypes) {
+                values.add(subtype.getEntityModel().getDiscriminator());
+            }
+            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+        return query;
+    }
+
     private String getCollectionName() {
         if (collectionName == null) {
             collectionName = getCollection().getNamespace().getCollectionName();
@@ -551,8 +387,19 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return collectionName;
     }
 
-    private MongoCollection<T> enforceWriteConcern(final WriteConcern writeConcern) {
-        return writeConcern == null ? getCollection() : getCollection().withWriteConcern(writeConcern);
+    /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
+    public Class<T> getEntityClass() {
+        return clazz;
+    }
+
+    FindOptions getOptions() {
+        if (options == null) {
+            options = new FindOptions();
+        }
+        return options;
     }
 
     /**
@@ -563,11 +410,144 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return FilterOperator.fromString(operator);
     }
 
-    FindOptions getOptions() {
-        if (options == null) {
-            options = new FindOptions();
+    @Override
+    public void add(final Criteria... criteria) {
+        for (final Criteria c : criteria) {
+            c.attach(this);
+            compoundContainer.add(c);
         }
-        return options;
+    }
+
+    @Override
+    public CriteriaContainer and(final Criteria... criteria) {
+        return compoundContainer.and(criteria);
+    }
+
+    @Override
+    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
+        add(container);
+
+        return new FieldEndImpl<CriteriaContainer>(mapper, this, field, container);
+    }
+
+    @Override
+    public CriteriaContainer or(final Criteria... criteria) {
+        return compoundContainer.or(criteria);
+    }
+
+    @Override
+    public void remove(final Criteria criteria) {
+        compoundContainer.remove(criteria);
+    }
+
+    /**
+     * @return the collection this query targets
+     * @morphia.internal
+     */
+    public MongoCollection<T> getCollection() {
+        if (collection == null) {
+            collection = mapper.getCollection(clazz);
+        }
+        return collection;
+    }
+
+    private Document getQueryDocument() {
+        final Document obj = new Document();
+
+        if (baseQuery != null) {
+            obj.putAll(baseQuery);
+        }
+
+        obj.putAll(toDocument());
+
+        return obj;
+    }
+
+    @Override
+    public Document toDocument() {
+        return compoundContainer.toDocument();
+    }
+
+    @Override
+    public void attach(final CriteriaContainer container) {
+        compoundContainer.attach(container);
+    }
+
+    @Override
+    public String getFieldName() {
+        throw new UnsupportedOperationException("this method is unused on a Query");
+    }
+
+    /**
+     * @return the Mongo sort {@link Document}.
+     * @morphia.internal
+     */
+    public Document getSort() {
+        return options != null ? options.getSort() : null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clazz, validateName, validateType, baseQuery, getOptions(), compoundContainer, getCollectionName());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof QueryImpl)) {
+            return false;
+        }
+        final QueryImpl<?> query = (QueryImpl<?>) o;
+        return validateName == query.validateName
+               && validateType == query.validateType
+               && Objects.equals(clazz, query.clazz)
+               && Objects.equals(baseQuery, query.baseQuery)
+               && Objects.equals(getOptions(), query.getOptions())
+               && Objects.equals(compoundContainer, query.compoundContainer)
+               && Objects.equals(getCollectionName(), query.getCollectionName());
+    }
+
+    @Override
+    public String toString() {
+        return getOptions().getProjection() == null ? getQueryDocument().toString()
+                                                    : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
+    }
+
+    /**
+     * @return the Mongo fields {@link Document}.
+     * @morphia.internal
+     */
+    public Document getFieldsObject() {
+        Projection projection = getOptions().getProjection();
+
+        return projection != null ? projection.map(mapper, clazz) : null;
+    }
+
+    /**
+     * @return true if field names are being validated
+     */
+    public boolean isValidatingNames() {
+        return validateName;
+    }
+
+    /**
+     * Sets query structure directly
+     *
+     * @param query the Document containing the query
+     */
+    public void setQueryObject(final Document query) {
+        baseQuery = new Document(query);
+    }
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
+
+    private MongoCollection<T> enforceWriteConcern(final WriteConcern writeConcern) {
+        return writeConcern == null ? getCollection() : getCollection().withWriteConcern(writeConcern);
     }
 
     WriteConcern getWriteConcern(final Class clazz) {
