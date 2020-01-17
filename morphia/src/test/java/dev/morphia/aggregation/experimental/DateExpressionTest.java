@@ -162,6 +162,7 @@ public class DateExpressionTest extends TestBase {
 
     @Test
     public void testToDate() {
+        checkMinServerVersion(4.0);
         getDatabase().getCollection("orders")
                      .insertMany(List.of(
                          parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
