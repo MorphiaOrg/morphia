@@ -35,7 +35,7 @@ public class KeyMappingTest extends TestBase {
     public void testKeyComparisons() {
         final User user = new User("Luke Skywalker");
         getDs().save(user);
-        final Key<User> k1 = new Key<User>(User.class, "User", user.id);
+        final Key<User> k1 = new Key<User>(User.class, "user", user.id);
         final Key<User> k2 = getDs().getKey(user);
 
         Assert.assertTrue(k1.equals(k2));

@@ -3,20 +3,19 @@ package dev.morphia.mapping;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
+import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Id;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -35,11 +34,13 @@ public class MapImplTest extends TestBase {
         getDs().save(cmoeg);
         //check className in the map values.
 
-        MongoCollection<Document> collection = getDatabase().getCollection(ContainsGoo.class.getSimpleName());
+
+        MongoCollection<Document> collection = getDatabase().getCollection(getMapper()
+                                                                               .getMappedClass(ContainsGoo.class).getCollectionName());
         Document first = (Document) collection
-                                                 .find()
-                                                 .first()
-                                                 .get("values");
+                                        .find()
+                                        .first()
+                                        .get("values");
         final Document goo = (Document) first.get("first");
 
         assertTrue(goo.toString(), goo.containsKey(getMapper().getOptions().getDiscriminatorKey()));
@@ -60,11 +61,14 @@ public class MapImplTest extends TestBase {
                .set("values.second", g2)
                .execute();
 
-        final Document goo = (Document) ((Document) getDatabase().getCollection(ContainsGoo.class.getSimpleName())
+        MongoCollection<Document> collection = getDatabase().getCollection(getMapper()
+                                                                               .getMappedClass(ContainsGoo.class).getCollectionName());
+
+        final Document goo = (Document) ((Document) collection
                                                            .find()
                                                            .first()
-                                                           .get("values")).get(
-            "second");
+                                                           .get("values"))
+                                            .get("second");
         assertTrue("className should not be here.", goo.containsKey(
             getMapper().getOptions().getDiscriminatorKey()));
     }
@@ -84,8 +88,11 @@ public class MapImplTest extends TestBase {
                .set("values.second", g2)
                .execute();
 
+        MongoCollection<Document> collection = getDatabase()
+                                                   .getCollection(getMapper()
+                                                                      .getMappedClass(MapOfInterfaces.class).getCollectionName());
         //check className in the map values.
-        final Document goo = (Document) ((Document) getDatabase().getCollection(MapOfInterfaces.class.getSimpleName())
+        final Document goo = (Document) ((Document) collection
                                                            .find()
                                                            .first()
                                                            .get("values"))
@@ -102,10 +109,14 @@ public class MapImplTest extends TestBase {
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
         //check className in the map values.
-        final Document goo = (Document) ((Document) getDatabase().getCollection(MapOfInterfaces.class.getSimpleName())
-                                                           .find()
-                                                           .first()
-                                                           .get("values"))
+        MongoCollection<Document> collection = getDatabase()
+                                                   .getCollection(getMapper()
+                                                                      .getMappedClass(MapOfInterfaces.class).getCollectionName());
+
+        final Document goo = (Document) ((Document) collection
+                                                        .find()
+                                                        .first()
+                                                        .get("values"))
                                             .get("first");
         assertTrue(goo.containsKey(getMapper().getOptions().getDiscriminatorKey()));
     }

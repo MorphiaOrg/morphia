@@ -1,6 +1,7 @@
 package dev.morphia.mapping;
 
 
+import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.TestBase;
@@ -100,11 +101,11 @@ public class MapperOptionsTest extends TestBase {
         DummyEntity entity = new DummyEntity();
 
         String collectionName = getMapper().getMappedClass(entity.getClass()).getCollectionName();
-        Assert.assertEquals("uppercase", "DummyEntity", collectionName);
+        Assert.assertEquals("uppercase", "dummyEntity", collectionName);
 
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-            builder.useLowerCaseCollectionNames(true).build());
+            builder.collectionNaming(NamingStrategy.lowerCase()).build());
 
         collectionName = datastore.getMapper().getMappedClass(entity.getClass()).getCollectionName();
         Assert.assertEquals("lowercase", "dummyentity", collectionName);
@@ -183,13 +184,17 @@ public class MapperOptionsTest extends TestBase {
 
     private void shouldNotFindField(final Datastore datastore, final HasList hl) {
         datastore.save(hl);
-        Document document = getDatabase().getCollection(HasList.class.getSimpleName()).find().first();
+        Document document = getDocumentCollection(HasList.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("names"), document.containsKey("names"));
         HasList hasList = datastore.find(HasList.class)
                                    .execute(new FindOptions().limit(1))
                                    .tryNext();
         Assert.assertNull(hasList.names);
         cleanup();
+    }
+
+    private MongoCollection<Document> getDocumentCollection(final Class<?> type) {
+        return getDatabase().getCollection(getMappedClass(type).getCollectionName());
     }
 
     private Datastore empties(final boolean storeEmpties) {
@@ -200,7 +205,7 @@ public class MapperOptionsTest extends TestBase {
 
     private void shouldFindField(final Datastore datastore, final HasList hl, final List<String> expected) {
         datastore.save(hl);
-        final Document document = getDatabase().getCollection(HasList.class.getSimpleName()).find().first();
+        final Document document = getDocumentCollection(HasList.class).find().first();
         Assert.assertTrue("Should find the field", document.containsKey("names"));
         Assert.assertEquals(expected, datastore.find(HasList.class)
                                                .execute(new FindOptions().limit(1))
@@ -211,7 +216,7 @@ public class MapperOptionsTest extends TestBase {
 
     private void shouldNotFindField(final Datastore datastore, final HasMap hl) {
         datastore.save(hl);
-        Document document = getDatabase().getCollection(HasMap.class.getSimpleName()).find().first();
+        Document document = getDocumentCollection(HasMap.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("properties"), document.containsKey("properties"));
         Assert.assertNull(datastore.find(HasMap.class)
                                    .execute(new FindOptions().limit(1))
@@ -223,7 +228,7 @@ public class MapperOptionsTest extends TestBase {
     private void shouldFindField(final Datastore datastore, final HasMap hl, final Map<String, String> expected) {
         final Document document;
         datastore.save(hl);
-        document = getDatabase().getCollection(HasMap.class.getSimpleName()).find().first();
+        document = getDocumentCollection(HasMap.class).find().first();
         Assert.assertTrue("Should find the field", document.containsKey("properties"));
         Assert.assertEquals(expected, datastore.find(HasMap.class)
                                                .execute(new FindOptions().limit(1))
@@ -234,7 +239,7 @@ public class MapperOptionsTest extends TestBase {
 
     private void shouldNotFindField(final Datastore datastore, final HasCollectionValuedMap hm) {
         datastore.save(hm);
-        Document document = getDatabase().getCollection(HasCollectionValuedMap.class.getSimpleName()).find().first();
+        Document document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("properties"), document.containsKey("properties"));
         Assert.assertNull(datastore.find(HasCollectionValuedMap.class)
                                    .execute(new FindOptions().limit(1))
@@ -248,7 +253,7 @@ public class MapperOptionsTest extends TestBase {
                                  final Map<String, Collection<String>> expected) {
         final Document document;
         datastore.save(hm);
-        document = getDatabase().getCollection(HasCollectionValuedMap.class.getSimpleName()).find().first();
+        document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
         Assert.assertTrue("Should find the field", document.containsKey("properties"));
         Assert.assertEquals(expected, datastore.find(HasCollectionValuedMap.class)
                                                .execute(new FindOptions().limit(1))
@@ -259,7 +264,7 @@ public class MapperOptionsTest extends TestBase {
 
     private void shouldNotFindField(final Datastore datastore, final HasComplexObjectValuedMap hm) {
         datastore.save(hm);
-        Document document = getDatabase().getCollection(HasComplexObjectValuedMap.class.getSimpleName()).find().first();
+        Document document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("properties"), document.containsKey("properties"));
         Assert.assertNull(datastore.find(HasComplexObjectValuedMap.class)
                                    .execute(new FindOptions().limit(1))
@@ -271,7 +276,7 @@ public class MapperOptionsTest extends TestBase {
     private void shouldFindField(final Datastore datastore, final HasComplexObjectValuedMap hm, final Map<String, ComplexObject> expected) {
         final Document document;
         datastore.save(hm);
-        document = getDatabase().getCollection(HasComplexObjectValuedMap.class.getSimpleName()).find().first();
+        document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
         Assert.assertTrue("Should find the field", document.containsKey("properties"));
         Assert.assertEquals(expected, datastore.find(HasComplexObjectValuedMap.class)
                                                .execute(new FindOptions().limit(1))
