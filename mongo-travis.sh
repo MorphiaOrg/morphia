@@ -37,8 +37,11 @@ LINUX=ubuntu1604
 if [ "${MONGODB}" ]
 then
   download
-  mvn install
-  killall -9 mongod
+  if [ -z "$DRIVER" ]
+  then
+    mvn install
+    killall -9 mongod
+  fi
 else
   sudo service mongodb stop
   killall -9  mongod || true
