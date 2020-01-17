@@ -425,6 +425,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testMerge() {
+        checkMinServerVersion(4.2);
         MongoCollection<Document> salaries = getDatabase().getCollection("salaries");
 
         salaries.insertMany(List.of(
@@ -509,6 +510,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testPlanCacheStats() {
+        checkMinServerVersion(4.2);
         List<Document> list = List.of(
             parse("{ '_id' : 1, 'item' : 'abc', 'price' : NumberDecimal('12'), 'quantity' : 2, 'type': 'apparel' }"),
             parse("{ '_id' : 2, 'item' : 'jkl', 'price' : NumberDecimal('20'), 'quantity' : 1, 'type': 'electronics' }"),
@@ -664,6 +666,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testReplaceWith() {
+        checkMinServerVersion(4.2);
         List<Document> documents = List.of(
             parse("{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}"),
             parse("{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}"),
@@ -766,6 +769,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testUnset() {
+        checkMinServerVersion(4.2);
         List<Document> documents = List.of(
             parse("{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
                   + "[ {warehouse: 'A', qty: 5 }, {warehouse: 'B', qty: 15 } ] }"),
