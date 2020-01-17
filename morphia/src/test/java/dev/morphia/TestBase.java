@@ -2,6 +2,7 @@ package dev.morphia;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -109,6 +110,10 @@ public abstract class TestBase {
             iterator.next();
         }
         return count;
+    }
+
+    protected MongoCollection<Document> getDocumentCollection(final Class<?> type) {
+        return getDatabase().getCollection(getMappedClass(type).getCollectionName());
     }
 
     /**

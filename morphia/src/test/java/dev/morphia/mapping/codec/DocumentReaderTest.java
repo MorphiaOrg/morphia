@@ -110,8 +110,7 @@ public class DocumentReaderTest extends TestBase {
         parent.child = new Child();
         getDs().save(parent);
 
-        MongoCollection<Document> collection = getDatabase()
-                                                   .getCollection(Parent.class.getSimpleName());
+        MongoCollection<Document> collection = getDocumentCollection(Parent.class);
 
         Document first = collection.find().first();
 

@@ -193,10 +193,6 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private MongoCollection<Document> getDocumentCollection(final Class<?> type) {
-        return getDatabase().getCollection(getMappedClass(type).getCollectionName());
-    }
-
     private Datastore empties(final boolean storeEmpties) {
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         return Morphia.createDatastore(getMongoClient(), getDatabase().getName(),

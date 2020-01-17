@@ -48,7 +48,7 @@ public class TransientMappingTest extends TestBase {
         entity.morphiaTransientSerializable = serializable;
 
         getDs().save(entity);
-        Document document = getDatabase().getCollection(HasTransientFields.class.getSimpleName()).find().first();
+        Document document = getDocumentCollection(HasTransientFields.class).find().first();
         String string = toString(document);
         Assert.assertFalse(string, document.containsKey("morphiaTransientString"));
         Assert.assertFalse(string, document.containsKey("morphiaTransientInt"));

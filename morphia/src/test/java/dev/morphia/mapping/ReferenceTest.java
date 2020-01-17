@@ -81,7 +81,7 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(refs);
 
         // ensure that we're not using DBRef
-        final MongoCollection<Document> collection = getDatabase().getCollection(Container.class.getSimpleName());
+        final MongoCollection<Document> collection = getDocumentCollection(Container.class);
         final Document persisted = collection.find(new Document("_id", key)).first();
         assertNotNull(persisted);
         assertEquals("foo", persisted.get("singleRef"));
