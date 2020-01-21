@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.bson.codecs.pojo;
+package dev.morphia.mapping;
 
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
 import java.util.Map;
@@ -24,14 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
 
-public final class DiscriminatorLookup {
+final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<String, Class<?>>();
     private final Set<String> packages;
 
-    public DiscriminatorLookup(final Map<Class<?>, ClassModel<?>> classModels, final Set<String> packages) {
-        for (ClassModel<?> classModel : classModels.values()) {
-            if (classModel.getDiscriminator() != null) {
-                discriminatorClassMap.put(classModel.getDiscriminator(), classModel.getType());
+    DiscriminatorLookup(final Map<Class<?>, EntityModel<?>> entityModels, final Set<String> packages) {
+        for (EntityModel<?> entityModel : entityModels.values()) {
+            if (entityModel.getDiscriminator() != null) {
+                discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
             }
         }
         this.packages = packages;
@@ -55,9 +56,9 @@ public final class DiscriminatorLookup {
         return clazz;
     }
 
-    public void addClassModel(final ClassModel<?> classModel) {
-        if (classModel.getDiscriminator() != null) {
-            discriminatorClassMap.put(classModel.getDiscriminator(), classModel.getType());
+    void addModel(final EntityModel<?> entityModel) {
+        if (entityModel.getDiscriminator() != null) {
+            discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
         }
     }
 
