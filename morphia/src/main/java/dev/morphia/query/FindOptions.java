@@ -41,7 +41,6 @@ import java.util.concurrent.TimeUnit;
 public final class FindOptions implements SessionConfigurable<FindOptions> {
     private int batchSize;
     private int limit;
-    private Document modifiers;
     private long maxTimeMS;
     private long maxAwaitTimeMS;
     private int skip;
@@ -53,6 +52,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     private Collation collation;
     private String comment;
     private Document hint;
+    private String hintString;
     private Document max;
     private Document min;
     private boolean returnKey;
@@ -77,7 +77,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     FindOptions(final FindOptions original) {
         this.batchSize = original.batchSize;
         this.limit = original.limit;
-        this.modifiers = original.modifiers;
         this.maxTimeMS = original.maxTimeMS;
         this.maxAwaitTimeMS = original.maxAwaitTimeMS;
         this.skip = original.skip;
@@ -89,6 +88,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         this.collation = original.collation;
         this.comment = original.comment;
         this.hint = original.hint;
+        this.hintString = original.hintString;
         this.max = original.max;
         this.min = original.min;
         this.returnKey = original.returnKey;
@@ -97,238 +97,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         this.readPreference = original.readPreference;
         this.projection = original.projection;
         this.queryLogId = original.queryLogId;
-    }
-
-    /**
-     * Sets the limit
-     *
-     * @param limit the limit
-     * @return this
-     */
-    public FindOptions limit(final int limit) {
-        this.limit = limit;
-        return this;
-    }
-
-    /**
-     * Sets how many documents to skip
-     *
-     * @param skip the count
-     * @return this
-     */
-    public FindOptions skip(final int skip) {
-        this.skip = skip;
-        return this;
-    }
-
-    /**
-     * @param timeUnit the time unit to apply
-     * @return the max time for the operation
-     */
-    public long getMaxTime(final TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        return timeUnit.convert(this.maxTimeMS, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Sets the max time
-     *
-     * @param maxTime  the max
-     * @param timeUnit the unit
-     * @return this
-     */
-    public FindOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        Assertions.isTrueArgument("maxTime > = 0", maxTime >= 0L);
-        this.maxTimeMS = TimeUnit.MILLISECONDS.convert(maxTime, timeUnit);
-        return this;
-    }
-
-    /**
-     * @param timeUnit the time unit to apply
-     * @return the max await time for the operation
-     */
-    public long getMaxAwaitTime(final TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        return timeUnit.convert(this.maxAwaitTimeMS, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Sets the max await time
-     *
-     * @param maxAwaitTime the max
-     * @param timeUnit     the unit
-     * @return this
-     */
-    public FindOptions maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        Assertions.isTrueArgument("maxAwaitTime > = 0", maxAwaitTime >= 0L);
-        this.maxAwaitTimeMS = TimeUnit.MILLISECONDS.convert(maxAwaitTime, timeUnit);
-        return this;
-    }
-
-    /**
-     * Sets the batch size
-     *
-     * @param batchSize the size
-     * @return this
-     */
-    public FindOptions batchSize(final int batchSize) {
-        this.batchSize = batchSize;
-        return this;
-    }
-
-    /**
-     * @return the projection
-     */
-    public Projection projection() {
-        if (projection == null) {
-            projection = new Projection(this);
-        }
-        return projection;
-    }
-
-    /**
-     * Sets to the sort to use
-     *
-     * @param sort the sort document
-     * @return this
-     */
-    public FindOptions sort(final Document sort) {
-        this.sort = sort;
-        return this;
-    }
-
-    /**
-     * Sets whether to disable cursor time out
-     *
-     * @param noCursorTimeout true if the time should be disabled
-     * @return this
-     */
-    public FindOptions noCursorTimeout(final boolean noCursorTimeout) {
-        this.noCursorTimeout = noCursorTimeout;
-        return this;
-    }
-
-    /**
-     * Users should not set this under normal circumstances.
-     *
-     * @param oplogReplay if oplog replay is enabled
-     * @return this
-     */
-    public FindOptions oplogReplay(final boolean oplogReplay) {
-        this.oplogReplay = oplogReplay;
-        return this;
-    }
-
-    /**
-     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
-     *
-     * @param partial if partial results for sharded clusters is enabled
-     * @return this
-     */
-    public FindOptions partial(final boolean partial) {
-        this.partial = partial;
-        return this;
-    }
-
-    /**
-     * Sets the cursor type
-     *
-     * @param cursorType the type
-     * @return this
-     */
-    public FindOptions cursorType(final CursorType cursorType) {
-        this.cursorType = Assertions.notNull("cursorType", cursorType);
-        return this;
-    }
-
-    /**
-     * Sets the collation to use
-     *
-     * @param collation the collation
-     * @return this
-     */
-    public FindOptions collation(final Collation collation) {
-        this.collation = collation;
-        return this;
-    }
-
-    /**
-     * Sets the index hint
-     *
-     * @param hint the hint
-     * @return this
-     */
-    public FindOptions hint(final Document hint) {
-        this.hint = hint;
-        return this;
-    }
-
-    /**
-     * Defines the index hint value
-     *
-     * @param hint the hint
-     * @return this
-     */
-    public FindOptions hint(final String hint) {
-        hint(new Document(hint, 1));
-        return this;
-    }
-
-    /**
-     * Sets the max index value
-     *
-     * @param max the max
-     * @return this
-     */
-    public FindOptions max(final Document max) {
-        this.max = max;
-        return this;
-    }
-
-    /**
-     * Sets the min index value
-     *
-     * @param min the min
-     * @return this
-     */
-    public FindOptions min(final Document min) {
-        this.min = min;
-        return this;
-    }
-
-    /**
-     * Sets if only the key value should be returned
-     *
-     * @param returnKey true if only the key should be returned
-     * @return this
-     */
-    public FindOptions returnKey(final boolean returnKey) {
-        this.returnKey = returnKey;
-        return this;
-    }
-
-    /**
-     * Sets if the record ID should be returned
-     *
-     * @param showRecordId true if the record id should be returned
-     * @return this
-     */
-    public FindOptions showRecordId(final boolean showRecordId) {
-        this.showRecordId = showRecordId;
-        return this;
-    }
-
-    /**
-     * Sets the read preference to apply
-     *
-     * @param readPreference the read preference
-     * @return this
-     */
-    public FindOptions readPreference(final ReadPreference readPreference) {
-        this.readPreference = readPreference;
-        return this;
+        this.clientSession = original.clientSession;
     }
 
     /**
@@ -355,12 +124,12 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
             iterable.cursorType(cursorType);
         }
         iterable.hint(hint);
+        iterable.hintString(hintString);
         iterable.limit(limit);
         iterable.max(max);
         iterable.maxAwaitTime(maxAwaitTimeMS, TimeUnit.MILLISECONDS);
         iterable.maxTime(maxTimeMS, TimeUnit.MILLISECONDS);
         iterable.min(min);
-        iterable.modifiers(modifiers);
         iterable.noCursorTimeout(noCursorTimeout);
         iterable.oplogReplay(oplogReplay);
         iterable.partial(partial);
@@ -374,6 +143,94 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
             iterable.sort(sort);
         }
         return iterable;
+    }
+
+    /**
+     * Sets the batch size
+     *
+     * @param batchSize the size
+     * @return this
+     */
+    public FindOptions batchSize(final int batchSize) {
+        this.batchSize = batchSize;
+        return this;
+    }
+
+    /**
+     * Set the client session to use for the insert.
+     *
+     * @param clientSession the client session
+     * @return this
+     * @since 2.0
+     */
+    public FindOptions clientSession(final ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    /**
+     * The client session to use for the insertion.
+     *
+     * @return the client session
+     * @since 2.0
+     */
+    public ClientSession clientSession() {
+        return clientSession;
+    }
+
+    /**
+     * Sets the collation to use
+     *
+     * @param collation the collation
+     * @return this
+     */
+    public FindOptions collation(final Collation collation) {
+        this.collation = collation;
+        return this;
+    }
+
+    /**
+     * @return a copy of this instance
+     */
+    public FindOptions copy() {
+        return new FindOptions(this);
+    }
+
+    /**
+     * Sets the cursor type
+     *
+     * @param cursorType the type
+     * @return this
+     */
+    public FindOptions cursorType(final CursorType cursorType) {
+        this.cursorType = Assertions.notNull("cursorType", cursorType);
+        return this;
+    }
+
+    /**
+     * @param timeUnit the time unit to apply
+     * @return the max await time for the operation
+     */
+    public long getMaxAwaitTime(final TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        return timeUnit.convert(this.maxAwaitTimeMS, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * @param timeUnit the time unit to apply
+     * @return the max time for the operation
+     */
+    public long getMaxTime(final TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        return timeUnit.convert(this.maxTimeMS, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * @return the query log id used for retrieving the logged query
+     * @morphia.internal
+     */
+    public String getQueryLogId() {
+        return queryLogId;
     }
 
     @Override
@@ -477,7 +334,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")
                    .add("batchSize=" + batchSize)
                    .add("limit=" + limit)
-                   .add("modifiers=" + modifiers)
                    .add("maxTimeMS=" + maxTimeMS)
                    .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
                    .add("skip=" + skip)
@@ -620,10 +476,57 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
-     * @return a copy of this instance
+     * Sets the index hint
+     *
+     * @param hint the hint
+     * @return this
      */
-    public FindOptions copy() {
-        return new FindOptions(this);
+    public FindOptions hint(final Document hint) {
+        this.hint = hint;
+        return this;
+    }
+
+    /**
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hint(final String hint) {
+        hintString(hint);
+        return this;
+    }
+
+    /**
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hintString(final String hint) {
+        this.hintString = hint;
+        return this;
+    }
+
+    /**
+     * This is an experimental method.  It's implementation and presence are subject to change.
+     *
+     * @return this
+     * @morphia.internal
+     */
+    public boolean isLogQuery() {
+        return queryLogId != null;
+    }
+
+    /**
+     * Sets the limit
+     *
+     * @param limit the limit
+     * @return this
+     */
+    public FindOptions limit(final int limit) {
+        this.limit = limit;
+        return this;
     }
 
     /**
@@ -650,42 +553,150 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
-     * This is an experimental method.  It's implementation and presence are subject to change.
+     * Sets the max index value
      *
+     * @param max the max
      * @return this
-     * @morphia.internal
      */
-    public boolean isLogQuery() {
-        return queryLogId != null;
-    }
-
-    /**
-     * @return the query log id used for retrieving the logged query
-     * @morphia.internal
-     */
-    public String getQueryLogId() {
-        return queryLogId;
-    }
-
-    /**
-     * Set the client session to use for the insert.
-     *
-     * @param clientSession the client session
-     * @return this
-     * @since 2.0
-     */
-    public FindOptions clientSession(final ClientSession clientSession) {
-        this.clientSession = clientSession;
+    public FindOptions max(final Document max) {
+        this.max = max;
         return this;
     }
 
     /**
-     * The client session to use for the insertion.
+     * Sets the max await time
      *
-     * @return the client session
-     * @since 2.0
+     * @param maxAwaitTime the max
+     * @param timeUnit     the unit
+     * @return this
      */
-    public ClientSession clientSession() {
-        return clientSession;
+    public FindOptions maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        Assertions.isTrueArgument("maxAwaitTime > = 0", maxAwaitTime >= 0L);
+        this.maxAwaitTimeMS = TimeUnit.MILLISECONDS.convert(maxAwaitTime, timeUnit);
+        return this;
+    }
+
+    /**
+     * Sets the max time
+     *
+     * @param maxTime  the max
+     * @param timeUnit the unit
+     * @return this
+     */
+    public FindOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        Assertions.isTrueArgument("maxTime > = 0", maxTime >= 0L);
+        this.maxTimeMS = TimeUnit.MILLISECONDS.convert(maxTime, timeUnit);
+        return this;
+    }
+
+    /**
+     * Sets the min index value
+     *
+     * @param min the min
+     * @return this
+     */
+    public FindOptions min(final Document min) {
+        this.min = min;
+        return this;
+    }
+
+    /**
+     * Sets whether to disable cursor time out
+     *
+     * @param noCursorTimeout true if the time should be disabled
+     * @return this
+     */
+    public FindOptions noCursorTimeout(final boolean noCursorTimeout) {
+        this.noCursorTimeout = noCursorTimeout;
+        return this;
+    }
+
+    /**
+     * Users should not set this under normal circumstances.
+     *
+     * @param oplogReplay if oplog replay is enabled
+     * @return this
+     */
+    public FindOptions oplogReplay(final boolean oplogReplay) {
+        this.oplogReplay = oplogReplay;
+        return this;
+    }
+
+    /**
+     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
+     *
+     * @param partial if partial results for sharded clusters is enabled
+     * @return this
+     */
+    public FindOptions partial(final boolean partial) {
+        this.partial = partial;
+        return this;
+    }
+
+    /**
+     * @return the projection
+     */
+    public Projection projection() {
+        if (projection == null) {
+            projection = new Projection(this);
+        }
+        return projection;
+    }
+
+    /**
+     * Sets the read preference to apply
+     *
+     * @param readPreference the read preference
+     * @return this
+     */
+    public FindOptions readPreference(final ReadPreference readPreference) {
+        this.readPreference = readPreference;
+        return this;
+    }
+
+    /**
+     * Sets if only the key value should be returned
+     *
+     * @param returnKey true if only the key should be returned
+     * @return this
+     */
+    public FindOptions returnKey(final boolean returnKey) {
+        this.returnKey = returnKey;
+        return this;
+    }
+
+    /**
+     * Sets if the record ID should be returned
+     *
+     * @param showRecordId true if the record id should be returned
+     * @return this
+     */
+    public FindOptions showRecordId(final boolean showRecordId) {
+        this.showRecordId = showRecordId;
+        return this;
+    }
+
+    /**
+     * Sets how many documents to skip
+     *
+     * @param skip the count
+     * @return this
+     */
+    public FindOptions skip(final int skip) {
+        this.skip = skip;
+        return this;
+    }
+
+    /**
+     * Sets to the sort to use
+     *
+     * @param sort the sort document
+     * @return this
+     */
+    public FindOptions sort(final Document sort) {
+        this.sort = sort;
+        return this;
     }
 }

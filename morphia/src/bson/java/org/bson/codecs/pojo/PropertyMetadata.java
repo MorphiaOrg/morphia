@@ -46,7 +46,7 @@ public final class PropertyMetadata<T> {
     private Method getter;
     private Method setter;
 
-    public PropertyMetadata(final String name, final String declaringClassName, final TypeData<T> typeData) {
+    PropertyMetadata(final String name, final String declaringClassName, final TypeData<T> typeData) {
         this.name = name;
         this.declaringClassName = declaringClassName;
         this.typeData = typeData;

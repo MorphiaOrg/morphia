@@ -5,33 +5,26 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Handler;
-import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.experimental.IdField;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
-import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import org.bson.codecs.pojo.PropertyAccessor;
-import org.bson.codecs.pojo.PropertyMetadata;
-import org.bson.codecs.pojo.PropertyModelBuilder;
 import org.bson.codecs.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;
-import static org.bson.codecs.pojo.PojoBuilderHelper.createPropertyModelBuilder;
 
 /**
  * A set of conventions to apply to Morphia entities
@@ -64,31 +57,22 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
 
         options.getDiscriminator().apply(modelBuilder);
 
-        final List<String> properties = modelBuilder.getPropertyModelBuilders().stream()
-                                                         .map(PropertyModelBuilder::getName)
-                                                         .collect(Collectors.toList());
-        for (final String name : properties) {
-            modelBuilder.removeProperty(name);
-        }
-        modelBuilder.propertyNameToTypeParameterMap(Collections.emptyMap());
+        processFields(modelBuilder, datastore, options);
 
-        processFields(datastore, modelBuilder, options);
-
-        if (modelBuilder.getIdPropertyName() == null) {
+        if (modelBuilder.idFieldName() == null) {
             IdField idField = modelBuilder.getAnnotation(IdField.class);
             if (idField != null) {
-                modelBuilder.idPropertyName(idField.value());
-                FieldModelBuilder<?> fieldModelBuilder = modelBuilder.getFieldModelBuilders().stream()
-                                                                     .filter(builder -> builder.getName().equals(idField.value()))
-                                                                     .findFirst().orElseThrow();
+                modelBuilder.idFieldName(idField.value());
+                FieldModelBuilder<?> fieldModelBuilder = modelBuilder.fieldModelByFieldName(idField.value());
                 fieldModelBuilder.mappedName("_id");
             }
         }
 
     }
 
-    void processFields(final Datastore datastore, final EntityModelBuilder<?> modelBuilder, final MapperOptions options) {
-        Iterator<FieldModelBuilder<?>> iterator = modelBuilder.getFieldModelBuilders().iterator();
+    @SuppressWarnings("rawtypes")
+    void processFields(final EntityModelBuilder<?> modelBuilder, final Datastore datastore, final MapperOptions options) {
+        Iterator<FieldModelBuilder<?>> iterator = modelBuilder.fieldModels().iterator();
         while (iterator.hasNext()) {
             final FieldModelBuilder<?> builder = iterator.next();
             final Field field = builder.getField();
@@ -102,54 +86,40 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
                     builder.typeData(typeData);
                 }
 
-                List<String> names = new ArrayList<>(List.of(builder.mappedName()));
                 AlsoLoad alsoLoad = builder.getAnnotation(AlsoLoad.class);
                 if (alsoLoad != null) {
-                    names.addAll(Arrays.asList(alsoLoad.value()));
-                }
-                for (final String name : names) {
-                    buildProperty(datastore, options, modelBuilder, builder, field, name);
+                    for (final String name : alsoLoad.value()) {
+                        builder.alternateName(name);
+                    }
                 }
             }
+
+            buildField(datastore, options, builder, field);
         }
     }
 
-    private void buildProperty(final Datastore datastore, final MapperOptions options, final EntityModelBuilder modelBuilder,
-                               final FieldModelBuilder<?> builder, final Field field, final String mappedName) {
-        final PropertyMetadata<?> propertyMetadata = new PropertyMetadata<>(builder.getName(),
-            modelBuilder.getType().getName(), builder.getTypeData())
-                                                         .field(field);
-        final PropertyModelBuilder<?> property = createPropertyModelBuilder(propertyMetadata);
-        modelBuilder.addProperty(property);
+    private void buildField(final Datastore datastore,
+                            final MapperOptions options,
+                            final FieldModelBuilder<?> builder,
+                            final Field field) {
 
-        property.typeData((TypeData) builder.getTypeData());
+        builder
+            .serialization(new MorphiaPropertySerialization(options, builder))
+            .accessor(getAccessor(field, builder));
+        configureCodec(datastore, builder, field);
 
-        if (builder.hasAnnotation(Id.class)) {
-            modelBuilder.idPropertyName(property.getReadName());
-        }
-
-        property.readName(mappedName)
-                .writeName(mappedName)
-                .propertySerialization(new MorphiaPropertySerialization(options, builder))
-                .readAnnotations(builder.getAnnotations())
-                .writeAnnotations(builder.getAnnotations())
-                .propertyAccessor(getPropertyAccessor(field, property));
-        configureCodec(datastore, property, field);
-
-        if (isNotConcrete(property.getTypeData())) {
-            property.discriminatorEnabled(true);
+        if (isNotConcrete(builder.getTypeData())) {
+            builder.discriminatorEnabled(true);
         }
     }
 
-    private PropertyAccessor getPropertyAccessor(final Field field,
-                                                 final PropertyModelBuilder<?> property) {
-
+    private PropertyAccessor<?> getAccessor(final Field field, final FieldModelBuilder<?> property) {
         return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
                ? new ArrayFieldAccessor(property.getTypeData(), field)
                : new FieldAccessor(field);
     }
 
-    private void configureCodec(final Datastore datastore, final PropertyModelBuilder builder, final Field field) {
+    private void configureCodec(final Datastore datastore, final FieldModelBuilder<?> builder, final Field field) {
         Handler handler = getHandler(builder);
         if (handler != null) {
             try {
@@ -163,7 +133,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
     }
 
     private boolean isNotConcrete(final TypeData<?> typeData) {
-        Class type;
+        Class<?> type;
         if (!typeData.getTypeParameters().isEmpty()) {
             type = typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1).getType();
         } else {
@@ -173,16 +143,15 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         return isNotConcrete(type);
     }
 
-    private Handler getHandler(final PropertyModelBuilder builder) {
-        Handler handler = (Handler) builder.getTypeData().getType().getAnnotation(Handler.class);
+    private Handler getHandler(final FieldModelBuilder<?> builder) {
+        Handler handler = builder.getTypeData().getType().getAnnotation(Handler.class);
 
         if (handler == null) {
-            final List<Annotation> readAnnotations = builder.getReadAnnotations();
-            handler = (Handler) readAnnotations
+            handler = (Handler) builder.getAnnotations()
                                     .stream().filter(a -> a.getClass().equals(Handler.class))
                                     .findFirst().orElse(null);
             if (handler == null) {
-                for (Annotation annotation : readAnnotations) {
+                for (Annotation annotation : builder.getAnnotations()) {
                     handler = annotation.annotationType().getAnnotation(Handler.class);
                 }
             }

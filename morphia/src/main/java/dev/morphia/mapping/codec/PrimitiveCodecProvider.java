@@ -35,4 +35,9 @@ public class PrimitiveCodecProvider implements CodecRegistry {
     public <T> Codec<T> get(final Class<T> clazz) {
         return primitiveCodecs.get(clazz);
     }
+
+    @Override
+    public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
+        return primitiveCodecs.get(clazz);
+    }
 }

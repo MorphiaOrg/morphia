@@ -35,7 +35,7 @@ import static org.bson.codecs.pojo.PropertyReflectionUtils.isGetter;
 
 public class TypeData<T> implements TypeWithTypeParameters<T> {
     private final Class<T> type;
-    private final List<TypeData<?>> typeParameters;
+    private final List<org.bson.codecs.pojo.TypeData<?>> typeParameters;
 
     /**
      * Creates a new builder for ClassTypeData
@@ -48,7 +48,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         return new Builder<T>(notNull("type", type));
     }
 
-    public static TypeData<?> newInstance(final Method method) {
+    public static org.bson.codecs.pojo.TypeData<?> newInstance(final Method method) {
         if (isGetter(method)) {
             return newInstance(method.getGenericReturnType(), method.getReturnType());
         } else {
@@ -56,12 +56,12 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         }
     }
 
-    public static TypeData<?> newInstance(final Field field) {
+    public static org.bson.codecs.pojo.TypeData<?> newInstance(final Field field) {
         return newInstance(field.getGenericType(), field.getType());
     }
 
-    public static <T> TypeData<T> newInstance(final Type genericType, final Class<T> clazz) {
-        TypeData.Builder<T> builder = TypeData.builder(clazz);
+    public static <T> org.bson.codecs.pojo.TypeData<T> newInstance(final Type genericType, final Class<T> clazz) {
+        org.bson.codecs.pojo.TypeData.Builder<T> builder = org.bson.codecs.pojo.TypeData.builder(clazz);
         if (genericType instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) genericType;
             for (Type argType : pType.getActualTypeArguments()) {
@@ -72,20 +72,20 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static <T> void getNestedTypeData(final TypeData.Builder<T> builder, final Type type) {
+    private static <T> void getNestedTypeData(final org.bson.codecs.pojo.TypeData.Builder<T> builder, final Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) type;
-            TypeData.Builder paramBuilder = TypeData.builder((Class) pType.getRawType());
+            org.bson.codecs.pojo.TypeData.Builder paramBuilder = org.bson.codecs.pojo.TypeData.builder((Class) pType.getRawType());
             for (Type argType : pType.getActualTypeArguments()) {
                 getNestedTypeData(paramBuilder, argType);
             }
             builder.addTypeParameter(paramBuilder.build());
         } else if (type instanceof WildcardType) {
-            builder.addTypeParameter(TypeData.builder((Class) ((WildcardType) type).getUpperBounds()[0]).build());
+            builder.addTypeParameter(org.bson.codecs.pojo.TypeData.builder((Class) ((WildcardType) type).getUpperBounds()[0]).build());
         } else if (type instanceof TypeVariable) {
-            builder.addTypeParameter(TypeData.builder(Object.class).build());
+            builder.addTypeParameter(org.bson.codecs.pojo.TypeData.builder(Object.class).build());
         } else if (type instanceof Class) {
-            builder.addTypeParameter(TypeData.builder((Class) type).build());
+            builder.addTypeParameter(org.bson.codecs.pojo.TypeData.builder((Class) type).build());
         }
     }
 
@@ -101,7 +101,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      * @return the type parameters for the class
      */
     @Override
-    public List<TypeData<?>> getTypeParameters() {
+    public List<org.bson.codecs.pojo.TypeData<?>> getTypeParameters() {
         return typeParameters;
     }
 
@@ -112,7 +112,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      */
     public static final class Builder<T> {
         private final Class<T> type;
-        private final List<TypeData<?>> typeParameters = new ArrayList<TypeData<?>>();
+        private final List<org.bson.codecs.pojo.TypeData<?>> typeParameters = new ArrayList<org.bson.codecs.pojo.TypeData<?>>();
 
         private Builder(final Class<T> type) {
             this.type = type;
@@ -125,7 +125,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
          * @param <S> the type of the type parameter
          * @return this
          */
-        public <S> Builder<T> addTypeParameter(final TypeData<S> typeParameter) {
+        public <S> Builder<T> addTypeParameter(final org.bson.codecs.pojo.TypeData<S> typeParameter) {
             typeParameters.add(notNull("typeParameter", typeParameter));
             return this;
         }
@@ -136,9 +136,9 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
          * @param typeParameters the type parameters
          * @return this
          */
-        public Builder<T> addTypeParameters(final List<TypeData<?>> typeParameters) {
+        public Builder<T> addTypeParameters(final List<org.bson.codecs.pojo.TypeData<?>> typeParameters) {
             notNull("typeParameters", typeParameters);
-            for (TypeData<?> typeParameter : typeParameters) {
+            for (org.bson.codecs.pojo.TypeData<?> typeParameter : typeParameters) {
                 addTypeParameter(typeParameter);
             }
             return this;
@@ -147,8 +147,8 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         /**
          * @return the class type data
          */
-        public TypeData<T> build() {
-            return new TypeData<T>(type, Collections.unmodifiableList(typeParameters));
+        public org.bson.codecs.pojo.TypeData<T> build() {
+            return new org.bson.codecs.pojo.TypeData<T>(type, Collections.unmodifiableList(typeParameters));
         }
     }
 
@@ -162,11 +162,11 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
                 + "}";
     }
 
-    private static String nestedTypeParameters(final List<TypeData<?>> typeParameters) {
+    private static String nestedTypeParameters(final List<org.bson.codecs.pojo.TypeData<?>> typeParameters) {
         StringBuilder builder = new StringBuilder();
         int count = 0;
         int last = typeParameters.size();
-        for (TypeData<?> typeParameter : typeParameters) {
+        for (org.bson.codecs.pojo.TypeData<?> typeParameter : typeParameters) {
             count++;
             builder.append(typeParameter.getType().getSimpleName());
             if (!typeParameter.getTypeParameters().isEmpty()) {
@@ -184,20 +184,16 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof TypeData)) {
+        if (!(o instanceof org.bson.codecs.pojo.TypeData)) {
             return false;
         }
 
-        TypeData<?> that = (TypeData<?>) o;
+        org.bson.codecs.pojo.TypeData<?> that = (org.bson.codecs.pojo.TypeData<?>) o;
 
         if (!getType().equals(that.getType())) {
             return false;
         }
-        if (!getTypeParameters().equals(that.getTypeParameters())) {
-            return false;
-        }
-
-        return true;
+        return getTypeParameters().equals(that.getTypeParameters());
     }
 
     @Override
@@ -207,7 +203,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         return result;
     }
 
-    private TypeData(final Class<T> type, final List<TypeData<?>> typeParameters) {
+    private TypeData(final Class<T> type, final List<org.bson.codecs.pojo.TypeData<?>> typeParameters) {
         this.type = boxType(type);
         this.typeParameters = typeParameters;
     }

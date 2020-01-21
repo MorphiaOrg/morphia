@@ -4,12 +4,15 @@ package dev.morphia.mapping;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import org.bson.UuidRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.bson.UuidRepresentation.STANDARD;
 
 /**
  * Options to control mapping behavior.
@@ -29,6 +32,7 @@ public class MapperOptions {
     private final List<MorphiaConvention> conventions;
     private final NamingStrategy collectionNaming;
     private final NamingStrategy fieldNaming;
+    private final UuidRepresentation uuidRepresentation;
     private ClassLoader classLoader;
 
     private MapperOptions(final Builder builder) {
@@ -44,6 +48,7 @@ public class MapperOptions {
         conventions = builder.conventions;
         collectionNaming = builder.collectionNaming;
         fieldNaming = builder.fieldNaming;
+        uuidRepresentation = builder.uuidRepresentation;
     }
 
     /**
@@ -81,31 +86,10 @@ public class MapperOptions {
     }
 
     /**
-     * @return the factory to use when creating new instances
-     */
-    public MorphiaInstanceCreator getCreator() {
-        return creator;
-    }
-
-    /**
-     * @return true if Morphia should cache name to Class lookups
-     */
-    public boolean isCacheClassLookups() {
-        return cacheClassLookups;
-    }
-
-    /**
      * @return true if Morphia should ignore final fields
      */
     public boolean isIgnoreFinals() {
         return ignoreFinals;
-    }
-
-    /**
-     * @return true if Morphia should store empty values for lists/maps/sets/arrays
-     */
-    public boolean isStoreEmpties() {
-        return storeEmpties;
     }
 
     /**
@@ -116,10 +100,31 @@ public class MapperOptions {
     }
 
     /**
+     * @return true if Morphia should store empty values for lists/maps/sets/arrays
+     */
+    public boolean isStoreEmpties() {
+        return storeEmpties;
+    }
+
+    /**
+     * @return true if Morphia should cache name to Class lookups
+     */
+    public boolean isCacheClassLookups() {
+        return cacheClassLookups;
+    }
+
+    /**
      * @return true if Morphia should map classes from the sub-packages as well
      */
     public boolean isMapSubPackages() {
         return mapSubPackages;
+    }
+
+    /**
+     * @return the factory to use when creating new instances
+     */
+    public MorphiaInstanceCreator getCreator() {
+        return creator;
     }
 
     /**
@@ -144,10 +149,10 @@ public class MapperOptions {
     }
 
     /**
-     * @return the discriminator field name
+     * @return the configured Conventions
      */
-    public String getDiscriminatorKey() {
-        return discriminatorKey;
+    public List<MorphiaConvention> getConventions() {
+        return Collections.unmodifiableList(conventions);
     }
 
     /**
@@ -158,10 +163,10 @@ public class MapperOptions {
     }
 
     /**
-     * @return the configured Conventions
+     * @return the discriminator field name
      */
-    public List<MorphiaConvention> getConventions() {
-        return Collections.unmodifiableList(conventions);
+    public String getDiscriminatorKey() {
+        return discriminatorKey;
     }
 
     /**
@@ -170,6 +175,13 @@ public class MapperOptions {
      */
     public NamingStrategy getFieldNaming() {
         return fieldNaming;
+    }
+
+    /**
+     * @return the UUID representation to use in the driver
+     */
+    public UuidRepresentation getUuidRepresentation() {
+        return uuidRepresentation;
     }
 
     /**
@@ -190,138 +202,9 @@ public class MapperOptions {
         private List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
         private NamingStrategy collectionNaming = NamingStrategy.camelCase();
         private NamingStrategy fieldNaming = NamingStrategy.identity();
+        private UuidRepresentation uuidRepresentation = STANDARD;
 
         private Builder() {
-        }
-
-        /**
-         * @param ignoreFinals if true final fields are ignored
-         * @return this
-         */
-        public Builder ignoreFinals(final boolean ignoreFinals) {
-            this.ignoreFinals = ignoreFinals;
-            return this;
-        }
-
-        /**
-         * @param storeNulls if true null values are stored in the database
-         * @return this
-         */
-        public Builder storeNulls(final boolean storeNulls) {
-            this.storeNulls = storeNulls;
-            return this;
-        }
-
-        /**
-         * @param storeEmpties if true empty maps and collection types are stored in the database
-         * @return this
-         */
-        public Builder storeEmpties(final boolean storeEmpties) {
-            this.storeEmpties = storeEmpties;
-            return this;
-        }
-
-        /**
-         * @param useLowerCaseCollectionNames if true, generated collections names are lower cased
-         * @return this
-         * @deprecated use {@link #collectionNaming(NamingStrategy)} instead
-         */
-        @Deprecated(since = "2.0", forRemoval = true)
-        public Builder useLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
-            if (useLowerCaseCollectionNames) {
-                collectionNaming(NamingStrategy.lowerCase());
-            }
-            return this;
-        }
-
-        /**
-         * @param cacheClassLookups if true class lookups are cached
-         * @return this
-         */
-        public Builder cacheClassLookups(final boolean cacheClassLookups) {
-            this.cacheClassLookups = cacheClassLookups;
-            return this;
-        }
-
-        /**
-         * @param mapSubPackages if true subpackages are mapped when given a particular package
-         * @return this
-         */
-        public Builder mapSubPackages(final boolean mapSubPackages) {
-            this.mapSubPackages = mapSubPackages;
-            return this;
-        }
-
-        /**
-         * @param disableEmbeddedIndexes if true scanning @Embedded fields for indexing is disabled
-         * @return this
-         */
-        public Builder disableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
-            LOG.warn("this option is no longer used");
-            return this;
-        }
-
-        /**
-         * @param creator the object factory to use when creating instances
-         * @return this
-         */
-        public Builder objectFactory(final MorphiaInstanceCreator creator) {
-            this.creator = creator;
-            return this;
-        }
-
-        /**
-         * @param classLoader the ClassLoader to use
-         * @return this
-         */
-        public Builder classLoader(final ClassLoader classLoader) {
-            this.classLoader = classLoader;
-            return this;
-        }
-
-        /**
-         * Defines the discriminator key name
-         *
-         * @param key the key to use, e.g., "_t".  the default/legacy value is "className"
-         * @return this
-         */
-        public Builder discriminatorKey(final String key) {
-            this.discriminatorKey = key;
-            return this;
-        }
-
-        /**
-         * Sets the discriminator function to use
-         *
-         * @param function the function to use
-         * @return this
-         */
-        public Builder discriminator(final DiscriminatorFunction function) {
-            this.discriminator = function;
-            return this;
-        }
-
-        /**
-         * Sets the naming strategy to use for collection names
-         *
-         * @param strategy the strategy to use
-         * @return this
-         */
-        public Builder collectionNaming(final NamingStrategy strategy) {
-            this.collectionNaming = strategy;
-            return this;
-        }
-
-        /**
-         * Sets the naming strategy to use for fields unless expliclity set via @Property
-         *
-         * @param strategy the strategy to use
-         * @return this
-         * @see Property
-         */
-        public Builder fieldNaming(final NamingStrategy strategy) {
-            this.fieldNaming = strategy;
-            return this;
         }
 
         /**
@@ -342,6 +225,147 @@ public class MapperOptions {
          */
         public MapperOptions build() {
             return new MapperOptions(this);
+        }
+
+        /**
+         * @param cacheClassLookups if true class lookups are cached
+         * @return this
+         */
+        public Builder cacheClassLookups(final boolean cacheClassLookups) {
+            this.cacheClassLookups = cacheClassLookups;
+            return this;
+        }
+
+        /**
+         * @param classLoader the ClassLoader to use
+         * @return this
+         */
+        public Builder classLoader(final ClassLoader classLoader) {
+            this.classLoader = classLoader;
+            return this;
+        }
+
+        /**
+         * @param disableEmbeddedIndexes if true scanning @Embedded fields for indexing is disabled
+         * @return this
+         */
+        public Builder disableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
+            LOG.warn("this option is no longer used");
+            return this;
+        }
+
+        /**
+         * Sets the discriminator function to use
+         *
+         * @param function the function to use
+         * @return this
+         */
+        public Builder discriminator(final DiscriminatorFunction function) {
+            this.discriminator = function;
+            return this;
+        }
+
+        /**
+         * Defines the discriminator key name
+         *
+         * @param key the key to use, e.g., "_t".  the default/legacy value is "className"
+         * @return this
+         */
+        public Builder discriminatorKey(final String key) {
+            this.discriminatorKey = key;
+            return this;
+        }
+
+        /**
+         * Sets the naming strategy to use for fields unless expliclity set via @Property
+         *
+         * @param strategy the strategy to use
+         * @return this
+         * @see Property
+         */
+        public Builder fieldNaming(final NamingStrategy strategy) {
+            this.fieldNaming = strategy;
+            return this;
+        }
+
+        /**
+         * @param ignoreFinals if true final fields are ignored
+         * @return this
+         */
+        public Builder ignoreFinals(final boolean ignoreFinals) {
+            this.ignoreFinals = ignoreFinals;
+            return this;
+        }
+
+        /**
+         * @param mapSubPackages if true subpackages are mapped when given a particular package
+         * @return this
+         */
+        public Builder mapSubPackages(final boolean mapSubPackages) {
+            this.mapSubPackages = mapSubPackages;
+            return this;
+        }
+
+        /**
+         * @param creator the object factory to use when creating instances
+         * @return this
+         */
+        public Builder objectFactory(final MorphiaInstanceCreator creator) {
+            this.creator = creator;
+            return this;
+        }
+
+        /**
+         * @param storeEmpties if true empty maps and collection types are stored in the database
+         * @return this
+         */
+        public Builder storeEmpties(final boolean storeEmpties) {
+            this.storeEmpties = storeEmpties;
+            return this;
+        }
+
+        /**
+         * @param storeNulls if true null values are stored in the database
+         * @return this
+         */
+        public Builder storeNulls(final boolean storeNulls) {
+            this.storeNulls = storeNulls;
+            return this;
+        }
+
+        /**
+         * @param useLowerCaseCollectionNames if true, generated collections names are lower cased
+         * @return this
+         * @deprecated use {@link #collectionNaming(NamingStrategy)} instead
+         */
+        @Deprecated(since = "2.0", forRemoval = true)
+        public Builder useLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
+            if (useLowerCaseCollectionNames) {
+                collectionNaming(NamingStrategy.lowerCase());
+            }
+            return this;
+        }
+
+        /**
+         * Sets the naming strategy to use for collection names
+         *
+         * @param strategy the strategy to use
+         * @return this
+         */
+        public Builder collectionNaming(final NamingStrategy strategy) {
+            this.collectionNaming = strategy;
+            return this;
+        }
+
+        /**
+         * Configures the UUID representation to use
+         *
+         * @param uuidRepresentation the representation
+         * @return this
+         */
+        public Builder uuidRepresentation(final UuidRepresentation uuidRepresentation) {
+            this.uuidRepresentation = uuidRepresentation;
+            return this;
         }
     }
 }

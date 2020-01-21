@@ -298,8 +298,8 @@ public class MappedClass {
      * @param mapper the Mapper to use for validation
      */
     public void validate(final Mapper mapper) {
-        MorphiaInstanceCreator factory = (MorphiaInstanceCreator) entityModel.getInstanceCreatorFactory()
-                                                                             .create();
+        MorphiaInstanceCreator factory = entityModel.getInstanceCreatorFactory()
+                                                    .create();
         new MappingValidator(factory).validate(mapper, this);
     }
 
@@ -349,9 +349,4 @@ public class MappedClass {
             }
         });
     }
-
-    boolean isSubType(final MappedClass mc) {
-        return mc.equals(superClass) || interfaces.contains(mc);
-    }
-
 }

@@ -26,7 +26,6 @@ import static java.lang.String.format;
  */
 public class DocumentReader implements BsonReader {
     private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
-    private final Stage initial;
     private Stage stage;
 
     /**
@@ -36,7 +35,6 @@ public class DocumentReader implements BsonReader {
      */
     public DocumentReader(final Document document) {
         stage = new InitialStage(this, new DocumentIterator(this, document.entrySet().iterator()));
-        initial = stage;
     }
 
     @Override
@@ -308,21 +306,9 @@ public class DocumentReader implements BsonReader {
         stage().advance();
     }
 
-    @Deprecated
-    @Override
-    public void mark() {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public BsonReaderMark getMark() {
         return new Mark(this, stage());
-    }
-
-    @Deprecated
-    @Override
-    public void reset() {
-        throw new UnsupportedOperationException();
     }
 
     @Override

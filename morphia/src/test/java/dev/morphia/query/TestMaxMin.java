@@ -7,6 +7,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
+import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -49,6 +50,7 @@ public class TestMaxMin extends TestBase {
         ds.save(b);
         ds.save(c);
 
+        ds.ensureIndexes();
         Assert.assertEquals("last", b.id, ds.find(IndexedEntity.class)
                                             .order(descending("id"))
                                             .first(new FindOptions()
@@ -171,7 +173,8 @@ public class TestMaxMin extends TestBase {
 
     @Entity("IndexedEntity")
     @Indexes({
-        @Index(fields = @Field("testField")),
+        @Index(fields = @Field("testField"),
+            options = @IndexOptions(name = "testField")),
         @Index(fields = {@Field("testField"), @Field("_id")})})
     private static final class IndexedEntity {
 

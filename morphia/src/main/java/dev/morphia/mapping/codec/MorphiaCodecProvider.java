@@ -6,7 +6,6 @@ import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.Map;
  * Provider for codecs for Morphia entities
  */
 public class MorphiaCodecProvider implements CodecProvider {
-    private final Map<Class<?>, PojoCodec<?>> codecs = new HashMap<>();
+    private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
     private final Mapper mapper;
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
     private final Datastore datastore;
@@ -42,7 +41,7 @@ public class MorphiaCodecProvider implements CodecProvider {
     public <T> Codec<T> get(final Class<T> type, final CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && mapper.isMappable(type)) {
-            codec = new MorphiaCodec<>(datastore, mapper.getMappedClass(type), propertyCodecProviders,
+            codec = new MorphiaCodec<T>(datastore, mapper.getMappedClass(type), propertyCodecProviders,
                 mapper.getDiscriminatorLookup(),  registry);
             codecs.put(type, codec);
         }

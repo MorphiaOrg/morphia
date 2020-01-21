@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
+import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
@@ -13,13 +14,9 @@ import org.bson.codecs.CollectibleCodec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.ClassModel;
-import org.bson.codecs.pojo.DiscriminatorLookup;
-import org.bson.codecs.pojo.PojoCodec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.codecs.pojo.PropertyCodecRegistryImpl;
-import org.bson.codecs.pojo.PropertyModel;
 import org.bson.types.ObjectId;
 
 import java.util.List;
@@ -35,7 +32,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * @morphia.internal
  * @since 2.0
  */
-public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T> {
+public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final MappedField idField;
     private final Mapper mapper;
     private final EntityModel<T> entityModel;
@@ -72,16 +69,15 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void specializePropertyCodecs() {
-        ClassModel<T> classModel = getClassModel();
-        for (PropertyModel<?> propertyModel : classModel.getPropertyModels()) {
-            Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
-                                                           : propertyCodecRegistry.get(propertyModel.getTypeData());
-            propertyModel.cachedCodec(codec);
+        EntityModel<T> entityModel = getEntityModel();
+        for (FieldModel<?> fieldModel : entityModel.getFieldModels()) {
+            Codec codec = fieldModel.getCodec() != null ? fieldModel.getCodec()
+                                                           : propertyCodecRegistry.get(fieldModel.getTypeData());
+            fieldModel.cachedCodec(codec);
         }
     }
 
-    @Override
-    public EntityModel<T> getClassModel() {
+    public EntityModel<T> getEntityModel() {
         return entityModel;
     }
 
@@ -97,7 +93,7 @@ public class MorphiaCodec<T> extends PojoCodec<T> implements CollectibleCodec<T>
 
     @Override
     public Class<T> getEncoderClass() {
-        return getClassModel().getType();
+        return getEntityModel().getType();
     }
 
     @Override

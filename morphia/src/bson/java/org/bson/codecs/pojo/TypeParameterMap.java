@@ -33,7 +33,7 @@ public final class TypeParameterMap {
      *
      * @return the builder
      */
-    static Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -55,7 +55,7 @@ public final class TypeParameterMap {
     /**
      * A builder for mapping field type parameter indices to the class type parameter indices
      */
-    static final class Builder {
+    public static final class Builder {
         private final Map<Integer, Integer> propertyToClassParamIndexMap = new HashMap<Integer, Integer>();
 
         private Builder() {
@@ -67,7 +67,7 @@ public final class TypeParameterMap {
          * @param classTypeParameterIndex the class's type parameter index that represents the whole field
          * @return this
          */
-        Builder addIndex(final int classTypeParameterIndex) {
+        public Builder addIndex(final int classTypeParameterIndex) {
             propertyToClassParamIndexMap.put(-1, classTypeParameterIndex);
             return this;
         }
@@ -79,7 +79,7 @@ public final class TypeParameterMap {
          * @param classTypeParameterIndex the class's type parameter index
          * @return this
          */
-        Builder addIndex(final int propertyTypeParameterIndex, final int classTypeParameterIndex) {
+        public Builder addIndex(final int propertyTypeParameterIndex, final int classTypeParameterIndex) {
             propertyToClassParamIndexMap.put(propertyTypeParameterIndex, classTypeParameterIndex);
             return this;
         }
@@ -87,7 +87,7 @@ public final class TypeParameterMap {
         /**
          * @return the TypeParameterMap
          */
-        TypeParameterMap build() {
+        public TypeParameterMap build() {
             if (propertyToClassParamIndexMap.size() > 1 && propertyToClassParamIndexMap.containsKey(-1)) {
                 throw new IllegalStateException("You cannot have a generic field that also has type parameters.");
             }
@@ -113,11 +113,7 @@ public final class TypeParameterMap {
 
         TypeParameterMap that = (TypeParameterMap) o;
 
-        if (!getPropertyToClassParamIndexMap().equals(that.getPropertyToClassParamIndexMap())) {
-            return false;
-        }
-
-        return true;
+        return getPropertyToClassParamIndexMap().equals(that.getPropertyToClassParamIndexMap());
     }
 
     @Override

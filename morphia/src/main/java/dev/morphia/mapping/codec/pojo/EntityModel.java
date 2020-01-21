@@ -7,20 +7,21 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
-import org.bson.codecs.pojo.ClassModel;
-import org.bson.codecs.pojo.InstanceCreatorFactory;
-import org.bson.codecs.pojo.PropertyModel;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.bson.codecs.pojo.IdPropertyModelHolder.create;
 
 /**
  * A model of metadata about a type
@@ -37,77 +37,52 @@ import static org.bson.codecs.pojo.IdPropertyModelHolder.create;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-public class EntityModel<T> extends ClassModel<T> {
+public class EntityModel<T> {
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
         PreLoad.class,
         PostPersist.class,
         PostLoad.class);
 
     private final Map<Class<? extends Annotation>, List<Annotation>> annotations;
-    private final List<FieldModel<?>> fieldModels;
+    private final Map<String, FieldModel<?>> fieldModelsByField;
+    private final Map<Object, FieldModel<?>> fieldModelsByMappedName;
     private final Datastore datastore;
-    private final InstanceCreatorFactory creatorFactory;
+    private final InstanceCreatorFactory<T> creatorFactory;
+    private final boolean discriminatorEnabled;
+    private final String discriminatorKey;
+    private final String discriminator;
+    private final Class<T> type;
+    private final String collectionName;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
-    private String collectionName;
-    private Map<String, PropertyModel> propertyMap = new HashMap<>();
 
     /**
      * Creates a new instance
      *
      * @param builder the builder to pull values from
      */
-    EntityModel(final EntityModelBuilder builder) {
-        super(builder.getType(), builder.getPropertyNameToTypeParameterMap(), null,
-            builder.useDiscriminator(), builder.getDiscriminatorKey(), builder.getDiscriminator(),
-            create(builder.getType(), builder.getIdPropertyModel(), builder.getIdGenerator()),
-            builder.getPropertyModels());
+    EntityModel(final EntityModelBuilder<T> builder) {
+        type = builder.getType();
+        discriminatorEnabled = builder.isDiscriminatorEnabled();
+        discriminatorKey = builder.discriminatorKey();
+        discriminator = builder.discriminator();
 
-        this.annotations = builder.getAnnotationsMap();
-        this.fieldModels = builder.getFieldModels();
+        this.annotations = builder.annotationsMap();
+        this.fieldModelsByField = new LinkedHashMap<>();
+        this.fieldModelsByMappedName = new LinkedHashMap<>();
+        builder.fieldModels().forEach(modelBuilder -> {
+            FieldModel<?> model = modelBuilder.build();
+            fieldModelsByMappedName.put(model.getMappedName(), model);
+            for (final String name : modelBuilder.alternateNames()) {
+                if(fieldModelsByMappedName.put(name, model) != null) {
+                    throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
+                }
+            }
+            fieldModelsByField.putIfAbsent(model.getName(), model);
+        });
+
         this.datastore = builder.getDatastore();
         this.collectionName = builder.getCollectionName();
-        creatorFactory = new InstanceCreatorFactoryImpl(this);
-        List<PropertyModel> propertyModels = builder.getPropertyModels();
-        for (final PropertyModel<?> propertyModel : propertyModels) {
-            propertyMap.put(propertyModel.getWriteName(), propertyModel);
-        }
-    }
-
-    /**
-     * Copies an existing model
-     *
-     * @param entityModel      the model to copy
-     * @param useDiscriminator the new use discriminator value
-     */
-    public EntityModel(final EntityModel entityModel, final boolean useDiscriminator) {
-        super(entityModel.getType(), entityModel.getPropertyNameToTypeParameterMap(), entityModel.getInstanceCreatorFactory(),
-            useDiscriminator, entityModel.getDiscriminatorKey(),
-            entityModel.getDiscriminator(),
-            entityModel.getIdPropertyModelHolder(), entityModel.getPropertyModels());
-
-        this.annotations = entityModel.getAnnotations();
-        this.fieldModels = entityModel.getFieldModels();
-        this.datastore = entityModel.datastore;
-        this.collectionName = entityModel.collectionName;
-        this.creatorFactory = entityModel.creatorFactory;
-    }
-
-    /**
-     * Returns all the annotations on this model
-     *
-     * @return the list of annotations
-     */
-    public Map<Class<? extends Annotation>, List<Annotation>> getAnnotations() {
-        return annotations;
-    }
-
-    /**
-     * Returns all the fields on this model
-     *
-     * @return the list of fields
-     */
-    public List<FieldModel<?>> getFieldModels() {
-        return fieldModels;
+        creatorFactory = new InstanceCreatorFactoryImpl<>(this);
     }
 
     /**
@@ -149,23 +124,105 @@ public class EntityModel<T> extends ClassModel<T> {
         return (List<A>) annotations.get(clazz);
     }
 
+    public String getDiscriminator() {
+        return discriminator;
+    }
+
+    /**
+     * @param name the property name
+     * @return the named FieldModel or null if it does not exist
+     */
+    public FieldModel<?> getFieldModelByName(final String name) {
+        return fieldModelsByMappedName.getOrDefault(name, fieldModelsByField.get(name));
+    }
+
+    public FieldModel<?> getIdModel() {
+        return fieldModelsByMappedName.get("_id");
+    }
+
     /**
      * @return a new InstanceCreator instance for the ClassModel
      */
     public MorphiaInstanceCreator<T> getInstanceCreator() {
-        return (MorphiaInstanceCreator<T>) creatorFactory.create();
+        return creatorFactory.create();
+    }
+
+    /**
+     * @return thee creator factory
+     * @morphia.internal
+     */
+    public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
+        return creatorFactory;
+    }
+
+    /**
+     * @return the lifecycle event methods
+     */
+    public Map<Class<? extends Annotation>, List<ClassMethodPair>> getLifecycleMethods() {
+        if (lifecycleMethods == null) {
+            lifecycleMethods = new HashMap<>();
+
+            final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
+            if (entityLisAnn != null && entityLisAnn.value().length != 0) {
+                for (final Class<?> aClass : entityLisAnn.value()) {
+                    mapEvent(aClass, true);
+                }
+            }
+
+            mapEvent(getType(), false);
+        }
+        return lifecycleMethods;
+    }
+
+    public String getName() {
+        return type.getSimpleName();
+    }
+
+    public Class<T> getType() {
+        return type;
+    }
+
+    /**
+     * @param type the lifecycle event type
+     * @return true if that even has been configured
+     */
+    public boolean hasLifecycle(final Class<? extends Annotation> type) {
+        return getLifecycleMethods().containsKey(type);
     }
 
     @Override
-    public PropertyModel<?> getPropertyModel(final String name) {
-        return propertyMap.get(name);
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getAnnotations() != null ? getAnnotations().hashCode() : 0);
+        result = 31 * result + (getFieldModels() != null ? getFieldModels().hashCode() : 0);
+        result = 31 * result + (datastore != null ? datastore.hashCode() : 0);
+        result = 31 * result + (getCollectionName() != null ? getCollectionName().hashCode() : 0);
+        return result;
     }
 
-    @Override
-    public String toString() {
-        String fields = fieldModels.stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
-                                   .collect(Collectors.joining(", "));
-        return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), getName(), fields);
+    /**
+     * Returns all the annotations on this model
+     *
+     * @return the list of annotations
+     */
+    public Map<Class<? extends Annotation>, List<Annotation>> getAnnotations() {
+        return annotations;
+    }
+
+    /**
+     * Returns all the fields on this model
+     *
+     * @return the list of fields
+     */
+    public Collection<FieldModel<?>> getFieldModels() {
+        return fieldModelsByField.values();
+    }
+
+    /**
+     * @return the mapped collection name for the type
+     */
+    public String getCollectionName() {
+        return collectionName;
     }
 
     @Override
@@ -199,68 +256,18 @@ public class EntityModel<T> extends ClassModel<T> {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getAnnotations() != null ? getAnnotations().hashCode() : 0);
-        result = 31 * result + (getFieldModels() != null ? getFieldModels().hashCode() : 0);
-        result = 31 * result + (datastore != null ? datastore.hashCode() : 0);
-        result = 31 * result + (getCollectionName() != null ? getCollectionName().hashCode() : 0);
-        return result;
+    public String toString() {
+        String fields = fieldModelsByField.values().stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
+                                          .collect(Collectors.joining(", "));
+        return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), type.getSimpleName(), fields);
     }
 
-    /**
-     * @return thee creator factory
-     * @morphia.internal
-     */
-    public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
-        return creatorFactory;
+    public String getDiscriminatorKey() {
+        return discriminatorKey;
     }
 
-    /**
-     * @return the mapped collection name for the type
-     */
-    public String getCollectionName() {
-        return collectionName;
-    }
-
-    /**
-     * @return the lifecycle event methods
-     */
-    public Map<Class<? extends Annotation>, List<ClassMethodPair>> getLifecycleMethods() {
-        if (lifecycleMethods == null) {
-            lifecycleMethods = new HashMap<>();
-
-            final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
-            if (entityLisAnn != null && entityLisAnn.value().length != 0) {
-                for (final Class<?> aClass : entityLisAnn.value()) {
-                    mapEvent(aClass, true);
-                }
-            }
-
-            mapEvent(getType(), false);
-        }
-        return lifecycleMethods;
-    }
-
-    /**
-     * @param name the property name
-     * @return the named PropertyModel or null if it does not exist
-     */
-    public PropertyModel<?> getPropertyModelByName(final String name) {
-        for (final PropertyModel<?> propertyModel : getPropertyModels()) {
-            if (propertyModel.getName().equals(name)) {
-                return propertyModel;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param type the lifecycle event type
-     * @return true if that even has been configured
-     */
-    public boolean hasLifecycle(final Class<? extends Annotation> type) {
-        return getLifecycleMethods().containsKey(type);
+    protected boolean useDiscriminator() {
+        return discriminatorEnabled;
     }
 
     private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final Document document,
@@ -280,13 +287,13 @@ public class EntityModel<T> extends ClassModel<T> {
         }
     }
 
-    private List<Method> getDeclaredAndInheritedMethods(final Class type) {
+    private List<Method> getDeclaredAndInheritedMethods(final Class<?> type) {
         final List<Method> methods = new ArrayList<>();
         if ((type == null) || (type == Object.class)) {
             return methods;
         }
 
-        final Class parent = type.getSuperclass();
+        final Class<?> parent = type.getSuperclass();
         methods.addAll(getDeclaredAndInheritedMethods(parent));
 
         for (final Method m : type.getDeclaredMethods()) {

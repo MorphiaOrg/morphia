@@ -8,14 +8,7 @@ import org.bson.codecs.pojo.Convention;
 /**
  * Applies certain conventions specific for Morphia
  */
-public interface MorphiaConvention extends Convention {
-    @Override
-    default void apply(final ClassModelBuilder<?> classModelBuilder) {
-        if (classModelBuilder instanceof EntityModelBuilder) {
-            throw new MappingException("call #apply(Datastore, MorphiaModelBuilder) instead");
-        }
-    }
-
+public interface MorphiaConvention {
     /**
      * This method applies this Convention to the given builder
      *

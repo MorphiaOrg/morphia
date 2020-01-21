@@ -18,11 +18,11 @@ public class ConstructorParameterNameConstraint implements ClassConstraint {
     @Override
     public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
         EntityModel<?> model = mc.getEntityModel();
-        Constructor<Object> fullConstructor = ConstructorCreator.getFullConstructor(model);
+        Constructor<?> fullConstructor = ConstructorCreator.getFullConstructor(model);
         if (fullConstructor != null) {
             for (final Parameter parameter : fullConstructor.getParameters()) {
                 String name = ConstructorCreator.getParameterName(parameter);
-                if (model.getPropertyModelByName(name) == null) {
+                if (model.getFieldModelByName(name) == null) {
                     throw new ConstraintViolationException(
                         new ConstraintViolation(Level.FATAL, mc, getClass(), Sofia.misnamedConstructorParameter(model.getType(), name)));
                 }

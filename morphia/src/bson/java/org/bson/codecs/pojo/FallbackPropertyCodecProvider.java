@@ -21,10 +21,10 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 final class FallbackPropertyCodecProvider implements PropertyCodecProvider {
     private final CodecRegistry codecRegistry;
-    private final PojoCodec<?> pojoCodec;
+    private final Codec<?> codec;
 
-    FallbackPropertyCodecProvider(final PojoCodec<?> pojoCodec, final CodecRegistry codecRegistry) {
-        this.pojoCodec = pojoCodec;
+    FallbackPropertyCodecProvider(final Codec<?> codec, final CodecRegistry codecRegistry) {
+        this.codec = codec;
         this.codecRegistry = codecRegistry;
     }
 
@@ -32,8 +32,8 @@ final class FallbackPropertyCodecProvider implements PropertyCodecProvider {
     @Override
     public <S> Codec<S> get(final TypeWithTypeParameters<S> type, final PropertyCodecRegistry propertyCodecRegistry) {
         Class<S> clazz = type.getType();
-        if (clazz == pojoCodec.getEncoderClass()) {
-            return (Codec<S>) pojoCodec;
+        if (clazz == codec.getEncoderClass()) {
+            return (Codec<S>) codec;
         }
         return codecRegistry.get(type.getType());
     }

@@ -114,4 +114,13 @@ public final class FieldMetadata<T> {
     public List<TypeData<?>> getTypeParameters() {
         return typeParameters;
     }
+
+    public <S> FieldMetadata<T> typeParameterInfo(final TypeParameterMap typeParameterMap, final TypeData<S> parentTypeData) {
+        if (typeParameterMap != null && parentTypeData != null) {
+            this.typeParameterMap = typeParameterMap;
+            this.typeParameters = parentTypeData.getTypeParameters();
+        }
+        return this;
+    }
+
 }

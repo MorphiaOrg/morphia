@@ -4,8 +4,8 @@ import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.sofia.Sofia;
-import org.bson.codecs.pojo.PropertyModel;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
@@ -64,11 +64,11 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
      * @return the constructor taking all fields if it exists
      * @morphia.internal
      */
-    public static <T> Constructor<T> getFullConstructor(final EntityModel model) {
-        for (Constructor<T> constructor : model.getType().getDeclaredConstructors()) {
+    public static <T> Constructor<T> getFullConstructor(final EntityModel<T> model) {
+        for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
             if (constructor.getParameterCount() == model.getFieldModels().size()
                 && constructor.getAnnotation(dev.morphia.annotations.experimental.Constructor.class) != null) {
-                return constructor;
+                return (Constructor<T>) constructor;
             }
         }
         return null;
@@ -85,8 +85,8 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
     }
 
     @Override
-    public <S> void set(final S value, final PropertyModel<S> propertyModel) {
-        positions.get(propertyModel.getName()).apply(parameters, value);
+    public <S> void set(final S value, final FieldModel<S> model) {
+        positions.get(model.getName()).apply(parameters, value);
     }
 
     @Override

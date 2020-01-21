@@ -25,7 +25,7 @@ import java.util.List;
 public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
     private final List<PropertyCodecProvider> propertyCodecProviders;
 
-    public PropertyCodecRegistryImpl(final PojoCodec<?> pojoCodec, final CodecRegistry codecRegistry,
+    public PropertyCodecRegistryImpl(final Codec<?> pojoCodec, final CodecRegistry codecRegistry,
                                      final List<PropertyCodecProvider> propertyCodecProviders) {
         List<PropertyCodecProvider> augmentedProviders = new ArrayList<PropertyCodecProvider>();
         if (propertyCodecProviders != null) {

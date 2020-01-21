@@ -82,6 +82,11 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
         return this;
     }
 
+    @Override
+    public CountOptions hintString(final String hint) {
+        super.hintString(hint);
+        return this;
+    }
 
     @Override
     public CountOptions skip(final int skip) {

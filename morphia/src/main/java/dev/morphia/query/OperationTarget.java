@@ -4,11 +4,11 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.pojo.PropertyModel;
 
 import java.util.StringJoiner;
 
@@ -45,13 +45,13 @@ class OperationTarget {
         MappedField mappedField = this.target.getTarget();
         Object mappedValue = value;
 
-        PropertyModel<?> propertyModel = mappedField != null
-                                         ? mappedField.getDeclaringClass()
-                                                      .getEntityModel()
-                                                      .getPropertyModel(mappedField.getJavaFieldName())
-                                         : null;
+        FieldModel<?> model = mappedField != null
+                              ? mappedField.getDeclaringClass()
+                                           .getEntityModel()
+                                           .getFieldModelByName(mappedField.getJavaFieldName())
+                              : null;
 
-        Codec cachedCodec = propertyModel != null ? propertyModel.getCachedCodec() : null;
+        Codec cachedCodec = model != null ? model.getCachedCodec() : null;
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
         } else if (mappedValue != null) {

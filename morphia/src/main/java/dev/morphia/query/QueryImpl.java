@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 
-import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -17,10 +16,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
-import org.bson.BsonDocument;
 import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -544,40 +540,5 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     protected Datastore getDatastore() {
         return datastore;
-    }
-
-    private MongoCollection<T> enforceWriteConcern(final WriteConcern writeConcern) {
-        return writeConcern == null ? getCollection() : getCollection().withWriteConcern(writeConcern);
-    }
-
-    WriteConcern getWriteConcern(final Class clazz) {
-        WriteConcern wc = null;
-        if (clazz != null) {
-            final Entity entityAnn = mapper.getMappedClass(clazz).getEntityAnnotation();
-            if (!entityAnn.concern().isEmpty()) {
-                wc = WriteConcern.valueOf(entityAnn.concern());
-            }
-        }
-
-        return wc;
-    }
-
-    class QueryDocument implements Bson {
-
-        QueryDocument() {
-        }
-
-        @Override
-        public <TDocument> BsonDocument toBsonDocument(final Class<TDocument> tDocumentClass, final CodecRegistry codecRegistry) {
-            final Document obj = new Document();
-
-            if (baseQuery != null) {
-                obj.putAll(baseQuery);
-            }
-
-            obj.putAll(toDocument());
-
-            return obj.toBsonDocument(Document.class, codecRegistry);
-        }
     }
 }

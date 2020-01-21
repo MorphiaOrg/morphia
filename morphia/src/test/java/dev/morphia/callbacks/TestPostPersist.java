@@ -40,7 +40,7 @@ public class TestPostPersist extends TestBase {
         getMapper().map(List.of(NestedEventEntity.class, Inner.class));
         MorphiaCodec<NestedEventEntity> codec = (MorphiaCodec<NestedEventEntity>) getMapper().getCodecRegistry()
                                                                                              .get(NestedEventEntity.class);
-        Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = codec.getClassModel().getLifecycleMethods();
+        Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods = codec.getEntityModel().getLifecycleMethods();
         final NestedEventEntity p = new NestedEventEntity();
         getDs().save(p);
         Assert.assertTrue(p.called);

@@ -28,7 +28,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.DiscriminatorLookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,7 +123,7 @@ public class Mapper {
      * @return the new model
      * @morphia.internal
      */
-    public <T> EntityModel<T> createMorphiaModel(final Class<T> clazz) {
+    public <T> EntityModel<T> createEntityModel(final Class<T> clazz) {
         return new EntityModelBuilder<>(this.datastore, clazz)
                    .build();
     }
@@ -611,7 +610,7 @@ public class Mapper {
     private MappedClass addMappedClass(final Class type) {
         MappedClass mappedClass = mappedClasses.get(type);
         if (mappedClass == null && isMappable(type)) {
-            EntityModel entityModel = createMorphiaModel(type);
+            EntityModel entityModel = createEntityModel(type);
             mappedClass = addMappedClass(new MappedClass(entityModel, this));
         }
         return mappedClass;
@@ -623,7 +622,7 @@ public class Mapper {
             mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                                      .add(mc);
         }
-        discriminatorLookup.addClassModel(mc.getEntityModel());
+        discriminatorLookup.addModel(mc.getEntityModel());
 
         if (!mc.isInterface()) {
             mc.validate(this);

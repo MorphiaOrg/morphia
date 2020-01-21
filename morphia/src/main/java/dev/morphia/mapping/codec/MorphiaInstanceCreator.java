@@ -1,7 +1,5 @@
 package dev.morphia.mapping.codec;
 
-import org.bson.codecs.pojo.InstanceCreator;
-
 /**
  * Marker interface for creators
  *

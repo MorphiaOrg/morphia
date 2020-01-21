@@ -17,10 +17,13 @@
 package dev.morphia.mapping.codec.pojo;
 
 import org.bson.codecs.Codec;
+import org.bson.codecs.pojo.PropertyAccessor;
+import org.bson.codecs.pojo.PropertySerialization;
 import org.bson.codecs.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -32,16 +35,139 @@ import static org.bson.assertions.Assertions.notNull;
  * A builder for programmatically creating {@code FieldModels}.
  *
  * @param <T> the type of the field
+ * @morphia.internal
  */
 public final class FieldModelBuilder<T> {
     private Field field;
     private String name;
     private String mappedName;
+    private List<String> alternateNames = new ArrayList<>();
     private TypeData<T> typeData;
     private Codec<T> codec;
     private List<Annotation> annotations = emptyList();
+    private PropertySerialization<T> serialization;
+    private PropertyAccessor<T> accessor;
+    private Boolean discriminatorEnabled;
 
     FieldModelBuilder() {
+    }
+
+    public PropertyAccessor<T> accessor() {
+        return accessor;
+    }
+
+    /**
+     * Sets the {@link PropertyAccessor}
+     *
+     * @param accessor the accessor
+     * @return this
+     */
+    public FieldModelBuilder<T> accessor(final PropertyAccessor<T> accessor) {
+        this.accessor = accessor;
+        return this;
+    }
+
+    public List<String> alternateNames() {
+        return alternateNames;
+    }
+
+    public void alternateName(final String name) {
+        alternateNames.add(name);
+    }
+
+    /**
+     * Sets the annotations
+     *
+     * @param annotations the annotations
+     * @return this
+     */
+    public FieldModelBuilder<T> annotations(final List<Annotation> annotations) {
+        this.annotations = unmodifiableList(notNull("annotations", annotations));
+        return this;
+    }
+
+    /**
+     * Creates the {@link FieldModel}.
+     *
+     * @return the FieldModel
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public FieldModel<T> build() {
+        return new FieldModel(field, name, mappedName, typeData, annotations, codec, accessor, serialization);
+    }
+
+    /**
+     * Sets a custom codec for the field
+     *
+     * @param codec the custom codec for the field
+     * @return this
+     */
+    public FieldModelBuilder<T> codec(final Codec<T> codec) {
+        this.codec = codec;
+        return this;
+    }
+
+    public FieldModelBuilder<T> discriminatorEnabled(final Boolean discriminatorEnabled) {
+        this.discriminatorEnabled = discriminatorEnabled;
+        return this;
+    }
+
+    /**
+     * Sets the field used
+     *
+     * @param field the field
+     * @return this
+     */
+    public FieldModelBuilder<T> field(final Field field) {
+        this.field = notNull("field", field);
+        return this;
+    }
+
+    /**
+     * Sets the field name
+     *
+     * @param fieldName the name
+     * @return this
+     */
+    public FieldModelBuilder<T> fieldName(final String fieldName) {
+        this.name = notNull("fieldName", fieldName);
+        return this;
+    }
+
+    /**
+     * Gets the annotation of this type.
+     *
+     * @param type the annotation class
+     * @param <A>  the annotation type
+     * @return the annotation instance or null if this annotation is on the field
+     */
+    public <A extends Annotation> A getAnnotation(final Class<A> type) {
+        for (Annotation annotation : annotations) {
+            if (type.equals(annotation.annotationType())) {
+                return type.cast(annotation);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the read annotations,  to be applied when serializing to BSON
+     *
+     * @return the read annotations
+     */
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public Boolean getDiscriminatorEnabled() {
+        return discriminatorEnabled;
+    }
+
+    /**
+     * @return the field
+     */
+    public Field getField() {
+        return field;
     }
 
     /**
@@ -49,6 +175,28 @@ public final class FieldModelBuilder<T> {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return the type data
+     */
+    public TypeData<T> getTypeData() {
+        return typeData;
+    }
+
+    /**
+     * Checks this field for an annotation of the given type
+     *
+     * @param type the annotation class
+     * @return true if the annotation is used on this field
+     */
+    public boolean hasAnnotation(final Class<? extends Annotation> type) {
+        for (Annotation annotation : annotations) {
+            if (type.equals(annotation.annotationType())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -70,75 +218,14 @@ public final class FieldModelBuilder<T> {
     }
 
     /**
-     * Sets a custom codec for the field
+     * Sets the {@link PropertySerialization} checker
      *
-     * @param codec the custom codec for the field
+     * @param propertySerialization checks if a property should be serialized
      * @return this
      */
-    public FieldModelBuilder<T> codec(final Codec<T> codec) {
-        this.codec = codec;
+    public FieldModelBuilder<T> serialization(final PropertySerialization<T> propertySerialization) {
+        this.serialization = notNull("propertySerialization", propertySerialization);
         return this;
-    }
-
-    /**
-     * Returns the read annotations,  to be applied when serializing to BSON
-     *
-     * @return the read annotations
-     */
-    public List<Annotation> getAnnotations() {
-        return annotations;
-    }
-
-    /**
-     * Gets the annotation of this type.
-     *
-     * @param type the annotation class
-     * @param <A>  the annotation type
-     * @return the annotation instance or null if this annotation is on the field
-     */
-    public <A extends Annotation> A getAnnotation(final Class<A> type) {
-        for (Annotation annotation : annotations) {
-            if (type.equals(annotation.annotationType())) {
-                return type.cast(annotation);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Checks this field for an annotation of the given type
-     *
-     * @param type the annotation class
-     * @return true if the annotation is used on this field
-     */
-    public boolean hasAnnotation(final Class<? extends Annotation> type) {
-        for (Annotation annotation : annotations) {
-            if (type.equals(annotation.annotationType())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Sets the annotations
-     *
-     * @param annotations the annotations
-     * @return this
-     */
-    public FieldModelBuilder<T> annotations(final List<Annotation> annotations) {
-        this.annotations = unmodifiableList(notNull("annotations", annotations));
-        return this;
-    }
-
-    /**
-     * Creates the {@link FieldModel}.
-     *
-     * @return the FieldModel
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public FieldModel<T> build() {
-        return new FieldModel(field, name, mappedName, typeData, annotations, codec);
     }
 
     @Override
@@ -149,42 +236,6 @@ public final class FieldModelBuilder<T> {
                    .add("typeData=" + typeData)
                    .add("annotations=" + annotations)
                    .toString();
-    }
-
-    /**
-     * Sets the field used
-     *
-     * @param field the field
-     * @return this
-     */
-    public FieldModelBuilder<T> field(final Field field) {
-        this.field = notNull("field", field);
-        return this;
-    }
-
-    /**
-     * @return the field
-     */
-    public Field getField() {
-        return field;
-    }
-
-    /**
-     * Sets the field name
-     *
-     * @param fieldName the name
-     * @return this
-     */
-    public FieldModelBuilder<T> fieldName(final String fieldName) {
-        this.name = notNull("fieldName", fieldName);
-        return this;
-    }
-
-    /**
-     * @return the type data
-     */
-    public TypeData<T> getTypeData() {
-        return typeData;
     }
 
     /**

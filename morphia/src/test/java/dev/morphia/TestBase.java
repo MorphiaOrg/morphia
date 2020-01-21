@@ -1,5 +1,8 @@
 package dev.morphia;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -8,6 +11,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Assume;
@@ -28,13 +32,22 @@ public abstract class TestBase {
     private final MongoClient mongoClient;
     private final MongoDatabase database;
     private final Datastore ds;
+    private final MapperOptions mapperOptions = MapperOptions.DEFAULT;
 
     protected TestBase() {
-        this(MongoClients.create(getMongoURI()));
-    }
+        Builder builder = MongoClientSettings.builder();
 
-    protected TestBase(final MongoClient mongoClient) {
-        this.mongoClient = mongoClient;
+        try {
+            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
+        } catch(Exception ignored) {
+            // not a 4.0 driver
+        }
+
+        MongoClientSettings clientSettings = builder
+                               .applyConnectionString(new ConnectionString(getMongoURI()))
+                                                                .build();
+
+        this.mongoClient = MongoClients.create(clientSettings);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
     }

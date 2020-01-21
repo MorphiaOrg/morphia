@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import dev.morphia.mapping.MapperOptions;
@@ -30,7 +31,9 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(final String dbName, final MapperOptions options) {
-        return createDatastore(MongoClients.create(), dbName, options);
+        return createDatastore(MongoClients.create(MongoClientSettings.builder()
+                                                                      .uuidRepresentation(options.getUuidRepresentation())
+                                                                      .build()), dbName, options);
     }
 
     /**

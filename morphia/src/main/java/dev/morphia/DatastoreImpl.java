@@ -70,7 +70,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         MongoDatabase database = mongoClient.getDatabase(dbName);
         this.mapper = new Mapper(this, database.getCodecRegistry(), options);
 
-        this.database = database.withCodecRegistry(mapper.getCodecRegistry());
+        this.database = database
+                            .withCodecRegistry(mapper.getCodecRegistry());
     }
 
     /**

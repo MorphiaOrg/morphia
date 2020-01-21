@@ -116,8 +116,13 @@
     <dependencies>
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.11.1</version>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>${driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-legacy</artifactId>
+            <version>${driver.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.classgraph</groupId>

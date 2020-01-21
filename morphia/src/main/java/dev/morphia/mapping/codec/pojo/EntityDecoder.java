@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PreLoad;
+import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonInvalidOperationException;
@@ -13,9 +14,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.DiscriminatorLookup;
-import org.bson.codecs.pojo.InstanceCreator;
-import org.bson.codecs.pojo.PropertyModel;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 
@@ -34,7 +32,7 @@ class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
             || morphiaCodec.getMapper().hasInterceptors()) {
             entity = decodeWithLifecycle(reader, decoderContext);
         } else {
-            EntityModel<T> classModel = morphiaCodec.getClassModel();
+            EntityModel<T> classModel = morphiaCodec.getEntityModel();
             if (decoderContext.hasCheckedDiscriminator()) {
                 MorphiaInstanceCreator<T> instanceCreator = classModel.getInstanceCreator();
                 decodeProperties(reader, decoderContext, instanceCreator);
@@ -52,36 +50,36 @@ class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
     protected void decodeProperties(final BsonReader reader, final DecoderContext decoderContext,
                                     final MorphiaInstanceCreator<T> instanceCreator) {
         reader.readStartDocument();
-        EntityModel<T> classModel = morphiaCodec.getClassModel();
+        EntityModel<T> classModel = morphiaCodec.getEntityModel();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
             if (classModel.useDiscriminator() && classModel.getDiscriminatorKey().equals(name)) {
                 reader.readString();
             } else {
-                decodePropertyModel(reader, decoderContext, instanceCreator, classModel.getPropertyModel(name));
+                decodeModel(reader, decoderContext, instanceCreator, classModel.getFieldModelByName(name));
             }
         }
         reader.readEndDocument();
     }
 
     @SuppressWarnings("unchecked")
-    protected <S> void decodePropertyModel(final BsonReader reader, final DecoderContext decoderContext,
-                                           final InstanceCreator<T> instanceCreator, final PropertyModel<S> propertyModel) {
+    protected <S> void decodeModel(final BsonReader reader, final DecoderContext decoderContext,
+                                   final MorphiaInstanceCreator<T> instanceCreator, final FieldModel<S> model) {
 
-        if (propertyModel != null) {
+        if (model != null) {
             final BsonReaderMark mark = reader.getMark();
             try {
                 S value = null;
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
                 } else {
-                    value = decoderContext.decodeWithChildContext(propertyModel.getCachedCodec(), reader);
+                    value = decoderContext.decodeWithChildContext(model.getCachedCodec(), reader);
                 }
-                instanceCreator.set(value, propertyModel);
+                instanceCreator.set(value, model);
             } catch (BsonInvalidOperationException e) {
                 mark.reset();
                 final Object value = morphiaCodec.getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
-                instanceCreator.set((S) convert(value, propertyModel.getTypeData().getType()), propertyModel);
+                instanceCreator.set((S) convert(value, model.getTypeData().getType()), model);
             }
         } else {
             reader.skipValue();
@@ -106,7 +104,7 @@ class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
                 }
             } catch (Exception e) {
                 throw new CodecConfigurationException(String.format("Failed to decode '%s'. Decoding errored with: %s",
-                    morphiaCodec.getClassModel().getName(), e.getMessage()), e);
+                    morphiaCodec.getEntityModel().getName(), e.getMessage()), e);
             } finally {
                 mark.reset();
             }
@@ -116,7 +114,7 @@ class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
 
     private T decodeWithLifecycle(final BsonReader reader, final DecoderContext decoderContext) {
         final T entity;
-        final MorphiaInstanceCreator<T> instanceCreator = morphiaCodec.getClassModel().getInstanceCreator();
+        final MorphiaInstanceCreator<T> instanceCreator = morphiaCodec.getEntityModel().getInstanceCreator();
         entity = instanceCreator.getInstance();
 
         Document document = morphiaCodec.getRegistry().get(Document.class).decode(reader, decoderContext);

@@ -7,15 +7,19 @@ import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.IdGenerator;
+import org.bson.codecs.ObjectIdGenerator;
 import org.bson.codecs.configuration.CodecConfigurationException;
-import org.bson.codecs.pojo.IdPropertyModelHolder;
 import org.bson.codecs.pojo.PropertyModel;
+import org.bson.types.ObjectId;
 
 import java.util.Collection;
 import java.util.Map;
 
 class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
+    public static final ObjectIdGenerator OBJECT_ID_GENERATOR = new ObjectIdGenerator();
     private final MorphiaCodec<T> morphiaCodec;
+    private IdGenerator idGenerator;
 
     EntityEncoder(final MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
@@ -46,45 +50,58 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     }
 
     private <S> void encodeIdProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
-                                        final IdPropertyModelHolder<S> propertyModelHolder) {
-        if (propertyModelHolder.getPropertyModel() != null) {
-            if (propertyModelHolder.getIdGenerator() == null) {
-                encodeProperty(writer, instance, encoderContext, propertyModelHolder.getPropertyModel());
+                                        final FieldModel<S> idModel) {
+        if (idModel != null) {
+            IdGenerator generator = getIdGenerator();
+            if (generator == null) {
+                encodeProperty(writer, instance, encoderContext, idModel);
             } else {
-                S id = propertyModelHolder.getPropertyModel().getPropertyAccessor().get(instance);
+                S id = idModel.getAccessor().get(instance);
                 if (id == null && encoderContext.isEncodingCollectibleDocument()) {
-                    id = propertyModelHolder.getIdGenerator().generate();
-                    propertyModelHolder.getPropertyModel().getPropertyAccessor().set(instance, id);
+                    id = (S) generator.generate();
+                    idModel.getAccessor().set(instance, id);
                 }
-                encodeValue(writer, encoderContext, propertyModelHolder.getPropertyModel(), id);
+                encodeValue(writer, encoderContext, idModel, id);
             }
         }
     }
 
+    private IdGenerator getIdGenerator() {
+        if(idGenerator == null) {
+            FieldModel<?> idModel = morphiaCodec.getEntityModel().getIdModel();
+            if(idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
+                idGenerator = OBJECT_ID_GENERATOR;
+            }
+        }
+
+        return idGenerator;
+    }
+
     private <S> void encodeProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
-                                      final PropertyModel<S> propertyModel) {
-        if (propertyModel != null && propertyModel.isReadable()) {
-            S propertyValue = propertyModel.getPropertyAccessor().get(instance);
-            encodeValue(writer, encoderContext, propertyModel, propertyValue);
+                                      final FieldModel<S> model) {
+        if (model != null) {
+            S value = model.getAccessor().get(instance);
+            encodeValue(writer, encoderContext, model, value);
         }
     }
 
     @SuppressWarnings("unchecked")
     private void encodeEntity(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
-        if (areEquivalentTypes(value.getClass(), morphiaCodec.getClassModel().getType())) {
+        if (areEquivalentTypes(value.getClass(), morphiaCodec.getEntityModel().getType())) {
             writer.writeStartDocument();
 
-            encodeIdProperty(writer, value, encoderContext, morphiaCodec.getClassModel().getIdPropertyModelHolder());
+            FieldModel<?> idModel = morphiaCodec.getEntityModel().getIdModel();
+            encodeIdProperty(writer, value, encoderContext, idModel);
 
-            if (morphiaCodec.getClassModel().useDiscriminator()) {
-                writer.writeString(morphiaCodec.getClassModel().getDiscriminatorKey(), morphiaCodec.getClassModel().getDiscriminator());
+            if (morphiaCodec.getEntityModel().useDiscriminator()) {
+                writer.writeString(morphiaCodec.getEntityModel().getDiscriminatorKey(), morphiaCodec.getEntityModel().getDiscriminator());
             }
 
-            for (PropertyModel<?> propertyModel : morphiaCodec.getClassModel().getPropertyModels()) {
-                if (propertyModel.equals(morphiaCodec.getClassModel().getIdPropertyModel())) {
+            for (FieldModel<?> fieldModel : morphiaCodec.getEntityModel().getFieldModels()) {
+                if (fieldModel.equals(idModel)) {
                     continue;
                 }
-                encodeProperty(writer, value, encoderContext, propertyModel);
+                encodeProperty(writer, value, encoderContext, fieldModel);
             }
             writer.writeEndDocument();
         } else {
@@ -93,18 +110,18 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         }
     }
 
-    private <S> void encodeValue(final BsonWriter writer, final EncoderContext encoderContext, final PropertyModel<S> propertyModel,
+    private <S> void encodeValue(final BsonWriter writer, final EncoderContext encoderContext, final FieldModel<S> model,
                                  final S propertyValue) {
-        if (propertyModel.shouldSerialize(propertyValue)) {
-            writer.writeName(propertyModel.getReadName());
+        if (model.shouldSerialize(propertyValue)) {
+            writer.writeName(model.getMappedName());
             if (propertyValue == null) {
                 writer.writeNull();
             } else {
                 try {
-                    encoderContext.encodeWithChildContext(propertyModel.getCachedCodec(), writer, propertyValue);
+                    encoderContext.encodeWithChildContext(model.getCachedCodec(), writer, propertyValue);
                 } catch (CodecConfigurationException e) {
                     throw new CodecConfigurationException(String.format("Failed to encode '%s'. Encoding '%s' errored with: %s",
-                        morphiaCodec.getClassModel().getName(), propertyModel.getReadName(), e.getMessage()), e);
+                        morphiaCodec.getEntityModel().getName(), model.getMappedName(), e.getMessage()), e);
                 }
             }
         }

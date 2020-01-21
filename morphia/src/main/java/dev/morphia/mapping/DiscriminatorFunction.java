@@ -18,9 +18,7 @@ public abstract class DiscriminatorFunction {
             return builder.getType().getName();
         }
     };
-    public static final DiscriminatorFunction lowerClassName = new DiscriminatorFunction() {
-        @Override
-        public String compute(final EntityModelBuilder<?> builder) {
+    public static final DiscriminatorFunction lowerClassName = new DiscriminatorFunction() {@Override public String compute(final EntityModelBuilder<?> builder) {
             return builder.getType().getName().toLowerCase();
         }
     };

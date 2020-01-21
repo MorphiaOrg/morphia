@@ -10,17 +10,13 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MorphiaConvention;
 import dev.morphia.sofia.Sofia;
-import org.bson.codecs.pojo.ClassModelBuilder;
-import org.bson.codecs.pojo.Convention;
-import org.bson.codecs.pojo.PojoBuilderHelper;
-import org.bson.codecs.pojo.PropertyMetadata;
-import org.bson.codecs.pojo.PropertyModel;
-import org.bson.codecs.pojo.PropertyModelBuilder;
 import org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.pojo.TypeParameterMap;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,22 +25,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.groupingBy;
-import static org.bson.codecs.pojo.PojoBuilderHelper.getTypeParameterMap;
+import static org.bson.assertions.Assertions.notNull;
 
 /**
- * Builder for MorphiaModels
+ * Builder for EntityModels
+ *
  * @param <T> the entity type
+ * @since 2.0
+ * @morphia.internal
  */
-public class EntityModelBuilder<T> extends ClassModelBuilder<T> {
-    private final List<FieldModelBuilder<?>> fieldModelBuilders = new ArrayList<>();
+public class EntityModelBuilder<T> {
     private final Datastore datastore;
-    private List<FieldModel<?>> fieldModels;
+    private final List<FieldModelBuilder<?>> fieldModels = new ArrayList<>();
+    private Class<T> type;
     private Map<Class<? extends Annotation>, List<Annotation>> annotationsMap;
-    private List<PropertyModel<?>> propertyModels;
-    private PropertyModel<?> idPropertyModel;
+    private List<Annotation> annotations = emptyList();
+    private boolean discriminatorEnabled;
+    private String discriminator;
+    private String discriminatorKey;
+    private String idFieldName;
+    private List<? extends MorphiaConvention> conventions;
 
     /**
      * Create a builder
@@ -53,49 +56,9 @@ public class EntityModelBuilder<T> extends ClassModelBuilder<T> {
      * @param type      the entity type
      */
     public EntityModelBuilder(final Datastore datastore, final Class<T> type) {
-        super(type);
         this.datastore = datastore;
+        this.type = type;
         configure();
-    }
-
-    <T> FieldModelBuilder<T> createFieldModelBuilder(final FieldMetadata<T> fieldMetadata) {
-        FieldModelBuilder<T> fieldModelBuilder = FieldModel.<T>builder()
-                                                     .field(fieldMetadata.getField())
-                                                     .fieldName(fieldMetadata.getName())
-                                                     .typeData(fieldMetadata.getTypeData())
-                                                     .annotations(fieldMetadata.getAnnotations());
-
-        fieldModelBuilder.mappedName(getMappedFieldName(fieldModelBuilder));
-
-        if (fieldMetadata.getTypeParameters() != null) {
-            specializeFieldModelBuilder(fieldModelBuilder, fieldMetadata);
-        }
-
-        return fieldModelBuilder;
-    }
-
-    private String getMappedFieldName(final FieldModelBuilder<?> fieldBuilder) {
-        MapperOptions options = datastore.getMapper().getOptions();
-        if (fieldBuilder.hasAnnotation(Id.class)) {
-            return "_id";
-        } else if (fieldBuilder.hasAnnotation(Property.class)) {
-            final Property mv = fieldBuilder.getAnnotation(Property.class);
-            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mv.value();
-            }
-        } else if (fieldBuilder.hasAnnotation(Reference.class)) {
-            final Reference mr = fieldBuilder.getAnnotation(Reference.class);
-            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mr.value();
-            }
-        } else if (fieldBuilder.hasAnnotation(Version.class)) {
-            final Version me = fieldBuilder.getAnnotation(Version.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        }
-
-        return options.getFieldNaming().apply(fieldBuilder.getName());
     }
 
     @SuppressWarnings("unchecked")
@@ -123,6 +86,134 @@ public class EntityModelBuilder<T> extends ClassModelBuilder<T> {
         }
     }
 
+    public void addModel(final FieldModelBuilder<?> builder) {
+        fieldModels.add(builder);
+    }
+
+    public EntityModelBuilder<T> annotations(final List<Annotation> annotations) {
+        this.annotations = notNull("annotations", annotations);
+        return this;
+    }
+
+    /**
+     * Creates a new ClassModel instance based on the mapping data provided.
+     *
+     * @return the new instance
+     */
+    public EntityModel<T> build() {
+        annotationsMap = annotations.stream()
+                                    .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
+
+        for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
+            convention.apply(datastore, this);
+        }
+
+        if (discriminatorEnabled) {
+            Objects.requireNonNull(discriminatorKey, Sofia.notNull("discriminatorKey"));
+            Objects.requireNonNull(discriminator, Sofia.notNull("discriminator"));
+        }
+
+        return new EntityModel<>(this);
+    }
+
+    public void discriminator(final String discriminator) {
+        this.discriminator = discriminator;
+    }
+
+    public void discriminatorKey(final String key) {
+        discriminatorKey = key;
+    }
+
+    /**
+     * Enables or disables the use of a discriminator when serializing
+     *
+     * @param enabled true to enable the use of a discriminator
+     * @return this
+     */
+    public EntityModelBuilder<T> enableDiscriminator(final boolean enabled) {
+        this.discriminatorEnabled = enabled;
+        return this;
+    }
+
+    public List<Annotation> annotations() {
+        return annotations;
+    }
+
+    public String discriminator() {
+        return discriminator;
+    }
+
+    public String discriminatorKey() {
+        return discriminatorKey;
+    }
+
+    public FieldModelBuilder<?> fieldModelByFieldName(final String name) {
+        return fieldModels.stream().filter(f -> f.getField().getName().equals(name))
+                   .findFirst().get();
+    }
+
+    public List<FieldModelBuilder<?>> fieldModels() {
+        return fieldModels;
+    }
+
+    public Class<T> getType() {
+        return type;
+    }
+
+    /**
+     * @param type the annotation class
+     * @return the annotation if it exists
+     */
+    public boolean hasAnnotation(final Class<? extends Annotation> type) {
+        for (Annotation annotation : annotations) {
+            if (type.equals(annotation.annotationType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String idFieldName() {
+        return idFieldName;
+    }
+
+    public EntityModelBuilder<T> idFieldName(final String idFieldName) {
+        this.idFieldName = idFieldName;
+        return this;
+    }
+
+    public boolean isDiscriminatorEnabled() {
+        return discriminatorEnabled;
+    }
+
+    protected void configure() {
+        TypeData<?> parentClassTypeData = null;
+        Set<Class<?>> classes = buildHierarchy(type);
+        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<String, TypeParameterMap>();
+
+        List<Annotation> annotations = new ArrayList<>();
+        for (Class<?> klass : classes) {
+            List<String> genericTypeNames = processTypeNames(klass);
+
+            annotations.addAll(List.of(klass.getDeclaredAnnotations()));
+            processFields(klass, parentClassTypeData, genericTypeNames, propertyTypeParameterMap);
+
+            parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
+        }
+        annotations(annotations);
+    }
+
+    protected Map<Class<? extends Annotation>, List<Annotation>> annotationsMap() {
+        return annotationsMap;
+    }
+
+    protected String getCollectionName() {
+        Entity entityAn = getAnnotation(Entity.class);
+        return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
+               ? entityAn.value()
+               : datastore.getMapper().getOptions().getCollectionNaming().apply(type.getSimpleName());
+    }
+
     /**
      * @param type the annotation class
      * @param <A>  the annotation type
@@ -136,116 +227,8 @@ public class EntityModelBuilder<T> extends ClassModelBuilder<T> {
         return null;
     }
 
-    /**
-     * @param type the annotation class
-     * @return the annotation if it exists
-     */
-    public boolean hasAnnotation(final Class<? extends Annotation> type) {
-        for (Annotation annotation : getAnnotations()) {
-            if (type.equals(annotation.annotationType())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return the fields on the modeled type
-     */
-    public List<FieldModelBuilder<?>> getFieldModelBuilders() {
-        return fieldModelBuilders;
-    }
-
-    /**
-     * Creates a new ClassModel instance based on the mapping data provided.
-     *
-     * @return the new instance
-     */
-    public EntityModel<T> build() {
-        annotationsMap = getAnnotations().stream()
-                                         .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
-
-        for (final Convention convention : getConventions()) {
-            convention.apply(this);
-        }
-        idPropertyModel = null;
-        idPropertyName(null);
-        for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
-            convention.apply(datastore, this);
-        }
-
-        if (useDiscriminator()) {
-            Objects.requireNonNull(getDiscriminatorKey(), Sofia.notNull("discriminatorKey"));
-            Objects.requireNonNull(getDiscriminator(), Sofia.notNull("discriminator"));
-        }
-
-        for (PropertyModelBuilder<?> propertyModelBuilder : getPropertyModelBuilders()) {
-            if (propertyModelBuilder.getName().equals(getIdPropertyName())) {
-                propertyModelBuilder.readName(ID_PROPERTY_NAME).writeName(ID_PROPERTY_NAME);
-            }
-        }
-
-        propertyModels = new ArrayList<>();
-        for (final PropertyModelBuilder<?> builder : getPropertyModelBuilders()) {
-            PropertyModel<?> propertyModel = builder.build();
-            if (propertyModel.getReadName().equals(ID_PROPERTY_NAME)) {
-                idPropertyModel = propertyModel;
-            }
-            propertyModels.add(propertyModel);
-        }
-
-        fieldModels = fieldModelBuilders.stream()
-                                        .map(FieldModelBuilder::build)
-                                        .collect(Collectors.toList());
-
-        if (getIdPropertyName() == null) {
-            idGenerator(null);
-        }
-
-        return new EntityModel<>(this);
-    }
-
-    protected String getCollectionName() {
-        Entity entityAn = getAnnotation(Entity.class);
-        return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
-               ? entityAn.value()
-               : datastore.getMapper().getOptions().getCollectionNaming().apply(getType().getSimpleName());
-    }
-
     protected Datastore getDatastore() {
         return datastore;
-    }
-
-    protected List<FieldModel<?>> getFieldModels() {
-        return fieldModels;
-    }
-
-    protected Map<Class<? extends Annotation>, List<Annotation>> getAnnotationsMap() {
-        return annotationsMap;
-    }
-
-    protected List<PropertyModel<?>> getPropertyModels() {
-        return propertyModels;
-    }
-
-    protected PropertyModel<?> getIdPropertyModel() {
-        return idPropertyModel;
-    }
-
-    protected void configure() {
-        TypeData<?> parentClassTypeData = null;
-        Set<Class<?>> classes = buildHierarchy(getType());
-
-        List<Annotation> annotations = new ArrayList<>();
-        for (Class<?> klass : classes) {
-            List<String> genericTypeNames = processTypeNames(klass);
-
-            annotations.addAll(List.of(klass.getDeclaredAnnotations()));
-            processFields(klass, parentClassTypeData, genericTypeNames);
-
-            parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
-        }
-        annotations(annotations);
     }
 
     private Set<Class<?>> buildHierarchy(final Class<?> type) {
@@ -261,6 +244,78 @@ public class EntityModelBuilder<T> extends ClassModelBuilder<T> {
         return set;
     }
 
+    private String getMappedFieldName(final FieldModelBuilder<?> fieldBuilder) {
+        MapperOptions options = datastore.getMapper().getOptions();
+        if (fieldBuilder.hasAnnotation(Id.class)) {
+            return "_id";
+        } else if (fieldBuilder.hasAnnotation(Property.class)) {
+            final Property mv = fieldBuilder.getAnnotation(Property.class);
+            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mv.value();
+            }
+        } else if (fieldBuilder.hasAnnotation(Reference.class)) {
+            final Reference mr = fieldBuilder.getAnnotation(Reference.class);
+            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return mr.value();
+            }
+        } else if (fieldBuilder.hasAnnotation(Version.class)) {
+            final Version me = fieldBuilder.getAnnotation(Version.class);
+            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
+                return me.value();
+            }
+        }
+
+        return options.getFieldNaming().apply(fieldBuilder.getName());
+    }
+
+    private void processFields(final Class<?> currentClass,
+                               final TypeData<?> parentClassTypeData,
+                               final List<String> genericTypeNames, final Map<String, TypeParameterMap> propertyTypeParameterMap) {
+        for (Field field : currentClass.getDeclaredFields()) {
+            final TypeData<?> typeData = TypeData.newInstance(field);
+
+            Type genericType = field.getGenericType();
+            TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
+            FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData, typeParameterMap, parentClassTypeData);
+
+            cachePropertyTypeData(fieldMetadata, propertyTypeParameterMap, parentClassTypeData, genericTypeNames, genericType);
+
+            for (Annotation annotation : field.getDeclaredAnnotations()) {
+                fieldMetadata.addAnnotation(annotation);
+            }
+            addModel(createFieldModelBuilder(fieldMetadata));
+        }
+    }
+
+    private <T, S> void cachePropertyTypeData(final FieldMetadata<?> metadata,
+                                                     final Map<String, TypeParameterMap> propertyTypeParameterMap,
+                                                     final TypeData<S> parentClassTypeData,
+                                                     final List<String> genericTypeNames,
+                                                     final Type genericType) {
+        TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
+        propertyTypeParameterMap.put(metadata.getName(), typeParameterMap);
+        metadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
+    }
+
+    private TypeParameterMap getTypeParameterMap(final List<String> genericTypeNames, final Type propertyType) {
+        int classParamIndex = genericTypeNames.indexOf(propertyType.toString());
+        TypeParameterMap.Builder builder = TypeParameterMap.builder();
+        if (classParamIndex != -1) {
+            builder.addIndex(classParamIndex);
+        } else {
+            if (propertyType instanceof ParameterizedType) {
+                ParameterizedType pt = (ParameterizedType) propertyType;
+                for (int i = 0; i < pt.getActualTypeArguments().length; i++) {
+                    classParamIndex = genericTypeNames.indexOf(pt.getActualTypeArguments()[i].toString());
+                    if (classParamIndex != -1) {
+                        builder.addIndex(i, classParamIndex);
+                    }
+                }
+            }
+        }
+        return builder.build();
+    }
+
     private List<String> processTypeNames(final Class<?> currentClass) {
         List<String> genericTypeNames = new ArrayList<>();
         for (TypeVariable<? extends Class<?>> classTypeVariable : currentClass.getTypeParameters()) {
@@ -269,30 +324,19 @@ public class EntityModelBuilder<T> extends ClassModelBuilder<T> {
         return genericTypeNames;
     }
 
-    private void processFields(final Class<?> currentClass, final TypeData<?> parentClassTypeData, final List<String> genericTypeNames) {
-        Map<String, PropertyMetadata<?>> propertyNameMap = new HashMap<>();
-        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
+    <F> FieldModelBuilder<F> createFieldModelBuilder(final FieldMetadata<F> fieldMetadata) {
+        FieldModelBuilder<F> fieldModelBuilder = FieldModel.<F>builder()
+                                                     .field(fieldMetadata.getField())
+                                                     .fieldName(fieldMetadata.getName())
+                                                     .typeData(fieldMetadata.getTypeData())
+                                                     .annotations(fieldMetadata.getAnnotations());
 
-        for (Field field : currentClass.getDeclaredFields()) {
-            PropertyMetadata<?> propertyMetadata = PojoBuilderHelper.getOrCreateFieldPropertyMetadata(field.getName(),
-                getType().getSimpleName(), propertyNameMap, TypeData.newInstance(field), propertyTypeParameterMap, parentClassTypeData,
-                genericTypeNames, field.getGenericType());
-            if (propertyMetadata != null && propertyMetadata.getField() == null) {
-                propertyMetadata.field(field);
-                for (Annotation annotation : field.getDeclaredAnnotations()) {
-                    propertyMetadata.addReadAnnotation(annotation);
-                    propertyMetadata.addWriteAnnotation(annotation);
-                }
-            }
+        fieldModelBuilder.mappedName(getMappedFieldName(fieldModelBuilder));
 
-            final TypeData<?> typeData = TypeData.newInstance(field);
-
-            FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData,
-                getTypeParameterMap(genericTypeNames, field.getGenericType()), parentClassTypeData);
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                fieldMetadata.addAnnotation(annotation);
-            }
-            fieldModelBuilders.add(createFieldModelBuilder(fieldMetadata));
+        if (fieldMetadata.getTypeParameters() != null) {
+            specializeFieldModelBuilder(fieldModelBuilder, fieldMetadata);
         }
+
+        return fieldModelBuilder;
     }
 }
