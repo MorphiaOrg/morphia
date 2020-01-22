@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.pojo;
 
 /**
  * @morphia.internal
+ * @since 2.0
  */
 public interface PropertyHandler {
     /**

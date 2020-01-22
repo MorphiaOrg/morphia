@@ -14,6 +14,7 @@ import static java.util.Arrays.asList;
  * Base class for the math expressions
  *
  * @mongodb.driver.manual reference/operator/aggregation/#arithmetic-expression-operators Arithmetic Expressions
+ * @since 2.0
  */
 public class MathExpression extends Expression {
     private final List<Expression> operands;
@@ -70,6 +71,7 @@ public class MathExpression extends Expression {
     /**
      * Returns the absolute value of a number.
      *
+     * @param value the value
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/abs $abs
      */
@@ -80,6 +82,7 @@ public class MathExpression extends Expression {
     /**
      * Returns the smallest integer greater than or equal to the specified number.
      *
+     * @param value the value
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/ceil $ceil
      */
@@ -91,6 +94,7 @@ public class MathExpression extends Expression {
     /**
      * Raises e to the specified exponent.
      *
+     * @param value the value
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/exp $exp
      */
@@ -101,6 +105,7 @@ public class MathExpression extends Expression {
     /**
      * Returns the largest integer less than or equal to the specified number.
      *
+     * @param value the value
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/floor $floor
      */
@@ -111,6 +116,7 @@ public class MathExpression extends Expression {
     /**
      * Calculates the natural log of a number.
      *
+     * @param value the value
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/ln $ln
      */
@@ -121,6 +127,8 @@ public class MathExpression extends Expression {
     /**
      * Calculates the log of a number in the specified base.
      *
+     * @param number the number to log
+     * @param base   the base to use
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/log $log
      */
@@ -131,6 +139,7 @@ public class MathExpression extends Expression {
     /**
      * Calculates the log base 10 of a number.
      *
+     * @param value the value
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/log10 $log10
      */
@@ -141,6 +150,8 @@ public class MathExpression extends Expression {
     /**
      * Returns the remainder of the first number divided by the second. Accepts two argument expressions.
      *
+     * @param dividend the dividend
+     * @param divisor  the divisor
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/mod $mod
      */
@@ -151,6 +162,8 @@ public class MathExpression extends Expression {
     /**
      * Raises a number to the specified exponent.
      *
+     * @param number   the base name
+     * @param exponent the exponent
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/pow $pow
      */
@@ -161,6 +174,8 @@ public class MathExpression extends Expression {
     /**
      * Rounds a number to to a whole integer or to a specified decimal place.
      *
+     * @param number the value
+     * @param place  the place to round to
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/round $round
      */
@@ -171,6 +186,7 @@ public class MathExpression extends Expression {
     /**
      * Calculates the square root.
      *
+     * @param value the value
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/sqrt $sqrt
      */
@@ -184,6 +200,8 @@ public class MathExpression extends Expression {
      * resulting date. Accepts two argument expressions. If the two values are a date and a number, specify the date argument first as it
      * is not meaningful to subtract a date from a number.
      *
+     * @param minuend    the number to subtract from
+     * @param subtrahend the number to subtract
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/subtract $subtract
      */
@@ -194,6 +212,8 @@ public class MathExpression extends Expression {
     /**
      * Truncates a number to a whole integer or to a specified decimal place.
      *
+     * @param number the value
+     * @param place  the place to trunc to
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/trunc $trunc
      */

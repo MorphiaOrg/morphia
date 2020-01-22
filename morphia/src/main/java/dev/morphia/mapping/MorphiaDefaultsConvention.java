@@ -19,9 +19,7 @@ import org.bson.codecs.pojo.TypeData;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;

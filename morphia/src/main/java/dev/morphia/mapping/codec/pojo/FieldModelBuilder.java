@@ -36,6 +36,7 @@ import static org.bson.assertions.Assertions.notNull;
  *
  * @param <T> the type of the field
  * @morphia.internal
+ * @since 2.0
  */
 public final class FieldModelBuilder<T> {
     private Field field;
@@ -52,6 +53,9 @@ public final class FieldModelBuilder<T> {
     FieldModelBuilder() {
     }
 
+    /**
+     * @return the accessor for this model
+     */
     public PropertyAccessor<T> accessor() {
         return accessor;
     }
@@ -67,12 +71,21 @@ public final class FieldModelBuilder<T> {
         return this;
     }
 
-    public List<String> alternateNames() {
-        return alternateNames;
-    }
-
+    /**
+     * Adds an alternate name
+     *
+     * @param name the new name
+     */
     public void alternateName(final String name) {
         alternateNames.add(name);
+    }
+
+    /**
+     * @return the list of alternate names this model can be known by
+     * @see dev.morphia.annotations.AlsoLoad
+     */
+    public List<String> alternateNames() {
+        return alternateNames;
     }
 
     /**
@@ -107,6 +120,12 @@ public final class FieldModelBuilder<T> {
         return this;
     }
 
+    /**
+     * Enables/disables the use of the discriminator during mapping
+     *
+     * @param discriminatorEnabled true if the discriminator should be used
+     * @return this
+     */
     public FieldModelBuilder<T> discriminatorEnabled(final Boolean discriminatorEnabled) {
         this.discriminatorEnabled = discriminatorEnabled;
         return this;
@@ -159,6 +178,9 @@ public final class FieldModelBuilder<T> {
         return annotations;
     }
 
+    /**
+     * @return true if the discriminator is to be used
+     */
     public Boolean getDiscriminatorEnabled() {
         return discriminatorEnabled;
     }

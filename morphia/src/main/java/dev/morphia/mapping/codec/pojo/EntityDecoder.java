@@ -17,6 +17,9 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 
+/**
+ * @since 2.0
+ */
 class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
     private final MorphiaCodec<T> morphiaCodec;
 

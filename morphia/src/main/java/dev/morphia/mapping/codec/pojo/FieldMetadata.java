@@ -31,6 +31,7 @@ import static java.util.Collections.unmodifiableList;
  *
  * @param <T> the field type
  * @morphia.internal
+ * @since 2.0
  */
 public final class FieldMetadata<T> {
     private final String name;
@@ -63,20 +64,6 @@ public final class FieldMetadata<T> {
     }
 
     /**
-     * @return the field name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return any annotations defined on the field
-     */
-    public List<Annotation> getAnnotations() {
-        return unmodifiableList(annotations);
-    }
-
-    /**
      * Adds an annotation to the metadata
      *
      * @param annotation the annotation
@@ -88,10 +75,24 @@ public final class FieldMetadata<T> {
     }
 
     /**
+     * @return any annotations defined on the field
+     */
+    public List<Annotation> getAnnotations() {
+        return unmodifiableList(annotations);
+    }
+
+    /**
      * @return the field
      */
     public Field getField() {
         return field;
+    }
+
+    /**
+     * @return the field name
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -115,6 +116,14 @@ public final class FieldMetadata<T> {
         return typeParameters;
     }
 
+    /**
+     * Sets the type parameter information
+     *
+     * @param typeParameterMap the map to use
+     * @param parentTypeData   the parent's type data
+     * @param <S>              the parent's type
+     * @return this
+     */
     public <S> FieldMetadata<T> typeParameterInfo(final TypeParameterMap typeParameterMap, final TypeData<S> parentTypeData) {
         if (typeParameterMap != null && parentTypeData != null) {
             this.typeParameterMap = typeParameterMap;

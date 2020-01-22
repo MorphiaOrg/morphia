@@ -35,6 +35,7 @@ import static java.util.Arrays.asList;
  *
  * @param <T> the entity type
  * @morphia.internal
+ * @since 2.0
  */
 @SuppressWarnings("unchecked")
 public class EntityModel<T> {
@@ -73,7 +74,7 @@ public class EntityModel<T> {
             FieldModel<?> model = modelBuilder.build();
             fieldModelsByMappedName.put(model.getMappedName(), model);
             for (final String name : modelBuilder.alternateNames()) {
-                if(fieldModelsByMappedName.put(name, model) != null) {
+                if (fieldModelsByMappedName.put(name, model) != null) {
                     throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
                 }
             }
@@ -124,8 +125,34 @@ public class EntityModel<T> {
         return (List<A>) annotations.get(clazz);
     }
 
+    /**
+     * Returns all the annotations on this model
+     *
+     * @return the list of annotations
+     */
+    public Map<Class<? extends Annotation>, List<Annotation>> getAnnotations() {
+        return annotations;
+    }
+
+    /**
+     * @return the mapped collection name for the type
+     */
+    public String getCollectionName() {
+        return collectionName;
+    }
+
+    /**
+     * @return the discriminator
+     */
     public String getDiscriminator() {
         return discriminator;
+    }
+
+    /**
+     * @return the discriminator key
+     */
+    public String getDiscriminatorKey() {
+        return discriminatorKey;
     }
 
     /**
@@ -136,6 +163,18 @@ public class EntityModel<T> {
         return fieldModelsByMappedName.getOrDefault(name, fieldModelsByField.get(name));
     }
 
+    /**
+     * Returns all the fields on this model
+     *
+     * @return the list of fields
+     */
+    public Collection<FieldModel<?>> getFieldModels() {
+        return fieldModelsByField.values();
+    }
+
+    /**
+     * @return the model for the id field
+     */
     public FieldModel<?> getIdModel() {
         return fieldModelsByMappedName.get("_id");
     }
@@ -174,10 +213,16 @@ public class EntityModel<T> {
         return lifecycleMethods;
     }
 
+    /**
+     * @return the name of this model
+     */
     public String getName() {
         return type.getSimpleName();
     }
 
+    /**
+     * @return the type of this model
+     */
     public Class<T> getType() {
         return type;
     }
@@ -192,37 +237,8 @@ public class EntityModel<T> {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getAnnotations() != null ? getAnnotations().hashCode() : 0);
-        result = 31 * result + (getFieldModels() != null ? getFieldModels().hashCode() : 0);
-        result = 31 * result + (datastore != null ? datastore.hashCode() : 0);
-        result = 31 * result + (getCollectionName() != null ? getCollectionName().hashCode() : 0);
-        return result;
-    }
-
-    /**
-     * Returns all the annotations on this model
-     *
-     * @return the list of annotations
-     */
-    public Map<Class<? extends Annotation>, List<Annotation>> getAnnotations() {
-        return annotations;
-    }
-
-    /**
-     * Returns all the fields on this model
-     *
-     * @return the list of fields
-     */
-    public Collection<FieldModel<?>> getFieldModels() {
-        return fieldModelsByField.values();
-    }
-
-    /**
-     * @return the mapped collection name for the type
-     */
-    public String getCollectionName() {
-        return collectionName;
+        return Objects.hash(getAnnotations(), fieldModelsByField, fieldModelsByMappedName, datastore, creatorFactory, discriminatorEnabled,
+            getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), getLifecycleMethods());
     }
 
     @Override
@@ -233,26 +249,18 @@ public class EntityModel<T> {
         if (!(o instanceof EntityModel)) {
             return false;
         }
-        if (!super.equals(o)) {
-            return false;
-        }
-
         final EntityModel<?> that = (EntityModel<?>) o;
-
-        if (getAnnotations() != null ? !getAnnotations().equals(that.getAnnotations()) : that.getAnnotations() != null) {
-            return false;
-        }
-        if (getFieldModels() != null ? !getFieldModels().equals(that.getFieldModels()) : that.getFieldModels() != null) {
-            return false;
-        }
-        if (!Objects.equals(datastore, that.datastore)) {
-            return false;
-        }
-        if (getLifecycleMethods() != null ? !getLifecycleMethods().equals(that.getLifecycleMethods())
-                                          : that.getLifecycleMethods() != null) {
-            return false;
-        }
-        return getCollectionName() != null ? getCollectionName().equals(that.getCollectionName()) : that.getCollectionName() == null;
+        return discriminatorEnabled == that.discriminatorEnabled
+               && Objects.equals(getAnnotations(), that.getAnnotations())
+               && Objects.equals(fieldModelsByField, that.fieldModelsByField)
+               && Objects.equals(fieldModelsByMappedName, that.fieldModelsByMappedName)
+               && Objects.equals(datastore, that.datastore)
+               && Objects.equals(creatorFactory, that.creatorFactory)
+               && Objects.equals(getDiscriminatorKey(), that.getDiscriminatorKey())
+               && Objects.equals(getDiscriminator(), that.getDiscriminator())
+               && Objects.equals(getType(), that.getType())
+               && Objects.equals(getCollectionName(), that.getCollectionName())
+               && Objects.equals(getLifecycleMethods(), that.getLifecycleMethods());
     }
 
     @Override
@@ -260,10 +268,6 @@ public class EntityModel<T> {
         String fields = fieldModelsByField.values().stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
                                           .collect(Collectors.joining(", "));
         return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), type.getSimpleName(), fields);
-    }
-
-    public String getDiscriminatorKey() {
-        return discriminatorKey;
     }
 
     protected boolean useDiscriminator() {

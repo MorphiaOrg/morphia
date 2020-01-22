@@ -25,10 +25,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
 
+/**
+ * Provides lookup capabilities to find a type by its discriminator
+ *
+ * @morphia.internal
+ */
 public final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<String, Class<?>>();
     private final Set<String> packages;
 
+    /**
+     * Creates a new lookup
+     *
+     * @param entityModels the models to map
+     * @param packages     the packages to search
+     */
     public DiscriminatorLookup(final Map<Class<?>, EntityModel<?>> entityModels, final Set<String> packages) {
         for (EntityModel<?> entityModel : entityModels.values()) {
             if (entityModel.getDiscriminator() != null) {
@@ -38,6 +49,23 @@ public final class DiscriminatorLookup {
         this.packages = packages;
     }
 
+    /**
+     * Adds a model to the map
+     *
+     * @param entityModel the model
+     */
+    public void addModel(final EntityModel<?> entityModel) {
+        if (entityModel.getDiscriminator() != null) {
+            discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
+        }
+    }
+
+    /**
+     * Looks up a discriminator value
+     *
+     * @param discriminator the value to search witih
+     * @return the mapped class
+     */
     public Class<?> lookup(final String discriminator) {
         if (discriminatorClassMap.containsKey(discriminator)) {
             return discriminatorClassMap.get(discriminator);
@@ -49,17 +77,11 @@ public final class DiscriminatorLookup {
         }
 
         if (clazz == null) {
-            throw new CodecConfigurationException(format("A class could not be found for the discriminator: '%s'.",  discriminator));
+            throw new CodecConfigurationException(format("A class could not be found for the discriminator: '%s'.", discriminator));
         } else {
             discriminatorClassMap.put(discriminator, clazz);
         }
         return clazz;
-    }
-
-    public void addModel(final EntityModel<?> entityModel) {
-        if (entityModel.getDiscriminator() != null) {
-            discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
-        }
     }
 
     private Class<?> getClassForName(final String discriminator) {

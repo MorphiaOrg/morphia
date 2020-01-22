@@ -10,12 +10,14 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.IdGenerator;
 import org.bson.codecs.ObjectIdGenerator;
 import org.bson.codecs.configuration.CodecConfigurationException;
-import org.bson.codecs.pojo.PropertyModel;
 import org.bson.types.ObjectId;
 
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * @since 2.0
+ */
 class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     public static final ObjectIdGenerator OBJECT_ID_GENERATOR = new ObjectIdGenerator();
     private final MorphiaCodec<T> morphiaCodec;
@@ -49,42 +51,6 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
     }
 
-    private <S> void encodeIdProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
-                                        final FieldModel<S> idModel) {
-        if (idModel != null) {
-            IdGenerator generator = getIdGenerator();
-            if (generator == null) {
-                encodeProperty(writer, instance, encoderContext, idModel);
-            } else {
-                S id = idModel.getAccessor().get(instance);
-                if (id == null && encoderContext.isEncodingCollectibleDocument()) {
-                    id = (S) generator.generate();
-                    idModel.getAccessor().set(instance, id);
-                }
-                encodeValue(writer, encoderContext, idModel, id);
-            }
-        }
-    }
-
-    private IdGenerator getIdGenerator() {
-        if(idGenerator == null) {
-            FieldModel<?> idModel = morphiaCodec.getEntityModel().getIdModel();
-            if(idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
-                idGenerator = OBJECT_ID_GENERATOR;
-            }
-        }
-
-        return idGenerator;
-    }
-
-    private <S> void encodeProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
-                                      final FieldModel<S> model) {
-        if (model != null) {
-            S value = model.getAccessor().get(instance);
-            encodeValue(writer, encoderContext, model, value);
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private void encodeEntity(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
         if (areEquivalentTypes(value.getClass(), morphiaCodec.getEntityModel().getType())) {
@@ -107,6 +73,31 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         } else {
             morphiaCodec.getRegistry().get((Class<T>) value.getClass())
                         .encode(writer, value, encoderContext);
+        }
+    }
+
+    private <S> void encodeIdProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
+                                      final FieldModel<S> idModel) {
+        if (idModel != null) {
+            IdGenerator generator = getIdGenerator();
+            if (generator == null) {
+                encodeProperty(writer, instance, encoderContext, idModel);
+            } else {
+                S id = idModel.getAccessor().get(instance);
+                if (id == null && encoderContext.isEncodingCollectibleDocument()) {
+                    id = (S) generator.generate();
+                    idModel.getAccessor().set(instance, id);
+                }
+                encodeValue(writer, encoderContext, idModel, id);
+            }
+        }
+    }
+
+    private <S> void encodeProperty(final BsonWriter writer, final T instance, final EncoderContext encoderContext,
+                                    final FieldModel<S> model) {
+        if (model != null) {
+            S value = model.getAccessor().get(instance);
+            encodeValue(writer, encoderContext, model, value);
         }
     }
 
@@ -137,6 +128,17 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         morphiaCodec.getMappedClass().callLifecycleMethods(PostPersist.class, value, document, morphiaCodec.getMapper());
 
         morphiaCodec.getRegistry().get(Document.class).encode(writer, document, encoderContext);
+    }
+
+    private IdGenerator getIdGenerator() {
+        if (idGenerator == null) {
+            FieldModel<?> idModel = morphiaCodec.getEntityModel().getIdModel();
+            if (idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
+                idGenerator = OBJECT_ID_GENERATOR;
+            }
+        }
+
+        return idGenerator;
     }
 
 }

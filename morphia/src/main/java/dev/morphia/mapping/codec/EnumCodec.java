@@ -6,11 +6,23 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * An enum codec
+ *
+ * @param <T> the type of the enum
+ * @morphia.internal
+ * @since 2.0
+ */
 public class EnumCodec<T extends Enum<T>> implements Codec<T> {
-    private final Class<T> clazz;
+    private final Class<T> type;
 
-    public EnumCodec(final Class<T> clazz) {
-        this.clazz = clazz;
+    /**
+     * Creates a codec for the given type
+     *
+     * @param type the type
+     */
+    public EnumCodec(final Class<T> type) {
+        this.type = type;
     }
 
     @Override
@@ -19,12 +31,12 @@ public class EnumCodec<T extends Enum<T>> implements Codec<T> {
     }
 
     @Override
-    public Class<T> getEncoderClass() {
-        return clazz;
+    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+        return Enum.valueOf(type, reader.readString());
     }
 
     @Override
-    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
-        return Enum.valueOf(clazz, reader.readString());
+    public Class<T> getEncoderClass() {
+        return type;
     }
 }

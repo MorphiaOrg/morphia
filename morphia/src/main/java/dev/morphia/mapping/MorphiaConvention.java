@@ -2,8 +2,6 @@ package dev.morphia.mapping;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
-import org.bson.codecs.pojo.ClassModelBuilder;
-import org.bson.codecs.pojo.Convention;
 
 /**
  * Applies certain conventions specific for Morphia

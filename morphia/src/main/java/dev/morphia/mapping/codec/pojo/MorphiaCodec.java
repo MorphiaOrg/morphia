@@ -6,7 +6,7 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.mapping.codec.bson.PropertyCodecRegistryImpl;
+import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
@@ -72,11 +72,14 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         EntityModel<T> entityModel = getEntityModel();
         for (FieldModel<?> fieldModel : entityModel.getFieldModels()) {
             Codec codec = fieldModel.getCodec() != null ? fieldModel.getCodec()
-                                                           : propertyCodecRegistry.get(fieldModel.getTypeData());
+                                                        : propertyCodecRegistry.get(fieldModel.getTypeData());
             fieldModel.cachedCodec(codec);
         }
     }
 
+    /**
+     * @return the entity model backing this codec
+     */
     public EntityModel<T> getEntityModel() {
         return entityModel;
     }

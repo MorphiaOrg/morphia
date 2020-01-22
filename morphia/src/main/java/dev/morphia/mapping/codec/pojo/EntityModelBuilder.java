@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,8 +35,8 @@ import static org.bson.assertions.Assertions.notNull;
  * Builder for EntityModels
  *
  * @param <T> the entity type
- * @since 2.0
  * @morphia.internal
+ * @since 2.0
  */
 public class EntityModelBuilder<T> {
     private final Datastore datastore;
@@ -86,13 +87,31 @@ public class EntityModelBuilder<T> {
         }
     }
 
+    /**
+     * Adds a field to the model
+     *
+     * @param builder the field to add
+     */
     public void addModel(final FieldModelBuilder<?> builder) {
         fieldModels.add(builder);
     }
 
+    /**
+     * Sets the annotations for the model
+     *
+     * @param annotations the annotations to use
+     * @return this
+     */
     public EntityModelBuilder<T> annotations(final List<Annotation> annotations) {
         this.annotations = notNull("annotations", annotations);
         return this;
+    }
+
+    /**
+     * @return the annotation on this model
+     */
+    public List<Annotation> annotations() {
+        return annotations;
     }
 
     /**
@@ -116,12 +135,40 @@ public class EntityModelBuilder<T> {
         return new EntityModel<>(this);
     }
 
-    public void discriminator(final String discriminator) {
+    /**
+     * Sets the discriminator
+     *
+     * @param discriminator the discriminator
+     * @return this
+     */
+    public EntityModelBuilder<T> discriminator(final String discriminator) {
         this.discriminator = discriminator;
+        return this;
     }
 
-    public void discriminatorKey(final String key) {
+    /**
+     * @return the discriminator
+     */
+    public String discriminator() {
+        return discriminator;
+    }
+
+    /**
+     * Sets the mapped key name to use when storing the discriminator value
+     *
+     * @param key the key to use
+     * @return this
+     */
+    public EntityModelBuilder<T> discriminatorKey(final String key) {
         discriminatorKey = key;
+        return this;
+    }
+
+    /**
+     * @return the discriminator key
+     */
+    public String discriminatorKey() {
+        return discriminatorKey;
     }
 
     /**
@@ -135,27 +182,43 @@ public class EntityModelBuilder<T> {
         return this;
     }
 
-    public List<Annotation> annotations() {
-        return annotations;
-    }
-
-    public String discriminator() {
-        return discriminator;
-    }
-
-    public String discriminatorKey() {
-        return discriminatorKey;
-    }
-
-    public FieldModelBuilder<?> fieldModelByFieldName(final String name) {
+    /**
+     * Gets a field by its name
+     *
+     * @param name the name
+     * @return the field
+     * @throws NoSuchElementException if no value is present
+     */
+    public FieldModelBuilder<?> fieldModelByFieldName(final String name) throws NoSuchElementException {
         return fieldModels.stream().filter(f -> f.getField().getName().equals(name))
-                   .findFirst().get();
+                          .findFirst().get();
     }
 
+    /**
+     * @return the fields on this model
+     */
     public List<FieldModelBuilder<?>> fieldModels() {
         return fieldModels;
     }
 
+    /**
+     * @param type the annotation class
+     * @param <A>  the annotation type
+     * @return the annotation or null if it doesn't exist
+     */
+    public <A extends Annotation> A getAnnotation(final Class<A> type) {
+        List<A> annotations = (List<A>) annotationsMap.get(type);
+        if (annotations != null && !annotations.isEmpty()) {
+            return annotations.get(annotations.size() - 1);
+        }
+        return null;
+    }
+
+    /**
+     * The type of this model
+     *
+     * @return the type
+     */
     public Class<T> getType() {
         return type;
     }
@@ -173,17 +236,33 @@ public class EntityModelBuilder<T> {
         return false;
     }
 
+    /**
+     * @return the name of the id field
+     */
     public String idFieldName() {
         return idFieldName;
     }
 
-    public EntityModelBuilder<T> idFieldName(final String idFieldName) {
-        this.idFieldName = idFieldName;
+    /**
+     * Sets the name of the id field
+     *
+     * @param name the name
+     * @return this
+     */
+    public EntityModelBuilder<T> idFieldName(final String name) {
+        this.idFieldName = name;
         return this;
     }
 
+    /**
+     * @return true if the discriminator is enabled
+     */
     public boolean isDiscriminatorEnabled() {
         return discriminatorEnabled;
+    }
+
+    protected Map<Class<? extends Annotation>, List<Annotation>> annotationsMap() {
+        return annotationsMap;
     }
 
     protected void configure() {
@@ -203,28 +282,11 @@ public class EntityModelBuilder<T> {
         annotations(annotations);
     }
 
-    protected Map<Class<? extends Annotation>, List<Annotation>> annotationsMap() {
-        return annotationsMap;
-    }
-
     protected String getCollectionName() {
         Entity entityAn = getAnnotation(Entity.class);
         return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
                ? entityAn.value()
                : datastore.getMapper().getOptions().getCollectionNaming().apply(type.getSimpleName());
-    }
-
-    /**
-     * @param type the annotation class
-     * @param <A>  the annotation type
-     * @return the annotation or null if it doesn't exist
-     */
-    public <A extends Annotation> A getAnnotation(final Class<A> type) {
-        List<A> annotations = (List<A>) annotationsMap.get(type);
-        if (annotations != null && !annotations.isEmpty()) {
-            return annotations.get(annotations.size() - 1);
-        }
-        return null;
     }
 
     protected Datastore getDatastore() {
@@ -242,6 +304,16 @@ public class EntityModelBuilder<T> {
         }
 
         return set;
+    }
+
+    private <T, S> void cachePropertyTypeData(final FieldMetadata<?> metadata,
+                                              final Map<String, TypeParameterMap> propertyTypeParameterMap,
+                                              final TypeData<S> parentClassTypeData,
+                                              final List<String> genericTypeNames,
+                                              final Type genericType) {
+        TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
+        propertyTypeParameterMap.put(metadata.getName(), typeParameterMap);
+        metadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
     }
 
     private String getMappedFieldName(final FieldModelBuilder<?> fieldBuilder) {
@@ -268,35 +340,6 @@ public class EntityModelBuilder<T> {
         return options.getFieldNaming().apply(fieldBuilder.getName());
     }
 
-    private void processFields(final Class<?> currentClass,
-                               final TypeData<?> parentClassTypeData,
-                               final List<String> genericTypeNames, final Map<String, TypeParameterMap> propertyTypeParameterMap) {
-        for (Field field : currentClass.getDeclaredFields()) {
-            final TypeData<?> typeData = TypeData.newInstance(field);
-
-            Type genericType = field.getGenericType();
-            TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
-            FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData, typeParameterMap, parentClassTypeData);
-
-            cachePropertyTypeData(fieldMetadata, propertyTypeParameterMap, parentClassTypeData, genericTypeNames, genericType);
-
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                fieldMetadata.addAnnotation(annotation);
-            }
-            addModel(createFieldModelBuilder(fieldMetadata));
-        }
-    }
-
-    private <T, S> void cachePropertyTypeData(final FieldMetadata<?> metadata,
-                                                     final Map<String, TypeParameterMap> propertyTypeParameterMap,
-                                                     final TypeData<S> parentClassTypeData,
-                                                     final List<String> genericTypeNames,
-                                                     final Type genericType) {
-        TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
-        propertyTypeParameterMap.put(metadata.getName(), typeParameterMap);
-        metadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
-    }
-
     private TypeParameterMap getTypeParameterMap(final List<String> genericTypeNames, final Type propertyType) {
         int classParamIndex = genericTypeNames.indexOf(propertyType.toString());
         TypeParameterMap.Builder builder = TypeParameterMap.builder();
@@ -314,6 +357,25 @@ public class EntityModelBuilder<T> {
             }
         }
         return builder.build();
+    }
+
+    private void processFields(final Class<?> currentClass,
+                               final TypeData<?> parentClassTypeData,
+                               final List<String> genericTypeNames, final Map<String, TypeParameterMap> propertyTypeParameterMap) {
+        for (Field field : currentClass.getDeclaredFields()) {
+            final TypeData<?> typeData = TypeData.newInstance(field);
+
+            Type genericType = field.getGenericType();
+            TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
+            FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData, typeParameterMap, parentClassTypeData);
+
+            cachePropertyTypeData(fieldMetadata, propertyTypeParameterMap, parentClassTypeData, genericTypeNames, genericType);
+
+            for (Annotation annotation : field.getDeclaredAnnotations()) {
+                fieldMetadata.addAnnotation(annotation);
+            }
+            addModel(createFieldModelBuilder(fieldMetadata));
+        }
     }
 
     private List<String> processTypeNames(final Class<?> currentClass) {

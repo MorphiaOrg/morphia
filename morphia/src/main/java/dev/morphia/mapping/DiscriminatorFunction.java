@@ -18,20 +18,22 @@ public abstract class DiscriminatorFunction {
             return builder.getType().getName();
         }
     };
-    public static final DiscriminatorFunction lowerClassName = new DiscriminatorFunction() {@Override public String compute(final EntityModelBuilder<?> builder) {
-            return builder.getType().getName().toLowerCase();
-        }
-    };
-    public static final DiscriminatorFunction simpleName = new DiscriminatorFunction() {
+    public static final DiscriminatorFunction lowerClassName = new DiscriminatorFunction() {
         @Override
         public String compute(final EntityModelBuilder<?> builder) {
-            return builder.getType().getSimpleName();
+            return builder.getType().getName().toLowerCase();
         }
     };
     public static final DiscriminatorFunction lowerSimpleName = new DiscriminatorFunction() {
         @Override
         public String compute(final EntityModelBuilder<?> builder) {
             return builder.getType().getSimpleName().toLowerCase();
+        }
+    };
+    public static final DiscriminatorFunction simpleName = new DiscriminatorFunction() {
+        @Override
+        public String compute(final EntityModelBuilder<?> builder) {
+            return builder.getType().getSimpleName();
         }
     };
 

@@ -24,16 +24,16 @@ import org.bson.codecs.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * Represents a field on a class and stores various metadata such as generic parameters
+ * Represents a field on a class and stores various metadata such as generic parameters.
  *
  * @param <T> the type of the field that the FieldModel represents.
- * @since 3.5
+ * @morphia.internal
+ * @since 2.0
  */
 public final class FieldModel<T> {
     private final Field field;
@@ -73,6 +73,30 @@ public final class FieldModel<T> {
         return new FieldModelBuilder<>();
     }
 
+    /**
+     * Gets the parameterized type of a TypeData
+     *
+     * @param toNormalize the type to normalize
+     * @return the unwrapped type
+     * @morphia.internal
+     */
+    public static Class<?> normalize(final TypeData<?> toNormalize) {
+        Class<?> type;
+        TypeData<?> typeData = toNormalize;
+        while (!typeData.getTypeParameters().isEmpty()) {
+            List<TypeData<?>> typeParameters = typeData.getTypeParameters();
+            typeData = typeParameters.get(typeParameters.size() - 1);
+        }
+        type = typeData.getType();
+        while (type.isArray()) {
+            type = type.getComponentType();
+        }
+        return type;
+    }
+
+    /**
+     * @return the accessor to use when accessing this field
+     */
     public PropertyAccessor<T> getAccessor() {
         return accessor;
     }
@@ -100,6 +124,9 @@ public final class FieldModel<T> {
         return annotations;
     }
 
+    /**
+     * @return the cached codec
+     */
     public Codec<T> getCachedCodec() {
         return cachedCodec;
     }
@@ -146,28 +173,6 @@ public final class FieldModel<T> {
     }
 
     /**
-     * Gets the parameterized type of a TypeData
-     *
-     * @param toNormalize the type to normalize
-     * @return the unwrapped type
-     * @morphia.internal
-     */
-    public static Class<?> normalize(final TypeData<?> toNormalize) {
-        Class<?> type;
-        TypeData<?> typeData = toNormalize;
-        while (!typeData.getTypeParameters().isEmpty()) {
-            List<TypeData<?>> typeParameters = typeData.getTypeParameters();
-            typeData = typeParameters.get(typeParameters.size() - 1);
-        }
-        type = typeData.getType();
-        while (type.isArray()) {
-            type = type.getComponentType();
-        }
-        //            normalizedType =  normalizedType.isArray() ? normalizedType.getComponentType() : normalizedType;
-        return type;
-    }
-
-    /**
      * @return the type data for the field
      */
     public TypeData<T> getTypeData() {
@@ -176,12 +181,8 @@ public final class FieldModel<T> {
 
     @Override
     public int hashCode() {
-        int result = field.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + typeData.hashCode();
-        result = 31 * result + (codec != null ? codec.hashCode() : 0);
-        result = 31 * result + (cachedCodec != null ? cachedCodec.hashCode() : 0);
-        return result;
+        return Objects.hash(getField(), getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
+            getAnnotations(), getCachedCodec(), getNormalizedType());
     }
 
     @Override
@@ -192,26 +193,17 @@ public final class FieldModel<T> {
         if (!(o instanceof FieldModel)) {
             return false;
         }
-
         final FieldModel<?> that = (FieldModel<?>) o;
-
-        if (!field.equals(that.field)) {
-            return false;
-        }
-        if (!name.equals(that.name)) {
-            return false;
-        }
-        if (!typeData.equals(that.typeData)) {
-            return false;
-        }
-        if (codec != null ? !codec.equals(that.codec) : that.codec != null) {
-            return false;
-        }
-        return cachedCodec != null ? cachedCodec.equals(that.cachedCodec) : that.cachedCodec == null;
-    }
-
-    public boolean shouldSerialize(final T value) {
-        return serialization.shouldSerialize(value);
+        return getField().equals(that.getField())
+               && getName().equals(that.getName())
+               && getTypeData().equals(that.getTypeData())
+               && getMappedName().equals(that.getMappedName())
+               && Objects.equals(getCodec(), that.getCodec())
+               && getAccessor().equals(that.getAccessor())
+               && serialization.equals(that.serialization)
+               && getAnnotations().equals(that.getAnnotations())
+               && Objects.equals(getCachedCodec(), that.getCachedCodec())
+               && Objects.equals(getNormalizedType(), that.getNormalizedType());
     }
 
     @Override
@@ -222,6 +214,16 @@ public final class FieldModel<T> {
                    .add("typeData=" + typeData)
                    .add("annotations=" + annotations)
                    .toString();
+    }
+
+    /**
+     * Checks a value against the configured rules for serialization
+     *
+     * @param value the value to check
+     * @return true if the given value should be serialized
+     */
+    public boolean shouldSerialize(final T value) {
+        return serialization.shouldSerialize(value);
     }
 
     void cachedCodec(final Codec<T> codec) {
