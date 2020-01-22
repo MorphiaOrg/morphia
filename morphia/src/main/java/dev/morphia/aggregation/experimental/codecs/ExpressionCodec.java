@@ -71,7 +71,11 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
 
     @Override
     public void encode(final BsonWriter writer, final T expression, final EncoderContext encoderContext) {
-        expression.encode(mapper, writer, encoderContext);
+        if(expression != null) {
+            expression.encode(mapper, writer, encoderContext);
+        } else {
+            writer.writeNull();
+        }
     }
 
     @Override

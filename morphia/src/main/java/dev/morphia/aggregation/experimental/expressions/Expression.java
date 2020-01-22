@@ -52,6 +52,20 @@ public abstract class Expression {
     }
 
     /**
+     * Creates a null expression
+     *
+     * @return the new expression
+     */
+    public static Expression nullExpression() {
+        return new Expression(null) {
+            @Override
+            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+                writer.writeNull();
+            }
+        };
+    }
+
+    /**
      * Returns an array of all values that result from applying an expression to each document in a group of documents that share the
      * same group by key.
      * <p>

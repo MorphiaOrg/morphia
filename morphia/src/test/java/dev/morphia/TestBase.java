@@ -154,9 +154,10 @@ public abstract class TestBase {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
-        /*if(expected.getClass().equals(actual.getClass())) {
-            assertEquals(format("mismatch found at %s:%s%n%s", path, expected, actual), expected, actual);
-        } else */if (expected instanceof Document) {
+        if (expected == null && actual != null
+            || actual == null && expected != null) {
+            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
+        } else if (expected instanceof Document) {
             for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
                 final String key = entry.getKey();
                 assertDocumentEquals(path.isEmpty() ? key : (path + "." + key), entry.getValue(), ((Document) actual).get(key));
