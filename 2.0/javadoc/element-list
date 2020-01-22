@@ -11,7 +11,6 @@ dev.morphia.experimental
 dev.morphia.geo
 dev.morphia.mapping
 dev.morphia.mapping.codec
-dev.morphia.mapping.codec.bson
 dev.morphia.mapping.codec.pojo
 dev.morphia.mapping.codec.reader
 dev.morphia.mapping.codec.references
