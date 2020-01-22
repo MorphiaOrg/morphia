@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package org.bson.codecs.pojo;
+package dev.morphia.mapping.codec.bson;
 
+import dev.morphia.mapping.codec.MorphiaCollectionPropertyCodecProvider;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PropertyCodecProvider;
+import org.bson.codecs.pojo.PropertyCodecRegistry;
+import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +36,7 @@ public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
             augmentedProviders.addAll(propertyCodecProviders);
         }
         augmentedProviders.add(new CollectionPropertyCodecProvider());
-        augmentedProviders.add(new MapPropertyCodecProvider());
+        augmentedProviders.add(new MorphiaCollectionPropertyCodecProvider());
         augmentedProviders.add(new EnumPropertyCodecProvider(codecRegistry));
         augmentedProviders.add(new FallbackPropertyCodecProvider(pojoCodec, codecRegistry));
         this.propertyCodecProviders = augmentedProviders;
@@ -47,5 +51,25 @@ public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
             }
         }
         return null;
+    }
+
+    private static final class FallbackPropertyCodecProvider implements PropertyCodecProvider {
+        private final CodecRegistry codecRegistry;
+        private final Codec<?> codec;
+
+        FallbackPropertyCodecProvider(final Codec<?> codec, final CodecRegistry codecRegistry) {
+            this.codec = codec;
+            this.codecRegistry = codecRegistry;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <S> Codec<S> get(final TypeWithTypeParameters<S> type, final PropertyCodecRegistry propertyCodecRegistry) {
+            Class<S> clazz = type.getType();
+            if (clazz == codec.getEncoderClass()) {
+                return (Codec<S>) codec;
+            }
+            return codecRegistry.get(type.getType());
+        }
     }
 }

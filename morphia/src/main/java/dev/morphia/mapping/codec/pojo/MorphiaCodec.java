@@ -6,6 +6,7 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.bson.PropertyCodecRegistryImpl;
 import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
@@ -16,7 +17,6 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
-import org.bson.codecs.pojo.PropertyCodecRegistryImpl;
 import org.bson.types.ObjectId;
 
 import java.util.List;

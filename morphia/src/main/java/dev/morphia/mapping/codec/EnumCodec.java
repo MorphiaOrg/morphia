@@ -6,10 +6,10 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-class EnumCodec<T extends Enum<T>> implements Codec<T> {
+public class EnumCodec<T extends Enum<T>> implements Codec<T> {
     private final Class<T> clazz;
 
-    EnumCodec(final Class<T> clazz) {
+    public EnumCodec(final Class<T> clazz) {
         this.clazz = clazz;
     }
 
