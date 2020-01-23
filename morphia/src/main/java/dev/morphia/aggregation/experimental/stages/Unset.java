@@ -40,7 +40,7 @@ public class Unset extends Stage {
             fieldName = fieldName.substring(1);
             Sofia.logUnsetNamesDollarSign();
         }
-        fields.add(Expression.literal(fieldName));
+        fields.add(Expression.value(fieldName));
         return this;
     }
 

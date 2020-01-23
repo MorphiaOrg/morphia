@@ -40,7 +40,7 @@ import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.s
 import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
+import static dev.morphia.aggregation.experimental.expressions.Expression.value;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
 import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
 import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
@@ -56,9 +56,9 @@ public class CodecStructureTest extends TestBase {
                        + "$sum: 1 },'titles': { $push: '$title' } } } }"),
             Bucket.of()
                   .groupBy(field("price"))
-                  .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
+                  .boundaries(value(0), value(150), value(200), value(300), value(400))
                   .defaultValue("Other")
-                  .outputField("count", sum(literal(1)))
+                  .outputField("count", sum(value(1)))
                   .outputField("titles", push().single(field("title"))));
     }
 
@@ -145,7 +145,7 @@ public class CodecStructureTest extends TestBase {
             ConditionalExpression.ifNull()
                                  .target(field("name"))
                                  .field("_id", field("_id"))
-                                 .field("missingName", literal(true)));
+                                 .field("missingName", value(true)));
     }
 
     @Test
@@ -172,8 +172,8 @@ public class CodecStructureTest extends TestBase {
                  .on("_id")
                  .whenMatched(List.of(
                      AddFields.of()
-                              .field("thumbsup", add(field("thumbsup"), literal("$$new.thumbsup")))
-                              .field("thumbsdown", add(field("$thumbsdown"), literal("$$new.thumbsdown")))))
+                              .field("thumbsup", add(field("thumbsup"), value("$$new.thumbsup")))
+                              .field("thumbsdown", add(field("$thumbsdown"), value("$$new.thumbsdown")))))
                  .whenNotMatched(WhenNotMatched.INSERT));
     }
 
@@ -181,8 +181,8 @@ public class CodecStructureTest extends TestBase {
     public void testMergeObjects() {
         evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
             ObjectExpression.mergeObjects()
-                            .add(ArrayExpression.elementAt(field("fromItems"), literal(0)))
-                            .add(literal("$$ROOT")));
+                            .add(ArrayExpression.elementAt(field("fromItems"), value(0)))
+                            .add(value("$$ROOT")));
     }
 
     @Test
@@ -202,9 +202,9 @@ public class CodecStructureTest extends TestBase {
         evaluate(parse("{ $redact: { $cond: [ { $gt: [ { $size: { $setIntersection: [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] }, "
                        + "'$$DESCEND', '$$PRUNE']}}"),
             Redact.on(condition(
-                gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
-                literal("$$DESCEND"),
-                literal("$$PRUNE"))));
+                gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
+                value("$$DESCEND"),
+                value("$$PRUNE"))));
     }
 
     @Test
@@ -219,8 +219,8 @@ public class CodecStructureTest extends TestBase {
                        .field("_id", field("_id"))
                        .field("item", field("item"))
                        .field("amount", MathExpression.multiply(field("price"), field("quantity")))
-                       .field("status", literal("Complete"))
-                       .field("asofDate", literal("$$NOW"))
+                       .field("status", value("Complete"))
+                       .field("asofDate", value("$$NOW"))
                 );
     }
 

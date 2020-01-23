@@ -9,7 +9,7 @@ import dev.morphia.sofia.Sofia;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
+import static dev.morphia.aggregation.experimental.expressions.Expression.value;
 
 /**
  * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields
@@ -42,7 +42,7 @@ public class Projection extends Stage {
      * @return this
      */
     public Projection exclude(final String name) {
-        exclude(name, literal(false));
+        exclude(name, value(false));
         return this;
     }
 
@@ -70,7 +70,7 @@ public class Projection extends Stage {
             fields.addAll(excludes.getFields());
         }
         if (suppressId) {
-            fields.add(new PipelineField("_id", literal(false)));
+            fields.add(new PipelineField("_id", value(false)));
         }
         return fields;
     }
@@ -83,7 +83,7 @@ public class Projection extends Stage {
      * @return this
      */
     public Projection include(final String name) {
-        return include(name, literal(true));
+        return include(name, value(true));
     }
 
     /**

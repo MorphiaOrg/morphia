@@ -68,7 +68,7 @@ import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.ifNull;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.literal;
+import static dev.morphia.aggregation.experimental.expressions.Expression.value;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpression.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
@@ -194,9 +194,9 @@ public class AggregationTest extends TestBase {
         List<Document> results = getDs().aggregate(Artwork.class)
                                         .bucket(Bucket.of()
                                                       .groupBy(field("price"))
-                                                      .boundaries(literal(0), literal(200), literal(400))
+                                                      .boundaries(value(0), value(200), value(400))
                                                       .defaultValue("Other")
-                                                      .outputField("count", sum(literal(1)))
+                                                      .outputField("count", sum(value(1)))
                                                       .outputField("titles", push().single(field("title"))))
                                         .execute(Document.class)
                                         .toList();
@@ -229,14 +229,14 @@ public class AggregationTest extends TestBase {
     @Test
     public void testCollectionStats() {
         getDs().save(new Author());
-        Document execute = getDs().aggregate(Author.class)
-                                  .collStats(CollectionStats.with()
-                                                            .histogram(true)
-                                                            .scale(42)
-                                                            .count(true))
-                                  .execute(Document.class)
-                                  .next();
-        System.out.println(execute);
+        Document stats = getDs().aggregate(Author.class)
+                                .collStats(CollectionStats.with()
+                                                          .histogram(true)
+                                                          .scale(42)
+                                                          .count(true))
+                                .execute(Document.class)
+                                .tryNext();
+        Assert.assertNotNull(stats);
     }
 
     @Test
@@ -291,9 +291,9 @@ public class AggregationTest extends TestBase {
                                                                  .field("price").exists()),
                                                  Bucket.of()
                                                        .groupBy(field("price"))
-                                                       .boundaries(literal(0), literal(150), literal(200), literal(300), literal(400))
+                                                       .boundaries(value(0), value(150), value(200), value(300), value(400))
                                                        .defaultValue("Other")
-                                                       .outputField("count", sum(literal(1)))
+                                                       .outputField("count", sum(value(1)))
                                                        .outputField("titles", push().single(field("title"))))
                                              .field("categorizedByYears(Auto)", AutoBucket.of()
                                                                                           .groupBy(field("year"))
@@ -472,7 +472,7 @@ public class AggregationTest extends TestBase {
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .group(Group.of()
-                                                     .field("count", sum(literal(1))));
+                                                     .field("count", sum(value(1))));
 
         Group group = pipeline.getStage("$group");
         Assert.assertNull(group.getId());
@@ -592,9 +592,9 @@ public class AggregationTest extends TestBase {
         Document actual = getDs().aggregate("forecasts")
                                  .match(getDs().find().filter("year", 2014))
                                  .redact(Redact.on(condition(
-                                     gt(size(setIntersection(field("tags"), array(literal("STLW"), literal("G")))), literal(0)),
-                                     literal("$$DESCEND"),
-                                     literal("$$PRUNE"))))
+                                     gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
+                                     value("$$DESCEND"),
+                                     value("$$PRUNE"))))
                                  .execute(Document.class)
                                  .next();
         Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"
@@ -633,7 +633,7 @@ public class AggregationTest extends TestBase {
                         .replaceRoot(ReplaceRoot.with()
                                                 .with(ifNull().target(field("name"))
                                                               .field("_id", field("_id"))
-                                                              .field("missingName", literal(true))))
+                                                              .field("missingName", value(true))))
                         .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
@@ -649,8 +649,8 @@ public class AggregationTest extends TestBase {
                                                 .with(mergeObjects()
                                                            .add(Expression.of()
                                                                           .field("_id", field("_id"))
-                                                                          .field("first", literal(""))
-                                                                          .field("last", literal("")))
+                                                                          .field("first", value(""))
+                                                                          .field("last", value("")))
                                                            .add(field("name"))))
                         .execute(Document.class)
                         .toList();
@@ -693,7 +693,7 @@ public class AggregationTest extends TestBase {
                         .replaceWith(with()
                                          .with(ifNull().target(field("name"))
                                                        .field("_id", field("_id"))
-                                                       .field("missingName", literal(true))))
+                                                       .field("missingName", value(true))))
                         .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
@@ -709,8 +709,8 @@ public class AggregationTest extends TestBase {
                                          .with(mergeObjects()
                                                     .add(Expression.of()
                                                                    .field("_id", field("_id"))
-                                                                   .field("first", literal(""))
-                                                                   .field("last", literal("")))
+                                                                   .field("first", value(""))
+                                                                   .field("last", value("")))
                                                     .add(field("name"))))
                         .execute(Document.class)
                         .toList();

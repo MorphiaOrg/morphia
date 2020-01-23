@@ -32,8 +32,8 @@ public class DateFromString extends Expression {
         writer.writeEndDocument();
     }
 
-    public DateFromString format(final String format) {
-        return format(literal(format));
+    public DateFromString dateString(final String dateString) {
+        return dateString(value(dateString));
     }
 
     public DateFromString format(final Expression format) {
@@ -41,8 +41,8 @@ public class DateFromString extends Expression {
         return this;
     }
 
-    public DateFromString dateString(final String dateString) {
-        return dateString(literal(dateString));
+    public DateFromString format(final String format) {
+        return format(value(format));
     }
 
     public DateFromString dateString(final Expression dateString) {
@@ -51,7 +51,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString onError(final String onError) {
-        return onError(literal(onError));
+        return onError(value(onError));
     }
 
     public DateFromString onError(final Expression onError) {
@@ -60,7 +60,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString onNull(final String onNull) {
-        return onNull(literal(onNull));
+        return onNull(value(onNull));
     }
 
     public DateFromString onNull(final Expression onNull) {
@@ -69,7 +69,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString timeZone(final String timeZone) {
-        return timeZone(literal(timeZone));
+        return timeZone(value(timeZone));
     }
 
     public DateFromString timeZone(final Expression timeZone) {

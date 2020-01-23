@@ -17,7 +17,7 @@ public class DateToString extends Expression {
     }
 
     public DateToString date(final String date) {
-        return date(literal(date));
+        return date(value(date));
     }
 
     public DateToString date(final Expression date) {
@@ -39,7 +39,7 @@ public class DateToString extends Expression {
     }
 
     public DateToString format(final String format) {
-        return format(literal(format));
+        return format(value(format));
     }
 
     public DateToString format(final Expression format) {
@@ -48,7 +48,7 @@ public class DateToString extends Expression {
     }
 
     public DateToString onNull(final String onNull) {
-        return onNull(literal(onNull));
+        return onNull(value(onNull));
     }
 
     public DateToString onNull(final Expression onNull) {
@@ -57,7 +57,7 @@ public class DateToString extends Expression {
     }
 
     public DateToString timeZone(final String timeZone) {
-        return timeZone(literal(timeZone));
+        return timeZone(value(timeZone));
     }
 
     public DateToString timeZone(final Expression timeZone) {

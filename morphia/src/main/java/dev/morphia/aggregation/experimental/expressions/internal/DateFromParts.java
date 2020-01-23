@@ -32,7 +32,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts day(final int value) {
-        return day(literal(value));
+        return day(value(value));
     }
 
     /**
@@ -55,7 +55,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts hour(final int value) {
-        return hour(literal(value));
+        return hour(value(value));
     }
 
     /**
@@ -78,7 +78,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts isoDayOfWeek(final int value) {
-        return isoDayOfWeek(literal(value));
+        return isoDayOfWeek(value(value));
     }
 
     /**
@@ -99,7 +99,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts isoWeek(final int value) {
-        return isoWeek(literal(value));
+        return isoWeek(value(value));
     }
 
     /**
@@ -122,7 +122,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts isoWeekYear(final int value) {
-        return isoWeekYear(literal(value));
+        return isoWeekYear(value(value));
     }
 
     /**
@@ -145,7 +145,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts millisecond(final int value) {
-        return millisecond(literal(value));
+        return millisecond(value(value));
     }
 
     /**
@@ -168,7 +168,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts minute(final int value) {
-        return minute(literal(value));
+        return minute(value(value));
     }
 
     /**
@@ -191,7 +191,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts month(final int value) {
-        return month(literal(value));
+        return month(value(value));
     }
 
     /**
@@ -214,7 +214,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts second(final int value) {
-        return second(literal(value));
+        return second(value(value));
     }
 
     /**
@@ -266,7 +266,7 @@ public class DateFromParts extends Expression {
      * Optional
      */
     public DateFromParts timezone(final String value) {
-        return timezone(literal(value));
+        return timezone(value(value));
     }
 
     /**
@@ -278,7 +278,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts year(final int value) {
-        return year(literal(value));
+        return year(value(value));
     }
 
     /**

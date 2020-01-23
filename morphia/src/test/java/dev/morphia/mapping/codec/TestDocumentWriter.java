@@ -64,7 +64,6 @@ public class TestDocumentWriter extends TestBase {
         writer.writeString("something simple");
         writer.writeEndDocument();
         check(writer, 0, 0);
-        System.out.println(writer.getRoot().toString());
     }
 
     private void check(final DocumentWriter writer, final int docs, final int arrays) {

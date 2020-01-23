@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.internal.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.internal.Literal;
+import dev.morphia.aggregation.experimental.expressions.internal.ValueExpression;
 import dev.morphia.aggregation.experimental.expressions.internal.Push;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
@@ -37,7 +38,18 @@ public abstract class Expression {
      * @return the new expression
      */
     public static Expression field(final String name) {
-        return new Literal(name.startsWith("$") ? name : "$" + name);
+        return new ValueExpression(name.startsWith("$") ? name : "$" + name);
+    }
+
+    /**
+     * Returns a value without parsing. Note that this is different from {@link #literal(Object)} in that the given value will dropped
+     * directly in to the pipeline for use/evaluation in whatever context the value is used.
+     *
+     * @param value the value
+     * @return the new expression
+     */
+    public static Expression value(final Object value) {
+        return new ValueExpression(value);
     }
 
     /**
