@@ -154,13 +154,18 @@ public abstract class TestBase {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
-        if (expected == null && actual != null
-            || actual == null && expected != null) {
-            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
-        } else if (expected instanceof Document) {
+        assertSameNullity(path, expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertSameType(path, expected, actual);
+
+        if (expected instanceof Document) {
             for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
                 final String key = entry.getKey();
-                assertDocumentEquals(path.isEmpty() ? key : (path + "." + key), entry.getValue(), ((Document) actual).get(key));
+                Object expectedValue = entry.getValue();
+                Object actualValue = ((Document) actual).get(key);
+                assertDocumentEquals(path + "." + key, expectedValue, actualValue);
             }
         } else if (expected instanceof List) {
             List list = (List) expected;
@@ -186,6 +191,26 @@ public abstract class TestBase {
             }
         } else {
             assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
+        }
+    }
+
+    private void assertSameNullity(final String path, final Object expected, final Object actual) {
+        if (expected == null && actual != null
+            || actual == null && expected != null) {
+            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
+        }
+    }
+
+    private void assertSameType(final String path, final Object expected, final Object actual) {
+        try {
+            if (expected instanceof List && actual instanceof List) {
+                return;
+            }
+            if (!expected.getClass().equals(actual.getClass())) {
+                assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental;
 
-import dev.morphia.TestBase;
-import dev.morphia.aggregation.experimental.expressions.DateExpression;
+import dev.morphia.aggregation.experimental.expressions.DateExpressions;
+import dev.morphia.aggregation.experimental.expressions.ExpressionsTest;
 import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.model.StringDates;
 import dev.morphia.aggregation.experimental.stages.AddFields;
@@ -14,30 +14,37 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.dateFromParts;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.dateFromString;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.dateToString;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.dayOfMonth;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.dayOfWeek;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.dayOfYear;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.hour;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.milliseconds;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.minute;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.month;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.second;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.week;
-import static dev.morphia.aggregation.experimental.expressions.DateExpression.year;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateFromParts;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateFromString;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateToParts;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateToString;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dayOfMonth;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dayOfWeek;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dayOfYear;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.hour;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.isoDayOfWeek;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.isoWeek;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.isoWeekYear;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.milliseconds;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.minute;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.month;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.second;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.toDate;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.week;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
+import static dev.morphia.aggregation.experimental.expressions.Expression.value;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 
-public class DateExpressionTest extends TestBase {
+public class DateExpressionTest extends ExpressionsTest {
     @Test
     public void testDateAggregation() {
         getDatabase().getCollection("sales").insertOne(
@@ -68,6 +75,27 @@ public class DateExpressionTest extends TestBase {
         assertEquals(1, dates.getInteger("dayOfYear").intValue());
         assertEquals(4, dates.getInteger("dayOfWeek").intValue());
         assertEquals(0, dates.getInteger("week").intValue());
+    }
+
+    @Test
+    public void testDateToParts() {
+        getMapper().getCollection(User.class).drop();
+        getDocumentCollection(User.class)
+            .insertOne(parse("{'_id': 2, 'item': 'abc', 'price': 10, 'quantity': 2, 'date': ISODate('2017-01-01T01:29:09.123Z')}"));
+
+        Document parts = getDs().aggregate(User.class)
+                                .project(of()
+                                             .include("date", dateToParts(field("date")))
+                                             .include("date_iso", dateToParts(field("date"))
+                                                                      .iso8601(true))
+                                             .include("date_timezone", dateToParts(field("date"))
+                                                                           .timezone(value("America/New_York"))))
+                                .execute(Document.class)
+                                .next();
+        assertDocumentEquals(parse("{\"_id\":2,\"date\":{\"year\":2017,\"month\":1,\"day\":1,\"hour\":1,\"minute\":29,\"second\":9,"
+                                   + "\"millisecond\":123},\"date_iso\":{\"isoWeekYear\":2016,\"isoWeek\":52,\"isoDayOfWeek\":7,"
+                                   + "\"hour\":1,\"minute\":29,\"second\":9,\"millisecond\":123},\"date_timezone\":{\"year\":2016,"
+                                   + "\"month\":12,\"day\":31,\"hour\":20,\"minute\":29,\"second\":9,\"millisecond\":123}}"), parts);
     }
 
     @Test
@@ -105,6 +133,7 @@ public class DateExpressionTest extends TestBase {
     @Test
     public void testDateToString() throws ParseException {
         Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");
+        getMapper().getCollection(User.class).drop();
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
@@ -161,6 +190,28 @@ public class DateExpressionTest extends TestBase {
     }
 
     @Test
+    public void testIsoDayOfWeek() throws ParseException {
+        evaluate("{}", isoDayOfWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
+                           .timezone(value("America/Chicago")), 6);
+        evaluate("{}", isoDayOfWeek(value(new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01"))), 5);
+    }
+
+    @Test
+    public void testIsoWeek() throws ParseException {
+        evaluate("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
+                           .timezone(value("America/Chicago")), 32);
+        evaluate("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("Jan 4, 2016"))), 1);
+    }
+
+    @Test
+    public void testIsoWeekYear() throws ParseException {
+        evaluate("{}", isoWeekYear(value(new SimpleDateFormat("MMM dd, yyyy").parse("April 08, 2024")))
+                           .timezone(value("America/Chicago")), 2024L);
+        evaluate("{}", isoWeekYear(value(new SimpleDateFormat("yyyy-MM-dd").parse("2015-05-26"))),
+            2015L);
+    }
+
+    @Test
     public void testToDate() {
         checkMinServerVersion(4.0);
         getDatabase().getCollection("orders")
@@ -172,7 +223,7 @@ public class DateExpressionTest extends TestBase {
 
         List<Document> result = getDs().aggregate(Order.class)
                                           .addFields(AddFields.of()
-                                                              .field("convertedDate", DateExpression.toDate(field("order_date"))))
+                                                              .field("convertedDate", toDate(field("order_date"))))
                                           .sort(Sort.on()
                                                     .ascending("convertedDate"))
                                           .execute(Document.class)
