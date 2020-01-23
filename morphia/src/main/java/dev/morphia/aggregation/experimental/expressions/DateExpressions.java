@@ -11,11 +11,14 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 /**
- * Base class for the date expressions
+ * Defines helper methods for the date expressions
  *
  * @mongodb.driver.manual reference/operator/aggregation/#date-expression-operators Date Expressions
  */
-public class DateExpressions {
+public final class DateExpressions {
+    private DateExpressions() {
+    }
+
     /**
      * Converts a value to a date. If the value cannot be converted to a date, $toDate errors. If the value is null or missing,
      * $toDate returns null.
@@ -216,6 +219,11 @@ public class DateExpressions {
         return new DateToParts(date);
     }
 
+    /**
+     * Base class for the date expressions
+     *
+     * @mongodb.driver.manual reference/operator/aggregation/#date-expression-operators Date Expressions
+     */
     public static class DateExpression extends Expression {
         protected DateExpression(final String operation, final Expression value) {
             super(operation, value);
