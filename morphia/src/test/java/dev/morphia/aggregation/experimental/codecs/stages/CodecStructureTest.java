@@ -33,8 +33,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
-import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
+import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
+import static dev.morphia.aggregation.experimental.expressions.Accumulators.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.array;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.size;
 import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;

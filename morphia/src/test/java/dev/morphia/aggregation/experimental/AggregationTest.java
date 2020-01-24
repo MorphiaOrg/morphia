@@ -39,6 +39,7 @@ import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Out;
+import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.Sample;
@@ -59,22 +60,20 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
-import static dev.morphia.aggregation.experimental.stages.Lookup.from;
-import static dev.morphia.aggregation.experimental.expressions.Accumulator.add;
-import static dev.morphia.aggregation.experimental.expressions.Accumulator.sum;
+import static dev.morphia.aggregation.experimental.expressions.Accumulators.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.array;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.size;
 import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.ifNull;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
+import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpression.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
-import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
-import static dev.morphia.aggregation.experimental.stages.Projection.of;
+import static dev.morphia.aggregation.experimental.stages.Lookup.from;
 import static dev.morphia.aggregation.experimental.stages.ReplaceWith.with;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
 import static java.util.Arrays.asList;
@@ -96,10 +95,10 @@ public class AggregationTest extends TestBase {
                      .insertMany(parse);
         Aggregation<Sales> pipeline = getDs()
                                           .aggregate(Sales.class)
-                                          .project(of()
-                                                       .include("item")
-                                                       .include("total",
-                                                           add(field("price"), field("fee"))));
+                                          .project(Projection.of()
+                                                             .include("item")
+                                                             .include("total",
+                                                                 add(field("price"), field("fee"))));
 
         List<Document> list = pipeline.execute(Document.class).toList();
         List<Document> expected = asList(
@@ -109,15 +108,6 @@ public class AggregationTest extends TestBase {
         for (int i = 1; i < 4; i++) {
             compare(i, expected, list);
         }
-    }
-
-    private void compare(final int id, final List<Document> expected, final List<Document> actual) {
-        assertEquals(find(id, expected), find(id, actual));
-    }
-
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    private Document find(final int id, final List<Document> documents) {
-        return documents.stream().filter(d -> d.getInteger("_id").equals(id)).findFirst().get();
     }
 
     @Test
@@ -441,10 +431,10 @@ public class AggregationTest extends TestBase {
             parse("{ '_id' : 10, employee: 'Cat', dept: 'Z', salary: 150000, fiscal_year: 2019 }")));
 
         List<Document> actual = getDs().aggregate(Salary.class)
-                                       .group(group(id()
-                                                        .field("fiscal_year")
-                                                        .field("dept"))
-                                                  .field("salaries", sum(field("salary"))))
+                                       .group(Group.of(id()
+                                                           .field("fiscal_year")
+                                                           .field("dept"))
+                                                   .field("salaries", sum(field("salary"))))
                                        .merge(Merge.into("budgets")
                                                    .on("_id")
                                                    .whenMatched(WhenMatched.REPLACE)
@@ -492,17 +482,17 @@ public class AggregationTest extends TestBase {
 
         AggregationOptions options = new AggregationOptions();
         Aggregation<Book> aggregation = getDs().aggregate(Book.class)
-                                               .group(group(id("author"))
-                                                          .field("books", push()
-                                                                              .single(field("title"))));
+                                               .group(Group.of(id("author"))
+                                                           .field("books", push()
+                                                                               .single(field("title"))));
         aggregation.out(Out.to(Author.class))
                    .execute(options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
 
         getDs().aggregate(Book.class)
-               .group(group(id("author"))
-                          .field("books", push()
-                                              .single(field("title"))))
+               .group(Group.of(id("author"))
+                           .field("books", push()
+                                               .single(field("title"))))
                .out(Out.to("different"))
                .execute(Document.class);
         Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
@@ -553,26 +543,26 @@ public class AggregationTest extends TestBase {
 
         getDatabase().getCollection("books").insertOne(doc);
         Aggregation<Book> pipeline = getDs().aggregate(Book.class)
-                                            .project(of()
-                                                         .include("title")
-                                                         .include("author"));
+                                            .project(Projection.of()
+                                                               .include("title")
+                                                               .include("author"));
         MorphiaCursor<Document> aggregate = pipeline.execute(Document.class);
         doc = parse("{ '_id' : 1, title: 'abc123', author: { last: 'zzz', first: 'aaa' }}");
         Assert.assertEquals(doc, aggregate.next());
 
         pipeline = getDs().aggregate(Book.class)
-                          .project(of()
-                                       .suppressId()
-                                       .include("title")
-                                       .include("author"));
+                          .project(Projection.of()
+                                             .suppressId()
+                                             .include("title")
+                                             .include("author"));
         aggregate = pipeline.execute(Document.class);
 
         doc = parse("{title: 'abc123', author: { last: 'zzz', first: 'aaa' }}");
         Assert.assertEquals(doc, aggregate.next());
 
         pipeline = getDs().aggregate(Book.class)
-                          .project(of()
-                                       .exclude("lastModified"));
+                          .project(Projection.of()
+                                             .exclude("lastModified"));
         aggregate = pipeline.execute(Document.class);
 
         doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}");
@@ -647,11 +637,11 @@ public class AggregationTest extends TestBase {
         actual = getDs().aggregate(Author.class)
                         .replaceRoot(ReplaceRoot.with()
                                                 .with(mergeObjects()
-                                                           .add(Expression.of()
-                                                                          .field("_id", field("_id"))
-                                                                          .field("first", value(""))
-                                                                          .field("last", value("")))
-                                                           .add(field("name"))))
+                                                          .add(Expression.of()
+                                                                         .field("_id", field("_id"))
+                                                                         .field("first", value(""))
+                                                                         .field("last", value("")))
+                                                          .add(field("name"))))
                         .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
@@ -707,11 +697,11 @@ public class AggregationTest extends TestBase {
         actual = getDs().aggregate(Author.class)
                         .replaceWith(with()
                                          .with(mergeObjects()
-                                                    .add(Expression.of()
-                                                                   .field("_id", field("_id"))
-                                                                   .field("first", value(""))
-                                                                   .field("last", value("")))
-                                                    .add(field("name"))))
+                                                   .add(Expression.of()
+                                                                  .field("_id", field("_id"))
+                                                                  .field("first", value(""))
+                                                                  .field("last", value("")))
+                                                   .add(field("name"))))
                         .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
@@ -789,6 +779,15 @@ public class AggregationTest extends TestBase {
 
         assertEquals(documents, copies);
 
+    }
+
+    private void compare(final int id, final List<Document> expected, final List<Document> actual) {
+        assertEquals(find(id, expected), find(id, actual));
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    private Document find(final int id, final List<Document> documents) {
+        return documents.stream().filter(d -> d.getInteger("_id").equals(id)).findFirst().get();
     }
 
     @Entity(useDiscriminator = false)

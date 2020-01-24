@@ -40,7 +40,7 @@ public class Group extends Stage {
      * @param id the group ID
      * @return the new stage
      */
-    public static Group group(final GroupId id) {
+    public static Group of(final GroupId id) {
         return new Group(id);
     }
 

@@ -32,8 +32,11 @@ public class Sort extends Stage {
      * @param field the sort field
      * @return this
      */
-    public Sort ascending(final String field) {
+    public Sort ascending(final String field, final String... additional) {
         sorts.add(new SortType(field, Direction.ASCENDING));
+        for (final String another : additional) {
+            sorts.add(new SortType(another, Direction.ASCENDING));
+        }
         return this;
     }
 
@@ -43,8 +46,11 @@ public class Sort extends Stage {
      * @param field the sort field
      * @return this
      */
-    public Sort descending(final String field) {
+    public Sort descending(final String field, final String... additional) {
         sorts.add(new SortType(field, Direction.DESCENDING));
+        for (final String another : additional) {
+            sorts.add(new SortType(another, Direction.DESCENDING));
+        }
         return this;
     }
 

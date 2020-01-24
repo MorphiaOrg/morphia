@@ -16,7 +16,7 @@ import java.util.StringJoiner;
  *
  * @mongodb.driver.manual reference/operator/aggregation/ Expressions
  */
-public abstract class Expression {
+public class Expression {
     private final String operation;
     private final Object value;
 

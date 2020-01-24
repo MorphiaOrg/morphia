@@ -33,13 +33,16 @@ public class MathExpression extends Expression {
      * Adds numbers together or adds numbers and a date. If one of the arguments is a date, $add treats the other arguments as
      * milliseconds to add to the date.
      *
-     * @param first      the first expression to add
-     * @param additional any additional expressions
+     * @param first      the first expression to sum
+     * @param additional any subsequent expressions to include in the sum
      * @return the new expression
      * @mongodb.driver.manual reference/operator/aggregation/add $add
      */
-    public static Expression add(final Expression first, final Expression... additional) {
-        return Accumulator.add(first, additional);
+    public static MathExpression add(final Expression first, final Expression... additional) {
+        List<Expression> expressions = new ArrayList<>();
+        expressions.add(first);
+        expressions.addAll(asList(additional));
+        return new MathExpression("$add", expressions);
     }
 
     /**
