@@ -71,7 +71,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expression.push;
 import static dev.morphia.aggregation.experimental.expressions.Expression.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpression.mergeObjects;
-import static dev.morphia.aggregation.experimental.expressions.SetExpression.setIntersection;
+import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.from;
 import static dev.morphia.aggregation.experimental.stages.ReplaceWith.with;

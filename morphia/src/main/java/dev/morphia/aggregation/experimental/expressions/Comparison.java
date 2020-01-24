@@ -22,7 +22,7 @@ public class Comparison extends Expression {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/gte $gte
+     * @mongodb.driver.manual manual/reference/operator/aggregation/gt $gt
      */
     public static Comparison gt(final Expression first, final Expression second) {
         return new Comparison("$gt", List.of(first, second));
