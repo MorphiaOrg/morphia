@@ -4,6 +4,7 @@ dev.morphia.aggregation.experimental
 dev.morphia.aggregation.experimental.codecs
 dev.morphia.aggregation.experimental.codecs.stages
 dev.morphia.aggregation.experimental.expressions
+dev.morphia.aggregation.experimental.expressions.impls
 dev.morphia.aggregation.experimental.stages
 dev.morphia.annotations
 dev.morphia.annotations.experimental
