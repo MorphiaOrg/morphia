@@ -14,7 +14,10 @@ import static java.util.Arrays.asList;
  * @mongodb.driver.manual reference/operator/aggregation/#arithmetic-expression-operators Arithmetic Expressions
  * @since 2.0
  */
-public class MathExpressions {
+public final class MathExpressions {
+    protected MathExpressions() {
+    }
+
     /**
      * Adds numbers together or adds numbers and a date. If one of the arguments is a date, $add treats the other arguments as
      * milliseconds to add to the date.
