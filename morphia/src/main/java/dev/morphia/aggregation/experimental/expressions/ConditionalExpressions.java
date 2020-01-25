@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IfNull;
+import dev.morphia.aggregation.experimental.expressions.impls.SwitchExpression;
 
 import java.util.List;
 
@@ -40,4 +41,14 @@ public class ConditionalExpressions {
         return new IfNull();
     }
 
+    /**
+     * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified
+     * expression and breaks out of the control flow.
+     *
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/switch $switch
+     */
+    public static SwitchExpression switchExpression() {
+        return new SwitchExpression();
+    }
 }
