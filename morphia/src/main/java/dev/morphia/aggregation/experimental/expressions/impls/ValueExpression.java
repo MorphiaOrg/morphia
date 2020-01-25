@@ -13,7 +13,11 @@ public class ValueExpression extends Expression {
 
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
-        Codec codec = mapper.getCodecRegistry().get(getValue().getClass());
-        encoderContext.encodeWithChildContext(codec, writer, getValue());
+        if (getValue() != null) {
+            Codec codec = mapper.getCodecRegistry().get(getValue().getClass());
+            encoderContext.encodeWithChildContext(codec, writer, getValue());
+        } else {
+            writer.writeNull();
+        }
     }
 }

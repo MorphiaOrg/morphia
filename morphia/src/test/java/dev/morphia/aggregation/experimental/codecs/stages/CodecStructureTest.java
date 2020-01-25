@@ -6,8 +6,6 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
-import dev.morphia.aggregation.experimental.stages.GraphLookup;
-import dev.morphia.aggregation.experimental.expressions.ArrayExpression;
 import dev.morphia.aggregation.experimental.expressions.ConditionalExpression;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.aggregation.experimental.expressions.MathExpression;
@@ -16,6 +14,7 @@ import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
+import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Redact;
@@ -33,15 +32,16 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
 import static dev.morphia.aggregation.experimental.expressions.Accumulators.sum;
-import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.array;
-import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.size;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.array;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.elementAt;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.size;
 import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
 import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
 import static dev.morphia.aggregation.experimental.expressions.Expression.push;
+import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static org.bson.Document.parse;
@@ -181,7 +181,7 @@ public class CodecStructureTest extends TestBase {
     public void testMergeObjects() {
         evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
             ObjectExpression.mergeObjects()
-                            .add(ArrayExpression.elementAt(field("fromItems"), value(0)))
+                            .add(elementAt(field("fromItems"), value(0)))
                             .add(value("$$ROOT")));
     }
 

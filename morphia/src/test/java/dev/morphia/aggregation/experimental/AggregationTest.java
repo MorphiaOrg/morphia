@@ -61,8 +61,8 @@ import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.Accumulators.sum;
-import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.array;
-import static dev.morphia.aggregation.experimental.expressions.ArrayExpression.size;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.array;
+import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.size;
 import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.ifNull;

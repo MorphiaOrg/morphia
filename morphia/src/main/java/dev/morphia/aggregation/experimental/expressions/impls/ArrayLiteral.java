@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.expressions.ArrayExpression;
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
