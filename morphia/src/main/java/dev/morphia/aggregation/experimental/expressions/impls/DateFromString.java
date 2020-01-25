@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -33,7 +33,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString dateString(final String dateString) {
-        return dateString(value(dateString));
+        return dateString(Expressions.value(dateString));
     }
 
     public DateFromString format(final Expression format) {
@@ -42,7 +42,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString format(final String format) {
-        return format(value(format));
+        return format(Expressions.value(format));
     }
 
     public DateFromString dateString(final Expression dateString) {
@@ -51,7 +51,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString onError(final String onError) {
-        return onError(value(onError));
+        return onError(Expressions.value(onError));
     }
 
     public DateFromString onError(final Expression onError) {
@@ -60,7 +60,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString onNull(final String onNull) {
-        return onNull(value(onNull));
+        return onNull(Expressions.value(onNull));
     }
 
     public DateFromString onNull(final Expression onNull) {
@@ -69,7 +69,7 @@ public class DateFromString extends Expression {
     }
 
     public DateFromString timeZone(final String timeZone) {
-        return timeZone(value(timeZone));
+        return timeZone(Expressions.value(timeZone));
     }
 
     public DateFromString timeZone(final Expression timeZone) {

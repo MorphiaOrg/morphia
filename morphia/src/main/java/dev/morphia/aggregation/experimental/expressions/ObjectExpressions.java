@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -8,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base class for the object expressions
+ * Defines helper methods for the object expressions
  *
  * @mongodb.driver.manual reference/operator/aggregation/#object-expression-operators Object Expressions
+ * @since 2.0
  */
-public final class ObjectExpression {
-    private ObjectExpression() {
+public final class ObjectExpressions {
+    private ObjectExpressions() {
     }
 
     /**

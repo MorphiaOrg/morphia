@@ -1,21 +1,18 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IfNull;
 
 import java.util.List;
 
 /**
- * Base class for the conditional expressions
+ * Defines helper methods for the conditional expressions
  *
  * @mongodb.driver.manual reference/operator/aggregation/#conditional-expression-operators Conditional Expressions
+ * @since 2.0
  */
-public class ConditionalExpression extends Expression {
-    protected ConditionalExpression(final String operation) {
-        super(operation);
-    }
-
-    protected ConditionalExpression(final String operation, final Object value) {
-        super(operation, value);
+public class ConditionalExpressions {
+    private ConditionalExpressions() {
     }
 
     /**
@@ -25,10 +22,10 @@ public class ConditionalExpression extends Expression {
      * @param then      the expression for the true branch
      * @param otherwise the expresion for the else branch
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/if $if
+     * @mongodb.driver.manual manual/reference/operator/aggregation/cond $cond
      */
-    public static ConditionalExpression condition(final Expression condition, final Expression then, final Expression otherwise) {
-        return new ConditionalExpression("$cond", List.of(condition, then, otherwise));
+    public static Expression condition(final Expression condition, final Expression then, final Expression otherwise) {
+        return new Expression("$cond", List.of(condition, then, otherwise));
     }
 
     /**

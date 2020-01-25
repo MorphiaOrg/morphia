@@ -6,10 +6,10 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
-import dev.morphia.aggregation.experimental.expressions.ConditionalExpression;
-import dev.morphia.aggregation.experimental.expressions.Expression;
-import dev.morphia.aggregation.experimental.expressions.MathExpression;
-import dev.morphia.aggregation.experimental.expressions.ObjectExpression;
+import dev.morphia.aggregation.experimental.expressions.ConditionalExpressions;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
+import dev.morphia.aggregation.experimental.expressions.MathExpressions;
+import dev.morphia.aggregation.experimental.expressions.ObjectExpressions;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
@@ -32,16 +32,16 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.sum;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.size;
-import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
-import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
-import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.push;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
-import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
+import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
+import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.push;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static org.bson.Document.parse;
@@ -142,10 +142,10 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testIfNull() {
         evaluate(parse("{ $ifNull: [ \"$name\", { _id: \"$_id\", missingName: true} ] }"),
-            ConditionalExpression.ifNull()
-                                 .target(field("name"))
-                                 .field("_id", field("_id"))
-                                 .field("missingName", value(true)));
+            ConditionalExpressions.ifNull()
+                                  .target(field("name"))
+                                  .field("_id", field("_id"))
+                                  .field("missingName", value(true)));
     }
 
     @Test
@@ -180,21 +180,21 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testMergeObjects() {
         evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
-            ObjectExpression.mergeObjects()
-                            .add(elementAt(field("fromItems"), value(0)))
-                            .add(value("$$ROOT")));
+            ObjectExpressions.mergeObjects()
+                             .add(elementAt(field("fromItems"), value(0)))
+                             .add(value("$$ROOT")));
     }
 
     @Test
     public void testPush() {
         evaluate(parse("{ $push:  { item: \"$item\", quantity: \"$quantity\" } }"),
-            Expression.push()
-                      .field("item", field("item"))
-                      .field("quantity", field("quantity")));
+            Expressions.push()
+                       .field("item", field("item"))
+                       .field("quantity", field("quantity")));
 
         evaluate(parse("{ $push: '$title' }"),
-            Expression.push()
-                      .single(field("title")));
+            Expressions.push()
+                       .single(field("title")));
     }
 
     @Test
@@ -218,7 +218,7 @@ public class CodecStructureTest extends TestBase {
             ReplaceWith.with()
                        .field("_id", field("_id"))
                        .field("item", field("item"))
-                       .field("amount", MathExpression.multiply(field("price"), field("quantity")))
+                       .field("amount", MathExpressions.multiply(field("price"), field("quantity")))
                        .field("status", value("Complete"))
                        .field("asofDate", value("$$NOW"))
                 );

@@ -35,7 +35,7 @@ import dev.morphia.aggregation.experimental.codecs.stages.SortCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.StageCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.UnsetCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.UnwindCodec;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;

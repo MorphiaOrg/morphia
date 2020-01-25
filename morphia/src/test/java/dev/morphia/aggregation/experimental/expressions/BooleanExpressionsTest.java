@@ -5,7 +5,7 @@ import org.junit.Test;
 import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.and;
 import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.not;
 import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.or;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 
 public class BooleanExpressionsTest extends ExpressionsTest {
 

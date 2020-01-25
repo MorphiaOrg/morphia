@@ -1,7 +1,8 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.AggregationException;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Fields;
 import dev.morphia.sofia.Sofia;
@@ -51,7 +52,7 @@ public class Group extends Stage {
      * @return the new groupID
      */
     public static GroupId id(final String name) {
-        return new GroupId(Expression.field(name));
+        return new GroupId(Expressions.field(name));
     }
 
     /**
@@ -69,10 +70,10 @@ public class Group extends Stage {
      * @param name the field name
      * @return this
      * @see #field(String, Expression)
-     * @see Expression#field(String)
+     * @see Expressions#field(String)
      */
     public Group field(final String name) {
-        return field(name, Expression.field(name));
+        return field(name, Expressions.field(name));
     }
 
     /**
@@ -114,7 +115,7 @@ public class Group extends Stage {
         private DocumentExpression document;
 
         protected GroupId() {
-            document = Expression.of();
+            document = Expressions.of();
         }
 
         protected GroupId(final Expression value) {
@@ -131,10 +132,10 @@ public class Group extends Stage {
          * @param name the field name
          * @return this
          * @see #field(String, Expression)
-         * @see Expression#field(String)
+         * @see Expressions#field(String)
          */
         public GroupId field(final String name) {
-            return field(name, Expression.field(name));
+            return field(name, Expressions.field(name));
         }
 
         /**

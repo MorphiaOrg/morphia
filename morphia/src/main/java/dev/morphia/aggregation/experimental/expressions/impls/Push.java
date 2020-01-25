@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.aggregation.experimental.AggregationException;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
@@ -29,7 +29,7 @@ public class Push extends Expression implements FieldHolder<Push> {
             throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
         }
         if(document == null) {
-            document = Expression.of();
+            document = Expressions.of();
         }
         document.field(name, expression);
 

@@ -1,16 +1,17 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+
 import java.util.List;
 
 /**
- * Base class for the comparison expressions
+ * Defines helper methods for the comparison expressions
  *
  * @mongodb.driver.manual reference/operator/aggregation/#comparison-expression-operators Comparison Expressions
+ * @since 2.0
  */
-public class Comparison extends Expression {
-
-    protected Comparison(final String operation, final Object value) {
-        super(operation, value);
+public final class ComparisonExpressions {
+    private ComparisonExpressions() {
     }
 
     /**
@@ -56,5 +57,18 @@ public class Comparison extends Expression {
      */
     public static Comparison lte(final Expression first, final Expression second) {
         return new Comparison("$lte", List.of(first, second));
+    }
+
+    /**
+     * Base class for the comparison expressions
+     *
+     * @mongodb.driver.manual reference/operator/aggregation/#comparison-expression-operators Comparison Expressions
+     */
+    public static class Comparison extends Expression {
+
+        protected Comparison(final String operation, final Object value) {
+            super(operation, value);
+        }
+
     }
 }

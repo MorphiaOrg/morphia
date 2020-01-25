@@ -2,7 +2,7 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import org.junit.Test;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.acos;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.acosh;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.asin;

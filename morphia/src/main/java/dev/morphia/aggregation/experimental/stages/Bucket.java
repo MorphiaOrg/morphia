@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 
 import java.util.List;
@@ -122,7 +123,7 @@ public class Bucket extends Stage {
      */
     public Bucket outputField(final String name, final Expression value) {
         if (output == null) {
-            output = Expression.of();
+            output = Expressions.of();
         }
         output.field(name, value);
         return this;

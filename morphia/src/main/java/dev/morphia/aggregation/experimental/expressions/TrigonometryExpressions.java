@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+
 import java.util.List;
 
 /**

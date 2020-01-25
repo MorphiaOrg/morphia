@@ -4,6 +4,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.ArrayExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ArrayFilterExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ArrayIndexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ArrayLiteral;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.MapExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.RangeExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ReduceExpression;

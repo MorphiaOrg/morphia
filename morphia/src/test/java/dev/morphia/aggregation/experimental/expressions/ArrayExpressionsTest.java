@@ -23,12 +23,12 @@ import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.slice;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.zip;
 import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.and;
-import static dev.morphia.aggregation.experimental.expressions.Comparison.gte;
-import static dev.morphia.aggregation.experimental.expressions.Comparison.lte;
-import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
-import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
-import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
+import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gte;
+import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.lte;
+import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.concat;
 import static org.bson.Document.parse;
 
@@ -122,9 +122,9 @@ public class ArrayExpressionsTest extends ExpressionsTest {
     @Test
     public void testObjectToArray() {
         evaluate("{ $objectToArray: { item: 'foo', qty: 25 } }",
-            objectToArray(Expression.of()
-                                    .field("item", value("foo"))
-                                    .field("qty", value(25))),
+            objectToArray(Expressions.of()
+                                     .field("item", value("foo"))
+                                     .field("qty", value(25))),
             List.of(parse("{ 'k' : 'item', 'v' : 'foo' }"), parse("{ 'k' : 'qty', 'v' : 25 }")));
     }
 

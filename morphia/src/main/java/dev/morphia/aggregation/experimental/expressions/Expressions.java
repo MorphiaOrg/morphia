@@ -1,44 +1,30 @@
 package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.Literal;
-import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Push;
+import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 
 import static java.util.Arrays.asList;
 
 /**
- * Base class for all the expression types.
+ * Defines helper methods for various expressions.
  *
- * @mongodb.driver.manual reference/operator/aggregation/ Expressions
+ * @mongodb.driver.manual reference/operator/aggregation/ Aggregation pipeline operators
+ * @since 2.0
  */
-public class Expression {
-    private final String operation;
-    private final Object value;
-
-    protected Expression(final String operation) {
-        this.operation = operation;
-        this.value = null;
-    }
-
-    protected Expression(final String operation, final Object value) {
-        this.operation = operation;
-        this.value = value;
-    }
-
+public class Expressions {
     /**
      * Creates a field expression for the given value.  If the value does not already start with '$', it will be prepended automatically.
      *
      * @param name the field name
-     *
      * @return the new expression
      */
     public static Expression field(final String name) {
@@ -114,43 +100,4 @@ public class Expression {
         expressions.addAll(asList(additional));
         return expressions;
     }
-
-    /**
-     * @param mapper         the mapper
-     * @param writer         the writer
-     * @param encoderContext the context
-     * @morphia.internal
-     */
-    @SuppressWarnings("rawtypes")
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(operation);
-        Codec codec = mapper.getCodecRegistry().get(value.getClass());
-        encoderContext.encodeWithChildContext(codec, writer, value);
-        writer.writeEndDocument();
-    }
-
-    /**
-     * @return the value
-     * @morphia.internal
-     */
-    public String getOperation() {
-        return operation;
-    }
-
-    /**
-     * @return the value
-     * @morphia.internal
-     */
-    public Object getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Expression.class.getSimpleName() + "[", "]")
-                   .add("operation='" + operation + "'")
-                   .toString();
-    }
-
 }

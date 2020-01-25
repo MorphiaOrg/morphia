@@ -10,24 +10,24 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.addToSet;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.avg;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.first;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.last;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.min;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.push;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.stdDevPop;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.stdDevSamp;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.sum;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.avg;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.first;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.last;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.min;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.stdDevPop;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.stdDevSamp;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
-import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
-import static dev.morphia.aggregation.experimental.expressions.MathExpression.multiply;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static org.bson.Document.parse;
 
-public class AccumulatorsTest extends ExpressionsTest {
+public class AccumulatorExpressionsTest extends ExpressionsTest {
 
     @Test
     public void testAddToSet() {

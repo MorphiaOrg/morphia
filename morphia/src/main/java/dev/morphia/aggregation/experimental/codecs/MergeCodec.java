@@ -1,8 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs;
 
-import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.codecs.stages.StageCodec;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.mapping.Mapper;

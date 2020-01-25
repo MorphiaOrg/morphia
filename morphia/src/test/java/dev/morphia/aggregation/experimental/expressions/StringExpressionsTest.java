@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.indexOfBytes;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.indexOfCP;

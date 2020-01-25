@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.AggregationException;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.Fields;
 import dev.morphia.aggregation.experimental.expressions.impls.PipelineField;
 import dev.morphia.sofia.Sofia;
@@ -9,7 +9,7 @@ import dev.morphia.sofia.Sofia;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 
 /**
  * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields

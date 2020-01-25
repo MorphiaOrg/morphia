@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 /**
  * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.

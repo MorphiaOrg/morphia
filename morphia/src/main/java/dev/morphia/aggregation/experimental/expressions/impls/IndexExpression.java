@@ -1,12 +1,9 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedValue;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeUnnamedExpression;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeUnnamedValue;
 

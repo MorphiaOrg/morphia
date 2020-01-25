@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 
 /**
  * Deconstructs an array field from the input documents to output a document for each element. Each output document is the input document

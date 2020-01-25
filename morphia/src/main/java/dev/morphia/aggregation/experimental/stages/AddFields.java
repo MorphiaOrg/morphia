@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 
 /**
@@ -13,7 +14,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression
  * @mongodb.driver.manual reference/operator/aggregation/addFields/ $addFields
  */
 public class AddFields extends Stage {
-    private DocumentExpression document = Expression.of();
+    private DocumentExpression document = Expressions.of();
 
     protected AddFields() {
         super("$addFields");

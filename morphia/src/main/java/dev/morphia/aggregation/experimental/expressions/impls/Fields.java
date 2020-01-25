@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
-import static dev.morphia.aggregation.experimental.expressions.Expression.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 
 public class Fields<T> {
     private T owner;

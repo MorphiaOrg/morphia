@@ -1,6 +1,8 @@
 package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.testmodel.User;

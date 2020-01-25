@@ -2,7 +2,7 @@ package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.MergeOptions.WhenMatched;
 import com.mongodb.client.model.MergeOptions.WhenNotMatched;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

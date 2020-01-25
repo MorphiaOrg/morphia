@@ -1,9 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
-import dev.morphia.mapping.Mapper;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,24 +9,12 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 /**
- * Base class for the math expressions
+ * Defines helper methods for the math expressions
  *
  * @mongodb.driver.manual reference/operator/aggregation/#arithmetic-expression-operators Arithmetic Expressions
  * @since 2.0
  */
-public class MathExpression extends Expression {
-    private final List<Expression> operands;
-
-    protected MathExpression(final String operation, final List<Expression> operands) {
-        super(operation);
-        this.operands = operands;
-    }
-
-    protected MathExpression(final String operation, final Expression operand) {
-        super(operation);
-        this.operands = List.of(operand);
-    }
-
+public class MathExpressions {
     /**
      * Adds numbers together or adds numbers and a date. If one of the arguments is a date, $add treats the other arguments as
      * milliseconds to add to the date.
@@ -92,7 +78,6 @@ public class MathExpression extends Expression {
     public static Expression ceil(final Expression value) {
         return new MathExpression("$ceil", value);
     }
-
 
     /**
      * Raises e to the specified exponent.
@@ -222,21 +207,5 @@ public class MathExpression extends Expression {
      */
     public static Expression trunc(final Expression number, final Expression place) {
         return new MathExpression("$trunc", List.of(number, place));
-    }
-
-    @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(getOperation());
-        if (operands.size() > 1) {
-            writer.writeStartArray();
-        }
-        for (final Expression operand : operands) {
-            ExpressionCodec.writeUnnamedExpression(mapper, writer, operand, encoderContext);
-        }
-        if (operands.size() > 1) {
-            writer.writeEndArray();
-        }
-        writer.writeEndDocument();
     }
 }

@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.experimental;
 
-import dev.morphia.aggregation.experimental.expressions.DateExpressions;
 import dev.morphia.aggregation.experimental.expressions.ExpressionsTest;
 import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.model.StringDates;
@@ -14,7 +13,6 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,8 +36,8 @@ import static dev.morphia.aggregation.experimental.expressions.DateExpressions.s
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.toDate;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.week;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
-import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;

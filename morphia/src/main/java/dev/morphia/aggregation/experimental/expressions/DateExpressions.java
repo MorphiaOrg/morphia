@@ -5,6 +5,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromString;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToString;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IsoDates;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
@@ -14,6 +15,7 @@ import org.bson.codecs.EncoderContext;
  * Defines helper methods for the date expressions
  *
  * @mongodb.driver.manual reference/operator/aggregation/#date-expression-operators Date Expressions
+ * @since 2.0
  */
 public final class DateExpressions {
     private DateExpressions() {

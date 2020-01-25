@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -32,7 +32,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts day(final int value) {
-        return day(value(value));
+        return day(Expressions.value(value));
     }
 
     /**
@@ -55,7 +55,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts hour(final int value) {
-        return hour(value(value));
+        return hour(Expressions.value(value));
     }
 
     /**
@@ -78,7 +78,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts isoDayOfWeek(final int value) {
-        return isoDayOfWeek(value(value));
+        return isoDayOfWeek(Expressions.value(value));
     }
 
     /**
@@ -99,7 +99,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts isoWeek(final int value) {
-        return isoWeek(value(value));
+        return isoWeek(Expressions.value(value));
     }
 
     /**
@@ -122,7 +122,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts isoWeekYear(final int value) {
-        return isoWeekYear(value(value));
+        return isoWeekYear(Expressions.value(value));
     }
 
     /**
@@ -145,7 +145,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts millisecond(final int value) {
-        return millisecond(value(value));
+        return millisecond(Expressions.value(value));
     }
 
     /**
@@ -168,7 +168,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts minute(final int value) {
-        return minute(value(value));
+        return minute(Expressions.value(value));
     }
 
     /**
@@ -191,7 +191,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts month(final int value) {
-        return month(value(value));
+        return month(Expressions.value(value));
     }
 
     /**
@@ -214,7 +214,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts second(final int value) {
-        return second(value(value));
+        return second(Expressions.value(value));
     }
 
     /**
@@ -266,7 +266,7 @@ public class DateFromParts extends Expression {
      * Optional
      */
     public DateFromParts timezone(final String value) {
-        return timezone(value(value));
+        return timezone(Expressions.value(value));
     }
 
     /**
@@ -278,7 +278,7 @@ public class DateFromParts extends Expression {
      * @return this
      */
     public DateFromParts year(final int value) {
-        return year(value(value));
+        return year(Expressions.value(value));
     }
 
     /**

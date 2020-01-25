@@ -23,7 +23,7 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.MergeOptions.WhenMatched;
 import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import dev.morphia.TestBase;
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.model.Author;
 import dev.morphia.aggregation.experimental.model.Book;
 import dev.morphia.aggregation.experimental.model.Inventory;
@@ -60,17 +60,17 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
-import static dev.morphia.aggregation.experimental.expressions.Accumulators.sum;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.size;
-import static dev.morphia.aggregation.experimental.expressions.Comparison.gt;
-import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.condition;
-import static dev.morphia.aggregation.experimental.expressions.ConditionalExpression.ifNull;
-import static dev.morphia.aggregation.experimental.expressions.Expression.field;
-import static dev.morphia.aggregation.experimental.expressions.Expression.push;
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
-import static dev.morphia.aggregation.experimental.expressions.MathExpression.add;
-import static dev.morphia.aggregation.experimental.expressions.ObjectExpression.mergeObjects;
+import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
+import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
+import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.ifNull;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.push;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
+import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.from;
@@ -637,10 +637,10 @@ public class AggregationTest extends TestBase {
         actual = getDs().aggregate(Author.class)
                         .replaceRoot(ReplaceRoot.with()
                                                 .with(mergeObjects()
-                                                          .add(Expression.of()
-                                                                         .field("_id", field("_id"))
-                                                                         .field("first", value(""))
-                                                                         .field("last", value("")))
+                                                          .add(Expressions.of()
+                                                                          .field("_id", field("_id"))
+                                                                          .field("first", value(""))
+                                                                          .field("last", value("")))
                                                           .add(field("name"))))
                         .execute(Document.class)
                         .toList();
@@ -697,10 +697,10 @@ public class AggregationTest extends TestBase {
         actual = getDs().aggregate(Author.class)
                         .replaceWith(with()
                                          .with(mergeObjects()
-                                                   .add(Expression.of()
-                                                                  .field("_id", field("_id"))
-                                                                  .field("first", value(""))
-                                                                  .field("last", value("")))
+                                                   .add(Expressions.of()
+                                                                   .field("_id", field("_id"))
+                                                                   .field("first", value(""))
+                                                                   .field("last", value("")))
                                                    .add(field("name"))))
                         .execute(Document.class)
                         .toList();

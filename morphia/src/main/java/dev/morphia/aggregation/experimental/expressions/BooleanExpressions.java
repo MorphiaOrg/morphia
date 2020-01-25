@@ -1,8 +1,10 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.toList;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.toList;
 
 /**
  * Defines helper methods for the boolean expressions

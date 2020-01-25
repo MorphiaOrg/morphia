@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+
 import java.util.List;
 
 /**
@@ -21,7 +23,7 @@ public final class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/allElementsTrue $allElementsTrue
      */
     public static Expression allElementsTrue(final Expression first, final Expression... additional) {
-        return new Expression("$allElementsTrue", Expression.toList(first, additional));
+        return new Expression("$allElementsTrue", Expressions.toList(first, additional));
     }
 
     /**
@@ -33,7 +35,7 @@ public final class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/anyElementTrue $anyElementTrue
      */
     public static Expression anyElementTrue(final Expression first, final Expression... additional) {
-        return new Expression("$anyElementTrue", Expression.toList(first, additional));
+        return new Expression("$anyElementTrue", Expressions.toList(first, additional));
     }
 
     /**
@@ -58,7 +60,7 @@ public final class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/setEquals $setEquals
      */
     public static Expression setEquals(final Expression first, final Expression... additional) {
-        return new Expression("$setEquals", Expression.toList(first, additional));
+        return new Expression("$setEquals", Expressions.toList(first, additional));
     }
 
     /**
@@ -70,7 +72,7 @@ public final class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/setIntersection $setIntersection
      */
     public static Expression setIntersection(final Expression first, final Expression... additional) {
-        return new Expression("$setIntersection", Expression.toList(first, additional));
+        return new Expression("$setIntersection", Expressions.toList(first, additional));
     }
 
     /**
@@ -95,7 +97,7 @@ public final class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/setUnion $setUnion
      */
     public static Expression setUnion(final Expression first, final Expression... additional) {
-        return new Expression("$setUnion", Expression.toList(first, additional));
+        return new Expression("$setUnion", Expressions.toList(first, additional));
     }
 
 }

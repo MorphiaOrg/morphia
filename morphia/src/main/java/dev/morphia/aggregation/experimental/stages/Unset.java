@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class Unset extends Stage {
             fieldName = fieldName.substring(1);
             Sofia.logUnsetNamesDollarSign();
         }
-        fields.add(Expression.value(fieldName));
+        fields.add(Expressions.value(fieldName));
         return this;
     }
 

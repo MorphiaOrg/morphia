@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IndexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.RegexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.TrimExpression;
@@ -25,7 +26,7 @@ public final class StringExpressions {
      * @mongodb.driver.manual reference/operator/aggregation/concat $concat
      */
     public static Expression concat(final Expression first, final Expression... additional) {
-        return new Expression("$concat", Expression.toList(first, additional));
+        return new Expression("$concat", Expressions.toList(first, additional));
     }
 
     /**

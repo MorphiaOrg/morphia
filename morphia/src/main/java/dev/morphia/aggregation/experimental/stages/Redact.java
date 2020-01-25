@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 /**
  * Restricts the contents of the documents based on information stored in the documents themselves.

@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.Push;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
@@ -17,8 +18,8 @@ import static java.util.Arrays.asList;
  * @mongodb.driver.manual reference/operator/aggregation/#accumulators-group Accumulators
  * @since 2.0
  */
-public final class Accumulators {
-    private Accumulators() {
+public final class AccumulatorExpressions {
+    private AccumulatorExpressions() {
     }
 
     /**

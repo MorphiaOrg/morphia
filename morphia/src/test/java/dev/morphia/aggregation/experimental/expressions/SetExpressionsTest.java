@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Expression.value;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.allElementsTrue;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.anyElementTrue;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setDifference;
