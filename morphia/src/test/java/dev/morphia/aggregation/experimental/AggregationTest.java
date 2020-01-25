@@ -67,7 +67,7 @@ import static dev.morphia.aggregation.experimental.expressions.ComparisonExpress
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.push;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;

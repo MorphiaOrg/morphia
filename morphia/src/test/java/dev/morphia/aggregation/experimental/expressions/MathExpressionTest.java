@@ -3,7 +3,6 @@ package dev.morphia.aggregation.experimental.expressions;
 import org.junit.Test;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.nullExpression;
 
 public class MathExpressionTest extends ExpressionsTest {
 
@@ -11,7 +10,7 @@ public class MathExpressionTest extends ExpressionsTest {
     public void testAbs() {
         evaluate("{ $abs: -1 }", MathExpressions.abs(value(-1)), 1);
         evaluate("{ $abs: 1 }", MathExpressions.abs(value(1)), 1);
-        evaluate("{ $abs: null }", MathExpressions.abs(nullExpression()), null);
+        evaluate("{ $abs: null }", MathExpressions.abs(null), null);
     }
 
     @Test

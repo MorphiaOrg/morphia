@@ -6,8 +6,8 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
+import dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions;
 import dev.morphia.aggregation.experimental.expressions.ConditionalExpressions;
-import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.MathExpressions;
 import dev.morphia.aggregation.experimental.expressions.ObjectExpressions;
 import dev.morphia.aggregation.experimental.stages.AddFields;
@@ -39,7 +39,7 @@ import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.push;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
@@ -188,13 +188,13 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testPush() {
         evaluate(parse("{ $push:  { item: \"$item\", quantity: \"$quantity\" } }"),
-            Expressions.push()
-                       .field("item", field("item"))
-                       .field("quantity", field("quantity")));
+            AccumulatorExpressions.push()
+                                  .field("item", field("item"))
+                                  .field("quantity", field("quantity")));
 
         evaluate(parse("{ $push: '$title' }"),
-            Expressions.push()
-                       .single(field("title")));
+            AccumulatorExpressions.push()
+                                  .single(field("title")));
     }
 
     @Test

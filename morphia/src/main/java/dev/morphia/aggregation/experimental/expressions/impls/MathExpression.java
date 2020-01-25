@@ -7,6 +7,8 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 /**
  * Base class for the math expressions
  *
@@ -33,7 +35,7 @@ public class MathExpression extends Expression {
      */
     public MathExpression(final String operation, final Expression operand) {
         super(operation);
-        this.operands = List.of(operand);
+        this.operands = asList(operand);
     }
 
     @Override
@@ -44,7 +46,11 @@ public class MathExpression extends Expression {
             writer.writeStartArray();
         }
         for (final Expression operand : operands) {
-            ExpressionCodec.writeUnnamedExpression(mapper, writer, operand, encoderContext);
+            if (operand != null) {
+                ExpressionCodec.writeUnnamedExpression(mapper, writer, operand, encoderContext);
+            } else {
+                writer.writeNull();
+            }
         }
         if (operands.size() > 1) {
             writer.writeEndArray();
