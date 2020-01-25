@@ -2,6 +2,11 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import java.util.List;
 
+/**
+ * Defines helper methods for the trigonometry expressions
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/#trigonometry-expression-operators Trigonometry Expressions
+ */
 public final class TrigonometryExpressions {
     private TrigonometryExpressions() {
     }

@@ -2,8 +2,8 @@ package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.AggregationException;
 import dev.morphia.aggregation.experimental.expressions.Expression;
-import dev.morphia.aggregation.experimental.expressions.internal.Fields;
-import dev.morphia.aggregation.experimental.expressions.internal.PipelineField;
+import dev.morphia.aggregation.experimental.expressions.impls.Fields;
+import dev.morphia.aggregation.experimental.expressions.impls.PipelineField;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;

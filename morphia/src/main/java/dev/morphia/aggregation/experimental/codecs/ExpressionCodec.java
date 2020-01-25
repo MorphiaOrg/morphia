@@ -33,7 +33,6 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
     }
 
     /**
-     *
      * @param mapper
      * @param writer
      * @param name
@@ -42,9 +41,24 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
      * @morphia.internal
      */
     public static void writeNamedValue(final Mapper mapper, final BsonWriter writer, final String name, final Object value,
-                                   final EncoderContext encoderContext) {
+                                       final EncoderContext encoderContext) {
         if (value != null) {
             writer.writeName(name);
+            Codec codec = mapper.getCodecRegistry().get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
+        }
+    }
+
+    /**
+     * @param mapper
+     * @param writer
+     * @param value
+     * @param encoderContext
+     * @morphia.internal
+     */
+    public static void writeUnnamedValue(final Mapper mapper, final BsonWriter writer, final Object value,
+                                         final EncoderContext encoderContext) {
+        if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
         }
@@ -71,7 +85,7 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
 
     @Override
     public void encode(final BsonWriter writer, final T expression, final EncoderContext encoderContext) {
-        if(expression != null) {
+        if (expression != null) {
             expression.encode(mapper, writer, encoderContext);
         } else {
             writer.writeNull();

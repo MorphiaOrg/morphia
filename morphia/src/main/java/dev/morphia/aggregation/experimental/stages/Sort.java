@@ -29,7 +29,8 @@ public class Sort extends Stage {
     /**
      * Adds an ascending sort definition on the field.
      *
-     * @param field the sort field
+     * @param field      the sort field
+     * @param additional any additional fields to sort on
      * @return this
      */
     public Sort ascending(final String field, final String... additional) {
@@ -44,6 +45,7 @@ public class Sort extends Stage {
      * Adds an descending sort definition on the field.
      *
      * @param field the sort field
+     * @param additional any additional fields to sort on
      * @return this
      */
     public Sort descending(final String field, final String... additional) {

@@ -33,7 +33,6 @@ public class ExpressionsTest extends TestBase {
         assertEquals(0, writer.getDocsLevel());
         assertEquals(0, writer.getArraysLevel());
         assertTrue(writer.getState().isEmpty());
-
         assertDocumentEquals(expected, actual);
 
         Document test = getDs().aggregate(User.class)

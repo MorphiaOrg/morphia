@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
 import dev.morphia.aggregation.experimental.stages.Projection;
-import dev.morphia.aggregation.experimental.expressions.internal.PipelineField;
+import dev.morphia.aggregation.experimental.expressions.impls.PipelineField;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;

@@ -1,4 +1,4 @@
-package dev.morphia.aggregation.experimental.expressions.internal;
+package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.aggregation.experimental.expressions.Expression;
 import dev.morphia.mapping.Mapper;
@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class DocumentExpression extends Expression implements FieldHolder<DocumentExpression> {
-    private Fields<dev.morphia.aggregation.experimental.expressions.internal.DocumentExpression> fields = Fields.on(this);
+    private Fields<dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression> fields = Fields.on(this);
 
     public DocumentExpression() {
         super(null);
@@ -26,7 +26,7 @@ public class DocumentExpression extends Expression implements FieldHolder<Docume
     }
 
     @Override
-    public dev.morphia.aggregation.experimental.expressions.internal.DocumentExpression field(final String name, final Expression expression) {
+    public dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression field(final String name, final Expression expression) {
         return fields.add(name, expression);
     }
 }

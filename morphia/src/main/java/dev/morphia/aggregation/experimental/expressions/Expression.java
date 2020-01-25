@@ -1,15 +1,19 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.internal.DocumentExpression;
-import dev.morphia.aggregation.experimental.expressions.internal.Literal;
-import dev.morphia.aggregation.experimental.expressions.internal.ValueExpression;
-import dev.morphia.aggregation.experimental.expressions.internal.Push;
+import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Literal;
+import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Push;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
+
+import static java.util.Arrays.asList;
 
 /**
  * Base class for all the expression types.
@@ -97,6 +101,18 @@ public class Expression {
      */
     public static DocumentExpression of() {
         return new DocumentExpression();
+    }
+
+    /**
+     * @param first
+     * @param additional
+     * @return
+     * @morphia.internal
+     */
+    static List<Expression> toList(final Expression first, final Expression[] additional) {
+        List<Expression> expressions = new ArrayList<>(asList(first));
+        expressions.addAll(asList(additional));
+        return expressions;
     }
 
     /**

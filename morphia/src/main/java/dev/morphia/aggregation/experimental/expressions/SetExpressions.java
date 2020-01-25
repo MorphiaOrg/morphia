@@ -1,11 +1,17 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+/**
+ * Defines helper methods for the set expressions
+ *
+ * @mongodb.driver.manual reference/operator/aggregation/#set-expression-operators Set Expressions
+ * @since 2.0
+ */
+public final class SetExpressions {
+    private SetExpressions() {
+    }
 
-public class SetExpressions {
     /**
      * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
      *
@@ -15,9 +21,7 @@ public class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/allElementsTrue $allElementsTrue
      */
     public static Expression allElementsTrue(final Expression first, final Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
-        expressions.addAll(asList(additional));
-        return new Expression("$allElementsTrue", expressions);
+        return new Expression("$allElementsTrue", Expression.toList(first, additional));
     }
 
     /**
@@ -29,9 +33,7 @@ public class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/anyElementTrue $anyElementTrue
      */
     public static Expression anyElementTrue(final Expression first, final Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
-        expressions.addAll(asList(additional));
-        return new Expression("$anyElementTrue", expressions);
+        return new Expression("$anyElementTrue", Expression.toList(first, additional));
     }
 
     /**
@@ -56,9 +58,7 @@ public class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/setEquals $setEquals
      */
     public static Expression setEquals(final Expression first, final Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
-        expressions.addAll(asList(additional));
-        return new Expression("$setEquals", expressions);
+        return new Expression("$setEquals", Expression.toList(first, additional));
     }
 
     /**
@@ -70,9 +70,7 @@ public class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/setIntersection $setIntersection
      */
     public static Expression setIntersection(final Expression first, final Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
-        expressions.addAll(asList(additional));
-        return new Expression("$setIntersection", expressions);
+        return new Expression("$setIntersection", Expression.toList(first, additional));
     }
 
     /**
@@ -97,8 +95,7 @@ public class SetExpressions {
      * @mongodb.driver.manual manual/reference/operator/aggregation/setUnion $setUnion
      */
     public static Expression setUnion(final Expression first, final Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
-        expressions.addAll(asList(additional));
-        return new Expression("$setUnion", expressions);
+        return new Expression("$setUnion", Expression.toList(first, additional));
     }
+
 }

@@ -2,7 +2,7 @@ package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.AggregationException;
 import dev.morphia.aggregation.experimental.expressions.Expression;
-import dev.morphia.aggregation.experimental.expressions.internal.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.sofia.Sofia;
 
 /**

@@ -202,15 +202,11 @@ public abstract class TestBase {
     }
 
     private void assertSameType(final String path, final Object expected, final Object actual) {
-        try {
-            if (expected instanceof List && actual instanceof List) {
-                return;
-            }
-            if (!expected.getClass().equals(actual.getClass())) {
-                assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        if (expected instanceof List && actual instanceof List) {
+            return;
+        }
+        if (!expected.getClass().equals(actual.getClass())) {
+            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
         }
     }
 

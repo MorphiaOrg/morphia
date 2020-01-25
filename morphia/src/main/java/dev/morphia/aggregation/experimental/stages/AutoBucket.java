@@ -2,7 +2,7 @@ package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.BucketGranularity;
 import dev.morphia.aggregation.experimental.expressions.Expression;
-import dev.morphia.aggregation.experimental.expressions.internal.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 
 /**
  * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries
