@@ -2,12 +2,9 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.aggregation.experimental.expressions.impls.Literal;
-import dev.morphia.aggregation.experimental.expressions.impls.Push;
+import dev.morphia.aggregation.experimental.expressions.impls.LiteralExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.MetaExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
-import dev.morphia.mapping.Mapper;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +50,17 @@ public final class Expressions {
      * @mongodb.driver.manual reference/operator/aggregation/literal $literal
      */
     public static Expression literal(final Object value) {
-        return new Literal(value);
+        return new LiteralExpression(value);
+    }
+
+    /**
+     * Returns the metadata associated with a document in a pipeline operations, e.g. "textScore" when performing text search.
+     *
+     * @return the new expression
+     * @mongodb.driver.manual reference/operator/aggregation/meta $meta
+     */
+    public static Expression meta() {
+        return new MetaExpression();
     }
 
     /**

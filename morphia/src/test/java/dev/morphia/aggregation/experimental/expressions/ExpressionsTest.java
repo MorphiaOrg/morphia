@@ -1,47 +1,40 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.TestBase;
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
-import dev.morphia.aggregation.experimental.stages.Projection;
-import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.testmodel.User;
+import com.mongodb.client.MongoCollection;
+import dev.morphia.aggregation.experimental.stages.Group;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.Test;
 
-import java.util.Date;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.meta;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static org.bson.Document.parse;
 
-public class ExpressionsTest extends TestBase {
-    @Before
-    public void seed() {
-        getMapper().getCollection(User.class).drop();
-        getDs().save(new User("", new Date()));
-    }
+public class ExpressionsTest extends ExpressionsTestBase {
 
-    @SuppressWarnings("unchecked")
-    protected void evaluate(final String expectedString, final Expression value, final Object expectedValue) {
-        Document expected = Document.parse(expectedString);
-        DocumentWriter writer = new DocumentWriter();
-        ((Codec) getMapper().getCodecRegistry()
-                            .get(MathExpression.class))
-            .encode(writer, value, EncoderContext.builder().build());
-        Document actual = writer.getRoot();
-        assertEquals(0, writer.getDocsLevel());
-        assertEquals(0, writer.getArraysLevel());
-        assertTrue(writer.getState().isEmpty());
+    @Test
+    public void testMeta() {
+        MongoCollection<Document> articles = getDatabase().getCollection("articles");
+        articles.createIndex(new Document("title", "text"));
+        articles.insertMany(List.of(
+            parse("{ '_id' : 1, 'title' : 'cakes and ale' }"),
+            parse("{ '_id' : 2, 'title' : 'more cakes' }"),
+            parse("{ '_id' : 3, 'title' : 'bread' }"),
+            parse("{ '_id' : 4, 'title' : 'some cakes' }")));
+
+        List<Document> actual = getDs().aggregate("articles")
+                                       .match(getDs().find().search("cake"))
+                                       .group(Group.of(Group.id(meta()))
+                                                   .field("count", sum(value(1))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 0.75, 'count' : 1 }"),
+            parse("{ '_id' : 1.0, 'count' : 2 }"));
+
         assertDocumentEquals(expected, actual);
-
-        Document test = getDs().aggregate(User.class)
-                               .project(Projection.of()
-                                                  .include("test", value))
-                               .execute(Document.class)
-                               .next();
-        Assert.assertEquals(expectedValue, test.get("test"));
     }
 }

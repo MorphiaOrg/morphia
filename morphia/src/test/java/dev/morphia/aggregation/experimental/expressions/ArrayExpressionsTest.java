@@ -32,7 +32,7 @@ import static dev.morphia.aggregation.experimental.expressions.MathExpressions.a
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.concat;
 import static org.bson.Document.parse;
 
-public class ArrayExpressionsTest extends ExpressionsTest {
+public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testArrayToObject() {

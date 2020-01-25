@@ -11,7 +11,7 @@ import static dev.morphia.aggregation.experimental.expressions.ComparisonExpress
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.ne;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 
-public class ComparisonExpressionsTest extends ExpressionsTest {
+public class ComparisonExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testCmp() {

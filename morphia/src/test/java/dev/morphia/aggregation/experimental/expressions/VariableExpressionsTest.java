@@ -14,7 +14,7 @@ import static dev.morphia.aggregation.experimental.expressions.MathExpressions.m
 import static dev.morphia.aggregation.experimental.expressions.VariableExpressions.let;
 import static org.bson.Document.parse;
 
-public class VariableExpressionsTest extends ExpressionsTest {
+public class VariableExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testLet() {
         getDatabase().getCollection("sales").insertMany(List.of(

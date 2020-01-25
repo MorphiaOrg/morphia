@@ -14,7 +14,7 @@ import static dev.morphia.aggregation.experimental.expressions.SetExpressions.se
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setUnion;
 import static java.util.Arrays.asList;
 
-public class SetExpressionsTest extends ExpressionsTest {
+public class SetExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testAllElementsTrue() {

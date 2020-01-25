@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental;
 
-import dev.morphia.aggregation.experimental.expressions.ExpressionsTest;
+import dev.morphia.aggregation.experimental.expressions.ExpressionsTestBase;
 import dev.morphia.aggregation.experimental.model.Sales;
 import dev.morphia.aggregation.experimental.model.StringDates;
 import dev.morphia.aggregation.experimental.stages.AddFields;
@@ -42,7 +42,7 @@ import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 
-public class DateExpressionTest extends ExpressionsTest {
+public class DateExpressionTest extends ExpressionsTestBase {
     @Test
     public void testDateAggregation() {
         getDatabase().getCollection("sales").insertOne(

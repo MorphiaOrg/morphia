@@ -26,7 +26,7 @@ import static dev.morphia.aggregation.experimental.expressions.StringExpressions
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.trim;
 import static org.bson.Document.parse;
 
-public class StringExpressionsTest extends ExpressionsTest {
+public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testConcat() {

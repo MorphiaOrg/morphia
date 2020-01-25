@@ -5,8 +5,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-public class Literal extends Expression {
-    public Literal(final Object value) {
+public class LiteralExpression extends Expression {
+    public LiteralExpression(final Object value) {
         super("$literal", value);
     }
 

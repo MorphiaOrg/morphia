@@ -16,7 +16,7 @@ import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpre
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.sin;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.tan;
 
-public class TrigonometryExpressionsTest extends ExpressionsTest {
+public class TrigonometryExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testAcos() {

@@ -27,7 +27,6 @@ public class Accumulator extends Expression {
         expressions.addAll(values);
     }
 
-
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
         writer.writeStartDocument();

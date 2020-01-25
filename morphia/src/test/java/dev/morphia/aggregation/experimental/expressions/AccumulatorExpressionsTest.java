@@ -27,7 +27,7 @@ import static dev.morphia.aggregation.experimental.expressions.MathExpressions.m
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static org.bson.Document.parse;
 
-public class AccumulatorExpressionsTest extends ExpressionsTest {
+public class AccumulatorExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testAddToSet() {

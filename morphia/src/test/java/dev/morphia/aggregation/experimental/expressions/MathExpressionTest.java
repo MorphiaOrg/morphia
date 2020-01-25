@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 
-public class MathExpressionTest extends ExpressionsTest {
+public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testAbs() {

@@ -91,8 +91,8 @@ public abstract class TestBase {
         getMongoClient().close();
     }
 
-    protected void assertDocumentEquals(final Object document, final Object result) {
-        assertDocumentEquals("", document, result);
+    protected void assertDocumentEquals(final Object expected, final Object actual) {
+        assertDocumentEquals("", expected, actual);
     }
 
     protected void checkMinServerVersion(final double version) {

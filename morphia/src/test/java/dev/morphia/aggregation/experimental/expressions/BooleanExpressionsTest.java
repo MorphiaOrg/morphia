@@ -7,7 +7,7 @@ import static dev.morphia.aggregation.experimental.expressions.BooleanExpression
 import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.or;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 
-public class BooleanExpressionsTest extends ExpressionsTest {
+public class BooleanExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testAnd() {

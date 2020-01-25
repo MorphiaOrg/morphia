@@ -5,11 +5,8 @@ import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 
-import static dev.morphia.aggregation.experimental.expressions.Expressions.toList;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.convert;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toBool;
@@ -21,7 +18,7 @@ import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.t
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toObjectId;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.type;
 
-public class TypeExpressionsTest extends ExpressionsTest {
+public class TypeExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testConvert() {

@@ -56,6 +56,16 @@ public class Group extends Stage {
     }
 
     /**
+     * Creates a named group ID
+     *
+     * @param name the id name
+     * @return the new groupID
+     */
+    public static GroupId id(final Expression name) {
+        return new GroupId(name);
+    }
+
+    /**
      * Creates an unnamed group ID
      *
      * @return the new groupID
