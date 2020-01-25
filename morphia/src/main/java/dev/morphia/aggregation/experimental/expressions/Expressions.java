@@ -20,7 +20,10 @@ import static java.util.Arrays.asList;
  * @mongodb.driver.manual reference/operator/aggregation/ Aggregation pipeline operators
  * @since 2.0
  */
-public class Expressions {
+public final class Expressions {
+    private Expressions() {
+    }
+
     /**
      * Creates a field expression for the given value.  If the value does not already start with '$', it will be prepended automatically.
      *
