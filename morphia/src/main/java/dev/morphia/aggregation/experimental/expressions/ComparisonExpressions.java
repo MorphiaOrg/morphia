@@ -15,6 +15,19 @@ public final class ComparisonExpressions {
     }
 
     /**
+     * Returns 0 if the two values are equivalent, 1 if the first value is greater than the second, and -1 if the first value is less than
+     * the second.
+     *
+     * @param first  an expression for the value to compare
+     * @param second an expression yielding the value to check against
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/cmp $cmp
+     */
+    public static Expression cmp(final Expression first, final Expression second) {
+        return new Expression("$cmp", List.of(first, second));
+    }
+
+    /**
      * Compares two values and returns:
      *
      * <li>true when the first value is greater than the second value.
@@ -25,8 +38,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/gt $gt
      */
-    public static Comparison gt(final Expression first, final Expression second) {
-        return new Comparison("$gt", List.of(first, second));
+    public static Expression gt(final Expression first, final Expression second) {
+        return new Expression("$gt", List.of(first, second));
     }
 
     /**
@@ -40,8 +53,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/gte $gte
      */
-    public static Comparison gte(final Expression first, final Expression second) {
-        return new Comparison("$gte", List.of(first, second));
+    public static Expression gte(final Expression first, final Expression second) {
+        return new Expression("$gte", List.of(first, second));
     }
 
     /**
@@ -55,20 +68,44 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @mongodb.driver.manual manual/reference/operator/aggregation/lte $lte
      */
-    public static Comparison lte(final Expression first, final Expression second) {
-        return new Comparison("$lte", List.of(first, second));
+    public static Expression lte(final Expression first, final Expression second) {
+        return new Expression("$lte", List.of(first, second));
     }
 
     /**
-     * Base class for the comparison expressions
+     * Returns true if the values are equivalent.
      *
-     * @mongodb.driver.manual reference/operator/aggregation/#comparison-expression-operators Comparison Expressions
+     * @param first  an expression for the value to compare
+     * @param second an expression yielding the value to check against
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/eq $eq
      */
-    public static class Comparison extends Expression {
-
-        protected Comparison(final String operation, final Object value) {
-            super(operation, value);
-        }
-
+    public static Expression eq(final Expression first, final Expression second) {
+        return new Expression("$eq", List.of(first, second));
     }
+
+    /**
+     * Returns true if the first value is less than the second.
+     *
+     * @param first  an expression for the value to compare
+     * @param second an expression yielding the value to check against
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/lt $lt
+     */
+    public static Expression lt(final Expression first, final Expression second) {
+        return new Expression("$lt", List.of(first, second));
+    }
+
+    /**
+     * Returns true if the values are not equivalent.
+     *
+     * @param first  an expression for the value to compare
+     * @param second an expression yielding the value to check against
+     * @return the new expression
+     * @mongodb.driver.manual manual/reference/operator/aggregation/ne $ne
+     */
+    public static Expression ne(final Expression first, final Expression second) {
+        return new Expression("$ne", List.of(first, second));
+    }
+
 }
