@@ -27,6 +27,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     private ReadPreference readPreference;
     private ReadConcern readConcern;
     private WriteConcern writeConcern;
+    private Document hint;
 
     /**
      * @return the configuration value
@@ -78,6 +79,9 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
         if (maxTimeMS != null) {
             aggregate.maxTime(getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
         }
+        if (hint != null) {
+            aggregate.hint(hint);
+        }
 
         return aggregate;
     }
@@ -105,6 +109,28 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      */
     public AggregationOptions batchSize(final int batchSize) {
         this.batchSize = batchSize;
+        return this;
+    }
+
+    /**
+     * @return the hint for which index to use. A null value means no hint is set.
+     * @mongodb.server.release 3.6
+     * @since 2.0
+     */
+    public Document hint() {
+        return hint;
+    }
+
+    /**
+     * Sets the hint for which index to use. A null value means no hint is set.
+     *
+     * @param hint the hint
+     * @return this
+     * @mongodb.server.release 3.6
+     * @since 3.6
+     */
+    public AggregationOptions hint(final String hint) {
+        this.hint = new Document("hint", hint);
         return this;
     }
 
