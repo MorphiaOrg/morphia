@@ -72,6 +72,8 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.value
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
+import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
+import static dev.morphia.aggregation.experimental.expressions.SystemVariables.PRUNE;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.from;
 import static dev.morphia.aggregation.experimental.stages.ReplaceWith.with;
@@ -583,8 +585,7 @@ public class AggregationTest extends TestBase {
                                  .match(getDs().find().filter("year", 2014))
                                  .redact(Redact.on(condition(
                                      gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
-                                     value("$$DESCEND"),
-                                     value("$$PRUNE"))))
+                                     DESCEND, PRUNE)))
                                  .execute(Document.class)
                                  .next();
         Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"

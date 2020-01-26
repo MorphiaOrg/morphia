@@ -43,6 +43,10 @@ import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpres
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
+import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
+import static dev.morphia.aggregation.experimental.expressions.SystemVariables.NOW;
+import static dev.morphia.aggregation.experimental.expressions.SystemVariables.PRUNE;
+import static dev.morphia.aggregation.experimental.expressions.SystemVariables.ROOT;
 import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
@@ -182,7 +186,7 @@ public class CodecStructureTest extends TestBase {
         evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
             ObjectExpressions.mergeObjects()
                              .add(elementAt(field("fromItems"), value(0)))
-                             .add(value("$$ROOT")));
+                             .add(ROOT));
     }
 
     @Test
@@ -203,8 +207,7 @@ public class CodecStructureTest extends TestBase {
                        + "'$$DESCEND', '$$PRUNE']}}"),
             Redact.on(condition(
                 gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
-                value("$$DESCEND"),
-                value("$$PRUNE"))));
+                DESCEND, PRUNE)));
     }
 
     @Test
@@ -220,7 +223,7 @@ public class CodecStructureTest extends TestBase {
                        .field("item", field("item"))
                        .field("amount", MathExpressions.multiply(field("price"), field("quantity")))
                        .field("status", value("Complete"))
-                       .field("asofDate", value("$$NOW"))
+                       .field("asofDate", NOW)
                 );
     }
 
