@@ -40,7 +40,12 @@ class DocumentState extends WriteState {
     }
 
     public DocumentState applyValue(final String name, final Object value) {
-        document.put(name, value);
+        if (value instanceof Document && document.get(name) instanceof Document) {
+            Document extant = (Document) document.get(name);
+            extant.putAll((Document) value);
+        } else {
+            document.put(name, value);
+        }
         documentWriter.state(this);
         return this;
     }

@@ -91,9 +91,10 @@ public class TestDocumentWriter extends TestBase {
 
         writer.writeEndDocument();
 
-        Document document = writer.getDocument();
+        Document document = (Document) writer.getDocument().get("id");
 
-        Assert.assertTrue(document.containsKey("first"));
+        Assert.assertTrue(document.toString(), document.containsKey("first"));
+        Assert.assertTrue(document.toString(), document.containsKey("second"));
     }
 
     @Test
