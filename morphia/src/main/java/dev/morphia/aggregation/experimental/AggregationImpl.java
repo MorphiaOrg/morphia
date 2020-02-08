@@ -136,7 +136,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
                                            Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
                                            DocumentWriter writer = new DocumentWriter();
                                            codec.encode(writer, s, EncoderContext.builder().build());
-                                           return writer.<Document>getRoot();
+                                           return writer.getDocument();
                                        })
                                        .collect(Collectors.toList());
         return collect;

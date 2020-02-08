@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Defines a projection for use in aggregation
  *
- * @mongodb.driver.manual reference/operator/aggregation/project/ $project
+ * @aggregation.expression $project
  */
 public final class  Projection {
 
@@ -99,7 +99,7 @@ public final class  Projection {
      *
      * @param args the projection arguments
      * @return the projection
-     * @mongodb.driver.manual reference/operator/aggregation/add $add
+     * @aggregation.expression $add
      */
     public static  Projection add(final Object... args) {
         return expression("$add", args);
@@ -111,7 +111,7 @@ public final class  Projection {
      * @param arg1 subtraction argument
      * @param arg2 subtraction argument
      * @return the projection
-     * @mongodb.driver.manual reference/operator/aggregation/subtract $subtract
+     * @aggregation.expression $subtract
      */
     public static  Projection subtract(final Object arg1, final Object arg2) {
         return expression("$subtract", arg1, arg2);
@@ -122,7 +122,7 @@ public final class  Projection {
      *
      * @param args the projection arguments
      * @return the projection
-     * @mongodb.driver.manual reference/operator/aggregation/multiply $multiply
+     * @aggregation.expression $multiply
      */
     public static  Projection multiply(final Object... args) {
         return expression("$multiply", args);
@@ -134,7 +134,7 @@ public final class  Projection {
      * @param arg1 subtraction argument
      * @param arg2 subtraction argument
      * @return the projection
-     * @mongodb.driver.manual reference/operator/aggregation/divide $divide
+     * @aggregation.expression $divide
      */
     public static  Projection divide(final Object arg1, final Object arg2) {
         return expression("$divide", arg1, arg2);
@@ -145,7 +145,7 @@ public final class  Projection {
      *
      * @param expression The argument for $size can be any expression as long as it resolves to an array.
      * @return the projection
-     * @mongodb.driver.manual reference/operator/aggregation/size $size
+     * @aggregation.expression $size
      */
     public static Projection size(final Object expression) {
         return expression("$size", expression);
@@ -157,7 +157,7 @@ public final class  Projection {
      * @param arg1 subtraction argument
      * @param arg2 subtraction argument
      * @return the projection
-     * @mongodb.driver.manual reference/operator/aggregation/mod $mod
+     * @aggregation.expression $mod
      */
     public static  Projection mod(final Object arg1, final Object arg2) {
         return expression("$mod", arg1, arg2);

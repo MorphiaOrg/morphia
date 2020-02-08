@@ -5,7 +5,7 @@ import dev.morphia.query.Query;
 /**
  * Limits the number of documents passed to the next stage in the pipeline.
  *
- * @mongodb.driver.manual reference/operator/aggregation/match/ $match
+ * @aggregation.expression $match
  */
 public class Match extends Stage {
     private Query query;

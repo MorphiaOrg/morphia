@@ -35,6 +35,19 @@ import java.util.List;
  */
 public interface Aggregation<T> {
     /**
+     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+     * added fields.
+     * <p>
+     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+     * adds the new fields.
+     *
+     * @param fields the stage definition
+     * @return this
+     * @aggregation.expression $addFields
+     */
+    Aggregation<T> addFields(AddFields fields);
+
+    /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
      * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
      * <p>
@@ -44,7 +57,7 @@ public interface Aggregation<T> {
      *
      * @param bucket the bucket definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/bucketAuto $bucketAuto
+     * @aggregation.expression $bucketAuto
      */
     Aggregation<T> autoBucket(AutoBucket bucket);
 
@@ -59,7 +72,7 @@ public interface Aggregation<T> {
      *
      * @param bucket the bucket definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/bucket $bucket
+     * @aggregation.expression $bucket
      */
     Aggregation<T> bucket(Bucket bucket);
 
@@ -68,7 +81,7 @@ public interface Aggregation<T> {
      *
      * @param stats the stats configuration
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/collStats $collStats
+     * @aggregation.expression $collStats
      */
     Aggregation<T> collStats(CollectionStats stats);
 
@@ -77,28 +90,9 @@ public interface Aggregation<T> {
      *
      * @param name the field name for the resulting count value
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/count $count
+     * @aggregation.expression $count
      */
     Aggregation<T> count(String name);
-
-    /**
-     * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
-     * holding locks as part of a transaction. The stage returns a document for each operation or session. To run $currentOp, use the
-     * db.aggregate() helper on the admin database.
-     * <p>
-     * The $currentOp aggregation stage is preferred over the currentOp command and its mongo shell helper db.currentOp(). Because
-     * currentOp command and db.currentOp() helper returns the results in a single document, the total size of the currentOp result
-     * set is subject to the maximum 16MB BSON size limit for documents. The $currentOp stage returns a cursor over a stream of
-     * documents, each of which reports a single operation. Each operation document is subject to the 16MB BSON limit, but unlike the
-     * currentOp command, there is no limit on the overall size of the result set.
-     * <p>
-     * $currentOp also enables you to perform arbitrary transformations of the results as the documents pass through the pipeline.
-     *
-     * @param currentOp the configuration
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/currentOp $currentOp
-     */
-    Aggregation<T> currentOp(CurrentOp currentOp);
 
     /**
      * Execute the aggregation.
@@ -125,11 +119,30 @@ public interface Aggregation<T> {
      * Execute the aggregation and get the results.
      *
      * @param resultType the type of the result
-     * @param options the options to apply
-     * @param <S>     the output type
+     * @param options    the options to apply
+     * @param <S>        the output type
      * @return a MorphiaCursor
      */
     <S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options);
+
+    /**
+     * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
+     * holding locks as part of a transaction. The stage returns a document for each operation or session. To run $currentOp, use the
+     * db.aggregate() helper on the admin database.
+     * <p>
+     * The $currentOp aggregation stage is preferred over the currentOp command and its mongo shell helper db.currentOp(). Because
+     * currentOp command and db.currentOp() helper returns the results in a single document, the total size of the currentOp result
+     * set is subject to the maximum 16MB BSON size limit for documents. The $currentOp stage returns a cursor over a stream of
+     * documents, each of which reports a single operation. Each operation document is subject to the 16MB BSON limit, but unlike the
+     * currentOp command, there is no limit on the overall size of the result set.
+     * <p>
+     * $currentOp also enables you to perform arbitrary transformations of the results as the documents pass through the pipeline.
+     *
+     * @param currentOp the configuration
+     * @return this
+     * @aggregation.expression $currentOp
+     */
+    Aggregation<T> currentOp(CurrentOp currentOp);
 
     /**
      * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Each sub-pipeline has its own
@@ -144,18 +157,9 @@ public interface Aggregation<T> {
      *
      * @param facet the facet definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/facet $facet
+     * @aggregation.expression $facet
      */
     Aggregation<T> facet(Facet facet);
-
-    /**
-     * Outputs documents in order of nearest to farthest from a specified point.
-     *
-     * @param near the geo query definition
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/geoNear $geoNear
-     */
-    Aggregation<T> geoNear(GeoNear near);
 
     /**
      * @return the stage documents
@@ -178,11 +182,20 @@ public interface Aggregation<T> {
     List<Stage> getStages();
 
     /**
+     * Outputs documents in order of nearest to farthest from a specified point.
+     *
+     * @param near the geo query definition
+     * @return this
+     * @aggregation.expression $geoNear
+     */
+    Aggregation<T> geoNear(GeoNear near);
+
+    /**
      * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.
      *
      * @param lookup the lookup configuration
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/graphLookup $graphLookup
+     * @aggregation.expression $graphLookup
      */
     Aggregation<T> graphLookup(GraphLookup lookup);
 
@@ -193,7 +206,7 @@ public interface Aggregation<T> {
      *
      * @param group the group definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/group $group
+     * @aggregation.expression $group
      */
     Aggregation<T> group(Group group);
 
@@ -202,7 +215,7 @@ public interface Aggregation<T> {
      * privileges that include indexStats action.
      *
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/indexStats $indexStats
+     * @aggregation.expression $indexStats
      */
     Aggregation<T> indexStats();
 
@@ -211,7 +224,7 @@ public interface Aggregation<T> {
      *
      * @param limit the maximum docs to pass along to the next stage
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/limit $limit
+     * @aggregation.expression $limit
      */
     Aggregation<T> limit(int limit);
 
@@ -222,7 +235,7 @@ public interface Aggregation<T> {
      *
      * @param lookup the lookup definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/lookup $lookup
+     * @aggregation.expression $lookup
      */
     Aggregation<T> lookup(Lookup lookup);
 
@@ -232,7 +245,7 @@ public interface Aggregation<T> {
      *
      * @param query the query to use when matching
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/match $match
+     * @aggregation.expression $match
      */
     Aggregation<T> match(Query<?> query);
 
@@ -241,7 +254,7 @@ public interface Aggregation<T> {
      *
      * @param merge the merge definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/merge $merge
+     * @aggregation.expression $merge
      */
     Aggregation<T> merge(Merge merge);
 
@@ -251,7 +264,7 @@ public interface Aggregation<T> {
      * @param out the out definition
      * @param <O> the output collection type
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/out $out
+     * @aggregation.expression $out
      */
     <O> Aggregation<O> out(Out<O> out);
 
@@ -259,7 +272,7 @@ public interface Aggregation<T> {
      * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
      *
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/planCacheStats $planCacheStats
+     * @aggregation.expression $planCacheStats
      */
     Aggregation<T> planCacheStats();
 
@@ -269,7 +282,7 @@ public interface Aggregation<T> {
      *
      * @param projection the project definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/project $project
+     * @aggregation.expression $project
      */
     Aggregation<T> project(Projection projection);
 
@@ -278,7 +291,7 @@ public interface Aggregation<T> {
      *
      * @param redact the redaction definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/redact $redact
+     * @aggregation.expression $redact
      */
     Aggregation<T> redact(Redact redact);
 
@@ -288,7 +301,7 @@ public interface Aggregation<T> {
      *
      * @param root the new root definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/replaceRoot $replaceRoot
+     * @aggregation.expression $replaceRoot
      */
     Aggregation<T> replaceRoot(ReplaceRoot root);
 
@@ -301,7 +314,7 @@ public interface Aggregation<T> {
      *
      * @param with the replacement definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/replaceWith $replaceWith
+     * @aggregation.expression $replaceWith
      */
     Aggregation<T> replaceWith(ReplaceWith with);
 
@@ -310,7 +323,7 @@ public interface Aggregation<T> {
      *
      * @param sample the sample definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/sample $sample
+     * @aggregation.expression $sample
      */
     Aggregation<T> sample(Sample sample);
 
@@ -323,24 +336,11 @@ public interface Aggregation<T> {
      *
      * @param fields the stage definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/set $set
+     * @aggregation.expression $set
      */
     default Aggregation<T> set(AddFields fields) {
         return addFields(fields);
     }
-
-    /**
-     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
-     * added fields.
-     * <p>
-     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
-     * adds the new fields.
-     *
-     * @param fields the stage definition
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/addFields $addFields
-     */
-    Aggregation<T> addFields(AddFields fields);
 
     /**
      * Skips over the specified number of documents that pass into the stage and passes the remaining documents to the next stage in the
@@ -348,7 +348,7 @@ public interface Aggregation<T> {
      *
      * @param skip the skip definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/skip $skip
+     * @aggregation.expression $skip
      */
     Aggregation<T> skip(Skip skip);
 
@@ -357,7 +357,7 @@ public interface Aggregation<T> {
      *
      * @param sort the sort definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/sort $sort
+     * @aggregation.expression $sort
      */
     Aggregation<T> sort(Sort sort);
 
@@ -371,7 +371,7 @@ public interface Aggregation<T> {
      *
      * @param sort the sort definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/sortByCount $sortByCount
+     * @aggregation.expression $sortByCount
      */
     Aggregation<T> sortByCount(SortByCount sort);
 
@@ -380,7 +380,7 @@ public interface Aggregation<T> {
      *
      * @param unset the unset definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/unset $unset
+     * @aggregation.expression $unset
      */
     Aggregation<T> unset(Unset unset);
 
@@ -390,7 +390,7 @@ public interface Aggregation<T> {
      *
      * @param unwind the unwind definition
      * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/unwind $unwind
+     * @aggregation.expression $unwind
      */
     Aggregation<T> unwind(Unwind unwind);
 }

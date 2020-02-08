@@ -14,7 +14,7 @@ import static java.util.Arrays.asList;
 /**
  * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
  *
- * @mongodb.driver.manual reference/operator/aggregation/merge/ $merge
+ * @aggregation.expression $merge
  */
 public class Merge extends Stage {
     private Class type;

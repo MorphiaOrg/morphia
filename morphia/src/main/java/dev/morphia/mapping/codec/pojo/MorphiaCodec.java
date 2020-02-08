@@ -10,6 +10,7 @@ import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
+import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.CollectibleCodec;
 import org.bson.codecs.DecoderContext;
@@ -119,7 +120,13 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         final DocumentWriter writer = new DocumentWriter();
         ((Codec) registry.get(id.getClass()))
             .encode(writer, id, EncoderContext.builder().build());
-        return writer.getRoot();
+        Document doc = writer.getDocument();
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
+
+        return null;
     }
 
     /**

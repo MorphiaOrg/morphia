@@ -67,7 +67,7 @@
         <Bug category="I18N,MT_CORRECTNESS,SECURITY,PERFORMANCE"/>
     </Match>
     <Match>
-      <Class name="dev.morphia.query.QueryImpl" />
+      <Class name="dev.morphia.query.LegacyQuery"/>
       <!--<Method name="compare" params="FindOptions,FindOptions"/>-->
       <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
     </Match>

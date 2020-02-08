@@ -23,7 +23,7 @@ public final class BooleanExpressions {
      * @param first      the first expression
      * @param additional any additional expressions
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/and $and
+     * @aggregation.expression $and
      */
     public static Expression and(final Expression first, final Expression... additional) {
         return new Expression("$and", toList(first, additional));
@@ -35,7 +35,7 @@ public final class BooleanExpressions {
      * @param first      the first expression
      * @param additional any additional expressions
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/or $or
+     * @aggregation.expression $or
      */
     public static Expression or(final Expression first, final Expression... additional) {
         return new Expression("$or", toList(first, additional));
@@ -47,7 +47,7 @@ public final class BooleanExpressions {
      *
      * @param value the expression
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/not $not
+     * @aggregation.expression $not
      */
     public static Expression not(final Expression value) {
         return new Expression("$not", List.of(value));

@@ -23,8 +23,17 @@ import com.sun.source.doctree.UnknownBlockTagTree;
 import jdk.javadoc.doclet.Taglet;
 
 import javax.lang.model.element.Element;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static jdk.javadoc.doclet.Taglet.Location.CONSTRUCTOR;
+import static jdk.javadoc.doclet.Taglet.Location.FIELD;
+import static jdk.javadoc.doclet.Taglet.Location.METHOD;
+import static jdk.javadoc.doclet.Taglet.Location.OVERVIEW;
+import static jdk.javadoc.doclet.Taglet.Location.PACKAGE;
+import static jdk.javadoc.doclet.Taglet.Location.TYPE;
 
 /**
  * Provides a taglet for linking to the MongoDB manual pages
@@ -32,6 +41,11 @@ import java.util.Set;
  * @see <a href="http://docs.mongodb.org/manual/">the MongoDB manual</a>
  */
 public class ManualTaglet extends DocTaglet {
+
+    @Override
+    public Set<Location> getAllowedLocations() {
+        return new HashSet<>(asList(CONSTRUCTOR, METHOD, FIELD, PACKAGE));
+    }
 
     @Override
     public String getName() {

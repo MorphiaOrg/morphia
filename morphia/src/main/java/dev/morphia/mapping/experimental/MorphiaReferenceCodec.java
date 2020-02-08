@@ -70,7 +70,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
         }
         DocumentWriter writer = new DocumentWriter();
         encode(writer, wrap, EncoderContext.builder().build());
-        return writer.getRoot();
+        return writer.getDocument();
     }
 
     @Override

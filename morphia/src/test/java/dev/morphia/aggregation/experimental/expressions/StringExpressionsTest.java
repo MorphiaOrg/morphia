@@ -68,35 +68,35 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testRegexFind() {
         evaluate("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
-                                                                                       .regex("inter"),
+                                                                                       .pattern("inter"),
             parse("{match: 'inter', idx:1, captures:[]}"));
         evaluate("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
-                                                                                       .regex(Pattern.compile("inter")),
+                                                                                       .pattern(Pattern.compile("inter")),
             parse("{match: 'inter', idx:1, captures:[]}"));
         evaluate("{ $regexFind: { input: 'winter wonderland', regex: /splinter/ } }", regexFind(value("winter wonderland"))
-                                                                                          .regex("splinter"), null);
+                                                                                          .pattern("splinter"), null);
     }
 
     @Test
     public void testRegexFindAll() {
         evaluate("{ $regexFindAll: { input: 'winter wonderland', regex: /inter/ } }",
-            regexFindAll(value("winter wonderland")).regex("inter"),
+            regexFindAll(value("winter wonderland")).pattern("inter"),
             List.of(parse("{match: 'inter', idx:1, captures:[]}")));
         evaluate("{ $regexFindAll: { input: 'winter wonderland', regex: /inter/ } }",
-            regexFindAll(value("winter wonderland")).regex(Pattern.compile("inter")),
+            regexFindAll(value("winter wonderland")).pattern(Pattern.compile("inter")),
             List.of(parse("{match: 'inter', idx:1, captures:[]}")));
         evaluate("{ $regexFindAll: { input: 'winter wonderland', regex: /splinter/ } }",
-            regexFindAll(value("winter wonderland")).regex("splinter"), List.of());
+            regexFindAll(value("winter wonderland")).pattern("splinter"), List.of());
     }
 
     @Test
     public void testRegexMatch() {
         evaluate("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",
-            regexMatch(value("winter wonderland")).regex("inter"), true);
+            regexMatch(value("winter wonderland")).pattern("inter"), true);
         evaluate("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",
-            regexMatch(value("winter wonderland")).regex(Pattern.compile("inter")), true);
+            regexMatch(value("winter wonderland")).pattern(Pattern.compile("inter")), true);
         evaluate("{ $regexMatch: { input: 'winter wonderland', regex: /splinter/ } }",
-            regexMatch(value("winter wonderland")).regex("splinter"), false);
+            regexMatch(value("winter wonderland")).pattern("splinter"), false);
     }
 
     @Test

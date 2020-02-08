@@ -22,7 +22,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryImpl;
+import dev.morphia.query.LegacyQuery;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -84,7 +84,7 @@ public class TestSerializedFormat extends TestBase {
                                             .field("referenceMap.foo").equal(new ReferenceType(1, "chance"))
                                             .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
 
-        Document document = ((QueryImpl) query).prepareQuery();
+        Document document = ((LegacyQuery) query).prepareQuery();
         final Document parse = Document.parse(readFully("/QueryStructure.json"));
         Assert.assertEquals(parse, document);
     }

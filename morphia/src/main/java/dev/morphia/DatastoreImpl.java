@@ -29,6 +29,7 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateException;
@@ -63,7 +64,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final MongoClient mongoClient;
     private final Mapper mapper;
 
-    private volatile QueryFactory queryFactory = new DefaultQueryFactory();
+    private volatile QueryFactory queryFactory = new LegacyQueryFactory();
 
     protected DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
         this.mongoClient = mongoClient;
@@ -163,11 +164,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    /**
-     * @param configurable the configurable
-     * @return any session found first on the configurable then on this
-     * @morphia.internal
-     */
+    @Override
     public ClientSession findSession(final SessionConfigurable configurable) {
         return configurable.clientSession() != null
                ? configurable.clientSession()

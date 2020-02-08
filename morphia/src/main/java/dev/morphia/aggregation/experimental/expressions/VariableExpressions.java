@@ -18,7 +18,7 @@ public final class VariableExpressions {
      *
      * @param in the expression to evaluate.  variables can be defined using the {@link LetExpression#variable(String, Expression)} method
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/let $let
+     * @aggregation.expression $let
      */
     public static LetExpression let(final Expression in) {
         return new LetExpression(in);

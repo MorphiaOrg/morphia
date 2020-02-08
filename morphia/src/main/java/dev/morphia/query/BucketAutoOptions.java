@@ -84,7 +84,7 @@ public class BucketAutoOptions {
          *
          * @param field the field to process
          * @return an Accumulator
-         * @mongodb.driver.manual reference/operator/aggregation/addToSet $addToSet
+         * @aggregation.expression $addToSet
          */
         public BucketAutoOptions addToSet(final String field) {
             accumulators.put(fieldName, new Accumulator("$addToSet", field));
@@ -97,7 +97,7 @@ public class BucketAutoOptions {
          *
          * @param field the field to process
          * @return an Accumulator
-         * @mongodb.driver.manual reference/operator/aggregation/avg $avg
+         * @aggregation.expression $avg
          */
         public BucketAutoOptions average(final String field) {
 
@@ -112,7 +112,7 @@ public class BucketAutoOptions {
          *
          * @param field the field to process
          * @return an Accumulator
-         * @mongodb.driver.manual reference/operator/aggregation/sum $sum
+         * @aggregation.expression $sum
          */
         public BucketAutoOptions sum(final Object field) {
             accumulators.put(fieldName, new Accumulator("$sum", field));

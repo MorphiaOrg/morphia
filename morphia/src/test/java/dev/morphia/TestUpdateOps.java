@@ -201,7 +201,7 @@ public class TestUpdateOps extends TestBase {
               .inc("size")
               .execute( new UpdateOptions().multi(true));
 
-        final MorphiaCursor<ContainsPic> iterator = finder.order(Sort.ascending("size")).execute();
+        final MorphiaCursor<ContainsPic> iterator = finder.execute(new FindOptions().sort(Sort.ascending("size")));
         for (int i = 0; i < 3; i++) {
             assertEquals(i + 1, iterator.next().getSize());
         }

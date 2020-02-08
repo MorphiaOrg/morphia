@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Geometry;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.Document;
@@ -19,15 +20,15 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     private Document options;
     private CoordinateReferenceSystem crs;
 
-    private Geo2dSphereCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator operator,
-                                final Geometry geometry) {
-        super(mapper, query, field, operator, geometry);
+    private Geo2dSphereCriteria(final Mapper mapper, final String field, final FilterOperator operator,
+                                final Geometry geometry, final MappedClass mappedClass, final boolean validating) {
+        super(mapper, field, operator, geometry, mappedClass, validating);
         this.geometry = geometry;
     }
 
-    static Geo2dSphereCriteria geo(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator operator,
-                                   final Geometry value) {
-        return new Geo2dSphereCriteria(mapper, query, field, operator, value);
+    static Geo2dSphereCriteria geo(final Mapper mapper, final String field, final FilterOperator operator,
+                                   final Geometry value, final MappedClass mappedClass, final boolean validating) {
+        return new Geo2dSphereCriteria(mapper, field, operator, value, mappedClass, validating);
     }
 
     @Override
@@ -38,7 +39,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         DocumentWriter writer = new DocumentWriter();
         ((Codec) getMapper().getCodecRegistry().get(geometry.getClass()))
             .encode(writer, geometry, EncoderContext.builder().build());
-        Document document = new Document("$geometry", writer.<Document>getRoot());
+        Document document = new Document("$geometry", writer.getDocument());
 
         switch (operator) {
             case NEAR:

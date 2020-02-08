@@ -25,7 +25,7 @@ public final class AccumulatorExpressions {
      * @param first      the first expression to sum
      * @param additional any subsequent expressions to include in the sum
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/sum $sum
+     * @aggregation.expression $sum
      */
     public static Expression sum(final Expression first, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
@@ -39,7 +39,7 @@ public final class AccumulatorExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/addToSet $addToSet
+     * @aggregation.expression $addToSet
      */
     public static Expression addToSet(final Expression value) {
         return new Expression("$addToSet", value);
@@ -51,7 +51,7 @@ public final class AccumulatorExpressions {
      * @param value      the value
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/avg $avg
+     * @aggregation.expression $avg
      */
     public static Expression avg(final Expression value, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
@@ -65,7 +65,7 @@ public final class AccumulatorExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/first $first
+     * @aggregation.expression $first
      */
     public static Expression first(final Expression value) {
         return new Expression("$first", value);
@@ -76,7 +76,7 @@ public final class AccumulatorExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/last $last
+     * @aggregation.expression $last
      */
     public static Expression last(final Expression value) {
         return new Expression("$last", value);
@@ -87,7 +87,7 @@ public final class AccumulatorExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/max $max
+     * @aggregation.expression $max
      */
     public static Expression max(final Expression value) {
         return new Expression("$max", value);
@@ -98,7 +98,7 @@ public final class AccumulatorExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/min $min
+     * @aggregation.expression $min
      */
     public static Expression min(final Expression value) {
         return new Expression("$min", value);
@@ -109,7 +109,7 @@ public final class AccumulatorExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/push $push
+     * @aggregation.expression $push
      */
     public static Expression push(final Expression value) {
         return new Expression("$push", value);
@@ -122,7 +122,7 @@ public final class AccumulatorExpressions {
      * $push is only available in the $group stage.
      *
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/push $push
+     * @aggregation.expression $push
      */
     public static Push push() {
         return new Push();
@@ -134,7 +134,7 @@ public final class AccumulatorExpressions {
      * @param value      the value
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/stdDevPop $stdDevPop
+     * @aggregation.expression $stdDevPop
      */
     public static Expression stdDevPop(final Expression value, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
@@ -149,7 +149,7 @@ public final class AccumulatorExpressions {
      * @param value      the value
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/stdDevSamp $stdDevSamp
+     * @aggregation.expression $stdDevSamp
      */
     public static Expression stdDevSamp(final Expression value, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>();

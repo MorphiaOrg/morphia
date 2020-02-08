@@ -3,7 +3,7 @@ package dev.morphia.aggregation.experimental.stages;
 /**
  * Returns statistics regarding the use of each index for the collection.
  *
- * @mongodb.driver.manual reference/operator/aggregation/indexStats/ $indexStats
+ * @aggregation.expression $indexStats
  */
 public class IndexStats extends Stage {
     protected IndexStats() {

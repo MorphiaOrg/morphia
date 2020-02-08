@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
@@ -20,14 +21,16 @@ import static dev.morphia.query.CriteriaJoin.AND;
  */
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
     private final Mapper mapper;
+    private final MappedClass mappedClass;
     private CriteriaJoin joinMethod;
     private List<Criteria> children = new ArrayList<>();
-    private QueryImpl<?> query;
+    private LegacyQuery<?> query;
 
-    protected CriteriaContainerImpl(final Mapper mapper, final QueryImpl<?> query, final CriteriaJoin joinMethod) {
+    protected CriteriaContainerImpl(final Mapper mapper, final LegacyQuery<?> query, final CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
         this.mapper = mapper;
         this.query = query;
+        mappedClass = mapper.getMappedClass(query.getEntityClass());
     }
 
     /**
@@ -110,10 +113,15 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         return collect(AND, criteria);
     }
 
+    @Override
+    public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
+        return new FieldEndImpl<>(mapper, name, this, mappedClass, query.isValidatingNames());
+    }
+
     /**
      * @return the Query for this CriteriaContainer
      */
-    public QueryImpl<?> getQuery() {
+    public LegacyQuery<?> getQuery() {
         return query;
     }
 
@@ -122,11 +130,8 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
      *
      * @param query the query
      */
-    public void setQuery(final QueryImpl<?> query) {
+    public void setQuery(final LegacyQuery<?> query) {
         this.query = query;
-    }    @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
-        return new FieldEndImpl<>(mapper, query, name, this);
     }
 
     @Override

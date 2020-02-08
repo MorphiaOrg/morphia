@@ -1,12 +1,12 @@
 package dev.morphia.query;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import static dev.morphia.query.Sort.descending;
 
@@ -23,12 +23,16 @@ public class SortByIdTest extends TestBase {
         getDs().save(a2);
         getDs().save(a3);
 
-        Assert.assertEquals("last id", a3.id, getDs().find(A.class).order(descending("id"))
-                                                     .execute(new FindOptions().limit(1))
+        Assert.assertEquals("last id", a3.id, getDs().find(A.class)
+                                                     .execute(new FindOptions()
+                                                                  .sort(descending("id"))
+                                                                  .limit(1))
                                                      .next()
                                                   .id);
-        Assert.assertEquals("last id", a3.id, getDs().find(A.class).disableValidation().order(descending("_id"))
-                                                     .execute(new FindOptions().limit(1))
+        Assert.assertEquals("last id", a3.id, getDs().find(A.class).disableValidation()
+                                                     .execute(new FindOptions()
+                                                                  .sort(descending("_id"))
+                                                                  .limit(1))
                                                      .next()
                                                   .id);
     }

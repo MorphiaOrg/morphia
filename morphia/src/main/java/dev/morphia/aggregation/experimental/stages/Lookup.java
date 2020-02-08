@@ -1,11 +1,20 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import dev.morphia.aggregation.experimental.expressions.Expressions;
+import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
 /**
  * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
  * processing. To each input document, the $lookup stage adds a new array field whose elements are the matching documents from the
  * “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
  *
- * @mongodb.driver.manual reference/operator/aggregation/lookup/ $lookup
+ * @aggregation.expression $lookup
+ * @since 2.0
  */
 public class Lookup extends Stage {
     private String from;
@@ -13,6 +22,8 @@ public class Lookup extends Stage {
     private String localField;
     private String foreignField;
     private String as;
+    private DocumentExpression variables;
+    private List<Stage> pipeline;
 
     protected Lookup(final Class<?> fromType) {
         super("$lookup");
@@ -100,11 +111,42 @@ public class Lookup extends Stage {
     }
 
     /**
+     * @return the embeded pipeline
+     * @morphia.internal
+     */
+    public List<Stage> getPipeline() {
+        return pipeline;
+    }
+
+    /**
+     * @return the embeded pipeline's variables
+     * @morphia.internal
+     */
+    public DocumentExpression getVariables() {
+        return variables;
+    }
+
+    /**
      * @return the value
      * @morphia.internal
      */
     public String getLocalField() {
         return localField;
+    }
+
+    /**
+     * Defines a variable
+     *
+     * @param name       the variable name
+     * @param expression the variable value expression
+     * @return
+     */
+    public Lookup let(final String name, final Expression expression) {
+        if (variables == null) {
+            variables = Expressions.of();
+        }
+        variables.field(name, expression);
+        return this;
     }
 
     /**
@@ -115,6 +157,20 @@ public class Lookup extends Stage {
      */
     public Lookup localField(final String localField) {
         this.localField = localField;
+        return this;
+    }
+
+    /**
+     * Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection.
+     * To return all documents, specify an empty pipeline.
+     * <p>
+     * The pipeline cannot include the $out stage or the $merge stage.
+     *
+     * @param stages the stages of the embedded pipeline
+     * @return this
+     */
+    public Lookup pipeline(final Stage... stages) {
+        pipeline = asList(stages);
         return this;
     }
 }

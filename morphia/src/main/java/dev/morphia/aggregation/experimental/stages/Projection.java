@@ -15,7 +15,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.value
  * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields
  * from the input documents or newly computed fields.
  *
- * @mongodb.driver.manual reference/operator/aggregation/projection/ $projection
+ * @aggregation.expression $projection
  */
 public class Projection extends Stage {
     private Fields<Projection> includes;

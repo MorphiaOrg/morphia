@@ -6,7 +6,7 @@ import dev.morphia.query.Query;
 /**
  * Outputs documents in order of nearest to farthest from a specified point.
  *
- * @mongodb.driver.manual reference/operator/aggregation/geoNear/ $geoNear
+ * @aggregation.expression $geoNear
  */
 public class GeoNear extends Stage {
     private Point point;

@@ -10,7 +10,7 @@ import dev.morphia.sofia.Sofia;
 /**
  * Groups input documents by the specified _id expression and for each distinct grouping, outputs a document.
  *
- * @mongodb.driver.manual reference/operator/aggregation/group/ $group
+ * @aggregation.expression $group
  */
 public class Group extends Stage {
     private Fields<Group> fields;

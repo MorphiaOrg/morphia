@@ -15,11 +15,12 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
 import dev.morphia.experimental.MorphiaSession;
+import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
+import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
@@ -490,22 +491,11 @@ public interface Datastore {
     MorphiaSession startSession(ClientSessionOptions options);
 
     /**
-     * Updates all entities found with the operations; this is an atomic operation per entity
-     *
-     * @param query      the query used to match the documents to update
-     * @param operations the update operations to perform
-     * @param <T>        the type of the entity
-     * @return the results of the updates
-     * @deprecated use {@link Query#update()} instead.  Please note the default has changed from multi- to single- document updates.
+     * @param configurable the configurable
+     * @return any session found first on the configurable then on this
+     * @morphia.internal
      */
-    @SuppressWarnings("removal")
-    @Deprecated(since = "2.0", forRemoval = true)
-    default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations) {
-        return query.update(operations).execute(new UpdateOptions()
-                                                    .upsert(false)
-                                                    .multi(true)
-                                                    .writeConcern(getMapper().getWriteConcern(((QueryImpl) query).getEntityClass())));
-    }
+    ClientSession findSession(SessionConfigurable configurable);
 
     /**
      * Updates all entities found with the operations; this is an atomic operation per entity
@@ -522,6 +512,24 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
         return query.update(operations).execute(options);
+    }
+
+    /**
+     * Updates all entities found with the operations; this is an atomic operation per entity
+     *
+     * @param query      the query used to match the documents to update
+     * @param operations the update operations to perform
+     * @param <T>        the type of the entity
+     * @return the results of the updates
+     * @deprecated use {@link Query#update()} instead.  Please note the default has changed from multi- to single- document updates.
+     */
+    @SuppressWarnings("removal")
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations) {
+        return query.update(operations).execute(new UpdateOptions()
+                                                    .upsert(false)
+                                                    .multi(true)
+                                                    .writeConcern(getMapper().getWriteConcern(((LegacyQuery) query).getEntityClass())));
     }
 
     /**

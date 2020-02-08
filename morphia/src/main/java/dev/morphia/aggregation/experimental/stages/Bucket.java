@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
  * <p>
  * $bucket only produces output documents for buckets that contain at least one input document.
  *
- * @mongodb.driver.manual reference/operator/aggregation/bucket/ $bucket
+ * @aggregation.expression $bucket
  */
 public class Bucket extends Stage {
     private Expression groupBy;

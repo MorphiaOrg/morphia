@@ -20,18 +20,15 @@ import org.bson.types.ObjectId;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
 
 /**
  * Utility to write out to a Document
+ *
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
 public class DocumentWriter implements BsonWriter {
-    private Stack<Object> state = new Stack<>();
-    private Object root;
+    private WriteState state;
     private int arraysLevel;
     private int docsLevel;
 
@@ -39,35 +36,7 @@ public class DocumentWriter implements BsonWriter {
      * Creates a new Writer
      */
     public DocumentWriter() {
-        push(new RootSlab());
-    }
-
-    /**
-     * @return a number
-     * @morphia.internal
-     */
-    public int getArraysLevel() {
-        return arraysLevel;
-    }
-
-    /**
-     * @return a number
-     * @morphia.internal
-     */
-    public int getDocsLevel() {
-        return docsLevel;
-    }
-
-    /**
-     * @return the stack
-     * @morphia.internal
-     */
-    public Stack<Object> getState() {
-        return state;
-    }
-
-    private void push(final Object o) {
-        state.push(o);
+        state = new RootState(this);
     }
 
     /**
@@ -76,15 +45,7 @@ public class DocumentWriter implements BsonWriter {
      * @param seed the seed Document
      */
     public DocumentWriter(final Document seed) {
-        push(new RootSlab(seed));
-    }
-
-    /**
-     * @param <T> the root type
-     * @return the root, or output, of this writer.  usually a Document.
-     */
-    public <T> T getRoot() {
-        return (T) root;
+        state = new DocumentState(this, seed);
     }
 
     /**
@@ -107,121 +68,137 @@ public class DocumentWriter implements BsonWriter {
     public void flush() {
     }
 
+    /**
+     * @return a number
+     * @morphia.internal
+     */
+    public int getArraysLevel() {
+        return arraysLevel;
+    }
+
+    /**
+     * @return a number
+     * @morphia.internal
+     */
+    public int getDocsLevel() {
+        return docsLevel;
+    }
+
+    /**
+     * @return the root, or output, of this writer.  usually a Document.
+     */
+    public Document getDocument() {
+        return ((DocumentState) state).getDocument();
+    }
+
+    /**
+     * @return the stack
+     * @morphia.internal
+     */
+    public WriteState state() {
+        return state;
+    }
+
+    @Override
+    public String toString() {
+        return state.toString();
+    }
+
     @Override
     public void writeBinaryData(final BsonBinary binary) {
-        value(binary);
+        state.value(binary);
     }
 
     @Override
     public void writeBinaryData(final String name, final BsonBinary binary) {
-        document().put(name, binary);
+        state.name(name).value(binary);
     }
 
     @Override
     public void writeBoolean(final boolean value) {
-        value(value);
+        state.value(value);
     }
 
     @Override
     public void writeBoolean(final String name, final boolean value) {
-        document().put(name, value);
+        state.name(name).value(value);
     }
 
     @Override
     public void writeDateTime(final long value) {
-        value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
+        state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
     }
 
     @Override
     public void writeDateTime(final String name, final long value) {
-        document().put(name, LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
+        state.name(name).value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
     }
 
     @Override
     public void writeDBPointer(final BsonDbPointer value) {
-        value(value);
+        state.value(value);
     }
 
     @Override
     public void writeDBPointer(final String name, final BsonDbPointer value) {
-        document().put(name, value);
+        state.name(name).value(value);
     }
 
     @Override
     public void writeDouble(final double value) {
-        value(value);
+        state.value(value);
     }
 
     @Override
     public void writeDouble(final String name, final double value) {
-        document().put(name, value);
+        state.name(name).value(value);
     }
 
     @Override
     public void writeEndArray() {
         arraysLevel--;
-        pop();
+        state.end();
     }
 
     @Override
     public void writeEndDocument() {
         docsLevel--;
-        pop();
+        state.end();
     }
 
     @Override
     public void writeInt32(final int value) {
-        value(value);
+        state.value(value);
     }
 
     @Override
     public void writeInt32(final String name, final int value) {
-        document().put(name, value);
+        state.name(name).value(value);
     }
 
     @Override
     public void writeInt64(final long value) {
-        value(value);
+        state.value(value);
     }
 
     @Override
     public void writeInt64(final String name, final long value) {
-        document().put(name, value);
+        state.name(name).value(value);
     }
 
     @Override
     public void writeDecimal128(final Decimal128 value) {
-        value(value);
+        state.value(value);
     }
 
     @Override
     public void writeDecimal128(final String name, final Decimal128 value) {
-        document().put(name, value);
+        state.name(name).value(value);
     }
 
     @Override
     public void writeJavaScript(final String code) {
-        value(code);
-    }
-
-    @Override
-    public void writeJavaScript(final String name, final String code) {
-        document().put(name, code);
-    }
-
-    @Override
-    public void writeJavaScriptWithScope(final String code) {
-        value(code);
-    }
-
-    @Override
-    public void writeJavaScriptWithScope(final String name, final String code) {
-        document().put(name, code);
-    }
-
-    @Override
-    public void writeMaxKey() {
-        value(new BsonMaxKey());
+        state.value(code);
     }
 
     @Override
@@ -231,8 +208,8 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
-    public void writeMinKey() {
-        value(new BsonMinKey());
+    public void writeJavaScript(final String name, final String code) {
+        state.name(name).value(code);
     }
 
     @Override
@@ -242,50 +219,44 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
+    public void writeJavaScriptWithScope(final String code) {
+        state.value(code);
+    }
+
+    @Override
+    public void writeJavaScriptWithScope(final String name, final String code) {
+        state.name(name).value(code);
+    }
+
+    @Override
+    public void writeMaxKey() {
+        state.value(new BsonMaxKey());
+    }
+
+    @Override
+    public void writeMinKey() {
+        state.value(new BsonMinKey());
+    }
+
+    @Override
     public void writeName(final String name) {
-        Document document = peek();
-        final ValueSlab value = new ValueSlab(name);
-        document.put(name, value);
-        push(value);
+        state.name(name);
     }
 
     @Override
     public void writeNull() {
-        value(null);
+        state.value(null);
     }
 
     @Override
     public void writeNull(final String name) {
         writeName(name);
-        value(null);
+        state.value(null);
     }
 
     @Override
     public void writeObjectId(final ObjectId objectId) {
-        value(objectId);
-    }
-
-    @Override
-    public void writeObjectId(final String name, final ObjectId objectId) {
-        document().put(name, objectId);
-    }
-
-    @Override
-    public void writeRegularExpression(final BsonRegularExpression regularExpression) {
-        value(regularExpression);
-    }
-
-    @Override
-    public void writeRegularExpression(final String name, final BsonRegularExpression regularExpression) {
-        document().put(name, regularExpression);
-    }
-
-    @Override
-    public void writeStartArray() {
-        arraysLevel++;
-        final List<Object> list = new ArrayList<>();
-        value(list);
-        push(new ListSlab(list));
+        state.value(objectId);
     }
 
     @Override
@@ -295,32 +266,30 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
+    public void writeObjectId(final String name, final ObjectId objectId) {
+        state.name(name).value(objectId);
+    }
+
+    @Override
+    public void writeRegularExpression(final BsonRegularExpression regularExpression) {
+        state.value(regularExpression);
+    }
+
+    @Override
+    public void writeRegularExpression(final String name, final BsonRegularExpression regularExpression) {
+        state.name(name).value(regularExpression);
+    }
+
+    @Override
+    public void writeStartArray() {
+        arraysLevel++;
+        state = state.array();
+    }
+
+    @Override
     public void writeStartDocument() {
         docsLevel++;
-        final Document document = new Document();
-        value(document);
-        push(document);
-    }
-
-    @Override
-    public void writeStartDocument(final String name) {
-        writeName(name);
-        writeStartDocument();
-    }
-
-    @Override
-    public void writeString(final String value) {
-        value(value);
-    }
-
-    @Override
-    public void writeString(final String name, final String value) {
-        document().put(name, value);
-    }
-
-    @Override
-    public void writeSymbol(final String value) {
-        value(new BsonSymbol(value));
+        state.document();
     }
 
     @Override
@@ -330,19 +299,19 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
-    public void writeTimestamp(final BsonTimestamp value) {
-        value(value);
+    public void writeStartDocument(final String name) {
+        state.name(name).document();
+        docsLevel++;
     }
 
     @Override
-    public void writeTimestamp(final String name, final BsonTimestamp value) {
-        writeName(name);
-        value(value);
+    public void writeString(final String value) {
+        state.value(value);
     }
 
     @Override
-    public void writeUndefined() {
-        value(new BsonUndefined());
+    public void writeString(final String name, final String value) {
+        state.name(name).value(value);
     }
 
     @Override
@@ -356,90 +325,31 @@ public class DocumentWriter implements BsonWriter {
         throw new UnsupportedOperationException("org.bson.io.TestingDocumentWriter.pipe has not yet been implemented.");
     }
 
-    private Document document() {
-        return (Document) peek();
-    }
-
-    private <T> T peek() {
-        return (T) state.peek();
-    }
-
-    private void value(final Object value) {
-        ((ValueSlab) pop()).apply(value);
-    }
-
-    private <T> T pop() {
-        final Object pop = state.pop();
-        try {
-            return (T) pop;
-        } catch (ClassCastException e) {
-            throw new IllegalStateException("Tried to end the wrong state.  The current state is: " + pop.getClass(), e);
-        }
+    @Override
+    public void writeSymbol(final String value) {
+        state.value(new BsonSymbol(value));
     }
 
     @Override
-    public String toString() {
-        return root == null ? "<empty>" : root.toString();
+    public void writeTimestamp(final BsonTimestamp value) {
+        state.value(value);
     }
 
-    private class ValueSlab {
-        private String name;
-
-        private ValueSlab(final String name) {
-            this.name = name;
-        }
-
-        public void apply(final Object value) {
-            document().put(name, value);
-        }
-
-        @Override
-        public String toString() {
-            return "Calculating...";
-        }
+    @Override
+    public void writeTimestamp(final String name, final BsonTimestamp value) {
+        writeName(name);
+        state.value(value);
     }
 
-    private final class RootSlab extends ValueSlab {
-        private Document seed;
-
-        private RootSlab() {
-            super(null);
-        }
-
-        private RootSlab(final Document seed) {
-            super(null);
-            this.seed = seed;
-        }
-
-        @Override
-        public void apply(final Object value) {
-            if (seed != null) {
-                if (value instanceof Document) {
-                    ((Document) value).putAll(seed);
-                    seed = null;
-                }
-            }
-            root = value;
-        }
+    @Override
+    public void writeUndefined() {
+        state.value(new BsonUndefined());
     }
 
-    private final class ListSlab extends ValueSlab {
-        private List<Object> list;
-
-        private ListSlab(final List<Object> list) {
-            super(null);
-            this.list = list;
-        }
-
-        @Override
-        public void apply(final Object value) {
-            list.add(value);
-            push(this);
-        }
-
-        @Override
-        public String toString() {
-            return list.toString();
-        }
+    WriteState state(final WriteState state) {
+        final WriteState previous = this.state;
+        this.state = state;
+        return previous;
     }
+
 }

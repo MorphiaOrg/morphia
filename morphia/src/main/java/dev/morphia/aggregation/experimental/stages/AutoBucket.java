@@ -13,7 +13,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression
  * inclusive lower bound and the exclusive upper bound for the bucket, and a count field that contains the number of documents in the
  * bucket. The count field is included by default when the output is not specified.
  *
- * @mongodb.driver.manual reference/operator/aggregation/bucketAuto/ $bucketAuto
+ * @aggregation.expression $bucketAuto
  */
 public class AutoBucket extends Stage {
     private Expression groupBy;

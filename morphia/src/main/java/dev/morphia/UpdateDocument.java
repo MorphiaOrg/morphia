@@ -35,7 +35,7 @@ public class UpdateDocument implements Bson {
         MorphiaCodec codec = (MorphiaCodec) codecRegistry.get(entity.getClass());
         codec.encode(writer, entity, EncoderContext.builder().build());
 
-        Document document = writer.getRoot();
+        Document document = writer.getDocument();
         document.remove("_id");
         MappedField versionField = codec.getMappedClass().getVersionField();
         if (versionField != null) {

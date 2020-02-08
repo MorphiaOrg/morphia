@@ -3,7 +3,7 @@ package dev.morphia.aggregation.experimental.stages;
 /**
  * Limits the number of documents passed to the next stage in the pipeline.
  *
- * @mongodb.driver.manual reference/operator/aggregation/limit/ $limit
+ * @aggregation.expression $limit
  */
 public class Limit extends Stage {
     private int limit;

@@ -544,7 +544,7 @@ public class Mapper {
             EncoderContext.builder()
                           .build());
 
-        return writer.getRoot();
+        return writer.getDocument();
     }
 
     /**

@@ -41,8 +41,9 @@ public class TestTextSearching extends TestBase {
 
         List<Greeting> good = getDs().find(Greeting.class)
                                      .search("good")
-                                     .order(ascending("_id"))
-                                     .execute().toList();
+                                     .execute(new FindOptions()
+                                                  .sort(ascending("_id")))
+                                     .toList();
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);
         Assert.assertEquals("good afternoon", good.get(1).value);
@@ -51,8 +52,9 @@ public class TestTextSearching extends TestBase {
 
         good = getDs().find(Greeting.class)
                       .search("good", "english")
-                      .order(ascending("_id"))
-                      .execute().toList();
+                      .execute(new FindOptions()
+                                   .sort(ascending("_id")))
+                      .toList();
         Assert.assertEquals(4, good.size());
         Assert.assertEquals("good morning", good.get(0).value);
         Assert.assertEquals("good afternoon", good.get(1).value);

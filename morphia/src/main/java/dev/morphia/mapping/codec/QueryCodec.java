@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.QueryImpl;
+import dev.morphia.query.LegacyQuery;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -12,7 +12,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * Defines a codec for Query instances
  */
-public class QueryCodec implements Codec<QueryImpl> {
+public class QueryCodec implements Codec<LegacyQuery> {
     private Mapper mapper;
 
     /**
@@ -25,17 +25,17 @@ public class QueryCodec implements Codec<QueryImpl> {
     }
 
     @Override
-    public QueryImpl decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public LegacyQuery decode(final BsonReader reader, final DecoderContext decoderContext) {
         return null;
     }
 
     @Override
-    public void encode(final BsonWriter writer, final QueryImpl value, final EncoderContext encoderContext) {
+    public void encode(final BsonWriter writer, final LegacyQuery value, final EncoderContext encoderContext) {
         mapper.getCodecRegistry().get(Document.class).encode(writer, value.prepareQuery(), encoderContext);
     }
 
     @Override
-    public Class<QueryImpl> getEncoderClass() {
-        return QueryImpl.class;
+    public Class<LegacyQuery> getEncoderClass() {
+        return LegacyQuery.class;
     }
 }

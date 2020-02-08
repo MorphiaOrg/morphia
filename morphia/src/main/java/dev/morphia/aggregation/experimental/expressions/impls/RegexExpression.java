@@ -46,7 +46,7 @@ public class RegexExpression extends Expression {
      * @param pattern the regular expression
      * @return this
      */
-    public RegexExpression regex(final String pattern) {
+    public RegexExpression pattern(final String pattern) {
         this.regex = pattern;
         return this;
     }
@@ -57,7 +57,7 @@ public class RegexExpression extends Expression {
      * @param pattern the regular expression
      * @return this
      */
-    public RegexExpression regex(final Pattern pattern) {
+    public RegexExpression pattern(final Pattern pattern) {
         this.regex = pattern.pattern();
         return this;
     }

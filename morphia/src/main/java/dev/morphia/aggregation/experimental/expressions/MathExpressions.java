@@ -25,7 +25,7 @@ public final class MathExpressions {
      * @param first      the first expression to sum
      * @param additional any subsequent expressions to include in the sum
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/add $add
+     * @aggregation.expression $add
      */
     public static MathExpression add(final Expression first, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
@@ -40,7 +40,7 @@ public final class MathExpressions {
      * @param numerator the numerator
      * @param divisor   the divisor
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/divide $divide
+     * @aggregation.expression $divide
      */
     public static Expression divide(final Expression numerator, final Expression divisor) {
         return new MathExpression("$divide", List.of(numerator, divisor));
@@ -52,7 +52,7 @@ public final class MathExpressions {
      * @param first      the first expression to add
      * @param additional any additional expressions
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/multiply $multiply
+     * @aggregation.expression $multiply
      */
     public static Expression multiply(final Expression first, final Expression... additional) {
         List<Expression> expressions = new ArrayList<>(asList(first));
@@ -65,7 +65,7 @@ public final class MathExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/abs $abs
+     * @aggregation.expression $abs
      */
     public static Expression abs(final Expression value) {
         return new MathExpression("$abs", value);
@@ -76,7 +76,7 @@ public final class MathExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/ceil $ceil
+     * @aggregation.expression $ceil
      */
     public static Expression ceil(final Expression value) {
         return new MathExpression("$ceil", value);
@@ -87,7 +87,7 @@ public final class MathExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/exp $exp
+     * @aggregation.expression $exp
      */
     public static Expression exp(final Expression value) {
         return new MathExpression("$exp", value);
@@ -98,7 +98,7 @@ public final class MathExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/floor $floor
+     * @aggregation.expression $floor
      */
     public static Expression floor(final Expression value) {
         return new MathExpression("$floor", value);
@@ -109,7 +109,7 @@ public final class MathExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/ln $ln
+     * @aggregation.expression $ln
      */
     public static Expression ln(final Expression value) {
         return new MathExpression("$ln", value);
@@ -121,7 +121,7 @@ public final class MathExpressions {
      * @param number the number to log
      * @param base   the base to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/log $log
+     * @aggregation.expression $log
      */
     public static Expression log(final Expression number, final Expression base) {
         return new MathExpression("$log", List.of(number, base));
@@ -132,7 +132,7 @@ public final class MathExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/log10 $log10
+     * @aggregation.expression $log10
      */
     public static Expression log10(final Expression value) {
         return new MathExpression("$log10", value);
@@ -144,7 +144,7 @@ public final class MathExpressions {
      * @param dividend the dividend
      * @param divisor  the divisor
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/mod $mod
+     * @aggregation.expression $mod
      */
     public static Expression mod(final Expression dividend, final Expression divisor) {
         return new MathExpression("$mod", List.of(dividend, divisor));
@@ -156,7 +156,7 @@ public final class MathExpressions {
      * @param number   the base name
      * @param exponent the exponent
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/pow $pow
+     * @aggregation.expression $pow
      */
     public static Expression pow(final Expression number, final Expression exponent) {
         return new MathExpression("$pow", List.of(number, exponent));
@@ -168,7 +168,7 @@ public final class MathExpressions {
      * @param number the value
      * @param place  the place to round to
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/round $round
+     * @aggregation.expression $round
      */
     public static Expression round(final Expression number, final Expression place) {
         return new MathExpression("$round", List.of(number, place));
@@ -179,7 +179,7 @@ public final class MathExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/sqrt $sqrt
+     * @aggregation.expression $sqrt
      */
     public static Expression sqrt(final Expression value) {
         return new MathExpression("$sqrt", value);
@@ -194,7 +194,7 @@ public final class MathExpressions {
      * @param minuend    the number to subtract from
      * @param subtrahend the number to subtract
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/subtract $subtract
+     * @aggregation.expression $subtract
      */
     public static Expression subtract(final Expression minuend, final Expression subtrahend) {
         return new MathExpression("$subtract", List.of(minuend, subtrahend));
@@ -206,7 +206,7 @@ public final class MathExpressions {
      * @param number the value
      * @param place  the place to trunc to
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/trunc $trunc
+     * @aggregation.expression $trunc
      */
     public static Expression trunc(final Expression number, final Expression place) {
         return new MathExpression("$trunc", List.of(number, place));

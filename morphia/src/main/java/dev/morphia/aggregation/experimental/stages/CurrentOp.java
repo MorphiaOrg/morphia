@@ -4,7 +4,7 @@ package dev.morphia.aggregation.experimental.stages;
  * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
  * holding locks as part of a transaction.
  *
- * @mongodb.driver.manual reference/operator/aggregation/currentOp/ $currentOp
+ * @aggregation.expression $currentOp
  */
 public class CurrentOp extends Stage {
     private boolean allUsers;

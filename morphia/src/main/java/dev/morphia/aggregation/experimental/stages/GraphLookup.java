@@ -6,7 +6,7 @@ import dev.morphia.query.Query;
 /**
  * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.
  *
- * @mongodb.driver.manual reference/operator/aggregation/graphLookup/ $graphLookup
+ * @aggregation.expression $graphLookup
  */
 public class GraphLookup extends Stage {
     private String from;

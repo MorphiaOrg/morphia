@@ -8,7 +8,7 @@ import org.bson.codecs.EncoderContext;
 
 public class LetExpression extends Expression {
     private final Expression in;
-    private DocumentExpression documentExpression = Expressions.of();
+    private DocumentExpression variables = Expressions.of();
 
     public LetExpression(final Expression in) {
         super("$let");
@@ -20,7 +20,7 @@ public class LetExpression extends Expression {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         writer.writeName("vars");
-        documentExpression.encode(mapper, writer, encoderContext);
+        variables.encode(mapper, writer, encoderContext);
         ExpressionCodec.writeNamedExpression(mapper, writer, "in", in, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
@@ -34,7 +34,7 @@ public class LetExpression extends Expression {
      * @return this
      */
     public LetExpression variable(final String name, final Expression expression) {
-        documentExpression.field(name, expression);
+        variables.field(name, expression);
         return this;
     }
 }

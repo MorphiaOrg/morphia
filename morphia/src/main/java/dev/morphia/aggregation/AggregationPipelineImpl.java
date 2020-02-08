@@ -11,8 +11,8 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
+import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryImpl;
 import dev.morphia.query.Sort;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -98,7 +98,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         putIfNull(geo, "num", geoNear.getMaxDocuments());
         putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
         if (geoNear.getQuery() != null) {
-            geo.put("query", ((QueryImpl) geoNear.getQuery()).prepareQuery());
+            geo.put("query", ((LegacyQuery) geoNear.getQuery()).prepareQuery());
         }
         putIfNull(geo, "spherical", geoNear.getSpherical());
         putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
@@ -161,7 +161,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline match(final Query query) {
-        stages.add(new Document("$match", ((QueryImpl) query).prepareQuery()));
+        stages.add(new Document("$match", ((LegacyQuery) query).prepareQuery()));
         return this;
     }
 

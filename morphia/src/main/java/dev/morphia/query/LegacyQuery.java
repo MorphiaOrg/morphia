@@ -37,8 +37,8 @@ import static java.lang.String.format;
  * @param <T> The type we will be querying for, and returning.
  */
 @SuppressWarnings("removal")
-public class QueryImpl<T> implements CriteriaContainer, Query<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
+public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;
     private final Class<T> clazz;
     private final Mapper mapper;
@@ -51,6 +51,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     private String collectionName;
     private MongoCollection<T> collection;
     private FindOptions previousOptions;
+    private final MappedClass mappedClass;
 
     /**
      * Creates a Query for the given type and collection
@@ -58,10 +59,11 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
      * @param clazz     the type to return
      * @param datastore the Datastore to use
      */
-    public QueryImpl(final Class<T> clazz, final Datastore datastore) {
+    public LegacyQuery(final Class<T> clazz, final Datastore datastore) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();
+        mappedClass = mapper.getMappedClass(clazz);
 
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
     }
@@ -88,24 +90,37 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
                                                     .append("filter", getQueryDocument()))));
     }
 
+/*
     @Override
-    public FieldEnd<? extends Query<T>> field(final String name) {
-        return new FieldEndImpl<>(mapper, this, name, this);
+    public Query<T> expr(final Expression expression) {
+        throw new UnsupportedOperationException();
+    }
+*/
+
+    @Override
+    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
+        add(container);
+
+        return new FieldEndImpl<CriteriaContainer>(mapper, field, container, mappedClass, this.isValidatingNames());
     }
 
     @Override
-    public Query<T> filter(final String condition, final Object value) {
-        final String[] parts = condition.trim().split(" ");
-        if (parts.length < 1 || parts.length > 6) {
-            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
         }
-
-        final String prop = parts[0].trim();
-        final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
-
-        add(new FieldCriteria(mapper, this, prop, op, value));
-
-        return this;
+        if (!(o instanceof LegacyQuery)) {
+            return false;
+        }
+        final LegacyQuery<?> query = (LegacyQuery<?>) o;
+        return validateName == query.validateName
+               && validateType == query.validateType
+               && Objects.equals(clazz, query.clazz)
+               && Objects.equals(baseQuery, query.baseQuery)
+               && Objects.equals(getOptions(), query.getOptions())
+               && Objects.equals(compoundContainer, query.compoundContainer)
+               && Objects.equals(getCollectionName(), query.getCollectionName());
     }
 
     @Override
@@ -184,14 +199,8 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MorphiaKeyCursor<T> keys(final FindOptions options) {
-        FindOptions returnKey = new FindOptions(options)
-                                    .projection()
-                                    .include("_id");
-
-        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            clazz, getCollectionName());
+    public FieldEnd<? extends Query<T>> field(final String name) {
+        return new FieldEndImpl<>(mapper, name, this, mappedClass, this.isValidatingNames());
     }
 
     @Override
@@ -239,8 +248,18 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Modify<T> modify() {
-        return new Modify<>(this);
+    public Query<T> filter(final String condition, final Object value) {
+        final String[] parts = condition.trim().split(" ");
+        if (parts.length < 1 || parts.length > 6) {
+            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
+        }
+
+        final String prop = parts[0].trim();
+        final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
+
+        add(new FieldCriteria(mapper, prop, op, value, mapper.getMappedClass(this.getEntityClass()), this.isValidatingNames()));
+
+        return this;
     }
 
     @Override
@@ -271,7 +290,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return new Update<>(datastore, mapper, clazz, getCollection(), this);
     }
 
-    @Override
     @Deprecated(since = "2.0", forRemoval = true)
     public Update<T> update(final Document document) {
         final Update<T> updates = update();
@@ -289,65 +307,28 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return updates;
     }
 
+    @Override
+    public MorphiaKeyCursor<T> keys(final FindOptions options) {
+        FindOptions returnKey = new FindOptions().copy(options)
+                                                 .projection()
+                                                 .include("_id");
+
+        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
+            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
+            clazz, getCollectionName());
+    }
+
+    @Override
+    public Modify<T> modify() {
+        return new Modify<>(this, datastore, mapper, clazz, collection);
+    }
+
     /**
      * @return the logged query
      * @morphia.internal
      */
     public String getLoggedQuery() {
-        if (previousOptions != null && previousOptions.isLogQuery()) {
-            String json = "{}";
-            Document first = datastore.getDatabase()
-                                      .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + previousOptions.getQueryLogId()),
-                                          Document.class)
-                                      .projection(new Document("command.filter", 1))
-                                      .first();
-            if (first != null) {
-                Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
-                if (filter != null) {
-                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
-                }
-            }
-            return json;
-        } else {
-            throw new IllegalStateException(Sofia.queryNotLogged());
-        }
-    }
-
-    private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
-        final Document query = prepareQuery();
-
-        if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
-        }
-
-        if (findOptions.getCursorType() != NonTailable && (findOptions.getSort() != null)) {
-            LOG.warn("Sorting on tail is not allowed.");
-        }
-
-        ClientSession clientSession = datastore.findSession(findOptions);
-
-        FindIterable<E> iterable = clientSession != null
-                                   ? collection.find(clientSession, query)
-                                   : collection.find(query);
-
-        Document oldProfile = null;
-        if (findOptions.isLogQuery()) {
-            oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
-        }
-        try {
-            return findOptions
-                       .apply(this, iterable, mapper, clazz)
-                       .iterator();
-        } finally {
-            if (findOptions.isLogQuery()) {
-                datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
-                                                       .append("slowms", oldProfile.get("slowms"))
-                                                       .append("sampleRate", oldProfile.get("sampleRate")));
-            }
-
-        }
+        return getLoggedQuery(previousOptions);
     }
 
     /**
@@ -420,11 +401,26 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
-        add(container);
-
-        return new FieldEndImpl<CriteriaContainer>(mapper, this, field, container);
+    public String getLoggedQuery(final FindOptions options) {
+        if (previousOptions != null && previousOptions.isLogQuery()) {
+            String json = "{}";
+            Document first = datastore.getDatabase()
+                                      .getCollection("system.profile")
+                                      .find(new Document("command.comment", "logged query: " + previousOptions.getQueryLogId()),
+                                          Document.class)
+                                      .projection(new Document("command.filter", 1))
+                                      .first();
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
+                }
+            }
+            return json;
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
+        }
     }
 
     @Override
@@ -488,22 +484,40 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         return Objects.hash(clazz, validateName, validateType, baseQuery, getOptions(), compoundContainer, getCollectionName());
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
+    private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
+        final Document query = prepareQuery();
+
+        FindOptions options = findOptions.copy().copy(getOptions());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, options));
         }
-        if (!(o instanceof QueryImpl)) {
-            return false;
+
+        if (options.getCursorType() != NonTailable && (options.getSort() != null)) {
+            LOG.warn("Sorting on tail is not allowed.");
         }
-        final QueryImpl<?> query = (QueryImpl<?>) o;
-        return validateName == query.validateName
-               && validateType == query.validateType
-               && Objects.equals(clazz, query.clazz)
-               && Objects.equals(baseQuery, query.baseQuery)
-               && Objects.equals(getOptions(), query.getOptions())
-               && Objects.equals(compoundContainer, query.compoundContainer)
-               && Objects.equals(getCollectionName(), query.getCollectionName());
+
+        ClientSession clientSession = datastore.findSession(options);
+
+        FindIterable<E> iterable = clientSession != null
+                                   ? collection.find(clientSession, query)
+                                   : collection.find(query);
+
+        Document oldProfile = null;
+        if (options.isLogQuery()) {
+            oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
+        }
+        try {
+            return options
+                       .apply(iterable, mapper, clazz)
+                       .iterator();
+        } finally {
+            if (options.isLogQuery()) {
+                datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
+                                                       .append("slowms", oldProfile.get("slowms"))
+                                                       .append("sampleRate", oldProfile.get("sampleRate")));
+            }
+
+        }
     }
 
     @Override

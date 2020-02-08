@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
 
@@ -13,9 +14,9 @@ class Geo2dCriteria extends FieldCriteria {
 
     private final Map<String, Object> opts;
 
-    Geo2dCriteria(final Mapper mapper, final QueryImpl<?> query, final String field, final FilterOperator op, final Object value,
-                  final Map<String, Object> opts) {
-        super(mapper, query, field, op, value);
+    Geo2dCriteria(final Mapper mapper, final String field, final FilterOperator op, final Object value,
+                  final Map<String, Object> opts, final MappedClass mappedClass, final boolean validating) {
+        super(mapper, field, op, value, mappedClass, validating);
         this.opts = opts;
     }
 

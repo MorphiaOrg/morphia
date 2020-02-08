@@ -10,7 +10,7 @@ import dev.morphia.sofia.Sofia;
  * Replaces the input document with the specified document. The operation replaces all existing fields in the input document, including
  * the _id field.
  *
- * @mongodb.driver.manual reference/operator/aggregation/replaceRoot/ $replaceRoot
+ * @aggregation.expression $replaceRoot
  */
 public class ReplaceRoot extends Stage {
     private Expression value;

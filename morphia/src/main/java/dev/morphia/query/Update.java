@@ -14,11 +14,11 @@ import org.bson.Document;
  * @param <T>
  */
 public class Update<T> extends UpdateBase<T, Update<T>> {
-    private QueryImpl query;
+    private Query query;
     private MongoCollection<T> collection;
 
     Update(final DatastoreImpl datastore, final Mapper mapper, final Class<T> clazz, final MongoCollection<T> collection,
-           final QueryImpl query) {
+           final Query query) {
         super(datastore, mapper, clazz);
         this.collection = collection;
         this.query = query;
@@ -42,7 +42,12 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
     public UpdateResult execute(final UpdateOptions options) {
         MongoCollection mongoCollection = options.apply(collection);
         Document updateOperations = toDocument();
-        final Document queryObject = query.prepareQuery();
+        final Document queryObject = null; //query.prepareQuery();
+        if (1 == 1) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        }
+
         ClientSession session = getDatastore().findSession(options);
         if (options.isMulti()) {
             return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)

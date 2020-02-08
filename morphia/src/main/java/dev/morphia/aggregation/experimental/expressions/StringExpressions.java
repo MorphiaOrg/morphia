@@ -23,7 +23,7 @@ public final class StringExpressions {
      * @param first      the first array expression
      * @param additional additional expressions
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/concat $concat
+     * @aggregation.expression $concat
      */
     public static Expression concat(final Expression first, final Expression... additional) {
         return new Expression("$concat", Expressions.toList(first, additional));
@@ -36,7 +36,7 @@ public final class StringExpressions {
      * @param string    the string to search
      * @param substring the target string
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/indexOfBytes $indexOfBytes
+     * @aggregation.expression $indexOfBytes
      */
     public static IndexExpression indexOfBytes(final Expression string, final Expression substring) {
         return new IndexExpression("$indexOfBytes", string, substring);
@@ -49,7 +49,7 @@ public final class StringExpressions {
      * @param string    the string to search
      * @param substring the target string
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/indexOfCP $indexOfCP
+     * @aggregation.expression $indexOfCP
      */
     public static IndexExpression indexOfCP(final Expression string, final Expression substring) {
         return new IndexExpression("$indexOfCP", string, substring);
@@ -60,7 +60,7 @@ public final class StringExpressions {
      *
      * @param input The string to trim. The argument can be any valid expression that resolves to a string.
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/ltrim $ltrim
+     * @aggregation.expression $ltrim
      */
     public static TrimExpression ltrim(final Expression input) {
         return new TrimExpression("$ltrim", input);
@@ -71,7 +71,7 @@ public final class StringExpressions {
      *
      * @param input the string to evaluate
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/regexFind $regexFind
+     * @aggregation.expression $regexFind
      */
     public static RegexExpression regexFind(final Expression input) {
         return new RegexExpression("$regexFind", input);
@@ -82,7 +82,7 @@ public final class StringExpressions {
      *
      * @param input the string to evaluate
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/regexFindAll $regexFindAll
+     * @aggregation.expression $regexFindAll
      */
     public static RegexExpression regexFindAll(final Expression input) {
         return new RegexExpression("$regexFindAll", input);
@@ -93,7 +93,7 @@ public final class StringExpressions {
      *
      * @param input the string to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/regexMatch $regexMatch
+     * @aggregation.expression $regexMatch
      */
     public static RegexExpression regexMatch(final Expression input) {
         return new RegexExpression("$regexMatch", input);
@@ -104,7 +104,7 @@ public final class StringExpressions {
      *
      * @param input The string to trim. The argument can be any valid expression that resolves to a string.
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/rtrim $rtrim
+     * @aggregation.expression $rtrim
      */
     public static TrimExpression rtrim(final Expression input) {
         return new TrimExpression("$rtrim", input);
@@ -119,7 +119,7 @@ public final class StringExpressions {
      * @param delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it
      *                  resolves to a string.
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/split $split
+     * @aggregation.expression $split
      */
     public static Expression split(final Expression input, final Expression delimiter) {
         return new Expression("$split", asList(input, delimiter));
@@ -130,7 +130,7 @@ public final class StringExpressions {
      *
      * @param input the string to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/strLenBytes $strLenBytes
+     * @aggregation.expression $strLenBytes
      */
     public static Expression strLenBytes(final Expression input) {
         return new Expression("$strLenBytes", input);
@@ -141,7 +141,7 @@ public final class StringExpressions {
      *
      * @param input the string to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/strLenCP $strLenCP
+     * @aggregation.expression $strLenCP
      */
     public static Expression strLenCP(final Expression input) {
         return new Expression("$strLenCP", input);
@@ -154,7 +154,7 @@ public final class StringExpressions {
      * @param first  the first string to compare
      * @param second the first string to second
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/strcasecmp $strcasecmp
+     * @aggregation.expression $strcasecmp
      */
     public static Expression strcasecmp(final Expression first, final Expression second) {
         return new Expression("$strcasecmp", asList(first, second));
@@ -169,7 +169,7 @@ public final class StringExpressions {
      * @param start  the starting position
      * @param length the number of characters
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/substr $substr
+     * @aggregation.expression $substr
      * @deprecated use {@link #substrBytes(Expression, int, int)}
      */
     public static Expression substr(final Expression input, final int start, final int length) {
@@ -184,7 +184,7 @@ public final class StringExpressions {
      * @param start  Indicates the starting point of the substring
      * @param length the byte count to include.  Can not result in an ending index that is in the middle of a UTF-8 character.
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/substrBytes $substrBytes
+     * @aggregation.expression $substrBytes
      */
     public static Expression substrBytes(final Expression input, final int start, final int length) {
         return new Expression("$substrBytes", asList(input, start, length));
@@ -198,7 +198,7 @@ public final class StringExpressions {
      * @param start  Indicates the starting point of the substring
      * @param length the code points to include.
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/substrCP $substrCP
+     * @aggregation.expression $substrCP
      */
     public static Expression substrCP(final Expression input, final int start, final int length) {
         return new Expression("$substrCP", asList(input, start, length));
@@ -209,7 +209,7 @@ public final class StringExpressions {
      *
      * @param input the string to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toLower $toLower
+     * @aggregation.expression $toLower
      */
     public static Expression toLower(final Expression input) {
         return new Expression("$toLower", input);
@@ -220,7 +220,7 @@ public final class StringExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toString $toString
+     * @aggregation.expression $toString
      */
     public static Expression toString(final Expression input) {
         return new Expression("$toString", input);
@@ -231,7 +231,7 @@ public final class StringExpressions {
      *
      * @param input the string to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/trim $trim
+     * @aggregation.expression $trim
      */
     public static TrimExpression trim(final Expression input) {
         return new TrimExpression("$trim", input);
@@ -242,7 +242,7 @@ public final class StringExpressions {
      *
      * @param input the string to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toUpper $toUpper
+     * @aggregation.expression $toUpper
      */
     public static Expression toUpper(final Expression input) {
         return new Expression("$toUpper", input);

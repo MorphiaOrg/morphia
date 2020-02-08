@@ -58,7 +58,7 @@ class OperationTarget {
             Codec codec = mapper.getCodecRegistry().get(mappedValue.getClass());
             DocumentWriter writer = new DocumentWriter();
             codec.encode(writer, mappedValue, EncoderContext.builder().build());
-            mappedValue = writer.getRoot();
+            mappedValue = writer.getDocument();
         }
         return new Document(target.translatedPath(), mappedValue);
     }

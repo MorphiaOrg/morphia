@@ -36,6 +36,7 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Out;
@@ -60,6 +61,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.size;
@@ -67,7 +69,6 @@ import static dev.morphia.aggregation.experimental.expressions.ComparisonExpress
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
@@ -414,6 +415,33 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(inventories.get(4), lookups.get(2).getInventoryDocs().get(0));
         Assert.assertEquals(inventories.get(5), lookups.get(2).getInventoryDocs().get(1));
     }
+
+/*
+    @Test
+    public void testLookupWithPipeline() {
+        getDatabase().getCollection("orders").insertMany(List.of(
+            parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
+            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
+            parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
+
+        getDatabase().getCollection("warehouses").insertMany(List.of(
+            parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
+            parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
+            parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
+            parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
+            parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
+
+        getDs().aggregate("orders")
+               .lookup(Lookup.from("warehouses")
+                      .let("order_item", field("item"))
+                      .let("order_qty", field("ordered"))
+                      .pipeline(
+                          Match.on(getDs().find()
+                                       .expr())
+
+                               ))
+    }
+*/
 
     @Test
     public void testMerge() {

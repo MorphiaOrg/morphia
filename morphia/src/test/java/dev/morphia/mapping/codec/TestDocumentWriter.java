@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec;
 import dev.morphia.TestBase;
 import org.bson.Document;
 import org.json.JSONException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class TestDocumentWriter extends TestBase {
     @Test
     public void nesting() throws JSONException {
-        String expected = "{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: " 
+        String expected = "{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: "
                           + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
 
         DocumentWriter writer = new DocumentWriter();
@@ -44,8 +45,55 @@ public class TestDocumentWriter extends TestBase {
 
         writer.writeEndDocument();
         writer.writeEndDocument();
-        String s = writer.<Document>getRoot().toJson();
+        String s = writer.getDocument().toJson();
         JSONAssert.assertEquals(expected, s, false);
+    }
+
+    @Test
+    public void testBasic() {
+        DocumentWriter writer = new DocumentWriter();
+
+        writer.writeStartDocument();
+        writer.writeEndDocument();
+
+        check(writer, 0, 0);
+        Document document = writer.getDocument();
+        assertEquals(new Document(), document);
+
+        writer = new DocumentWriter();
+        writer.writeStartDocument();
+        writer.writeName("first");
+        writer.writeInt32(42);
+        writer.writeName("second");
+        writer.writeBoolean(false);
+        writer.writeInt64("third", 100L);
+        writer.writeEndDocument();
+
+        check(writer, 0, 0);
+        assertEquals(new Document("first", 42)
+                         .append("second", false)
+                         .append("third", 100L),
+            writer.getDocument());
+    }
+
+    @Test
+    public void testDuplicateKeys() {
+        DocumentWriter writer = new DocumentWriter();
+        writer.writeStartDocument();
+
+        writer.writeStartDocument("id");
+        writer.writeInt32("first", 1);
+        writer.writeEndDocument();
+
+        writer.writeStartDocument("id");
+        writer.writeInt32("second", 2);
+        writer.writeEndDocument();
+
+        writer.writeEndDocument();
+
+        Document document = writer.getDocument();
+
+        Assert.assertTrue(document.containsKey("first"));
     }
 
     @Test
@@ -65,6 +113,22 @@ public class TestDocumentWriter extends TestBase {
         writer.writeEndDocument();
         check(writer, 0, 0);
     }
+
+    @Test
+    public void testSubdocuments() {
+        DocumentWriter writer = new DocumentWriter();
+        writer.writeStartDocument();
+        writer.writeName("subdoc");
+        writer.writeStartDocument();
+        writer.writeInt32("nested", 42);
+        writer.writeEndDocument();
+        writer.writeEndDocument();
+
+        check(writer, 0, 0);
+        assertEquals(new Document("subdoc", new Document("nested", 42)), writer.getDocument());
+
+    }
+
 
     private void check(final DocumentWriter writer, final int docs, final int arrays) {
         assertEquals(docs, writer.getDocsLevel());

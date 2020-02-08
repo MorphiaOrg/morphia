@@ -3,7 +3,7 @@ package dev.morphia.query;
 /**
  * Used for sorting query results or defining a sort stage in an aggregation pipeline
  *
- * @mongodb.driver.manual reference/operator/aggregation/sort/ $sort
+ * @aggregation.expression $sort
  * @since 1.3
  */
 public class Sort {

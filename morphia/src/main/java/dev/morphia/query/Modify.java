@@ -3,8 +3,10 @@ package dev.morphia.query;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.ReturnDocument;
+import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.FindAndModifyOptions;
+import dev.morphia.mapping.Mapper;
 
 /**
  * Represents a modify operation
@@ -12,13 +14,13 @@ import dev.morphia.FindAndModifyOptions;
  * @param <T> the entity type
  */
 public class Modify<T> extends UpdateBase<T, Modify<T>> {
-    private final QueryImpl<T> query;
+    private final Query<T> query;
     private final MongoCollection<T> collection;
 
-    Modify(final QueryImpl<T> query) {
-        super((DatastoreImpl) query.getDatastore(), query.getDatastore().getMapper(), query.getEntityClass());
+    Modify(final Query<T> query, final Datastore datastore, final Mapper mapper, final Class<T> type, final MongoCollection<T> collection) {
+        super((DatastoreImpl) datastore, mapper, type);
         this.query = query;
-        this.collection = query.getCollection();
+        this.collection = collection;
     }
 
     /**
@@ -28,9 +30,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      */
     public T execute() {
         return execute(new FindAndModifyOptions()
-                           .returnDocument(ReturnDocument.AFTER)
-                           .sort(query.getSort())
-                           .projection(query.getFieldsObject()));
+                           .returnDocument(ReturnDocument.AFTER));
     }
 
     /**
@@ -41,9 +41,11 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      */
     public T execute(final FindAndModifyOptions options) {
         ClientSession session = getDatastore().findSession(options);
-        return session == null
-               ? options.apply(collection).findOneAndUpdate(query.prepareQuery(), toDocument(), options)
-               : options.apply(collection).findOneAndUpdate(session, query.prepareQuery(), toDocument(), options);
+        throw new UnsupportedOperationException("todo");
+
+        //        return session == null
+        //               ? options.apply(collection).findOneAndUpdate(query.prepareQuery(), toDocument(), options)
+        //               : options.apply(collection).findOneAndUpdate(session, query.prepareQuery(), toDocument(), options);
 
     }
 }

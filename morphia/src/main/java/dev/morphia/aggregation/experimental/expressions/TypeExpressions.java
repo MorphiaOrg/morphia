@@ -20,7 +20,7 @@ public final class TypeExpressions {
      * @param input the value to process
      * @param to    an expression giving the target type
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/convert $convert
+     * @aggregation.expression $convert
      */
     public static Expression convert(final Expression input, final ConvertType to) {
         return new ConvertExpression(input, to);
@@ -31,7 +31,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toBool $toBool
+     * @aggregation.expression $toBool
      */
     public static Expression toBool(final Expression input) {
         return new Expression("$toBool", input);
@@ -42,7 +42,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toDate $toDate
+     * @aggregation.expression $toDate
      */
     public static Expression toDate(final Expression input) {
         return new Expression("$toDate", input);
@@ -53,7 +53,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toDecimal $toDecimal
+     * @aggregation.expression $toDecimal
      */
     public static Expression toDecimal(final Expression input) {
         return new Expression("$toDecimal", input);
@@ -64,7 +64,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toDouble $toDouble
+     * @aggregation.expression $toDouble
      */
     public static Expression toDouble(final Expression input) {
         return new Expression("$toDouble", input);
@@ -75,7 +75,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toInt $toInt
+     * @aggregation.expression $toInt
      */
     public static Expression toInt(final Expression input) {
         return new Expression("$toInt", input);
@@ -86,7 +86,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toLong $toLong
+     * @aggregation.expression $toLong
      */
     public static Expression toLong(final Expression input) {
         return new Expression("$toLong", input);
@@ -97,7 +97,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toObjectId $toObjectId
+     * @aggregation.expression $toObjectId
      */
     public static Expression toObjectId(final Expression input) {
         return new Expression("$toObjectId", input);
@@ -108,7 +108,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/toString $toString
+     * @aggregation.expression $toString
      */
     public static Expression toString(final Expression input) {
         return StringExpressions.toString(input);
@@ -119,7 +119,7 @@ public final class TypeExpressions {
      *
      * @param input the value to process
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/type $type
+     * @aggregation.expression $type
      */
     public static Expression type(final Expression input) {
         return new Expression("$type", input);

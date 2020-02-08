@@ -13,7 +13,7 @@ import dev.morphia.sofia.Sofia;
  * <p>
  * The $replaceWith is an alias for $replaceRoot.
  *
- * @mongodb.driver.manual reference/operator/aggregation/replaceWith/ $replaceWith
+ * @aggregation.expression $replaceWith
  */
 public class ReplaceWith extends Stage {
     private Expression value;

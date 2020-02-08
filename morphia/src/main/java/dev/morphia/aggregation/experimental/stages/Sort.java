@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Sorts all input documents and returns them to the pipeline in sorted order.
  *
- * @mongodb.driver.manual reference/operator/aggregation/sort $sort
+ * @aggregation.expression $sort
  */
 public class Sort extends Stage {
     private List<SortType> sorts = new ArrayList<>();

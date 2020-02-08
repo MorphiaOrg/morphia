@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
 /**
  * Defines helper methods for the array expressions
  *
- * @mongodb.driver.manual reference/operator/aggregation/#array-expression-operators Array Expressions
+ * @aggregation.expression Expressions
  * @since 2.0
  */
 public final class ArrayExpressions {
@@ -42,7 +42,7 @@ public final class ArrayExpressions {
      * @param array the array to use
      * @param index the index to return
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/arrayElemAt $arrayElemAt
+     * @aggregation.expression $arrayElemAt
      */
     public static Expression elementAt(final Expression array, final Expression index) {
         return new Expression("$arrayElemAt", List.of(array, index));
@@ -53,7 +53,7 @@ public final class ArrayExpressions {
      *
      * @param array the array to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/size $size
+     * @aggregation.expression $size
      */
     public static Expression size(final Expression array) {
         return new Expression("$size", array);
@@ -64,7 +64,7 @@ public final class ArrayExpressions {
      *
      * @param array the array to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/arrayToObject $arrayToObject
+     * @aggregation.expression $arrayToObject
      */
     public static Expression arrayToObject(final Expression array) {
         return new Expression("$arrayToObject", array);
@@ -76,7 +76,7 @@ public final class ArrayExpressions {
      * @param array      the array to use
      * @param additional any additional arrays to concatenate
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/concatArrays $concatArrays
+     * @aggregation.expression $concatArrays
      */
     public static Expression concatArrays(final Expression array, final Expression additional) {
         return new Expression("$concatArrays", asList(array, additional));
@@ -88,7 +88,7 @@ public final class ArrayExpressions {
      * @param array       the array to use
      * @param conditional the conditional to use for filtering
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/filter $filter
+     * @aggregation.expression $filter
      */
     public static ArrayFilterExpression filter(final Expression array, final Expression conditional) {
         return new ArrayFilterExpression(array, conditional);
@@ -100,7 +100,7 @@ public final class ArrayExpressions {
      * @param search the expression to search for
      * @param array  the array to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/in $in
+     * @aggregation.expression $in
      */
     public static Expression in(final Expression search, final Expression array) {
         return new Expression("$in", List.of(search, array));
@@ -113,7 +113,7 @@ public final class ArrayExpressions {
      * @param array  the array to use
      * @param search the expression to search for
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/indexOfArray $indexOfArray
+     * @aggregation.expression $indexOfArray
      */
     public static Expression indexOfArray(final Expression array, final Expression search) {
         return new ArrayIndexExpression(array, search);
@@ -124,7 +124,7 @@ public final class ArrayExpressions {
      *
      * @param array the array to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/isArray $isArray
+     * @aggregation.expression $isArray
      */
     public static Expression isArray(final Expression array) {
         return new Expression("$isArray", List.of(array));
@@ -136,7 +136,7 @@ public final class ArrayExpressions {
      * @param input the array to use
      * @param in    An expression that is applied to each element of the input array.
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/map $map
+     * @aggregation.expression $map
      */
     public static MapExpression map(final Expression input, final Expression in) {
         return new MapExpression(input, in);
@@ -147,7 +147,7 @@ public final class ArrayExpressions {
      *
      * @param array the array to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/objectToArray $objectToArray
+     * @aggregation.expression $objectToArray
      */
     public static Expression objectToArray(final Expression array) {
         return new Expression("$objectToArray", array);
@@ -159,7 +159,7 @@ public final class ArrayExpressions {
      * @param start the starting value
      * @param end   the ending value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/range $range
+     * @aggregation.expression $range
      */
     public static RangeExpression range(final int start, final int end) {
         return new RangeExpression(start, end);
@@ -172,7 +172,7 @@ public final class ArrayExpressions {
      * @param initial The initial cumulative value set before in is applied to the first element of the input array.
      * @param in      A valid expression that $reduce applies to each element in the input array in left-to-right order.
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/reduce $reduce
+     * @aggregation.expression $reduce
      */
     public static Expression reduce(final Expression input, final Expression initial, final Expression in) {
         return new ReduceExpression(input, initial, in);
@@ -183,7 +183,7 @@ public final class ArrayExpressions {
      *
      * @param array the array to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/reverseArray $reverseArray
+     * @aggregation.expression $reverseArray
      */
     public static Expression reverseArray(final Expression array) {
         return new Expression("$reverseArray", array);
@@ -195,7 +195,7 @@ public final class ArrayExpressions {
      * @param array the array to use
      * @param size  the number of elements to return
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/slice $slice
+     * @aggregation.expression $slice
      */
     public static Expression slice(final Expression array, final int size) {
         return new SliceExpression(array, size);
@@ -206,7 +206,7 @@ public final class ArrayExpressions {
      *
      * @param arrays the arrays to use
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/zip $zip
+     * @aggregation.expression $zip
      */
     public static ZipExpression zip(final Expression... arrays) {
         return new ZipExpression(asList(arrays));

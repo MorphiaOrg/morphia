@@ -8,7 +8,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.field
  * Deconstructs an array field from the input documents to output a document for each element. Each output document is the input document
  * with the value of the array field replaced by the element.
  *
- * @mongodb.driver.manual reference/operator/aggregation/unwind/ $unwind
+ * @aggregation.expression $unwind
  */
 public class Unwind extends Stage {
     private Expression path;

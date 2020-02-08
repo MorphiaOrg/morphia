@@ -47,7 +47,7 @@ public final class Expressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/literal $literal
+     * @aggregation.expression $literal
      */
     public static Expression literal(final Object value) {
         return new LiteralExpression(value);
@@ -57,7 +57,7 @@ public final class Expressions {
      * Returns the metadata associated with a document in a pipeline operations, e.g. "textScore" when performing text search.
      *
      * @return the new expression
-     * @mongodb.driver.manual reference/operator/aggregation/meta $meta
+     * @aggregation.expression $meta
      */
     public static Expression meta() {
         return new MetaExpression();

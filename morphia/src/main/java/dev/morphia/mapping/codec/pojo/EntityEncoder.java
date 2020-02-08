@@ -124,7 +124,7 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
 
         final DocumentWriter documentWriter = new DocumentWriter(document);
         encodeEntity(documentWriter, value, encoderContext);
-        document = documentWriter.getRoot();
+        document = documentWriter.getDocument();
         morphiaCodec.getMappedClass().callLifecycleMethods(PostPersist.class, value, document, morphiaCodec.getMapper());
 
         morphiaCodec.getRegistry().get(Document.class).encode(writer, document, encoderContext);

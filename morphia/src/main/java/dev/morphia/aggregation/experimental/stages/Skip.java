@@ -3,7 +3,7 @@ package dev.morphia.aggregation.experimental.stages;
 /**
  * Randomly selects the specified number of documents from its input.
  *
- * @mongodb.driver.manual reference/operator/aggregation/skip/ $skip
+ * @aggregation.expression $skip
  */
 public class Skip extends Stage {
     private int size;

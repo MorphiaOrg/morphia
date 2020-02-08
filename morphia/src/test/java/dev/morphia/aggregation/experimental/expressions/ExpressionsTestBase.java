@@ -31,10 +31,9 @@ public class ExpressionsTestBase extends TestBase {
         ((Codec) getMapper().getCodecRegistry()
                             .get(MathExpression.class))
             .encode(writer, value, EncoderContext.builder().build());
-        Document actual = writer.getRoot();
+        Document actual = writer.getDocument();
         assertEquals(0, writer.getDocsLevel());
         assertEquals(0, writer.getArraysLevel());
-        assertTrue(writer.getState().isEmpty());
         assertDocumentEquals(expected, actual);
 
         Document test = getDs().aggregate(User.class)

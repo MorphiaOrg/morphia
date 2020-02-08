@@ -22,12 +22,15 @@ import com.mongodb.assertions.Assertions;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
+import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.Map.Entry;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
@@ -70,38 +73,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
-     * Creates an copy of the given options
-     *
-     * @param original the orginal to copy
-     */
-    FindOptions(final FindOptions original) {
-        this.batchSize = original.batchSize;
-        this.limit = original.limit;
-        this.maxTimeMS = original.maxTimeMS;
-        this.maxAwaitTimeMS = original.maxAwaitTimeMS;
-        this.skip = original.skip;
-        this.sort = original.sort;
-        this.cursorType = original.cursorType;
-        this.noCursorTimeout = original.noCursorTimeout;
-        this.oplogReplay = original.oplogReplay;
-        this.partial = original.partial;
-        this.collation = original.collation;
-        this.comment = original.comment;
-        this.hint = original.hint;
-        this.hintString = original.hintString;
-        this.max = original.max;
-        this.min = original.min;
-        this.returnKey = original.returnKey;
-        this.showRecordId = original.showRecordId;
-        this.snapshot = original.snapshot;
-        this.readPreference = original.readPreference;
-        this.projection = original.projection;
-        this.queryLogId = original.queryLogId;
-        this.clientSession = original.clientSession;
-    }
-
-    /**
-     * @param query    the query to execute
      * @param iterable the iterable to use
      * @param mapper   the mapper to use
      * @param type     the result type
@@ -109,11 +80,8 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
      * @return the iterable instance for the query results
      * @morphia.internal
      */
-    public <T> FindIterable<T> apply(final QueryImpl query, final FindIterable<T> iterable, final Mapper mapper, final Class<?> type) {
-        Document fieldsObject = query.getFieldsObject();
-        if (fieldsObject != null) {
-            iterable.projection(fieldsObject);
-        } else if (projection != null) {
+    public <T> FindIterable<T> apply(final FindIterable<T> iterable, final Mapper mapper, final Class<?> type) {
+        if (projection != null) {
             iterable.projection(projection.map(mapper, type));
         }
 
@@ -136,11 +104,13 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         iterable.returnKey(returnKey);
         iterable.showRecordId(showRecordId);
         iterable.skip(skip);
-        Document querySort = query.getSort();
-        if (querySort != null) {
-            iterable.sort(querySort);
-        } else if (sort != null) {
-            iterable.sort(sort);
+        if (sort != null) {
+            Document mapped = new Document();
+            MappedClass mappedClass = mapper.getMappedClass(type);
+            for (final Entry<String, Object> entry : sort.entrySet()) {
+                mapped.put(new PathTarget(mapper, mappedClass, entry.getKey()).translatedPath(), entry.getValue());
+            }
+            iterable.sort(mapped);
         }
         return iterable;
     }
@@ -190,10 +160,55 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
+     * Sets the comment to log with the query
+     *
+     * @param comment the comment
+     * @return this
+     */
+    public FindOptions comment(final String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    /**
      * @return a copy of this instance
      */
     public FindOptions copy() {
-        return new FindOptions(this);
+        return new FindOptions().copy(this);
+    }
+
+    /**
+     * Creates an copy of the given options
+     *
+     * @param original the orginal to copy
+     * @morphia.internal
+     */
+    public FindOptions copy(final FindOptions original) {
+        this.batchSize = original.batchSize;
+        this.limit = original.limit;
+        this.maxTimeMS = original.maxTimeMS;
+        this.maxAwaitTimeMS = original.maxAwaitTimeMS;
+        this.skip = original.skip;
+        this.sort = original.sort;
+        this.cursorType = original.cursorType;
+        this.noCursorTimeout = original.noCursorTimeout;
+        this.oplogReplay = original.oplogReplay;
+        this.partial = original.partial;
+        this.collation = original.collation;
+        this.comment = original.comment;
+        this.hint = original.hint;
+        this.hintString = original.hintString;
+        this.max = original.max;
+        this.min = original.min;
+        this.returnKey = original.returnKey;
+        this.showRecordId = original.showRecordId;
+        this.snapshot = original.snapshot;
+        this.readPreference = original.readPreference;
+        this.projection = original.projection;
+        this.queryLogId = original.queryLogId;
+        this.clientSession = original.clientSession;
+
+        return this;
     }
 
     /**
@@ -205,6 +220,55 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     public FindOptions cursorType(final CursorType cursorType) {
         this.cursorType = Assertions.notNull("cursorType", cursorType);
         return this;
+    }
+
+    /**
+     * @return the batch size
+     */
+    public int getBatchSize() {
+        return this.batchSize;
+    }
+
+    /**
+     * @return the collation
+     */
+    public Collation getCollation() {
+        return this.collation;
+    }
+
+    /**
+     * @return the comment
+     */
+    public String getComment() {
+        return this.comment;
+    }
+
+    /**
+     * @return the cursor type
+     */
+    public CursorType getCursorType() {
+        return this.cursorType;
+    }
+
+    /**
+     * @return the index hint
+     */
+    public Document getHint() {
+        return this.hint;
+    }
+
+    /**
+     * @return the limit
+     */
+    public int getLimit() {
+        return this.limit;
+    }
+
+    /**
+     * @return the max value
+     */
+    public Document getMax() {
+        return this.max;
     }
 
     /**
@@ -226,11 +290,46 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
+     * @return the min value
+     */
+    public Document getMin() {
+        return this.min;
+    }
+
+    /**
+     * @return the projection
+     */
+    public Projection getProjection() {
+        return this.projection;
+    }
+
+    /**
      * @return the query log id used for retrieving the logged query
      * @morphia.internal
      */
     public String getQueryLogId() {
         return queryLogId;
+    }
+
+    /**
+     * @return the read preference
+     */
+    public ReadPreference getReadPreference() {
+        return readPreference;
+    }
+
+    /**
+     * @return the skip count
+     */
+    public int getSkip() {
+        return this.skip;
+    }
+
+    /**
+     * @return the sort criteria
+     */
+    public Document getSort() {
+        return this.sort;
     }
 
     @Override
@@ -357,125 +456,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
-     * @return the batch size
-     */
-    public int getBatchSize() {
-        return this.batchSize;
-    }
-
-    /**
-     * @return the limit
-     */
-    public int getLimit() {
-        return this.limit;
-    }
-
-    /**
-     * @return the skip count
-     */
-    public int getSkip() {
-        return this.skip;
-    }
-
-    /**
-     * @return the sort criteria
-     */
-    public Document getSort() {
-        return this.sort;
-    }
-
-    /**
-     * @return the cursor type
-     */
-    public CursorType getCursorType() {
-        return this.cursorType;
-    }
-
-    /**
-     * @return is the cursor timeout enabled
-     */
-    public boolean isNoCursorTimeout() {
-        return this.noCursorTimeout;
-    }
-
-    /**
-     * @return is oplog replay enabled
-     */
-    public boolean isOplogReplay() {
-        return this.oplogReplay;
-    }
-
-    /**
-     * @return are partial results enabled
-     */
-    public boolean isPartial() {
-        return this.partial;
-    }
-
-    /**
-     * @return the collation
-     */
-    public Collation getCollation() {
-        return this.collation;
-    }
-
-    /**
-     * @return the comment
-     */
-    public String getComment() {
-        return this.comment;
-    }
-
-    /**
-     * @return the index hint
-     */
-    public Document getHint() {
-        return this.hint;
-    }
-
-    /**
-     * @return the max value
-     */
-    public Document getMax() {
-        return this.max;
-    }
-
-    /**
-     * @return the min value
-     */
-    public Document getMin() {
-        return this.min;
-    }
-
-    /**
-     * @return is return key only enabled
-     */
-    public boolean isReturnKey() {
-        return this.returnKey;
-    }
-
-    /**
-     * @return is showing the record id enabled
-     */
-    public boolean isShowRecordId() {
-        return this.showRecordId;
-    }
-
-    /**
-     * @return the read preference
-     */
-    public ReadPreference getReadPreference() {
-        return readPreference;
-    }
-
-    /**
-     * @return the projection
-     */
-    public Projection getProjection() {
-        return this.projection;
-    }
-
-    /**
      * Sets the index hint
      *
      * @param hint the hint
@@ -519,6 +499,41 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
+     * @return is the cursor timeout enabled
+     */
+    public boolean isNoCursorTimeout() {
+        return this.noCursorTimeout;
+    }
+
+    /**
+     * @return is oplog replay enabled
+     */
+    public boolean isOplogReplay() {
+        return this.oplogReplay;
+    }
+
+    /**
+     * @return are partial results enabled
+     */
+    public boolean isPartial() {
+        return this.partial;
+    }
+
+    /**
+     * @return is return key only enabled
+     */
+    public boolean isReturnKey() {
+        return this.returnKey;
+    }
+
+    /**
+     * @return is showing the record id enabled
+     */
+    public boolean isShowRecordId() {
+        return this.showRecordId;
+    }
+
+    /**
      * Sets the limit
      *
      * @param limit the limit
@@ -538,17 +553,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     public FindOptions logQuery() {
         queryLogId = new ObjectId().toString();
         comment(Sofia.loggedQuery(queryLogId));
-        return this;
-    }
-
-    /**
-     * Sets the comment to log with the query
-     *
-     * @param comment the comment
-     * @return this
-     */
-    public FindOptions comment(final String comment) {
-        this.comment = comment;
         return this;
     }
 
@@ -697,6 +701,20 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
      */
     public FindOptions sort(final Document sort) {
         this.sort = sort;
+        return this;
+    }
+
+    /**
+     * Sets to the sort to use
+     *
+     * @param sorts the sorts to apply
+     * @return this
+     */
+    public FindOptions sort(final Sort... sorts) {
+        this.sort = new Document();
+        for (final Sort sort : sorts) {
+            this.sort.append(sort.getField(), sort.getOrder());
+        }
         return this;
     }
 }

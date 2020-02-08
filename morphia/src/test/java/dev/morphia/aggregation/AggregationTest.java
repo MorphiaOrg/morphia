@@ -31,6 +31,7 @@ import dev.morphia.geo.model.City;
 import dev.morphia.geo.PlaceWithLegacyCoords;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
+import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
@@ -294,8 +295,9 @@ public class AggregationTest extends TestBase {
                .lookup("inventory", "item", "sku", "inventoryDocs")
                .out("lookups", Order.class);
         List<Order> lookups = getAds().createQuery("lookups", Order.class)
-                                      .order(ascending("_id"))
-                                      .execute().toList();
+                                      .execute(new FindOptions()
+                                                   .sort(ascending("_id")))
+                                      .toList();
         Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(4), lookups.get(2).inventoryDocs.get(0));

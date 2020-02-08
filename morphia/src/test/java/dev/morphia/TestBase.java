@@ -12,6 +12,7 @@ import com.mongodb.client.MongoIterable;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.query.DefaultQueryFactory;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Assume;
@@ -50,6 +51,7 @@ public abstract class TestBase {
         this.mongoClient = MongoClients.create(clientSettings);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
+        ds.setQueryFactory(new DefaultQueryFactory());
     }
 
     protected static String getMongoURI() {

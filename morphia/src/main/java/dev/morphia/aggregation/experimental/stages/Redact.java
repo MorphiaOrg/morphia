@@ -5,7 +5,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 /**
  * Restricts the contents of the documents based on information stored in the documents themselves.
  *
- * @mongodb.driver.manual reference/operator/aggregation/redact/ $redact
+ * @aggregation.expression $redact
  */
 public class Redact extends Stage {
     private Expression expression;

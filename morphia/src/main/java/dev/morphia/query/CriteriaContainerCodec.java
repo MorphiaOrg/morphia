@@ -98,6 +98,6 @@ public class CriteriaContainerCodec implements Codec<CriteriaContainerImpl> {
     private Document getCriteriaDoc(final Criteria child, final EncoderContext encoderContext) {
         return new DocumentWriter()
                    .encode(mapper.getCodecRegistry(), child, encoderContext)
-                   .getRoot();
+                   .getDocument();
     }
 }

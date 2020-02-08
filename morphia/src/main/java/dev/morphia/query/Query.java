@@ -4,9 +4,10 @@ package dev.morphia.query;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
 import dev.morphia.FindAndModifyOptions;
+import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
-import org.bson.Document;
+import dev.morphia.sofia.Sofia;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,10 @@ public interface Query<T> {
      * @return the FieldEnd to define the criteria
      */
     FieldEnd<? extends CriteriaContainer> criteria(String field);
+
+    default Query filter(Filter... filters) {
+        throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
+    }
 
     /**
      * Turns off validation (for all calls made after)
@@ -67,6 +72,14 @@ public interface Query<T> {
      * @since 1.3
      */
     Map<String, Object> explain(FindOptions options);
+
+    /**
+     * Allows the use of aggregation expressions within the query language.
+     * @param expression the expression to include
+     * @return this
+     * @since 2.0
+     */
+    //    Query<T> expr(Expression expression);
 
     /**
      * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}
@@ -384,12 +397,12 @@ public interface Query<T> {
      */
     Update<T> update();
 
-    /**
+    /*
      * @param document the seed document
      * @return the update operation
      * @morphia.internal
      */
-    Update<T> update(Document document);
+    //    Update<T> update(Document document);
 
     /**
      * @param operations the prebuilt operations
@@ -406,5 +419,14 @@ public interface Query<T> {
      * @morphia.internal
      * @since 2.0
      */
-    String getLoggedQuery();
+    default String getLoggedQuery() {
+        return MorphiaQuery.legacyOperation();
+    }
+
+    /**
+     * @return the logged query
+     * @morphia.internal
+     * @since 2.0
+     */
+    String getLoggedQuery(FindOptions options);
 }

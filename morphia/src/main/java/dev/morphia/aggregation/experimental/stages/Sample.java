@@ -3,7 +3,7 @@ package dev.morphia.aggregation.experimental.stages;
 /**
  * Randomly selects the specified number of documents from its input.
  *
- * @mongodb.driver.manual reference/operator/aggregation/sample/ $sample
+ * @aggregation.expression $sample
  */
 public class Sample extends Stage {
     private int size;

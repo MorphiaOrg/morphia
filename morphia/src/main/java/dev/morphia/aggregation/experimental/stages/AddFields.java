@@ -11,7 +11,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression
  * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and adds
  * the new fields.
  *
- * @mongodb.driver.manual reference/operator/aggregation/addFields/ $addFields
+ * @aggregation.expression $addFields
  */
 public class AddFields extends Stage {
     private DocumentExpression document = Expressions.of();

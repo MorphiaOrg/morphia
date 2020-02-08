@@ -8,7 +8,7 @@ import static java.util.Arrays.asList;
 /**
  * Defines a group pipeline stage.
  *
- * @mongodb.driver.manual reference/operator/aggregation/group/ $group
+ * @aggregation.expression $group
  */
 public final class Group {
     private final String name;
@@ -119,7 +119,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/addToSet $addToSet
+     * @aggregation.expression $addToSet
      */
     public static Accumulator addToSet(final String field) {
         return new Accumulator("$addToSet", field);
@@ -131,7 +131,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/avg $avg
+     * @aggregation.expression $avg
      */
     public static Accumulator average(final String field) {
         return new Accumulator("$avg", field);
@@ -144,7 +144,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/first $first
+     * @aggregation.expression $first
      */
     public static Accumulator first(final String field) {
         return new Accumulator("$first", field);
@@ -156,7 +156,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/last $last
+     * @aggregation.expression $last
      */
     public static Accumulator last(final String field) {
         return new Accumulator("$last", field);
@@ -169,7 +169,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/max $max
+     * @aggregation.expression $max
      */
     public static Accumulator max(final String field) {
         return new Accumulator("$max", field);
@@ -181,7 +181,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/min $min
+     * @aggregation.expression $min
      */
     public static Accumulator min(final String field) {
         return new Accumulator("$min", field);
@@ -193,7 +193,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/push $push
+     * @aggregation.expression $push
      */
     public static Accumulator push(final String field) {
         return new Accumulator("$push", field);
@@ -206,7 +206,7 @@ public final class Group {
      *
      * @param field the field to process
      * @return an Accumulator
-     * @mongodb.driver.manual reference/operator/aggregation/sum $sum
+     * @aggregation.expression $sum
      */
     public static Accumulator sum(final String field) {
         return new Accumulator("$sum", field);

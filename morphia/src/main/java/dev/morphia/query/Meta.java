@@ -4,7 +4,8 @@ import org.bson.Document;
 
 /**
  * Defines $meta expression object
- * @mongodb.driver.manual reference/operator/aggregation/meta/ $meta
+ *
+ * @aggregation.expression $meta
  */
 public class Meta {
 
@@ -12,7 +13,7 @@ public class Meta {
 
     /**
      * Representing specified metadata keyword
-     * @mongodb.driver.manual reference/operator/aggregation/meta/#exp._S_meta $meta
+     * @aggregation.expression $meta
      */
     public enum MetaDataKeyword {
         textScore;

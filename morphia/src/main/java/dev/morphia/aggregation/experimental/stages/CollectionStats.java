@@ -3,7 +3,7 @@ package dev.morphia.aggregation.experimental.stages;
 /**
  * Returns statistics regarding a collection or view.
  *
- * @mongodb.driver.manual reference/operator/aggregation/collStats/ $collStats
+ * @aggregation.expression $collStats
  */
 public class CollectionStats extends Stage {
     private boolean histogram;

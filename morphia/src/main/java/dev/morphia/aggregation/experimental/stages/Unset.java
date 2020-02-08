@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Removes/excludes fields from documents.
  *
- * @mongodb.driver.manual reference/operator/aggregation/unset/ $unset
+ * @aggregation.expression $unset
  */
 public class Unset extends Stage {
     private List<Expression> fields = new ArrayList<>();

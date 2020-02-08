@@ -3,7 +3,7 @@ package dev.morphia.aggregation.experimental.stages;
 /**
  * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
  *
- * @mongodb.driver.manual reference/operator/aggregation/planCacheStats/ $planCacheStats
+ * @aggregation.expression $planCacheStats
  */
 public class PlanCacheStats extends Stage {
     protected PlanCacheStats() {
