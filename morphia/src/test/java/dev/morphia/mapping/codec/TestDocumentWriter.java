@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 public class TestDocumentWriter extends TestBase {
@@ -112,7 +113,10 @@ public class TestDocumentWriter extends TestBase {
         writer.writeName("next");
         writer.writeString("something simple");
         writer.writeEndDocument();
+
         check(writer, 0, 0);
+        assertEquals(new Document("stuff", asList("hello", 42))
+                         .append("next", "something simple"), writer.getDocument());
     }
 
     @Test

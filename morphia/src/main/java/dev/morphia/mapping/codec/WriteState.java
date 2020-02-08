@@ -15,14 +15,25 @@ class ArrayState extends ValueState {
     }
 
     @Override
+    protected String stateToString(final String s) {
+        return previous().stateToString(list.toString()) +
+               (!s.equals("") ? ", " + s : "");
+    }
+
+    @Override
     void end() {
-        super.end();
+        previous().apply(list);
     }
 
     @Override
     WriteState value(final Object value) {
         list.add(value);
         return this;
+    }
+
+    @Override
+    NameState previous() {
+        return (NameState) super.previous();
     }
 }
 

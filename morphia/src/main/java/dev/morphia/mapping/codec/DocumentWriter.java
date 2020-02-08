@@ -283,7 +283,7 @@ public class DocumentWriter implements BsonWriter {
     @Override
     public void writeStartArray() {
         arraysLevel++;
-        state = state.array();
+        state.array();
     }
 
     @Override
