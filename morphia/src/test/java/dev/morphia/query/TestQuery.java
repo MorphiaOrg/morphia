@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -1232,7 +1233,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    @Ignore("takes a long time to fail.  come back to this.")
     public void testTailableCursors() {
         getMapper().map(CappedPic.class);
         final Datastore ds = getDs();
@@ -1244,8 +1244,13 @@ public class TestQuery extends TestBase {
 
         assertEquals(0, query.count());
 
-        executorService.scheduleAtFixedRate(
-            () -> ds.save(new CappedPic()), 0, 500, TimeUnit.MILLISECONDS);
+        ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(
+            () -> ds.save(new CappedPic()), 0, 100, TimeUnit.MILLISECONDS);
+
+        Awaitility
+            .await()
+            .atMost(10, TimeUnit.SECONDS)
+            .until(() -> getDs().find(CappedPic.class).count() > 0);
 
         final Iterator<CappedPic> tail = query.execute(new FindOptions()
                                                            .cursorType(CursorType.Tailable));
