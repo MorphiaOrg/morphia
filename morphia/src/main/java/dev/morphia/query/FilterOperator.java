@@ -140,7 +140,7 @@ public enum FilterOperator {
     WHERE("$where") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.where(prop, value);
+            return Filters.where(value.toString());
         }
     },
 

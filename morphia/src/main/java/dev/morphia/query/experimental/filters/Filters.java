@@ -118,13 +118,22 @@ public final class Filters {
     /**
      * Matches documents that satisfy a JavaScript expression.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param val the value to check
      * @return the filter
      * @query.filter $where
      */
-    public static Filter where(final String field, final Object val) {
-        return new Filter("$where", field, val);
+    public static Filter where(final String val) {
+        return new Filter("$where", null, val) {
+            @Override
+            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+                writer.writeName(getFilterName());
+                String value = getValue().toString().trim();
+                if (!value.startsWith("function()")) {
+                    value = format("function() { %s }", value);
+                }
+                writer.writeString(value);
+            }
+        };
     }
 
     /**

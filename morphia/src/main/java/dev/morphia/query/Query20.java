@@ -66,11 +66,6 @@ public interface Query20<T> extends Query<T> {
     }
 
     @Override
-    default Query<T> where(final String js) {
-        return legacyOperation();
-    }
-
-    @Override
     default Modify<T> modify(final UpdateOperations<T> operations) {
         return legacyOperation();
     }

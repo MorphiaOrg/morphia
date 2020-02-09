@@ -1424,7 +1424,8 @@ public class TestQuery extends TestBase {
     @Test
     public void testWhereStringQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class).where("this.keywords != null")
+        assertNotNull(getDs().find(PhotoWithKeywords.class)
+                             .where("return this.keywords != null;")
                              .execute(new FindOptions().limit(1))
                              .next());
     }

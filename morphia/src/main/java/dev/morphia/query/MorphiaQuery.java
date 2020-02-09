@@ -419,6 +419,12 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
                    .toString();
     }
 
+    @Override
+    public Query<T> where(final String js) {
+        filter(Filters.where(js));
+        return this;
+    }
+
     private class CriteriaFieldEnd extends FieldEndImpl<CriteriaFieldEnd> implements CriteriaContainer {
         private final String name;
         private List<Filter> filters = new ArrayList<>();
