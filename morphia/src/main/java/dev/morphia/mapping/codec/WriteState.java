@@ -26,6 +26,12 @@ class ArrayState extends ValueState {
     }
 
     @Override
+    protected void apply(final Object value) {
+        list.add(value);
+        documentWriter.state(this);
+    }
+
+    @Override
     WriteState value(final Object value) {
         list.add(value);
         return this;
@@ -76,8 +82,8 @@ class DocumentState extends WriteState {
 
     @Override
     void end() {
-        if (previous() instanceof NameState) {
-            ((NameState) previous()).apply(document);
+        if (!(previous() instanceof RootState)) {
+            previous().apply(document);
         }
     }
 
@@ -209,6 +215,10 @@ abstract class WriteState {
         return stateToString("");
     }
 
+    void apply(final Object value) {
+        throw new UnsupportedOperationException();
+    }
+
     protected abstract String state();
 
     protected String stateToString(final String s) {
@@ -220,7 +230,7 @@ abstract class WriteState {
     }
 
     WriteState document() {
-        throw new IllegalStateException(Sofia.notInValidState("value", state()));
+        return new DocumentState(documentWriter);
     }
 
     void end() {

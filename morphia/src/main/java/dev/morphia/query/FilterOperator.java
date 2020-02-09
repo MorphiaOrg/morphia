@@ -42,7 +42,7 @@ public enum FilterOperator {
     NOT_EQUAL("$ne", "!=", "<>") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.near(prop, value);
+            return Filters.ne(prop, value);
         }
     },
 

@@ -45,7 +45,7 @@ public class DocumentWriter implements BsonWriter {
      * @param seed the seed Document
      */
     public DocumentWriter(final Document seed) {
-        state = new DocumentState(this, seed);
+        state = new RootState(this, seed);
     }
 
     /**

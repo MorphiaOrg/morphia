@@ -20,6 +20,7 @@ public class Filter {
     private String filterName;
     private String field;
     private Object value;
+    private boolean not;
     private boolean validate;
     private Class<?> entityClass;
 
@@ -41,8 +42,14 @@ public class Filter {
      */
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
         writer.writeStartDocument(field(mapper));
+        if (not) {
+            writer.writeStartDocument("$not");
+        }
         writer.writeName(filterName);
         writeUnnamedValue(value, mapper, writer, context);
+        if (not) {
+            writer.writeEndDocument();
+        }
         writer.writeEndDocument();
     }
 
@@ -70,6 +77,17 @@ public class Filter {
         return this;
     }
 
+    /**
+     * Negates this filter by wrapping in "$not: {}"
+     *
+     * @param not possible negation
+     * @return this
+     */
+    public Filter not(final boolean not) {
+        this.not = not;
+        return this;
+    }
+
     @Override
     public String toString() {
         return format("%s %s %s", field, filterName, value);
@@ -86,6 +104,10 @@ public class Filter {
 
     protected String getFilterName() {
         return filterName;
+    }
+
+    protected Object getValue() {
+        return value;
     }
 
     protected void writeNamedValue(final String name, final Object value, final Mapper mapper, final BsonWriter writer,

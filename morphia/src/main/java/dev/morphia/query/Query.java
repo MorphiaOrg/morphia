@@ -419,14 +419,5 @@ public interface Query<T> {
      * @morphia.internal
      * @since 2.0
      */
-    default String getLoggedQuery() {
-        return MorphiaQuery.legacyOperation();
-    }
-
-    /**
-     * @return the logged query
-     * @morphia.internal
-     * @since 2.0
-     */
     String getLoggedQuery(FindOptions options);
 }

@@ -12,7 +12,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * Defines a codec for Query instances
  */
-public class QueryCodec implements Codec<LegacyQuery> {
+public class LegacyQueryCodec implements Codec<LegacyQuery> {
     private Mapper mapper;
 
     /**
@@ -20,13 +20,13 @@ public class QueryCodec implements Codec<LegacyQuery> {
      *
      * @param mapper the mapper to use
      */
-    public QueryCodec(final Mapper mapper) {
+    public LegacyQueryCodec(final Mapper mapper) {
         this.mapper = mapper;
     }
 
     @Override
     public LegacyQuery decode(final BsonReader reader, final DecoderContext decoderContext) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override

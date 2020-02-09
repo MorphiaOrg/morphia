@@ -50,7 +50,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private CriteriaContainer compoundContainer;
     private String collectionName;
     private MongoCollection<T> collection;
-    private FindOptions previousOptions;
     private final MappedClass mappedClass;
 
     /**
@@ -222,7 +221,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public MorphiaCursor<T> execute(final FindOptions options) {
-        previousOptions = options;
         return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
 
@@ -324,14 +322,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     /**
-     * @return the logged query
-     * @morphia.internal
-     */
-    public String getLoggedQuery() {
-        return getLoggedQuery(previousOptions);
-    }
-
-    /**
      * Converts the query to a Document and updates for any discriminator values as my be necessary
      *
      * @return the query
@@ -402,11 +392,11 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public String getLoggedQuery(final FindOptions options) {
-        if (previousOptions != null && previousOptions.isLogQuery()) {
+        if (options != null && options.isLogQuery()) {
             String json = "{}";
             Document first = datastore.getDatabase()
                                       .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + previousOptions.getQueryLogId()),
+                                      .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
                                           Document.class)
                                       .projection(new Document("command.filter", 1))
                                       .first();

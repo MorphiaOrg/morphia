@@ -175,11 +175,12 @@ public class MapperOptionsTest extends TestBase {
         getDs().save(List.of(entityDiscriminator, entityDiscriminator2));
 
         Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
-            .field("name").notEqual("hi");
-        List<EntityDiscriminator2> list = query.execute(new FindOptions()
-                                                            .logQuery())
+                                                   .field("name").notEqual("hi");
+        FindOptions options = new FindOptions()
+                                  .logQuery();
+        List<EntityDiscriminator2> list = query.execute(options)
                                                .toList();
-        Assert.assertEquals(query.getLoggedQuery(), 1, list.size());
+        Assert.assertEquals(query.getLoggedQuery(options), 1, list.size());
     }
 
     private void shouldNotFindField(final Datastore datastore, final HasList hl) {

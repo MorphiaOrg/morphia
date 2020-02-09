@@ -177,8 +177,9 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
     @Override
     public long count(final CountOptions options) {
         ClientSession session = datastore.findSession(options);
-        return session == null ? getCollection().countDocuments(getQueryDocument(), options)
-                               : getCollection().countDocuments(session, getQueryDocument(), options);
+        Document query = getQueryDocument();
+        return session == null ? getCollection().countDocuments(query, options)
+                               : getCollection().countDocuments(session, query, options);
     }
 
     @Override
@@ -291,14 +292,16 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
                Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
-                   .add("clazz=" + clazz)
-                   .add("validate=" + validate)
-                   .add("baseQuery=" + baseQuery)
-                   .add("collectionName='" + collectionName + "'")
-                   .toString();
+    public Document getQueryDocument() {
+        DocumentWriter writer = new DocumentWriter(seedQuery);
+        writer.writeStartDocument();
+        EncoderContext context = EncoderContext.builder().build();
+        for (Filter filter : filters) {
+            filter.encode(mapper, writer, context);
+        }
+        writer.writeEndDocument();
+
+        return writer.getDocument();
     }
 
     @Override
@@ -347,16 +350,30 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         return collectionName;
     }
 
-    private Document getQueryDocument() {
-        DocumentWriter writer = new DocumentWriter(seedQuery);
-        writer.writeStartDocument();
-        EncoderContext context = EncoderContext.builder().build();
-        for (Filter filter : filters) {
-            filter.encode(mapper, writer, context);
-        }
-        writer.writeEndDocument();
+    /**
+     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     *
+     * @return the query
+     * @morphia.internal
+     */
+    public Document prepareQuery() {
+        final Document query = getQueryDocument();
+        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
+        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
 
-        return writer.getDocument();
+            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(mappedClass.getEntityModel().getDiscriminator());
+            for (final MappedClass subtype : subtypes) {
+                values.add(subtype.getEntityModel().getDiscriminator());
+            }
+            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+        return query;
     }
 
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
@@ -394,30 +411,12 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         }
     }
 
-    /**
-     * Converts the query to a Document and updates for any discriminator values as my be necessary
-     *
-     * @return the query
-     * @morphia.internal
-     */
-    private Document prepareQuery() {
-        final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
-        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
-
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
-            List<String> values = new ArrayList<>();
-            values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
-                values.add(subtype.getEntityModel().getDiscriminator());
-            }
-            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
-                new Document("$in", values));
-        }
-        return query;
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
+                   .add("clazz=" + clazz.getSimpleName())
+                   .add("query=" + getQueryDocument())
+                   .toString();
     }
 
     private class CriteriaFieldEnd extends FieldEndImpl<CriteriaFieldEnd> implements CriteriaContainer {
@@ -425,8 +424,7 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         private List<Filter> filters = new ArrayList<>();
 
         private CriteriaFieldEnd(final String name) {
-            super(MorphiaQuery.this.mapper, name, null,
-                MorphiaQuery.this.mapper.getMappedClass(MorphiaQuery.this.getEntityClass()), MorphiaQuery.this.validate);
+            super(mapper, name, null, mapper.getMappedClass(getEntityClass()), validate);
             this.name = name;
         }
 
@@ -493,14 +491,13 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         private final String name;
 
         private MorphiaQueryFieldEnd(final String name) {
-            super(MorphiaQuery.this.mapper, name, MorphiaQuery.this,
-                MorphiaQuery.this.mapper.getMappedClass(MorphiaQuery.this.getEntityClass()), MorphiaQuery.this.validate);
+            super(mapper, name, MorphiaQuery.this, mapper.getMappedClass(getEntityClass()), validate);
             this.name = name;
         }
 
         @Override
         protected MorphiaQuery addCriteria(final FilterOperator op, final Object val, final boolean not) {
-            filter(op.apply(name, val));
+            filter(op.apply(name, val).not(not));
             return MorphiaQuery.this;
         }
     }

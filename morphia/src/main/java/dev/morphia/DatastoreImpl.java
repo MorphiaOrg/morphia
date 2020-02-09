@@ -27,7 +27,6 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.Query;
@@ -100,7 +99,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Query<T> find(final String collection) {
-        return newQuery(mapper.getClassFromCollection(collection));
+        return getQueryFactory().createQuery(this, mapper.getClassFromCollection(collection));
     }
 
     @Override
@@ -171,10 +170,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                : getSession();
     }
 
-    protected <T> Query<T> newQuery(final Class<T> type) {
-        return getQueryFactory().createQuery(this, type);
-    }
-
     @Override
     public <T> T withTransaction(final MorphiaTransaction<T> body) {
         return doTransaction(startSession(), body);
@@ -211,14 +206,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public Query<Document> find() {
-        return newQuery(Document.class)
-            .disableValidation();
+    public <T> Query<T> find(final Class<T> type) {
+        return getQueryFactory().createQuery(this, type);
     }
 
     @Override
-    public <T> Query<T> find(final Class<T> type) {
-        return newQuery(type);
+    public Query<Document> find() {
+        return getQueryFactory().createQuery(this, Document.class)
+                                .disableValidation();
     }
 
     /**

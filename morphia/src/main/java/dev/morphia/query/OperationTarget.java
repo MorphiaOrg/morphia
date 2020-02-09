@@ -57,8 +57,10 @@ class OperationTarget {
         } else if (mappedValue != null) {
             Codec codec = mapper.getCodecRegistry().get(mappedValue.getClass());
             DocumentWriter writer = new DocumentWriter();
+            writer.writeStartDocument();
+            writer.writeName("mapped");
             codec.encode(writer, mappedValue, EncoderContext.builder().build());
-            mappedValue = writer.getDocument();
+            mappedValue = writer.getDocument().get("mapped");
         }
         return new Document(target.translatedPath(), mappedValue);
     }

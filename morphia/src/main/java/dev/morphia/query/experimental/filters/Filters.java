@@ -24,7 +24,13 @@ public final class Filters {
      * @query.filter $eq
      */
     public static Filter eq(final String field, final Object val) {
-        return new Filter("$eq", field, val);
+        return new Filter("$eq", field, val) {
+            @Override
+            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+                writer.writeName(field(mapper));
+                writeUnnamedValue(getValue(), mapper, writer, context);
+            }
+        };
     }
 
     /**

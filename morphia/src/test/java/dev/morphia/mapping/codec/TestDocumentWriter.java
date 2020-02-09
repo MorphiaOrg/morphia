@@ -120,6 +120,25 @@ public class TestDocumentWriter extends TestBase {
     }
 
     @Test
+    public void testArraysWithDocs() {
+        DocumentWriter writer = new DocumentWriter();
+
+        writer.writeStartDocument();
+        check(writer, 1, 0);
+        writer.writeStartArray("stuff");
+        check(writer, 1, 1);
+        writer.writeStartDocument();
+        writer.writeInt32("doc", 42);
+        writer.writeEndDocument();
+        writer.writeEndArray();
+        check(writer, 1, 0);
+        writer.writeEndDocument();
+
+        check(writer, 0, 0);
+        assertEquals(new Document("stuff", asList(new Document("doc", 42))), writer.getDocument());
+    }
+
+    @Test
     public void testSubdocuments() {
         DocumentWriter writer = new DocumentWriter();
         writer.writeStartDocument();

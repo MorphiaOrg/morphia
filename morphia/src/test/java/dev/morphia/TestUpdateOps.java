@@ -265,9 +265,10 @@ public class TestUpdateOps extends TestBase {
 
         query = getDs().find(ContainsIntArray.class)
                        .filter("values", new Integer[]{4, 5, 7, 6});
-        ContainsIntArray values = query.first(new FindOptions()
-                                                    .logQuery());
-        assertNotNull(query.getLoggedQuery(), values);
+        FindOptions options = new FindOptions()
+                                  .logQuery();
+        ContainsIntArray values = query.first(options);
+        assertNotNull(query.getLoggedQuery(options), values);
     }
 
     private void doUpdates(final ContainsIntArray updated, final ContainsIntArray control, final Update update, final Integer[] target) {
