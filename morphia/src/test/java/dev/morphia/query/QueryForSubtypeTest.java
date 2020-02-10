@@ -76,6 +76,7 @@ public class QueryForSubtypeTest extends TestBase {
     }
 
     @Entity
+    public
     interface User {
     }
 

@@ -20,4 +20,8 @@ public class LegacyQueryFactory extends AbstractQueryFactory {
         return item;
     }
 
+    @Override
+    public <T> Query<T> createQuery(final Datastore datastore) {
+        return new LegacyQuery<>(null, datastore);
+    }
 }

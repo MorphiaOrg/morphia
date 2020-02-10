@@ -19,4 +19,8 @@ public class DefaultQueryFactory extends AbstractQueryFactory {
 
         return item;
     }
+    @Override
+    public <T> Query<T> createQuery(final Datastore datastore) {
+        return new MorphiaQuery<>(null, datastore);
+    }
 }

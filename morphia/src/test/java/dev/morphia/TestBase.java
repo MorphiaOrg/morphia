@@ -53,7 +53,6 @@ public abstract class TestBase {
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
         ds.setQueryFactory(new DefaultQueryFactory());
-        //        ds.setQueryFactory(new LegacyQueryFactory());
     }
 
     protected static String getMongoURI() {
