@@ -3,27 +3,36 @@ package dev.morphia.query;
 
 import org.bson.Document;
 
+import static dev.morphia.query.MorphiaQuery.legacyOperation;
+
 
 /**
  * Internal class for building up query documents.
  *
  * @morphia.internal
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public interface Criteria {
-    /**
-     * @return the Document form of this type
-     */
-    Document toDocument();
-
     /**
      * Used to add this Criteria to a CriteriaContainer
      *
      * @param container the container to add to
      */
-    void attach(CriteriaContainer container);
+    default void attach(CriteriaContainer container) {
+        legacyOperation();
+    }
 
     /**
      * @return the field name for the criteria
      */
-    String getFieldName();
+    default String getFieldName() {
+        return legacyOperation();
+    }
+
+    /**
+     * @return the Document form of this type
+     */
+    default Document toDocument() {
+        return legacyOperation();
+    }
 }

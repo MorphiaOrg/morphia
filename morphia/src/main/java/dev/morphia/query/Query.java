@@ -12,18 +12,24 @@ import dev.morphia.sofia.Sofia;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static dev.morphia.query.MorphiaQuery.legacyOperation;
+import static dev.morphia.query.MorphiaQuery.modernOperation;
+
 
 /**
  * @param <T> The java type to query against
  */
-public interface Query<T> {
+public interface Query<T> extends CriteriaContainer {
     /**
      * Creates a container to hold 'and' clauses
      *
      * @param criteria the clauses to 'and' together
      * @return the container
      */
-    CriteriaContainer and(Criteria... criteria);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default CriteriaContainer and(final Criteria... criteria) {
+        return legacyOperation();
+    }
 
     /**
      * Creates a criteria to apply against a field
@@ -31,7 +37,10 @@ public interface Query<T> {
      * @param field the field
      * @return the FieldEnd to define the criteria
      */
-    FieldEnd<? extends CriteriaContainer> criteria(String field);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default FieldEnd<? extends CriteriaContainer> criteria(final String field) {
+        return legacyOperation();
+    }
 
     default Query filter(Filter... filters) {
         throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
@@ -82,12 +91,26 @@ public interface Query<T> {
     //    Query<T> expr(Expression expression);
 
     /**
+     * Creates a container to hold 'or' clauses
+     *
+     * @param criteria the clauses to 'or' together
+     * @return the container
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default CriteriaContainer or(final Criteria... criteria) {
+        return legacyOperation();
+    }
+
+    /**
      * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}
      *
-     * @param field the field
+     * @param name the field
      * @return the FieldEnd to define the criteria
      */
-    FieldEnd<? extends Query<T>> field(String field);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default FieldEnd<? extends Query<T>> field(final String name) {
+        return legacyOperation();
+    }
 
     /**
      * Create a filter based on the specified condition and value. </p>
@@ -118,15 +141,24 @@ public interface Query<T> {
      * @param value     the value to apply against
      * @return this
      */
-    Query<T> filter(String condition, Object value);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default Query<T> filter(final String condition, final Object value) {
+        return legacyOperation();
+    }
 
     /**
-     * Creates a container to hold 'or' clauses
+     * This is only intended for migration of legacy uses of UpdateOperations
      *
-     * @param criteria the clauses to 'or' together
-     * @return the container
+     * @param operations the prebuilt operations
+     * @return the Modify instance
+     * @morphia.internal
+     * @since 2.0
+     * @deprecated
      */
-    CriteriaContainer or(Criteria... criteria);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default Modify<T> modify(final UpdateOperations<T> operations) {
+        return legacyOperation();
+    }
 
     /**
      * Sorts based on a metadata (defines return order). Example:
@@ -135,7 +167,10 @@ public interface Query<T> {
      * @param sort the sort order to apply
      * @return this
      */
-    Query<T> order(Meta sort);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default Query<T> order(final Meta sort) {
+        return legacyOperation();
+    }
 
     /**
      * Sorts based on a specified sort keys (defines return order).
@@ -143,7 +178,10 @@ public interface Query<T> {
      * @param sorts the sort order to apply
      * @return this
      */
-    Query<T> order(Sort... sorts);
+    @Deprecated(since = "2.0", forRemoval = true)
+    default Query<T> order(final Sort... sorts) {
+        return legacyOperation();
+    }
 
     /**
      * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
@@ -157,7 +195,9 @@ public interface Query<T> {
      * @deprecated use {@link FindOptions#projection()}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Query<T> project(String field, boolean include);
+    default Query<T> project(final String field, final boolean include) {
+        return legacyOperation();
+    }
 
     /**
      * Adds an sliced array field to a projection.
@@ -170,7 +210,9 @@ public interface Query<T> {
      * @deprecated use {@link FindOptions#projection()}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Query<T> project(String field, ArraySlice slice);
+    default Query<T> project(final String field, final ArraySlice slice) {
+        return legacyOperation();
+    }
 
     /**
      * Adds a metadata field to a projection.
@@ -182,16 +224,9 @@ public interface Query<T> {
      * @deprecated use {@link FindOptions#projection()}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Query<T> project(Meta meta);
-
-    /**
-     * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
-     *
-     * @return this
-     * @deprecated use {@link FindOptions#projection()}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    Query<T> retrieveKnownFields();
+    default Query<T> project(final Meta meta) {
+        return legacyOperation();
+    }
 
     /**
      * Perform a text search on the content of the fields indexed with a text index..
@@ -361,16 +396,15 @@ public interface Query<T> {
     Modify<T> modify();
 
     /**
-     * This is only intended for migration of legacy uses of UpdateOperations
+     * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
      *
-     * @param operations the prebuilt operations
-     * @return the Modify instance
-     * @morphia.internal
-     * @since 2.0
-     * @deprecated
+     * @return this
+     * @deprecated use {@link FindOptions#projection()}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Modify<T> modify(UpdateOperations<T> operations);
+    default Query<T> retrieveKnownFields() {
+        return legacyOperation();
+    }
 
     /**
      * Deletes elements matching this query
@@ -412,7 +446,9 @@ public interface Query<T> {
      * @deprecated
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    Update<T> update(UpdateOperations operations);
+    default Update<T> update(final UpdateOperations operations) {
+        return legacyOperation();
+    }
 
     /**
      * @return the logged query

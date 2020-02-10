@@ -32,15 +32,15 @@ import java.util.StringJoiner;
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
-public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
+public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final DatastoreImpl datastore;
     private final Class<T> clazz;
     private final Mapper mapper;
     private final Document seedQuery;
     private boolean validate = true;
-    private Document baseQuery;
     private String collectionName;
     private MongoCollection<T> collection;
     private List<Filter> filters = new ArrayList<>();
@@ -60,20 +60,15 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         throw new UnsupportedOperationException(Sofia.legacyQueryOperation());
     }
 
-    @Override
-    public void add(final Criteria... criteria) {
-        throw new UnsupportedOperationException();
+    static <V> V modernOperation() {
+        throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
     }
 
-    @Override
-    public void remove(final Criteria criteria) {
-        throw new UnsupportedOperationException();
-    }
-
+/*
     @Override
     public CriteriaContainer and(final Criteria... criteria) {
         List<Filter> collect = collect(criteria);
-        filters.clear();
+        filters.remove(asList(criteria));
         filter(Filters.and(collect.toArray(new Filter[0])));
         return this;
     }
@@ -82,6 +77,7 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
     public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
         return new CriteriaFieldEnd(field);
     }
+*/
 
     @Override
     public FieldEnd<? extends Query<T>> field(final String name) {
@@ -100,18 +96,15 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         return filter(op.apply(parts[0].trim(), value));
     }
 
+/*
     @Override
     public CriteriaContainer or(final Criteria... criteria) {
         List<Filter> collect = collect(criteria);
-        filters.clear();
+        filters.remove(asList(criteria));
         filter(Filters.or(collect.toArray(new Filter[0])));
         return this;
     }
-
-    @Override
-    public String getFieldName() {
-        throw new UnsupportedOperationException();
-    }
+*/
 
     @Override
     public Query filter(final Filter... additional) {
@@ -274,7 +267,7 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
 
     @Override
     public int hashCode() {
-        return Objects.hash(clazz, validate, baseQuery, getCollectionName());
+        return Objects.hash(clazz, validate, getCollectionName());
     }
 
     @Override
@@ -288,7 +281,6 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
         return validate == query20.validate &&
                Objects.equals(clazz, query20.clazz) &&
-               Objects.equals(baseQuery, query20.baseQuery) &&
                Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
@@ -304,16 +296,7 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         return writer.getDocument();
     }
 
-    @Override
-    public Document toDocument() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void attach(final CriteriaContainer container) {
-        throw new UnsupportedOperationException();
-    }
-
+/*
     private List<Filter> collect(final Criteria[] criteria) {
         List<Filter> collected = new ArrayList<>();
         for (final Criteria criterion : criteria) {
@@ -331,6 +314,7 @@ public class MorphiaQuery<T> implements Query20<T>, CriteriaContainer {
         }
         return collected;
     }
+*/
 
     /**
      * @return the collection this query targets

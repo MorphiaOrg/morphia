@@ -1,15 +1,22 @@
 package dev.morphia.query;
 
+import static dev.morphia.query.MorphiaQuery.legacyOperation;
+
 /**
  * Internal class to represent groups of {@link Criteria} instances via $and and $or query clauses
+ *
+ * @deprecated
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public interface CriteriaContainer extends Criteria {
     /**
      * Adds Criteria to this container
      *
      * @param criteria the criteria to add
      */
-    void add(Criteria... criteria);
+    default void add(Criteria... criteria) {
+        legacyOperation();
+    }
 
     /**
      * Ands Criteria with this CriteriaContainer.
@@ -17,7 +24,9 @@ public interface CriteriaContainer extends Criteria {
      * @param criteria the criteria
      * @return the container
      */
-    CriteriaContainer and(Criteria... criteria);
+    default CriteriaContainer and(Criteria... criteria) {
+        return legacyOperation();
+    }
 
     /**
      * Creates a criteria against a field
@@ -25,7 +34,9 @@ public interface CriteriaContainer extends Criteria {
      * @param field the field
      * @return the FieldEnd to define the criteria to apply
      */
-    FieldEnd<? extends CriteriaContainer> criteria(String field);
+    default FieldEnd<? extends CriteriaContainer> criteria(String field) {
+        return legacyOperation();
+    }
 
     /**
      * Ors Criteria with this CriteriaContainer.
@@ -34,12 +45,16 @@ public interface CriteriaContainer extends Criteria {
      * @return the container
      */
 
-    CriteriaContainer or(Criteria... criteria);
+    default CriteriaContainer or(Criteria... criteria) {
+        return legacyOperation();
+    }
 
     /**
      * Removes Criteria to this container
      *
      * @param criteria the criteria to remove
      */
-    void remove(Criteria criteria);
+    default void remove(Criteria criteria) {
+        legacyOperation();
+    }
 }

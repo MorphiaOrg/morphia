@@ -467,25 +467,34 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    @Ignore
     public void testCriteriaContainers() {
-        final Query<User> query = getDs().find(User.class)
-                                         .disableValidation();
+        try {
+            check(new DefaultQueryFactory().createQuery(getDs(), User.class).disableValidation());
+            fail("These operations are not supported on the modern query operation and should have failed.");
+        } catch (UnsupportedOperationException e) {
+            // success
+        }
+        check(new LegacyQueryFactory().createQuery(getDs(), User.class).disableValidation());
+    }
 
-        query.field("version").equal("latest")
-             .and(
-                 query.or(
-                     query.criteria("fieldA").equal("a"),
-                     query.criteria("fieldB").equal("b")),
-                 query.and(
-                     query.criteria("fieldC").equal("c"),
-                     query.or(
-                         query.criteria("fieldD").equal("d"),
-                         query.criteria("fieldE").equal("e"))));
+    private void check(final Query<User> query) {
+        query
+            .field("version").equal("latest")
+            .and(
+                query.or(
+                    query.criteria("fieldA").equal("a"),
+                    query.criteria("fieldB").equal("b")),
+                query.and(
+                    query.criteria("fieldC").equal("c"),
+                    query.or(
+                        query.criteria("fieldD").equal("d"),
+                        query.criteria("fieldE").equal("e"))));
 
         query.and(query.criteria("fieldF").equal("f"));
 
-        final Document queryObject = ((LegacyQuery) query).prepareQuery();
+        final Document queryObject = query instanceof LegacyQuery
+                                     ? ((LegacyQuery) query).prepareQuery()
+                                     : ((MorphiaQuery) query).prepareQuery();
 
         final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
