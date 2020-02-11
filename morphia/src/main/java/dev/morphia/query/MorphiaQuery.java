@@ -487,7 +487,11 @@ public class MorphiaQuery<T> implements Query<T> {
 
         @Override
         protected MorphiaQuery addCriteria(final FilterOperator op, final Object val, final boolean not) {
-            filter(op.apply(name, val).not(not));
+            Filter converted = op.apply(name, val);
+            if(not) {
+                converted.not();
+            }
+            filter(converted);
             return MorphiaQuery.this;
         }
     }

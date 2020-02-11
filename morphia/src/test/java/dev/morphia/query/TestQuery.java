@@ -27,6 +27,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
+import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
@@ -54,6 +55,9 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
 import static dev.morphia.query.Sort.naturalDescending;
+import static dev.morphia.query.experimental.filters.Filters.and;
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.or;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
@@ -324,7 +328,8 @@ public class TestQuery extends TestBase {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
 
         Query<Rectangle> q = getDs().find(Rectangle.class);
-        q.and(q.criteria("width").equal(10), q.criteria("height").equal(1));
+        q.filter(
+            and(eq("width", 10), eq("height", 1)));
         FindOptions options = new FindOptions()
                                   .logQuery();
         List<Rectangle> list = q.execute(options)
@@ -333,16 +338,15 @@ public class TestQuery extends TestBase {
         assertEquals(1, q.count());
 
         q = getDs().find(Rectangle.class);
-        q.or(q.criteria("width").equal(10), q.criteria("height").equal(10));
+        q.filter(
+            or(eq("width", 10), eq("height", 10)));
         assertEquals(3, q.count());
 
         q = getDs().find(Rectangle.class);
-        q.or(q.criteria("width").equal(10), q.and(q.criteria("width").equal(5), q.criteria("height").equal(8)));
-        options = new FindOptions()
-                      .logQuery();
-        list = q.execute(options)
-                .toList();
-        loggedQuery = q.getLoggedQuery(options);
+        q.filter(
+            or(eq("width", 10),
+                and(eq("width", 5),
+                    eq("height", 8))));
         assertEquals(3, q.count());
     }
 
@@ -661,9 +665,10 @@ public class TestQuery extends TestBase {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
         final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
-        q.and(
-            q.or(q.criteria("keywords.keyword").equal("scott")),
-            q.or(q.criteria("keywords.keyword").equal("hernandez")));
+        q.filter(
+            and(
+                or(eq("keywords.keyword", "scott")),
+                or(eq("keywords.keyword", "hernandez"))));
 
         assertEquals(1, q.count());
     }
@@ -674,8 +679,12 @@ public class TestQuery extends TestBase {
         getDs().save(pwk);
 
         final Query<PhotoWithKeywords> query = getAds().find(PhotoWithKeywords.class);
-        query.criteria("keywords.keyword").not().startsWith("ralph");
+        query.filter(
+            Filters.regex("keywords.keyword").pattern("^ralph").not());
 
+        FindOptions options = new FindOptions().logQuery();
+        query.execute(/*options*/);
+        //        String loggedQuery = query.getLoggedQuery(options);
         assertEquals(1, query.count());
     }
 
@@ -684,10 +693,11 @@ public class TestQuery extends TestBase {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
-        q.or(
-            q.criteria("keywords.keyword").equal("scott"),
-            q.criteria("keywords.keyword").equal("ralph"));
+        final Query<PhotoWithKeywords> q =
+            getAds().find(PhotoWithKeywords.class)
+                    .filter(or(
+                        eq("keywords.keyword", "scott"),
+                        eq("keywords.keyword", "ralph")));
 
         assertEquals(1, q.count());
     }
@@ -1215,7 +1225,7 @@ public class TestQuery extends TestBase {
                 .append("someMap", new Document("someKey", "value")));
 
         Query<Class1> query = getDs().find(Class1.class);
-        query.disableValidation().criteria("someMap.someKey").equal("value");
+        query.disableValidation().filter(eq("someMap.someKey", "value"));
         Class1 retrievedValue = query.execute(new FindOptions().limit(1)).next();
         Assert.assertNotNull(retrievedValue);
         Assert.assertEquals("foo", retrievedValue.value1);

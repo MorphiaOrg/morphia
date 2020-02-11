@@ -15,11 +15,11 @@ import java.util.StringJoiner;
 /**
  * @morphia.internal
  */
-class OperationTarget {
+public class OperationTarget {
     private PathTarget target;
     private Object value;
 
-    OperationTarget(final PathTarget target, final Object value) {
+    public OperationTarget(final PathTarget target, final Object value) {
         this.target = target;
         this.value = value;
     }

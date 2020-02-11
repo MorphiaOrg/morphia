@@ -2,11 +2,11 @@ package dev.morphia.query.experimental.filters;
 
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.OperationTarget;
 import org.bson.BsonWriter;
+import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-
-import java.util.StringJoiner;
 
 import static java.lang.String.format;
 
@@ -23,6 +23,8 @@ public class Filter {
     private boolean not;
     private boolean validate;
     private Class<?> entityClass;
+    private PathTarget pathTarget;
+    private boolean mapped;
 
     protected Filter(final String name) {
         this.filterName = name;
@@ -32,6 +34,10 @@ public class Filter {
         this.filterName = name;
         this.field = field;
         this.value = value;
+    }
+
+    protected boolean isNot() {
+        return not;
     }
 
     /**
@@ -80,11 +86,10 @@ public class Filter {
     /**
      * Negates this filter by wrapping in "$not: {}"
      *
-     * @param not possible negation
      * @return this
      */
-    public Filter not(final boolean not) {
-        this.not = not;
+    public Filter not() {
+        this.not = true;
         return this;
     }
 
@@ -94,28 +99,37 @@ public class Filter {
     }
 
     protected String field(final Mapper mapper) {
-        String s = field;
-        if (validate) {
-            s = new PathTarget(mapper, entityClass, s).translatedPath();
+        if (validate && field != null && pathTarget == null) {
+            pathTarget = new PathTarget(mapper, entityClass, field);
+            field = pathTarget.translatedPath();
         }
 
-        return s;
+        return field;
     }
 
     protected String getFilterName() {
         return filterName;
     }
 
-    protected Object getValue() {
+    protected Object getValue(final Mapper mapper) {
+        if(!mapped) {
+            String field = field(mapper);
+            if(pathTarget != null) {
+                this.value = ((Document) new OperationTarget(pathTarget, value)
+                                             .encode(mapper))
+                                 .get(field);
+            }
+            mapped = true;
+        }
         return value;
     }
 
-    protected void writeNamedValue(final String name, final Object value, final Mapper mapper, final BsonWriter writer,
+    protected void writeNamedValue(final String name, final Object named, final Mapper mapper, final BsonWriter writer,
                                    final EncoderContext encoderContext) {
         writer.writeName(name);
-        if (value != null) {
-            Codec codec = mapper.getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
+        if (named != null) {
+            Codec codec = mapper.getCodecRegistry().get(named.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, named);
         } else {
             writer.writeNull();
         }

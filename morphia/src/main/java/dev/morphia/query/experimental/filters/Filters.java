@@ -28,7 +28,7 @@ public final class Filters {
             @Override
             public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
                 writer.writeName(field(mapper));
-                writeUnnamedValue(getValue(), mapper, writer, context);
+                writeUnnamedValue(getValue(mapper), mapper, writer, context);
             }
         };
     }
@@ -127,7 +127,7 @@ public final class Filters {
             @Override
             public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
                 writer.writeName(getFilterName());
-                String value = getValue().toString().trim();
+                String value = getValue(mapper).toString().trim();
                 if (!value.startsWith("function()")) {
                     value = format("function() { %s }", value);
                 }

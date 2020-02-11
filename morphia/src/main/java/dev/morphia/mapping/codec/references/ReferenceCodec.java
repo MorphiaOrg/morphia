@@ -155,8 +155,11 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     public Object encode(final Object value) {
         try {
             DocumentWriter writer = new DocumentWriter();
+            writer.writeStartDocument();
+            writer.writeName("ref");
             encode(writer, value, EncoderContext.builder().build());
-            return writer.getDocument();
+            writer.writeEndDocument();
+            return writer.getDocument().get("ref");
         } catch (ReferenceException e) {
             return value;
         }
