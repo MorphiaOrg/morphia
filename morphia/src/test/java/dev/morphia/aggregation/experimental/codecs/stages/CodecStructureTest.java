@@ -212,8 +212,7 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testReplaceWith() {
         evaluate(parse("{ $replaceWith: \"$grades\" }"),
-            ReplaceWith.with()
-                       .with(field("grades")));
+            ReplaceWith.with(field("grades")));
 
         evaluate(parse("{ $replaceWith: { _id: '$_id', item: '$item', amount: { $multiply: [ '$price', '$quantity']}, status: 'Complete', "
                        + "asofDate: '$$NOW' } }"),

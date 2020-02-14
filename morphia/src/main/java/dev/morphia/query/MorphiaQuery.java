@@ -32,7 +32,6 @@ import java.util.StringJoiner;
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
 public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
@@ -208,7 +207,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Modify<T> modify() {
-        return new Modify<>(this, datastore, mapper, getEntityClass(), collection);
+        return new Modify<>(this, datastore, mapper, getEntityClass(), getCollection());
     }
 
     @Override
@@ -340,7 +339,7 @@ public class MorphiaQuery<T> implements Query<T> {
      * @return the query
      * @morphia.internal
      */
-    public Document prepareQuery() {
+    public Document toDocument() {
         final Document query = getQueryDocument();
         MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
         Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
@@ -361,7 +360,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
-        final Document query = prepareQuery();
+        final Document query = toDocument();
 
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
@@ -407,74 +406,6 @@ public class MorphiaQuery<T> implements Query<T> {
     public Query<T> where(final String js) {
         filter(Filters.where(js));
         return this;
-    }
-
-    private class CriteriaFieldEnd extends FieldEndImpl<CriteriaFieldEnd> implements CriteriaContainer {
-        private final String name;
-        private List<Filter> filters = new ArrayList<>();
-
-        private CriteriaFieldEnd(final String name) {
-            super(mapper, name, null, mapper.getMappedClass(getEntityClass()), validate);
-            this.name = name;
-        }
-
-        @Override
-        public void add(final Criteria... criteria) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public CriteriaContainer and(final Criteria... criteria) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public CriteriaContainer or(final Criteria... criteria) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void remove(final Criteria criteria) {
-            throw new UnsupportedOperationException();
-        }
-
-        public List<Filter> getFilters() {
-            return filters;
-        }
-
-        @Override
-        public Document toDocument() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void attach(final CriteriaContainer container) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getFieldName() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String toString() {
-            return new StringJoiner(", ", CriteriaFieldEnd.class.getSimpleName() + "[", "]")
-                       .add("name='" + name + "'")
-                       .add("filters=" + filters)
-                       .toString();
-        }
-
-        @Override
-        protected CriteriaFieldEnd addCriteria(final FilterOperator op, final Object val, final boolean not) {
-            filters.add(op.apply(name, val));
-            return this;
-        }
     }
 
     private class MorphiaQueryFieldEnd extends FieldEndImpl {

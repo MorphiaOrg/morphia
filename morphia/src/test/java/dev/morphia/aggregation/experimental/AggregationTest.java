@@ -611,8 +611,10 @@ public class AggregationTest extends TestBase {
 
         Document actual = getDs().aggregate("forecasts")
                                  .match(getDs().find().filter("year", 2014))
-                                 .redact(Redact.on(condition(
-                                     gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
+                                 .redact(Redact.on(
+                                     condition(
+                                         gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))),
+                                             value(0)),
                                      DESCEND, PRUNE)))
                                  .execute(Document.class)
                                  .next();

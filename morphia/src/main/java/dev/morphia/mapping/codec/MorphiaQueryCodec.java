@@ -31,7 +31,7 @@ public class MorphiaQueryCodec implements Codec<MorphiaQuery> {
 
     @Override
     public void encode(final BsonWriter writer, final MorphiaQuery value, final EncoderContext encoderContext) {
-        mapper.getCodecRegistry().get(Document.class).encode(writer, value.prepareQuery(), encoderContext);
+        mapper.getCodecRegistry().get(Document.class).encode(writer, value.toDocument(), encoderContext);
     }
 
     @Override

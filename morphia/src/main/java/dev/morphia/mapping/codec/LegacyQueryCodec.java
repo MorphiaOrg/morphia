@@ -31,7 +31,7 @@ public class LegacyQueryCodec implements Codec<LegacyQuery> {
 
     @Override
     public void encode(final BsonWriter writer, final LegacyQuery value, final EncoderContext encoderContext) {
-        mapper.getCodecRegistry().get(Document.class).encode(writer, value.prepareQuery(), encoderContext);
+        mapper.getCodecRegistry().get(Document.class).encode(writer, value.toDocument(), encoderContext);
     }
 
     @Override

@@ -42,11 +42,7 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
     public UpdateResult execute(final UpdateOptions options) {
         MongoCollection mongoCollection = options.apply(collection);
         Document updateOperations = toDocument();
-        final Document queryObject = null; //query.prepareQuery();
-        if (1 == 1) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        }
+        final Document queryObject = query.toDocument();
 
         ClientSession session = getDatastore().findSession(options);
         if (options.isMulti()) {

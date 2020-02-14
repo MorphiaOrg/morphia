@@ -34,7 +34,6 @@ import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -57,6 +56,8 @@ import static dev.morphia.query.Sort.naturalAscending;
 import static dev.morphia.query.Sort.naturalDescending;
 import static dev.morphia.query.experimental.filters.Filters.and;
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.gt;
+import static dev.morphia.query.experimental.filters.Filters.lt;
 import static dev.morphia.query.experimental.filters.Filters.or;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
@@ -497,8 +498,8 @@ public class TestQuery extends TestBase {
         query.and(query.criteria("fieldF").equal("f"));
 
         final Document queryObject = query instanceof LegacyQuery
-                                     ? ((LegacyQuery) query).prepareQuery()
-                                     : ((MorphiaQuery) query).prepareQuery();
+                                     ? ((LegacyQuery) query).toDocument()
+                                     : ((MorphiaQuery) query).toDocument();
 
         final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
@@ -715,8 +716,8 @@ public class TestQuery extends TestBase {
     public void testIdRangeQuery() {
         getDs().save(asList(new HasIntId(1), new HasIntId(11), new HasIntId(12)));
         Query<HasIntId> filter = getDs().find(HasIntId.class)
-                                        .filter("_id >", 5)
-                                        .filter("_id <", 20);
+                                        .filter(gt("_id", 5),
+                                            lt("_id", 20));
 
         FindOptions options = new FindOptions().logQuery();
         MorphiaCursor<HasIntId> list = filter.execute(options);
@@ -724,8 +725,8 @@ public class TestQuery extends TestBase {
         assertEquals(2, filter
                             .count());
         assertEquals(1, getDs().find(HasIntId.class)
-                               .field("_id").greaterThan(0)
-                               .field("_id").lessThan(11)
+                               .filter(gt("_id", 0),
+                                   lt("_id", 11))
                                .count());
     }
 

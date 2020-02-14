@@ -41,11 +41,9 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      */
     public T execute(final FindAndModifyOptions options) {
         ClientSession session = getDatastore().findSession(options);
-        throw new UnsupportedOperationException("todo");
 
-        //        return session == null
-        //               ? options.apply(collection).findOneAndUpdate(query.prepareQuery(), toDocument(), options)
-        //               : options.apply(collection).findOneAndUpdate(session, query.prepareQuery(), toDocument(), options);
-
+        return session == null
+               ? options.apply(collection).findOneAndUpdate(query.toDocument(), toDocument(), options)
+               : options.apply(collection).findOneAndUpdate(session, query.toDocument(), toDocument(), options);
     }
 }

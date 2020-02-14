@@ -7,10 +7,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 public class TestDocumentWriter extends TestBase {
+    private int docs = 0;
+    private int arrays = 0;
+
     @Test
     public void nesting() throws JSONException {
         String expected = "{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: "
@@ -48,6 +54,46 @@ public class TestDocumentWriter extends TestBase {
         writer.writeEndDocument();
         String s = writer.getDocument().toJson();
         JSONAssert.assertEquals(expected, s, false);
+    }
+
+    @Test
+    public void testArrays() {
+        DocumentWriter writer = new DocumentWriter();
+
+        writer.writeStartDocument();
+        check(writer, 1, 0);
+        writer.writeStartArray("stuff");
+        check(writer, 1, 1);
+        writer.writeString("hello");
+        writer.writeInt32(42);
+        writer.writeEndArray();
+        check(writer, 1, 0);
+        writer.writeName("next");
+        writer.writeString("something simple");
+        writer.writeEndDocument();
+
+        check(writer, 0, 0);
+        assertEquals(new Document("stuff", asList("hello", 42))
+                         .append("next", "something simple"), writer.getDocument());
+    }
+
+    @Test
+    public void testArraysWithDocs() {
+        DocumentWriter writer = new DocumentWriter();
+
+        writer.writeStartDocument();
+        check(writer, 1, 0);
+        writer.writeStartArray("stuff");
+        check(writer, 1, 1);
+        writer.writeStartDocument();
+        writer.writeInt32("doc", 42);
+        writer.writeEndDocument();
+        writer.writeEndArray();
+        check(writer, 1, 0);
+        writer.writeEndDocument();
+
+        check(writer, 0, 0);
+        assertEquals(new Document("stuff", asList(new Document("doc", 42))), writer.getDocument());
     }
 
     @Test
@@ -99,43 +145,23 @@ public class TestDocumentWriter extends TestBase {
     }
 
     @Test
-    public void testArrays() {
+    public void testNestedArrays() {
         DocumentWriter writer = new DocumentWriter();
 
-        writer.writeStartDocument();
-        check(writer, 1, 0);
-        writer.writeStartArray("stuff");
-        check(writer, 1, 1);
-        writer.writeString("hello");
-        writer.writeInt32(42);
-        writer.writeEndArray();
-        check(writer, 1, 0);
-        writer.writeName("next");
-        writer.writeString("something simple");
-        writer.writeEndDocument();
-
-        check(writer, 0, 0);
-        assertEquals(new Document("stuff", asList("hello", 42))
-                         .append("next", "something simple"), writer.getDocument());
-    }
-
-    @Test
-    public void testArraysWithDocs() {
-        DocumentWriter writer = new DocumentWriter();
-
-        writer.writeStartDocument();
-        check(writer, 1, 0);
-        writer.writeStartArray("stuff");
-        check(writer, 1, 1);
-        writer.writeStartDocument();
-        writer.writeInt32("doc", 42);
-        writer.writeEndDocument();
-        writer.writeEndArray();
-        check(writer, 1, 0);
-        writer.writeEndDocument();
-
-        check(writer, 0, 0);
-        assertEquals(new Document("stuff", asList(new Document("doc", 42))), writer.getDocument());
+        startDoc(writer);
+        startArray(writer, "top");
+        startArray(writer);
+        writer.writeInt32(1);
+        writer.writeInt32(2);
+        writer.writeInt32(3);
+        startDoc(writer);
+        writer.writeString("nested", "string");
+        endDoc(writer);
+        endArray(writer);
+        endArray(writer);
+        endDoc(writer);
+        Document top = new Document("top", List.of(List.of(1, 2, 3, new Document("nested", "string"))));
+        assertEquals(top, writer.getDocument());
     }
 
     @Test
@@ -153,10 +179,34 @@ public class TestDocumentWriter extends TestBase {
 
     }
 
-
     private void check(final DocumentWriter writer, final int docs, final int arrays) {
         assertEquals(docs, writer.getDocsLevel());
         assertEquals(arrays, writer.getArraysLevel());
+    }
+
+    private void endArray(final DocumentWriter writer) {
+        writer.writeEndArray();
+        assertEquals(--arrays, writer.getArraysLevel());
+    }
+
+    private void endDoc(final DocumentWriter writer) {
+        writer.writeEndDocument();
+        assertEquals(--docs, writer.getDocsLevel());
+    }
+
+    private void startArray(final DocumentWriter writer) {
+        writer.writeStartArray();
+        assertEquals(++arrays, writer.getArraysLevel());
+    }
+
+    private void startArray(final DocumentWriter writer, final String name) {
+        writer.writeStartArray(name);
+        assertEquals(++arrays, writer.getArraysLevel());
+    }
+
+    private void startDoc(final DocumentWriter writer) {
+        writer.writeStartDocument();
+        assertEquals(++docs, writer.getDocsLevel());
     }
 
 }

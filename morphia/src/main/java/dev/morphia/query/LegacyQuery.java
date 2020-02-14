@@ -327,7 +327,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @return the query
      * @morphia.internal
      */
-    public Document prepareQuery() {
+    public Document toDocument() {
         final Document query = getQueryDocument();
         MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
         Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
@@ -441,14 +441,9 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             obj.putAll(baseQuery);
         }
 
-        obj.putAll(toDocument());
+        obj.putAll(compoundContainer.toDocument());
 
         return obj;
-    }
-
-    @Override
-    public Document toDocument() {
-        return compoundContainer.toDocument();
     }
 
     @Override
@@ -475,7 +470,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
-        final Document query = prepareQuery();
+        final Document query = this.toDocument();
 
         FindOptions options = findOptions.copy().copy(getOptions());
         if (LOG.isTraceEnabled()) {

@@ -513,8 +513,8 @@ public class TestLegacyQuery extends TestBase {
         query.and(query.criteria("fieldF").equal("f"));
 
         final Document queryObject = query instanceof LegacyQuery
-                                     ? ((LegacyQuery) query).prepareQuery()
-                                     : ((MorphiaQuery) query).prepareQuery();
+                                     ? ((LegacyQuery) query).toDocument()
+                                     : ((MorphiaQuery) query).toDocument();
 
         final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "

@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -56,13 +57,13 @@ public class TestEmbeddedValidation extends TestBase {
         getDs().save(entity);
 
         TestEntity testEntity = getDs().find(TestEntity.class)
-                                       .filter("_id", entity.getId())
-                                       .first();;
+                                       .filter(eq("_id", entity.getId()))
+                                       .first();
         assertEquals(entity, testEntity);
 
         Query<TestEntity> query = getDs().find(TestEntity.class);
         query.disableValidation();
-        query.criteria("data.data.id").equal("123");
+        query.filter(eq("data.data.id", "123"));
 
         assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
     }

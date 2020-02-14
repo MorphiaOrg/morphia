@@ -8,6 +8,7 @@ import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
+import org.bson.Document;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +43,7 @@ public interface Query<T> extends CriteriaContainer {
         return legacyOperation();
     }
 
-    default Query filter(Filter... filters) {
+    default Query<T> filter(Filter... filters) {
         throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
     }
 
@@ -182,6 +183,12 @@ public interface Query<T> extends CriteriaContainer {
     default Query<T> order(final Sort... sorts) {
         return legacyOperation();
     }
+
+    /**
+     * @return
+     * @morphia.internal
+     */
+    Document toDocument();
 
     /**
      * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
