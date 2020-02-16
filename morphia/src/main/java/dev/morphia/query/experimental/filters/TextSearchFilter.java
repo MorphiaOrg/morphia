@@ -44,7 +44,6 @@ public class TextSearchFilter extends Filter {
 
     @Override
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
-        writer.writeStartDocument();
         writer.writeStartDocument(getFilterName());
         writeNamedValue("$search", searchText, mapper, writer, context);
         writeNamedValue("$language", language, mapper, writer, context);
@@ -54,7 +53,6 @@ public class TextSearchFilter extends Filter {
         if (Boolean.TRUE.equals(diacriticSensitive)) {
             writeNamedValue("$diacriticSensitive", diacriticSensitive, mapper, writer, context);
         }
-        writer.writeEndDocument();
         writer.writeEndDocument();
     }
 

@@ -746,7 +746,8 @@ public class TestUpdateOps extends TestBase {
 
         //test with Key<Pic>
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class).filter("name", cpk.name);
-        final UpdateResult res = query.update().set("keys", cpk.keys).execute();
+        final UpdateResult res = query.update()
+                                      .set("keys", cpk.keys).execute();
 
         assertThat(res.getModifiedCount(), is(1L));
 

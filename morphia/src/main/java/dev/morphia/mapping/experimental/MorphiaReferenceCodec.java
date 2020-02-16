@@ -69,8 +69,10 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
             wrap = MorphiaReference.wrap(value);
         }
         DocumentWriter writer = new DocumentWriter();
+        writer.writeStartDocument();
+        writer.writeName("ref");
         encode(writer, wrap, EncoderContext.builder().build());
-        return writer.getDocument();
+        return writer.getDocument().get("ref");
     }
 
     @Override

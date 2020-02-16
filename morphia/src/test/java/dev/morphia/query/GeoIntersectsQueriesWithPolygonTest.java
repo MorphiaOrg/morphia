@@ -14,6 +14,7 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
+import dev.morphia.query.legacy.LegacyTestBase;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,7 +25,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
+public class GeoIntersectsQueriesWithPolygonTest extends LegacyTestBase {
     @Test
     public void shouldFindAPointThatLiesInAQueryPolygon() {
         // given

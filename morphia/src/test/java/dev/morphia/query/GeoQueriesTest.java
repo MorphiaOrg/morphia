@@ -5,6 +5,7 @@ import com.mongodb.client.model.geojson.Position;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.geo.model.City;
+import dev.morphia.query.legacy.LegacyTestBase;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class GeoQueriesTest extends TestBase {
+public class GeoQueriesTest extends LegacyTestBase {
     @Test
     public void shouldFindCitiesCloseToAGivenPointWithinARadiusOfMeters() {
         // given

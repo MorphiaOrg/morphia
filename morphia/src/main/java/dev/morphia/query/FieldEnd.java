@@ -6,6 +6,8 @@ import dev.morphia.geo.Geometry;
 import dev.morphia.geo.MultiPolygon;
 import dev.morphia.geo.Point;
 import dev.morphia.geo.Polygon;
+import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.experimental.filters.Filters;
 
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
@@ -20,7 +22,9 @@ public interface FieldEnd<T> {
      * @param string the value to check for
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
+     * @deprecated use {@link Filters#regex(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T contains(String string);
 
     /**
@@ -29,7 +33,9 @@ public interface FieldEnd<T> {
      * @param string the value to check for
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
+     * @deprecated use {@link Filters#regex(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T containsIgnoreCase(String string);
 
     /**
@@ -37,7 +43,9 @@ public interface FieldEnd<T> {
      *
      * @return T
      * @mongodb.driver.manual reference/operator/query/exists/ $exists
+     * @deprecated use {@link Filters#exists(String, Object)} with {@link Filter#not()} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T doesNotExist();
 
     /**
@@ -46,7 +54,9 @@ public interface FieldEnd<T> {
      * @param suffix the value to check
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
+     * @deprecated use {@link Filters#regex(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T endsWith(String suffix);
 
     /**
@@ -55,7 +65,9 @@ public interface FieldEnd<T> {
      * @param suffix the value to check
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
+     * @deprecated use {@link Filters#regex(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T endsWithIgnoreCase(String suffix);
 
     /**
@@ -64,7 +76,9 @@ public interface FieldEnd<T> {
      * @param val the value to check
      * @return T
      * @mongodb.driver.manual reference/operator/query/eq/ $eq
+     * @deprecated use {@link Filters#eq(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T equal(Object val);
 
     /**
@@ -73,7 +87,9 @@ public interface FieldEnd<T> {
      * @param val the value to check
      * @return T
      * @mongodb.driver.manual reference/operator/query/eq/ $eq
+     * @deprecated use {@link Filters#eq(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T equalIgnoreCase(Object val);
 
     /**
@@ -81,7 +97,9 @@ public interface FieldEnd<T> {
      *
      * @return T
      * @mongodb.driver.manual reference/operator/query/exists/ $exists
+     * @deprecated use {@link Filters#exists(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T exists();
 
     /**
@@ -90,7 +108,9 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/gt/ $gt
+     * @deprecated use {@link Filters#gt(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T greaterThan(Object val);
 
     /**
@@ -99,7 +119,9 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/gte/ $gte
+     * @deprecated use {@link Filters#gte(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T greaterThanOrEq(Object val);
 
     /**
@@ -108,7 +130,9 @@ public interface FieldEnd<T> {
      * @param values the values to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/all/ $all
+     * @deprecated use {@link Filters#all(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T hasAllOf(Iterable<?> values);
 
     /**
@@ -117,7 +141,9 @@ public interface FieldEnd<T> {
      * @param values the values to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/in/ $in
+     * @deprecated use {@link Filters#in(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T hasAnyOf(Iterable<?> values);
 
     /**
@@ -126,7 +152,9 @@ public interface FieldEnd<T> {
      * @param values the values to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/nin/ $nin
+     * @deprecated use {@link Filters#nin(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T hasNoneOf(Iterable<?> values);
 
     /**
@@ -135,7 +163,9 @@ public interface FieldEnd<T> {
      * @param query the query to find certain field values
      * @return T
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     * @deprecated use {@link Filters#elemMatch(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T elemMatch(Query query);
 
     /**
@@ -144,7 +174,9 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/eq/ $eq
+     * @deprecated use {@link Filters#eq(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T hasThisOne(Object val);
 
     /**
@@ -153,7 +185,9 @@ public interface FieldEnd<T> {
      * @param values the values to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/in/ $in
+     * @deprecated use {@link Filters#in(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T in(Iterable<?> values);
 
     /**
@@ -163,8 +197,8 @@ public interface FieldEnd<T> {
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoIntersects/ $geoIntersects
+     * @deprecated use {@link Filters#geoIntersects(String, Object)} instead
      * @mongodb.server.release 2.4
-     * @deprecated use the driver provided geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T intersects(Geometry geometry) {
@@ -178,9 +212,11 @@ public interface FieldEnd<T> {
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoIntersects/ $geoIntersects
+     * @deprecated use {@link Filters#geoIntersects(String, Object)} instead
      * @mongodb.server.release 2.4
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T intersects(com.mongodb.client.model.geojson.Geometry geometry);
 
     /**
@@ -191,8 +227,8 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use with the query
      * @return T
      * @mongodb.driver.manual reference/operator/query/geometry $geometry
+     * @deprecated use {@link Filters#geometry(String, Object)} instead
      * @mongodb.server.release 2.4
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T intersects(Geometry geometry, final CoordinateReferenceSystem crs) {
@@ -207,9 +243,11 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use with the query
      * @return T
      * @mongodb.driver.manual reference/operator/query/geometry $geometry
+     * @deprecated use {@link Filters#geometry(String, Object)} instead
      * @mongodb.server.release 2.4
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T intersects(com.mongodb.client.model.geojson.Geometry geometry, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
 
     /**
@@ -218,7 +256,9 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/lt/ $lt
+     * @deprecated use {@link Filters#lt(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T lessThan(Object val);
 
     /**
@@ -227,7 +267,9 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/lte/ $lte
+     * @deprecated use {@link Filters#lte(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T lessThanOrEq(Object val);
 
     /**
@@ -238,7 +280,9 @@ public interface FieldEnd<T> {
      * @param remainder the remainder to check for
      * @return T
      * @mongodb.driver.manual reference/operator/query/mod/ $mod
+     * @deprecated use {@link Filters#mod(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T mod(long divisor, long remainder);
 
     /**
@@ -248,7 +292,9 @@ public interface FieldEnd<T> {
      * @param latitude  the latitude
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @deprecated use {@link Filters#near(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude);
 
     /**
@@ -260,7 +306,9 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude, boolean spherical);
 
     /**
@@ -271,7 +319,9 @@ public interface FieldEnd<T> {
      * @param radius    the max distance to consider
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @deprecated use {@link Filters#near(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude, double radius);
 
     /**
@@ -284,7 +334,9 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude, double radius, boolean spherical);
 
     /**
@@ -294,7 +346,7 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated Use the driver supplied geo types instead
+     * @deprecated use {@link Filters#near(String, Object)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T near(Point point) {
@@ -308,8 +360,10 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @deprecated use {@link Filters#near(String, Object)} instead
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T near(com.mongodb.client.model.geojson.Point point);
 
     /**
@@ -320,8 +374,8 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @deprecated use {@link Filters#near(String, Object)} instead
      * @since 1.5
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T near(Point point, Double maxDistance, Double minDistance) {
@@ -336,8 +390,10 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
+     * @deprecated use {@link Filters#near(String, Object)} instead
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T near(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance);
 
     /**
@@ -346,8 +402,8 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 1.5
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T nearSphere(Point point) {
@@ -360,8 +416,10 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T nearSphere(com.mongodb.client.model.geojson.Point point);
 
     /**
@@ -372,8 +430,8 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 1.5
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T nearSphere(Point point, Double maxDistance, Double minDistance) {
@@ -388,8 +446,10 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
+     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T nearSphere(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance);
 
     /**
@@ -405,7 +465,9 @@ public interface FieldEnd<T> {
      * @param val the value to check
      * @return T
      * @mongodb.driver.manual reference/operator/query/ne/ $ne
+     * @deprecated use {@link Filters#ne(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T notEqual(Object val);
 
     /**
@@ -414,7 +476,9 @@ public interface FieldEnd<T> {
      * @param values the values to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/nin/ $nin
+     * @deprecated use {@link Filters#nin(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T notIn(Iterable<?> values);
 
     /**
@@ -423,7 +487,9 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/size/ $size
+     * @deprecated use {@link Filters#size(String, Object)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T sizeEq(int val);
 
     /**
@@ -432,7 +498,9 @@ public interface FieldEnd<T> {
      * @param prefix the value to check
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
+     * @deprecated use {@link Filters#regex(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T startsWith(String prefix);
 
     /**
@@ -441,7 +509,9 @@ public interface FieldEnd<T> {
      * @param prefix the value to check
      * @return T
      * @mongodb.driver.manual reference/operator/query/regex/ $regex
+     * @deprecated use {@link Filters#regex(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T startsWithIgnoreCase(String prefix);
 
     /**
@@ -449,7 +519,9 @@ public interface FieldEnd<T> {
      *
      * @param type the value to check against
      * @return T
+     * @deprecated use {@link Filters#type(String, Type)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T type(Type type);
 
     /**
@@ -458,8 +530,10 @@ public interface FieldEnd<T> {
      * @param shape the shape to check within
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T within(Shape shape);
 
     /**
@@ -469,8 +543,8 @@ public interface FieldEnd<T> {
      * @param boundary a polygon describing the boundary to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T within(Polygon boundary) {
@@ -484,9 +558,11 @@ public interface FieldEnd<T> {
      * @param boundary a polygon describing the boundary to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.Polygon boundary);
 
     /**
@@ -497,8 +573,8 @@ public interface FieldEnd<T> {
      * @param boundaries a multi-polygon describing the areas to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.6
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T within(MultiPolygon boundaries) {
@@ -513,9 +589,11 @@ public interface FieldEnd<T> {
      * @param boundaries a multi-polygon describing the areas to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.6
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.MultiPolygon boundaries);
 
     /**
@@ -526,8 +604,8 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T within(Polygon boundary, CoordinateReferenceSystem crs) {
@@ -542,9 +620,11 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.Polygon boundary, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
 
     /**
@@ -558,8 +638,8 @@ public interface FieldEnd<T> {
      * @param crs        the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.6
-     * @deprecated Use the driver supplied geo types instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T within(MultiPolygon boundaries, CoordinateReferenceSystem crs) {
@@ -577,8 +657,10 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
+     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.6
      * @since 2.0
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.MultiPolygon boundaries, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
 }

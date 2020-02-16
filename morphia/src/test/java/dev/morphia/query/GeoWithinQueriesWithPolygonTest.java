@@ -16,6 +16,7 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
+import dev.morphia.query.legacy.LegacyTestBase;
 import org.junit.Test;
 
 import java.util.List;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoWithinQueriesWithPolygonTest extends TestBase {
+public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
     @Test
     public void shouldFindAreasWithinTheUK() {
         // given

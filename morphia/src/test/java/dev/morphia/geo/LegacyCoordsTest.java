@@ -4,6 +4,7 @@ import com.mongodb.MongoException;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.query.legacy.LegacyTestBase;
 import org.bson.Document;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertThat;
  * <p/>
  * This set of tests should run on all server versions.
  */
-public class LegacyCoordsTest extends TestBase {
+public class LegacyCoordsTest extends LegacyTestBase {
     @Test
     public void shouldCreateA2dIndexOnAnEntityWithArrayOfCoordinates() {
         // given

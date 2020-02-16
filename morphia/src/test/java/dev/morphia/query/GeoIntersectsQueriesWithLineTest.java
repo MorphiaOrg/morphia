@@ -15,6 +15,7 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
+import dev.morphia.query.legacy.LegacyTestBase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoIntersectsQueriesWithLineTest extends TestBase {
+public class GeoIntersectsQueriesWithLineTest extends LegacyTestBase {
 
     @Test
     public void shouldFindAPointThatLiesOnTheQueryLine() {

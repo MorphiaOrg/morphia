@@ -318,7 +318,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Modify<T> modify() {
-        return new Modify<>(this, datastore, mapper, clazz, collection);
+        return new Modify<>(this, datastore, mapper, clazz, getCollection());
     }
 
     /**

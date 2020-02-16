@@ -15,6 +15,7 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
+import dev.morphia.query.legacy.LegacyTestBase;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +28,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoNearQueriesTest extends TestBase {
+public class GeoNearQueriesTest extends LegacyTestBase {
     @Test
     public void shouldFindAreasCloseToAGivenPointWithinARadiusOfMeters() {
         // given

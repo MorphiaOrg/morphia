@@ -61,9 +61,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * @author Scott Hernandez
- */
 public class TestDatastore extends TestBase {
 
     @Test(expected = UpdateException.class)
@@ -400,28 +397,6 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testFindAndModifyLegacy() {
-        getDs().save(asList(new FacebookUser(1, "John Doe"),
-            new FacebookUser(2, "john doe")));
-
-        Query<FacebookUser> query = getDs().find(FacebookUser.class)
-                                           .field("username").equal("john doe");
-        UpdateOperations<FacebookUser> modify = getDs().createUpdateOperations(FacebookUser.class).inc("loginCount");
-
-        FacebookUser results = getDs().findAndModify(query, modify);
-
-        assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 2)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, results.loginCount);
-    }
-
-    @Test
     public void testFindAndModifyWithOptions() {
         getMapper().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
@@ -601,7 +576,7 @@ public class TestDatastore extends TestBase {
         @Id
         private long id;
         private String username;
-        private int loginCount;
+        public int loginCount;
         @Reference
         private List<FacebookUser> friends = new ArrayList<>();
 

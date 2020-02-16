@@ -84,7 +84,7 @@ public enum FilterOperator {
     TYPE("$type", "type") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.type(prop, value);
+            return Filters.type(prop, (Type) value);
         }
     },
 

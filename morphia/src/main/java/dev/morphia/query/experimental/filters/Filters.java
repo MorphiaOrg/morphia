@@ -1,6 +1,7 @@
 package dev.morphia.query.experimental.filters;
 
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.Type;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -53,8 +54,8 @@ public final class Filters {
      * @return the filter
      * @query.filter $type
      */
-    public static Filter type(final String field, final Object val) {
-        return new Filter("$type", field, val);
+    public static Filter type(final String field, final Type val) {
+        return new Filter("$type", field, val.toString().toLowerCase());
     }
 
     /**

@@ -82,10 +82,7 @@ import static org.junit.Assert.fail;
 
 
 @SuppressWarnings({"unchecked", "unused"})
-public class TestLegacyQuery extends TestBase {
-    public TestLegacyQuery() {
-        getDs().setQueryFactory(new LegacyQueryFactory());
-    }
+public class TestLegacyQuery extends LegacyTestBase {
 
     @Before
     @Test

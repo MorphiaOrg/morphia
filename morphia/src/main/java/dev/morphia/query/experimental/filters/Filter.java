@@ -16,6 +16,7 @@ import static java.lang.String.format;
  *
  * @since 2.0
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Filter {
     private String filterName;
     private String field;
@@ -126,12 +127,10 @@ public class Filter {
 
     protected void writeNamedValue(final String name, final Object named, final Mapper mapper, final BsonWriter writer,
                                    final EncoderContext encoderContext) {
-        writer.writeName(name);
         if (named != null) {
+            writer.writeName(name);
             Codec codec = mapper.getCodecRegistry().get(named.getClass());
             encoderContext.encodeWithChildContext(codec, writer, named);
-        } else {
-            writer.writeNull();
         }
     }
 
@@ -140,8 +139,6 @@ public class Filter {
         if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
-        } else {
-            writer.writeNull();
         }
     }
 }

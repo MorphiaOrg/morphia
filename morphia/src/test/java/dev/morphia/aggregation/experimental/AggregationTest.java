@@ -36,7 +36,6 @@ import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.stages.Group;
-import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Out;
@@ -641,7 +640,7 @@ public class AggregationTest extends TestBase {
                                                      .field("name").exists()
                                                      .field("name").not().type(Type.ARRAY)
                                                      .field("name").type(Type.OBJECT))
-                                       .replaceRoot(ReplaceRoot.with().with(field("name")))
+                                       .replaceRoot(ReplaceRoot.with(field("name")))
                                        .execute(Document.class)
                                        .toList();
         List<Document> expected = documents.subList(0, 3)
@@ -651,8 +650,7 @@ public class AggregationTest extends TestBase {
         assertDocumentEquals(expected, actual);
 
         actual = getDs().aggregate(Author.class)
-                        .replaceRoot(ReplaceRoot.with()
-                                                .with(ifNull().target(field("name"))
+                        .replaceRoot(ReplaceRoot.with(ifNull().target(field("name"))
                                                               .field("_id", field("_id"))
                                                               .field("missingName", value(true))))
                         .execute(Document.class)
@@ -666,8 +664,7 @@ public class AggregationTest extends TestBase {
         assertDocumentEquals(expected, actual);
 
         actual = getDs().aggregate(Author.class)
-                        .replaceRoot(ReplaceRoot.with()
-                                                .with(mergeObjects()
+                        .replaceRoot(ReplaceRoot.with(mergeObjects()
                                                           .add(Expressions.of()
                                                                           .field("_id", field("_id"))
                                                                           .field("first", value(""))
@@ -701,7 +698,7 @@ public class AggregationTest extends TestBase {
                                                      .field("name").exists()
                                                      .field("name").not().type(Type.ARRAY)
                                                      .field("name").type(Type.OBJECT))
-                                       .replaceWith(with().with(field("name")))
+                                       .replaceWith(with(field("name")))
                                        .execute(Document.class)
                                        .toList();
         List<Document> expected = documents.subList(0, 3)
@@ -711,8 +708,7 @@ public class AggregationTest extends TestBase {
         assertDocumentEquals(expected, actual);
 
         actual = getDs().aggregate(Author.class)
-                        .replaceWith(with()
-                                         .with(ifNull().target(field("name"))
+                        .replaceWith(with(ifNull().target(field("name"))
                                                        .field("_id", field("_id"))
                                                        .field("missingName", value(true))))
                         .execute(Document.class)
@@ -726,8 +722,7 @@ public class AggregationTest extends TestBase {
         assertDocumentEquals(expected, actual);
 
         actual = getDs().aggregate(Author.class)
-                        .replaceWith(with()
-                                         .with(mergeObjects()
+                        .replaceWith(with(mergeObjects()
                                                    .add(Expressions.of()
                                                                    .field("_id", field("_id"))
                                                                    .field("first", value(""))

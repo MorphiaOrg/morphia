@@ -280,7 +280,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T type(final Type type) {
-        return addCriteria(TYPE, type.val());
+        return addCriteria(TYPE, type);
     }
 
     @Override

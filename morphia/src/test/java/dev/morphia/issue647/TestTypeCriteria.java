@@ -1,6 +1,7 @@
 package dev.morphia.issue647;
 
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.filters.Filters;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,6 +11,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.query.Query;
 import dev.morphia.query.Type;
+
+import static dev.morphia.query.experimental.filters.Filters.type;
 
 public class TestTypeCriteria extends TestBase {
 
@@ -22,7 +25,7 @@ public class TestTypeCriteria extends TestBase {
         getMapper().map(Class1.class);
 
         Query<Class1> query = getDs().find(Class1.class);
-        query.criteria("first_name").type(Type.STRING);
+        query.filter(type( "first_name", Type.STRING));
         Assert.assertTrue(query.count() > 0);
     }
 

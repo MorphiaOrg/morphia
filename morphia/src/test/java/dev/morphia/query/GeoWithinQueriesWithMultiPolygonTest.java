@@ -14,6 +14,7 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
+import dev.morphia.query.legacy.LegacyTestBase;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +28,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
+public class GeoWithinQueriesWithMultiPolygonTest extends LegacyTestBase {
     private final PolygonCoordinates uk = new PolygonCoordinates(asList(new Position(49.78, -10.5),
         new Position(49.78, 1.78),
         new Position((double) 59, 1.78),
