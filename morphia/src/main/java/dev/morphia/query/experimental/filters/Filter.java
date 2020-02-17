@@ -53,7 +53,7 @@ public class Filter {
             writer.writeStartDocument("$not");
         }
         writer.writeName(filterName);
-        writeUnnamedValue(value, mapper, writer, context);
+        writeUnnamedValue(getValue(mapper), mapper, writer, context);
         if (not) {
             writer.writeEndDocument();
         }
@@ -100,8 +100,8 @@ public class Filter {
     }
 
     protected String field(final Mapper mapper) {
-        if (validate && field != null && pathTarget == null) {
-            pathTarget = new PathTarget(mapper, entityClass, field);
+        if (field != null && pathTarget == null) {
+            pathTarget = new PathTarget(mapper, entityClass, field, validate);
             field = pathTarget.translatedPath();
         }
 
@@ -127,10 +127,12 @@ public class Filter {
 
     protected void writeNamedValue(final String name, final Object named, final Mapper mapper, final BsonWriter writer,
                                    final EncoderContext encoderContext) {
+        writer.writeName(name);
         if (named != null) {
-            writer.writeName(name);
             Codec codec = mapper.getCodecRegistry().get(named.getClass());
             encoderContext.encodeWithChildContext(codec, writer, named);
+        } else {
+            writer.writeNull();
         }
     }
 
@@ -139,6 +141,8 @@ public class Filter {
         if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
+        } else {
+            writer.writeNull();
         }
     }
 }

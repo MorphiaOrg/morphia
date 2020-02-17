@@ -18,6 +18,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
+import static dev.morphia.query.experimental.filters.Filters.or;
 import static java.util.Collections.singletonList;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -27,18 +30,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class QueryInTest extends TestBase {
     private static final Logger LOG = getLogger(QueryInTest.class);
-
-    @Test(expected = QueryException.class)
-    public void testAddEmpty() {
-        Query<Data> query = getDs().find(Data.class);
-        List<ObjectId> memberships = new ArrayList<>();
-
-        query.or(
-            query.criteria("id").hasAnyOf(memberships),
-            query.criteria("otherIds").hasAnyOf(memberships));
-
-        Assert.assertFalse(query.execute().hasNext());
-    }
 
     @Test
     @Category(Reference.class)
@@ -54,11 +45,11 @@ public class QueryInTest extends TestBase {
         getDs().save(has);
 
         Query<HasIdOnly> q = getDs().find(HasIdOnly.class);
-        q.criteria("list").in(singletonList(b));
+        q.filter(in("list", singletonList(b)));
         Assert.assertEquals(1, q.count());
 
         q = getDs().find(HasIdOnly.class);
-        q.criteria("entity").equal(b.getId());
+        q.filter(eq("entity", b.getId()));
         Assert.assertEquals(1, q.count());
     }
 

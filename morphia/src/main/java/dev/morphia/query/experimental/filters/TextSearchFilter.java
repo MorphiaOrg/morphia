@@ -46,7 +46,9 @@ public class TextSearchFilter extends Filter {
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
         writer.writeStartDocument(getFilterName());
         writeNamedValue("$search", searchText, mapper, writer, context);
-        writeNamedValue("$language", language, mapper, writer, context);
+        if(language != null) {
+            writeNamedValue("$language", language, mapper, writer, context);
+        }
         if (Boolean.TRUE.equals(caseSensitive)) {
             writeNamedValue("$caseSensitive", caseSensitive, mapper, writer, context);
         }

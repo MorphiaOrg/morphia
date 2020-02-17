@@ -21,33 +21,23 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
     @Test
     public void testInQuery() {
 
-        Plan plan1 = new Plan();
-        plan1.name = "Trial 1";
+        Plan plan1 = getDs().save(new Plan("Trial 1"));
+        Plan plan2 = getDs().save(new Plan("Trial 2"));
 
-        Plan plan2 = new Plan();
-        plan2.name = "Trial 2";
+        Org org1 = getDs().save(new Org("Test Org1", plan1));
+        Org org2 = getDs().save(new Org("Test Org2", plan2));
 
-        getDs().save(plan1);
-        getDs().save(plan2);
-
-        Org org1 = new Org();
-        org1.plan = plan1;
-        org1.name = "Test Org1";
-
-        Org org2 = new Org();
-        org2.plan = plan2;
-        org2.name = "Test Org2";
-
-        getDs().save(org1);
-        getDs().save(org2);
-
-        long count = getDs().find(Org.class).field("name").equal("Test Org1").count();
+        long count = getDs().find(Org.class)
+                            .field("name").equal("Test Org1")
+                            .count();
         assertEquals(1, count);
 
         List<Plan> plans = new ArrayList<>();
         plans.add(plan1);
 
-        count = getDs().find(Org.class).field("plan").hasAnyOf(plans).count();
+        count = getDs().find(Org.class)
+                       .field("plan").hasAnyOf(plans)
+                       .count();
         assertEquals(1, count);
 
         plans = new ArrayList<>();
@@ -65,6 +55,13 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         private ObjectId id;
         @Property("name")
         private String name;
+
+        public Plan() {
+        }
+
+        public Plan(final String name) {
+            this.name = name;
+        }
     }
 
     @Entity(useDiscriminator = false)
@@ -75,6 +72,14 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         private String name;
         @Reference("plan")
         private Plan plan;
+
+        public Org(final String name, final Plan plan) {
+            this.name = name;
+            this.plan = plan;
+        }
+
+        public Org() {
+        }
     }
 
 }
