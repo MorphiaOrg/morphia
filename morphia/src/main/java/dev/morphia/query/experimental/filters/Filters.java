@@ -1,5 +1,7 @@
 package dev.morphia.query.experimental.filters;
 
+import com.mongodb.client.model.geojson.Geometry;
+import com.mongodb.client.model.geojson.Point;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Type;
 import org.bson.BsonWriter;
@@ -145,20 +147,23 @@ public final class Filters {
      * @return the filter
      * @query.filter $geoIntersects
      */
-    public static Filter geoIntersects(final String field, final Object val) {
-        return new Filter("$geoIntersects", field, val);
+    public static Filter geoIntersects(final String field, final Geometry val) {
+        return new GeoIntersectsFilter("$geoIntersects", field, val);
     }
 
     /**
-     * Returns geospatial objects in proximity to a point. Requires a geospatial index. The 2dsphere and 2d indexes support $near.
+     * Specifies a point for which a geospatial query returns the documents from nearest to farthest. The $near operator can specify
+     * either a GeoJSON point or legacy coordinate point.
+     * <p>
+     * This requires a geospatial index.
      *
      * @param field the field to check
-     * @param val   the value to check
+     * @param point the point to check
      * @return the filter
      * @query.filter $near
      */
-    public static Filter near(final String field, final Object val) {
-        return new Filter("$near", field, val);
+    public static GeoFilter near(final String field, final Point point) {
+        return new NearFilter("$near", field, point);
     }
 
     /**
@@ -169,12 +174,14 @@ public final class Filters {
      * @return the filter
      * @query.filter $geoWithin
      */
-    public static Filter geoWithin(final String field, final Object val) {
-        return new Filter("$geoWithin", field, val);
+    public static GeoFilter geoWithin(final String field, final Geometry val) {
+        return new GeoFilter("$geoWithin", field, val);
     }
 
     /**
-     * Returns geospatial objects in proximity to a point on a sphere. Requires a geospatial index. The 2dsphere and 2d indexes support
+     * Returns geospatial objects in proximity to a point on a sphere.
+     * <p>
+     * Requires a geospatial index. The 2dsphere and 2d indexes support
      * $nearSphere.
      *
      * @param field the field to check
@@ -182,8 +189,8 @@ public final class Filters {
      * @return the filter
      * @query.filter $nearSphere
      */
-    public static Filter nearSphere(final String field, final Object val) {
-        return new Filter("$nearSphere", field, val);
+    public static GeoFilter nearSphere(final String field, final Geometry val) {
+        return new GeoFilter("$nearSphere", field, val);
     }
 
     /**
@@ -286,37 +293,45 @@ public final class Filters {
      * Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
      *
      * @param field the field to check
-     * @param val   the value to check
+     * @param bottomLeft the bottom left corner of the box
+     * @param upperRight the upper right corner of the box
      * @return the filter
      * @query.filter $box
      */
-    public static Filter box(final String field, final Object val) {
-        return new Filter("$box", field, val);
+    public static GeoFilter box(final String field, final Point bottomLeft, final Point upperRight) {
+        return new Box(field, bottomLeft, upperRight);
     }
 
     /**
      * Specifies a circle using legacy coordinate pairs to $geoWithin queries when using planar geometry. The 2d index supports $center.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param field  the field to check
+     * @param center the center point of the shape
+     * @param radius the radius of the circle
      * @return the filter
      * @query.filter $center
      */
-    public static Filter center(final String field, final Object val) {
-        return new Filter("$center", field, val);
+    public static Filter center(final String field, final Point center, final double radius) {
+        return new CenterFilter("$center", field, center, radius);
     }
 
     /**
-     * Specifies a circle using either legacy coordinate pairs or GeoJSON format for $geoWithin queries when using spherical geometry. The
-     * 2dsphere and 2d indexes support $centerSphere.
+     * Defines a circle for a geospatial query that uses spherical geometry. The query returns documents that are within the bounds of
+     * the circle. You can use the $centerSphere operator on both GeoJSON objects and legacy coordinate pairs.
+     *
+     * To use $centerSphere, specify an array that contains:
+     *
+     *  <li>The grid coordinates of the circle’s center point, and
+     *  <li>The circle’s radius measured in radians. To calculate radians, see Calculate Distance Using Spherical Geometry.
      *
      * @param field the field to check
-     * @param val   the value to check
+     * @param center the center point of the shape
+     * @param radius the radius of the circle
      * @return the filter
      * @query.filter $centerSphere
      */
-    public static Filter centerSphere(final String field, final Object val) {
-        return new Filter("$centerSphere", field, val);
+    public static Filter centerSphere(final String field, final Point center, final double radius) {
+        return new CenterFilter("$centerSphere", field, center, radius);
     }
 
     /**
@@ -359,12 +374,12 @@ public final class Filters {
      * Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
      *
      * @param field the field to check
-     * @param val   the value to check
+     * @param points   the value to check
      * @return the filter
      * @query.filter $polygon
      */
-    public static Filter polygon(final String field, final Object val) {
-        return new Filter("$polygon", field, val);
+    public static Filter polygon(final String field, final Point[] points) {
+        return new PolygonFilter(field, points);
     }
 
     /**

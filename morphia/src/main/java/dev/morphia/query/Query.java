@@ -456,11 +456,4 @@ public interface Query<T> extends CriteriaContainer {
     default Update<T> update(final UpdateOperations operations) {
         return legacyOperation();
     }
-
-    /**
-     * @return the logged query
-     * @morphia.internal
-     * @since 2.0
-     */
-    String getLoggedQuery(FindOptions options);
 }

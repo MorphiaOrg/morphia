@@ -536,6 +536,33 @@ public class DatastoreImpl implements AdvancedDatastore {
         return true;
     }
 
+    /**
+     * @return the logged query
+     * @morphia.internal
+     */
+    @Override
+    public String getLoggedQuery(final FindOptions options) {
+        if (options != null && options.isLogQuery()) {
+            String json = "{}";
+            Document first = getDatabase()
+                                 .getCollection("system.profile")
+                                 .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
+                                     Document.class)
+                                 .projection(new Document("command.filter", 1))
+                                 .first();
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
+                }
+            }
+            return json;
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
+        }
+    }
+
     protected <T> void saveDocument(final T entity, final MongoCollection<T> collection, final InsertOneOptions options) {
         Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
         ClientSession clientSession = findSession(options);

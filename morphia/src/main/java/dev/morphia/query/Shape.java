@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 
+import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.client.model.geojson.Point;
 
 /**

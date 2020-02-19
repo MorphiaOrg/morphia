@@ -18,6 +18,7 @@ import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
+import dev.morphia.query.FindOptions;
 import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
@@ -550,4 +551,11 @@ public interface Datastore {
      * @since 2.0
      */
     <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);
+
+    /**
+     * @return the logged query
+     * @morphia.internal
+     * @since 2.0
+     */
+    String getLoggedQuery(FindOptions options);
 }

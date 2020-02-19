@@ -1,5 +1,8 @@
 package dev.morphia.query;
 
+import com.mongodb.client.model.geojson.Geometry;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.sofia.Sofia;
@@ -14,21 +17,27 @@ public enum FilterOperator {
     WITHIN_CIRCLE("$center") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.center(prop, value);
+            throw new UnsupportedOperationException();
+//            return Filters.center(prop, value);
         }
     },
 
     WITHIN_CIRCLE_SPHERE("$centerSphere") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.centerSphere(prop, value);
+            throw new UnsupportedOperationException();
         }
     },
 
     WITHIN_BOX("$box") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.box(prop, value);
+            if(!(value instanceof Point[])) {
+                throw new IllegalArgumentException(Sofia.illegalArgument(value.getClass().getCanonicalName(),
+                    Point[].class.getCanonicalName())) ;
+            }
+            Point[] points = (Point[]) value;
+            return Filters.box(prop, points[0], points[1]);
         }
     },
 
@@ -148,40 +157,51 @@ public enum FilterOperator {
     NEAR("$near", "near") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.near(prop, value);
+            return Filters.near(prop, (Point) convertToGeometry(value));
         }
     },
 
     NEAR_SPHERE("$nearSphere") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.nearSphere(prop, value);
+            return Filters.nearSphere(prop, convertToGeometry(value));
         }
     },
 
     GEO_NEAR("$geoNear", "geoNear") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-
-            //            return Filters.geoNear(prop, value);
+            throw new UnsupportedOperationException("An aggregation operator called in a query context?");
         }
     },
 
     GEO_WITHIN("$geoWithin", "geoWithin") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.geoWithin(prop, value);
+            return Filters.geoWithin(prop, convertToGeometry(value));
         }
     },
 
     INTERSECTS("$geoIntersects", "geoIntersects") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.geoIntersects(prop, value);
+            return Filters.geoIntersects(prop, convertToGeometry(value));
         }
     };
+
+    private static Geometry convertToGeometry(final Object value) {
+        Geometry converted;
+        if(value instanceof double[]) {
+            final double[] coords = (double[]) value;
+            converted = new Point(new Position(coords[0], coords[1]));
+        } else if(value instanceof Geometry){
+            converted = (Geometry) value;
+        } else {
+            throw new UnsupportedOperationException(Sofia.conversionNotSupported(value.getClass().getCanonicalName()));
+        }
+
+        return converted;
+    }
 
     private final String value;
     private final List<String> filters;

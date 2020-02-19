@@ -95,7 +95,7 @@ public class TestQuery extends TestBase {
         final GenericKeyValue found = query
                                           .execute(options)
                                           .tryNext();
-        String loggedQuery = query.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
         assertEquals(found.id, value.id);
     }
@@ -114,7 +114,7 @@ public class TestQuery extends TestBase {
                                              .field("key")
                                              .hasAnyOf(keys);
         query.execute(options);
-        String loggedQuery = query.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
         assertEquals(query.execute(new FindOptions().limit(1))
                           .tryNext()
@@ -335,7 +335,7 @@ public class TestQuery extends TestBase {
                                   .logQuery();
         List<Rectangle> list = q.execute(options)
                                 .toList();
-        String loggedQuery = q.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         assertEquals(1, q.count());
 
         q = getDs().find(Rectangle.class);
@@ -685,7 +685,7 @@ public class TestQuery extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
         query.execute(/*options*/);
-        //        String loggedQuery = query.getLoggedQuery(options);
+        //        String loggedQuery = getDs().getLoggedQuery(options);
         assertEquals(1, query.count());
     }
 
@@ -721,7 +721,7 @@ public class TestQuery extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
         MorphiaCursor<HasIntId> list = filter.execute(options);
-        String loggedQuery = filter.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         assertEquals(2, filter
                             .count());
         assertEquals(1, getDs().find(HasIntId.class)
@@ -1087,7 +1087,7 @@ public class TestQuery extends TestBase {
         HasPhotoReference photoKey = query.execute(options)
                                           .tryNext();
 
-        assertNotNull(query.getLoggedQuery(options), photoKey);
+        assertNotNull(getDs().getLoggedQuery(options), photoKey);
 
         assertNotNull(getDs().find(HasPhotoReference.class)
                              .filter("photo", cpk.photo)

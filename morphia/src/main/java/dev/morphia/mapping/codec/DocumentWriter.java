@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonMaxKey;
@@ -88,6 +89,9 @@ public class DocumentWriter implements BsonWriter {
      * @return the root, or output, of this writer.  usually a Document.
      */
     public Document getDocument() {
+        if (arraysLevel != 0 || docsLevel != 0) {
+            throw new IllegalStateException(Sofia.unbalancedOpens(arraysLevel, docsLevel, state));
+        }
         return ((DocumentState) state).getDocument();
     }
 

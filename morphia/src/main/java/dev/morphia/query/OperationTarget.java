@@ -60,6 +60,7 @@ public class OperationTarget {
             writer.writeStartDocument();
             writer.writeName("mapped");
             codec.encode(writer, mappedValue, EncoderContext.builder().build());
+            writer.writeEndDocument();
             mappedValue = writer.getDocument().get("mapped");
         }
         return new Document(target.translatedPath(), mappedValue);

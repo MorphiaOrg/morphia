@@ -180,7 +180,7 @@ public class MapperOptionsTest extends TestBase {
                                   .logQuery();
         List<EntityDiscriminator2> list = query.execute(options)
                                                .toList();
-        Assert.assertEquals(query.getLoggedQuery(options), 1, list.size());
+        Assert.assertEquals(getDs().getLoggedQuery(options), 1, list.size());
     }
 
     private void shouldNotFindField(final Datastore datastore, final HasList hl) {

@@ -10,6 +10,7 @@ import dev.morphia.utils.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static dev.morphia.query.FilterOperator.ALL;
@@ -64,6 +65,14 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
         this.target = target;
         this.mappedClass = mappedClass;
         this.validating = validating;
+    }
+
+    protected String getField() {
+        return field;
+    }
+
+    protected boolean isNot() {
+        return not;
     }
 
     @Override
@@ -198,7 +207,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(final double longitude, final double latitude, final boolean spherical) {
-        return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR, new double[]{longitude, latitude}, null);
+        return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR, new double[]{longitude, latitude}, new HashMap<>());
     }
 
     @Override
@@ -328,7 +337,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
         return target;
     }
 
-    private T addGeoCriteria(final FilterOperator op, final Object val, final Map<String, Object> opts) {
+    protected T addGeoCriteria(final FilterOperator op, final Object val, final Map<String, Object> opts) {
         if (not) {
             throw new QueryException("Geospatial queries cannot be negated with 'not'.");
         }

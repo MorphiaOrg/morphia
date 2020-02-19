@@ -106,7 +106,7 @@ public class TestQueriesOnReferences extends TestBase {
         ContainsPic containsPic = query.execute(options)
                                        .tryNext();
 
-        Assert.assertEquals(query.getLoggedQuery(options), cpk.getId(), containsPic.getId());
+        Assert.assertEquals(getDs().getLoggedQuery(options), cpk.getId(), containsPic.getId());
 
         containsPic = query.execute(new FindOptions().limit(1))
                            .tryNext();

@@ -5,6 +5,7 @@ import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Shape;
+import dev.morphia.query.experimental.filters.Filters;
 import org.junit.Test;
 
 import java.util.List;

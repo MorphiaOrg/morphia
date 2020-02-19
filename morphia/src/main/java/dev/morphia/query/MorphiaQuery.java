@@ -4,6 +4,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
@@ -12,8 +13,11 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.query.Shape.Center;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
+import dev.morphia.query.experimental.filters.GeoFilter;
+import dev.morphia.query.experimental.filters.NearFilter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
@@ -79,33 +83,6 @@ public class MorphiaQuery<T> implements Query<T> {
 */
 
     @Override
-    public FieldEnd<? extends Query<T>> field(final String name) {
-        return new MorphiaQueryFieldEnd(name);
-    }
-
-    @Override
-    public Query<T> filter(final String condition, final Object value) {
-        final String[] parts = condition.trim().split(" ");
-        if (parts.length < 1 || parts.length > 6) {
-            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
-        }
-
-        final FilterOperator op = (parts.length == 2) ? FilterOperator.fromString(parts[1]) : FilterOperator.EQUAL;
-
-        return filter(op.apply(parts[0].trim(), value));
-    }
-
-/*
-    @Override
-    public CriteriaContainer or(final Criteria... criteria) {
-        List<Filter> collect = collect(criteria);
-        filters.remove(asList(criteria));
-        filter(Filters.or(collect.toArray(new Filter[0])));
-        return this;
-    }
-*/
-
-    @Override
     public Query filter(final Filter... additional) {
         for (final Filter filter : additional) {
             filters.add(filter
@@ -120,6 +97,16 @@ public class MorphiaQuery<T> implements Query<T> {
         validate = false;
         return this;
     }
+
+/*
+    @Override
+    public CriteriaContainer or(final Criteria... criteria) {
+        List<Filter> collect = collect(criteria);
+        filters.remove(asList(criteria));
+        filter(Filters.or(collect.toArray(new Filter[0])));
+        return this;
+    }
+*/
 
     @Override
     public Query<T> enableValidation() {
@@ -136,6 +123,49 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
+    public FieldEnd<? extends Query<T>> field(final String name) {
+        return new MorphiaQueryFieldEnd(name);
+    }
+
+    @Override
+    public Query<T> filter(final String condition, final Object value) {
+        final String[] parts = condition.trim().split(" ");
+        if (parts.length < 1 || parts.length > 6) {
+            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
+        }
+
+        final FilterOperator op = (parts.length == 2) ? FilterOperator.fromString(parts[1]) : FilterOperator.EQUAL;
+
+        return filter(op.apply(parts[0].trim(), value));
+    }
+
+    /**
+     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     *
+     * @return the query
+     * @morphia.internal
+     */
+    public Document toDocument() {
+        final Document query = getQueryDocument();
+        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
+        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
+
+            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(mappedClass.getEntityModel().getDiscriminator());
+            for (final MappedClass subtype : subtypes) {
+                values.add(subtype.getEntityModel().getDiscriminator());
+            }
+            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+        return query;
+    }
+
+    @Override
     public Query<T> search(final String searchText) {
         return filter(text(searchText));
     }
@@ -143,6 +173,12 @@ public class MorphiaQuery<T> implements Query<T> {
     @Override
     public Query<T> search(final String searchText, final String language) {
         return filter(text(searchText).language(language));
+    }
+
+    @Override
+    public Query<T> where(final String js) {
+        filter(Filters.where(js));
+        return this;
     }
 
     @Override
@@ -231,56 +267,11 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     /**
-     * @return the logged query
-     * @morphia.internal
-     */
-    public String getLoggedQuery(final FindOptions options) {
-        if (options != null && options.isLogQuery()) {
-            String json = "{}";
-            Document first = datastore.getDatabase()
-                                      .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
-                                          Document.class)
-                                      .projection(new Document("command.filter", 1))
-                                      .first();
-            if (first != null) {
-                Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
-                if (filter != null) {
-                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
-                }
-            }
-            return json;
-        } else {
-            throw new IllegalStateException(Sofia.queryNotLogged());
-        }
-    }
-
-    /**
      * @return the entity {@link Class}.
      * @morphia.internal
      */
     public Class<T> getEntityClass() {
         return clazz;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clazz, validate, getCollectionName());
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof MorphiaQuery)) {
-            return false;
-        }
-        final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
-        return validate == query20.validate &&
-               Objects.equals(clazz, query20.clazz) &&
-               Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
     public Document getQueryDocument() {
@@ -315,6 +306,33 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 */
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(clazz, validate, getCollectionName());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MorphiaQuery)) {
+            return false;
+        }
+        final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
+        return validate == query20.validate &&
+               Objects.equals(clazz, query20.clazz) &&
+               Objects.equals(getCollectionName(), query20.getCollectionName());
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
+                   .add("clazz=" + clazz.getSimpleName())
+                   .add("query=" + getQueryDocument())
+                   .toString();
+    }
+
     /**
      * @return the collection this query targets
      * @morphia.internal
@@ -331,32 +349,6 @@ public class MorphiaQuery<T> implements Query<T> {
             collectionName = getCollection().getNamespace().getCollectionName();
         }
         return collectionName;
-    }
-
-    /**
-     * Converts the query to a Document and updates for any discriminator values as my be necessary
-     *
-     * @return the query
-     * @morphia.internal
-     */
-    public Document toDocument() {
-        final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
-        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
-
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
-            List<String> values = new ArrayList<>();
-            values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
-                values.add(subtype.getEntityModel().getDiscriminator());
-            }
-            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
-                new Document("$in", values));
-        }
-        return query;
     }
 
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
@@ -394,20 +386,6 @@ public class MorphiaQuery<T> implements Query<T> {
         }
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
-                   .add("clazz=" + clazz.getSimpleName())
-                   .add("query=" + getQueryDocument())
-                   .toString();
-    }
-
-    @Override
-    public Query<T> where(final String js) {
-        filter(Filters.where(js));
-        return this;
-    }
-
     private class MorphiaQueryFieldEnd extends FieldEndImpl {
         private final String name;
 
@@ -417,13 +395,43 @@ public class MorphiaQuery<T> implements Query<T> {
         }
 
         @Override
-        protected MorphiaQuery addCriteria(final FilterOperator op, final Object val, final boolean not) {
-            Filter converted = op.apply(name, val);
-            if(not) {
+        public CriteriaContainer within(final Shape shape) {
+            Filter converted;
+            if (shape instanceof Center) {
+                final Center center = (Center) shape;
+                converted = Filters.center(getField(), center.getCenter(), center.getRadius());
+            } else if (shape.getGeometry().equals("$box")) {
+                Point[] points = shape.getPoints();
+                converted = Filters.box(getField(), points[0], points[1]);
+            } else if (shape.getGeometry().equals("$polygon")) {
+                converted = Filters.polygon(getField(), shape.getPoints());
+            } else {
+                throw new UnsupportedOperationException(Sofia.conversionNotSupported(shape.getGeometry()));
+            }
+            if (isNot()) {
                 converted.not();
             }
             filter(converted);
             return MorphiaQuery.this;
+        }
+
+        @Override
+        protected MorphiaQuery addCriteria(final FilterOperator op, final Object val, final boolean not) {
+            Filter converted = op.apply(name, val);
+            if (not) {
+                converted.not();
+            }
+            filter(converted);
+            return MorphiaQuery.this;
+        }
+
+        @Override
+        protected CriteriaContainer addGeoCriteria(final FilterOperator op, final Object val, final Map opts) {
+            NearFilter apply = (NearFilter) op.apply(name, val);
+            apply.applyOpts(opts);
+            filter(apply);
+            return MorphiaQuery.this;
+//            return super.addGeoCriteria(op, val, opts);
         }
     }
 }

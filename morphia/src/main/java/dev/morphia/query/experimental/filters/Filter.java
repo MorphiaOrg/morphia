@@ -112,6 +112,10 @@ public class Filter {
         return filterName;
     }
 
+    protected Object getValue() {
+        return value;
+    }
+
     protected Object getValue(final Mapper mapper) {
         if(!mapped) {
             String field = field(mapper);

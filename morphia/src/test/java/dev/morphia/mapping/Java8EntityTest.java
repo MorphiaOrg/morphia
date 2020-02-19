@@ -102,7 +102,7 @@ public class Java8EntityTest extends TestBase {
                                                .limit(1);
         Java8Entity actual = query.execute(options)
                                   .tryNext();
-        Assert.assertEquals(query.getLoggedQuery(options), entity, actual);
+        Assert.assertEquals(getDs().getLoggedQuery(options), entity, actual);
     }
 
     private Java8Entity createEntity(final Datastore ds, final Instant instant, final LocalDate localDate,

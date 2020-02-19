@@ -28,5 +28,6 @@ public class AutoBucketCodec extends StageCodec<AutoBucket> {
         if (output != null) {
             output.encode("output", getMapper(), writer, encoderContext);
         }
+        writer.writeEndDocument();
     }
 }

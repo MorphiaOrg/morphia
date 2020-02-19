@@ -233,7 +233,7 @@ abstract class WriteState {
     }
 
     WriteState name(final String name) {
-        throw new IllegalStateException(Sofia.notInValidState("name", state()));
+        return new NameState(writer, name);
     }
 
     <P extends WriteState> P previous() {

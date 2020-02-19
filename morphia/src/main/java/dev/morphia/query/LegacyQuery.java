@@ -391,29 +391,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public String getLoggedQuery(final FindOptions options) {
-        if (options != null && options.isLogQuery()) {
-            String json = "{}";
-            Document first = datastore.getDatabase()
-                                      .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
-                                          Document.class)
-                                      .projection(new Document("command.filter", 1))
-                                      .first();
-            if (first != null) {
-                Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
-                if (filter != null) {
-                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
-                }
-            }
-            return json;
-        } else {
-            throw new IllegalStateException(Sofia.queryNotLogged());
-        }
-    }
-
-    @Override
     public CriteriaContainer or(final Criteria... criteria) {
         return compoundContainer.or(criteria);
     }

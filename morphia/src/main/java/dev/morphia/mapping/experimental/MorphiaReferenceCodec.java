@@ -72,6 +72,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
         writer.writeStartDocument();
         writer.writeName("ref");
         encode(writer, wrap, EncoderContext.builder().build());
+        writer.writeEndDocument();
         return writer.getDocument().get("ref");
     }
 

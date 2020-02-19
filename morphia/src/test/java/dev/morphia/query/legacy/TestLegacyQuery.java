@@ -107,7 +107,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         final GenericKeyValue found = query
                                           .execute(options)
                                           .tryNext();
-        String loggedQuery = query.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
         assertEquals(found.id, value.id);
     }
@@ -126,7 +126,7 @@ public class TestLegacyQuery extends LegacyTestBase {
                                              .field("key")
                                              .hasAnyOf(keys);
         query.execute(options);
-        String loggedQuery = query.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
         assertEquals(query.execute(new FindOptions().limit(1))
                           .tryNext()
@@ -346,7 +346,7 @@ public class TestLegacyQuery extends LegacyTestBase {
                                   .logQuery();
         List<Rectangle> list = q.execute(options)
                                 .toList();
-        String loggedQuery = q.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         assertEquals(1, q.count());
 
         q = getDs().find(Rectangle.class);
@@ -357,10 +357,9 @@ public class TestLegacyQuery extends LegacyTestBase {
         q.or(q.criteria("width").equal(10), q.and(q.criteria("width").equal(5), q.criteria("height").equal(8)));
         options = new FindOptions()
                       .logQuery();
-        list = q.execute(options)
-                .toList();
-        loggedQuery = q.getLoggedQuery(options);
-        assertEquals(3, q.count());
+        q.execute(options)
+         .toList();
+        assertEquals(getDs().getLoggedQuery(options), 3, q.count());
     }
 
     @Test
@@ -727,7 +726,7 @@ public class TestLegacyQuery extends LegacyTestBase {
 
         FindOptions options = new FindOptions().logQuery();
         MorphiaCursor<HasIntId> list = filter.execute(options);
-        String loggedQuery = filter.getLoggedQuery(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
         assertEquals(2, filter
                             .count());
         assertEquals(1, getDs().find(HasIntId.class)
@@ -1093,7 +1092,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         HasPhotoReference photoKey = query.execute(options)
                                           .tryNext();
 
-        assertNotNull(query.getLoggedQuery(options), photoKey);
+        assertNotNull(getDs().getLoggedQuery(options), photoKey);
 
         assertNotNull(getDs().find(HasPhotoReference.class)
                              .filter("photo", cpk.photo)

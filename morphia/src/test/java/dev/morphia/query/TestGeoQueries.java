@@ -13,6 +13,9 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.StringJoiner;
+
 
 public class TestGeoQueries extends TestBase {
     @Override
@@ -136,21 +139,25 @@ public class TestGeoQueries extends TestBase {
 
     @Test
     public void testNearMaxDistance() {
+        getDs().getMapper().map(Place.class);
         getDs().ensureIndexes();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                                   .field("loc")
-                                   .near(0, 0, 1.5)
-                                   .execute(new FindOptions().limit(1))
-                                   .next();
-        Assert.assertNotNull(found);
+        FindOptions options = new FindOptions()
+                                  .logQuery()
+                                  .limit(1);
+        Query<Place> query = getDs().find(Place.class)
+                                    .field("loc")
+                                    .near(1, 1, 2);
+        Place found = query.execute(options).tryNext();
+        Assert.assertNotNull(getDs().getLoggedQuery(options), found);
+
         final Place notFound = getDs().find(Place.class)
                                       .field("loc")
                                       .near(0, 0, 1)
-                                      .execute(new FindOptions().limit(1))
+                                      .execute(options)
                                       .tryNext();
-        Assert.assertNull(notFound);
+        Assert.assertNull(getDs().getLoggedQuery(options), notFound);
     }
 
     @Test(expected = MongoQueryException.class)
@@ -252,7 +259,7 @@ public class TestGeoQueries extends TestBase {
         @Id
         private ObjectId id;
         private String name;
-        @Indexed(IndexDirection.GEO2D)
+        @Indexed(IndexDirection.GEO2DSPHERE)
         private double[] loc;
 
         private Place() {
@@ -261,6 +268,14 @@ public class TestGeoQueries extends TestBase {
         Place(final String name, final double[] loc) {
             this.name = name;
             this.loc = loc;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", Place.class.getSimpleName() + "[", "]")
+                       .add("name='" + name + "'")
+                       .add("loc=" + Arrays.toString(loc))
+                       .toString();
         }
     }
 }
