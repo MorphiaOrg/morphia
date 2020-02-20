@@ -449,7 +449,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
         final Document query = this.toDocument();
 
-        FindOptions options = findOptions.copy().copy(getOptions());
+        FindOptions options = getOptions().copy().copy(findOptions);
         if (LOG.isTraceEnabled()) {
             LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, options));
         }

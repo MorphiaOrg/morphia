@@ -4,7 +4,6 @@ import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.UnwindOptions;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedField;
@@ -19,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,39 +57,34 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public <U> MongoIterable<U> aggregate(final Class<U> target) {
+    public <U> Iterator<U> aggregate(final Class<U> target) {
         return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
     }
 
     @Override
-    public <U> MongoIterable<U> aggregate(final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options) {
         return aggregate(target, options, collection.getReadPreference());
     }
 
     @Override
-    public <U> MongoIterable<U> aggregate(final Class<U> target, final AggregationOptions options,
-                                          final ReadPreference readPreference) {
+    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options,
+                                     final ReadPreference readPreference) {
         return aggregate(mapper.getCollection(target).getNamespace().getCollectionName(), target, options, readPreference);
     }
 
     @Override
-    public <U> MongoIterable<U> aggregate(final String collectionName, final Class<U> target,
-                                          final AggregationOptions options,
-                                          final ReadPreference readPreference) {
+    public <U> Iterator<U> aggregate(final String collectionName, final Class<U> target,
+                                     final AggregationOptions options,
+                                     final ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
 
         AggregateIterable<U> cursor = collection.aggregate(stages, target);
-        return cursor; // new MorphiaCursor<U>(datastore, cursor, mapper, target, mapper.createEntityCache());
+        return cursor.iterator();
     }
 
     @Override
     public AggregationPipeline geoNear(final GeoNear geoNear) {
-        if (1 == 1) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        }
-
         Document geo = new Document();
 
 //        putIfNull(geo, "near", geoNear.getNearAsDocument(pointConverter));
@@ -98,7 +93,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         putIfNull(geo, "num", geoNear.getMaxDocuments());
         putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
         if (geoNear.getQuery() != null) {
-            geo.put("query", ((LegacyQuery) geoNear.getQuery()).toDocument());
+            geo.put("query", geoNear.getQuery().toDocument());
         }
         putIfNull(geo, "spherical", geoNear.getSpherical());
         putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
@@ -161,7 +156,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline match(final Query query) {
-        stages.add(new Document("$match", ((LegacyQuery) query).toDocument()));
+        stages.add(new Document("$match", query.disableValidation().toDocument()));
         return this;
     }
 
@@ -172,23 +167,23 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public <U> MongoIterable<U> out(final Class<U> target) {
+    public <U> Iterator<U> out(final Class<U> target) {
         return out(mapper.getCollection(target).getNamespace().getCollectionName(), target);
     }
 
     @Override
-    public <U> MongoIterable<U> out(final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> out(final Class<U> target, final AggregationOptions options) {
         return out(mapper.getCollection(target).getNamespace().getCollectionName(), target, options);
     }
 
     @Override
-    public <U> MongoIterable<U> out(final String collectionName, final Class<U> target) {
+    public <U> Iterator<U> out(final String collectionName, final Class<U> target) {
         return out(collectionName, target, AggregationOptions.builder().build());
     }
 
     @Override
-    public <U> MongoIterable<U> out(final String collectionName, final Class<U> target,
-                                    final AggregationOptions options) {
+    public <U> Iterator<U> out(final String collectionName, final Class<U> target,
+                               final AggregationOptions options) {
         stages.add(new Document("$out", collectionName));
         return aggregate(target, options);
     }

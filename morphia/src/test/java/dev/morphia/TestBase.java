@@ -8,12 +8,10 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
-import dev.morphia.query.LegacyQueryFactory;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Assume;
@@ -118,8 +116,7 @@ public abstract class TestBase {
         return count;
     }
 
-    protected int count(final MongoIterable<?> iterable) {
-        MongoCursor<?> iterator = iterable.iterator();
+    protected int count(final Iterator<?> iterator) {
         int count = 0;
         while (iterator.hasNext()) {
             count++;

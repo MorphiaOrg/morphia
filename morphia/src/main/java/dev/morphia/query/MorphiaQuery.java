@@ -87,7 +87,7 @@ public class MorphiaQuery<T> implements Query<T> {
         for (final Filter filter : additional) {
             filters.add(filter
                             .entityType(getEntityClass())
-                            .isValidating(validate));
+                            .isValidating(validate && getEntityClass() != null));
         }
         return this;
     }

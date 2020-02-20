@@ -70,7 +70,7 @@ public class ZipCodeDataSetTest extends TestBase {
             if (!file.exists()) {
                 file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
                 if (!file.exists()) {
-                    download(new URL("http://media.mongodb.org/zips.json"), file);
+                    download(new URL("https://media.mongodb.org/zips.json"), file);
                 }
             }
             MongoCollection<Document> zips = getDatabase().getCollection("zips");
@@ -100,6 +100,7 @@ public class ZipCodeDataSetTest extends TestBase {
                      .match(query.field("totalPop").greaterThanOrEq(10000000));
 
 
+        System.out.println("******************* pipeline.toString() = " + pipeline.toString());
         validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "CA", 29754890);
         validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "OH", 10846517);
     }
@@ -152,23 +153,18 @@ public class ZipCodeDataSetTest extends TestBase {
 
     private void download(final URL url, final File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
-        InputStream inputStream = url.openStream();
-        FileOutputStream outputStream = new FileOutputStream(file);
-        try {
+        try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
             byte[] read = new byte[49152];
             int count;
             while ((count = inputStream.read(read)) != -1) {
                 outputStream.write(read, 0, count);
             }
-        } finally {
-            inputStream.close();
-            outputStream.close();
         }
     }
 
     private void validate(final MongoCursor<Population> cursor, final String state, final long value) {
         boolean found = false;
-        try {
+        try (cursor) {
             while (cursor.hasNext()) {
                 Population population = cursor.next();
 
@@ -179,8 +175,6 @@ public class ZipCodeDataSetTest extends TestBase {
                 LOG.debug("population = " + population);
             }
             Assert.assertTrue("Should have found " + state, found);
-        } finally {
-            cursor.close();
         }
     }
 

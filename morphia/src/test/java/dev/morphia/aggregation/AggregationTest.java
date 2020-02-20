@@ -136,7 +136,8 @@ public class AggregationTest extends TestBase {
                                                new Document("format", "%Y-%m-%d")
                                                    .append("date", "$joined"))));
 
-        for (final StringDates next : pipeline.aggregate(StringDates.class, builder().build())) {
+        for (Iterator<StringDates> it = pipeline.aggregate(StringDates.class, builder().build()); it.hasNext(); ) {
+            final StringDates next = it.next();
             assertEquals("2016-05-01", next.string);
         }
     }
@@ -152,7 +153,7 @@ public class AggregationTest extends TestBase {
         Iterator<CountResult> aggregation = getDs().createAggregation(Book.class)
                                                    .group("author", grouping("count", accumulator("$sum", 1)))
                                                    .sort(ascending("_id"))
-                                                   .aggregate(CountResult.class).iterator();
+                                                   .aggregate(CountResult.class);
 
         CountResult result1 = aggregation.next();
         CountResult result2 = aggregation.next();
@@ -182,7 +183,7 @@ public class AggregationTest extends TestBase {
                                                                                   .setNear(londonPoint)
                                                                                   .setSpherical(true)
                                                                                   .build())
-                                                                  .aggregate(City.class).iterator();
+                                                                  .aggregate(City.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
@@ -213,8 +214,7 @@ public class AggregationTest extends TestBase {
                                                                                                 .setNear(latitude, longitude)
                                                                                                 .setSpherical(false)
                                                                                                 .build())
-                                                                                .aggregate(PlaceWithLegacyCoords.class)
-                                                                                .iterator();
+                                                                                .aggregate(PlaceWithLegacyCoords.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
@@ -244,8 +244,7 @@ public class AggregationTest extends TestBase {
                                                                                   .setNear(latitude, longitude)
                                                                                   .setSpherical(true)
                                                                                   .build())
-                                                                  .aggregate(City.class)
-                                                                  .iterator();
+                                                                  .aggregate(City.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
@@ -265,8 +264,7 @@ public class AggregationTest extends TestBase {
 
         Iterator<Book> aggregate = getDs().createAggregation(Book.class)
                                           .limit(2)
-                                          .aggregate(Book.class)
-                                          .iterator();
+                                          .aggregate(Book.class);
         int count = 0;
         while (aggregate.hasNext()) {
             aggregate.next();
@@ -316,8 +314,7 @@ public class AggregationTest extends TestBase {
                                          .build();
         Iterator<Author> aggregate = getDs().createAggregation(Book.class)
                                             .group("author", grouping("books", push("title")))
-                                            .out(Author.class, options)
-                                            .iterator();
+                                            .out(Author.class, options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
         Author author = aggregate.next();
         Assert.assertEquals("Homer", author.name);
@@ -362,7 +359,7 @@ public class AggregationTest extends TestBase {
                                                         projection("author", "_id"),
                                                         projection("copies", divide(projection("copies"), 5)))
                                                     .sort(ascending("author"));
-        Iterator<Book> aggregate = pipeline.aggregate(Book.class).iterator();
+        Iterator<Book> aggregate = pipeline.aggregate(Book.class);
         Book book = aggregate.next();
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(1, book.copies.intValue());
@@ -389,7 +386,7 @@ public class AggregationTest extends TestBase {
                                                         projection("author", "_id"),
                                                         projection("copies", size(projection("titles"))))
                                                     .sort(ascending("author"));
-        Iterator<Book> aggregate = pipeline.aggregate(Book.class).iterator();
+        Iterator<Book> aggregate = pipeline.aggregate(Book.class);
         Book book = aggregate.next();
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(3, book.copies.intValue());
@@ -411,8 +408,7 @@ public class AggregationTest extends TestBase {
 
         Book book = getDs().createAggregation(Book.class)
                            .skip(2)
-                           .aggregate(Book.class)
-                           .first();
+                           .aggregate(Book.class).next();
         Assert.assertEquals("Eclogues", book.title);
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(2, book.copies.intValue());
@@ -429,8 +425,7 @@ public class AggregationTest extends TestBase {
                                           .project(projection("_id").suppress(), projection("name"), projection("joined"),
                                               projection("likes"))
                                           .unwind("likes")
-                                          .aggregate(User.class)
-                                          .iterator();
+                                          .aggregate(User.class);
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
@@ -465,8 +460,7 @@ public class AggregationTest extends TestBase {
                            .project(projection("_id").suppress(), projection("name"), projection("joined"),
                                projection("likes"))
                            .unwind("likes", new UnwindOptions().preserveNullAndEmptyArrays(true))
-                           .aggregate(User.class)
-                           .iterator();
+                           .aggregate(User.class);
         count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
@@ -512,8 +506,7 @@ public class AggregationTest extends TestBase {
 
 
         Iterator<SortByCountResult> aggregate = getDs().createAggregation(Book.class)
-                                                       .sortByCount("author").aggregate(SortByCountResult.class)
-                                                       .iterator();
+                                                       .sortByCount("author").aggregate(SortByCountResult.class);
         SortByCountResult result1 = aggregate.next();
         assertEquals(result1.id, "Dante");
         assertEquals(result1.count, 3);
@@ -533,8 +526,7 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10)));
 
         Iterator<BucketResult> aggregate = getDs().createAggregation(Book.class)
-                                                  .bucket("copies", Arrays.asList(1, 5, 12)).aggregate(BucketResult.class)
-                                                  .iterator();
+                                                  .bucket("copies", Arrays.asList(1, 5, 12)).aggregate(BucketResult.class);
         BucketResult result1 = aggregate.next();
         assertEquals(result1.id, "1");
         assertEquals(result1.count, 3);
@@ -558,8 +550,7 @@ public class AggregationTest extends TestBase {
                                                       new BucketOptions()
                                                           .defaultField("test")
                                                           .output("count").sum(1))
-                                                  .aggregate(BucketResult.class)
-                                                  .iterator();
+                                                  .aggregate(BucketResult.class);
         BucketResult result1 = aggregate.next();
         assertEquals(result1.id, "1");
         assertEquals(result1.count, 3);
@@ -584,8 +575,7 @@ public class AggregationTest extends TestBase {
                        .defaultField("test")
                        .output("count")
                        .sum(1))
-               .aggregate(BucketResult.class)
-               .iterator();
+               .aggregate(BucketResult.class);
 
     }
 
@@ -603,9 +593,7 @@ public class AggregationTest extends TestBase {
                        .defaultField("test")
                        .output("count")
                        .sum(1))
-               .aggregate(BucketResult.class)
-               .iterator();
-
+               .aggregate(BucketResult.class);
     }
 
 
@@ -618,8 +606,7 @@ public class AggregationTest extends TestBase {
 
         Iterator<BucketAutoResult> aggregate = getDs().createAggregation(Book.class)
                                                       .bucketAuto("copies", 2)
-                                                      .aggregate(BucketAutoResult.class)
-                                                      .iterator();
+                                                      .aggregate(BucketAutoResult.class);
         BucketAutoResult result1 = aggregate.next();
         assertEquals(result1.id.min, 5);
         assertEquals(result1.id.max, 21);
@@ -647,8 +634,7 @@ public class AggregationTest extends TestBase {
                                                                .addToSet("author")
                                                                .output("count")
                                                                .sum(1))
-                                                       .aggregate(BooksBucketResult.class)
-                                                       .iterator();
+                                                       .aggregate(BooksBucketResult.class);
         BooksBucketResult result1 = aggregate.next();
         assertEquals(result1.getId().min, 4);
         assertEquals(result1.getId().max, 8);

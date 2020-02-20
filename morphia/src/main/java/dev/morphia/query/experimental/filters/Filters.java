@@ -416,7 +416,7 @@ public final class Filters {
      * @query.filter $gte
      */
     public static Filter gte(final String field, final Object val) {
-        return new Filter("gte", field, val);
+        return new Filter("$gte", field, val);
     }
 
     /**
