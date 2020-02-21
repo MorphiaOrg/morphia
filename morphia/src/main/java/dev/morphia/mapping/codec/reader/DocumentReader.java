@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec.reader;
 
 import dev.morphia.mapping.codec.BsonTypeMap;
-import dev.morphia.mapping.codec.reader.Stage.InitialStage;
+import dev.morphia.mapping.codec.reader.ReaderState.InitialReaderState;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
@@ -26,7 +26,7 @@ import static java.lang.String.format;
  */
 public class DocumentReader implements BsonReader {
     private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
-    private Stage stage;
+    private ReaderState readerState;
 
     /**
      * Construct a new instance.
@@ -34,7 +34,7 @@ public class DocumentReader implements BsonReader {
      * @param document the document to read from
      */
     public DocumentReader(final Document document) {
-        stage = new InitialStage(this, new DocumentIterator(this, document.entrySet().iterator()));
+        readerState = new InitialReaderState(this, new DocumentIterator(this, document.entrySet().iterator()));
     }
 
     @Override
@@ -324,17 +324,17 @@ public class DocumentReader implements BsonReader {
         }
     }
 
-    Stage stage() {
-        return this.stage;
+    ReaderState stage() {
+        return this.readerState;
     }
 
-    Stage nextStage(final Stage nextStage) {
-        stage = nextStage;
-        return stage;
+    ReaderState nextStage(final ReaderState nextReaderState) {
+        readerState = nextReaderState;
+        return readerState;
     }
 
-    void reset(final Stage bookmark) {
-        stage = bookmark;
+    void reset(final ReaderState bookmark) {
+        readerState = bookmark;
     }
 
     BsonType getBsonType(final Object o) {

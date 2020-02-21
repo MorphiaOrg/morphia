@@ -99,8 +99,6 @@ public class ZipCodeDataSetTest extends TestBase {
                      .group("state", grouping("totalPop", sum("pop")))
                      .match(query.field("totalPop").greaterThanOrEq(10000000));
 
-
-        System.out.println("******************* pipeline.toString() = " + pipeline.toString());
         validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "CA", 29754890);
         validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "OH", 10846517);
     }

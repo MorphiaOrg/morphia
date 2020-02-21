@@ -8,20 +8,20 @@ import org.bson.Document;
 import java.util.List;
 import java.util.StringJoiner;
 
-class Stage {
+class ReaderState {
     private final String name;
     private final Object value;
     private DocumentReader reader;
     private ReaderIterator iterator;
-    private Stage nextStage;
+    private ReaderState nextReaderState;
 
-    Stage(final DocumentReader reader, final ReaderIterator iterator) {
+    ReaderState(final DocumentReader reader, final ReaderIterator iterator) {
         this.reader = reader;
         this.iterator = iterator;
         name = null;
         value = null;
         if (iterator.hasNext()) {
-            processNextStages(new DocumentEndStage(reader), iterator);
+            processNextStages(new DocumentEndReaderState(reader), iterator);
         }
     }
 
@@ -29,31 +29,31 @@ class Stage {
         return iterator;
     }
 
-    protected void nextStage(final Stage next) {
-        nextStage = next;
+    protected void nextStage(final ReaderState next) {
+        nextReaderState = next;
     }
 
-    public Stage getNextStage() {
-        return nextStage;
+    public ReaderState getNextReaderState() {
+        return nextReaderState;
     }
 
-    private void processNextStages(final Stage endStage, final ReaderIterator iterator) {
-        next(endStage);
-        Stage current = this;
+    private void processNextStages(final ReaderState endReaderState, final ReaderIterator iterator) {
+        next(endReaderState);
+        ReaderState current = this;
         while (iterator.hasNext()) {
             current = current.next(iterator.next());
         }
-        reader.nextStage(nextStage);
+        reader.nextStage(nextReaderState);
     }
 
-    Stage next(final Stage next) {
-        Stage old = nextStage;
-        nextStage = next;
-        nextStage.nextStage = old;
+    ReaderState next(final ReaderState next) {
+        ReaderState old = nextReaderState;
+        nextReaderState = next;
+        nextReaderState.nextReaderState = old;
         return next;
     }
 
-    Stage(final DocumentReader reader, final String name, final Object value) {
+    ReaderState(final DocumentReader reader, final String name, final Object value) {
         this.reader = reader;
         this.name = name;
         this.value = value;
@@ -77,17 +77,17 @@ class Stage {
         return (T) value;
     }
 
-    Stage advance() {
-        return reader.nextStage(nextStage);
+    ReaderState advance() {
+        return reader.nextStage(nextReaderState);
     }
 
     void startDocument() {
         if (!(value instanceof Document)) {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(Document.class, getCurrentBsonType()));
         }
-        if (!(nextStage instanceof DocumentStartStage)) {
-            processNextStages(new DocumentEndStage(reader), new DocumentIterator(reader, ((Document) value).entrySet().iterator()));
-            next(new DocumentStartStage(reader, ArrayIterator.empty())).advance();
+        if (!(nextReaderState instanceof DocumentStartReaderState)) {
+            processNextStages(new DocumentEndReaderState(reader), new DocumentIterator(reader, ((Document) value).entrySet().iterator()));
+            next(new DocumentStartReaderState(reader, ArrayIterator.empty())).advance();
         } else {
             advance();
         }
@@ -101,8 +101,8 @@ class Stage {
         if (!(value instanceof List)) {
             throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(List.class, getCurrentBsonType()));
         }
-        if (!(nextStage instanceof ListValueStage)) {
-            processNextStages(new ListEndStage(reader), new ArrayIterator(reader, ((List) value).iterator()));
+        if (!(nextReaderState instanceof ListValueReaderState)) {
+            processNextStages(new ListEndReaderState(reader), new ArrayIterator(reader, ((List) value).iterator()));
         }
     }
 
@@ -114,12 +114,12 @@ class Stage {
         throw new BsonInvalidOperationException(Sofia.invalidBsonOperation(Document.class, getCurrentBsonType()));
     }
 
-    static class InitialStage extends Stage {
+    static class InitialReaderState extends ReaderState {
 
-        InitialStage(final DocumentReader reader, final DocumentIterator documentIterator) {
+        InitialReaderState(final DocumentReader reader, final DocumentIterator documentIterator) {
             super(reader, documentIterator);
-            DocumentStartStage startStage = new DocumentStartStage(reader, getIterator());
-            startStage.nextStage(getNextStage());
+            DocumentStartReaderState startStage = new DocumentStartReaderState(reader, getIterator());
+            startStage.nextStage(getNextReaderState());
             nextStage(startStage);
         }
 
@@ -134,9 +134,9 @@ class Stage {
         }
     }
 
-    static class DocumentStartStage extends Stage {
+    static class DocumentStartReaderState extends ReaderState {
 
-        DocumentStartStage(final DocumentReader reader, final ReaderIterator iterator) {
+        DocumentStartReaderState(final DocumentReader reader, final ReaderIterator iterator) {
             super(reader, iterator);
         }
 
@@ -151,8 +151,8 @@ class Stage {
         }
     }
 
-    static class ListValueStage extends Stage {
-        ListValueStage(final DocumentReader reader, final Object value) {
+    static class ListValueReaderState extends ReaderState {
+        ListValueReaderState(final DocumentReader reader, final Object value) {
             super(reader, null, value);
         }
 
@@ -162,8 +162,8 @@ class Stage {
         }
     }
 
-    private static class EndStage extends Stage {
-        EndStage(final DocumentReader reader) {
+    private static class EndReaderState extends ReaderState {
+        EndReaderState(final DocumentReader reader) {
             super(reader, ArrayIterator.empty());
         }
 
@@ -175,8 +175,8 @@ class Stage {
         }
     }
 
-    static class DocumentEndStage extends EndStage {
-        DocumentEndStage(final DocumentReader reader) {
+    static class DocumentEndReaderState extends EndReaderState {
+        DocumentEndReaderState(final DocumentReader reader) {
             super(reader);
         }
 
@@ -192,8 +192,8 @@ class Stage {
 
     }
 
-    static class ListEndStage extends EndStage {
-        ListEndStage(final DocumentReader reader) {
+    static class ListEndReaderState extends EndReaderState {
+        ListEndReaderState(final DocumentReader reader) {
             super(reader);
         }
 

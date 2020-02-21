@@ -60,7 +60,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     static <V> V legacyOperation() {
-        throw new UnsupportedOperationException(Sofia.legacyQueryOperation());
+        throw new UnsupportedOperationException(Sofia.legacyOperation());
     }
 
     static <V> V modernOperation() {

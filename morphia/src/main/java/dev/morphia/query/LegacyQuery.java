@@ -89,13 +89,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                                                     .append("filter", getQueryDocument()))));
     }
 
-/*
-    @Override
-    public Query<T> expr(final Expression expression) {
-        throw new UnsupportedOperationException();
-    }
-*/
-
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);

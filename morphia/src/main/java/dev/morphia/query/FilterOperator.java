@@ -17,6 +17,7 @@ public enum FilterOperator {
     WITHIN_CIRCLE("$center") {
         @Override
         public Filter apply(final String prop, final Object value) {
+            // TODO
             throw new UnsupportedOperationException();
 //            return Filters.center(prop, value);
         }
@@ -25,6 +26,7 @@ public enum FilterOperator {
     WITHIN_CIRCLE_SPHERE("$centerSphere") {
         @Override
         public Filter apply(final String prop, final Object value) {
+            // TODO
             throw new UnsupportedOperationException();
         }
     },
@@ -164,7 +166,7 @@ public enum FilterOperator {
     NEAR_SPHERE("$nearSphere") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.nearSphere(prop, convertToGeometry(value));
+            return Filters.nearSphere(prop, (Point) convertToGeometry(value));
         }
     },
 

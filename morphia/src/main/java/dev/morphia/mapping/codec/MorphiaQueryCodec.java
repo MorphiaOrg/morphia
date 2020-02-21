@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.MorphiaQuery;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -26,7 +27,7 @@ public class MorphiaQueryCodec implements Codec<MorphiaQuery> {
 
     @Override
     public MorphiaQuery<?> decode(final BsonReader reader, final DecoderContext decoderContext) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override

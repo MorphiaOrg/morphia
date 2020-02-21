@@ -27,8 +27,8 @@ against.  Because of the transformational operations available in the aggregatio
  document fields actually exist when referencing them in your pipeline.
 
 ## The Pipeline
-Aggregation operations are comprised of a series stages.  Our example here has only one stage: `group()`.  This method is the Morphia
-equivalent of the [`$group`]({{< docsref "reference/operator/aggregation/group/" >}}) operator.  This stage, as the name
+Aggregation operations are comprised of a series stages.  Our example here has only one readerState: `group()`.  This method is the Morphia
+equivalent of the [`$group`]({{< docsref "reference/operator/aggregation/group/" >}}) operator.  This readerState, as the name
 suggests, groups together documents based on the given field's values.  In this example, we are collecting together all the books by
 author.  The first parameter to `group()` defines the `_id` of the resulting documents.  Within this grouping, this pipeline takes the
 `books` fields for each author and extracts the `title`.  With this grouping of data, we're then `push()`ing the titles in to an array
@@ -62,7 +62,7 @@ There are a handful options here but there's one that deserves some extra attent
 
 ### $out
 
-But this example doesn't use `aggregate()`, of course, it uses `out()` which gives us access to the `$out` pipeline stage.  [`$out`]
+But this example doesn't use `aggregate()`, of course, it uses `out()` which gives us access to the `$out` pipeline readerState.  [`$out`]
 ({{< docsref "reference/operator/aggregation/out/" >}}) is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
 if it does not exist, will be created upon execution of the pipeline.

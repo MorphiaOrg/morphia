@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.query.Shape;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -12,7 +13,7 @@ import org.bson.codecs.EncoderContext;
 class ShapeCodec implements Codec<Shape> {
     @Override
     public Shape decode(final BsonReader reader, final DecoderContext decoderContext) {
-        throw new UnsupportedOperationException("Shape is intended for querying only and should not be used on entities.");
+        throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override

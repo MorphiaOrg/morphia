@@ -13,6 +13,7 @@ import dev.morphia.query.BucketOptions;
 import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,23 +86,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline geoNear(final GeoNear geoNear) {
-        Document geo = new Document();
-
-//        putIfNull(geo, "near", geoNear.getNearAsDocument(pointConverter));
-        putIfNull(geo, "distanceField", geoNear.getDistanceField());
-        putIfNull(geo, "limit", geoNear.getLimit());
-        putIfNull(geo, "num", geoNear.getMaxDocuments());
-        putIfNull(geo, "maxDistance", geoNear.getMaxDistance());
-        if (geoNear.getQuery() != null) {
-            geo.put("query", geoNear.getQuery().toDocument());
-        }
-        putIfNull(geo, "spherical", geoNear.getSpherical());
-        putIfNull(geo, "distanceMultiplier", geoNear.getDistanceMultiplier());
-        putIfNull(geo, "includeLocs", geoNear.getIncludeLocations());
-        stages.add(new Document("$geoNear", geo));
-        throw new UnsupportedOperationException();
-
-//        return this;
+        throw new UnsupportedOperationException(Sofia.legacyOperation());
     }
 
     @Override

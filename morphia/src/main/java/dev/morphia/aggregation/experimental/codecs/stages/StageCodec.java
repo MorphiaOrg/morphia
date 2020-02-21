@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -26,7 +27,7 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
 
     @Override
     public final T decode(final BsonReader reader, final DecoderContext decoderContext) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override

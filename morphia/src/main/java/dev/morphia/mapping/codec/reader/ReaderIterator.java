@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec.reader;
 
-import dev.morphia.mapping.codec.reader.Stage.DocumentEndStage;
-import dev.morphia.mapping.codec.reader.Stage.ListValueStage;
+import dev.morphia.mapping.codec.reader.ReaderState.DocumentEndReaderState;
+import dev.morphia.mapping.codec.reader.ReaderState.ListValueReaderState;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 /**
  * @morphia.internal
  */
-interface ReaderIterator extends Iterator<Stage> {
+interface ReaderIterator extends Iterator<ReaderState> {
 }
 
 /**
@@ -32,18 +32,18 @@ class DocumentIterator implements ReaderIterator {
     }
 
     @Override
-    public Stage next() {
-        Stage stage = null;
+    public ReaderState next() {
+        ReaderState readerState = null;
         try {
             Entry<String, Object> next = iterator.next();
             if (next != null) {
-                stage = new Stage(reader, next.getKey(), next.getValue());
+                readerState = new ReaderState(reader, next.getKey(), next.getValue());
             }
         } catch (NoSuchElementException e) {
-            stage = new DocumentEndStage(reader);
+            readerState = new DocumentEndReaderState(reader);
         }
 
-        return stage;
+        return readerState;
     }
 
     @Override
@@ -82,8 +82,8 @@ class ArrayIterator implements ReaderIterator {
     }
 
     @Override
-    public Stage next() {
-        return new ListValueStage(reader, iterator.next());
+    public ReaderState next() {
+        return new ListValueReaderState(reader, iterator.next());
     }
 
     @Override

@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.codecs;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -80,7 +81,7 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
 
     @Override
     public final T decode(final BsonReader reader, final DecoderContext decoderContext) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override

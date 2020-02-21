@@ -185,12 +185,12 @@ public final class Filters {
      * $nearSphere.
      *
      * @param field the field to check
-     * @param val   the value to check
+     * @param point the point to check
      * @return the filter
      * @query.filter $nearSphere
      */
-    public static GeoFilter nearSphere(final String field, final Geometry val) {
-        return new GeoFilter("$nearSphere", field, val);
+    public static NearFilter nearSphere(final String field, final Point point) {
+        return new NearFilter("$nearSphere", field, point);
     }
 
     /**

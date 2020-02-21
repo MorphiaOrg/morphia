@@ -354,7 +354,6 @@ public class DatastoreImpl implements AdvancedDatastore {
             entities.addAll(kindResults);
         }
 
-        // TODO: order them based on the incoming Keys.
         return entities;
     }
 

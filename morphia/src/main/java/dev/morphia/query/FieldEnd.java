@@ -306,7 +306,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
-     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
+     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude, boolean spherical);

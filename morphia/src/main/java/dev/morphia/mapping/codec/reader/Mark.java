@@ -8,17 +8,17 @@ import org.bson.BsonReaderMark;
  */
 public class Mark implements BsonReaderMark {
     private DocumentReader reader;
-    private final Stage stage;
+    private final ReaderState readerState;
 
-    Mark(final DocumentReader reader, final Stage stage) {
+    Mark(final DocumentReader reader, final ReaderState readerState) {
         this.reader = reader;
-        this.stage = stage;
+        this.readerState = readerState;
     }
 
     /**
      * Resets the reader to place indicated by this Mark
      */
     public void reset() {
-        reader.reset(stage);
+        reader.reset(readerState);
     }
 }
