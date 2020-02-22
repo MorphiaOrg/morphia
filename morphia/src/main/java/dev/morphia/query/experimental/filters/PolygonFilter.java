@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 class PolygonFilter extends GeoWithinFilter {
     private final Point[] points;
 
-    public PolygonFilter(final String field, final Point[] points) {
+    PolygonFilter(final String field, final Point[] points) {
         super("$polygon", field, null);
         this.points = points;
     }

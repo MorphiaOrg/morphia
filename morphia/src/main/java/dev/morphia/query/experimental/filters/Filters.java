@@ -18,6 +18,9 @@ import static java.lang.String.format;
  * @since 2.0
  */
 public final class Filters {
+    private Filters() {
+    }
+
     /**
      * Specifies equality condition. The $eq operator matches documents where the value of a field equals the specified value.
      *
@@ -115,7 +118,7 @@ public final class Filters {
      * @query.filter $text
      */
     public static TextSearchFilter text(final String textSearch) {
-        return new TextSearchFilter("$text", textSearch);
+        return new TextSearchFilter(textSearch);
     }
 
     /**
@@ -148,7 +151,7 @@ public final class Filters {
      * @query.filter $geoIntersects
      */
     public static Filter geoIntersects(final String field, final Geometry val) {
-        return new GeoIntersectsFilter("$geoIntersects", field, val);
+        return new GeoIntersectsFilter(field, val);
     }
 
     /**
@@ -162,7 +165,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $near
      */
-    public static GeoFilter near(final String field, final Point point) {
+    public static NearFilter near(final String field, final Point point) {
         return new NearFilter("$near", field, point);
     }
 
@@ -174,8 +177,8 @@ public final class Filters {
      * @return the filter
      * @query.filter $geoWithin
      */
-    public static GeoFilter geoWithin(final String field, final Geometry val) {
-        return new GeoFilter("$geoWithin", field, val);
+    public static Filter geoWithin(final String field, final Geometry val) {
+        return new Filter("$geoWithin", field, val);
     }
 
     /**
@@ -292,13 +295,13 @@ public final class Filters {
     /**
      * Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
      *
-     * @param field the field to check
+     * @param field      the field to check
      * @param bottomLeft the bottom left corner of the box
      * @param upperRight the upper right corner of the box
      * @return the filter
      * @query.filter $box
      */
-    public static GeoFilter box(final String field, final Point bottomLeft, final Point upperRight) {
+    public static Filter box(final String field, final Point bottomLeft, final Point upperRight) {
         return new Box(field, bottomLeft, upperRight);
     }
 
@@ -318,13 +321,13 @@ public final class Filters {
     /**
      * Defines a circle for a geospatial query that uses spherical geometry. The query returns documents that are within the bounds of
      * the circle. You can use the $centerSphere operator on both GeoJSON objects and legacy coordinate pairs.
-     *
+     * <p>
      * To use $centerSphere, specify an array that contains:
      *
-     *  <li>The grid coordinates of the circle’s center point, and
-     *  <li>The circle’s radius measured in radians. To calculate radians, see Calculate Distance Using Spherical Geometry.
+     * <li>The grid coordinates of the circle’s center point, and
+     * <li>The circle’s radius measured in radians. To calculate radians, see Calculate Distance Using Spherical Geometry.
      *
-     * @param field the field to check
+     * @param field  the field to check
      * @param center the center point of the shape
      * @param radius the radius of the circle
      * @return the filter
@@ -373,8 +376,8 @@ public final class Filters {
     /**
      * Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
      *
-     * @param field the field to check
-     * @param points   the value to check
+     * @param field  the field to check
+     * @param points the value to check
      * @return the filter
      * @query.filter $polygon
      */
@@ -510,7 +513,7 @@ public final class Filters {
     private static class LogicalFilter extends Filter {
         private final List<Filter> filters;
 
-        public LogicalFilter(final String name, final Filter... filters) {
+        LogicalFilter(final String name, final Filter... filters) {
             super(name);
             this.filters = Arrays.asList(filters);
         }

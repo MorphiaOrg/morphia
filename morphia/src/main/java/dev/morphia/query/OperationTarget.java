@@ -19,6 +19,11 @@ public class OperationTarget {
     private PathTarget target;
     private Object value;
 
+    /**
+     * @param target the target
+     * @param value the value
+     * @morphia.internal
+     */
     public OperationTarget(final PathTarget target, final Object value) {
         this.target = target;
         this.value = value;
@@ -38,6 +43,12 @@ public class OperationTarget {
         return value;
     }
 
+    /**
+     * Encodes this target
+     * @param mapper the mapper
+     * @return the encoded form
+     * @morphia.internal
+     */
     public Object encode(final Mapper mapper) {
         if (target == null) {
             return value;

@@ -181,6 +181,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
      * Creates an copy of the given options
      *
      * @param original the orginal to copy
+     * @return the new copy
      * @morphia.internal
      */
     public FindOptions copy(final FindOptions original) {

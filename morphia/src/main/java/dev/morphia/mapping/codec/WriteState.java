@@ -16,8 +16,8 @@ class ArrayState extends ValueState {
 
     @Override
     protected String stateToString(final String s) {
-        return previous().stateToString(list.toString()) +
-               (!s.equals("") ? ", " + s : "");
+        return previous().stateToString(list.toString())
+               + (!s.equals("") ? ", " + s : "");
     }
 
     @Override
@@ -28,7 +28,7 @@ class ArrayState extends ValueState {
     @Override
     protected void apply(final Object value) {
         list.add(value);
-        writer.state(this);
+        getWriter().state(this);
     }
 
     @Override
@@ -58,7 +58,7 @@ class DocumentState extends WriteState {
         } else {
             document.put(name, value);
         }
-        writer.state(this);
+        getWriter().state(this);
         return this;
     }
 
@@ -89,7 +89,7 @@ class DocumentState extends WriteState {
 
     @Override
     NameState name(final String name) {
-        return new NameState(writer, name);
+        return new NameState(getWriter(), name);
     }
 
     Document getDocument() {
@@ -106,19 +106,19 @@ class NameState extends WriteState {
     }
 
     @Override
-    public String stateToString(String downstream) {
+    public String stateToString(final String downstream) {
         return previous().stateToString(name + ": "
                                         + (!downstream.equals("") ? downstream : "<pending>"));
     }
 
     @Override
     WriteState array() {
-        return new ArrayState(writer);
+        return new ArrayState(getWriter());
     }
 
     @Override
     WriteState document() {
-        return new DocumentState(writer);
+        return new DocumentState(getWriter());
     }
 
     @Override
@@ -162,7 +162,7 @@ class RootState extends WriteState {
 
     @Override
     WriteState document() {
-        return new DocumentState(writer, document);
+        return new DocumentState(getWriter(), document);
     }
 
     @Override
@@ -177,11 +177,7 @@ class RootState extends WriteState {
 
     @Override
     NameState name(final String name) {
-        return new NameState(writer, name);
-    }
-
-    Document getDocument() {
-        return document;
+        return new NameState(getWriter(), name);
     }
 }
 
@@ -197,7 +193,7 @@ class ValueState extends WriteState {
 }
 
 abstract class WriteState {
-    final DocumentWriter writer;
+    private final DocumentWriter writer;
     private final WriteState previous;
 
     WriteState(final DocumentWriter writer) {
@@ -221,19 +217,23 @@ abstract class WriteState {
     }
 
     WriteState array() {
-        return new ArrayState(writer);
+        return new ArrayState(getWriter());
     }
 
     WriteState document() {
-        return new DocumentState(writer);
+        return new DocumentState(getWriter());
     }
 
     void end() {
-        writer.state(previous());
+        getWriter().state(previous());
+    }
+
+    DocumentWriter getWriter() {
+        return writer;
     }
 
     WriteState name(final String name) {
-        return new NameState(writer, name);
+        return new NameState(getWriter(), name);
     }
 
     <P extends WriteState> P previous() {

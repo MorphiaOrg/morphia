@@ -10,7 +10,6 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
-import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.sofia.Sofia;
@@ -50,8 +49,8 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     /**
-     * @morphia.internal
      * @return the stages
+     * @morphia.internal
      */
     public List<Document> getStages() {
         return stages;
@@ -133,9 +132,9 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     public AggregationPipeline lookup(final String from, final String localField,
                                       final String foreignField, final String as) {
         stages.add(new Document("$lookup", new Document("from", from)
-            .append("localField", localField)
-            .append("foreignField", foreignField)
-            .append("as", as)));
+                                               .append("localField", localField)
+                                               .append("foreignField", foreignField)
+                                               .append("as", as)));
         return this;
     }
 
@@ -210,7 +209,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline unwind(final String field, final UnwindOptions options) {
         Document unwindOptions = new Document("path", "$" + field)
-                .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
+                                     .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
         String includeArrayIndex = options.getIncludeArrayIndex();
         if (includeArrayIndex != null) {
             unwindOptions.append("includeArrayIndex", includeArrayIndex);
@@ -295,7 +294,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
                     }
                 }
                 throw new UnsupportedOperationException("aggregation support pending");
-//                return args;
+                //                return args;
             } else {
                 // Unwrap for single-argument expressions
                 if (args.size() == 1) {

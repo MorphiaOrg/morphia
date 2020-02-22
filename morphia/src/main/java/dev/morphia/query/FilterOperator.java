@@ -12,6 +12,12 @@ import java.util.List;
 
 import static java.lang.String.format;
 
+/**
+ * Defines various query filter operators
+ *
+ * @deprecated use {@link Filters} and {@link Filter} instead
+ */
+@Deprecated(since = "2.0", forRemoval = true)
 public enum FilterOperator {
 
     WITHIN_CIRCLE("$center") {
@@ -19,7 +25,7 @@ public enum FilterOperator {
         public Filter apply(final String prop, final Object value) {
             // TODO
             throw new UnsupportedOperationException();
-//            return Filters.center(prop, value);
+            //            return Filters.center(prop, value);
         }
     },
 
@@ -34,9 +40,9 @@ public enum FilterOperator {
     WITHIN_BOX("$box") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            if(!(value instanceof Point[])) {
+            if (!(value instanceof Point[])) {
                 throw new IllegalArgumentException(Sofia.illegalArgument(value.getClass().getCanonicalName(),
-                    Point[].class.getCanonicalName())) ;
+                    Point[].class.getCanonicalName()));
             }
             Point[] points = (Point[]) value;
             return Filters.box(prop, points[0], points[1]);
@@ -193,10 +199,10 @@ public enum FilterOperator {
 
     private static Geometry convertToGeometry(final Object value) {
         Geometry converted;
-        if(value instanceof double[]) {
-            final double[] coords = (double[]) value;
-            converted = new Point(new Position(coords[0], coords[1]));
-        } else if(value instanceof Geometry){
+        if (value instanceof double[]) {
+            final double[] coordinates = (double[]) value;
+            converted = new Point(new Position(coordinates[0], coordinates[1]));
+        } else if (value instanceof Geometry) {
             converted = (Geometry) value;
         } else {
             throw new UnsupportedOperationException(Sofia.conversionNotSupported(value.getClass().getCanonicalName()));
@@ -229,7 +235,14 @@ public enum FilterOperator {
         throw new IllegalArgumentException(format("Unknown operator '%s'", operator));
     }
 
-    public abstract Filter apply(final String prop, final Object value);
+    /**
+     * Converts a {@link FilterOperator} to a {@link Filter}
+     * @param prop the document property name
+     * @param value the value to apply to the filter
+     * @return the new Filter
+     * @morphia.internal
+     */
+    public abstract Filter apply(String prop, Object value);
 
     /**
      * Returns true if the given filter matches the filters on this FilterOperator

@@ -59,7 +59,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
      * @param mappedClass the mapped class
      * @param validating  validate names or not
      */
-    protected FieldEndImpl(final Mapper mapper, final String field, final T target, MappedClass mappedClass, final boolean validating) {
+    protected FieldEndImpl(final Mapper mapper, final String field, final T target, final MappedClass mappedClass,
+                           final boolean validating) {
         this.mapper = mapper;
         this.field = field;
         this.target = target;

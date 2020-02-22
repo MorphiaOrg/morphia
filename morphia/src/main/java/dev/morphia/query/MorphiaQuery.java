@@ -16,7 +16,6 @@ import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.Shape.Center;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
-import dev.morphia.query.experimental.filters.GeoFilter;
 import dev.morphia.query.experimental.filters.NearFilter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -37,6 +36,10 @@ import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
 
+/**
+ * @param <T> the type
+ * @morphia.internal
+ */
 public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final DatastoreImpl datastore;
@@ -48,11 +51,11 @@ public class MorphiaQuery<T> implements Query<T> {
     private MongoCollection<T> collection;
     private List<Filter> filters = new ArrayList<>();
 
-    public MorphiaQuery(final Class<T> clazz, final Datastore datastore) {
+    protected MorphiaQuery(final Class<T> clazz, final Datastore datastore) {
         this(clazz, null, datastore);
     }
 
-    public MorphiaQuery(final Class<T> clazz, final Document query, final Datastore datastore) {
+    protected MorphiaQuery(final Class<T> clazz, final Document query, final Datastore datastore) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         this.seedQuery = query;
@@ -274,7 +277,7 @@ public class MorphiaQuery<T> implements Query<T> {
         return clazz;
     }
 
-    public Document getQueryDocument() {
+    Document getQueryDocument() {
         DocumentWriter writer = new DocumentWriter(seedQuery);
         writer.writeStartDocument();
         EncoderContext context = EncoderContext.builder().build();
@@ -320,9 +323,9 @@ public class MorphiaQuery<T> implements Query<T> {
             return false;
         }
         final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
-        return validate == query20.validate &&
-               Objects.equals(clazz, query20.clazz) &&
-               Objects.equals(getCollectionName(), query20.getCollectionName());
+        return validate == query20.validate
+               && Objects.equals(clazz, query20.clazz)
+               && Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
     @Override

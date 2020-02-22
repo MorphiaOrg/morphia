@@ -10,7 +10,6 @@ import org.bson.codecs.EncoderContext;
 
 import static java.lang.String.format;
 
-
 /**
  * Base class for query filters
  *
@@ -117,9 +116,9 @@ public class Filter {
     }
 
     protected Object getValue(final Mapper mapper) {
-        if(!mapped) {
+        if (!mapped) {
             String field = field(mapper);
-            if(pathTarget != null) {
+            if (pathTarget != null) {
                 this.value = ((Document) new OperationTarget(pathTarget, value)
                                              .encode(mapper))
                                  .get(field);

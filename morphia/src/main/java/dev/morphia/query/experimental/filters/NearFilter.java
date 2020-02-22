@@ -8,12 +8,17 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.Map;
 
-public class NearFilter extends GeoFilter {
+/**
+ * Defines a filter for $near and $nearSphere queries
+ *
+ * @since 2.0
+ */
+public class NearFilter extends Filter {
     private Double maxDistance;
     private Double minDistance;
     private CoordinateReferenceSystem crs;
 
-    public NearFilter(final String filterName, final String field, final Point point) {
+    NearFilter(final String filterName, final String field, final Point point) {
         super(filterName, field, point);
     }
 
@@ -42,23 +47,38 @@ public class NearFilter extends GeoFilter {
         writer.writeEndDocument();
     }
 
+    /**
+     * Sets the max distance to consider
+     * @param maxDistance the max
+     * @return this
+     */
     public NearFilter maxDistance(final Double maxDistance) {
         this.maxDistance = maxDistance;
         return this;
     }
 
+    /**
+     * Sets the min distance to consider
+     * @param minDistance the min
+     * @return this
+     */
     public NearFilter minDistance(final Double minDistance) {
         this.minDistance = minDistance;
         return this;
     }
 
+    /**
+     * Sets the coordinate reference system to use
+     * @param crs the crs
+     * @return this
+     */
     public NearFilter crs(final CoordinateReferenceSystem crs) {
         this.crs = crs;
         return this;
     }
 
     /**
-     * @param opts
+     * @param opts the options to apply
      * @morphia.internal
      */
     public void applyOpts(final Map opts) {

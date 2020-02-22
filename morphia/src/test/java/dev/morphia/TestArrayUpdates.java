@@ -27,7 +27,7 @@ public class TestArrayUpdates extends TestBase {
         datastore.ensureIndexes();
 
         datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
-                                   new Grade(90, singletonMap("name", "Test"))));
+            new Grade(90, singletonMap("name", "Test"))));
 
         Query<Student> testQuery = datastore.find(Student.class)
                                             .field("_id").equal(1L)
@@ -56,7 +56,7 @@ public class TestArrayUpdates extends TestBase {
         datastore.ensureIndexes();
 
         datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
-                                   new Grade(90, singletonMap("name", "Test"))));
+            new Grade(90, singletonMap("name", "Test"))));
 
         Query<Student> testQuery = datastore.find(Student.class)
                                             .field("_id").equal(1L)

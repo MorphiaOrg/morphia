@@ -553,6 +553,7 @@ public interface Datastore {
     <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);
 
     /**
+     * @param options the options used when requesting logging
      * @return the logged query
      * @morphia.internal
      * @since 2.0

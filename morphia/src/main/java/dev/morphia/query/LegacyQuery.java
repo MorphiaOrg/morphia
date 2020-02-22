@@ -15,7 +15,6 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
-import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @param clazz     the type to return
      * @param datastore the Datastore to use
      */
-    public LegacyQuery(final Class<T> clazz, final Datastore datastore) {
+    protected LegacyQuery(final Class<T> clazz, final Datastore datastore) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();
@@ -279,14 +278,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public Update<T> update() {
         return new Update<>(datastore, mapper, clazz, getCollection(), this);
-    }
-
-    @Deprecated(since = "2.0", forRemoval = true)
-    public Update<T> update(final Document document) {
-        final Update<T> updates = update();
-        updates.setOps(document);
-
-        return updates;
     }
 
     @Override

@@ -9,6 +9,12 @@
     </Match>
 
     <Match>
+        <Class name="~.*\.*DocumentWriter"/>
+        <Not>
+            <Bug code="RV_RETURN_VALUE_IGNORED_INFERRED"/>
+        </Not>
+    </Match>
+    <Match>
         <Class name="~.*\.*Test.*"/>
         <Not>
             <Bug code="IJU"/>

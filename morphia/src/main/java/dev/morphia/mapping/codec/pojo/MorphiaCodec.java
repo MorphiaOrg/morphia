@@ -5,12 +5,10 @@ import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.CollectibleCodec;
 import org.bson.codecs.DecoderContext;
@@ -116,17 +114,16 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public BsonValue getDocumentId(final T document) {
+        throw new UnsupportedOperationException("is this even necessary?");
+/*
         final Object id = mappedClass.getIdField().getFieldValue(document);
         final DocumentWriter writer = new DocumentWriter();
         ((Codec) registry.get(id.getClass()))
             .encode(writer, id, EncoderContext.builder().build());
         Document doc = writer.getDocument();
-        if (1 == 1) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        }
 
         return null;
+*/
     }
 
     /**

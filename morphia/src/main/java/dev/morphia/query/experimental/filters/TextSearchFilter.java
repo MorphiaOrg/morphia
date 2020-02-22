@@ -15,7 +15,7 @@ public class TextSearchFilter extends Filter {
     private Boolean caseSensitive;
     private Boolean diacriticSensitive;
 
-    protected TextSearchFilter(final String $text, final String searchText) {
+    protected TextSearchFilter(final String searchText) {
         super("$text");
         this.searchText = searchText;
     }
@@ -46,7 +46,7 @@ public class TextSearchFilter extends Filter {
     public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
         writer.writeStartDocument(getFilterName());
         writeNamedValue("$search", searchText, mapper, writer, context);
-        if(language != null) {
+        if (language != null) {
             writeNamedValue("$language", language, mapper, writer, context);
         }
         if (Boolean.TRUE.equals(caseSensitive)) {

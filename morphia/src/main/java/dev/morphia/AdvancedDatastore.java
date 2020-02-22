@@ -4,7 +4,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
@@ -15,8 +14,6 @@ import java.util.List;
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with Document and low-level options. It implements matching
  * methods from the {@code Datastore} interface but with a specified kind (collection name), or raw types (Document).
- *
- * @author ScottHernandez
  */
 public interface AdvancedDatastore extends Datastore {
 

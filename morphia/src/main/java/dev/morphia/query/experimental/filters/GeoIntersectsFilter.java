@@ -5,8 +5,11 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * @morphia.internal
+ */
 public class GeoIntersectsFilter extends Filter {
-    public GeoIntersectsFilter(final String $geoIntersects, final String field, final Geometry val) {
+    GeoIntersectsFilter(final String field, final Geometry val) {
         super("$geoIntersects", field, val);
     }
 

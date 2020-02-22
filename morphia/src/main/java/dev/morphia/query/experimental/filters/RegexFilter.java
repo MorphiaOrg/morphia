@@ -8,11 +8,15 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.regex.Pattern;
 
+/**
+ * Defines a regular expression filter
+ * @since 2.0
+ */
 public class RegexFilter extends Filter {
     private String regex;
     private String options;
 
-    public RegexFilter(final String field) {
+    RegexFilter(final String field) {
         super("$regex", field, null);
     }
 

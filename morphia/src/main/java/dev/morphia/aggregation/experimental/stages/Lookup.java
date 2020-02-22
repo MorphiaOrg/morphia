@@ -139,7 +139,7 @@ public class Lookup extends Stage {
      *
      * @param name       the variable name
      * @param expression the variable value expression
-     * @return
+     * @return this
      */
     public Lookup let(final String name, final Expression expression) {
         if (variables == null) {

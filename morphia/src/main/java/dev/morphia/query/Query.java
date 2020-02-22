@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
-import static dev.morphia.query.MorphiaQuery.modernOperation;
 
 
 /**
@@ -43,6 +42,12 @@ public interface Query<T> extends CriteriaContainer {
         return legacyOperation();
     }
 
+    /**
+     * Adds filters to this query.  This operation is cumulative.
+     *
+     * @param filters the filters to add
+     * @return this
+     */
     default Query<T> filter(Filter... filters) {
         throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
     }
@@ -185,7 +190,7 @@ public interface Query<T> extends CriteriaContainer {
     }
 
     /**
-     * @return
+     * @return the document form of this query
      * @morphia.internal
      */
     Document toDocument();
@@ -437,13 +442,6 @@ public interface Query<T> extends CriteriaContainer {
      * @return the update operation
      */
     Update<T> update();
-
-    /*
-     * @param document the seed document
-     * @return the update operation
-     * @morphia.internal
-     */
-    //    Update<T> update(Document document);
 
     /**
      * @param operations the prebuilt operations
