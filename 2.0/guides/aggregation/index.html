@@ -12,17 +12,17 @@
     <title>Aggregation :: Morphia</title>
 
     
-    <link href="/2.0/css/nucleus.css?1579999229" rel="stylesheet">
-    <link href="/2.0/css/fontawesome-all.min.css?1579999229" rel="stylesheet">
-    <link href="/2.0/css/hybrid.css?1579999229" rel="stylesheet">
-    <link href="/2.0/css/featherlight.min.css?1579999229" rel="stylesheet">
-    <link href="/2.0/css/perfect-scrollbar.min.css?1579999229" rel="stylesheet">
-    <link href="/2.0/css/auto-complete.css?1579999229" rel="stylesheet">
-    <link href="/2.0/css/theme.css?1579999229" rel="stylesheet">
-    <link href="/2.0/css/hugo-theme.css?1579999229" rel="stylesheet">
+    <link href="/2.0/css/nucleus.css?1582349693" rel="stylesheet">
+    <link href="/2.0/css/fontawesome-all.min.css?1582349693" rel="stylesheet">
+    <link href="/2.0/css/hybrid.css?1582349693" rel="stylesheet">
+    <link href="/2.0/css/featherlight.min.css?1582349693" rel="stylesheet">
+    <link href="/2.0/css/perfect-scrollbar.min.css?1582349693" rel="stylesheet">
+    <link href="/2.0/css/auto-complete.css?1582349693" rel="stylesheet">
+    <link href="/2.0/css/theme.css?1582349693" rel="stylesheet">
+    <link href="/2.0/css/hugo-theme.css?1582349693" rel="stylesheet">
     
 
-    <script src="/2.0/js/jquery-2.x.min.js?1579999229"></script>
+    <script src="/2.0/js/jquery-2.x.min.js?1582349693"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -566,9 +566,9 @@ against.  Because of the transformational operations available in the aggregatio
 
 <h2 id="the-pipeline">The Pipeline</h2>
 
-<p>Aggregation operations are comprised of a series stages.  Our example here has only one stage: <code>group()</code>.  This method is the Morphia
+<p>Aggregation operations are comprised of a series stages.  Our example here has only one readerState: <code>group()</code>.  This method is the Morphia
 equivalent of the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/
-"><code>$group</code></a> operator.  This stage, as the name
+"><code>$group</code></a> operator.  This readerState, as the name
 suggests, groups together documents based on the given field&rsquo;s values.  In this example, we are collecting together all the books by
 author.  The first parameter to <code>group()</code> defines the <code>_id</code> of the resulting documents.  Within this grouping, this pipeline takes the
 <code>books</code> fields for each author and extracts the <code>title</code>.  With this grouping of data, we&rsquo;re then <code>push()</code>ing the titles in to an array
@@ -601,7 +601,7 @@ in the final document.  This example is the Morphia equivalent of an <a href="ht
 
 <h3 id="out">$out</h3>
 
-<p>But this example doesn&rsquo;t use <code>aggregate()</code>, of course, it uses <code>out()</code> which gives us access to the <code>$out</code> pipeline stage.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/
+<p>But this example doesn&rsquo;t use <code>aggregate()</code>, of course, it uses <code>out()</code> which gives us access to the <code>$out</code> pipeline readerState.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/
 "><code>$out</code></a> is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
 if it does not exist, will be created upon execution of the pipeline.</p>
@@ -945,20 +945,20 @@ instances, you can use <a href="/javadoc/dev/morphia/aggregation/AggregationPipe
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0/js/clipboard.min.js?1579999229"></script>
-    <script src="/2.0/js/perfect-scrollbar.min.js?1579999229"></script>
-    <script src="/2.0/js/perfect-scrollbar.jquery.min.js?1579999229"></script>
-    <script src="/2.0/js/jquery.sticky.js?1579999229"></script>
-    <script src="/2.0/js/featherlight.min.js?1579999229"></script>
-    <script src="/2.0/js/html5shiv-printshiv.min.js?1579999229"></script>
-    <script src="/2.0/js/highlight.pack.js?1579999229"></script>
+    <script src="/2.0/js/clipboard.min.js?1582349693"></script>
+    <script src="/2.0/js/perfect-scrollbar.min.js?1582349693"></script>
+    <script src="/2.0/js/perfect-scrollbar.jquery.min.js?1582349693"></script>
+    <script src="/2.0/js/jquery.sticky.js?1582349693"></script>
+    <script src="/2.0/js/featherlight.min.js?1582349693"></script>
+    <script src="/2.0/js/html5shiv-printshiv.min.js?1582349693"></script>
+    <script src="/2.0/js/highlight.pack.js?1582349693"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0/js/modernizr.custom.71422.js?1579999229"></script>
-    <script src="/2.0/js/learn.js?1579999229"></script>
-    <script src="/2.0/js/hugo-learn.js?1579999229"></script>
+    <script src="/2.0/js/modernizr.custom.71422.js?1582349693"></script>
+    <script src="/2.0/js/learn.js?1582349693"></script>
+    <script src="/2.0/js/hugo-learn.js?1582349693"></script>
 
-    <link href="/2.0/mermaid/mermaid.css?1579999229" type="text/css" rel="stylesheet" />
-    <script src="/2.0/mermaid/mermaid.js?1579999229"></script>
+    <link href="/2.0/mermaid/mermaid.css?1582349693" type="text/css" rel="stylesheet" />
+    <script src="/2.0/mermaid/mermaid.js?1582349693"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
