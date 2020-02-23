@@ -14,7 +14,7 @@ download() {
   fi
   [ -e ${FILE} ] || wget ${URL} -O ${FILE}
   
-  rm -rf mongodb-linux-*
+  [ -e mongodb-linux-x86_64-${MONGODB} ] && sudo rm -rf mongodb-linux-*
   tar -xvf ${FILE}
   rm -rf /tmp/data
   mkdir -p /tmp/data
@@ -23,7 +23,7 @@ download() {
     --replSet morphia \
     --dbpath /tmp/data \
     --bind_ip 127.0.0.1 \
-    --logpath /tmp/mongodb-${MONGODB}.log &> /dev/null &
+    --logpath /tmp/mongodb-${MONGODB}.log &
 
   for i in $(seq 1 5)
   do
@@ -36,6 +36,7 @@ download() {
 LINUX=ubuntu1604
 if [ "${MONGODB}" ]
 then
+  killall -9 mongod && sleep 3 || true
   download
   if [ -z "$DRIVER" ]
   then

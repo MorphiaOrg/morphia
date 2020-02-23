@@ -67,6 +67,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRegexFind() {
+        checkMinServerVersion(4.2);
         evaluate("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
                                                                                        .pattern("inter"),
             parse("{match: 'inter', idx:1, captures:[]}"));
@@ -79,6 +80,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRegexFindAll() {
+        checkMinServerVersion(4.2);
         evaluate("{ $regexFindAll: { input: 'winter wonderland', regex: /inter/ } }",
             regexFindAll(value("winter wonderland")).pattern("inter"),
             List.of(parse("{match: 'inter', idx:1, captures:[]}")));
@@ -91,6 +93,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRegexMatch() {
+        checkMinServerVersion(4.2);
         evaluate("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",
             regexMatch(value("winter wonderland")).pattern("inter"), true);
         evaluate("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",

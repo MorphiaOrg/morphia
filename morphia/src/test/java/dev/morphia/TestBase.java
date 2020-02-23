@@ -210,7 +210,7 @@ public abstract class TestBase {
         }
     }
 
-    private double getServerVersion() {
+    protected double getServerVersion() {
         String version = (String) getMongoClient()
                                       .getDatabase("admin")
                                       .runCommand(new Document("serverStatus", 1))

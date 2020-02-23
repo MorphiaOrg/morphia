@@ -171,7 +171,7 @@ public final class MathExpressions {
      * @aggregation.expression $round
      */
     public static Expression round(final Expression number, final Expression place) {
-        return new MathExpression("$round", List.of(number, place));
+        return new MathExpression("$round", asList(number, place));
     }
 
     /**
@@ -203,12 +203,19 @@ public final class MathExpressions {
     /**
      * Truncates a number to a whole integer or to a specified decimal place.
      *
+     * NOTE:  Prior to 4.2, the place value wasn't available.  Pass null if your server is older than 4.2.
+     *
      * @param number the value
      * @param place  the place to trunc to
      * @return the new expression
      * @aggregation.expression $trunc
      */
     public static Expression trunc(final Expression number, final Expression place) {
-        return new MathExpression("$trunc", List.of(number, place));
+        ArrayList<Expression> params = new ArrayList<>();
+        params.add(number);
+        if (place != null) {
+            params.add(place);
+        }
+        return new MathExpression("$trunc", params);
     }
 }
