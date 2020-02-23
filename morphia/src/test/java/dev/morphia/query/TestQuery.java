@@ -676,6 +676,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testFluentNotQuery() {
+        checkMinServerVersion(4.0);
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
@@ -684,8 +685,7 @@ public class TestQuery extends TestBase {
             Filters.regex("keywords.keyword").pattern("^ralph").not());
 
         FindOptions options = new FindOptions().logQuery();
-        query.execute(/*options*/);
-        //        String loggedQuery = getDs().getLoggedQuery(options);
+        query.execute();
         assertEquals(1, query.count());
     }
 
