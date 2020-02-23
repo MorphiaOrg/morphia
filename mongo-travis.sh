@@ -19,18 +19,22 @@ download() {
   rm -rf /tmp/data
   mkdir -p /tmp/data
 
-  ${PWD}/mongodb-linux-x86_64-*/bin/mongod --quiet \
+  cd mongodb-linux-x86_64-${LINUX}-${MONGODB}/bin
+
+  ./mongod --quiet \
+    --bind_ip 127.0.0.1 \
     --replSet morphia \
     --dbpath /tmp/data \
-    --bind_ip 127.0.0.1 \
     --logpath /tmp/mongodb-${MONGODB}.log &
 
   for i in $(seq 1 5)
   do
-    ${PWD}/mongodb-linux-x86_64-*/bin/mongo --quiet --eval "rs.initiate()" && break
+    ./mongo --quiet --eval "rs.initiate()" && break
     sleep 3
     echo "Reattempting replSet initiation"
   done
+
+  cd -
 }
 
 LINUX=ubuntu1604
@@ -44,18 +48,18 @@ then
     killall -9 mongod
   fi
 else
-  sudo service mongodb stop
-  killall -9  mongod || true
+  killall -9 mongod || true
   LINUX=ubuntu1804
-  grep MONGODB .travis.yml | grep -v \# | while read LINE
+  MONGOS=$(grep MONGODB .travis.yml | cut -d" " -f4 | cut -d\= -f2 | sort -r | uniq)
+  DRIVERS=$(grep DRIVER .travis.yml | cut -d" " -f5 | cut -d\= -f2 | sort -r | uniq)
+  for MONGODB in ${MONGOS}
   do
-    eval $(echo $LINE | cut -d" " -f2)
-    eval $(echo $LINE | cut -d" " -f3)
-
-    echo SERVER = ${MONGODB}    DRIVER = ${DRIVER} | tee /tmp/morphia.test
-    download
-    mvn install
-    killall mongod
+#    for DRIVER in ${DRIVERS}
+#    do
+      echo SERVER = ${MONGODB}    DRIVER = ${DRIVER} | tee /tmp/morphia.test
+      download
+      mvn install
+      killall mongod
+#    done
   done
-  sudo service mongodb start
 fi
