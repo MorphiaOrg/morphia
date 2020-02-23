@@ -58,6 +58,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testLtrim() {
+        checkMinServerVersion(4.0);
         evaluate("{ $ltrim: { input: '    winter wonderland' } }", ltrim(value("    winter wonderland")),
             "winter wonderland");
         evaluate("{ $ltrim: { input: 'winter wonderland' } }", ltrim(value("winter wonderland"))
@@ -104,6 +105,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRtrim() {
+        checkMinServerVersion(4.0);
         evaluate("{ $rtrim: { input: 'winter wonderland    ' } }", rtrim(value("winter wonderland    ")),
             "winter wonderland");
         evaluate("{ $rtrim: { input: 'winter wonderland' } }", rtrim(value("winter wonderland"))
@@ -157,6 +159,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testToString() {
+        checkMinServerVersion(4.0);
         evaluate("{ $toString: 12345 }", StringExpressions.toString(value(12345)), "12345");
     }
 
@@ -167,6 +170,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testTrim() {
+        checkMinServerVersion(4.0);
         evaluate("{ $trim: { input: '   books   ' } }", trim(value("   books   ")), "books");
         evaluate("{ $trim: { input: '===books===' } }", trim(value("===books===")).chars(value("===")), "books");
     }
