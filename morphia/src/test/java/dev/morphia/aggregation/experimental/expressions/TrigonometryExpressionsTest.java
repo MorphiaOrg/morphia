@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
@@ -17,6 +18,11 @@ import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpre
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.tan;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
+    @Before
+    public void before() {
+        checkMinServerVersion(4.2);
+    }
+
 
     @Test
     public void testAcos() {
