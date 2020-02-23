@@ -5,6 +5,9 @@ import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
@@ -32,7 +35,9 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testToDate() {
-        evaluate("{$toDate: '2018-03-03' }", toDate(value("2018-03-03")), new Date(118, 2, 2, 19, 0, 0));
+        Date date = new Date(LocalDate.of(2018, 3, 3)
+                                      .toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC) * 1000);
+        evaluate("{$toDate: '2018-03-03' }", toDate(value("2018-03-03")), date);
     }
 
     @Test
