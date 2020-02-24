@@ -30,6 +30,7 @@ import java.util.Set;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.bson.assertions.Assertions.notNull;
+import static org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
 
 /**
  * Builder for EntityModels
@@ -48,7 +49,6 @@ public class EntityModelBuilder<T> {
     private String discriminator;
     private String discriminatorKey;
     private String idFieldName;
-    private List<? extends MorphiaConvention> conventions;
 
     /**
      * Create a builder
@@ -60,31 +60,6 @@ public class EntityModelBuilder<T> {
         this.datastore = datastore;
         this.type = type;
         configure();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <V> void specializeFieldModelBuilder(final FieldModelBuilder<V> fieldModelBuilder, final FieldMetadata<V> metaData) {
-        if (metaData.getTypeParameterMap().hasTypeParameters() && !metaData.getTypeParameters().isEmpty()) {
-            TypeData<V> specializedType;
-            Map<Integer, Integer> fieldToClassParamIndexMap = metaData.getTypeParameterMap().getPropertyToClassParamIndexMap();
-            Integer classType = fieldToClassParamIndexMap.get(-1);
-            if (classType != null) {
-                specializedType = (TypeData<V>) metaData.getTypeParameters().get(classType);
-            } else {
-                TypeData.Builder<V> builder = TypeData.builder(fieldModelBuilder.getTypeData().getType());
-                List<TypeData<?>> parameters = new ArrayList<>(fieldModelBuilder.getTypeData().getTypeParameters());
-                for (int i = 0; i < parameters.size(); i++) {
-                    for (Map.Entry<Integer, Integer> mapping : fieldToClassParamIndexMap.entrySet()) {
-                        if (mapping.getKey().equals(i)) {
-                            parameters.set(i, metaData.getTypeParameters().get(mapping.getValue()));
-                        }
-                    }
-                }
-                builder.addTypeParameters(parameters);
-                specializedType = builder.build();
-            }
-            fieldModelBuilder.typeData(specializedType);
-        }
     }
 
     /**
@@ -396,7 +371,8 @@ public class EntityModelBuilder<T> {
         fieldModelBuilder.mappedName(getMappedFieldName(fieldModelBuilder));
 
         if (fieldMetadata.getTypeParameters() != null) {
-            specializeFieldModelBuilder(fieldModelBuilder, fieldMetadata);
+            fieldModelBuilder.typeData(specializeTypeData(fieldModelBuilder.getTypeData(), fieldMetadata.getTypeParameters(),
+                fieldMetadata.getTypeParameterMap()));
         }
 
         return fieldModelBuilder;
