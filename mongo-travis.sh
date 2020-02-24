@@ -19,17 +19,15 @@ download() {
   rm -rf /tmp/data
   mkdir -p /tmp/data
 
-  cd mongodb-linux-x86_64-${LINUX}-${MONGODB}/bin
-
-  ./mongod --quiet \
-    --bind_ip 127.0.0.1 \
+  ${PWD}/mongodb-linux-x86_64-*/bin/mongod --quiet \
     --replSet morphia \
     --dbpath /tmp/data \
+    --bind_ip 127.0.0.1 \
     --logpath /tmp/mongodb-${MONGODB}.log &
 
   for i in $(seq 1 5)
   do
-    ./mongo --quiet --eval "rs.initiate()" && break
+    ${PWD}/mongodb-linux-x86_64-*/bin/mongo --quiet --eval "rs.initiate()" && break
     sleep 3
     echo "Reattempting replSet initiation"
   done
