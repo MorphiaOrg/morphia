@@ -237,12 +237,12 @@ public final class Filters {
      * Selects documents if the array field is a specified size.
      *
      * @param field the field to check
-     * @param val   the value to check
+     * @param size  the size to check against
      * @return the filter
      * @query.filter $size
      */
-    public static Filter size(final String field, final Object val) {
-        return new Filter("$size", field, val);
+    public static Filter size(final String field, final int size) {
+        return new Filter("$size", field, size);
     }
 
     /**

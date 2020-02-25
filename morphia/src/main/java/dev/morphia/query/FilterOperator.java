@@ -122,7 +122,7 @@ public enum FilterOperator {
     SIZE("$size", "size") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.size(prop, value);
+            return Filters.size(prop, (Integer) value);
         }
     },
 

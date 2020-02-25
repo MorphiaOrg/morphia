@@ -10,6 +10,7 @@ import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.bitsAllClear;
@@ -18,6 +19,7 @@ import static dev.morphia.query.experimental.filters.Filters.bitsAnyClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnySet;
 import static dev.morphia.query.experimental.filters.Filters.expr;
 import static dev.morphia.query.experimental.filters.Filters.gt;
+import static dev.morphia.query.experimental.filters.Filters.size;
 import static java.util.Arrays.asList;
 
 public class FiltersTest extends TestBase {
@@ -82,36 +84,6 @@ public class FiltersTest extends TestBase {
     }
 
     @Test
-    public void testBitsAnySet() {
-        MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
-
-        collection.insertMany(asList(
-            new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
-            new Document("a", 20).append("binaryValueofA", "00010100").append("_t", "User"),
-            new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", "User")));
-
-        FindOptions options = new FindOptions().logQuery();
-
-        List<User> found = getDs().find(User.class)
-                                  .disableValidation()
-                                  .filter(bitsAnySet("a", 35))
-                                  .execute(options)
-                                  .toList();
-
-        Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
-
-        options = new FindOptions().logQuery();
-        found = getDs().find(User.class)
-                       .disableValidation()
-                       .filter(bitsAnySet("a", new int[]{1, 5}))
-                       .execute(options)
-                       .toList();
-
-        Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
-    }
-
-    @Test
     public void testBitsAnyClear() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
         collection.drop();
@@ -142,6 +114,36 @@ public class FiltersTest extends TestBase {
     }
 
     @Test
+    public void testBitsAnySet() {
+        MongoCollection<Document> collection = getDatabase().getCollection("users");
+        collection.drop();
+
+        collection.insertMany(asList(
+            new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
+            new Document("a", 20).append("binaryValueofA", "00010100").append("_t", "User"),
+            new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", "User")));
+
+        FindOptions options = new FindOptions().logQuery();
+
+        List<User> found = getDs().find(User.class)
+                                  .disableValidation()
+                                  .filter(bitsAnySet("a", 35))
+                                  .execute(options)
+                                  .toList();
+
+        Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
+
+        options = new FindOptions().logQuery();
+        found = getDs().find(User.class)
+                       .disableValidation()
+                       .filter(bitsAnySet("a", new int[]{1, 5}))
+                       .execute(options)
+                       .toList();
+
+        Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
+    }
+
+    @Test
     public void testExpr() {
         getDatabase().getCollection("budget").insertMany(asList(
             Document.parse("{ '_id' : 1, 'category' : 'food', 'budget': 400, 'spent': 450 }"),
@@ -156,6 +158,33 @@ public class FiltersTest extends TestBase {
                                       .toList();
 
         Assert.assertEquals(3, budgets.size());
+    }
+
+    @Test
+    public void testSize() {
+        getDs().save(List.of(new User("John", new Date(), "puppies", "kittens", "heavy metal"),
+            new User("Janice", new Date(), "Chandler", "NYC")));
+
+        User likes = getDs().find(User.class)
+                            .filter(size("likes", 3))
+                            .execute()
+                            .next();
+
+        Assert.assertEquals("John", likes.name);
+
+        likes = getDs().find(User.class)
+                       .filter(size("likes", 2))
+                       .execute()
+                       .next();
+
+        Assert.assertEquals("Janice", likes.name);
+
+        likes = getDs().find(User.class)
+                       .filter(size("likes", 20))
+                       .execute()
+                       .tryNext();
+
+        Assert.assertNull(likes);
     }
 
 
