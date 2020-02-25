@@ -66,13 +66,26 @@ public final class Filters {
     /**
      * Allows use of aggregation expressions within the query language.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param filter the filter to evaluate
      * @return the filter
      * @query.filter $expr
      */
-    public static Filter expr(final String field, final Object val) {
-        return new Filter("$expr", field, val);
+    public static Filter expr(final Filter filter) {
+        return new Filter("$expr", null, filter) {
+            @Override
+            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+                writer.writeStartDocument();
+                writer.writeStartDocument("$expr");
+                getValue().encode(mapper, writer, context);
+                writer.writeEndDocument();
+                writer.writeEndDocument();
+            }
+
+            @Override
+            protected Filter getValue() {
+                return (Filter) super.getValue();
+            }
+        };
     }
 
     /**

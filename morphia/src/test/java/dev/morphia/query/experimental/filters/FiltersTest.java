@@ -2,6 +2,8 @@ package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
@@ -14,6 +16,8 @@ import static dev.morphia.query.experimental.filters.Filters.bitsAllClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAllSet;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnyClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnySet;
+import static dev.morphia.query.experimental.filters.Filters.expr;
+import static dev.morphia.query.experimental.filters.Filters.gt;
 import static java.util.Arrays.asList;
 
 public class FiltersTest extends TestBase {
@@ -135,5 +139,32 @@ public class FiltersTest extends TestBase {
                        .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 2, found.size());
+    }
+
+    @Test
+    public void testExpr() {
+        getDatabase().getCollection("budget").insertMany(asList(
+            Document.parse("{ '_id' : 1, 'category' : 'food', 'budget': 400, 'spent': 450 }"),
+            Document.parse("{ '_id' : 2, 'category' : 'drinks', 'budget': 100, 'spent': 150 }"),
+            Document.parse("{ '_id' : 3, 'category' : 'clothes', 'budget': 100, 'spent': 50 }"),
+            Document.parse("{ '_id' : 4, 'category' : 'misc', 'budget': 500, 'spent': 300 }"),
+            Document.parse("{ '_id' : 5, 'category' : 'travel', 'budget': 200, 'spent': 650 }")));
+
+        List<Budget> budgets = getDs().find(Budget.class)
+                                      .filter(expr(gt("$spent", "$budget")))
+                                      .execute()
+                                      .toList();
+
+        Assert.assertEquals(3, budgets.size());
+    }
+
+
+    @Entity(value = "budget", useDiscriminator = false)
+    static class Budget {
+        @Id
+        private int id;
+        private String category;
+        private int budget;
+        private int spent;
     }
 }
