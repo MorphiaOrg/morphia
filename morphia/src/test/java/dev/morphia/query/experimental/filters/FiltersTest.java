@@ -13,12 +13,13 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.query.experimental.filters.Filters.bitsAllClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAllSet;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnyClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnySet;
 import static dev.morphia.query.experimental.filters.Filters.expr;
-import static dev.morphia.query.experimental.filters.Filters.gt;
 import static dev.morphia.query.experimental.filters.Filters.size;
 import static java.util.Arrays.asList;
 
@@ -153,7 +154,7 @@ public class FiltersTest extends TestBase {
             Document.parse("{ '_id' : 5, 'category' : 'travel', 'budget': 200, 'spent': 650 }")));
 
         List<Budget> budgets = getDs().find(Budget.class)
-                                      .filter(expr(gt("$spent", "$budget")))
+                                      .filter(expr(gt(field("spent"), field("budget"))))
                                       .execute()
                                       .toList();
 

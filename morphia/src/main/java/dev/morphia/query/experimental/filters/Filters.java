@@ -2,6 +2,7 @@ package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.client.model.geojson.Point;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Type;
 import org.bson.BsonWriter;
@@ -70,20 +71,17 @@ public final class Filters {
      * @return the filter
      * @query.filter $expr
      */
-    public static Filter expr(final Filter filter) {
-        return new Filter("$expr", null, filter) {
+    public static Filter expr(final Expression expression) {
+        return new Filter("$expr", null, expression) {
             @Override
             public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
-                writer.writeStartDocument();
-                writer.writeStartDocument("$expr");
+                writer.writeName("$expr");
                 getValue().encode(mapper, writer, context);
-                writer.writeEndDocument();
-                writer.writeEndDocument();
             }
 
             @Override
-            protected Filter getValue() {
-                return (Filter) super.getValue();
+            protected Expression getValue() {
+                return (Expression) super.getValue();
             }
         };
     }
