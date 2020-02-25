@@ -32,6 +32,6 @@ public final class User {
 
     @Override
     public String toString() {
-        return format("User{name='%s', joined=%s, likes=%s}", name, joined, likes);
+        return format("User{id=%s, name='%s', joined=%s, likes=%s}", id, name, joined, likes);
     }
 }

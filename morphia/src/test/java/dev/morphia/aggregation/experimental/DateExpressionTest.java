@@ -189,23 +189,23 @@ public class DateExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testIsoDayOfWeek() throws ParseException {
-        evaluate("{}", isoDayOfWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
+        assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
                            .timezone(value("America/Chicago")), 6);
-        evaluate("{}", isoDayOfWeek(value(new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01"))), 5);
+        assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01"))), 5);
     }
 
     @Test
     public void testIsoWeek() throws ParseException {
-        evaluate("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
+        assertAndCheckDocShape("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
                            .timezone(value("America/Chicago")), 32);
-        evaluate("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("Jan 4, 2016"))), 1);
+        assertAndCheckDocShape("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("Jan 4, 2016"))), 1);
     }
 
     @Test
     public void testIsoWeekYear() throws ParseException {
-        evaluate("{}", isoWeekYear(value(new SimpleDateFormat("MMM dd, yyyy").parse("April 08, 2024")))
+        assertAndCheckDocShape("{}", isoWeekYear(value(new SimpleDateFormat("MMM dd, yyyy").parse("April 08, 2024")))
                            .timezone(value("America/Chicago")), 2024L);
-        evaluate("{}", isoWeekYear(value(new SimpleDateFormat("yyyy-MM-dd").parse("2015-05-26"))),
+        assertAndCheckDocShape("{}", isoWeekYear(value(new SimpleDateFormat("yyyy-MM-dd").parse("2015-05-26"))),
             2015L);
     }
 

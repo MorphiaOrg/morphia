@@ -15,36 +15,36 @@ public class ComparisonExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testCmp() {
-        evaluate("{ $cmp: [ 5, 10 ] }", cmp(value(5), value(10)), -1);
+        assertAndCheckDocShape("{ $cmp: [ 5, 10 ] }", cmp(value(5), value(10)), -1);
     }
 
     @Test
     public void testEq() {
-        evaluate("{ $eq: [ 5, 10 ] }", eq(value(5), value(10)), false);
+        assertAndCheckDocShape("{ $eq: [ 5, 10 ] }", eq(value(5), value(10)), false);
     }
 
     @Test
     public void testGt() {
-        evaluate("{ $gt: [ 5, 10 ] }", gt(value(5), value(10)), false);
+        assertAndCheckDocShape("{ $gt: [ 5, 10 ] }", gt(value(5), value(10)), false);
     }
 
     @Test
     public void testGte() {
-        evaluate("{ $gte: [ 5, 10 ] }", gte(value(5), value(10)), false);
+        assertAndCheckDocShape("{ $gte: [ 5, 10 ] }", gte(value(5), value(10)), false);
     }
 
     @Test
     public void testLt() {
-        evaluate("{ $lt: [ 5, 10 ] }", lt(value(5), value(10)), true);
+        assertAndCheckDocShape("{ $lt: [ 5, 10 ] }", lt(value(5), value(10)), true);
     }
 
     @Test
     public void testLte() {
-        evaluate("{ $lte: [ 5, 10 ] }", lte(value(5), value(10)), true);
+        assertAndCheckDocShape("{ $lte: [ 5, 10 ] }", lte(value(5), value(10)), true);
     }
 
     @Test
     public void testNe() {
-        evaluate("{ $ne: [ 5, 10 ] }", ne(value(5), value(10)), true);
+        assertAndCheckDocShape("{ $ne: [ 5, 10 ] }", ne(value(5), value(10)), true);
     }
 }

@@ -57,20 +57,20 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testConcatArrays() {
-        evaluate("{$concatArrays: [['hello', ' '], ['world']]}",
+        assertAndCheckDocShape("{$concatArrays: [['hello', ' '], ['world']]}",
             concatArrays(array(value("hello"), value(" ")), array(value("world"))), List.of("hello", " ", "world"));
     }
 
     @Test
     public void testElementAt() {
-        evaluate("{ $arrayElemAt: [ [ 1, 2, 3 ], 0 ] }", elementAt(array(value(1), value(2), value(3)), value(0)), 1);
+        assertAndCheckDocShape("{ $arrayElemAt: [ [ 1, 2, 3 ], 0 ] }", elementAt(array(value(1), value(2), value(3)), value(0)), 1);
     }
 
     @Test
     public void testFilter() {
 
-        evaluate("{$filter: {input: [1, 'a', 2, null, 3.1, NumberLong(4), '5' ], as: 'num', cond: {$and: ["
-                 + "{$gte: ['$$num', NumberLong('-9223372036854775807') ] },{ $lte: [ '$$num', NumberLong('9223372036854775807')]}]}}}",
+        assertAndCheckDocShape("{$filter: {input: [1, 'a', 2, null, 3.1, NumberLong(4), '5' ], as: 'num', cond: {$and: ["
+                               + "{$gte: ['$$num', NumberLong('-9223372036854775807') ] },{ $lte: [ '$$num', NumberLong('9223372036854775807')]}]}}}",
             filter(array(value(1), value('a'), value(2), value(null), value(3.1), value(4L), value('5')),
                 and(
                     gte(value("$$num"), value(-9223372036854775807L)),
@@ -81,18 +81,18 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testIn() {
-        evaluate("{$in: [2, [1, 2, 3]]}", ArrayExpressions.in(value(2), array(value(1), value(2), value(3))), true);
+        assertAndCheckDocShape("{$in: [2, [1, 2, 3]]}", ArrayExpressions.in(value(2), array(value(1), value(2), value(3))), true);
     }
 
     @Test
     public void testIndexOfArray() {
-        evaluate("{ $indexOfArray: [ [ 'a', 'abc' ], 'a' ] }", indexOfArray(array(value("a"), value("abc")),
+        assertAndCheckDocShape("{ $indexOfArray: [ [ 'a', 'abc' ], 'a' ] }", indexOfArray(array(value("a"), value("abc")),
             value("a")), 0);
     }
 
     @Test
     public void testIsArray() {
-        evaluate("{ $isArray: [ 'hello' ] }", isArray(value("hello")), false);
+        assertAndCheckDocShape("{ $isArray: [ 'hello' ] }", isArray(value("hello")), false);
     }
 
     @Test
@@ -121,7 +121,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testObjectToArray() {
-        evaluate("{ $objectToArray: { item: 'foo', qty: 25 } }",
+        assertAndCheckDocShape("{ $objectToArray: { item: 'foo', qty: 25 } }",
             objectToArray(Expressions.of()
                                      .field("item", value("foo"))
                                      .field("qty", value(25))),
@@ -130,12 +130,12 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRange() {
-        evaluate("{ $range: [ 0, 10, 2 ] }", range(0, 10).step(2), List.of(0, 2, 4, 6, 8));
+        assertAndCheckDocShape("{ $range: [ 0, 10, 2 ] }", range(0, 10).step(2), List.of(0, 2, 4, 6, 8));
     }
 
     @Test
     public void testReduce() {
-        evaluate("{$reduce: {input: ['a', 'b', 'c'], initialValue: '', in: { $concat : ['$$value', '$$this'] } } }",
+        assertAndCheckDocShape("{$reduce: {input: ['a', 'b', 'c'], initialValue: '', in: { $concat : ['$$value', '$$this'] } } }",
             reduce(array(value("a"), value("b"), value("c")), value(""), concat(value("$$value"), value("$$this"))),
             "abc");
     }

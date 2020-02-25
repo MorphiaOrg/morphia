@@ -26,61 +26,61 @@ public class TrigonometryExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testAcos() {
-        evaluate("{ $acos: 1 }", acos(value(1)), 0.0);
+        assertAndCheckDocShape("{ $acos: 1 }", acos(value(1)), 0.0);
     }
 
     @Test
     public void testAcosh() {
-        evaluate("{ $acosh: 90 }", acosh(value(90)), 5.192925985263684);
+        assertAndCheckDocShape("{ $acosh: 90 }", acosh(value(90)), 5.192925985263684);
     }
 
     @Test
     public void testAsin() {
-        evaluate("{ $asin: 0 }", asin(value(0)), 0.0);
+        assertAndCheckDocShape("{ $asin: 0 }", asin(value(0)), 0.0);
     }
 
     @Test
     public void testAsinh() {
-        evaluate("{ $asinh: 90 }", asinh(value(90)), 5.192987713658941);
+        assertAndCheckDocShape("{ $asinh: 90 }", asinh(value(90)), 5.192987713658941);
     }
 
     @Test
     public void testAtan() {
-        evaluate("{ $atan: 0 }", atan(value(0)), 0.0);
+        assertAndCheckDocShape("{ $atan: 0 }", atan(value(0)), 0.0);
     }
 
     @Test
     public void testAtan2() {
-        evaluate("{ $atan2: [ 4, 3 ] }", atan2(value(4), value(3)), 0.9272952180016122);
+        assertAndCheckDocShape("{ $atan2: [ 4, 3 ] }", atan2(value(4), value(3)), 0.9272952180016122);
     }
 
     @Test
     public void testAtanh() {
-        evaluate("{ $atanh: 0 }", atanh(value(0)), 0.0);
+        assertAndCheckDocShape("{ $atanh: 0 }", atanh(value(0)), 0.0);
     }
 
     @Test
     public void testCos() {
-        evaluate("{ $cos: 0}", cos(value(0)), 1.0);
+        assertAndCheckDocShape("{ $cos: 0}", cos(value(0)), 1.0);
     }
 
     @Test
     public void testDegreesToRadians() {
-        evaluate("{ $degreesToRadians: 90 }", degreesToRadians(value(90)), Math.PI / 2);
+        assertAndCheckDocShape("{ $degreesToRadians: 90 }", degreesToRadians(value(90)), Math.PI / 2);
     }
 
     @Test
     public void testRadiansToDegrees() {
-        evaluate("{}", radiansToDegrees(value(Math.PI / 2)), 90.0);
+        assertAndCheckDocShape("{}", radiansToDegrees(value(Math.PI / 2)), 90.0);
     }
 
     @Test
     public void testSin() {
-        evaluate("{}", sin(value(Math.PI / 2)), 1.0);
+        assertAndCheckDocShape("{}", sin(value(Math.PI / 2)), 1.0);
     }
 
     @Test
     public void testTan() {
-        evaluate("{ $tan: 0 }", tan(value(0)), 0.0);
+        assertAndCheckDocShape("{ $tan: 0 }", tan(value(0)), 0.0);
     }
 }

@@ -20,9 +20,6 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
 
 
-/**
- * @author Olafur Gauti Gudmundsson
- */
 @Entity("stuff")
 public class RecursiveParent extends TestEntity {
     @Reference

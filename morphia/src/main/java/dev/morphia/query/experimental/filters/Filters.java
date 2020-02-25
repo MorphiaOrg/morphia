@@ -235,25 +235,49 @@ public final class Filters {
     /**
      * Matches numeric or binary values in which a set of bit positions all have a value of 0.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param field     the field to check
+     * @param positions the value to check
      * @return the filter
      * @query.filter $bitsAllClear
      */
-    public static Filter bitsAllClear(final String field, final Object val) {
-        return new Filter("$bitsAllClear", field, val);
+    public static Filter bitsAllClear(final String field, final int[] positions) {
+        return new Filter("$bitsAllClear", field, positions);
+    }
+
+    /**
+     * Matches numeric or binary values in which a set of bit positions all have a value of 0.
+     *
+     * @param field   the field to check
+     * @param bitMask the numeric bitmask to use
+     * @return the filter
+     * @query.filter $bitsAllClear
+     */
+    public static Filter bitsAllClear(final String field, final int bitMask) {
+        return new Filter("$bitsAllClear", field, bitMask);
     }
 
     /**
      * Matches numeric or binary values in which a set of bit positions all have a value of 1.
      *
      * @param field the field to check
-     * @param val   the value to check
+     * @param bitMask the numeric bitmask to use
      * @return the filter
      * @query.filter $bitsAllSet
      */
-    public static Filter bitsAllSet(final String field, final Object val) {
-        return new Filter("$bitsAllSet", field, val);
+    public static Filter bitsAllSet(final String field, final int bitMask) {
+        return new Filter("$bitsAllSet", field, bitMask);
+    }
+
+    /**
+     * Matches numeric or binary values in which a set of bit positions all have a value of 1.
+     *
+     * @param field     the field to check
+     * @param positions the value to check
+     * @return the filter
+     * @query.filter $bitsAllSet
+     */
+    public static Filter bitsAllSet(final String field, final int[] positions) {
+        return new Filter("$bitsAllSet", field, positions);
     }
 
     /**
