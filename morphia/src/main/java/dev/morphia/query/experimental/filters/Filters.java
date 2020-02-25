@@ -67,7 +67,7 @@ public final class Filters {
     /**
      * Allows use of aggregation expressions within the query language.
      *
-     * @param filter the filter to evaluate
+     * @param expression the expression to evaluate
      * @return the filter
      * @query.filter $expr
      */
