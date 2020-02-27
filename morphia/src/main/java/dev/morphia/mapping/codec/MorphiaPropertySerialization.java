@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.annotations.LoadOnly;
+import dev.morphia.annotations.NotSaved;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import org.bson.codecs.pojo.PropertySerialization;
@@ -42,8 +44,7 @@ public class MorphiaPropertySerialization implements PropertySerialization {
                 return false;
             }
         }
-
-        return true;
+        return !hasAnnotation(LoadOnly.class) && !hasAnnotation(NotSaved.class);
     }
 
     private boolean hasAnnotation(final Class<? extends Annotation> annotationClass) {

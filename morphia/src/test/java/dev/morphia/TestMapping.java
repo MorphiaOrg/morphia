@@ -20,6 +20,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.NotSaved;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.experimental.Constructor;
 import dev.morphia.annotations.experimental.Name;
@@ -700,6 +701,31 @@ public class TestMapping extends TestBase {
         assertEquals(before, loaded.id);
     }
 
+    @Test
+    public void testLoadOnly() {
+        getDs().save(new Normal("value"));
+        Normal n = getDs().find(Normal.class)
+                          .execute(new FindOptions().limit(1))
+                          .next();
+        Assert.assertNotNull(n);
+        Assert.assertNotNull(n.name);
+        getDs().delete(n);
+        getDs().save(new NormalWithNotSaved());
+        n = getDs().find(Normal.class)
+                   .execute(new FindOptions().limit(1))
+                   .next();
+        Assert.assertNotNull(n);
+        Assert.assertNull(n.name);
+        getDs().delete(n);
+        getDs().save(new Normal("value21"));
+        final NormalWithNotSaved notSaved = getDs().find(NormalWithNotSaved.class)
+                                                   .execute(new FindOptions().limit(1))
+                                                   .next();
+        Assert.assertNotNull(notSaved);
+        Assert.assertNotNull(notSaved.name);
+        Assert.assertEquals("never", notSaved.name);
+    }
+
     public enum Enum1 {
         A,
         B
@@ -1003,5 +1029,27 @@ public class TestMapping extends TestBase {
     private class NonStaticInnerClass {
         @Id
         private long id = 1;
+    }
+
+    @Entity(value = "Normal", useDiscriminator = false)
+    static class Normal {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+
+        Normal(final String name) {
+            this.name = name;
+        }
+
+        protected Normal() {
+        }
+    }
+
+    @Entity(value = "Normal", useDiscriminator = false)
+    private static class NormalWithNotSaved {
+        @NotSaved
+        private final String name = "never";
+        @Id
+        private ObjectId id = new ObjectId();
     }
 }
