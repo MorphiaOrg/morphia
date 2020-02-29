@@ -18,12 +18,13 @@ import org.bson.codecs.configuration.CodecRegistry;
 import static dev.morphia.mapping.codec.Conversions.convert;
 
 /**
+ * @morphia.internal
  * @since 2.0
  */
-class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
+public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
     private final MorphiaCodec<T> morphiaCodec;
 
-    EntityDecoder(final MorphiaCodec<T> morphiaCodec) {
+    protected EntityDecoder(final MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
     }
 
@@ -37,7 +38,7 @@ class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
         } else {
             EntityModel<T> classModel = morphiaCodec.getEntityModel();
             if (decoderContext.hasCheckedDiscriminator()) {
-                MorphiaInstanceCreator<T> instanceCreator = classModel.getInstanceCreator();
+                MorphiaInstanceCreator<T> instanceCreator = getInstanceCreator(classModel);
                 decodeProperties(reader, decoderContext, instanceCreator);
                 return instanceCreator.getInstance();
             } else {
@@ -48,6 +49,10 @@ class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
         }
 
         return entity;
+    }
+
+    protected MorphiaInstanceCreator<T> getInstanceCreator(final EntityModel<T> classModel) {
+        return classModel.getInstanceCreator();
     }
 
     protected void decodeProperties(final BsonReader reader, final DecoderContext decoderContext,
@@ -117,7 +122,7 @@ class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
 
     private T decodeWithLifecycle(final BsonReader reader, final DecoderContext decoderContext) {
         final T entity;
-        final MorphiaInstanceCreator<T> instanceCreator = morphiaCodec.getEntityModel().getInstanceCreator();
+        final MorphiaInstanceCreator<T> instanceCreator = getInstanceCreator(morphiaCodec.getEntityModel());
         entity = instanceCreator.getInstance();
 
         Document document = morphiaCodec.getRegistry().get(Document.class).decode(reader, decoderContext);

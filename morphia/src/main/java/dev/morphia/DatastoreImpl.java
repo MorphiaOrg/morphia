@@ -620,4 +620,9 @@ public class DatastoreImpl implements AdvancedDatastore {
             return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
         }
     }
+
+    @Override
+    public <T> void refresh(final T entity) {
+        getMapper().refresh(entity);
+    }
 }

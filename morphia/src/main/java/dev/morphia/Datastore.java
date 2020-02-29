@@ -559,4 +559,15 @@ public interface Datastore {
      * @since 2.0
      */
     String getLoggedQuery(FindOptions options);
+
+    /**
+     * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
+     * latest persisted state while preserving the entity's reference and object identity.
+     *
+     * @param entity the entity to refresh
+     * @param <T>    the entity type
+     * @morphia.experimental
+     * @since 2.0
+     */
+    <T> void refresh(T entity);
 }

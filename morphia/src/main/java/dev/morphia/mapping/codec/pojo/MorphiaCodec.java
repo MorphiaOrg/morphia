@@ -40,7 +40,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
     private final EntityEncoder<T> encoder = new EntityEncoder<>(this);
-    private final EntityDecoder<T> decoder = new EntityDecoder<>(this);
 
     /**
      * Creates a new codec
@@ -66,6 +65,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         specializePropertyCodecs();
     }
 
+    @Override
+    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+        return getDecoder().decode(reader, decoderContext);
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void specializePropertyCodecs() {
         EntityModel<T> entityModel = getEntityModel();
@@ -83,9 +87,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return entityModel;
     }
 
-    @Override
-    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
-        return decoder.decode(reader, decoderContext);
+    protected EntityDecoder<T> getDecoder() {
+        return new EntityDecoder<>(this);
     }
 
     @Override

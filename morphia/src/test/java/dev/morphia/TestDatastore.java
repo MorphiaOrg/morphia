@@ -13,7 +13,6 @@
 
 package dev.morphia;
 
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.result.UpdateResult;
@@ -34,15 +33,12 @@ import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
-import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -50,8 +46,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.mongodb.WriteConcern.ACKNOWLEDGED;
-import static com.mongodb.WriteConcern.MAJORITY;
 import static com.mongodb.client.model.ReturnDocument.AFTER;
 import static com.mongodb.client.model.ReturnDocument.BEFORE;
 import static java.util.Arrays.asList;
@@ -515,6 +509,34 @@ public class TestDatastore extends TestBase {
         assertNull(getDs().find(FacebookUser.class)
                           .field("username").equal("David S. Pumpkins")
                           .delete());
+    }
+
+    @Test
+    public void testRefresh() {
+        FacebookUser steve = getDs().save(new FacebookUser(1, "Steve"));
+
+        assertEquals(0, steve.loginCount);
+        UpdateResult loginCount = getDs().find(FacebookUser.class)
+                                         .update()
+                                         .inc("loginCount", 10)
+                                         .execute();
+
+        assertEquals(1, loginCount.getModifiedCount());
+
+        getDs().refresh(steve);
+        assertEquals(10, steve.loginCount);
+
+        loginCount = getDs().find(FacebookUser.class)
+                            .update()
+                            .set("username", "Mark")
+                            .set("loginCount", 1)
+                            .execute();
+
+        assertEquals(1, loginCount.getModifiedCount());
+        getDs().refresh(steve);
+        assertEquals(1, steve.loginCount);
+        assertEquals("Mark", steve.username);
+
     }
 
     private void testFirstDatastore(final Datastore ds1) {

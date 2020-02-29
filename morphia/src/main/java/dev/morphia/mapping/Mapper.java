@@ -74,6 +74,7 @@ public class Mapper {
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
     private final MapperOptions options;
     private final DiscriminatorLookup discriminatorLookup = new DiscriminatorLookup(Collections.emptyMap(), Collections.emptySet());
+    private final MorphiaCodecProvider morphiaCodecProvider;
     private Datastore datastore;
     private CodecRegistry codecRegistry;
 
@@ -88,6 +89,7 @@ public class Mapper {
     public Mapper(final Datastore datastore, final CodecRegistry codecRegistry, final MapperOptions options) {
         this.datastore = datastore;
         this.options = options;
+        morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
         this.codecRegistry = fromRegistries(
             new PrimitiveCodecProvider(codecRegistry),
             codecRegistry,
@@ -95,26 +97,16 @@ public class Mapper {
                 new EnumCodecProvider(),
                 new MorphiaTypesCodecProvider(this),
                 new AggregationCodecProvider(this),
-                new MorphiaCodecProvider(this, datastore)));
+                morphiaCodecProvider));
     }
 
     /**
-     * Checks if a type is mappable or not
+     * Adds an {@link EntityInterceptor}
      *
-     * @param type the class to check
-     * @param <T>  the type
-     * @return true if the type is mappable
+     * @param ei the interceptor to add
      */
-    public <T> boolean isMappable(final Class<T> type) {
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
-    }
-
-    /**
-     * @return the DiscriminatorLookup in use
-     */
-    public DiscriminatorLookup getDiscriminatorLookup() {
-        return discriminatorLookup;
+    public void addInterceptor(final EntityInterceptor ei) {
+        interceptors.add(ei);
     }
 
     /**
@@ -129,124 +121,17 @@ public class Mapper {
     }
 
     /**
-     * Maps all the classes found in the package to which the given class belongs.
+     * Updates a collection to use a specific WriteConcern
      *
-     * @param clazz the class to use when trying to find others to map
+     * @param collection the collection to update
+     * @param type       the entity type
+     * @return the updated collection
      */
-    public void mapPackageFromClass(final Class clazz) {
-        mapPackage(clazz.getPackage().getName());
-    }
-
-    /**
-     * Tries to map all classes in the package specified.
-     *
-     * @param packageName the name of the package to process
-     */
-    public synchronized void mapPackage(final String packageName) {
-        try {
-            for (final Class clazz : getClasses(getClass().getClassLoader(), packageName,
-                getOptions().isMapSubPackages())) {
-                map(clazz);
-            }
-        } catch (ClassNotFoundException e) {
-            throw new MappingException("Could not get map classes from package " + packageName, e);
-        }
-    }
-
-    /**
-     * @return the options used by this Mapper
-     */
-    public MapperOptions getOptions() {
-        return options;
-    }
-
-    /**
-     * Sets the options this Mapper should use
-     *
-     * @param options the options to use
-     * @deprecated no longer used
-     */
-    @SuppressWarnings("unused")
-    @Deprecated(since = "2.0", forRemoval = true)
-    public void setOptions(final MapperOptions options) {
-    }
-
-    /**
-     * Maps a set of classes
-     *
-     * @param entityClasses the classes to map
-     * @return the MappedClass references
-     */
-    public List<MappedClass> map(final Class... entityClasses) {
-        return map(List.of(entityClasses));
-    }
-
-    /**
-     * Maps a set of classes
-     *
-     * @param classes the classes to map
-     * @return the list of mapped classes
-     */
-    public List<MappedClass> map(final List<Class> classes) {
-        return classes.stream()
-                      .map(c -> getMappedClass(c))
-                      .filter(mc -> mc != null)
-                      .collect(Collectors.toList());
-    }
-
-    /**
-     * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
-     *
-     * @param type the type to process
-     * @return the MappedClass for the object given
-     */
-    public MappedClass getMappedClass(final Class type) {
-
-        if (type == null || !isMappable(type)) {
-            return null;
-        }
-
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        MappedClass mc = mappedClasses.get(actual);
-        if (mc == null) {
-            mc = addMappedClass(actual);
-        }
-        return mc;
-    }
-
-    /**
-     * Adds an {@link EntityInterceptor}
-     *
-     * @param ei the interceptor to add
-     */
-    public void addInterceptor(final EntityInterceptor ei) {
-        interceptors.add(ei);
-    }
-
-    /**
-     * @return true if there are global interceptors defined
-     */
-    public boolean hasInterceptors() {
-        return !interceptors.isEmpty();
-    }
-
-    /**
-     * Finds any subtypes for the given MappedClass.
-     *
-     * @param mc the parent type
-     * @return the list of subtypes
-     * @morphia.internal
-     * @since 1.3
-     */
-    public List<MappedClass> getSubTypes(final MappedClass mc) {
-        return mc.getSubtypes();
-    }
-
-    /**
-     * @return collection of MappedClasses
-     */
-    public Collection<MappedClass> getMappedClasses() {
-        return new ArrayList<>(mappedClasses.values());
+    public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class type) {
+        WriteConcern applied = getWriteConcern(type);
+        return applied != null
+               ? collection.withWriteConcern(applied)
+               : collection;
     }
 
     /**
@@ -309,6 +194,40 @@ public class Mapper {
     }
 
     /**
+     * Looks up the class mapped to a named collection.
+     *
+     * @param collection the collection name
+     * @param <T>        the class type
+     * @return the Class mapped to this collection name
+     * @morphia.internal
+     */
+    public <T> Class<T> getClassFromCollection(final String collection) {
+        final List<MappedClass> classes = getClassesMappedToCollection(collection);
+        if (classes.size() > 1) {
+            Sofia.logMoreThanOneMapper(collection,
+                classes.stream()
+                       .map(c -> c.getType().getName())
+                       .collect(Collectors.joining(", ")));
+        }
+        return (Class<T>) classes.get(0).getType();
+    }
+
+    /**
+     * Finds all the types mapped to a named collection
+     *
+     * @param collection the collection to check
+     * @return the mapped types
+     * @morphia.internal
+     */
+    public List<MappedClass> getClassesMappedToCollection(final String collection) {
+        final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
+        if (mcs == null || mcs.isEmpty()) {
+            throw new MappingException(Sofia.collectionNotMapped(collection));
+        }
+        return new ArrayList<>(mcs);
+    }
+
+    /**
      * @return the codec registry
      */
     public CodecRegistry getCodecRegistry() {
@@ -316,36 +235,54 @@ public class Mapper {
     }
 
     /**
-     * Updates a collection to use a specific WriteConcern
-     *
-     * @param collection the collection to update
-     * @param type       the entity type
-     * @return the updated collection
+     * @param type the type look up
+     * @param <T>  the class type
+     * @return the collection mapped for this class
      */
-    public MongoCollection enforceWriteConcern(final MongoCollection collection, final Class type) {
-        WriteConcern applied = getWriteConcern(type);
-        return applied != null
-               ? collection.withWriteConcern(applied)
-               : collection;
+    public <T> MongoCollection<T> getCollection(final Class<T> type) {
+        MappedClass mappedClass = getMappedClass(type);
+        if (mappedClass == null) {
+            throw new MappingException(Sofia.notMappable(type.getName()));
+        }
+        if (mappedClass.getCollectionName() == null) {
+            throw new MappingException(Sofia.noMappedCollection(type.getName()));
+        }
+
+        MongoCollection<T> collection = datastore.getDatabase().getCollection(mappedClass.getCollectionName(), type);
+
+        Entity annotation = mappedClass.getEntityAnnotation();
+        if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
+            collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
+        }
+        return collection;
     }
 
     /**
-     * Gets the write concern for entity or returns the default write concern for this datastore
-     *
-     * @param clazz the class to use when looking up the WriteConcern
-     * @return the write concern for the type
-     * @morphia.internal
+     * @return the DiscriminatorLookup in use
      */
-    public WriteConcern getWriteConcern(final Class clazz) {
-        WriteConcern wc = null;
-        if (clazz != null) {
-            final Entity entityAnn = getMappedClass(clazz).getEntityAnnotation();
-            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
-                wc = WriteConcern.valueOf(entityAnn.concern());
+    public DiscriminatorLookup getDiscriminatorLookup() {
+        return discriminatorLookup;
+    }
+
+    /**
+     * Gets the ID value for an entity
+     *
+     * @param entity the entity to process
+     * @return the ID value
+     */
+    public Object getId(final Object entity) {
+        if (entity == null) {
+            return null;
+        }
+        final MappedClass mappedClass = getMappedClass(entity.getClass());
+        if (mappedClass != null) {
+            final MappedField idField = mappedClass.getIdField();
+            if (idField != null) {
+                return idField.getFieldValue(entity);
             }
         }
 
-        return wc;
+        return null;
     }
 
     /**
@@ -393,27 +330,6 @@ public class Mapper {
     }
 
     /**
-     * Gets the ID value for an entity
-     *
-     * @param entity the entity to process
-     * @return the ID value
-     */
-    public Object getId(final Object entity) {
-        if (entity == null) {
-            return null;
-        }
-        final MappedClass mappedClass = getMappedClass(entity.getClass());
-        if (mappedClass != null) {
-            final MappedField idField = mappedClass.getIdField();
-            if (idField != null) {
-                return idField.getFieldValue(entity);
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Gets the Keys for a list of objects
      *
      * @param clazz the Class of the objects
@@ -429,64 +345,6 @@ public class Mapper {
         }
 
         return keys;
-    }
-
-    /**
-     * Looks up the class mapped to a named collection.
-     *
-     * @param collection the collection name
-     * @param <T>        the class type
-     * @return the Class mapped to this collection name
-     * @morphia.internal
-     */
-    public <T> Class<T> getClassFromCollection(final String collection) {
-        final List<MappedClass> classes = getClassesMappedToCollection(collection);
-        if (classes.size() > 1) {
-            Sofia.logMoreThanOneMapper(collection,
-                classes.stream()
-                       .map(c -> c.getType().getName())
-                       .collect(Collectors.joining(", ")));
-        }
-        return (Class<T>) classes.get(0).getType();
-    }
-
-    /**
-     * @param type the type look up
-     * @param <T>  the class type
-     * @return the collection mapped for this class
-     */
-    public <T> MongoCollection<T> getCollection(final Class<T> type) {
-        MappedClass mappedClass = getMappedClass(type);
-        if (mappedClass == null) {
-            throw new MappingException(Sofia.notMappable(type.getName()));
-        }
-        if (mappedClass.getCollectionName() == null) {
-            throw new MappingException(Sofia.noMappedCollection(type.getName()));
-        }
-
-        MongoCollection<T> collection = datastore.getDatabase().getCollection(mappedClass.getCollectionName(), type);
-
-        Entity annotation = mappedClass.getEntityAnnotation();
-        if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
-            collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
-        }
-        return collection;
-    }
-
-
-    /**
-     * Finds all the types mapped to a named collection
-     *
-     * @param collection the collection to check
-     * @return the mapped types
-     * @morphia.internal
-     */
-    public List<MappedClass> getClassesMappedToCollection(final String collection) {
-        final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
-        if (mcs == null || mcs.isEmpty()) {
-            throw new MappingException(Sofia.collectionNotMapped(collection));
-        }
-        return new ArrayList<>(mcs);
     }
 
     /**
@@ -506,6 +364,159 @@ public class Mapper {
     }
 
     /**
+     * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     *
+     * @param type the type to process
+     * @return the MappedClass for the object given
+     */
+    public MappedClass getMappedClass(final Class type) {
+
+        if (type == null || !isMappable(type)) {
+            return null;
+        }
+
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        MappedClass mc = mappedClasses.get(actual);
+        if (mc == null) {
+            mc = addMappedClass(actual);
+        }
+        return mc;
+    }
+
+    /**
+     * @return collection of MappedClasses
+     */
+    public Collection<MappedClass> getMappedClasses() {
+        return new ArrayList<>(mappedClasses.values());
+    }
+
+    /**
+     * @return the options used by this Mapper
+     */
+    public MapperOptions getOptions() {
+        return options;
+    }
+
+    /**
+     * Sets the options this Mapper should use
+     *
+     * @param options the options to use
+     * @deprecated no longer used
+     */
+    @SuppressWarnings("unused")
+    @Deprecated(since = "2.0", forRemoval = true)
+    public void setOptions(final MapperOptions options) {
+    }
+
+    /**
+     * Finds any subtypes for the given MappedClass.
+     *
+     * @param mc the parent type
+     * @return the list of subtypes
+     * @morphia.internal
+     * @since 1.3
+     */
+    public List<MappedClass> getSubTypes(final MappedClass mc) {
+        return mc.getSubtypes();
+    }
+
+    /**
+     * Gets the write concern for entity or returns the default write concern for this datastore
+     *
+     * @param clazz the class to use when looking up the WriteConcern
+     * @return the write concern for the type
+     * @morphia.internal
+     */
+    public WriteConcern getWriteConcern(final Class clazz) {
+        WriteConcern wc = null;
+        if (clazz != null) {
+            final Entity entityAnn = getMappedClass(clazz).getEntityAnnotation();
+            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
+                wc = WriteConcern.valueOf(entityAnn.concern());
+            }
+        }
+
+        return wc;
+    }
+
+    /**
+     * @return true if there are global interceptors defined
+     */
+    public boolean hasInterceptors() {
+        return !interceptors.isEmpty();
+    }
+
+    /**
+     * Checks if a type is mappable or not
+     *
+     * @param type the class to check
+     * @param <T>  the type
+     * @return true if the type is mappable
+     */
+    public <T> boolean isMappable(final Class<T> type) {
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
+    }
+
+    /**
+     * Checks to see if a Class has been mapped.
+     *
+     * @param c the Class to check
+     * @return true if the Class has been mapped
+     */
+    public boolean isMapped(final Class c) {
+        return mappedClasses.containsKey(c);
+    }
+
+    /**
+     * Maps a set of classes
+     *
+     * @param entityClasses the classes to map
+     * @return the MappedClass references
+     */
+    public List<MappedClass> map(final Class... entityClasses) {
+        return map(List.of(entityClasses));
+    }
+
+    /**
+     * Maps a set of classes
+     *
+     * @param classes the classes to map
+     * @return the list of mapped classes
+     */
+    public List<MappedClass> map(final List<Class> classes) {
+        return classes.stream()
+                      .map(c -> getMappedClass(c))
+                      .filter(mc -> mc != null)
+                      .collect(Collectors.toList());
+    }
+
+    /**
+     * Tries to map all classes in the package specified.
+     *
+     * @param packageName the name of the package to process
+     */
+    public synchronized void mapPackage(final String packageName) {
+        try {
+            for (final Class clazz : getClasses(getClass().getClassLoader(), packageName,
+                getOptions().isMapSubPackages())) {
+                map(clazz);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new MappingException("Could not get map classes from package " + packageName, e);
+        }
+    }
+
+    /**
+     * Maps all the classes found in the package to which the given class belongs.
+     *
+     * @param clazz the class to use when trying to find others to map
+     */
+    public void mapPackageFromClass(final Class clazz) {
+        mapPackage(clazz.getPackage().getName());
+    }
+
+    /**
      * Converts a DBRef to a Key
      *
      * @param ref the DBRef to convert
@@ -517,14 +528,16 @@ public class Mapper {
             ref.getCollectionName(), ref.getId());
     }
 
-    /**
-     * Checks to see if a Class has been mapped.
-     *
-     * @param c the Class to check
-     * @return true if the Class has been mapped
-     */
-    public boolean isMapped(final Class c) {
-        return mappedClasses.containsKey(c);
+    public <T> void refresh(final T entity) {
+        Codec<T> refreshCodec = morphiaCodecProvider.getRefreshCodec(entity, getCodecRegistry());
+
+        MongoCollection<?> collection = getCollection(entity.getClass());
+        Document id = collection.find(new Document("_id", getMappedClass(entity.getClass())
+                                                              .getIdField()
+                                                              .getFieldValue(entity)), Document.class)
+                                .first();
+
+        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     /**
@@ -563,44 +576,6 @@ public class Mapper {
         return key.getCollection();
     }
 
-    private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
-        if (clazz == null) {
-            return false;
-        }
-        for (Class<? extends Annotation> annotation : annotations) {
-            if (clazz.getAnnotation(annotation) != null) {
-                return true;
-            }
-        }
-
-        return hasAnnotation(clazz.getSuperclass(), annotations)
-               || Arrays.stream(clazz.getInterfaces())
-                        .map(i -> hasAnnotation(i, annotations))
-                        .reduce(false, (l, r) -> l || r);
-    }
-
-    private Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
-        throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
-
-        ClassGraph classGraph = new ClassGraph()
-                                    .addClassLoader(loader)
-                                    .enableAllInfo();
-        if (mapSubPackages) {
-            classGraph.whitelistPackages(packageName);
-            classGraph.whitelistPackages(packageName + ".*");
-        } else {
-            classGraph.whitelistPackagesNonRecursive(packageName);
-        }
-
-        try (ScanResult scanResult = classGraph.scan()) {
-            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
-                classes.add(Class.forName(classInfo.getName(), true, loader));
-            }
-        }
-        return classes;
-    }
-
     /**
      * Creates a MappedClass and validates it.
      *
@@ -631,8 +606,45 @@ public class Mapper {
         return mc;
     }
 
+    private Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
+        throws ClassNotFoundException {
+        final Set<Class<?>> classes = new HashSet<>();
+
+        ClassGraph classGraph = new ClassGraph()
+                                    .addClassLoader(loader)
+                                    .enableAllInfo();
+        if (mapSubPackages) {
+            classGraph.whitelistPackages(packageName);
+            classGraph.whitelistPackages(packageName + ".*");
+        } else {
+            classGraph.whitelistPackagesNonRecursive(packageName);
+        }
+
+        try (ScanResult scanResult = classGraph.scan()) {
+            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
+                classes.add(Class.forName(classInfo.getName(), true, loader));
+            }
+        }
+        return classes;
+    }
+
+    private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
+        if (clazz == null) {
+            return false;
+        }
+        for (Class<? extends Annotation> annotation : annotations) {
+            if (clazz.getAnnotation(annotation) != null) {
+                return true;
+            }
+        }
+
+        return hasAnnotation(clazz.getSuperclass(), annotations)
+               || Arrays.stream(clazz.getInterfaces())
+                        .map(i -> hasAnnotation(i, annotations))
+                        .reduce(false, (l, r) -> l || r);
+    }
+
     <T> Key<T> manualRefToKey(final String collection, final Object id) {
         return id == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(collection), collection, id);
     }
-
 }
