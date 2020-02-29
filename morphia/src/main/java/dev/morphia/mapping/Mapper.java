@@ -528,6 +528,12 @@ public class Mapper {
             ref.getCollectionName(), ref.getId());
     }
 
+    /**
+     * Refreshes an entity with the current state in the database.
+     *
+     * @param entity the entity to refresh
+     * @param <T>    the entity type
+     */
     public <T> void refresh(final T entity) {
         Codec<T> refreshCodec = morphiaCodecProvider.getRefreshCodec(entity, getCodecRegistry());
 

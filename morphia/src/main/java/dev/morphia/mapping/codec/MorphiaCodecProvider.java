@@ -1,6 +1,5 @@
 package dev.morphia.mapping.codec;
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
@@ -19,6 +18,8 @@ import java.util.Map;
 
 /**
  * Provider for codecs for Morphia entities
+ *
+ * @morphia.internal
  */
 public class MorphiaCodecProvider implements CodecProvider {
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
@@ -29,8 +30,8 @@ public class MorphiaCodecProvider implements CodecProvider {
     /**
      * Creates a provider
      *
-     * @param mapper      the mapper to use
-     * @param datastore   the datastore to use
+     * @param mapper    the mapper to use
+     * @param datastore the datastore to use
      */
     public MorphiaCodecProvider(final Mapper mapper, final Datastore datastore) {
         this.datastore = datastore;
@@ -53,11 +54,16 @@ public class MorphiaCodecProvider implements CodecProvider {
         return codec;
     }
 
+    /**
+     * Creates a codec that uses an existing entity for loading rather than creating a new instance.
+     *
+     * @param entity   the entity to refresh
+     * @param registry the codec registry
+     * @param <T>      the entity type
+     * @return the new codec
+     */
     @SuppressWarnings("unchecked")
     public <T> Codec<T> getRefreshCodec(final T entity, final CodecRegistry registry) {
-        MorphiaCodec<T> codec = (MorphiaCodec<T>) get(entity.getClass(), registry);
-        MongoCollection<?> collection = mapper.getCollection(entity.getClass());
-
         MappedClass mappedClass = mapper.getMappedClass(entity.getClass());
         return new MorphiaCodec<T>(datastore, mappedClass, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
             @Override
