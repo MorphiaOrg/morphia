@@ -1,11 +1,5 @@
 package dev.morphia.query;
 
-
-import dev.morphia.geo.CoordinateReferenceSystem;
-import dev.morphia.geo.Geometry;
-import dev.morphia.geo.MultiPolygon;
-import dev.morphia.geo.Point;
-import dev.morphia.geo.Polygon;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 
@@ -14,6 +8,7 @@ import dev.morphia.query.experimental.filters.Filters;
  *
  * @param <T> the type of the FieldEnd
  */
+@SuppressWarnings("removal")
 public interface FieldEnd<T> {
 
     /**
@@ -166,7 +161,7 @@ public interface FieldEnd<T> {
      * @deprecated use {@link Filters#elemMatch(String, Object)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    T elemMatch(Query query);
+    T elemMatch(Query<?> query);
 
     /**
      * Checks that a field has the value listed.
@@ -197,11 +192,11 @@ public interface FieldEnd<T> {
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoIntersects/ $geoIntersects
-     * @deprecated use {@link Filters#geoIntersects(String, Object)} instead
      * @mongodb.server.release 2.4
+     * @deprecated use {@link Filters#geoIntersects(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T intersects(Geometry geometry) {
+    default T intersects(dev.morphia.geo.Geometry geometry) {
         return intersects(geometry.convert());
     }
 
@@ -212,9 +207,9 @@ public interface FieldEnd<T> {
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoIntersects/ $geoIntersects
-     * @deprecated use {@link Filters#geoIntersects(String, Object)} instead
      * @mongodb.server.release 2.4
      * @since 2.0
+     * @deprecated use {@link Filters#geoIntersects(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T intersects(com.mongodb.client.model.geojson.Geometry geometry);
@@ -231,7 +226,7 @@ public interface FieldEnd<T> {
      * @mongodb.server.release 2.4
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T intersects(Geometry geometry, final CoordinateReferenceSystem crs) {
+    default T intersects(dev.morphia.geo.Geometry geometry, final dev.morphia.geo.CoordinateReferenceSystem crs) {
         return intersects(geometry.convert(), crs.convert());
     }
 
@@ -292,7 +287,7 @@ public interface FieldEnd<T> {
      * @param latitude  the latitude
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated use {@link Filters#near(String, Object)} instead
+     * @deprecated use {@link Filters#near(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude);
@@ -306,7 +301,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
-     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude, boolean spherical);
@@ -319,7 +314,7 @@ public interface FieldEnd<T> {
      * @param radius    the max distance to consider
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated use {@link Filters#near(String, Object)} instead
+     * @deprecated use {@link Filters#near(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude, double radius);
@@ -334,7 +329,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
-     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
+     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T near(double longitude, double latitude, double radius, boolean spherical);
@@ -346,10 +341,10 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated use {@link Filters#near(String, Object)} instead
+     * @deprecated use {@link Filters#near(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T near(Point point) {
+    default T near(dev.morphia.geo.Point point) {
         return near(point.convert());
     }
 
@@ -360,8 +355,8 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated use {@link Filters#near(String, Object)} instead
      * @since 2.0
+     * @deprecated use {@link Filters#near(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T near(com.mongodb.client.model.geojson.Point point);
@@ -374,11 +369,11 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated use {@link Filters#near(String, Object)} instead
      * @since 1.5
+     * @deprecated use {@link Filters#near(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T near(Point point, Double maxDistance, Double minDistance) {
+    default T near(dev.morphia.geo.Point point, Double maxDistance, Double minDistance) {
         return near(point.convert(), maxDistance, minDistance);
     }
 
@@ -390,8 +385,8 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/near/ $near
-     * @deprecated use {@link Filters#near(String, Object)} instead
      * @since 2.0
+     * @deprecated use {@link Filters#near(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T near(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance);
@@ -402,11 +397,11 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
-     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 1.5
+     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T nearSphere(Point point) {
+    default T nearSphere(dev.morphia.geo.Point point) {
         return nearSphere(point.convert());
     }
 
@@ -416,8 +411,8 @@ public interface FieldEnd<T> {
      * @param point the point to find results close to
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
-     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 2.0
+     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T nearSphere(com.mongodb.client.model.geojson.Point point);
@@ -430,11 +425,11 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
-     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 1.5
+     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T nearSphere(Point point, Double maxDistance, Double minDistance) {
+    default T nearSphere(dev.morphia.geo.Point point, Double maxDistance, Double minDistance) {
         return nearSphere(point.convert(), maxDistance, minDistance);
     }
 
@@ -446,8 +441,8 @@ public interface FieldEnd<T> {
      * @param minDistance the minimum distance in meters from the point
      * @return T
      * @mongodb.driver.manual reference/operator/query/nearSphere/ $nearSphere
-     * @deprecated use {@link Filters#nearSphere(String, Object)} instead
      * @since 2.0
+     * @deprecated use {@link Filters#nearSphere(String, com.mongodb.client.model.geojson.Point)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T nearSphere(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance);
@@ -487,7 +482,7 @@ public interface FieldEnd<T> {
      * @param val the value to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/size/ $size
-     * @deprecated use {@link Filters#size(String, Object)} instead
+     * @deprecated use {@link Filters#size(String, int)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T sizeEq(int val);
@@ -530,8 +525,8 @@ public interface FieldEnd<T> {
      * @param shape the shape to check within
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(Shape shape);
@@ -543,11 +538,11 @@ public interface FieldEnd<T> {
      * @param boundary a polygon describing the boundary to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T within(Polygon boundary) {
+    default T within(dev.morphia.geo.Polygon boundary) {
         return within(boundary.convert());
     }
 
@@ -558,9 +553,9 @@ public interface FieldEnd<T> {
      * @param boundary a polygon describing the boundary to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
      * @since 2.0
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.Polygon boundary);
@@ -573,11 +568,11 @@ public interface FieldEnd<T> {
      * @param boundaries a multi-polygon describing the areas to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.6
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T within(MultiPolygon boundaries) {
+    default T within(dev.morphia.geo.MultiPolygon boundaries) {
         return within(boundaries.convert());
     }
 
@@ -589,9 +584,9 @@ public interface FieldEnd<T> {
      * @param boundaries a multi-polygon describing the areas to search within.
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.6
      * @since 2.0
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.MultiPolygon boundaries);
@@ -604,11 +599,11 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T within(Polygon boundary, CoordinateReferenceSystem crs) {
+    default T within(dev.morphia.geo.Polygon boundary, dev.morphia.geo.CoordinateReferenceSystem crs) {
         return within(boundary.convert(), crs.convert());
     }
 
@@ -620,9 +615,9 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
      * @mongodb.server.release 2.4
      * @since 2.0
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.Polygon boundary, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
@@ -638,11 +633,11 @@ public interface FieldEnd<T> {
      * @param crs        the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      * @mongodb.server.release 2.6
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T within(MultiPolygon boundaries, CoordinateReferenceSystem crs) {
+    default T within(dev.morphia.geo.MultiPolygon boundaries, dev.morphia.geo.CoordinateReferenceSystem crs) {
         return within(boundaries.convert(), crs.convert());
     }
 
@@ -657,7 +652,7 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, Object)} instead
+     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
      * @mongodb.server.release 2.6
      * @since 2.0
      */

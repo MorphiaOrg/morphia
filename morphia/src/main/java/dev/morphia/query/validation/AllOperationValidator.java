@@ -1,17 +1,16 @@
 package dev.morphia.query.validation;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.FilterOperator;
 
 import java.util.List;
 
-import static java.lang.String.format;
-import static dev.morphia.query.FilterOperator.ALL;
 import static dev.morphia.query.validation.CollectionTypeValidator.typeIsIterableOrArrayOrMap;
+import static java.lang.String.format;
 
 /**
  * Validates a query that uses the FilterOperator.ALL operator.
  */
+@SuppressWarnings("removal")
 public final class AllOperationValidator extends OperationValidator {
     private static final AllOperationValidator INSTANCE = new AllOperationValidator();
 
@@ -28,8 +27,8 @@ public final class AllOperationValidator extends OperationValidator {
     }
 
     @Override
-    protected FilterOperator getOperator() {
-        return ALL;
+    protected dev.morphia.query.FilterOperator getOperator() {
+        return dev.morphia.query.FilterOperator.ALL;
     }
 
     @Override

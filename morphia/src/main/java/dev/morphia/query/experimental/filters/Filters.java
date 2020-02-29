@@ -434,7 +434,7 @@ public final class Filters {
     }
 
     /**
-     * $gt selects those documents where the value of the field is greater than (i.e. >) the specified value.
+     * $gt selects those documents where the value of the field is greater than the specified value.
      *
      * @param field the field to check
      * @param val   the value to check
@@ -446,7 +446,7 @@ public final class Filters {
     }
 
     /**
-     * $gte selects the documents where the value of the field is greater than or equal to (i.e. >=) a specified value (e.g. value.)
+     * $gte selects the documents where the value of the field is greater than or equal to a specified value (e.g. value.)
      *
      * @param field the field to check
      * @param val   the value to check
@@ -470,7 +470,7 @@ public final class Filters {
     }
 
     /**
-     * $lt selects the documents where the value of the field is less than (i.e. <) the specified value.
+     * $lt selects the documents where the value of the field is less than the specified value.
      *
      * @param field the field to check
      * @param val   the value to check
@@ -482,7 +482,7 @@ public final class Filters {
     }
 
     /**
-     * $lte selects the documents where the value of the field is less than or equal to (i.e. <=) the specified value.
+     * $lte selects the documents where the value of the field is less than or equal to the specified value.
      *
      * @param field the field to check
      * @param val   the value to check

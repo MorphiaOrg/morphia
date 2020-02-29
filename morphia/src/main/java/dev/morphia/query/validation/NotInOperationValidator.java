@@ -1,17 +1,16 @@
 package dev.morphia.query.validation;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.FilterOperator;
 
 import java.util.List;
 
-import static java.lang.String.format;
-import static dev.morphia.query.FilterOperator.NOT_IN;
 import static dev.morphia.query.validation.CollectionTypeValidator.typeIsIterableOrArrayOrMap;
+import static java.lang.String.format;
 
 /**
- * Checks if the value can have the {@code FilterOperator.NOT_IN} operator applied to it.
+ * Checks if the value can have the {@code dev.morphia.query.FilterOperator.NOT_IN} operator applied to it.
  */
+@SuppressWarnings("removal")
 public final class NotInOperationValidator extends OperationValidator {
     private static final NotInOperationValidator INSTANCE = new NotInOperationValidator();
 
@@ -28,8 +27,8 @@ public final class NotInOperationValidator extends OperationValidator {
     }
 
     @Override
-    protected FilterOperator getOperator() {
-        return NOT_IN;
+    protected dev.morphia.query.FilterOperator getOperator() {
+        return dev.morphia.query.FilterOperator.NOT_IN;
     }
 
     @Override
@@ -37,10 +36,8 @@ public final class NotInOperationValidator extends OperationValidator {
         if (value == null) {
             validationFailures.add(new ValidationFailure(format("For a $nin operation, value cannot be null.")));
         } else if (!typeIsIterableOrArrayOrMap(value.getClass())) {
-            validationFailures.add(new ValidationFailure(format("For a $nin operation, value '%s' should be a List or array. "
-                                                                + "Instead it was a: %s",
-                                                                value, value.getClass()
-                                                               )));
+            validationFailures.add(new ValidationFailure(format("For a $nin operation, value '%s' should be a List or array. Instead it "
+                                                                + "was a: %s", value, value.getClass())));
         }
     }
 }

@@ -1,17 +1,16 @@
 package dev.morphia.query.validation;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.FilterOperator;
 
 import java.util.List;
 
-import static java.lang.String.format;
-import static dev.morphia.query.FilterOperator.IN;
 import static dev.morphia.query.validation.CollectionTypeValidator.typeIsIterableOrArrayOrMap;
+import static java.lang.String.format;
 
 /**
  * Checks if the value can have the {@code FilterOperator.IN} operator applied to it.
  */
+@SuppressWarnings("removal")
 public final class InOperationValidator extends OperationValidator {
     private static final InOperationValidator INSTANCE = new InOperationValidator();
 
@@ -28,8 +27,8 @@ public final class InOperationValidator extends OperationValidator {
     }
 
     @Override
-    protected FilterOperator getOperator() {
-        return IN;
+    protected dev.morphia.query.FilterOperator getOperator() {
+        return dev.morphia.query.FilterOperator.IN;
     }
 
     @Override

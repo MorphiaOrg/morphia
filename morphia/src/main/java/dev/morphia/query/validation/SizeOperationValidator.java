@@ -1,17 +1,16 @@
 package dev.morphia.query.validation;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.FilterOperator;
 
 import java.util.List;
 
-import static java.lang.String.format;
-import static dev.morphia.query.FilterOperator.SIZE;
 import static dev.morphia.query.validation.ValueClassValidator.valueIsClassOrSubclassOf;
+import static java.lang.String.format;
 
 /**
  * Checks if the value can have the {@code FilterOperator.ALL} operator applied to it.
  */
+@SuppressWarnings("removal")
 public final class SizeOperationValidator extends OperationValidator {
     private static final SizeOperationValidator INSTANCE = new SizeOperationValidator();
 
@@ -28,8 +27,8 @@ public final class SizeOperationValidator extends OperationValidator {
     }
 
     @Override
-    protected FilterOperator getOperator() {
-        return SIZE;
+    protected dev.morphia.query.FilterOperator getOperator() {
+        return dev.morphia.query.FilterOperator.SIZE;
     }
 
     @Override

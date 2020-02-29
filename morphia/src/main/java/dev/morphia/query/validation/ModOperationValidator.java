@@ -1,13 +1,11 @@
 package dev.morphia.query.validation;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.FilterOperator;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-import static dev.morphia.query.FilterOperator.MOD;
 import static java.lang.String.format;
 
 
@@ -16,6 +14,7 @@ import static java.lang.String.format;
  *
  * @mongodb.driver.manual reference/operator/query/mod/ $mod
  */
+@SuppressWarnings("removal")
 public final class ModOperationValidator extends OperationValidator {
     private static final ModOperationValidator INSTANCE = new ModOperationValidator();
 
@@ -32,8 +31,8 @@ public final class ModOperationValidator extends OperationValidator {
     }
 
     @Override
-    protected FilterOperator getOperator() {
-        return MOD;
+    protected dev.morphia.query.FilterOperator getOperator() {
+        return dev.morphia.query.FilterOperator.MOD;
     }
 
     @Override

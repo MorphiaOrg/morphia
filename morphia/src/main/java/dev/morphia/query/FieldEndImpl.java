@@ -13,24 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static dev.morphia.query.FilterOperator.ALL;
-import static dev.morphia.query.FilterOperator.ELEMENT_MATCH;
-import static dev.morphia.query.FilterOperator.EQUAL;
-import static dev.morphia.query.FilterOperator.EXISTS;
-import static dev.morphia.query.FilterOperator.GEO_WITHIN;
-import static dev.morphia.query.FilterOperator.GREATER_THAN;
-import static dev.morphia.query.FilterOperator.GREATER_THAN_OR_EQUAL;
-import static dev.morphia.query.FilterOperator.IN;
-import static dev.morphia.query.FilterOperator.INTERSECTS;
-import static dev.morphia.query.FilterOperator.LESS_THAN;
-import static dev.morphia.query.FilterOperator.LESS_THAN_OR_EQUAL;
-import static dev.morphia.query.FilterOperator.MOD;
-import static dev.morphia.query.FilterOperator.NEAR;
-import static dev.morphia.query.FilterOperator.NEAR_SPHERE;
-import static dev.morphia.query.FilterOperator.NOT_EQUAL;
-import static dev.morphia.query.FilterOperator.NOT_IN;
-import static dev.morphia.query.FilterOperator.SIZE;
-import static dev.morphia.query.FilterOperator.TYPE;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
@@ -42,14 +24,15 @@ import static java.util.regex.Pattern.quote;
  * @param <T> the type of the CriteriaContainer
  * @morphia.internal
  */
+@SuppressWarnings("removal")
 public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);
     private final String field;
     private final T target;
-    private Mapper mapper;
-    private boolean not;
     private final MappedClass mappedClass;
     private final boolean validating;
+    private Mapper mapper;
+    private boolean not;
 
     /**
      * Creates a FieldEnd for a particular field.
@@ -68,76 +51,68 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
         this.validating = validating;
     }
 
-    protected String getField() {
-        return field;
-    }
-
-    protected boolean isNot() {
-        return not;
-    }
-
     @Override
     public T contains(final String string) {
         Assert.parametersNotNull("val", string);
-        return addCriteria(EQUAL, compile(quote(string)));
+        return addCriteria(FilterOperator.EQUAL, compile(quote(string)));
     }
 
     @Override
     public T containsIgnoreCase(final String string) {
         Assert.parametersNotNull("val", string);
-        return addCriteria(EQUAL, compile(quote(string), CASE_INSENSITIVE));
+        return addCriteria(FilterOperator.EQUAL, compile(quote(string), CASE_INSENSITIVE));
     }
 
     @Override
     public T doesNotExist() {
-        return addCriteria(EXISTS, false);
+        return addCriteria(FilterOperator.EXISTS, false);
     }
 
     @Override
     public T endsWith(final String suffix) {
         Assert.parametersNotNull("val", suffix);
-        return addCriteria(EQUAL, compile(quote(suffix) + "$"));
+        return addCriteria(FilterOperator.EQUAL, compile(quote(suffix) + "$"));
     }
 
     @Override
     public T endsWithIgnoreCase(final String suffix) {
         Assert.parametersNotNull("val", suffix);
-        return addCriteria(EQUAL, compile(quote(suffix) + "$", CASE_INSENSITIVE));
+        return addCriteria(FilterOperator.EQUAL, compile(quote(suffix) + "$", CASE_INSENSITIVE));
     }
 
     @Override
     public T equal(final Object val) {
-        return addCriteria(EQUAL, val);
+        return addCriteria(FilterOperator.EQUAL, val);
     }
 
     @Override
     public T equalIgnoreCase(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(EQUAL, compile("^" + quote(val.toString()) + "$", CASE_INSENSITIVE));
+        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(val.toString()) + "$", CASE_INSENSITIVE));
     }
 
     @Override
     public T exists() {
-        return addCriteria(EXISTS, true);
+        return addCriteria(FilterOperator.EXISTS, true);
     }
 
     @Override
     public T greaterThan(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(GREATER_THAN, val);
+        return addCriteria(FilterOperator.GREATER_THAN, val);
     }
 
     @Override
     public T greaterThanOrEq(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(GREATER_THAN_OR_EQUAL, val);
+        return addCriteria(FilterOperator.GREATER_THAN_OR_EQUAL, val);
     }
 
     @Override
     public T hasAllOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
         Assert.parameterNotEmpty("values", values);
-        return addCriteria(ALL, values);
+        return addCriteria(FilterOperator.ALL, values);
     }
 
     @Override
@@ -145,25 +120,25 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
         Assert.parametersNotNull("values", values);
         Assert.parameterNotEmpty("values", values);
 
-        return addCriteria(IN, values);
+        return addCriteria(FilterOperator.IN, values);
     }
 
     @Override
     public T hasNoneOf(final Iterable<?> values) {
         Assert.parametersNotNull("values", values);
         Assert.parameterNotEmpty("values", values);
-        return addCriteria(NOT_IN, values);
+        return addCriteria(FilterOperator.NOT_IN, values);
     }
 
     @Override
     public T elemMatch(final Query query) {
         Assert.parametersNotNull("query", query);
-        return addCriteria(ELEMENT_MATCH, query, not);
+        return addCriteria(FilterOperator.ELEMENT_MATCH, query, not);
     }
 
     @Override
     public T hasThisOne(final Object val) {
-        return addCriteria(EQUAL, val);
+        return addCriteria(FilterOperator.EQUAL, val);
     }
 
     @Override
@@ -173,13 +148,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T intersects(final com.mongodb.client.model.geojson.Geometry geometry) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, INTERSECTS, geometry, mappedClass, validating));
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.INTERSECTS, geometry, mappedClass, validating));
         return target;
     }
 
     @Override
     public T intersects(final com.mongodb.client.model.geojson.Geometry geometry, final CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, INTERSECTS, geometry, mappedClass, validating)
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.INTERSECTS, geometry, mappedClass, validating)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
@@ -187,18 +162,18 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T lessThan(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(LESS_THAN, val);
+        return addCriteria(FilterOperator.LESS_THAN, val);
     }
 
     @Override
     public T lessThanOrEq(final Object val) {
         Assert.parametersNotNull("val", val);
-        return addCriteria(LESS_THAN_OR_EQUAL, val);
+        return addCriteria(FilterOperator.LESS_THAN_OR_EQUAL, val);
     }
 
     @Override
     public T mod(final long divisor, final long remainder) {
-        return addCriteria(MOD, new long[]{divisor, remainder});
+        return addCriteria(FilterOperator.MOD, new long[]{divisor, remainder});
     }
 
     @Override
@@ -208,7 +183,9 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(final double longitude, final double latitude, final boolean spherical) {
-        return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR, new double[]{longitude, latitude}, new HashMap<>());
+        return addGeoCriteria(spherical
+                              ? FilterOperator.NEAR_SPHERE
+                              : FilterOperator.NEAR, new double[]{longitude, latitude}, new HashMap<>());
     }
 
     @Override
@@ -218,22 +195,19 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(final double longitude, final double latitude, final double radius, final boolean spherical) {
-        return addGeoCriteria(spherical ? NEAR_SPHERE : NEAR,
-            new double[]{longitude, latitude},
+        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[]{longitude, latitude},
             Map.of("$maxDistance", radius));
     }
 
     @Override
     public T near(final com.mongodb.client.model.geojson.Point point) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, NEAR, point, mappedClass,
-            validating));
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR, point, mappedClass, validating));
         return target;
     }
 
     @Override
     public T near(final com.mongodb.client.model.geojson.Point point, final Double maxDistance, final Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, NEAR, point, mappedClass,
-            validating)
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR, point, mappedClass, validating)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -246,8 +220,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T nearSphere(final com.mongodb.client.model.geojson.Point point, final Double maxDistance, final Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, NEAR_SPHERE, point, mappedClass,
-            validating)
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR_SPHERE, point, mappedClass, validating)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -261,7 +234,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T notEqual(final Object val) {
-        return addCriteria(NOT_EQUAL, val);
+        return addCriteria(FilterOperator.NOT_EQUAL, val);
     }
 
     @Override
@@ -271,60 +244,57 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T sizeEq(final int val) {
-        return addCriteria(SIZE, val);
+        return addCriteria(FilterOperator.SIZE, val);
     }
 
     @Override
     public T startsWith(final String prefix) {
         Assert.parametersNotNull("val", prefix);
         /*LITERAL*/
-        return addCriteria(EQUAL, compile("^" + quote(prefix)));
+        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix)));
     }
 
     @Override
     public T startsWithIgnoreCase(final String prefix) {
         Assert.parametersNotNull("val", prefix);
         /*  | LITERAL */
-        return addCriteria(EQUAL, compile("^" + quote(prefix), CASE_INSENSITIVE));
+        return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix), CASE_INSENSITIVE));
     }
 
     @Override
     public T type(final Type type) {
-        return addCriteria(TYPE, type);
+        return addCriteria(FilterOperator.TYPE, type);
     }
 
     @Override
     public T within(final Shape shape) {
         Assert.parametersNotNull("shape", shape);
-        return addCriteria(GEO_WITHIN, shape);
+        return addCriteria(FilterOperator.GEO_WITHIN, shape);
     }
 
     @Override
     public T within(final Polygon boundary) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, GEO_WITHIN, boundary, mappedClass,
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundary, mappedClass,
             validating));
         return target;
     }
 
     @Override
     public T within(final MultiPolygon boundaries) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, GEO_WITHIN, boundaries, mappedClass,
-            validating));
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundaries, mappedClass, validating));
         return target;
     }
 
     @Override
     public T within(final Polygon boundary, final CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, GEO_WITHIN, boundary, mappedClass,
-            validating)
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundary, mappedClass, validating)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
 
     @Override
     public T within(final MultiPolygon boundaries, final CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, GEO_WITHIN, boundaries, mappedClass,
-            validating)
+        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundaries, mappedClass, validating)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
@@ -345,5 +315,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
         target.add(new Geo2dCriteria(mapper, field, op, val, opts, mappedClass, validating));
         return target;
+    }
+
+    protected String getField() {
+        return field;
+    }
+
+    protected boolean isNot() {
+        return not;
     }
 }

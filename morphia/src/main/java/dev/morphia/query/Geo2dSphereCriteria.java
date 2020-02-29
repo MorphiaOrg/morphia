@@ -9,24 +9,23 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.query.FilterOperator.NEAR;
-
 /**
  * Creates queries for GeoJson geo queries on MongoDB. These queries generally require MongoDB 2.4 and above, and usually work on 2d sphere
  * indexes.
  */
+@SuppressWarnings("removal")
 final class Geo2dSphereCriteria extends FieldCriteria {
     private final Geometry geometry;
     private Document options;
     private CoordinateReferenceSystem crs;
 
-    private Geo2dSphereCriteria(final Mapper mapper, final String field, final FilterOperator operator,
+    private Geo2dSphereCriteria(final Mapper mapper, final String field, final dev.morphia.query.FilterOperator operator,
                                 final Geometry geometry, final MappedClass mappedClass, final boolean validating) {
         super(mapper, field, operator, geometry, mappedClass, validating);
         this.geometry = geometry;
     }
 
-    static Geo2dSphereCriteria geo(final Mapper mapper, final String field, final FilterOperator operator,
+    static Geo2dSphereCriteria geo(final Mapper mapper, final String field, final dev.morphia.query.FilterOperator operator,
                                    final Geometry value, final MappedClass mappedClass, final boolean validating) {
         return new Geo2dSphereCriteria(mapper, field, operator, value, mappedClass, validating);
     }
@@ -35,29 +34,24 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Document toDocument() {
         Document query;
-        FilterOperator operator = getOperator();
+        dev.morphia.query.FilterOperator operator = getOperator();
         DocumentWriter writer = new DocumentWriter();
         ((Codec) getMapper().getCodecRegistry().get(geometry.getClass()))
             .encode(writer, geometry, EncoderContext.builder().build());
         Document document = new Document("$geometry", writer.getDocument());
 
-        switch (operator) {
-            case NEAR:
-            case NEAR_SPHERE:
-                if (options != null) {
-                    document.putAll(options);
-                }
-                query = new Document(NEAR.val(), document);
-                break;
-            case GEO_WITHIN:
-            case INTERSECTS:
-                query = new Document(operator.val(), document);
-                if (crs != null) {
-                    ((Document) document.get("$geometry")).put("crs", crs);
-                }
-                break;
-            default:
-                throw new UnsupportedOperationException(String.format("Operator %s not supported for geo-query", operator.val()));
+        if (operator == dev.morphia.query.FilterOperator.NEAR || operator == dev.morphia.query.FilterOperator.NEAR_SPHERE) {
+            if (options != null) {
+                document.putAll(options);
+            }
+            query = new Document(dev.morphia.query.FilterOperator.NEAR.val(), document);
+        } else if (operator == dev.morphia.query.FilterOperator.GEO_WITHIN || operator == dev.morphia.query.FilterOperator.INTERSECTS) {
+            query = new Document(operator.val(), document);
+            if (crs != null) {
+                ((Document) document.get("$geometry")).put("crs", crs);
+            }
+        } else {
+            throw new UnsupportedOperationException(String.format("Operator %s not supported for geo-query", operator.val()));
         }
 
         return new Document(getField(), query);

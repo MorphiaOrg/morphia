@@ -1,12 +1,10 @@
 package dev.morphia.query.validation;
 
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.FilterOperator;
 import org.bson.Document;
 
 import java.util.List;
 
-import static dev.morphia.query.FilterOperator.GEO_WITHIN;
 import static dev.morphia.query.validation.MappedFieldTypeValidator.isArrayOfNumbers;
 import static dev.morphia.query.validation.MappedFieldTypeValidator.isIterableOfNumbers;
 import static java.lang.String.format;
@@ -39,8 +37,8 @@ public final class GeoWithinOperationValidator extends OperationValidator {
     }
 
     @Override
-    protected FilterOperator getOperator() {
-        return GEO_WITHIN;
+    protected dev.morphia.query.FilterOperator getOperator() {
+        return dev.morphia.query.FilterOperator.GEO_WITHIN;
     }
 
     @Override
