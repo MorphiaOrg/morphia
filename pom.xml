@@ -218,8 +218,4 @@
         <module>no-proxy-deps-tests</module>
         <module>docs</module>
     </modules>
-
-    <prerequisites>
-        <maven>3.5</maven>
-    </prerequisites>
 </project>
