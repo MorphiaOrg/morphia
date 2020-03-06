@@ -1,4 +1,4 @@
-package taglets;/*
+/*
  * Copyright (c) 2008-2014 MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +14,7 @@ package taglets;/*
  * limitations under the License.
  */
 
-import com.sun.tools.doclets.Taglet;
-
-import java.util.Map;
+package taglets;
 
 /**
  * Provides a taglet for linking to the MongoDB manual pages
@@ -24,16 +22,6 @@ import java.util.Map;
  * @see <a href="http://docs.mongodb.org/manual/">the MongoDB manual</a>
  */
 public class ManualTaglet extends DocTaglet {
-
-    /**
-     * Registers this taglet with the javadoc runtime
-     *
-     * @param tagletMap the map of taglets
-     */
-    public static void register(final Map<String, Taglet> tagletMap) {
-        ManualTaglet t = new ManualTaglet();
-        tagletMap.put(t.getName(), t);
-    }
 
     @Override
     public String getName() {

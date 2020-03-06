@@ -86,5 +86,11 @@
             <version>${json.assert.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
+            <version>1.2.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
