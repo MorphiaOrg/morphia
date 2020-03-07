@@ -59,7 +59,7 @@
                 </executions>
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
-                    <javadocUrl>https://morphia.dev/1.5/javadoc/</javadocUrl>
+                    <javadocUrl>https://morphia.dev/1.5.8/javadoc/</javadocUrl>
                 </configuration>
             </plugin>
             <plugin>

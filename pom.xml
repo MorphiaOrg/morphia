@@ -132,7 +132,7 @@
                     <failOnError>false</failOnError>
                     <excludePackageNames>**/relocated/**,**/internal/**,dev/morphia/utils</excludePackageNames>
                     <doclint>none</doclint>
-                    <doctitle>Morphia</doctitle>
+                    <doctitle>Morphia ${project.version}</doctitle>
                     <windowtitle>Morphia</windowtitle>
                     <tagletArtifacts>
                         <tagletArtifact>
