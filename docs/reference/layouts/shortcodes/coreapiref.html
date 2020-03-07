@@ -1,1 +1,0 @@
-{{ .Page.Site.Data.morphia.coreApiUrl }}?{{ with (.Get 0) }}{{ . }}{{ if ne (in . ".html") true}}.html{{ end }}{{ end }}
