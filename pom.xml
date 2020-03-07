@@ -101,7 +101,7 @@
                     <excludePackageNames>org.bson, *.internal, dev.morphia.sofia, dev.morphia.utils</excludePackageNames>
                     <subpackages>dev.morphia</subpackages>
                     <doclint>none</doclint>
-                    <doctitle>Morphia</doctitle>
+                    <doctitle>Morphia ${project.version}</doctitle>
                     <windowtitle>Morphia</windowtitle>
                     <tagletArtifacts>
                         <tagletArtifact>
