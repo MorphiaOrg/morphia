@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.66.0" />
+    <meta name="generator" content="Hugo 0.49" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>Transactions :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583555254" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583558144" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583555254"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583558144"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -508,7 +508,7 @@
                 
                     <div class="progress">
     <div class="wrapper">
-<nav id="TableOfContents"></nav>
+
     </div>
 </div>
 
@@ -527,40 +527,50 @@
 
 
 <p>Starting with MongoDB version 4.0, multi-document transactions are now supported on replica sets.  Morphia 2.0 introduces a simple
-mechanism to access this functionality.  Morphia 2.0 adds the methods <code>withTransaction(MorphiaTransaction&lt;T&gt; transaction)</code> and
-<code>withTransaction(ClientSessionOptions options, MorphiaTransaction&lt;T&gt; transaction)</code> allowing for the execution of logic scoped to a
-transaction.</p>
-<p>The API is designed to work with Java 8&rsquo;s lambda syntax for the most convenience.  In this example, let&rsquo;s assume we&rsquo;re building a
-shopping site.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">User account <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">withTransaction</span><span style="color:#f92672">((</span>session<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
-    User user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;jimbo&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;jimhalpert@dundermifflin.com&#34;</span><span style="color:#f92672">);</span>
-    user<span style="color:#f92672">.</span><span style="color:#a6e22e">setHomeAddress</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Address<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;123 Paper Lane&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Scranton&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;PA&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;18510&#34;</span><span style="color:#f92672">));</span>
+ mechanism to access this functionality.  Morphia 2.0 adds the methods <code>withTransaction(MorphiaTransaction&lt;T&gt; transaction)</code> and
+ <code>withTransaction(ClientSessionOptions options, MorphiaTransaction&lt;T&gt; transaction)</code> allowing for the execution of logic scoped to a
+  transaction.</p>
 
-    <span style="color:#66d9ef">return</span> session<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
-<span style="color:#f92672">});</span>
-</code></pre></div><p>In this simple example, we&rsquo;re starting with our standard <code>Datastore</code> and calling <code>withTransaction()</code>.  The lambda we&rsquo;re passing in
-executes all with the scope of a single transaction.  You&rsquo;ll note the single parameter passed in is a <code>MorphiaSession</code>.  This is
-actually a <code>Datastore</code> but it has been bound to a session.  Any changes to be made within the transaction should be made using this
-<code>session</code> reference.  Once the lambda returns, the transaction is automatically committed and the session closed.  If you need access
-to server session or the transaction, there are methods on <code>MorphiaSession</code> to return either of those.</p>
+<p>The API is designed to work with Java 8&rsquo;s lambda syntax for the most convenience.  In this example, let&rsquo;s assume we&rsquo;re building a
+ shopping site.</p>
+
+<pre><code class="language-java">User account = datastore.withTransaction((session) -&gt; {
+    User user = new User(&quot;jimbo&quot;, &quot;jimhalpert@dundermifflin.com&quot;);
+    user.setHomeAddress(new Address(&quot;123 Paper Lane&quot;, &quot;Scranton&quot;, &quot;PA&quot;, &quot;18510&quot;));
+
+    return session.save(user);
+});
+</code></pre>
+
+<p>In this simple example, we&rsquo;re starting with our standard <code>Datastore</code> and calling <code>withTransaction()</code>.  The lambda we&rsquo;re passing in
+ executes all with the scope of a single transaction.  You&rsquo;ll note the single parameter passed in is a <code>MorphiaSession</code>.  This is
+  actually a <code>Datastore</code> but it has been bound to a session.  Any changes to be made within the transaction should be made using this
+   <code>session</code> reference.  Once the lambda returns, the transaction is automatically committed and the session closed.  If you need access
+    to server session or the transaction, there are methods on <code>MorphiaSession</code> to return either of those.</p>
+
 <p>Of course, it&rsquo;s not always possible to wrap things up neatly inside a lambda so let&rsquo;s take a look at more hands on approach:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">MorphiaSession session <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">startSession</span><span style="color:#f92672">();</span>
-session<span style="color:#f92672">.</span><span style="color:#a6e22e">startTransaction</span><span style="color:#f92672">();</span>
-User account <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;jimbo&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;jimhalpert@dundermifflin.com&#34;</span><span style="color:#f92672">);</span>
-user<span style="color:#f92672">.</span><span style="color:#a6e22e">setHomeAddress</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Address<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;123 Paper Lane&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Scranton&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;PA&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;18510&#34;</span><span style="color:#f92672">));</span>
-session<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
-session<span style="color:#f92672">.</span><span style="color:#a6e22e">commitTransaction</span><span style="color:#f92672">();</span>
-session<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
-</code></pre></div><p>This is essentially the same logic as above but now we&rsquo;re manually managing the transactional boundaries.  <code>MorphiaSession</code> is also
-<code>AutoCloseable</code> so you could wrap the entire block in a <code>try-with-resources</code> block and let that manage the session boundary for you:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">try</span><span style="color:#f92672">(</span>MorphiaSession session <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">startSession</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-    session<span style="color:#f92672">.</span><span style="color:#a6e22e">startTransaction</span><span style="color:#f92672">();</span>
-    User account <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;jimbo&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;jimhalpert@dundermifflin.com&#34;</span><span style="color:#f92672">);</span>
-    user<span style="color:#f92672">.</span><span style="color:#a6e22e">setHomeAddress</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Address<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;123 Paper Lane&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Scranton&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;PA&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;18510&#34;</span><span style="color:#f92672">));</span>
-    session<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
-    session<span style="color:#f92672">.</span><span style="color:#a6e22e">commitTransaction</span><span style="color:#f92672">();</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+
+<pre><code class="language-java">MorphiaSession session = datastore.startSession();
+session.startTransaction();
+User account = new User(&quot;jimbo&quot;, &quot;jimhalpert@dundermifflin.com&quot;);
+user.setHomeAddress(new Address(&quot;123 Paper Lane&quot;, &quot;Scranton&quot;, &quot;PA&quot;, &quot;18510&quot;));
+session.save(user);
+session.commitTransaction();
+session.close();
+</code></pre>
+
+<p>This is essentially the same logic as above but now we&rsquo;re manually managing the transactional boundaries.  <code>MorphiaSession</code> is also
+ <code>AutoCloseable</code> so you could wrap the entire block in a <code>try-with-resources</code> block and let that manage the session boundary for you:</p>
+
+<pre><code class="language-java">try(MorphiaSession session = datastore.startSession()) {
+    session.startTransaction();
+    User account = new User(&quot;jimbo&quot;, &quot;jimhalpert@dundermifflin.com&quot;);
+    user.setHomeAddress(new Address(&quot;123 Paper Lane&quot;, &quot;Scranton&quot;, &quot;PA&quot;, &quot;18510&quot;));
+    session.save(user);
+    session.commitTransaction();
+}
+</code></pre>
+
 
 <footer class=" footline" >
 	
@@ -879,20 +889,20 @@ session<span style="color:#f92672">.</span><span style="color:#a6e22e">close</sp
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583555254"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583558144"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583555254"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583558144"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583555254" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583555254"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583558144" type="text/css" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583558144"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

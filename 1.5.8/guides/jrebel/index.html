@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.66.0" />
+    <meta name="generator" content="Hugo 0.49" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>JRebel :: Morphia</title>
 
     
-    <link href="/1.5.8/css/nucleus.css?1583555159" rel="stylesheet">
-    <link href="/1.5.8/css/fontawesome-all.min.css?1583555159" rel="stylesheet">
-    <link href="/1.5.8/css/hybrid.css?1583555159" rel="stylesheet">
-    <link href="/1.5.8/css/featherlight.min.css?1583555159" rel="stylesheet">
-    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583555159" rel="stylesheet">
-    <link href="/1.5.8/css/auto-complete.css?1583555159" rel="stylesheet">
-    <link href="/1.5.8/css/theme.css?1583555159" rel="stylesheet">
-    <link href="/1.5.8/css/hugo-theme.css?1583555159" rel="stylesheet">
+    <link href="/1.5.8/css/nucleus.css?1583558100" rel="stylesheet">
+    <link href="/1.5.8/css/fontawesome-all.min.css?1583558100" rel="stylesheet">
+    <link href="/1.5.8/css/hybrid.css?1583558100" rel="stylesheet">
+    <link href="/1.5.8/css/featherlight.min.css?1583558100" rel="stylesheet">
+    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583558100" rel="stylesheet">
+    <link href="/1.5.8/css/auto-complete.css?1583558100" rel="stylesheet">
+    <link href="/1.5.8/css/theme.css?1583558100" rel="stylesheet">
+    <link href="/1.5.8/css/hugo-theme.css?1583558100" rel="stylesheet">
     
 
-    <script src="/1.5.8/js/jquery-2.x.min.js?1583555159"></script>
+    <script src="/1.5.8/js/jquery-2.x.min.js?1583558100"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -490,15 +490,17 @@
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-  <ul>
-    <li><a href="#prerequisites">Prerequisites</a></li>
-    <li><a href="#using">Using</a></li>
-    <li><a href="#dependencies">Dependencies</a>
-      <ul>
-        <li><a href="#maven">Maven</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#using">Using</a></li>
+<li><a href="#dependencies">Dependencies</a>
+<ul>
+<li><a href="#maven">Maven</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
     </div>
 </div>
@@ -517,32 +519,46 @@
         
 
 
+
+
 <p>This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.</p>
+
 <h2 id="prerequisites">Prerequisites</h2>
+
 <p>Of course you need to run JRebel (<a href="http://zeroturnaround.com">http://zeroturnaround.com</a>) for this extension to be useful.
 On top of that, you need to tell JRebel about the Plugin. In order to do that, add the following two new Elements to the VM startup command:</p>
+
 <pre><code>-Drebel.morphia=true -Drebel.plugins=/path/to/morphia-jrebel-plug-1.0-SNAPSHOT.jar
-</code></pre><p>If you´re using Eclipse with the JRebel Plugin this can be skipped and instead configured in the Agent Settings GUI.</p>
-<ul>
-<li>Choose Window-&gt;Prefs-&gt;JRebel</li>
-<li>Click Agent Settings</li>
-<li>Choose Plugins Tab</li>
-<li>Click custom plugins</li>
-<li>add the plugin jar, OK</li>
-<li>Choose custom, add key &ldquo;rebel.morphia&rdquo; with value of &ldquo;true&rdquo;</li>
-</ul>
+</code></pre>
+
+<p>If you´re using Eclipse with the JRebel Plugin this can be skipped and instead configured in the Agent Settings GUI.
+- Choose Window-&gt;Prefs-&gt;JRebel
+- Click Agent Settings
+- Choose Plugins Tab
+- Click custom plugins
+- add the plugin jar, OK
+- Choose custom, add key &ldquo;rebel.morphia&rdquo; with value of &ldquo;true&rdquo;</p>
+
 <h2 id="using">Using</h2>
+
 <p>Register the Extension to your Morphia instance</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> JRebelExtension<span style="color:#f92672">(</span>morphia<span style="color:#f92672">);</span>
-</code></pre></div><h2 id="dependencies">Dependencies</h2>
+
+<pre><code class="language-java">new JRebelExtension(morphia);
+</code></pre>
+
+<h2 id="dependencies">Dependencies</h2>
+
 <h3 id="maven">Maven</h3>
+
 <p>If you use Maven to manage your project, you can reference the Extension as a dependency:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
-    <span style="color:#f92672">&lt;groupId&gt;</span>dev.morphia.morphia<span style="color:#f92672">&lt;/groupId&gt;</span>
-    <span style="color:#f92672">&lt;artifactId&gt;</span>jrebel-plug<span style="color:#f92672">&lt;/artifactId&gt;</span>
-    <span style="color:#f92672">&lt;version&gt;</span>1.5.8<span style="color:#f92672">&lt;/version&gt;</span>
-<span style="color:#f92672">&lt;/dependency&gt;</span>
-</code></pre></div>
+
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
+    &lt;artifactId&gt;jrebel-plug&lt;/artifactId&gt;
+    &lt;version&gt;1.5.8&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
 
 <footer class=" footline" >
 	
@@ -845,20 +861,20 @@ On top of that, you need to tell JRebel about the Plugin. In order to do that, a
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.8/js/clipboard.min.js?1583555159"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583555159"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583555159"></script>
-    <script src="/1.5.8/js/jquery.sticky.js?1583555159"></script>
-    <script src="/1.5.8/js/featherlight.min.js?1583555159"></script>
-    <script src="/1.5.8/js/html5shiv-printshiv.min.js?1583555159"></script>
-    <script src="/1.5.8/js/highlight.pack.js?1583555159"></script>
+    <script src="/1.5.8/js/clipboard.min.js?1583558100"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583558100"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583558100"></script>
+    <script src="/1.5.8/js/jquery.sticky.js?1583558100"></script>
+    <script src="/1.5.8/js/featherlight.min.js?1583558100"></script>
+    <script src="/1.5.8/js/html5shiv-printshiv.min.js?1583558100"></script>
+    <script src="/1.5.8/js/highlight.pack.js?1583558100"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.8/js/modernizr.custom.71422.js?1583555159"></script>
-    <script src="/1.5.8/js/learn.js?1583555159"></script>
-    <script src="/1.5.8/js/hugo-learn.js?1583555159"></script>
+    <script src="/1.5.8/js/modernizr.custom.71422.js?1583558100"></script>
+    <script src="/1.5.8/js/learn.js?1583558100"></script>
+    <script src="/1.5.8/js/hugo-learn.js?1583558100"></script>
 
-    <link href="/1.5.8/mermaid/mermaid.css?1583555159" type="text/css" rel="stylesheet" />
-    <script src="/1.5.8/mermaid/mermaid.js?1583555159"></script>
+    <link href="/1.5.8/mermaid/mermaid.css?1583558100" type="text/css" rel="stylesheet" />
+    <script src="/1.5.8/mermaid/mermaid.js?1583558100"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

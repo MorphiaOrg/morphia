@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.66.0" />
+    <meta name="generator" content="Hugo 0.49" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>Annotations :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583555254" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583555254" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583558144" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583555254"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583558144"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -509,33 +509,43 @@
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-  <ul>
-    <li><a href="#indexes">Indexes</a>
-      <ul>
-        <li><a href="#index">Index</a></li>
-      </ul>
-    </li>
-    <li><a href="#entity-mapping">Entity Mapping</a>
-      <ul>
-        <li><a href="#entity">Entity</a></li>
-        <li><a href="#reference">Reference</a></li>
-        <li><a href="#embedded">Embedded</a></li>
-        <li><a href="#validation">Validation</a></li>
-        <li><a href="#id">Id</a></li>
-        <li><a href="#property">Property</a></li>
-        <li><a href="#transient">Transient</a></li>
-        <li><a href="#serialized">Serialized</a></li>
-        <li><a href="#notsaved">NotSaved</a></li>
-        <li><a href="#alsoload">AlsoLoad</a></li>
-        <li><a href="#version">Version</a></li>
-      </ul>
-    </li>
-    <li><a href="#lifecycle-annotations">Lifecycle Annotations</a>
-      <ul>
-        <li><a href="#examples">Examples</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#indexes">Indexes</a>
+<ul>
+<li><a href="#index">Index</a>
+<ul>
+<li><a href="#field">Field</a></li>
+<li><a href="#indexoptions">IndexOptions</a></li>
+<li><a href="#collation">Collation</a></li>
+<li><a href="#indexed">Indexed</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#entity-mapping">Entity Mapping</a>
+<ul>
+<li><a href="#entity">Entity</a></li>
+<li><a href="#reference">Reference</a></li>
+<li><a href="#embedded">Embedded</a></li>
+<li><a href="#validation">Validation</a></li>
+<li><a href="#id">Id</a></li>
+<li><a href="#property">Property</a></li>
+<li><a href="#transient">Transient</a></li>
+<li><a href="#serialized">Serialized</a></li>
+<li><a href="#notsaved">NotSaved</a></li>
+<li><a href="#alsoload">AlsoLoad</a></li>
+<li><a href="#version">Version</a></li>
+</ul></li>
+<li><a href="#lifecycle-annotations">Lifecycle Annotations</a>
+<ul>
+<li><a href="#examples">Examples</a>
+<ul>
+<li><a href="#prepersist"><code>@PrePersist</code></a></li>
+<li><a href="#entitylisteners"><code>@EntityListeners</code></a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
     </div>
 </div>
@@ -554,13 +564,19 @@
         
 
 
+
+
 <p>Below is a list of all the annotations and a brief description of how to use them.</p>
+
 <h2 id="indexes">Indexes</h2>
+
 <p>Indexes can be defined on each field directly for single field indexing or at the class level for compund indexes.  To see the next few
 annotations in context, please refer to <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/TestIndexCollections.java
 ">TestIndexCollections.java</a> or <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/indexes/TestIndexed.java
 ">TestIndexed.java</a> in the Morphia source.</p>
+
 <h3 id="index">Index</h3>
+
 <p>The <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Index.html
 ">@Index</a> documentation can be found <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Index.html
 ">here</a>.  There are two pieces to this
@@ -568,18 +584,24 @@ annotation that are mutually exclusive.  The first group of parameters are consi
 in the 2.x series.  These options and more have been conglomerated in the
 <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/IndexOptions.html
 ">@IndexOptions</a> annotation.</p>
+
 <h4 id="field">Field</h4>
+
 <p>The <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Field.html
 ">@Field</a> annotation defines indexing on a specific document field.  Multiple
 instances of this annotation may be passed to the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Index.html
 ">@Index</a> annotation to define a compound index on multiple fields.</p>
+
 <h4 id="indexoptions">IndexOptions</h4>
+
 <p>The <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/IndexOptions.html
 ">@IndexOptions</a> annotation defines the options to apply to an index
 definition.  This annotation replaces the fields found directly on the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Index.html
 ">@Index</a> annotation.  This annotation was added to ensure that index
 options are consistent across the various index definition approaches.</p>
+
 <h4 id="collation">Collation</h4>
+
 <p>The <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Collation.html
 ">@Collation</a> annotation defines the
 <a href="http://docs.mongodb.org/manual/reference/collation/
@@ -591,24 +613,32 @@ be faster if it does.  See <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/CountOpt
 <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/DeleteOptions.html
 ">DeleteOptions</a>, <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/FindOptions.html
 ">FindOptions</a>,
-<a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/MapReduceOptions.html
+ <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/MapReduceOptions.html
 ">MapReduceOptions</a>,
-and <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/FindAndModifyOptions.html
+ and <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/FindAndModifyOptions.html
 ">FindAndModifyOptions</a> for more information.</p>
+
 <h4 id="indexed">Indexed</h4>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Indexed.html
 ">@Indexed</a>, applied to a Java field, marks the field to be indexed by MongoDB.
 This is used for simple, single-field indexes.  As stated above, the <code>options</code> value replaces the individual setting values on the
 <code>@Indexed</code> annotation itself.</p>
+
 <h2 id="entity-mapping">Entity Mapping</h2>
+
 <p>Morphia provides a number of annotations providing for the customization of object mapping.</p>
+
 <h3 id="entity">Entity</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Entity.html
 ">@Entity</a> marks entities to be stored directly in a collection. This annotation
 is optional in most cases but is required if an entity is to be mapped to a specifically named collection.  If no mapping is given, the
 collection is named after the class itself.  There are two different mechanisms for mapping cross-object relationships in Morphia:
 references and embedding.</p>
+
 <h3 id="reference">Reference</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Reference.html
 ">@Reference</a> marks a field as a reference to a document stored in another
 collection and is linked (by a <code>DBRef</code> field). When the Entity is loaded, the referenced entity is also be loaded.  Any object referenced
@@ -618,33 +648,42 @@ entity. This can be done by either saving the referenced entities first or by ma
 referenced entities are automatically loaded by Morphia along with the referencing entity.  This can result in a high number of database
 round trips just to load a single entity.  To resolve this, <code>lazy = true</code> can be passed to the annotation.  This will create a dynamic
 proxy which will lazily load the entity the first time it is referenced in code.</p>
+
 <p>Fields annotated with <code>@Reference</code> will show up in MongoDB as <code>DBRef</code> fields by default.  A <code>DBRef</code> stores not only the entity&rsquo;s ID value
 but also the collection name.  In most cases, this is probably redundant information as the collection name is already encoded in the
 entity&rsquo;s mapping information.  To reduce the amount of storage necessary to track these references, use <code>idOnly = true</code> in the mapping.
 This will result in only the ID value being stored in the document.</p>
+
 <p>Morphia 1.5.0 introduced a new experimental API help with some of the complications involved with the annotation based mapping.  As this
 is an experimental API, details may change and the entire API might be removed.  But users are encouraged to experiment with the API and
 provide any feedback via GitHub Issues.  Further documentation can be found <a href="/2.0.0-SNAPSHOT/guides/references/">here</a>.</p>
+
 <h3 id="embedded">Embedded</h3>
+
 <p>In contrast to <code>@Reference</code> where a nested Java reference ends up as a separate document in a collection,
 <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Embedded.html
 ">@Embedded</a> tells Morphia to embed the document created from the Java object
 in the document of the parent object.  This annotation can be applied to the class of the embedded type or on the field holding the
 embedded instance.</p>
+
 <h3 id="validation">Validation</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Validation.html
 ">@Validation</a> allows for the definition of a
 <a href="http://docs.mongodb.org/manual/core/document-validation/
 ">document validation</a> schema to applied to all writes to MongoDB.  Validation rules are
 specified on a per-collection basis using any query operators, with the exception of <code>$near</code>, <code>$nearSphere</code>, <code>$text</code>, and <code>$where</code>.  This
 validation definition is done using the MongoDB query syntax as shown here:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Validation</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;{ number : { $gt : 10 } }&#34;</span><span style="color:#f92672">)</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SomeEntity</span> <span style="color:#f92672">{</span>
-    <span style="color:#f92672">...</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> number<span style="color:#f92672">;</span>
-    <span style="color:#f92672">...</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>Various operations on <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/Datastore.html
+
+<pre><code class="language-java">@Validation(&quot;{ number : { $gt : 10 } }&quot;)
+public class SomeEntity {
+    ...
+    private int number;
+    ...
+}
+</code></pre>
+
+<p>Various operations on <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/Datastore.html
 ">Datastore</a> and
 <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/AdvancedDatastore.html
 ">AdvancedDatastore</a> can bypass this validation via their Options classes. For
@@ -654,34 +693,46 @@ these operations, specify the <code>bypassDocumentValidation</code> option to di
 ">UpdateOptions</a>,
 <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/MapReduceOptions.html
 ">MapReduceOptions</a>,
-and <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/FindAndModifyOptions.html
+ and <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/FindAndModifyOptions.html
 ">FindAndModifyOptions</a> for more information.</p>
+
 <h3 id="id">Id</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Id.html
 ">@Id</a> marks a field in an entity to be the <code>_id</code> field in MongoDB.  This
 annotation is required on all top level entities regardless of the presence of an <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Entity.html
 ">@Entity</a>
-annotation.  If a class is marked with <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Embedded.html
+ annotation.  If a class is marked with <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Embedded.html
 ">@Embedded</a> this annotation is not required
-since embedded documents are not required to have <code>_id</code> fields.</p>
+ since embedded documents are not required to have <code>_id</code> fields.</p>
+
 <h3 id="property">Property</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Property.html
 ">@Property</a> is an optional annotation instructing Morphia to persist the
 field using the given name in the document saved in MongoDB.  By default, the field name is used as the property name.  This can be
 overridden by passing a String with the new name to the annotation.</p>
+
 <h3 id="transient">Transient</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Transient.html
 ">@Transient</a> instructs Morphia to ignore this field when converting an
 entity to a document.  The Java keyword <code>transient</code> can also be used instead.</p>
+
 <h3 id="serialized">Serialized</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Serialized.html
 ">@Serialized</a> instructs Morphia to serialize this field using JDK
 serialization.  The field&rsquo;s value gets converted to a <code>byte[]</code> and passed to MongoDB.</p>
+
 <h3 id="notsaved">NotSaved</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/NotSaved.html
 ">@NotSaved</a> instructs Morphia to ignore this field when saving but will
-still be loaded from the database when the entity is read.</p>
+ still be loaded from the database when the entity is read.</p>
+
 <h3 id="alsoload">AlsoLoad</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/AlsoLoad.html
 ">@AlsoLoad</a> instructs Morphia to look for a field under different names than
 the mapped name.  When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use
@@ -689,14 +740,19 @@ this annotation to tell Morphia what older names to try if the current one fails
 new key names when loading a document.  These alternate names are not used in queries, however, so if there are queries against this field
 they should be updated to use the alternate names as well or the database should be updated such that every instance of the old name is
 renamed.</p>
+
 <h3 id="version">Version</h3>
+
 <p><a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Version.html
 ">@Version</a> marks a field in an entity to control optimistic locking. If the
 versions change in the database while modifying an entity (including deletes) a <code>ConcurrentModificationException</code> will be thrown. This
 field will be automatically managed for you &ndash; there is no need to set a value and you should not do so.  If another name beside the Java
 field name is desired, a name can be passed to this annotation to change the document&rsquo;s field name.</p>
+
 <h2 id="lifecycle-annotations">Lifecycle Annotations</h2>
+
 <p>There are various annotations which can be used to register callbacks on certain lifecycle events. These include Pre/Post-Persist, Pre-Save, and Pre/Post-Load.</p>
+
 <ul>
 <li><code>@PreLoad</code> - Called before mapping the datastore object to the entity (POJO); the Document is passed as an argument (you can add/remove/change values)</li>
 <li><code>@PostLoad</code> - Called after mapping to the entity</li>
@@ -704,32 +760,43 @@ field name is desired, a name can be passed to this annotation to change the doc
 <li><code>@PreSave</code> - Called before the save call to the datastore</li>
 <li><code>@PostPersist</code> - Called after the save call to the datastore</li>
 </ul>
+
 <h3 id="examples">Examples</h3>
+
 <p><a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java#L63">This</a> is one of the test
 classes.</p>
+
 <p>All parameters and return values are optional in your implemented methods.</p>
+
 <h4 id="prepersist"><code>@PrePersist</code></h4>
+
 <p>Here is a simple example of an entity that always saves the Date it was last updated at.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BankAccount</span> <span style="color:#f92672">{</span>
-  <span style="color:#a6e22e">@Id</span> String id<span style="color:#f92672">;</span>
-  Date lastUpdated <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();</span>
 
-  <span style="color:#a6e22e">@PrePersist</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prePersist</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>lastUpdated <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h4 id="entitylisteners"><code>@EntityListeners</code></h4>
+<pre><code class="language-java">class BankAccount {
+  @Id String id;
+  Date lastUpdated = new Date();
+
+  @PrePersist void prePersist() {lastUpdated = new Date();}
+}
+</code></pre>
+
+<h4 id="entitylisteners"><code>@EntityListeners</code></h4>
+
 <p>In addition, you can separate the lifecycle event implementation in an external class, or many.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@EntityListeners</span><span style="color:#f92672">(</span>BackAccountWatcher<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BankAccount</span> <span style="color:#f92672">{</span>
-  <span style="color:#a6e22e">@Id</span> String id<span style="color:#f92672">;</span>
-  Date lastUpdated <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();</span>
-<span style="color:#f92672">}</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BankAccountWatcher</span><span style="color:#f92672">{</span>
+<pre><code class="language-java">@EntityListeners(BackAccountWatcher.class)
+public class BankAccount {
+  @Id String id;
+  Date lastUpdated = new Date();
+}
 
-  <span style="color:#a6e22e">@PrePersist</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prePersist</span><span style="color:#f92672">(</span>BankAccount act<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>act<span style="color:#f92672">.</span><span style="color:#a6e22e">lastUpdated</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();}</span>
+class BankAccountWatcher{
 
-<span style="color:#f92672">}</span>
-</code></pre></div>
+  @PrePersist void prePersist(BankAccount act) {act.lastUpdated = new Date();}
+
+}
+</code></pre>
+
 
 <footer class=" footline" >
 	
@@ -1045,20 +1112,20 @@ classes.</p>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583555254"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583558144"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583555254"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583555254"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583558144"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583555254" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583555254"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583558144" type="text/css" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583558144"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

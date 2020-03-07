@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
@@ -43,6 +43,7 @@
   
   <url>
     <loc>/2.0.0-SNAPSHOT/categories/</loc>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -75,6 +76,7 @@
   
   <url>
     <loc>/2.0.0-SNAPSHOT/tags/</loc>
+    <priority>0</priority>
   </url>
   
   <url>
