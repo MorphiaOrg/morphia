@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.49" />
+    <meta name="generator" content="Hugo 0.66.0" />
     <meta name="description" content="">
 
 
@@ -12,17 +12,17 @@
     <title>Life Cycle Methods :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583558144" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583558144" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583558144" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583558144" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583558144" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583558144" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583558144" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583558144" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583559169" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583559169" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583559169" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583559169" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583559169" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583559169" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583559169" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583559169" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583559169"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -509,17 +509,15 @@
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#examples">Examples</a>
-<ul>
-<li><a href="#example">Example</a></li>
-<li><a href="#entitylisteners">EntityListeners</a></li>
-</ul></li>
-<li><a href="#no-delete-support">No Delete Support</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#examples">Examples</a>
+      <ul>
+        <li><a href="#example">Example</a></li>
+        <li><a href="#entitylisteners">EntityListeners</a></li>
+      </ul>
+    </li>
+    <li><a href="#no-delete-support">No Delete Support</a></li>
+  </ul>
 </nav>
     </div>
 </div>
@@ -538,11 +536,8 @@
         
 
 
-
-
 <p>There are various annotations which can be used to register callbacks on certain life cycle events. These include Pre/Post-Persist (Save)
 , and Pre/Post-Load.</p>
-
 <ul>
 <li><code>@PrePersist</code> - Called before save, it can return a <code>Document</code> in place of an empty one.</li>
 <li><code>@PreSave</code> - Called right before <code>DBCollection.save()</code> is called. Changes made to the entity will not be persisted; the <code>Document</code> can
@@ -552,60 +547,46 @@ be passed as an argument (you can add/remove/change values)</li>
 add/remove/change values)</li>
 <li><code>@PostLoad</code> - Called after populating the entity with the values from the document</li>
 </ul>
-
 <p>See the <a href="/2.0.0-SNAPSHOT/guides/annotations/">annotations guide</a> for a full list of the annotations supported.</p>
-
 <h2 id="examples">Examples</h2>
-
 <p><a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java#L63">Here</a> is a one of the test classes.</p>
-
 <p>All parameters and return values are options in your implemented methods.</p>
-
 <h3 id="example">Example</h3>
-
 <p>Here is a simple example of an entity that always saves the Date it was last updated.  Alternatively, the resulting serialized form can
 be passed back in just prior to sending the document to the database.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BankAccount</span> <span style="color:#f92672">{</span>
+  <span style="color:#a6e22e">@Id</span>
+  String id<span style="color:#f92672">;</span>
+  Date lastUpdated <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();</span>
 
-<pre><code class="language-java">class BankAccount {
-  @Id
-  String id;
-  Date lastUpdated = new Date();
+  <span style="color:#a6e22e">@PrePersist</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">trackUpdate</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    lastUpdated <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();</span>
+  <span style="color:#f92672">}</span>
 
-  @PrePersist
-  public void trackUpdate() {
-    lastUpdated = new Date();
-  }
-
-  @PrePersist
-  public void prePersist(final Document document) {
-    // perform operations on serialized form of the entity
-  }
-}
-</code></pre>
-
-<h3 id="entitylisteners">EntityListeners</h3>
-
+  <span style="color:#a6e22e">@PrePersist</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prePersist</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> Document document<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// perform operations on serialized form of the entity
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="entitylisteners">EntityListeners</h3>
 <p>If your application has more generalized life cycle events, these methods can be stored on classes external to your model.  For example&rsquo;s
- sake, let&rsquo;s assume there&rsquo;s a need to digitally sign all documents before storing it in the database.</p>
+sake, let&rsquo;s assume there&rsquo;s a need to digitally sign all documents before storing it in the database.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@EntityListeners</span><span style="color:#f92672">(</span>DigitalSigner<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BankAccount</span> <span style="color:#f92672">{</span>
+  <span style="color:#a6e22e">@Id</span>
+  String id<span style="color:#f92672">;</span>
+  Date lastUpdated <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">@EntityListeners(DigitalSigner.class)
-public class BankAccount {
-  @Id
-  String id;
-  Date lastUpdated = new Date();
-}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DigitalSigner</span> <span style="color:#f92672">{</span>
+  <span style="color:#a6e22e">@PrePersist</span>
+  <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prePersist</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> Object entity<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> Document document<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+     document<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;signature&#34;</span><span style="color:#f92672">,</span> sign<span style="color:#f92672">(</span>document<span style="color:#f92672">));</span>
+  <span style="color:#f92672">}</span>
 
-class DigitalSigner {
-  @PrePersist
-  void prePersist(final Object entity, final Document document) {
-     document.put(&quot;signature&quot;, sign(document));
-  }
-
-}
-</code></pre>
-
-<h2 id="no-delete-support">No Delete Support</h2>
-
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="no-delete-support">No Delete Support</h2>
 <p>Because deletes are usually done with queries there is no way to support a Delete lifecycle event. If, or when, server-side triggers are enabled there may be some support for this, but even then it will be hard to imagine how this would logically fit.</p>
 
 
@@ -926,20 +907,20 @@ class DigitalSigner {
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583559169"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583558144"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583558144"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583559169"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583559169"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583558144" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583558144"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583559169" type="text/css" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583559169"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

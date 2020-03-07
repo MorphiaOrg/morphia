@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Reference Guides on Morphia</title>
@@ -49,7 +49,7 @@ There are two ways to define indexes: at the class level and at the field level.
       <guid>/1.4.1/guides/jrebel/</guid>
       <description>This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.
 Prerequisites Of course you need to run JRebel (http://zeroturnaround.com) for this extension to be useful. On top of that, you need to tell JRebel about the Plugin. In order to do that, add the following two new Elements to the VM startup command:
--Drebel.morphia=true -Drebel.plugins=/path/to/morphia-jrebel-plug-1.0-SNAPSHOT.jar  If you´re using Eclipse with the JRebel Plugin this can be skipped and instead configured in the Agent Settings GUI.</description>
+-Drebel.morphia=true -Drebel.plugins=/path/to/morphia-jrebel-plug-1.0-SNAPSHOT.jar If you´re using Eclipse with the JRebel Plugin this can be skipped and instead configured in the Agent Settings GUI.</description>
     </item>
     
     <item>
@@ -80,7 +80,7 @@ Creating a Query The Datastore is the key class when using Morphia. Virtually al
       <guid>/1.4.1/guides/schemavalidation/</guid>
       <description>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. Schema validationprovides the capability to perform schema validation during updates and insertions. Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
 Below we have a basic entity definition. Note the new annotation @Validation.
-@Entity(&amp;quot;validation&amp;quot;) @Validation(&amp;quot;{ number : { $gt : 10 } }&amp;quot;) public class DocumentValidation { @Id private ObjectId id; private String string; private int number; private Date date; .</description>
+@Entity(&amp;#34;validation&amp;#34;) @Validation(&amp;#34;{ number : { $gt : 10 } }&amp;#34;) public class DocumentValidation { @Id private ObjectId id; private String string; private int number; private Date date; .</description>
     </item>
     
     <item>
@@ -102,8 +102,8 @@ The Field Expression The field expression, used by all update operations, can be
       <guid>/1.4.1/guides/validationextension/</guid>
       <description>This is a simple extension to Morphia to process JSR 303 Validation Annotations.
 Using Add this at the start of your application (or wherever you create your morphia instances).
-new ValidationExtension(morphia);  Example Here is a simple example using (as an example) Hibernate validation:
-... import org.hibernate.validator.constraints.Email; ... @Entity public class Userlike { @Id ObjectId id; @Email String email; }  Implementation This is a lightweight wrapper around the JSR 303 API.</description>
+new ValidationExtension(morphia); Example Here is a simple example using (as an example) Hibernate validation:
+... import org.hibernate.validator.constraints.Email; ... @Entity public class Userlike { @Id ObjectId id; @Email String email; } Implementation This is a lightweight wrapper around the JSR 303 API. It installs a simple global entity interceptor which listens to all life cycle methods needed for validation.</description>
     </item>
     
   </channel>
