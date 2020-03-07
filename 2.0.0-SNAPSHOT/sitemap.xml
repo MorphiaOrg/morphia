@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/2.0/issues-help/</loc>
+    <lastmod>2015-03-18T16:56:14+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/annotations/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0/getting-started/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0/getting-started/installation-guide/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0/getting-started/quick-tour/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/aggregation/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/indexing/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/jrebel/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/lifecyclemethods/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/getting-started/migration/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/querying/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/references/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/schemavalidation/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/transactions/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/updating/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0/guides/validationextension/</loc>
+  </url>
+  
+</urlset>
