@@ -16,7 +16,7 @@
 'UTF-8'
 -Xdoclint:none
 -doctitle
-'Morphia'
+'Morphia 1.5.9-SNAPSHOT'
 -linkoffline
 'https://docs.oracle.com/javase/6/docs/api' '/tmp/morphia-for-docs-master/morphia/target/javadoc-bundle-options'
 -taglet
