@@ -1,1 +1,1 @@
-/usr/lib/jvm/java-11-openjdk-amd64/bin/javadoc @options @packages
+/home/evanchooly/.sdkman/candidates/java/current/bin/javadoc @options @packages

@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Getting Started on Morphia</title>
-    <link>/1.5.9-SNAPSHOT/getting-started/</link>
+    <link>./1.5.9-SNAPSHOT/getting-started/</link>
     <description>Recent content in Getting Started on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
     
-	<atom:link href="/1.5.9-SNAPSHOT/getting-started/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="./1.5.9-SNAPSHOT/getting-started/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Installation Guide</title>
-      <link>/1.5.9-SNAPSHOT/getting-started/installation-guide/</link>
+      <link>./1.5.9-SNAPSHOT/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/1.5.9-SNAPSHOT/getting-started/installation-guide/</guid>
+      <guid>./1.5.9-SNAPSHOT/getting-started/installation-guide/</guid>
       <description>The recommended way to get started using Morphia in your project is with a dependency management system.
-&amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.9-SNAPSHOT&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia:morphia:1.5.9-SNAPSHOT&#39; }   You can also download the jars directly from sonatype.  </description>
+&amp;lt;dependencies&amp;gt;&amp;lt;dependency&amp;gt;&amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;core&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;1.5.9-SNAPSHOT&amp;lt;/version&amp;gt;&amp;lt;/dependency&amp;gt;&amp;lt;/dependencies&amp;gt;&amp;lt;repositories&amp;gt;&amp;lt;repository&amp;gt;&amp;lt;id&amp;gt;sonatype-snapshots&amp;lt;/id&amp;gt;&amp;lt;name&amp;gt;Sontatype Snapshots&amp;lt;/name&amp;gt;&amp;lt;url&amp;gt;https://oss.sonatype.org/content/repositories/snapshots&amp;lt;/url&amp;gt;&amp;lt;snapshots&amp;gt;&amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt;&amp;lt;/snapshots&amp;gt;&amp;lt;/repository&amp;gt;&amp;lt;/repositories&amp;gt;dependencies {compile &#39;dev.morphia.morphia:core:1.5.9-SNAPSHOT&#39;}repositories {maven {url &#39;https://oss.sonatype.org/content/repositories/snapshots&#39;}}You can also download the jarsdirectlyfrom sonatype. </description>
     </item>
     
     <item>
       <title>Quick Tour</title>
-      <link>/1.5.9-SNAPSHOT/getting-started/quick-tour/</link>
+      <link>./1.5.9-SNAPSHOT/getting-started/quick-tour/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/1.5.9-SNAPSHOT/getting-started/quick-tour/</guid>
+      <guid>./1.5.9-SNAPSHOT/getting-started/quick-tour/</guid>
       <description>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful. Morphia does its best to abstract much of that away but if something is confusing, please consult the Java driver [documentation](http://mongodb.github .io/mongo-java-driver/) as well.
 The following code snippets come from the QuickTour.java example code that can be found with the Morphia source.
 Setting up Morphia The following example shows how to create the initial Morphia instance.</description>
@@ -34,10 +34,10 @@ Setting up Morphia The following example shows how to create the initial Morphia
     
     <item>
       <title>Migration Guide</title>
-      <link>/1.5.9-SNAPSHOT/getting-started/migration/</link>
+      <link>./1.5.9-SNAPSHOT/getting-started/migration/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/1.5.9-SNAPSHOT/getting-started/migration/</guid>
+      <guid>./1.5.9-SNAPSHOT/getting-started/migration/</guid>
       <description>Migrating to 1.5  Indexing of @Embedded fields is being deprecated in favor of declaring all indexes at the top level @Entity level. The new index definitions just need to use the dotted path names to recreate these indexes. To turn off the warning in the logs about embedded indexing, simply pass false to MapperOptions#setDisableEmbeddedIndexes. Query#asList() is deprecated. Usages should be updated to use find().toList() instead.  </description>
     </item>
     

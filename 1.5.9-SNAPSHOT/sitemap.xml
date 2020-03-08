@@ -3,86 +3,86 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/issues-help/</loc>
+    <loc>./1.5.9-SNAPSHOT/issues-help/</loc>
     <lastmod>2015-03-18T16:56:14+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/annotations/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/annotations/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/getting-started/</loc>
+    <loc>./1.5.9-SNAPSHOT/getting-started/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/getting-started/installation-guide/</loc>
+    <loc>./1.5.9-SNAPSHOT/getting-started/installation-guide/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/</loc>
+    <loc>./1.5.9-SNAPSHOT/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/getting-started/quick-tour/</loc>
+    <loc>./1.5.9-SNAPSHOT/getting-started/quick-tour/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/aggregation/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/aggregation/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/categories/</loc>
+    <loc>./1.5.9-SNAPSHOT/categories/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/indexing/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/indexing/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/jrebel/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/jrebel/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/lifecyclemethods/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/lifecyclemethods/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/getting-started/migration/</loc>
+    <loc>./1.5.9-SNAPSHOT/getting-started/migration/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/querying/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/querying/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/references/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/references/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/schemavalidation/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/schemavalidation/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/tags/</loc>
+    <loc>./1.5.9-SNAPSHOT/tags/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/updating/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/updating/</loc>
   </url>
   
   <url>
-    <loc>/1.5.9-SNAPSHOT/guides/validationextension/</loc>
+    <loc>./1.5.9-SNAPSHOT/guides/validationextension/</loc>
   </url>
   
 </urlset>
