@@ -12,17 +12,17 @@
     <title>Installation Guide :: Morphia</title>
 
     
-    <link href="/2.0.0-BETA1/css/nucleus.css?1583684705" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/fontawesome-all.min.css?1583684705" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/hybrid.css?1583684705" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/featherlight.min.css?1583684705" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/perfect-scrollbar.min.css?1583684705" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/auto-complete.css?1583684705" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/theme.css?1583684705" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/hugo-theme.css?1583684705" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/nucleus.css?1583685491" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/fontawesome-all.min.css?1583685491" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/hybrid.css?1583685491" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/featherlight.min.css?1583685491" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/perfect-scrollbar.min.css?1583685491" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/auto-complete.css?1583685491" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/theme.css?1583685491" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/hugo-theme.css?1583685491" rel="stylesheet">
     
 
-    <script src="/2.0.0-BETA1/js/jquery-2.x.min.js?1583684705"></script>
+    <script src="/2.0.0-BETA1/js/jquery-2.x.min.js?1583685491"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -527,37 +527,34 @@
 
 
 <p>The recommended way to get started using Morphia in your project is with a dependency management system.</p>
-
-
-
-
-
-<div class="download">
-<pre><code>
+<section class="maven">
+<pre><code class="ini">
 &lt;dependencies&gt;
     &lt;dependency&gt;
-        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-        &lt;artifactId&gt;morphia-core&lt;/artifactId&gt;
+        &lt;groupId&gt;dev.morphia&lt;/groupId&gt;
+        &lt;artifactId&gt;morphia&lt;/artifactId&gt;
         &lt;version&gt;2.0.0-BETA1&lt;/version&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;
-</code></pre>
-</div>
-<div class="download">
-<pre><code>
-dependencies {
-    compile 'dev.morphia.morphia:morphia-core:2.0.0-BETA1'
-}
-</code></pre>
-</div>
 
+</code></pre>
+</section>
+<section class="gradle hidden">
+<pre><code>
+  dependencies {
+      compile 'dev.morphia:morphia:2.0.0-BETA1'
+  }
+
+</code></pre>
+</section>
 <section class="downloadInfo">
-    <p class="small">You can also download the jars
-        <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia/2.0.0-BETA1" target="_blank">directly</a>
-        from sonatype.</a>
-    </p>
+<p class="small">You can also download the jars
+  <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia/2.0.0-BETA1" target="_blank">directly</a>
+  from sonatype.</a>
+</p>
 
 </section>
+
 
 
 <footer class=" footline" >
@@ -871,20 +868,20 @@ dependencies {
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-BETA1/js/clipboard.min.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/perfect-scrollbar.min.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/perfect-scrollbar.jquery.min.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/jquery.sticky.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/featherlight.min.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/html5shiv-printshiv.min.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/highlight.pack.js?1583684705"></script>
+    <script src="/2.0.0-BETA1/js/clipboard.min.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/perfect-scrollbar.min.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/perfect-scrollbar.jquery.min.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/jquery.sticky.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/featherlight.min.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/html5shiv-printshiv.min.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/highlight.pack.js?1583685491"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-BETA1/js/modernizr.custom.71422.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/learn.js?1583684705"></script>
-    <script src="/2.0.0-BETA1/js/hugo-learn.js?1583684705"></script>
+    <script src="/2.0.0-BETA1/js/modernizr.custom.71422.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/learn.js?1583685491"></script>
+    <script src="/2.0.0-BETA1/js/hugo-learn.js?1583685491"></script>
 
-    <link href="/2.0.0-BETA1/mermaid/mermaid.css?1583684705" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-BETA1/mermaid/mermaid.js?1583684705"></script>
+    <link href="/2.0.0-BETA1/mermaid/mermaid.css?1583685491" type="text/css" rel="stylesheet" />
+    <script src="/2.0.0-BETA1/mermaid/mermaid.js?1583685491"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

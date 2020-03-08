@@ -1,5 +1,5 @@
 -classpath
-'/home/evanchooly/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar:/home/evanchooly/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/home/evanchooly/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar:/home/evanchooly/.m2/repository/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar'
+'/var/lib/jenkins/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar:/var/lib/jenkins/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/var/lib/jenkins/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar:/var/lib/jenkins/.m2/repository/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar'
 -encoding
 'UTF-8'
 -protected
@@ -20,7 +20,7 @@
 -linkoffline
 'https://docs.oracle.com/javase/6/docs/api' '/tmp/morphia-for-docs-r1.4.1/morphia/target/javadoc-bundle-options'
 -tagletpath
-'/home/evanchooly/.m2/repository/dev/morphia/morphia/util/1.4.1/util-1.4.1.jar'
+'/var/lib/jenkins/.m2/repository/dev/morphia/morphia/util/1.4.1/util-1.4.1.jar'
 -use
 -version
 -windowtitle

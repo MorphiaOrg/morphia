@@ -12,17 +12,17 @@
     <title>Installation Guide :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583684641" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583685680" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583685680" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583685680" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583685680" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583685680" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583685680" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583685680" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583685680" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583684641"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583685680"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -282,6 +282,25 @@
  
   
     
+      <li data-nav-id="/2.0.0-SNAPSHOT/guides/jrebel/" title="JRebel" class="dd-item ">
+        <a href="/2.0.0-SNAPSHOT/guides/jrebel/">
+        JRebel
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
       <li data-nav-id="/2.0.0-SNAPSHOT/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item ">
         <a href="/2.0.0-SNAPSHOT/guides/lifecyclemethods/">
         Life Cycle Methods
@@ -342,25 +361,6 @@
       <li data-nav-id="/2.0.0-SNAPSHOT/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
         <a href="/2.0.0-SNAPSHOT/guides/schemavalidation/">
         Schema Validation
-        
-        </a>
-    </li>
-     
-  
- 
-
-            
-          
-            
-            
-
-
- 
-  
-    
-      <li data-nav-id="/2.0.0-SNAPSHOT/guides/textsearch/" title="Text Search" class="dd-item ">
-        <a href="/2.0.0-SNAPSHOT/guides/textsearch/">
-        Text Search
         
         </a>
     </li>
@@ -526,54 +526,35 @@
         
 
 
-<p>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.  To use
-Morphia using either build tool, you will need to update your build configurations with the following information.</p>
-
-
-
-
-
-<div class="download">
-<pre><code>
+<p>The recommended way to get started using Morphia in your project is with a dependency management system.</p>
+<section class="maven">
+<pre><code class="ini">
 &lt;dependencies&gt;
     &lt;dependency&gt;
-        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-        &lt;artifactId&gt;morphia-core&lt;/artifactId&gt;
+        &lt;groupId&gt;dev.morphia&lt;/groupId&gt;
+        &lt;artifactId&gt;morphia&lt;/artifactId&gt;
         &lt;version&gt;2.0.0-SNAPSHOT&lt;/version&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;
-&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;sonatype-snapshots&lt;/id&gt;
-        &lt;name&gt;Sontatype Snapshots&lt;/name&gt;
-        &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
-        &lt;snapshots&gt;
-            &lt;enabled&gt;true&lt;/enabled&gt;
-        &lt;/snapshots&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;
-</code></pre>
-</div>
-<div class="download hidden">
-<pre><code>
-dependencies {
-    compile 'dev.morphia.morphia:morphia-core:2.0.0-SNAPSHOT'
-}
-repositories {
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-}
-</code></pre>
-</div>
 
+</code></pre>
+</section>
+<section class="gradle hidden">
+<pre><code>
+  dependencies {
+      compile 'dev.morphia:morphia:2.0.0-SNAPSHOT'
+  }
+
+</code></pre>
+</section>
 <section class="downloadInfo">
-    <p class="small">You can also download the jars
-        <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia/2.0.0-SNAPSHOT" target="_blank">directly</a>
-        from sonatype.</a>
-    </p>
+<p class="small">You can also download the jars
+  <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia/2.0.0-SNAPSHOT" target="_blank">directly</a>
+  from sonatype.</a>
+</p>
 
 </section>
+
 
 
 <footer class=" footline" >
@@ -887,20 +868,20 @@ repositories {
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583684641"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583685680"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583684641"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583685680"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583685680"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583684641" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583684641"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583685680" type="text/css" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583685680"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
