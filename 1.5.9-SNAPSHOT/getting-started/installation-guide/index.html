@@ -12,17 +12,17 @@
     <title>Installation Guide :: Morphia</title>
 
     
-    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1583685742" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1583685742" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1583685742" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1583685742" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1583685742" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1583685742" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/theme.css?1583685742" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1583685742" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1583684656" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1583684656" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1583684656" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1583684656" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1583684656" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1583684656" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/theme.css?1583684656" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1583684656" rel="stylesheet">
     
 
-    <script src="/1.5.9-SNAPSHOT/js/jquery-2.x.min.js?1583685742"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery-2.x.min.js?1583684656"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -508,34 +508,52 @@
 
 
 <p>The recommended way to get started using Morphia in your project is with a dependency management system.</p>
-<section class="maven">
-<pre><code class="ini">
+
+
+
+
+
+<div class="download">
+<pre><code>
 &lt;dependencies&gt;
     &lt;dependency&gt;
-        &lt;groupId&gt;dev.morphia&lt;/groupId&gt;
-        &lt;artifactId&gt;morphia&lt;/artifactId&gt;
+        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
+        &lt;artifactId&gt;core&lt;/artifactId&gt;
         &lt;version&gt;1.5.9-SNAPSHOT&lt;/version&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;
-
+&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;sonatype-snapshots&lt;/id&gt;
+        &lt;name&gt;Sontatype Snapshots&lt;/name&gt;
+        &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+        &lt;snapshots&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/snapshots&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
 </code></pre>
-</section>
-<section class="gradle hidden">
+</div>
+<div class="download hidden">
 <pre><code>
-  dependencies {
-      compile 'dev.morphia:morphia:1.5.9-SNAPSHOT'
-  }
-
+dependencies {
+    compile 'dev.morphia.morphia:core:1.5.9-SNAPSHOT'
+}
+repositories {
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
 </code></pre>
-</section>
+</div>
+
 <section class="downloadInfo">
-<p class="small">You can also download the jars
-  <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia/1.5.9-SNAPSHOT" target="_blank">directly</a>
-  from sonatype.</a>
-</p>
+    <p class="small">You can also download the jars
+        <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia/1.5.9-SNAPSHOT" target="_blank">directly</a>
+        from sonatype.</a>
+    </p>
 
 </section>
-
 
 
 <footer class=" footline" >
@@ -833,20 +851,20 @@
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/html5shiv-printshiv.min.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1583685742"></script>
+    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/html5shiv-printshiv.min.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1583684657"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom.71422.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/learn.js?1583685742"></script>
-    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1583685742"></script>
+    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom.71422.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/learn.js?1583684657"></script>
+    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1583684657"></script>
 
-    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1583685742" type="text/css" rel="stylesheet" />
-    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1583685742"></script>
+    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1583684657" type="text/css" rel="stylesheet" />
+    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1583684657"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

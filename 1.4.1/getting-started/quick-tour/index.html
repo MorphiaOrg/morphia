@@ -12,17 +12,17 @@
     <title>Quick Tour :: Morphia</title>
 
     
-    <link href="/1.4.1/css/nucleus.css?1583685613" rel="stylesheet">
-    <link href="/1.4.1/css/fontawesome-all.min.css?1583685613" rel="stylesheet">
-    <link href="/1.4.1/css/hybrid.css?1583685613" rel="stylesheet">
-    <link href="/1.4.1/css/featherlight.min.css?1583685613" rel="stylesheet">
-    <link href="/1.4.1/css/perfect-scrollbar.min.css?1583685613" rel="stylesheet">
-    <link href="/1.4.1/css/auto-complete.css?1583685613" rel="stylesheet">
-    <link href="/1.4.1/css/theme.css?1583685613" rel="stylesheet">
-    <link href="/1.4.1/css/hugo-theme.css?1583685613" rel="stylesheet">
+    <link href="/1.4.1/css/nucleus.css?1583684673" rel="stylesheet">
+    <link href="/1.4.1/css/fontawesome-all.min.css?1583684673" rel="stylesheet">
+    <link href="/1.4.1/css/hybrid.css?1583684673" rel="stylesheet">
+    <link href="/1.4.1/css/featherlight.min.css?1583684673" rel="stylesheet">
+    <link href="/1.4.1/css/perfect-scrollbar.min.css?1583684673" rel="stylesheet">
+    <link href="/1.4.1/css/auto-complete.css?1583684673" rel="stylesheet">
+    <link href="/1.4.1/css/theme.css?1583684673" rel="stylesheet">
+    <link href="/1.4.1/css/hugo-theme.css?1583684673" rel="stylesheet">
     
 
-    <script src="/1.4.1/js/jquery-2.x.min.js?1583685613"></script>
+    <script src="/1.4.1/js/jquery-2.x.min.js?1583684673"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -479,7 +479,7 @@
         
 
 
-<p>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to
+<p>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful.  Morphia does its best to 
 abstract much of that away but if something is confusing, please consult the Java driver [documentation](<a href="http://mongodb.github">http://mongodb.github</a>
 .io/mongo-java-driver/) as well.</p>
 <p>The following code snippets come from the <strong>QuickTour.java</strong> example code
@@ -498,25 +498,25 @@ Morphia maps your entities and validates your queries.</p>
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">final</span> Datastore datastore <span style="color:#f92672">=</span> morphia<span style="color:#f92672">.</span><span style="color:#a6e22e">createDatastore</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> MongoClient<span style="color:#f92672">(),</span> <span style="color:#e6db74">&#34;morphia_example&#34;</span><span style="color:#f92672">);</span>
 datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">ensureIndexes</span><span style="color:#f92672">();</span>
 </code></pre></div><p>This snippet creates the Morphia instance we&rsquo;ll be using in our simple application.  The <strong>Morphia</strong> class exists to configure the <strong>Mapper</strong>
-to be used and to define various system-wide defaults.  It is also what is used to create the <strong>Datastore</strong> we&rsquo;ll be using.  The
-<strong>Datastore</strong> takes two parameters:  the <strong>MongoClient</strong> used to connect to MongoDB and the name of the database to use.  With this
+to be used and to define various system-wide defaults.  It is also what is used to create the <strong>Datastore</strong> we&rsquo;ll be using.  The 
+<strong>Datastore</strong> takes two parameters:  the <strong>MongoClient</strong> used to connect to MongoDB and the name of the database to use.  With this 
 approach we could conceivably configure Morphia once and then connect to multiple databases by creating different <strong>Datastore</strong> instances.
 In practice, this is likely pretty rare but it is possible.</p>
-<p>The second line, which we skipped over, deserves a bit of consideration.  In this case, we&rsquo;re telling Morphia to look at every class in the
-package we&rsquo;ve given and find every class annotated with <strong>@Entity</strong> (which we&rsquo;ll cover shortly) and discover the mapping metadata we&rsquo;ve
+<p>The second line, which we skipped over, deserves a bit of consideration.  In this case, we&rsquo;re telling Morphia to look at every class in the 
+package we&rsquo;ve given and find every class annotated with <strong>@Entity</strong> (which we&rsquo;ll cover shortly) and discover the mapping metadata we&rsquo;ve 
 put on our classes.  There are several variations of mapping that can be done and they can be called multiple times with different values
 to properly cover all your entities wherever they might live in your application.</p>
 <h2 id="mapping-options">Mapping Options</h2>
-<p>Once you have an instance of Morphia, you can configure various mapping options via the <strong>MappingOptions</strong> class.  While it&rsquo;s possible to
+<p>Once you have an instance of Morphia, you can configure various mapping options via the <strong>MappingOptions</strong> class.  While it&rsquo;s possible to 
 specify the <strong>Mapper</strong> when creating an instance of Morphia, most users will use the default mapper.  In either case, the <strong>Mapper</strong> can
 be fetched using the <strong>getMapper()</strong> method on the <strong>Morphia</strong> instance.  The two most common elements to configure are <strong>storeEmpties</strong> and
-<strong>storeNulls</strong>.  By default Morphia will not store empty <strong>List</strong> or <strong>Map</strong> values nor will it store null values in to MongoDB.  If your
-application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them
+<strong>storeNulls</strong>.  By default Morphia will not store empty <strong>List</strong> or <strong>Map</strong> values nor will it store null values in to MongoDB.  If your 
+application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them 
 for you.  There are a few other options to configure on <strong>MappingOptions</strong>, but we&rsquo;ll not be covering them here.</p>
 <h2 id="mapping-classes">Mapping Classes</h2>
 <p>There are two ways that Morphia can handle your classes:  as top level entities or embedded in others.  Any class annotated with <strong>@Entity</strong>
-is treated as a top level document stored directly in a collection.  Any class with <strong>@Entity</strong> must have a field annotated with <strong>@Id</strong> to
-define which field to use as the _<strong>id</strong> value in the document written to MongoDB.  <strong>@Embedded</strong> indicates that the class will result in a
+is treated as a top level document stored directly in a collection.  Any class with <strong>@Entity</strong> must have a field annotated with <strong>@Id</strong> to 
+define which field to use as the _<strong>id</strong> value in the document written to MongoDB.  <strong>@Embedded</strong> indicates that the class will result in a 
 subdocument inside another document.  <strong>@Embedded</strong> classes do not require the presence of an <strong>@Id</strong> field.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;employees&#34;</span><span style="color:#f92672">)</span>
 <span style="color:#a6e22e">@Indexes</span><span style="color:#f92672">(</span>
@@ -533,29 +533,29 @@ subdocument inside another document.  <strong>@Embedded</strong> classes do not 
     <span style="color:#a6e22e">@Property</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;wage&#34;</span><span style="color:#f92672">)</span>
     <span style="color:#66d9ef">private</span> Double salary<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>There are a few things here to discuss and others we&rsquo;ll defer to later sections.  This class is annotated using the <strong>@Entity</strong> annotation
-so we know that it will be a top level document.  In the annotation, you&rsquo;ll see <strong>&ldquo;employees&rdquo;</strong>.  By default, Morphia will use the class
-name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all
-<strong>Employee</strong> instances will be saved in to the <strong>employees</strong> collection instead.  There is a little more to this annotation but the
+</code></pre></div><p>There are a few things here to discuss and others we&rsquo;ll defer to later sections.  This class is annotated using the <strong>@Entity</strong> annotation 
+so we know that it will be a top level document.  In the annotation, you&rsquo;ll see <strong>&ldquo;employees&rdquo;</strong>.  By default, Morphia will use the class 
+name as the collection name.  If you pass a String instead, it will use that value for the collection name.  In this case, all 
+<strong>Employee</strong> instances will be saved in to the <strong>employees</strong> collection instead.  There is a little more to this annotation but the 
 <a href="/1.4.1/guides/annotations/">annotations guide</a> covers those details.</p>
 <p>The <strong>@Indexes</strong> annotation lists which indexes Morphia should create.  In this instance, we&rsquo;re defining an index named <strong>salary</strong> on the
 field salary with the default ordering of ascending.  More information on indexing can found
 <a href="/1.4.1/guides/annotations/">here</a>.</p>
-<p>We&rsquo;ve marked the <strong>id</strong> field to be used as our primary key (the _<strong>id</strong> field in the document).  In this instance we&rsquo;re using the Java driver
-type of <strong>ObjectId</strong> as the ID type.  The ID can be any type you&rsquo;d like but is generally something like <strong>ObjectId</strong> or <strong>Long</strong>.  There are
-two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy
+<p>We&rsquo;ve marked the <strong>id</strong> field to be used as our primary key (the _<strong>id</strong> field in the document).  In this instance we&rsquo;re using the Java driver 
+type of <strong>ObjectId</strong> as the ID type.  The ID can be any type you&rsquo;d like but is generally something like <strong>ObjectId</strong> or <strong>Long</strong>.  There are 
+two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy 
 every field to a document bound for the database.</p>
-<p>The simplest of the two remaining annotations is <strong>@Property</strong>.  This annotation is entirely optional.  If you leave this annotation off,
-Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you&rsquo;ll want to change
-the document field name for any number of reasons.  In those cases, you can use <strong>@Property</strong> and pass it the name to be used when this
+<p>The simplest of the two remaining annotations is <strong>@Property</strong>.  This annotation is entirely optional.  If you leave this annotation off, 
+Morphia will use the Java field name as the document field name.  Often times this is fine.  However, some times you&rsquo;ll want to change 
+the document field name for any number of reasons.  In those cases, you can use <strong>@Property</strong> and pass it the name to be used when this 
 class is serialized out to a document to be handed off to MongoDB.</p>
-<p>This just leaves <strong>@Reference</strong>.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case
+<p>This just leaves <strong>@Reference</strong>.  This annotation is telling Morphia that this field refers to other Morphia mapped entities.  In this case 
 Morphia will store what MongoDB calls a <a href="http://docs.mongodb.org/manual/reference/database-references/#dbrefs
-"><strong>DBRef</strong></a> which is just a
+"><strong>DBRef</strong></a> which is just a 
 collection name and key value.  These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an
 exception.</p>
 <h2 id="saving-data">Saving Data</h2>
-<p>For the most part, you treat your Java objects just like you normally would.  When you&rsquo;re ready to write an object to the database, it&rsquo;s
+<p>For the most part, you treat your Java objects just like you normally would.  When you&rsquo;re ready to write an object to the database, it&rsquo;s 
 as simple as this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> Employee elmer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Employee<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Elmer Fudd&#34;</span><span style="color:#f92672">,</span> 50000<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">);</span>
 datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>elmer<span style="color:#f92672">);</span>
@@ -570,38 +570,38 @@ elmer<span style="color:#f92672">.</span><span style="color:#a6e22e">getDirectRe
 elmer<span style="color:#f92672">.</span><span style="color:#a6e22e">getDirectReports</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>pepe<span style="color:#f92672">);</span>
 
 datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>elmer<span style="color:#f92672">);</span>
-</code></pre></div><p>As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and save.  Morphia
-takes care of saving the keys in Elmer&rsquo;s document that refer to Daffy and Pepé.  Updating data in MongoDB is as simple as updating your
-Java objects and then calling <strong>datastore.save()</strong> with them again.  For bulk updates (e.g., everyone gets a raise!) this is not the most
-efficient way of doing updates.  It is possible to update directly in the database without having to pull in every document, convert to
-Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see
+</code></pre></div><p>As you can see, we just need to create and save the other Employees then we can add them to the direct reports list and save.  Morphia 
+takes care of saving the keys in Elmer&rsquo;s document that refer to Daffy and Pepé.  Updating data in MongoDB is as simple as updating your 
+Java objects and then calling <strong>datastore.save()</strong> with them again.  For bulk updates (e.g., everyone gets a raise!) this is not the most 
+efficient way of doing updates.  It is possible to update directly in the database without having to pull in every document, convert to 
+Java objects, update, convert back to a document, and write back to MongoDB.  But in order to show you that piece, first we need to see 
 how to query.</p>
 <h2 id="querying">Querying</h2>
-<p>Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia
+<p>Morphia attempts to make your queries as type safe as possible.  All of the details of converting your data are handled by Morphia 
 directly and only rarely do you need to take additional action.  As with everything else, <strong>Datastore</strong> is where we start:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> Query<span style="color:#f92672">&lt;</span>Employee<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Employee<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
 <span style="color:#66d9ef">final</span> List<span style="color:#f92672">&lt;</span>Employee<span style="color:#f92672">&gt;</span> employees <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">();</span>
-</code></pre></div><p>This is a basic Morphia query.  Here, we&rsquo;re telling the <strong>Datastore</strong> to create a query that&rsquo;s been typed to <strong>Employee</strong>.  In this
-case, we&rsquo;re fetching every <strong>Employee</strong> in to a <strong>List</strong>.  For very large query results, this could very well be too much to fit in to
-memory.  For this simple example, using <strong>asList()</strong> is fine but in practice <strong>fetch()</strong> is usually the more appropriate choice.  Most queries
+</code></pre></div><p>This is a basic Morphia query.  Here, we&rsquo;re telling the <strong>Datastore</strong> to create a query that&rsquo;s been typed to <strong>Employee</strong>.  In this 
+case, we&rsquo;re fetching every <strong>Employee</strong> in to a <strong>List</strong>.  For very large query results, this could very well be too much to fit in to 
+memory.  For this simple example, using <strong>asList()</strong> is fine but in practice <strong>fetch()</strong> is usually the more appropriate choice.  Most queries 
 will, of course, want to filter the data in some way. There are two ways of doing this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">underpaid <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Employee<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
                      <span style="color:#f92672">.</span><span style="color:#a6e22e">field</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;salary&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">lessThanOrEq</span><span style="color:#f92672">(</span>30000<span style="color:#f92672">)</span>
                      <span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">();</span>
-</code></pre></div><p>The <strong>field()</strong> method here is used to filter on the named field and returns an instance of an interface with a number of methods to build
+</code></pre></div><p>The <strong>field()</strong> method here is used to filter on the named field and returns an instance of an interface with a number of methods to build 
 a query.  This approach is helpful if compile-time checking is needed.  Between javac failing on missing methods and IDE auto-completion,
 query building can be done quite safely.</p>
-<p>The other approach uses the <strong>filter()</strong> method which is a little more free form and succinct than <strong>field()</strong>.  Here we can embed
-certain operators in the query string.  While this is less verbose than the alternative, it does leave more things in the string to
+<p>The other approach uses the <strong>filter()</strong> method which is a little more free form and succinct than <strong>field()</strong>.  Here we can embed 
+certain operators in the query string.  While this is less verbose than the alternative, it does leave more things in the string to 
 validate and potentially get wrong:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">List<span style="color:#f92672">&lt;</span>Employee<span style="color:#f92672">&gt;</span> underpaid <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Employee<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
                                     <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;salary &lt;=&#34;</span><span style="color:#f92672">,</span> 30000<span style="color:#f92672">)</span>
                                     <span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">();</span>
-</code></pre></div><p>Either query works.  It comes down to a question of preference in most cases.  In either approach, Morphia will validate that there is a
-field called <strong>salary</strong> on the <strong>Employee</strong> class.  If you happen to have mapped that field such that the name in the database doesn&rsquo;t match
+</code></pre></div><p>Either query works.  It comes down to a question of preference in most cases.  In either approach, Morphia will validate that there is a 
+field called <strong>salary</strong> on the <strong>Employee</strong> class.  If you happen to have mapped that field such that the name in the database doesn&rsquo;t match 
 the Java field, Morphia can use either form and will validate against either name.</p>
 <h2 id="updates">Updates</h2>
-<p>Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set
+<p>Now that we can query, however simply, we can turn to in-database updates.  These updates take two components: a query, and a set 
 of update operations.  In this example, we&rsquo;ll find all the underpaid employees and give them a raise of 10000.  The first step is to create
 the query to find all the underpaid employees.  This is one we&rsquo;ve already seen:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> Query<span style="color:#f92672">&lt;</span>Employee<span style="color:#f92672">&gt;</span> underPaidQuery <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Employee<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
@@ -609,19 +609,19 @@ the query to find all the underpaid employees.  This is one we&rsquo;ve already 
 </code></pre></div><p>To define how we want to update the documents matched by this query, we create an <strong>UpdateOperations</strong> instance:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> UpdateOperations<span style="color:#f92672">&lt;</span>Employee<span style="color:#f92672">&gt;</span> updateOperations <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Employee<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
                                                    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;salary&#34;</span><span style="color:#f92672">,</span> 10000<span style="color:#f92672">);</span>
-</code></pre></div><p>There are many operations on this class but, in this case, we&rsquo;re only updating the <strong>salary</strong> field by 10000.  This corresponds to the
+</code></pre></div><p>There are many operations on this class but, in this case, we&rsquo;re only updating the <strong>salary</strong> field by 10000.  This corresponds to the 
 <a href="http://docs.mongodb.org/manual/reference/operator/update/inc/
 "><strong>$inc</strong></a> operator.  There&rsquo;s one last step involved here:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> UpdateResults results <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>underPaidQuery<span style="color:#f92672">,</span> updateOperations<span style="color:#f92672">);</span>
-</code></pre></div><p>This line executes the update in the database without having to pull in however many documents are matched by the query.  The
+</code></pre></div><p>This line executes the update in the database without having to pull in however many documents are matched by the query.  The 
 <strong>UpdateResults</strong> instance returned will contain various statistics about the update operation.</p>
 <h2 id="removes">Removes</h2>
-<p>After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and
+<p>After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and 
 then tell the <strong>Datastore</strong> to delete them:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> Query<span style="color:#f92672">&lt;</span>Employee<span style="color:#f92672">&gt;</span> overPaidQuery <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Employee<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
                                                 <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;salary &gt;&#34;</span><span style="color:#f92672">,</span> 100000<span style="color:#f92672">);</span>
 datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>overPaidQuery<span style="color:#f92672">);</span>
-</code></pre></div><p>There are a couple of variations on <strong>delete()</strong> but this is probably the most common usage.  If you already have an object in hand, there
+</code></pre></div><p>There are a couple of variations on <strong>delete()</strong> but this is probably the most common usage.  If you already have an object in hand, there 
 is a <strong>delete</strong> that can take that reference and delete it.  There is more information in the <a href="/javadoc">javadoc</a>.</p>
 
 
@@ -891,20 +891,20 @@ is a <strong>delete</strong> that can take that reference and delete it.  There 
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.4.1/js/clipboard.min.js?1583685613"></script>
-    <script src="/1.4.1/js/perfect-scrollbar.min.js?1583685613"></script>
-    <script src="/1.4.1/js/perfect-scrollbar.jquery.min.js?1583685613"></script>
-    <script src="/1.4.1/js/jquery.sticky.js?1583685613"></script>
-    <script src="/1.4.1/js/featherlight.min.js?1583685613"></script>
-    <script src="/1.4.1/js/html5shiv-printshiv.min.js?1583685613"></script>
-    <script src="/1.4.1/js/highlight.pack.js?1583685613"></script>
+    <script src="/1.4.1/js/clipboard.min.js?1583684673"></script>
+    <script src="/1.4.1/js/perfect-scrollbar.min.js?1583684673"></script>
+    <script src="/1.4.1/js/perfect-scrollbar.jquery.min.js?1583684673"></script>
+    <script src="/1.4.1/js/jquery.sticky.js?1583684673"></script>
+    <script src="/1.4.1/js/featherlight.min.js?1583684673"></script>
+    <script src="/1.4.1/js/html5shiv-printshiv.min.js?1583684673"></script>
+    <script src="/1.4.1/js/highlight.pack.js?1583684673"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.4.1/js/modernizr.custom.71422.js?1583685613"></script>
-    <script src="/1.4.1/js/learn.js?1583685613"></script>
-    <script src="/1.4.1/js/hugo-learn.js?1583685613"></script>
+    <script src="/1.4.1/js/modernizr.custom.71422.js?1583684673"></script>
+    <script src="/1.4.1/js/learn.js?1583684673"></script>
+    <script src="/1.4.1/js/hugo-learn.js?1583684673"></script>
 
-    <link href="/1.4.1/mermaid/mermaid.css?1583685613" type="text/css" rel="stylesheet" />
-    <script src="/1.4.1/mermaid/mermaid.js?1583685613"></script>
+    <link href="/1.4.1/mermaid/mermaid.css?1583684673" type="text/css" rel="stylesheet" />
+    <script src="/1.4.1/mermaid/mermaid.js?1583684673"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

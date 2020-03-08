@@ -12,17 +12,17 @@
     <title>Updating :: Morphia</title>
 
     
-    <link href="/1.5.8/css/nucleus.css?1583685553" rel="stylesheet">
-    <link href="/1.5.8/css/fontawesome-all.min.css?1583685553" rel="stylesheet">
-    <link href="/1.5.8/css/hybrid.css?1583685553" rel="stylesheet">
-    <link href="/1.5.8/css/featherlight.min.css?1583685553" rel="stylesheet">
-    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583685553" rel="stylesheet">
-    <link href="/1.5.8/css/auto-complete.css?1583685553" rel="stylesheet">
-    <link href="/1.5.8/css/theme.css?1583685553" rel="stylesheet">
-    <link href="/1.5.8/css/hugo-theme.css?1583685553" rel="stylesheet">
+    <link href="/1.5.8/css/nucleus.css?1583684689" rel="stylesheet">
+    <link href="/1.5.8/css/fontawesome-all.min.css?1583684689" rel="stylesheet">
+    <link href="/1.5.8/css/hybrid.css?1583684689" rel="stylesheet">
+    <link href="/1.5.8/css/featherlight.min.css?1583684689" rel="stylesheet">
+    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583684689" rel="stylesheet">
+    <link href="/1.5.8/css/auto-complete.css?1583684689" rel="stylesheet">
+    <link href="/1.5.8/css/theme.css?1583684689" rel="stylesheet">
+    <link href="/1.5.8/css/hugo-theme.css?1583684689" rel="stylesheet">
     
 
-    <script src="/1.5.8/js/jquery-2.x.min.js?1583685553"></script>
+    <script src="/1.5.8/js/jquery-2.x.min.js?1583684689"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -525,13 +525,13 @@
 <p>There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.</p>
 <h2 id="updating-on-the-server">Updating (on the server)</h2>
 <p>The update method on <a href="/1.5.8/javadoc?dev/morphia/Datastore.html
-">Datastore</a> is used to issue a command to the server to change
-existing documents.  The effects of the update command are defined via
+">Datastore</a> is used to issue a command to the server to change 
+existing documents.  The effects of the update command are defined via 
 <a href="/1.5.8/javadoc?dev/morphia/query/UpdateOperations.html
 ">UpdateOperations</a> methods.</p>
 <h2 id="the-field-expression">The Field Expression</h2>
-<p>The field expression, used by all update operations,  can be either a single field name or any dot-notation form (for embedded
-elements). The positional operator ($) can also be used in the in the field expression for array updates.  To illustrate, consider the
+<p>The field expression, used by all update operations,  can be either a single field name or any dot-notation form (for embedded 
+elements). The positional operator ($) can also be used in the in the field expression for array updates.  To illustrate, consider the 
 entity here:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hotels&#34;</span><span style="color:#f92672">)</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hotel</span>
@@ -614,9 +614,9 @@ be unique, use <code>addToSet()</code> instead:</p>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">addToSet</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">,</span> 11<span style="color:#f92672">);</span>
 datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-</code></pre></div><p><code>push()</code> and <code>addToSet()</code> can take either single values or a <code>List</code> of values.  The <code>push()</code> methods can also optionally take a
+</code></pre></div><p><code>push()</code> and <code>addToSet()</code> can take either single values or a <code>List</code> of values.  The <code>push()</code> methods can also optionally take a 
 <a href="/1.5.8/javadoc?dev/morphia/query/PushOptions.html
-">PushOptions</a> instance allowing for tweaking how the values are added to the
+">PushOptions</a> instance allowing for tweaking how the values are added to the 
 list.  See <a href="http://docs.mongodb.org/manual/reference/operator/update/push/#modifiers
 ">the manual</a> for more information about the various modifiers
 available.</p>
@@ -1017,20 +1017,20 @@ datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update<
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.8/js/clipboard.min.js?1583685553"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583685553"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583685553"></script>
-    <script src="/1.5.8/js/jquery.sticky.js?1583685553"></script>
-    <script src="/1.5.8/js/featherlight.min.js?1583685553"></script>
-    <script src="/1.5.8/js/html5shiv-printshiv.min.js?1583685553"></script>
-    <script src="/1.5.8/js/highlight.pack.js?1583685553"></script>
+    <script src="/1.5.8/js/clipboard.min.js?1583684689"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583684689"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583684689"></script>
+    <script src="/1.5.8/js/jquery.sticky.js?1583684689"></script>
+    <script src="/1.5.8/js/featherlight.min.js?1583684689"></script>
+    <script src="/1.5.8/js/html5shiv-printshiv.min.js?1583684689"></script>
+    <script src="/1.5.8/js/highlight.pack.js?1583684689"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.8/js/modernizr.custom.71422.js?1583685553"></script>
-    <script src="/1.5.8/js/learn.js?1583685553"></script>
-    <script src="/1.5.8/js/hugo-learn.js?1583685553"></script>
+    <script src="/1.5.8/js/modernizr.custom.71422.js?1583684689"></script>
+    <script src="/1.5.8/js/learn.js?1583684689"></script>
+    <script src="/1.5.8/js/hugo-learn.js?1583684689"></script>
 
-    <link href="/1.5.8/mermaid/mermaid.css?1583685553" type="text/css" rel="stylesheet" />
-    <script src="/1.5.8/mermaid/mermaid.js?1583685553"></script>
+    <link href="/1.5.8/mermaid/mermaid.css?1583684689" type="text/css" rel="stylesheet" />
+    <script src="/1.5.8/mermaid/mermaid.js?1583684689"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

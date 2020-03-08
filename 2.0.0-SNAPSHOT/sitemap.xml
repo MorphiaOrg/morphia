@@ -50,10 +50,6 @@
   </url>
   
   <url>
-    <loc>/2.0.0-SNAPSHOT/guides/jrebel/</loc>
-  </url>
-  
-  <url>
     <loc>/2.0.0-SNAPSHOT/guides/lifecyclemethods/</loc>
   </url>
   
@@ -75,6 +71,10 @@
   
   <url>
     <loc>/2.0.0-SNAPSHOT/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/textsearch/</loc>
   </url>
   
   <url>
