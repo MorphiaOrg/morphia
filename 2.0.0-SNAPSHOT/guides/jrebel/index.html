@@ -9,20 +9,20 @@
 
     <link rel="shortcut icon" href="/2.0.0-SNAPSHOT/images/favicon.png" type="image/x-icon" />
 <link rel="icon" href="/2.0.0-SNAPSHOT/images/favicon.png" type="image/x-icon" />
-    <title>Text Search :: Morphia</title>
+    <title>JRebel :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583684641" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583684641" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583724471" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583724471" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583724471" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583724471" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583724471" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583724471" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583724471" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583724471" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583684641"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583724471"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -84,7 +84,7 @@
 </style>
 
   </head>
-  <body class="" data-url="/2.0.0-SNAPSHOT/guides/textsearch/">
+  <body class="" data-url="/2.0.0-SNAPSHOT/guides/jrebel/">
     <nav id="sidebar" class="">
 
 
@@ -282,6 +282,25 @@
  
   
     
+      <li data-nav-id="/2.0.0-SNAPSHOT/guides/jrebel/" title="JRebel" class="dd-item active">
+        <a href="/2.0.0-SNAPSHOT/guides/jrebel/">
+        JRebel
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
       <li data-nav-id="/2.0.0-SNAPSHOT/guides/lifecyclemethods/" title="Life Cycle Methods" class="dd-item ">
         <a href="/2.0.0-SNAPSHOT/guides/lifecyclemethods/">
         Life Cycle Methods
@@ -342,25 +361,6 @@
       <li data-nav-id="/2.0.0-SNAPSHOT/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
         <a href="/2.0.0-SNAPSHOT/guides/schemavalidation/">
         Schema Validation
-        
-        </a>
-    </li>
-     
-  
- 
-
-            
-          
-            
-            
-
-
- 
-  
-    
-      <li data-nav-id="/2.0.0-SNAPSHOT/guides/textsearch/" title="Text Search" class="dd-item active">
-        <a href="/2.0.0-SNAPSHOT/guides/textsearch/">
-        Text Search
         
         </a>
     </li>
@@ -496,7 +496,7 @@
             
           
           
-            <a href='/2.0.0-SNAPSHOT/'>Morphia</a> > <a href='/2.0.0-SNAPSHOT/guides/'>Reference Guides</a> > Text Search
+            <a href='/2.0.0-SNAPSHOT/'>Morphia</a> > <a href='/2.0.0-SNAPSHOT/guides/'>Reference Guides</a> > JRebel
           
          
           
@@ -510,7 +510,13 @@
     <div class="wrapper">
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#text-searching">Text Searching</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#using">Using</a></li>
+    <li><a href="#dependencies">Dependencies</a>
+      <ul>
+        <li><a href="#maven">Maven</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
     </div>
@@ -524,59 +530,38 @@
         
         <div id="body-inner">
           
-            <h1>Text Search</h1>
+            <h1>JRebel</h1>
           
 
         
 
 
-<h2 id="text-searching">Text Searching</h2>
-<p>Morphia also supports MongoDB&rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
-have a <a href="http://docs.mongodb.org/manual//core/index-text/
-">text index</a> defined first.  Using Morphia that definition would look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Indexes</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Index</span><span style="color:#f92672">(</span>fields <span style="color:#f92672">=</span> <span style="color:#a6e22e">@Field</span><span style="color:#f92672">(</span>value <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;$**&#34;</span><span style="color:#f92672">,</span> type <span style="color:#f92672">=</span> IndexType<span style="color:#f92672">.</span><span style="color:#a6e22e">TEXT</span><span style="color:#f92672">)))</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Greeting</span> <span style="color:#f92672">{</span>
-    <span style="color:#a6e22e">@Id</span>
-    <span style="color:#66d9ef">private</span> ObjectId id<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> String value<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> String language<span style="color:#f92672">;</span>
-
-    <span style="color:#f92672">...</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/query/TestTextSearching.java
-">test</a> does:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">mapper<span style="color:#f92672">.</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>Greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">ensureIndexes</span><span style="color:#f92672">();</span>
-
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good morning&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good afternoon&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good night&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good riddance&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;guten Morgen&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;german&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;guten Tag&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;german&#34;</span><span style="color:#f92672">)),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;gute Nacht&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;german&#34;</span><span style="color:#f92672">));</span>
-
-List<span style="color:#f92672">&lt;</span>Greeting<span style="color:#f92672">&gt;</span> good <span style="color:#f92672">=</span> getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-                             <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>text<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good&#34;</span><span style="color:#f92672">))</span>
-                             <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
-                                          <span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>ascending<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;_id&#34;</span><span style="color:#f92672">)))</span>
-                             <span style="color:#f92672">.</span><span style="color:#a6e22e">toList</span><span style="color:#f92672">();</span>
-Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertEquals</span><span style="color:#f92672">(</span>4<span style="color:#f92672">,</span> good<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
-</code></pre></div><p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the word
-&ldquo;good&rdquo; in any document.  Using the method <code>text()</code> found on the <code>Filters</code> class, we can then query for all instances of our search term.  We
-created four such documents and our query returns exactly those four.</p>
-<p>If you would like to restrict your search to a specific language, that can also be specified as part of the query:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-         <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>text<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good&#34;</span><span style="color:#f92672">)</span>
-                     <span style="color:#f92672">.</span><span style="color:#a6e22e">language</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">))</span>
-         <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
-                      <span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>ascending<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;_id&#34;</span><span style="color:#f92672">)))</span>
-         <span style="color:#f92672">.</span><span style="color:#a6e22e">toList</span><span style="color:#f92672">();</span>
-</code></pre></div><p>There are some optional parameters in addition to the language you can specify as part of your text search.  Those paramaters are
-documented on the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/query/experimental/filters/TextSearchFilter.html
-">TextSearchFilter</a> class.</p>
-
+<p>This is a simple extension to Morphia to allow classes to be re-mapped once they are reloaded by JRebel.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Of course you need to run JRebel (<a href="http://zeroturnaround.com">http://zeroturnaround.com</a>) for this extension to be useful.
+On top of that, you need to tell JRebel about the Plugin. In order to do that, add the following two new Elements to the VM startup command:</p>
+<pre><code>-Drebel.morphia=true -Drebel.plugins=/path/to/morphia-jrebel-plug-1.0-SNAPSHOT.jar
+</code></pre><p>If you´re using Eclipse with the JRebel Plugin this can be skipped and instead configured in the Agent Settings GUI.</p>
+<ul>
+<li>Choose Window-&gt;Prefs-&gt;JRebel</li>
+<li>Click Agent Settings</li>
+<li>Choose Plugins Tab</li>
+<li>Click custom plugins</li>
+<li>add the plugin jar, OK</li>
+<li>Choose custom, add key &ldquo;rebel.morphia&rdquo; with value of &ldquo;true&rdquo;</li>
+</ul>
+<h2 id="using">Using</h2>
+<p>Register the Extension to your Morphia instance</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> JRebelExtension<span style="color:#f92672">(</span>morphia<span style="color:#f92672">);</span>
+</code></pre></div><h2 id="dependencies">Dependencies</h2>
+<h3 id="maven">Maven</h3>
+<p>If you use Maven to manage your project, you can reference the Extension as a dependency:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>dev.morphia.morphia<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>jrebel-plug<span style="color:#f92672">&lt;/artifactId&gt;</span>
+    <span style="color:#f92672">&lt;version&gt;</span>2.0.0-SNAPSHOT<span style="color:#f92672">&lt;/version&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div>
 
 <footer class=" footline" >
 	
@@ -746,6 +731,58 @@ documented on the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/query/experimenta
             
                 
                     
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
                 
                 
 
@@ -810,58 +847,6 @@ documented on the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/query/experimenta
             
                 
                     
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                        
-                        
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
                 
                 
 
@@ -883,10 +868,10 @@ documented on the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/query/experimenta
 
 
         
-            <a class="nav nav-prev" href="/2.0.0-SNAPSHOT/guides/schemavalidation/" title="Schema Validation"> <i class="fas fa-chevron-left"></i></a>
+            <a class="nav nav-prev" href="/2.0.0-SNAPSHOT/guides/indexing/" title="Indexing"> <i class="fas fa-chevron-left"></i></a>
         
         
-            <a class="nav nav-next" href="/2.0.0-SNAPSHOT/guides/transactions/" title="Transactions" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
+            <a class="nav nav-next" href="/2.0.0-SNAPSHOT/guides/lifecyclemethods/" title="Life Cycle Methods" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
         
     </div>
 
@@ -895,20 +880,20 @@ documented on the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/query/experimenta
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583684641"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583724471"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583684641"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583684641"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583724471"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583724471"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583684641" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583684641"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583724471" type="text/css" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583724471"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
