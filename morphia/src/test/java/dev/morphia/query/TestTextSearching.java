@@ -9,7 +9,6 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.utils.IndexType;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -18,7 +17,6 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.util.Arrays.asList;
 
-@Ignore("text searches need work")
 public class TestTextSearching extends TestBase {
     @Test
     public void testTextSearch() {
@@ -86,9 +84,8 @@ public class TestTextSearching extends TestBase {
 
         List<Book> books = getDs().find(Book.class)
                                   .search("Dante Comedy")
-                                  .order(Meta.textScore("score"))
                                   .execute(new FindOptions()
-                                          .projection().project(Meta.textScore("score")))
+                                               .sort(Meta.textScore("score")))
                                   .toList();
         Assert.assertEquals(3, books.size());
         Assert.assertEquals("Divine Comedy", books.get(0).title);
@@ -107,9 +104,8 @@ public class TestTextSearching extends TestBase {
 
         List<Book> books = getDs().find(Book.class)
                                   .search("Dante")
-                                  .order(Meta.textScore())
                                   .execute(new FindOptions()
-                                               .projection().project(Meta.textScore()))
+                                               .sort(Meta.textScore("score")))
                                   .toList();
         Assert.assertEquals(3, books.size());
         Assert.assertEquals("Dante", books.get(0).author);
@@ -128,9 +124,8 @@ public class TestTextSearching extends TestBase {
 
         List<Book> books = getDs().find(Book.class)
                                   .search("Dante")
-                                  .order(Meta.textScore("score"))
                                   .execute(new FindOptions()
-                                               .projection().project(Meta.textScore("score")))
+                                               .sort(Meta.textScore("score")))
                                   .toList();
         Assert.assertEquals(3, books.size());
         for (Book book : books) {

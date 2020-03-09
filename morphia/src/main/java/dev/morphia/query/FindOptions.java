@@ -108,7 +108,9 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
             Document mapped = new Document();
             MappedClass mappedClass = mapper.getMappedClass(type);
             for (final Entry<String, Object> entry : sort.entrySet()) {
-                mapped.put(new PathTarget(mapper, mappedClass, entry.getKey()).translatedPath(), entry.getValue());
+                Object value = entry.getValue();
+                boolean metaScore = value instanceof Document && ((Document) value).get("$meta") != null;
+                mapped.put(new PathTarget(mapper, mappedClass, entry.getKey(), !metaScore).translatedPath(), value);
             }
             iterable.sort(mapped);
         }
@@ -692,6 +694,18 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     public FindOptions skip(final int skip) {
         this.skip = skip;
         return this;
+    }
+
+    /**
+     * Sets to the sort to use
+     *
+     * @param meta the meta data to sort by
+     * @return this
+     * @since 2.0
+     */
+    public FindOptions sort(final Meta meta) {
+        projection().project(meta);
+        return sort(meta.toDatabase());
     }
 
     /**
