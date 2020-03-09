@@ -11,6 +11,8 @@ import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 public abstract class DiscriminatorFunction {
     /**
      * Defines a function to use the class name for the discriminator value
+     *
+     * @return the function
      */
     public static DiscriminatorFunction className() {
         return new DiscriminatorFunction() {
@@ -21,6 +23,11 @@ public abstract class DiscriminatorFunction {
         };
     }
 
+    /**
+     * Defines a function to use the lowercase class name for the discriminator value
+     *
+     * @return the function
+     */
     public static DiscriminatorFunction lowerClassName() {
         return new DiscriminatorFunction() {
             @Override
@@ -30,6 +37,11 @@ public abstract class DiscriminatorFunction {
         };
     }
 
+    /**
+     * Defines a function to use the lowercase simple class name for the discriminator value
+     *
+     * @return the function
+     */
     public static DiscriminatorFunction lowerSimpleName() {
         return new DiscriminatorFunction() {
             @Override
@@ -39,6 +51,11 @@ public abstract class DiscriminatorFunction {
         };
     }
 
+    /**
+     * Defines a function to use the simple class name for the discriminator value
+     *
+     * @return the function
+     */
     public static DiscriminatorFunction simpleName() {
         return new DiscriminatorFunction() {
             @Override

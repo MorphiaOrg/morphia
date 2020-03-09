@@ -39,10 +39,6 @@ public class MapperOptions {
     private ClassLoader classLoader;
     private QueryFactory queryFactory;
 
-    {
-        new LegacyQueryFactory();
-    }
-
     private MapperOptions(final Builder builder) {
         ignoreFinals = builder.ignoreFinals;
         storeNulls = builder.storeNulls;
@@ -345,6 +341,10 @@ public class MapperOptions {
             return this;
         }
 
+        /**
+         * @param queryFactory the query factory to use when creating queries
+         * @return this
+         */
         public Builder queryFactory(final QueryFactory queryFactory) {
             this.queryFactory = queryFactory;
             return this;
