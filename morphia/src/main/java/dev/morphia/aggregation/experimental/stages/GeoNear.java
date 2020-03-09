@@ -10,7 +10,7 @@ import dev.morphia.query.Query;
  */
 public class GeoNear extends Stage {
     private Point point;
-    private double[][] coordinates;
+    private double[] coordinates;
     private String distanceField;
     private Boolean spherical;
     private Number maxDistance;
@@ -29,7 +29,7 @@ public class GeoNear extends Stage {
         super("$geoNear");
     }
 
-    protected GeoNear(final double[][] coordinates) {
+    protected GeoNear(final double[] coordinates) {
         this();
         this.coordinates = coordinates;
     }
@@ -50,7 +50,7 @@ public class GeoNear extends Stage {
      * @param coordinates the center point coordinates
      * @return the new stage
      */
-    public static GeoNear to(final double[][] coordinates) {
+    public static GeoNear to(final double[] coordinates) {
         return new GeoNear(coordinates);
     }
 
@@ -81,7 +81,7 @@ public class GeoNear extends Stage {
      * @return the coordinates
      * @morphia.internal
      */
-    public double[][] getCoordinates() {
+    public double[] getCoordinates() {
         return coordinates;
     }
 

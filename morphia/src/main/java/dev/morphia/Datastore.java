@@ -77,15 +77,6 @@ public interface Datastore {
     }
 
     /**
-     * Find all instances by type
-     *
-     * @param type the class to use for mapping the results
-     * @param <T>  the type to query
-     * @return the query
-     */
-    <T> Query<T> find(Class<T> type);
-
-    /**
      * The builder for all update operations
      *
      * @param clazz the type to update
@@ -98,13 +89,6 @@ public interface Datastore {
     default <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
         return new UpdateOpsImpl<>(clazz, getMapper());
     }
-
-    /**
-     * @return the Mapper used by this Datastore
-     * @morphia.internal
-     * @since 1.5
-     */
-    Mapper getMapper();
 
     /**
      * Deletes entities based on the query
@@ -188,6 +172,15 @@ public interface Datastore {
     <T> void ensureIndexes(Class<T> clazz);
 
     /**
+     * Find all instances by type
+     *
+     * @param type the class to use for mapping the results
+     * @param <T>  the type to query
+     * @return the query
+     */
+    <T> Query<T> find(Class<T> type);
+
+    /**
      * Creates a "typeless" query suitable for using in aggregation pipelines.
      *
      * @return the query
@@ -238,6 +231,13 @@ public interface Datastore {
         return query.modify(operations).execute(new FindAndModifyOptions()
                                                     .returnDocument(ReturnDocument.AFTER));
     }
+
+    /**
+     * @param configurable the configurable
+     * @return any session found first on the configurable then on this
+     * @morphia.internal
+     */
+    ClientSession findSession(SessionConfigurable configurable);
 
     /**
      * Find the given entities (by id); shorthand for {@code find("_id in", ids)}
@@ -321,18 +321,36 @@ public interface Datastore {
     <T> Key<T> getKey(T entity);
 
     /**
+     * @param options the options used when requesting logging
+     * @return the logged query
+     * @morphia.internal
+     * @since 2.0
+     */
+    String getLoggedQuery(FindOptions options);
+
+    /**
+     * @return the Mapper used by this Datastore
+     * @morphia.internal
+     * @since 1.5
+     */
+    Mapper getMapper();
+
+    /**
      * @return the current {@link QueryFactory}.
      * @see QueryFactory
      */
     QueryFactory getQueryFactory();
 
     /**
-     * Replaces the current {@link QueryFactory} with the given value.
+     * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
+     * latest persisted state while preserving the entity's reference and object identity.
      *
-     * @param queryFactory the QueryFactory to use
-     * @see QueryFactory
+     * @param entity the entity to refresh
+     * @param <T>    the entity type
+     * @morphia.experimental
+     * @since 2.0
      */
-    void setQueryFactory(QueryFactory queryFactory);
+    <T> void refresh(T entity);
 
     /**
      * Returns the session this datastore is attached to or null if none is attached.
@@ -384,6 +402,15 @@ public interface Datastore {
      * @return the query
      */
     <T> Query<T> queryByExample(T example);
+
+    /**
+     * Replaces the current {@link QueryFactory} with the given value.
+     *
+     * @param queryFactory the QueryFactory to use
+     * @morphia.internal
+     * @see QueryFactory
+     */
+    void setQueryFactory(QueryFactory queryFactory);
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -492,13 +519,6 @@ public interface Datastore {
     MorphiaSession startSession(ClientSessionOptions options);
 
     /**
-     * @param configurable the configurable
-     * @return any session found first on the configurable then on this
-     * @morphia.internal
-     */
-    ClientSession findSession(SessionConfigurable configurable);
-
-    /**
      * Updates all entities found with the operations; this is an atomic operation per entity
      *
      * @param <T>        the type of the entity
@@ -551,23 +571,4 @@ public interface Datastore {
      * @since 2.0
      */
     <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);
-
-    /**
-     * @param options the options used when requesting logging
-     * @return the logged query
-     * @morphia.internal
-     * @since 2.0
-     */
-    String getLoggedQuery(FindOptions options);
-
-    /**
-     * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
-     * latest persisted state while preserving the entity's reference and object identity.
-     *
-     * @param entity the entity to refresh
-     * @param <T>    the entity type
-     * @morphia.experimental
-     * @since 2.0
-     */
-    <T> void refresh(T entity);
 }

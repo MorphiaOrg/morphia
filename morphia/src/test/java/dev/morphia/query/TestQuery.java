@@ -330,7 +330,9 @@ public class TestQuery extends TestBase {
 
         Query<Rectangle> q = getDs().find(Rectangle.class);
         q.filter(
-            and(eq("width", 10), eq("height", 1)));
+            and(
+                eq("width", 10),
+                eq("height", 1)));
         FindOptions options = new FindOptions()
                                   .logQuery();
         List<Rectangle> list = q.execute(options)

@@ -123,10 +123,9 @@ public class BucketAutoOptions {
     }
 
     /**
-     *
      * @return granurality for the current bucketauto stage
      */
-    public Granularity getGranurality() {
+    public Granularity getGranularity() {
         return granularity;
     }
 

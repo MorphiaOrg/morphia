@@ -31,7 +31,7 @@ public class Lookup extends Stage {
     }
 
     protected Lookup(final String from) {
-        super(from);
+        super("$lookup");
         this.from = from;
     }
 

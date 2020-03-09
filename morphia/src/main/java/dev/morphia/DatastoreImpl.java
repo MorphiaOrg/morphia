@@ -28,7 +28,6 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateException;
@@ -63,7 +62,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final MongoClient mongoClient;
     private final Mapper mapper;
 
-    private volatile QueryFactory queryFactory = new LegacyQueryFactory();
+    private QueryFactory queryFactory;
 
     protected DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
         this.mongoClient = mongoClient;
@@ -72,6 +71,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         this.database = database
                             .withCodecRegistry(mapper.getCodecRegistry());
+        this.queryFactory = options.getQueryFactory();
     }
 
     /**

@@ -18,18 +18,23 @@ package dev.morphia.aggregation;
 
 import com.mongodb.AggregationOptions;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.BucketGranularity;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.Aggregation;
+import dev.morphia.aggregation.experimental.stages.AutoBucket;
+import dev.morphia.aggregation.experimental.stages.Bucket;
+import dev.morphia.aggregation.experimental.stages.Lookup;
+import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.geo.model.City;
 import dev.morphia.geo.PlaceWithLegacyCoords;
-import dev.morphia.query.BucketAutoOptions;
+import dev.morphia.geo.model.City;
 import dev.morphia.query.BucketOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -49,6 +54,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.mongodb.AggregationOptions.builder;
+import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.Accumulator.accumulator;
 import static dev.morphia.aggregation.Group.addToSet;
 import static dev.morphia.aggregation.Group.grouping;
@@ -59,7 +65,13 @@ import static dev.morphia.aggregation.Projection.divide;
 import static dev.morphia.aggregation.Projection.expression;
 import static dev.morphia.aggregation.Projection.projection;
 import static dev.morphia.aggregation.Projection.size;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static dev.morphia.query.Sort.ascending;
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -68,26 +80,162 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-@Ignore("aggregation needs work")
 public class AggregationTest extends TestBase {
+
+    @Test
+    public void testBucketAutoWithGranularity() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 5),
+            new Book("Divine Comedy", "Dante", 7),
+            new Book("Eclogues", "Dante", 40),
+            new Book("The Odyssey", "Homer", 21)));
+
+        Iterator<BooksBucketResult> aggregate = getDs().aggregate(Book.class)
+                                                       .autoBucket(AutoBucket.of()
+                                                                             .groupBy(field("copies"))
+                                                                             .buckets(3)
+                                                                             .granularity(BucketGranularity.POWERSOF2)
+                                                                             .outputField("authors", addToSet(field("author")))
+                                                                             .outputField("count", sum(value(1))))
+                                                       .execute(BooksBucketResult.class);
+        BooksBucketResult result1 = aggregate.next();
+        assertEquals(result1.getId().min, 4);
+        assertEquals(result1.getId().max, 8);
+        assertEquals(result1.getCount(), 2);
+        assertEquals(result1.authors, singleton("Dante"));
+
+        result1 = aggregate.next();
+        assertEquals(result1.getId().min, 8);
+        assertEquals(result1.getId().max, 32);
+        assertEquals(result1.getCount(), 1);
+        assertEquals(result1.authors, singleton("Homer"));
+
+        result1 = aggregate.next();
+        assertEquals(result1.getId().min, 32);
+        assertEquals(result1.getId().max, 64);
+        assertEquals(result1.getCount(), 1);
+        assertEquals(result1.authors, singleton("Dante"));
+        assertFalse(aggregate.hasNext());
+
+    }
+
+    @Test
+    public void testBucketAutoWithoutGranularity() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 5),
+            new Book("Divine Comedy", "Dante", 10),
+            new Book("Eclogues", "Dante", 40),
+            new Book("The Odyssey", "Homer", 21)));
+
+        Iterator<BucketAutoResult> aggregate = getDs().createAggregation(Book.class)
+                                                      .bucketAuto("copies", 2)
+                                                      .aggregate(BucketAutoResult.class);
+        BucketAutoResult result1 = aggregate.next();
+        assertEquals(result1.id.min, 5);
+        assertEquals(result1.id.max, 21);
+        assertEquals(result1.count, 2);
+        result1 = aggregate.next();
+        assertEquals(result1.id.min, 21);
+        assertEquals(result1.id.max, 40);
+        assertEquals(result1.count, 2);
+        assertFalse(aggregate.hasNext());
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testBucketWithBoundariesWithSizeLessThanTwo() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        getDs().createAggregation(Book.class)
+               .bucket("copies", singletonList(10),
+                   new BucketOptions()
+                       .defaultField("test")
+                       .output("count")
+                       .sum(1))
+               .aggregate(BucketResult.class);
+    }
+
+    @Test
+    public void testBucketWithOptions() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        Iterator<BucketResult> aggregate = getDs().createAggregation(Book.class)
+                                                  .bucket("copies", Arrays.asList(1, 5, 10),
+                                                      new BucketOptions()
+                                                          .defaultField("test")
+                                                          .output("count").sum(1))
+                                                  .aggregate(BucketResult.class);
+        BucketResult result1 = aggregate.next();
+        assertEquals(result1.id, "1");
+        assertEquals(result1.count, 3);
+
+        BucketResult result2 = aggregate.next();
+        assertEquals(result2.id, "test");
+        assertEquals(result2.count, 2);
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testBucketWithUnsortedBoundaries() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        getDs().createAggregation(Book.class)
+               .bucket("copies", Arrays.asList(5, 1, 10),
+                   new BucketOptions()
+                       .defaultField("test")
+                       .output("count")
+                       .sum(1))
+               .aggregate(BucketResult.class);
+
+    }
+
+    @Test
+    public void testBucketWithoutOptions() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
+                                                  .bucket(Bucket.of()
+                                                                .groupBy(field("copies"))
+                                                                .boundaries(value(1), value(5), value(12)))
+                                                  .execute(BucketResult.class);
+        BucketResult result1 = aggregate.next();
+        assertEquals(result1.id, "1");
+        assertEquals(result1.count, 3);
+
+        BucketResult result2 = aggregate.next();
+        assertEquals(result2.id, "5");
+        assertEquals(result2.count, 2);
+    }
 
     @Test
     public void testCollation() {
         getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
-        Query query = getDs().find(User.class).field("name").equal("john doe");
-        AggregationPipeline pipeline = getDs()
-                                           .createAggregation(User.class)
-                                           .match(query);
-        Assert.assertEquals(1, count(pipeline.aggregate(User.class)));
+        Query query = getDs().find(User.class).filter(eq("name", "john doe"));
+        Aggregation<User> pipeline = getDs().aggregate(User.class)
+                                            .match(query);
+        Assert.assertEquals(1, count(pipeline.execute(User.class)));
 
-        Assert.assertEquals(2, count(pipeline.aggregate(User.class,
-            builder()
+        Assert.assertEquals(2, count(pipeline.execute(User.class,
+            new dev.morphia.aggregation.experimental.AggregationOptions()
                 .collation(Collation.builder()
                                     .locale("en")
-                                    .collationStrength(
-                                        CollationStrength.SECONDARY)
-                                    .build()).build())));
+                                    .collationStrength(SECONDARY)
+                                    .build()))));
     }
 
     @Test
@@ -101,27 +249,6 @@ public class AggregationTest extends TestBase {
         final Document id = getDocument(group, "$group", "_id");
         Assert.assertEquals(new Document("$month", "$date"), id.get("month"));
         Assert.assertEquals(new Document("$year", "$date"), id.get("year"));
-
-        pipeline.aggregate(User.class);
-    }
-
-    @Test
-    public void testSampleStage() {
-        AggregationPipeline pipeline = getDs()
-                                           .createAggregation(User.class)
-                                           .sample(1);
-        final Document sample = ((AggregationPipelineImpl) pipeline).getStages().get(0);
-        Assert.assertEquals(new Document("size", 1), sample.get("$sample"));
-    }
-
-    @Test
-    public void testNullGroupId() {
-        AggregationPipeline pipeline = getDs()
-                                           .createAggregation(User.class)
-                                           .group(grouping("count", accumulator("$sum", 1)));
-
-        final Document group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
-        Assert.assertNull(group.get("_id"));
 
         pipeline.aggregate(User.class);
     }
@@ -178,12 +305,12 @@ public class AggregationTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
-                                                                  .geoNear(GeoNear.builder("distance")
-                                                                                  .setNear(londonPoint)
-                                                                                  .setSpherical(true)
-                                                                                  .build())
-                                                                  .aggregate(City.class);
+        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().aggregate(City.class)
+                                                                  .geoNear(
+                                                                      to(londonPoint)
+                                                                          .distanceField("distance")
+                                                                          .spherical(true))
+                                                                  .execute(City.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
@@ -208,20 +335,18 @@ public class AggregationTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        Iterator<PlaceWithLegacyCoords> citiesOrderedByDistanceFromLondon = getDs()
-                                                                                .createAggregation(PlaceWithLegacyCoords.class)
-                                                                                .geoNear(GeoNear.builder("distance")
-                                                                                                .setNear(latitude, longitude)
-                                                                                                .setSpherical(false)
-                                                                                                .build())
-                                                                                .aggregate(PlaceWithLegacyCoords.class);
+        Iterator<PlaceWithLegacyCoords> cities = getDs().aggregate(PlaceWithLegacyCoords.class)
+                                                        .geoNear(to(new double[]{latitude, longitude})
+                                                                     .distanceField("distance")
+                                                                     .spherical(false))
+                                                        .execute(PlaceWithLegacyCoords.class);
 
         // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
-        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertTrue(cities.hasNext());
+        Assert.assertEquals(sevilla, cities.next());
+        Assert.assertEquals(london, cities.next());
+        Assert.assertEquals(manchester, cities.next());
+        Assert.assertFalse(cities.hasNext());
     }
 
     @Test
@@ -239,19 +364,38 @@ public class AggregationTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().createAggregation(City.class)
-                                                                  .geoNear(GeoNear.builder("distance")
-                                                                                  .setNear(latitude, longitude)
-                                                                                  .setSpherical(true)
-                                                                                  .build())
-                                                                  .aggregate(City.class);
+        Iterator<City> cities = getDs().aggregate(City.class)
+                                       .geoNear(to(new double[]{latitude, longitude})
+                                                    .distanceField("distance")
+                                                    .spherical(true))
+                                       .execute(City.class);
 
         // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
-        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertTrue(cities.hasNext());
+        Assert.assertEquals(london, cities.next());
+        Assert.assertEquals(manchester, cities.next());
+        Assert.assertEquals(sevilla, cities.next());
+        Assert.assertFalse(cities.hasNext());
+    }
+
+    @Test
+    public void testGroupWithProjection() {
+        AggregationPipeline pipeline =
+            getDs().createAggregation(Author.class)
+                   .group("subjectHash",
+                       grouping("authors", addToSet("fromAddress.address")),
+                       grouping("messageDataSet", grouping("$addToSet",
+                           projection("sentDate", "sentDate"),
+                           projection("messageId", "_id"))),
+                       grouping("messageCount", accumulator("$sum", 1)))
+                   .limit(10)
+                   .skip(0);
+        List<Document> stages = ((AggregationPipelineImpl) pipeline).getStages();
+        Document group = stages.get(0);
+        Document addToSet = getDocument(group, "$group", "messageDataSet", "$addToSet");
+        Assert.assertNotNull(addToSet);
+        Assert.assertEquals(addToSet.get("sentDate"), "$sentDate");
+        Assert.assertEquals(addToSet.get("messageId"), "$_id");
     }
 
     @Test
@@ -277,6 +421,7 @@ public class AggregationTest extends TestBase {
      * Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
      */
     @Test
+    @Ignore("custom collection name support needed")
     public void testLookup() {
         getDs().save(asList(new Order(1, "abc", 12, 2),
             new Order(2, "jkl", 20, 1),
@@ -289,9 +434,13 @@ public class AggregationTest extends TestBase {
             new Inventory(6));
         getDs().save(inventories);
 
-        getDs().createAggregation(Order.class)
-               .lookup("inventory", "item", "sku", "inventoryDocs")
-               .out("lookups", Order.class);
+        getDs().aggregate(Order.class)
+               .lookup(Lookup.from("inventory")
+                             .localField("item")
+                             .foreignField("sku")
+                             .as("inventoryDocs"))
+               .out(Out.to(Lookedup.class))
+               .execute();
         List<Order> lookups = getAds().createQuery("lookups", Order.class)
                                       .execute(new FindOptions()
                                                    .sort(ascending("_id")))
@@ -300,6 +449,18 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(4), lookups.get(2).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(5), lookups.get(2).inventoryDocs.get(1));
+    }
+
+    @Test
+    public void testNullGroupId() {
+        AggregationPipeline pipeline = getDs()
+                                           .createAggregation(User.class)
+                                           .group(grouping("count", accumulator("$sum", 1)));
+
+        final Document group = ((AggregationPipelineImpl) pipeline).getStages().get(0);
+        Assert.assertNull(group.get("_id"));
+
+        pipeline.aggregate(User.class);
     }
 
     @Test
@@ -316,7 +477,10 @@ public class AggregationTest extends TestBase {
                                             .group("author", grouping("books", push("title")))
                                             .out(Author.class, options);
         Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
-        Author author = aggregate.next();
+        Author author;
+        do {
+            author = aggregate.next();
+        } while (!author.name.equals("Homer"));
         Assert.assertEquals("Homer", author.name);
         Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
 
@@ -373,6 +537,15 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testSampleStage() {
+        AggregationPipeline pipeline = getDs()
+                                           .createAggregation(User.class)
+                                           .sample(1);
+        final Document sample = ((AggregationPipelineImpl) pipeline).getStages().get(0);
+        Assert.assertEquals(new Document("size", 1), sample.get("$sample"));
+    }
+
+    @Test
     public void testSizeProjection() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
@@ -412,6 +585,27 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals("Eclogues", book.title);
         Assert.assertEquals("Dante", book.author);
         Assert.assertEquals(2, book.copies.intValue());
+    }
+
+    @Test
+    public void testSortByCount() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+
+        Iterator<SortByCountResult> aggregate = getDs().createAggregation(Book.class)
+                                                       .sortByCount("author").aggregate(SortByCountResult.class);
+        SortByCountResult result1 = aggregate.next();
+        assertEquals(result1.id, "Dante");
+        assertEquals(result1.count, 3);
+
+        SortByCountResult result2 = aggregate.next();
+        assertEquals(result2.id, "Homer");
+        assertEquals(result2.count, 2);
+
     }
 
     @Test
@@ -497,166 +691,6 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testSortByCount() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-
-        Iterator<SortByCountResult> aggregate = getDs().createAggregation(Book.class)
-                                                       .sortByCount("author").aggregate(SortByCountResult.class);
-        SortByCountResult result1 = aggregate.next();
-        assertEquals(result1.id, "Dante");
-        assertEquals(result1.count, 3);
-
-        SortByCountResult result2 = aggregate.next();
-        assertEquals(result2.id, "Homer");
-        assertEquals(result2.count, 2);
-
-    }
-
-    @Test
-    public void testBucketWithoutOptions() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        Iterator<BucketResult> aggregate = getDs().createAggregation(Book.class)
-                                                  .bucket("copies", Arrays.asList(1, 5, 12)).aggregate(BucketResult.class);
-        BucketResult result1 = aggregate.next();
-        assertEquals(result1.id, "1");
-        assertEquals(result1.count, 3);
-
-        BucketResult result2 = aggregate.next();
-        assertEquals(result2.id, "5");
-        assertEquals(result2.count, 2);
-
-    }
-
-    @Test
-    public void testBucketWithOptions() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        Iterator<BucketResult> aggregate = getDs().createAggregation(Book.class)
-                                                  .bucket("copies", Arrays.asList(1, 5, 10),
-                                                      new BucketOptions()
-                                                          .defaultField("test")
-                                                          .output("count").sum(1))
-                                                  .aggregate(BucketResult.class);
-        BucketResult result1 = aggregate.next();
-        assertEquals(result1.id, "1");
-        assertEquals(result1.count, 3);
-
-        BucketResult result2 = aggregate.next();
-        assertEquals(result2.id, "test");
-        assertEquals(result2.count, 2);
-
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testBucketWithUnsortedBoundaries() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        getDs().createAggregation(Book.class)
-               .bucket("copies", Arrays.asList(5, 1, 10),
-                   new BucketOptions()
-                       .defaultField("test")
-                       .output("count")
-                       .sum(1))
-               .aggregate(BucketResult.class);
-
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testBucketWithBoundariesWithSizeLessThanTwo() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        getDs().createAggregation(Book.class)
-               .bucket("copies", singletonList(10),
-                   new BucketOptions()
-                       .defaultField("test")
-                       .output("count")
-                       .sum(1))
-               .aggregate(BucketResult.class);
-    }
-
-
-    @Test
-    public void testBucketAutoWithoutGranularity() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 5),
-            new Book("Divine Comedy", "Dante", 10),
-            new Book("Eclogues", "Dante", 40),
-            new Book("The Odyssey", "Homer", 21)));
-
-        Iterator<BucketAutoResult> aggregate = getDs().createAggregation(Book.class)
-                                                      .bucketAuto("copies", 2)
-                                                      .aggregate(BucketAutoResult.class);
-        BucketAutoResult result1 = aggregate.next();
-        assertEquals(result1.id.min, 5);
-        assertEquals(result1.id.max, 21);
-        assertEquals(result1.count, 2);
-        result1 = aggregate.next();
-        assertEquals(result1.id.min, 21);
-        assertEquals(result1.id.max, 40);
-        assertEquals(result1.count, 2);
-        assertFalse(aggregate.hasNext());
-
-    }
-
-    @Test
-    public void testBucketAutoWithGranularity() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 5),
-            new Book("Divine Comedy", "Dante", 7),
-            new Book("Eclogues", "Dante", 40),
-            new Book("The Odyssey", "Homer", 21)));
-
-        Iterator<BooksBucketResult> aggregate = getDs().createAggregation(Book.class)
-                                                       .bucketAuto("copies", 3,
-                                                           new BucketAutoOptions()
-                                                               .granularity(BucketAutoOptions.Granularity.POWERSOF2)
-                                                               .output("authors")
-                                                               .addToSet("author")
-                                                               .output("count")
-                                                               .sum(1))
-                                                       .aggregate(BooksBucketResult.class);
-        BooksBucketResult result1 = aggregate.next();
-        assertEquals(result1.getId().min, 4);
-        assertEquals(result1.getId().max, 8);
-        assertEquals(result1.getCount(), 2);
-        assertEquals(result1.authors, singleton("Dante"));
-
-        result1 = aggregate.next();
-        assertEquals(result1.getId().min, 8);
-        assertEquals(result1.getId().max, 32);
-        assertEquals(result1.getCount(), 1);
-        assertEquals(result1.authors, singleton("Homer"));
-
-        result1 = aggregate.next();
-        assertEquals(result1.getId().min, 32);
-        assertEquals(result1.getId().max, 64);
-        assertEquals(result1.getCount(), 1);
-        assertEquals(result1.authors, singleton("Dante"));
-        assertFalse(aggregate.hasNext());
-
-    }
-
-    @Test
     public void testUserPreferencesPipeline() {
         final AggregationPipeline pipeline = getDs().createAggregation(Book.class)  /* the class is irrelevant for this test */
                                                     .group("state", Group.grouping("total_pop", sum("pop")))
@@ -673,44 +707,6 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(stages.get(1), match);
     }
 
-    @Test
-    public void testGroupWithProjection() {
-        AggregationPipeline pipeline =
-            getDs().createAggregation(Author.class)
-                   .group("subjectHash",
-                       grouping("authors", addToSet("fromAddress.address")),
-                       grouping("messageDataSet", grouping("$addToSet",
-                           projection("sentDate", "sentDate"),
-                           projection("messageId", "_id"))),
-                       grouping("messageCount", accumulator("$sum", 1)))
-                   .limit(10)
-                   .skip(0);
-        List<Document> stages = ((AggregationPipelineImpl) pipeline).getStages();
-        Document group = stages.get(0);
-        Document addToSet = getDocument(group, "$group", "messageDataSet", "$addToSet");
-        Assert.assertNotNull(addToSet);
-        Assert.assertEquals(addToSet.get("sentDate"), "$sentDate");
-        Assert.assertEquals(addToSet.get("messageId"), "$_id");
-    }
-
-    @Test
-    public void testAdd() {
-        AggregationPipeline pipeline = getDs()
-                                           .createAggregation(Book.class)
-                                           .group(grouping("summation",
-                                               accumulator("$sum",
-                                                   accumulator("$add", asList("$amountFromTBInDouble", "$amountFromParentPNLInDouble"))
-                                                          )));
-
-        Document group = (Document) ((AggregationPipelineImpl) pipeline).getStages().get(0).get("$group");
-        Document summation = (Document) group.get("summation");
-        Document sum = (Document) summation.get("$sum");
-        List<?> add = (List<?>) sum.get("$add");
-        Assert.assertTrue(add.get(0) instanceof String);
-        Assert.assertEquals("$amountFromTBInDouble", add.get(0));
-        pipeline.aggregate(User.class);
-    }
-
     private Document getDocument(final Document document, final String... path) {
         Document current = document;
         for (String step : path) {
@@ -721,11 +717,11 @@ public class AggregationTest extends TestBase {
         return current;
     }
 
-    @Entity
-    private static class StringDates {
+    @Entity("authors")
+    public static class Author {
         @Id
-        private ObjectId id;
-        private String string;
+        private String name;
+        private List<String> books;
     }
 
     @Entity(value = "books", useDiscriminator = false)
@@ -753,44 +749,6 @@ public class AggregationTest extends TestBase {
         }
     }
 
-    @Entity("authors")
-    public static class Author {
-        @Id
-        private String name;
-        private List<String> books;
-    }
-
-    public static class BucketResult {
-        @Id
-        private String id;
-        private int count;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(final String id) {
-            this.id = id;
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        public void setCount(final int count) {
-            this.count = count;
-        }
-
-        @Override
-        public String toString() {
-            return "BucketResult{"
-                   + "id="
-                   + id
-                   + ", count=" + count
-                   + '}';
-        }
-    }
-
     public static class BooksBucketResult extends BucketAutoResult {
         private Set<String> authors;
 
@@ -810,20 +768,20 @@ public class AggregationTest extends TestBase {
         private MinMax id;
         private int count;
 
-        public MinMax getId() {
-            return id;
-        }
-
-        public void setId(final MinMax id) {
-            this.id = id;
-        }
-
         public int getCount() {
             return count;
         }
 
         public void setCount(final int count) {
             this.count = count;
+        }
+
+        public MinMax getId() {
+            return id;
+        }
+
+        public void setId(final MinMax id) {
+            this.id = id;
         }
 
         @Override
@@ -834,17 +792,10 @@ public class AggregationTest extends TestBase {
                    + '}';
         }
 
+        @Embedded
         public static class MinMax {
             private int min;
             private int max;
-
-            public int getMin() {
-                return min;
-            }
-
-            public void setMin(final int min) {
-                this.min = min;
-            }
 
             public int getMax() {
                 return max;
@@ -852,6 +803,14 @@ public class AggregationTest extends TestBase {
 
             public void setMax(final int max) {
                 this.max = max;
+            }
+
+            public int getMin() {
+                return min;
+            }
+
+            public void setMin(final int min) {
+                this.min = min;
             }
 
             @Override
@@ -865,18 +824,10 @@ public class AggregationTest extends TestBase {
     }
 
     @Entity
-    public static class SortByCountResult {
+    public static class BucketResult {
         @Id
         private String id;
         private int count;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(final String id) {
-            this.id = id;
-        }
 
         public int getCount() {
             return count;
@@ -886,10 +837,19 @@ public class AggregationTest extends TestBase {
             this.count = count;
         }
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(final String id) {
+            this.id = id;
+        }
+
         @Override
         public String toString() {
-            return "SortByCountResult{"
-                   + "id=" + id
+            return "BucketResult{"
+                   + "id="
+                   + id
                    + ", count=" + count
                    + '}';
         }
@@ -910,104 +870,6 @@ public class AggregationTest extends TestBase {
         public int getCount() {
             return count;
         }
-    }
-
-    @Entity("orders")
-    private static class Order {
-        @Id
-        private int id;
-        private String item;
-        private int price;
-        private int quantity;
-        private List<Inventory> inventoryDocs;
-
-        private Order() {
-        }
-
-        Order(final int id) {
-            this.id = id;
-        }
-
-        Order(final int id, final String item, final int price, final int quantity) {
-            this.id = id;
-            this.item = item;
-            this.price = price;
-            this.quantity = quantity;
-        }
-
-        public List<Inventory> getInventoryDocs() {
-            return inventoryDocs;
-        }
-
-        public void setInventoryDocs(final List<Inventory> inventoryDocs) {
-            this.inventoryDocs = inventoryDocs;
-        }
-
-        public String getItem() {
-            return item;
-        }
-
-        public void setItem(final String item) {
-            this.item = item;
-        }
-
-        public int getPrice() {
-            return price;
-        }
-
-        public void setPrice(final int price) {
-            this.price = price;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(final int quantity) {
-            this.quantity = quantity;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(final int id) {
-            this.id = id;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id;
-            result = 31 * result + (item != null ? item.hashCode() : 0);
-            result = 31 * result + price;
-            result = 31 * result + quantity;
-            return result;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Order)) {
-                return false;
-            }
-
-            final Order order = (Order) o;
-
-            if (id != order.id) {
-                return false;
-            }
-            if (price != order.price) {
-                return false;
-            }
-            if (quantity != order.quantity) {
-                return false;
-            }
-            return item != null ? item.equals(order.item) : order.item == null;
-
-        }
-
     }
 
     @Entity(value = "inventory", useDiscriminator = false)
@@ -1046,6 +908,14 @@ public class AggregationTest extends TestBase {
             this.description = description;
         }
 
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
+        }
+
         public int getInstock() {
             return instock;
         }
@@ -1062,12 +932,13 @@ public class AggregationTest extends TestBase {
             this.sku = sku;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public void setId(final int id) {
-            this.id = id;
+        @Override
+        public int hashCode() {
+            int result = id;
+            result = 31 * result + (sku != null ? sku.hashCode() : 0);
+            result = 31 * result + (description != null ? description.hashCode() : 0);
+            result = 31 * result + instock;
+            return result;
         }
 
         @Override
@@ -1093,14 +964,143 @@ public class AggregationTest extends TestBase {
             return description != null ? description.equals(inventory.description) : inventory.description == null;
 
         }
+    }
+
+    @Entity("lookups")
+    private static class Lookedup {
+        List<Inventory> inventoryDocs;
+        @Id
+        private int id;
+        private String item;
+        private int price;
+        private int quantity;
+    }
+
+    @Entity("orders")
+    private static class Order {
+        @Id
+        private int id;
+        private String item;
+        private int price;
+        private int quantity;
+        private List<Inventory> inventoryDocs;
+
+        private Order() {
+        }
+
+        Order(final int id) {
+            this.id = id;
+        }
+
+        Order(final int id, final String item, final int price, final int quantity) {
+            this.id = id;
+            this.item = item;
+            this.price = price;
+            this.quantity = quantity;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
+        }
+
+        public String getItem() {
+            return item;
+        }
+
+        public void setItem(final String item) {
+            this.item = item;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public void setPrice(final int price) {
+            this.price = price;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(final int quantity) {
+            this.quantity = quantity;
+        }
 
         @Override
         public int hashCode() {
             int result = id;
-            result = 31 * result + (sku != null ? sku.hashCode() : 0);
-            result = 31 * result + (description != null ? description.hashCode() : 0);
-            result = 31 * result + instock;
+            result = 31 * result + (item != null ? item.hashCode() : 0);
+            result = 31 * result + price;
+            result = 31 * result + quantity;
             return result;
         }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Order)) {
+                return false;
+            }
+
+            final Order order = (Order) o;
+
+            if (id != order.id) {
+                return false;
+            }
+            if (price != order.price) {
+                return false;
+            }
+            if (quantity != order.quantity) {
+                return false;
+            }
+            return item != null ? item.equals(order.item) : order.item == null;
+
+        }
+
+    }
+
+    @Entity
+    public static class SortByCountResult {
+        @Id
+        private String id;
+        private int count;
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(final int count) {
+            this.count = count;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(final String id) {
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return "SortByCountResult{"
+                   + "id=" + id
+                   + ", count=" + count
+                   + '}';
+        }
+    }
+
+    @Entity
+    private static class StringDates {
+        @Id
+        private ObjectId id;
+        private String string;
     }
 }

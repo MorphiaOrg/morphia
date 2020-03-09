@@ -12,30 +12,41 @@ public abstract class DiscriminatorFunction {
     /**
      * Defines a function to use the class name for the discriminator value
      */
-    public static final DiscriminatorFunction className = new DiscriminatorFunction() {
-        @Override
-        public String compute(final EntityModelBuilder<?> builder) {
-            return builder.getType().getName();
-        }
-    };
-    public static final DiscriminatorFunction lowerClassName = new DiscriminatorFunction() {
-        @Override
-        public String compute(final EntityModelBuilder<?> builder) {
-            return builder.getType().getName().toLowerCase();
-        }
-    };
-    public static final DiscriminatorFunction lowerSimpleName = new DiscriminatorFunction() {
-        @Override
-        public String compute(final EntityModelBuilder<?> builder) {
-            return builder.getType().getSimpleName().toLowerCase();
-        }
-    };
-    public static final DiscriminatorFunction simpleName = new DiscriminatorFunction() {
-        @Override
-        public String compute(final EntityModelBuilder<?> builder) {
-            return builder.getType().getSimpleName();
-        }
-    };
+    public static DiscriminatorFunction className() {
+        return new DiscriminatorFunction() {
+            @Override
+            public String compute(final EntityModelBuilder<?> builder) {
+                return builder.getType().getName();
+            }
+        };
+    }
+
+    public static DiscriminatorFunction lowerClassName() {
+        return new DiscriminatorFunction() {
+            @Override
+            public String compute(final EntityModelBuilder<?> builder) {
+                return builder.getType().getName().toLowerCase();
+            }
+        };
+    }
+
+    public static DiscriminatorFunction lowerSimpleName() {
+        return new DiscriminatorFunction() {
+            @Override
+            public String compute(final EntityModelBuilder<?> builder) {
+                return builder.getType().getSimpleName().toLowerCase();
+            }
+        };
+    }
+
+    public static DiscriminatorFunction simpleName() {
+        return new DiscriminatorFunction() {
+            @Override
+            public String compute(final EntityModelBuilder<?> builder) {
+                return builder.getType().getSimpleName();
+            }
+        };
+    }
 
     /**
      * Applies the function to the given model to determine the discriminator value

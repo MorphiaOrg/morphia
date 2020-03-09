@@ -4,6 +4,9 @@ package dev.morphia.mapping;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.query.DefaultQueryFactory;
+import dev.morphia.query.LegacyQueryFactory;
+import dev.morphia.query.QueryFactory;
 import org.bson.UuidRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,11 @@ public class MapperOptions {
     private final NamingStrategy fieldNaming;
     private final UuidRepresentation uuidRepresentation;
     private ClassLoader classLoader;
+    private QueryFactory queryFactory;
+
+    {
+        new LegacyQueryFactory();
+    }
 
     private MapperOptions(final Builder builder) {
         ignoreFinals = builder.ignoreFinals;
@@ -49,6 +57,7 @@ public class MapperOptions {
         collectionNaming = builder.collectionNaming;
         fieldNaming = builder.fieldNaming;
         uuidRepresentation = builder.uuidRepresentation;
+        queryFactory = builder.queryFactory;
     }
 
     /**
@@ -64,9 +73,10 @@ public class MapperOptions {
     public static Builder legacy() {
         return new Builder()
                    .discriminatorKey("className")
-                   .discriminator(DiscriminatorFunction.className)
+                   .discriminator(DiscriminatorFunction.className())
                    .collectionNaming(NamingStrategy.identity())
-                   .fieldNaming(NamingStrategy.identity());
+                   .fieldNaming(NamingStrategy.identity())
+                   .queryFactory(new LegacyQueryFactory());
     }
 
     /**
@@ -83,48 +93,6 @@ public class MapperOptions {
         builder.creator = original.getCreator();
         builder.classLoader = original.getClassLoader();
         return builder;
-    }
-
-    /**
-     * @return true if Morphia should ignore final fields
-     */
-    public boolean isIgnoreFinals() {
-        return ignoreFinals;
-    }
-
-    /**
-     * @return true if Morphia should store null values
-     */
-    public boolean isStoreNulls() {
-        return storeNulls;
-    }
-
-    /**
-     * @return true if Morphia should store empty values for lists/maps/sets/arrays
-     */
-    public boolean isStoreEmpties() {
-        return storeEmpties;
-    }
-
-    /**
-     * @return true if Morphia should cache name to Class lookups
-     */
-    public boolean isCacheClassLookups() {
-        return cacheClassLookups;
-    }
-
-    /**
-     * @return true if Morphia should map classes from the sub-packages as well
-     */
-    public boolean isMapSubPackages() {
-        return mapSubPackages;
-    }
-
-    /**
-     * @return the factory to use when creating new instances
-     */
-    public MorphiaInstanceCreator getCreator() {
-        return creator;
     }
 
     /**
@@ -156,6 +124,13 @@ public class MapperOptions {
     }
 
     /**
+     * @return the factory to use when creating new instances
+     */
+    public MorphiaInstanceCreator getCreator() {
+        return creator;
+    }
+
+    /**
      * @return the function to determine discriminator value
      */
     public DiscriminatorFunction getDiscriminator() {
@@ -178,10 +153,53 @@ public class MapperOptions {
     }
 
     /**
+     * @return the query factory used by the Datastore
+     * @since 2.0
+     */
+    public QueryFactory getQueryFactory() {
+        return queryFactory;
+    }
+
+    /**
      * @return the UUID representation to use in the driver
      */
     public UuidRepresentation getUuidRepresentation() {
         return uuidRepresentation;
+    }
+
+    /**
+     * @return true if Morphia should cache name to Class lookups
+     */
+    public boolean isCacheClassLookups() {
+        return cacheClassLookups;
+    }
+
+    /**
+     * @return true if Morphia should ignore final fields
+     */
+    public boolean isIgnoreFinals() {
+        return ignoreFinals;
+    }
+
+    /**
+     * @return true if Morphia should map classes from the sub-packages as well
+     */
+    public boolean isMapSubPackages() {
+        return mapSubPackages;
+    }
+
+    /**
+     * @return true if Morphia should store empty values for lists/maps/sets/arrays
+     */
+    public boolean isStoreEmpties() {
+        return storeEmpties;
+    }
+
+    /**
+     * @return true if Morphia should store null values
+     */
+    public boolean isStoreNulls() {
+        return storeNulls;
     }
 
     /**
@@ -198,11 +216,12 @@ public class MapperOptions {
         private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
         private String discriminatorKey = "_t";
-        private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName;
+        private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName();
         private List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
         private NamingStrategy collectionNaming = NamingStrategy.camelCase();
         private NamingStrategy fieldNaming = NamingStrategy.identity();
         private UuidRepresentation uuidRepresentation = STANDARD;
+        private QueryFactory queryFactory = new DefaultQueryFactory();
 
         private Builder() {
         }
@@ -242,6 +261,17 @@ public class MapperOptions {
          */
         public Builder classLoader(final ClassLoader classLoader) {
             this.classLoader = classLoader;
+            return this;
+        }
+
+        /**
+         * Sets the naming strategy to use for collection names
+         *
+         * @param strategy the strategy to use
+         * @return this
+         */
+        public Builder collectionNaming(final NamingStrategy strategy) {
+            this.collectionNaming = strategy;
             return this;
         }
 
@@ -315,6 +345,11 @@ public class MapperOptions {
             return this;
         }
 
+        public Builder queryFactory(final QueryFactory queryFactory) {
+            this.queryFactory = queryFactory;
+            return this;
+        }
+
         /**
          * @param storeEmpties if true empty maps and collection types are stored in the database
          * @return this
@@ -343,17 +378,6 @@ public class MapperOptions {
             if (useLowerCaseCollectionNames) {
                 collectionNaming(NamingStrategy.lowerCase());
             }
-            return this;
-        }
-
-        /**
-         * Sets the naming strategy to use for collection names
-         *
-         * @param strategy the strategy to use
-         * @return this
-         */
-        public Builder collectionNaming(final NamingStrategy strategy) {
-            this.collectionNaming = strategy;
             return this;
         }
 

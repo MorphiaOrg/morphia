@@ -1,7 +1,6 @@
 package dev.morphia.mapping;
 
 
-import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.TestBase;
@@ -145,7 +144,7 @@ public class MapperOptionsTest extends TestBase {
     public void discriminator() {
         Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
             MapperOptions.builder()
-                         .discriminator(DiscriminatorFunction.lowerSimpleName)
+                         .discriminator(DiscriminatorFunction.lowerSimpleName())
                          .build());
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 

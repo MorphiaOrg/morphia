@@ -1,22 +1,21 @@
 package dev.morphia.query;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.utils.IndexType;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.List;
 
-import static dev.morphia.query.Sort.*;
+import static dev.morphia.query.Sort.ascending;
+import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.util.Arrays.asList;
 
 @Ignore("text searches need work")
@@ -40,7 +39,7 @@ public class TestTextSearching extends TestBase {
         getDs().save(new Greeting("buenos noches", "spanish"));
 
         List<Greeting> good = getDs().find(Greeting.class)
-                                     .search("good")
+                                     .filter(text("good"))
                                      .execute(new FindOptions()
                                                   .sort(ascending("_id")))
                                      .toList();
@@ -51,7 +50,8 @@ public class TestTextSearching extends TestBase {
         Assert.assertEquals("good riddance", good.get(3).value);
 
         good = getDs().find(Greeting.class)
-                      .search("good", "english")
+                      .filter(text("good")
+                                  .language("english"))
                       .execute(new FindOptions()
                                    .sort(ascending("_id")))
                       .toList();
@@ -62,13 +62,14 @@ public class TestTextSearching extends TestBase {
         Assert.assertEquals("good riddance", good.get(3).value);
 
         Assert.assertEquals(1, getDs().find(Greeting.class)
-                                      .search("riddance")
+                                      .filter(text("riddance"))
                                       .execute().toList().size());
         Assert.assertEquals(1, getDs().find(Greeting.class)
-                                      .search("noches", "spanish")
+                                      .filter(text("noches")
+                                                  .language("spanish"))
                                       .execute().toList().size());
         Assert.assertEquals(1, getDs().find(Greeting.class)
-                                      .search("Tag")
+                                      .filter(text("Tag"))
                                       .execute().toList().size());
     }
 
