@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.elementAt;
@@ -39,7 +40,6 @@ import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
@@ -50,7 +50,6 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.R
 import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 public class CodecStructureTest extends TestBase {
@@ -227,14 +226,26 @@ public class CodecStructureTest extends TestBase {
 
     @Test
     public void testSample() {
-        evaluate(parse("{ $sample : { size: 15 } }"),
-            Sample.of(15));
+        DocumentWriter writer = new DocumentWriter();
+        getMapper().getCodecRegistry()
+                   .get(Sample.class)
+                   .encode(writer, Sample.of(15L), EncoderContext.builder().build());
+        Document actual = writer.getDocument();
+        assertEquals(0, writer.getDocsLevel());
+        assertEquals(0, writer.getArraysLevel());
+        assertEquals(15L, ((Document) actual.get("$sample")).getLong("size").longValue());
     }
 
     @Test
     public void testSkip() {
-        evaluate(parse("{ $skip : 15 }"),
-            Skip.of(15));
+        DocumentWriter writer = new DocumentWriter();
+        getMapper().getCodecRegistry()
+                   .get(Skip.class)
+                   .encode(writer, Skip.of(15L), EncoderContext.builder().build());
+        Document actual = writer.getDocument();
+        assertEquals(0, writer.getDocsLevel());
+        assertEquals(0, writer.getArraysLevel());
+        assertEquals(15L, actual.getLong("$skip").longValue());
     }
 
     @Test

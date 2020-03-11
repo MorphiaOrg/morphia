@@ -1,7 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.stages.Group;
-import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
@@ -200,7 +199,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         // we don't have a data set to test numbers so let's at least test we're creating the correct structures for the server
         getDs().save(new User("", new Date()));
         getDs().aggregate(User.class)
-               .sample(Sample.of(100))
+               .sample(100)
                .group(Group.of()
                            .field("ageStdDev", stdDevSamp(field("age"))))
                .execute(Document.class)

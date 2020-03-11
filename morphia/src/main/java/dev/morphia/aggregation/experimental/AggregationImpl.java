@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
@@ -177,7 +178,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> limit(final int limit) {
+    public Aggregation<T> limit(final long limit) {
         stages.add(Limit.of(limit));
         return this;
     }
@@ -238,8 +239,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> sample(final Sample sample) {
-        stages.add(sample);
+    public Aggregation<T> sample(final long sample) {
+        stages.add(Sample.of(sample));
         return this;
     }
 
@@ -250,8 +251,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> skip(final Skip skip) {
-        stages.add(skip);
+    public Aggregation<T> skip(final long skip) {
+        stages.add(Skip.of(skip));
         return this;
     }
 
@@ -262,8 +263,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> sortByCount(final SortByCount sort) {
-        stages.add(sort);
+    public Aggregation<T> sortByCount(final Expression sort) {
+        stages.add(SortByCount.on(sort));
         return this;
     }
 

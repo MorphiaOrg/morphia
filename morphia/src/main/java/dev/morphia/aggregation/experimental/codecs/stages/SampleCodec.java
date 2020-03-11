@@ -13,7 +13,7 @@ public class SampleCodec extends StageCodec<Sample> {
     @Override
     protected void encodeStage(final BsonWriter writer, final Sample value, final EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeInt32("size", value.getSize());
+        writer.writeInt64("size", value.getSize());
         writer.writeEndDocument();
     }
 

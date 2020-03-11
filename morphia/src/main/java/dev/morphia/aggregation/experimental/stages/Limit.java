@@ -6,9 +6,9 @@ package dev.morphia.aggregation.experimental.stages;
  * @aggregation.expression $limit
  */
 public class Limit extends Stage {
-    private int limit;
+    private long limit;
 
-    protected Limit(final int limit) {
+    protected Limit(final long limit) {
         super("$limit");
         this.limit = limit;
     }
@@ -19,7 +19,7 @@ public class Limit extends Stage {
      * @param limit the limit to apply
      * @return this
      */
-    public static Limit of(final int limit) {
+    public static Limit of(final long limit) {
         return new Limit(limit);
     }
 
@@ -27,7 +27,7 @@ public class Limit extends Stage {
      * @return the limit
      * @morphia.internal
      */
-    public int getLimit() {
+    public long getLimit() {
         return limit;
     }
 }

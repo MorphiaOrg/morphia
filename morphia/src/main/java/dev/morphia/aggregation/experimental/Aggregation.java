@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
@@ -16,10 +17,7 @@ import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
-import dev.morphia.aggregation.experimental.stages.Sample;
-import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.Sort;
-import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
@@ -226,7 +224,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.expression $limit
      */
-    Aggregation<T> limit(int limit);
+    Aggregation<T> limit(long limit);
 
     /**
      * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
@@ -325,7 +323,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.expression $sample
      */
-    Aggregation<T> sample(Sample sample);
+    Aggregation<T> sample(long sample);
 
     /**
      * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
@@ -350,7 +348,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.expression $skip
      */
-    Aggregation<T> skip(Skip skip);
+    Aggregation<T> skip(long skip);
 
     /**
      * Sorts all input documents and returns them to the pipeline in sorted order.
@@ -373,7 +371,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.expression $sortByCount
      */
-    Aggregation<T> sortByCount(SortByCount sort);
+    Aggregation<T> sortByCount(Expression sort);
 
     /**
      * Removes/excludes fields from documents.  Names must not start with '$'.

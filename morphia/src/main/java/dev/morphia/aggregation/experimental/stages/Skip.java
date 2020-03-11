@@ -6,9 +6,9 @@ package dev.morphia.aggregation.experimental.stages;
  * @aggregation.expression $skip
  */
 public class Skip extends Stage {
-    private int size;
+    private long size;
 
-    protected Skip(final int size) {
+    protected Skip(final long size) {
         super("$skip");
         this.size = size;
     }
@@ -19,7 +19,7 @@ public class Skip extends Stage {
      * @param size the skip size
      * @return the new stage
      */
-    public static Skip of(final int size) {
+    public static Skip of(final long size) {
         return new Skip(size);
     }
 
@@ -27,7 +27,7 @@ public class Skip extends Stage {
      * @return the size
      * @morphia.internal
      */
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 }

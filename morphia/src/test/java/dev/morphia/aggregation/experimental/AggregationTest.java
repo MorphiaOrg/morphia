@@ -748,7 +748,7 @@ public class AggregationTest extends TestBase {
             new User("Ringo", new Date())));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
-                                         .sample(Sample.of(3));
+                                         .sample(3);
         Sample sample = pipeline.getStage("$sample");
         assertEquals(3, sample.getSize());
 
