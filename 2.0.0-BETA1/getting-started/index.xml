@@ -17,8 +17,8 @@
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
       <guid>/2.0.0-BETA1/getting-started/installation-guide/</guid>
-      <description>The recommended way to get started using Morphia in your project is with a dependency management system.
-&amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.0.0-BETA1&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia:morphia:2.0.0-BETA1&#39; }   You can also download the jars directly from sonatype.  </description>
+      <description>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle. To use Morphia using either build tool, you will need to update your build configurations with the following information.
+ &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia-core&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.0.0-BETA1&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia.morphia:morphia-core:2.0.0-BETA1&#39; }   You can also download the jars directly from sonatype.  </description>
     </item>
     
     <item>
@@ -27,7 +27,7 @@
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
       <guid>/2.0.0-BETA1/getting-started/quick-tour/</guid>
-      <description>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful. Morphia does its best to abstract much of that away but if something is confusing, please consult the Java driver [documentation](http://mongodb.github .io/mongo-java-driver/) as well.
+      <description>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful. Morphia does its best to abstract much of that away but if something is confusing, please consult the Java driver documentation as well.
 The following code snippets come from the QuickTour.java example code that can be found with the Morphia source.
 Setting up Morphia The following example shows how to create the initial Morphia instance.</description>
     </item>

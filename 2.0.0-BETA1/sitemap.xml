@@ -46,11 +46,11 @@
   </url>
   
   <url>
-    <loc>/2.0.0-BETA1/guides/indexing/</loc>
+    <loc>/2.0.0-BETA1/guides/configuration/</loc>
   </url>
   
   <url>
-    <loc>/2.0.0-BETA1/guides/jrebel/</loc>
+    <loc>/2.0.0-BETA1/guides/indexing/</loc>
   </url>
   
   <url>
@@ -66,6 +66,10 @@
   </url>
   
   <url>
+    <loc>/2.0.0-BETA1/guides/querying-old/</loc>
+  </url>
+  
+  <url>
     <loc>/2.0.0-BETA1/guides/references/</loc>
   </url>
   
@@ -75,6 +79,10 @@
   
   <url>
     <loc>/2.0.0-BETA1/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-BETA1/guides/textsearch/</loc>
   </url>
   
   <url>

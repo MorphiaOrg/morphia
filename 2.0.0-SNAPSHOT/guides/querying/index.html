@@ -7,24 +7,25 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/2.0.0-SNAPSHOT/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/2.0.0-SNAPSHOT/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/2.0.0-SNAPSHOT/images/favicon.png" type="image/png">
+
     <title>Querying :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583754469" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583754469" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583754469" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583754469" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583754469" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583754469" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583754469" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583754469" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583890355" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583890355" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-2.x.min.js?1583754469"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1583890355"></script>
 
-    <style type="text/css">
+    <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
@@ -263,9 +264,9 @@
  
   
     
-      <li data-nav-id="/2.0.0-SNAPSHOT/guides/indexing/" title="Indexing" class="dd-item ">
-        <a href="/2.0.0-SNAPSHOT/guides/indexing/">
-        Indexing
+      <li data-nav-id="/2.0.0-SNAPSHOT/guides/configuration/" title="Configuration" class="dd-item ">
+        <a href="/2.0.0-SNAPSHOT/guides/configuration/">
+        Configuration
         
         </a>
     </li>
@@ -282,9 +283,9 @@
  
   
     
-      <li data-nav-id="/2.0.0-SNAPSHOT/guides/jrebel/" title="JRebel" class="dd-item ">
-        <a href="/2.0.0-SNAPSHOT/guides/jrebel/">
-        JRebel
+      <li data-nav-id="/2.0.0-SNAPSHOT/guides/indexing/" title="Indexing" class="dd-item ">
+        <a href="/2.0.0-SNAPSHOT/guides/indexing/">
+        Indexing
         
         </a>
     </li>
@@ -339,6 +340,25 @@
  
   
     
+      <li data-nav-id="/2.0.0-SNAPSHOT/guides/querying-old/" title="Querying (Deprecated)" class="dd-item ">
+        <a href="/2.0.0-SNAPSHOT/guides/querying-old/">
+        Querying (Deprecated)
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
       <li data-nav-id="/2.0.0-SNAPSHOT/guides/references/" title="References" class="dd-item ">
         <a href="/2.0.0-SNAPSHOT/guides/references/">
         References
@@ -361,6 +381,25 @@
       <li data-nav-id="/2.0.0-SNAPSHOT/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
         <a href="/2.0.0-SNAPSHOT/guides/schemavalidation/">
         Schema Validation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/2.0.0-SNAPSHOT/guides/textsearch/" title="Text Search" class="dd-item ">
+        <a href="/2.0.0-SNAPSHOT/guides/textsearch/">
+        Text Search
         
         </a>
     </li>
@@ -485,24 +524,10 @@
                   <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
-                    
-          
-          
-            
-            
-          
-          
-            
-            
-          
-          
-            <a href='/2.0.0-SNAPSHOT/'>Morphia</a> > <a href='/2.0.0-SNAPSHOT/guides/'>Reference Guides</a> > Querying
-          
-         
-          
-         
-          
-           
+                 
+                 
+                   Querying 
+                 
                   </span>
                 </div>
                 
@@ -513,18 +538,15 @@
     <li><a href="#creating-a-query">Creating a Query</a>
       <ul>
         <li><a href="#filter"><code>filter()</code></a></li>
-        <li><a href="#field"><code>field()</code></a></li>
       </ul>
     </li>
     <li><a href="#complex-queries">Complex Queries</a></li>
-    <li><a href="#text-searching">Text Searching</a></li>
     <li><a href="#other-query-options">Other Query Options</a>
       <ul>
         <li><a href="#projections">Projections</a></li>
         <li><a href="#limiting-and-skipping">Limiting and Skipping</a></li>
         <li><a href="#ordering">Ordering</a></li>
         <li><a href="#tailable-cursors">Tailable Cursors</a></li>
-        <li><a href="#raw-querying">Raw Querying</a></li>
       </ul>
     </li>
   </ul>
@@ -536,215 +558,59 @@
               </div>
             </div>
             
-
+        <div id="head-tags">
+        
+        </div>
         
         <div id="body-inner">
           
-            <h1>Querying</h1>
+            <h1>
+              
+              Querying
+            </h1>
           
 
         
 
 
-<p>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
-to provide as much type safety and validation as possible.  To this end, Morphia offers the <code>Query&lt;T&gt;</code> class which can be parameterized to
-the type of your entity.</p>
+
 <h2 id="creating-a-query">Creating a Query</h2>
-<p>The <code>Datastore</code> is the key class when using Morphia.  Virtually all operations begin with the <code>Datastore</code>.  To create the <code>Query</code>, we
-invoke the following code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Query<span style="color:#f92672">&lt;</span>Product<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Product<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-</code></pre></div><p><code>createQuery()</code> returns an instance of <code>Query</code> with which we can build a query.</p>
+<p>Morphia provides <code>Query&lt;T&gt;</code> class to build a query and map the results back to instances of your entity classes and attempts
+to provide as much type safety and validation as possible.  To create the <code>Query</code>, we invoke the following code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Query<span style="color:#f92672">&lt;</span>Product<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Product<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</code></pre></div><p><code>find()</code> returns an instance of <code>Query</code> which we can use to build a query.</p>
 <h3 id="filter"><code>filter()</code></h3>
-<p>The first method of interest is <code>filter()</code>.  This method takes two values: a condition string and a value.  The <code>value</code> parameter is, of
-course, the value to use when applying the <code>condition</code> clause.  The <code>condition</code> parameter is a bit more complicated.  At its simplest,
-the condition is just a field name.  In this case, the condition is assumed to be an <a href="http://docs.mongodb.org/manual/reference/operator/query/eq/
-">equality</a> check.  There is a slightly more complicated variant, however.</p>
-<p>The <code>condition</code> value can also contain an operator.  For example, to compare a numeric field against a value, you might write something
-like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">query<span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;price &gt;=&#34;</span><span style="color:#f92672">,</span> 1000<span style="color:#f92672">);</span>
-</code></pre></div><p>In this case, we&rsquo;re instructing Morphia to add a filter using <a href="http://docs.mongodb.org/manual/reference/operator/query/gte/
-">$gte</a>.  This would result
-in a query that looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">{ <span style="color:#a6e22e">price</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">$gte</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1000</span> } }
-</code></pre></div><p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/main/java/dev/morphia/query/FilterOperator.java
-">FilterOperator</a> class.</p>
-<table>
-<thead>
-<tr>
-<th>Operator</th>
-<th>Alias</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$center</td>
-<td></td>
-</tr>
-<tr>
-<td>$centerSphere</td>
-<td></td>
-</tr>
-<tr>
-<td>$box</td>
-<td></td>
-</tr>
-<tr>
-<td>$eq</td>
-<td>=, ==</td>
-</tr>
-<tr>
-<td>$ne</td>
-<td>!=, &lt;&gt;</td>
-</tr>
-<tr>
-<td>$gt</td>
-<td>&gt;</td>
-</tr>
-<tr>
-<td>$gte</td>
-<td>&gt;=</td>
-</tr>
-<tr>
-<td>$lt</td>
-<td>&lt;</td>
-</tr>
-<tr>
-<td>$lte</td>
-<td>&lt;=</td>
-</tr>
-<tr>
-<td>$exists</td>
-<td>exists</td>
-</tr>
-<tr>
-<td>$type</td>
-<td>type</td>
-</tr>
-<tr>
-<td>$not</td>
-<td></td>
-</tr>
-<tr>
-<td>$mod</td>
-<td>mod</td>
-</tr>
-<tr>
-<td>$size</td>
-<td>size</td>
-</tr>
-<tr>
-<td>$in</td>
-<td>in</td>
-</tr>
-<tr>
-<td>$nin</td>
-<td>nin</td>
-</tr>
-<tr>
-<td>$all</td>
-<td>all</td>
-</tr>
-<tr>
-<td>$elemMatch</td>
-<td>elem, elemMatch</td>
-</tr>
-<tr>
-<td>$where</td>
-<td></td>
-</tr>
-<tr>
-<td>$near</td>
-<td>near</td>
-</tr>
-<tr>
-<td>$nearSphere</td>
-<td></td>
-</tr>
-<tr>
-<td>$within (deprecated replaced by $geoWithin)</td>
-<td>within</td>
-</tr>
-<tr>
-<td>$geoNear</td>
-<td>geoNear</td>
-</tr>
-<tr>
-<td>$geoWithin</td>
-<td>geoWithin</td>
-</tr>
-<tr>
-<td>$geoIntersects</td>
-<td>geoIntersects</td>
-</tr>
-</tbody>
-</table>
-<p>Each filter operator can either be referenced by its MongoDB &ldquo;dollar operator&rdquo; or by the aliases listed afterward.  For example, with
-the equal operator, you can use the canonical <code>$eq</code> operator as you would when building a query in the shell or you could opt to use
-either the <code>=</code> or <code>==</code> aliases which might feel a little more natural to use than the dollar operators.</p>
-<h3 id="field"><code>field()</code></h3>
-<p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.  This method takes only the field name and
-returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/main/java/dev/morphia/query/FieldEnd.java
-">class</a> providing methods with which
-to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
-<code>filter()</code> can be.  To perform the same query as above, you&rsquo;d write this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">query<span style="color:#f92672">.</span><span style="color:#a6e22e">field</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;price&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">greaterThanOrEq</span><span style="color:#f92672">(</span>1000<span style="color:#f92672">);</span>
-</code></pre></div><p>This results in the exact same query as the <code>filter()</code> version but has the advantage that any typo in the operation name (method in this
-case) would easily be caught by an IDE or compiler.  Which version you use is largely a question of preference.</p>
-<!-- raw HTML omitted -->
-<p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-<a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/annotations/Property.html"><code>@Property</code></a> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
-result in an error.</p>
-<!-- raw HTML omitted -->
+<p>The most significant method <code>filter(Filter...)</code>.  This method takes takes a number of filters to apply to the query being built.  The
+filters are added to any existing, previously defined filters so you needn&rsquo;t add them all at once.  There are dozens of filters
+predefined in Morphia and can be found in the <code>dev.morphia.query.experimental.filters</code> package.</p>
+
+<div class="notices note" ><p>The package is currently <code>experimental</code>.  This done to signify that this API is a new one and might change based on user feedback
+prior to a final release.  It is expected that the API will be largely the same in the final release and you are highly encouraged
+to try it out before then.  If you encounter and bugs or usability issues, please file an
+<a href="https://github.com/MorphiaOrg/morphia/issues">issue</a></p>
+</div>
+
+<p>The filters can be accessed via the <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/query/experimental/filters/Filters.html
+">Filters</a> class.  The method names
+largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia&rsquo;s
+API.  For example, to query for products whose prices is greater than or equal to 1000, you would write this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">query<span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>Filters<span style="color:#f92672">.</span><span style="color:#a6e22e">gte</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;price&#34;</span><span style="color:#f92672">,</span> 1000<span style="color:#f92672">));</span>
+</code></pre></div><p>This will append the new criteria to any existing criteria already defined.  You can define as many filters in one call as you&rsquo;d like or
+you may choose to append them in smaller groups based on whatever query building logic your application might have.</p>
 <h2 id="complex-queries">Complex Queries</h2>
 <p>Of course, queries are usually more complex than single field comparisons.  Morphia offers both <code>and()</code> and <code>or()</code> to build up more
 complex queries.  An <code>and</code> query might look something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">q<span style="color:#f92672">.</span><span style="color:#a6e22e">and</span><span style="color:#f92672">(</span>
-    q<span style="color:#f92672">.</span><span style="color:#a6e22e">criteria</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;width&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">equal</span><span style="color:#f92672">(</span>10<span style="color:#f92672">),</span>
-    q<span style="color:#f92672">.</span><span style="color:#a6e22e">criteria</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;height&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">equal</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
-<span style="color:#f92672">);</span>
-</code></pre></div><p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.  For these clauses we use the <code>criteria()</code>
-method instead of <code>field()</code> but it is used in much the same fashion.  <code>and()</code> and <code>or()</code> take a [<code>varargs</code>](<a href="https://docs.oracle">https://docs.oracle</a>
-.com/javase/8/docs/technotes/guides/language/varargs.html) parameter of type <code>Criteria</code> so you can include as many filters as necessary.
-If all you need is an <code>and</code> clause, you don&rsquo;t need an explicit call to <code>and()</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>UserLocation<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">field</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;x&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">lessThan</span><span style="color:#f92672">(</span>5<span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">field</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;y&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">greaterThan</span><span style="color:#f92672">(</span>4<span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">field</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;z&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">greaterThan</span><span style="color:#f92672">(</span>10<span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">q<span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>and<span style="color:#f92672">(</span>
+    eq<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;width&#34;</span><span style="color:#f92672">,</span> 10<span style="color:#f92672">),</span> 
+    eq<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;height&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">)));</span>
+</code></pre></div><p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.  The default is to &ldquo;and&rdquo; filter criteria
+together so if all you need is an <code>and</code> clause, you don&rsquo;t need an explicit call to <code>and()</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>UserLocation<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>
+        lt<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;x&#34;</span><span style="color:#f92672">,</span> 5<span style="color:#f92672">),</span>
+        gt<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;y&#34;</span><span style="color:#f92672">,</span> 4<span style="color:#f92672">),</span>
+        gt<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;z&#34;</span><span style="color:#f92672">,</span> 10<span style="color:#f92672">));</span>
 </code></pre></div><p>This generates an implicit <code>and</code> across the field comparisons.</p>
-<h2 id="text-searching">Text Searching</h2>
-<p>Morphia also supports MongoDB&rsquo;s text search capabilities.  In order to execute a text search against a collection, the collection must
-have a <a href="http://docs.mongodb.org/manual//core/index-text/
-">text index</a> defined first.  Using Morphia that definition would look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Indexes</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Index</span><span style="color:#f92672">(</span>fields <span style="color:#f92672">=</span> <span style="color:#a6e22e">@Field</span><span style="color:#f92672">(</span>value <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;$**&#34;</span><span style="color:#f92672">,</span> type <span style="color:#f92672">=</span> IndexType<span style="color:#f92672">.</span><span style="color:#a6e22e">TEXT</span><span style="color:#f92672">)))</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Greeting</span> <span style="color:#f92672">{</span>
-    <span style="color:#a6e22e">@Id</span>
-    <span style="color:#66d9ef">private</span> ObjectId id<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> String value<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> String language<span style="color:#f92672">;</span>
-
-    <span style="color:#f92672">...</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/query/TestTextSearching.java
-">test</a> does:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">morphia<span style="color:#f92672">.</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>Greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">ensureIndexes</span><span style="color:#f92672">();</span>
-
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good morning&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good afternoon&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good night&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good riddance&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;english&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;guten Morgen&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;german&#34;</span><span style="color:#f92672">),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;guten Tag&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;german&#34;</span><span style="color:#f92672">)),</span>
-    <span style="color:#66d9ef">new</span> Greeting<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;gute Nacht&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;german&#34;</span><span style="color:#f92672">));</span>
-
-List<span style="color:#f92672">&lt;</span>Greeting<span style="color:#f92672">&gt;</span> good <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-                             <span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;good&#34;</span><span style="color:#f92672">)</span>
-                             <span style="color:#f92672">.</span><span style="color:#a6e22e">order</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;_id&#34;</span><span style="color:#f92672">)</span>
-                             <span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">();</span>
-Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertEquals</span><span style="color:#f92672">(</span>4<span style="color:#f92672">,</span> good<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
-</code></pre></div><p>As you can see here, we create <code>Greeting</code> objects for multiple languages.  In our test query, we&rsquo;re looking for occurrences of the word
-&ldquo;good&rdquo; in any document.  We created four such documents and our query returns exactly those four.</p>
 <h2 id="other-query-options">Other Query Options</h2>
 <p>There is more to querying than simply filtering against different document values.  Listed below are some of the options for modifying
 the query results in different ways.</p>
@@ -754,34 +620,29 @@ the query results in different ways.</p>
 document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ContainsRenamedFields user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ContainsRenamedFields<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Frank&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Zappa&#34;</span><span style="color:#f92672">);</span>
-getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
+datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
 
-ContainsRenamedFields found <span style="color:#f92672">=</span> getDs<span style="color:#f92672">()</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>ContainsRenamedFields<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">project</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;first_name&#34;</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
-Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">firstName</span><span style="color:#f92672">);</span>
-Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertNull</span><span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">lastName</span><span style="color:#f92672">);</span>
-
-found <span style="color:#f92672">=</span> getDs<span style="color:#f92672">()</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>ContainsRenamedFields<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">project</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;firstName&#34;</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
-Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">firstName</span><span style="color:#f92672">);</span>
-Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertNull</span><span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">lastName</span><span style="color:#f92672">);</span>
-</code></pre></div><p>As you can see here, we&rsquo;re saving this entity with a first and last name but our query only returns the first name (and the _id value) in
+ContainsRenamedFields found <span style="color:#f92672">=</span> datastore
+                                  <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>ContainsRenamedFields<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+                                  <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
+                                               <span style="color:#f92672">.</span><span style="color:#a6e22e">projection</span><span style="color:#f92672">().</span><span style="color:#a6e22e">include</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;first_name&#34;</span><span style="color:#f92672">)</span>
+                                               <span style="color:#f92672">.</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">(</span>1<span style="color:#f92672">))</span>
+                                  <span style="color:#f92672">.</span><span style="color:#a6e22e">tryNext</span><span style="color:#f92672">();</span>
+assertNotNull<span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">firstName</span><span style="color:#f92672">);</span>
+assertNull<span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">lastName</span><span style="color:#f92672">);</span>
+</code></pre></div><p>As you can see here, we&rsquo;re saving this entity with a first and last name but our query only returns the first name (and the <code>_id</code> value) in
 the returned instance of our type.  It&rsquo;s also worth noting that this project works with both the mapped document field name
 <code>&quot;first_name&quot;</code> and the Java field name <code>&quot;firstName&quot;</code>.</p>
-<p>The boolean value passed in instructs Morphia to either include (<code>true</code>) or exclude (<code>false</code>) the field.  It is not currently possible to list both inclusions and exclusions in one query.</p>
-<!-- raw HTML omitted -->
-<p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
+
+<div class="notices warn" ><p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
 MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
 saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
 for this entity will be removed.  To save such instances back consider using <a href="/2.0.0-SNAPSHOT/javadoc?dev/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
-<!-- raw HTML omitted -->
+</div>
+
 <h3 id="limiting-and-skipping">Limiting and Skipping</h3>
-<p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>Query.limit(int)</code> and <code>Query.offset(int)</code>
-for these cases.  An example of these methods in action would look like this:</p>
+<p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>FindOptions.limit(int)</code> and
+<code>FindOptions.offset(int)</code> for these cases.  An example of these methods in action would look like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Person<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
 	    <span style="color:#f92672">.</span><span style="color:#a6e22e">offset</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
@@ -790,11 +651,14 @@ for these cases.  An example of these methods in action would look like this:</p
 pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip
 ">skip</a> documentation for more detail.</p>
 <h3 id="ordering">Ordering</h3>
-<p>Ordering the results of a query is done via <a href="/javadoc/dev/morphia/query/Query.html#order-java.lang.String-"><code>Query.order(String)</code></a>
-.  The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.  To reverse the sort order
-for a particular field simply prefix that field with a <code>-</code>.  For example, to sort by age (youngest to oldest) and then income (highest
-to lowest), you would use this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">query<span style="color:#f92672">.</span><span style="color:#a6e22e">order</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age,-income&#34;</span><span style="color:#f92672">);</span>
+<p>Ordering the results of a query is done via <a href="/javadoc/dev/morphia/query/Query.html#order-java.lang.String-"><code>FindOptions.sort(Sort...)</code></a>
+and a handful of other overloads. For example, to sort by <code>age</code> (youngest to oldest) and then <code>income</code> (highest to lowest), you would
+use this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>User<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+       <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
+                    <span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>ascending<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">),</span> descending<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;income&#34;</span><span style="color:#f92672">))</span>
+                    <span style="color:#f92672">.</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">(</span>1<span style="color:#f92672">))</span>
+       <span style="color:#f92672">.</span><span style="color:#a6e22e">tryNext</span><span style="color:#f92672">();</span>
 </code></pre></div><h3 id="tailable-cursors">Tailable Cursors</h3>
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
@@ -804,11 +668,10 @@ are added to the collection that match your query, they&rsquo;ll be returned by 
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">getMorphia<span style="color:#f92672">().</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>CappedPic<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
 getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">ensureCaps</span><span style="color:#f92672">();</span>                                                          <span style="color:#75715e">// #1
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">final</span> Query<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>CappedPic<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-<span style="color:#66d9ef">final</span> List<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> found <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;();</span>
+<span style="color:#66d9ef">final</span> List<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> found <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
 
-<span style="color:#66d9ef">final</span> Iterator<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> tail <span style="color:#f92672">=</span> query
-	<span style="color:#f92672">.</span><span style="color:#a6e22e">fetch</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
-		<span style="color:#f92672">.</span><span style="color:#a6e22e">cursorType</span><span style="color:#f92672">(</span>CursorType<span style="color:#f92672">.</span><span style="color:#a6e22e">Tailable</span><span style="color:#f92672">));</span>
+<span style="color:#66d9ef">final</span> Iterator<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> tail <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
+                                                   <span style="color:#f92672">.</span><span style="color:#a6e22e">cursorType</span><span style="color:#f92672">(</span>CursorType<span style="color:#f92672">.</span><span style="color:#a6e22e">Tailable</span><span style="color:#f92672">));</span>
 <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 	found<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tail<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">());</span>                                                    <span style="color:#75715e">// #2
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
@@ -821,19 +684,7 @@ created correctly.  If the collection already exists and is not capped, you will
 version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
 application.</li>
 </ol>
-<h3 id="raw-querying">Raw Querying</h3>
-<p>You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.</p>
-<p>For example:</p>
-<pre><code>Document query = new Document()
-	.append(&quot;albums&quot;,
-            new Document(&quot;$elemMatch&quot;,
-                    new Document(&quot;$and&quot;, new Document[] {
-                        new Document(&quot;albumId&quot;, albumDto.getAlbumId()),
-                        new Document(&quot;album&quot;,
-                            new Document(&quot;$exists&quot;, false))})));
 
-Artist result = datastore.createQuery(Artist.class, query).get();
-</code></pre>
 
 <footer class=" footline" >
 	
@@ -1130,6 +981,38 @@ Artist result = datastore.createQuery(Artist.class, query).get();
             
         
                     
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
             
         
                     
@@ -1139,12 +1022,8 @@ Artist result = datastore.createQuery(Artist.class, query).get();
         
 
 
-        
-            <a class="nav nav-prev" href="/2.0.0-SNAPSHOT/guides/lifecyclemethods/" title="Life Cycle Methods"> <i class="fas fa-chevron-left"></i></a>
-        
-        
-            <a class="nav nav-next" href="/2.0.0-SNAPSHOT/guides/references/" title="References" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
-        
+	 
+	 
     </div>
 
     </section>
@@ -1152,20 +1031,19 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/html5shiv-printshiv.min.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583754470"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583890355"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583890355"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583890355"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583890355"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583890355"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583890355"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom.71422.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583754470"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583754470"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1583890355"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583890355"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583890355"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583754470" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583754470"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583890355" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583890355"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

@@ -102,3 +102,10 @@ a:hover {
     border-color: var(--MENU-SECTION-HR-color);
 }
 
+#body .tags a.tag-link {
+    background-color: var(--MENU-HEADER-BG-color);    
+}
+
+#body .tags a.tag-link:before {
+    border-right-color: var(--MENU-HEADER-BG-color);
+}

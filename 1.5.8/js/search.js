@@ -13,30 +13,33 @@ function initLunr() {
     // First retrieve the index file
     $.getJSON(baseurl +"index.json")
         .done(function(index) {
-            pagesIndex =   index;
+            pagesIndex = index;
             // Set up lunrjs by declaring the fields we use
             // Also provide their boost level for the ranking
-            lunrIndex = new lunr.Index
-            lunrIndex.ref("uri");
-            lunrIndex.field('title', {
-                boost: 15
-            });
-            lunrIndex.field('tags', {
-                boost: 10
-            });
-            lunrIndex.field("content", {
-                boost: 5
-            });
-
-            // Feed lunr with each file and let lunr actually index them
-            pagesIndex.forEach(function(page) {
-                lunrIndex.add(page);
-            });
-            lunrIndex.pipeline.remove(lunrIndex.stemmer)
+            lunrIndex = lunr(function() {
+                this.ref("uri");
+                this.field('title', {
+		    boost: 15
+                });
+                this.field('tags', {
+		    boost: 10
+                });
+                this.field("content", {
+		    boost: 5
+                });
+				
+                this.pipeline.remove(lunr.stemmer);
+                this.searchPipeline.remove(lunr.stemmer);
+				
+                // Feed lunr with each file and let lunr actually index them
+                pagesIndex.forEach(function(page) {
+		    this.add(page);
+                }, this);
+            })
         })
         .fail(function(jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
-            console.error("Error getting Hugo index flie:", err);
+            console.error("Error getting Hugo index file:", err);
         });
 }
 
@@ -46,9 +49,9 @@ function initLunr() {
  * @param  {String} query
  * @return {Array}  results
  */
-function search(query) {
+function search(queryTerm) {
     // Find the item in our index corresponding to the lunr one to have more info
-    return lunrIndex.search(query).map(function(result) {
+    return lunrIndex.search(queryTerm+"^100"+" "+queryTerm+"*^10"+" "+"*"+queryTerm+"^10"+" "+queryTerm+"~2^1").map(function(result) {
             return pagesIndex.filter(function(page) {
                 return page.uri === result.ref;
             })[0];

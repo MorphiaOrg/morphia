@@ -7,24 +7,25 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/2.0.0-BETA1/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/2.0.0-BETA1/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/2.0.0-BETA1/images/favicon.png" type="image/png">
+
     <title>Aggregation :: Morphia</title>
 
     
-    <link href="/2.0.0-BETA1/css/nucleus.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/fontawesome-all.min.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/hybrid.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/featherlight.min.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/perfect-scrollbar.min.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/auto-complete.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/theme.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/hugo-theme.css?1583754284" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/nucleus.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/fontawesome-all.min.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/hybrid.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/featherlight.min.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/perfect-scrollbar.min.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/auto-complete.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/atom-one-dark-reasonable.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/theme.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/hugo-theme.css?1583890166" rel="stylesheet">
     
 
-    <script src="/2.0.0-BETA1/js/jquery-2.x.min.js?1583754284"></script>
+    <script src="/2.0.0-BETA1/js/jquery-3.3.1.min.js?1583890166"></script>
 
-    <style type="text/css">
+    <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
@@ -263,9 +264,9 @@
  
   
     
-      <li data-nav-id="/2.0.0-BETA1/guides/indexing/" title="Indexing" class="dd-item ">
-        <a href="/2.0.0-BETA1/guides/indexing/">
-        Indexing
+      <li data-nav-id="/2.0.0-BETA1/guides/configuration/" title="Configuration" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/configuration/">
+        Configuration
         
         </a>
     </li>
@@ -282,9 +283,9 @@
  
   
     
-      <li data-nav-id="/2.0.0-BETA1/guides/jrebel/" title="JRebel" class="dd-item ">
-        <a href="/2.0.0-BETA1/guides/jrebel/">
-        JRebel
+      <li data-nav-id="/2.0.0-BETA1/guides/indexing/" title="Indexing" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/indexing/">
+        Indexing
         
         </a>
     </li>
@@ -339,6 +340,25 @@
  
   
     
+      <li data-nav-id="/2.0.0-BETA1/guides/querying-old/" title="Querying (Deprecated)" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/querying-old/">
+        Querying (Deprecated)
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
       <li data-nav-id="/2.0.0-BETA1/guides/references/" title="References" class="dd-item ">
         <a href="/2.0.0-BETA1/guides/references/">
         References
@@ -361,6 +381,25 @@
       <li data-nav-id="/2.0.0-BETA1/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
         <a href="/2.0.0-BETA1/guides/schemavalidation/">
         Schema Validation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/2.0.0-BETA1/guides/textsearch/" title="Text Search" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/textsearch/">
+        Text Search
         
         </a>
     </li>
@@ -485,24 +524,10 @@
                   <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
-                    
-          
-          
-            
-            
-          
-          
-            
-            
-          
-          
-            <a href='/2.0.0-BETA1/'>Morphia</a> > <a href='/2.0.0-BETA1/guides/'>Reference Guides</a> > Aggregation
-          
-         
-          
-         
-          
-           
+                 
+                 
+                   Aggregation 
+                 
                   </span>
                 </div>
                 
@@ -527,14 +552,20 @@
               </div>
             </div>
             
-
+        <div id="head-tags">
+        
+        </div>
         
         <div id="body-inner">
           
-            <h1>Aggregation</h1>
+            <h1>
+              
+              Aggregation
+            </h1>
           
 
         
+
 
 
 <p>The <a href="http://docs.mongodb.org/manual/aggregation
@@ -543,11 +574,10 @@ operations (called stages) against the data in a collection.  These pipelines ca
 convert your data from one form to another.  This guide will not go in to the details of how aggregation works, however.  The official
 MongoDB <a href="http://docs.mongodb.org/manual/aggregation
 ">documentation</a> has extensive tutorials on such details.  Rather, this
-guide will
-focus on the Morphia API.  The examples shown here are taken from the <a href="https://github.com/MorphiaOrg/morphia/blob/r2.0.0-BETA1/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java
+guide will focus on the Morphia API.  The examples shown here are taken from the <a href="https://github.com/MorphiaOrg/morphia/blob/r2.0.0-BETA1/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java
 ">tests</a> in Morphia itself.</p>
 <p>Writing an aggregation pipeline starts just like writing a standard query.  As with querying, we start with the <code>Datastore</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Iterator<span style="color:#f92672">&lt;</span>Author<span style="color:#f92672">&gt;</span> aggregate <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createAggregation</span><span style="color:#f92672">(</span>Book<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Iterator<span style="color:#f92672">&lt;</span>Author<span style="color:#f92672">&gt;</span> aggregate <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">aggregate</span><span style="color:#f92672">(</span>Book<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
       <span style="color:#f92672">.</span><span style="color:#a6e22e">group</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;author&#34;</span><span style="color:#f92672">,</span> grouping<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;books&#34;</span><span style="color:#f92672">,</span> push<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;title&#34;</span><span style="color:#f92672">)))</span>
       <span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">(</span>Author<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> options<span style="color:#f92672">);</span>
 </code></pre></div><p><code>createAggregation()</code> takes a <code>Class</code> literal.  This lets Morphia know which collection to perform this aggregation
@@ -588,9 +618,10 @@ on the server.</p>
 ) is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
 if it does not exist, will be created upon execution of the pipeline.</p>
-<!-- raw HTML omitted -->
-<p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
-<!-- raw HTML omitted -->
+
+<div class="notices warn" ><p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
+</div>
+
 <p>Using <code>out()</code> is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
 framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <code>find</code> on the output
 collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the
@@ -900,6 +931,38 @@ instances, you can use [<code>out(String,Class,AggregationOptions)</code>](/java
             
         
                     
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
             
         
                     
@@ -909,12 +972,8 @@ instances, you can use [<code>out(String,Class,AggregationOptions)</code>](/java
         
 
 
-        
-            <a class="nav nav-prev" href="/2.0.0-BETA1/guides/annotations/" title="Annotations"> <i class="fas fa-chevron-left"></i></a>
-        
-        
-            <a class="nav nav-next" href="/2.0.0-BETA1/guides/indexing/" title="Indexing" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
-        
+	 
+	 
     </div>
 
     </section>
@@ -922,20 +981,19 @@ instances, you can use [<code>out(String,Class,AggregationOptions)</code>](/java
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-BETA1/js/clipboard.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/perfect-scrollbar.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/perfect-scrollbar.jquery.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/jquery.sticky.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/featherlight.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/html5shiv-printshiv.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/highlight.pack.js?1583754284"></script>
+    <script src="/2.0.0-BETA1/js/clipboard.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/perfect-scrollbar.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/perfect-scrollbar.jquery.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/jquery.sticky.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/featherlight.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/highlight.pack.js?1583890166"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-BETA1/js/modernizr.custom.71422.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/learn.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/hugo-learn.js?1583754284"></script>
+    <script src="/2.0.0-BETA1/js/modernizr.custom-3.6.0.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/learn.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/hugo-learn.js?1583890166"></script>
 
-    <link href="/2.0.0-BETA1/mermaid/mermaid.css?1583754284" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-BETA1/mermaid/mermaid.js?1583754284"></script>
+    <link href="/2.0.0-BETA1/mermaid/mermaid.css?1583890166" rel="stylesheet" />
+    <script src="/2.0.0-BETA1/mermaid/mermaid.js?1583890166"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

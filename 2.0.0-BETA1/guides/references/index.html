@@ -7,24 +7,25 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/2.0.0-BETA1/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/2.0.0-BETA1/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/2.0.0-BETA1/images/favicon.png" type="image/png">
+
     <title>References :: Morphia</title>
 
     
-    <link href="/2.0.0-BETA1/css/nucleus.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/fontawesome-all.min.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/hybrid.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/featherlight.min.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/perfect-scrollbar.min.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/auto-complete.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/theme.css?1583754284" rel="stylesheet">
-    <link href="/2.0.0-BETA1/css/hugo-theme.css?1583754284" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/nucleus.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/fontawesome-all.min.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/hybrid.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/featherlight.min.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/perfect-scrollbar.min.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/auto-complete.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/atom-one-dark-reasonable.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/theme.css?1583890166" rel="stylesheet">
+    <link href="/2.0.0-BETA1/css/hugo-theme.css?1583890166" rel="stylesheet">
     
 
-    <script src="/2.0.0-BETA1/js/jquery-2.x.min.js?1583754284"></script>
+    <script src="/2.0.0-BETA1/js/jquery-3.3.1.min.js?1583890166"></script>
 
-    <style type="text/css">
+    <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
@@ -263,9 +264,9 @@
  
   
     
-      <li data-nav-id="/2.0.0-BETA1/guides/indexing/" title="Indexing" class="dd-item ">
-        <a href="/2.0.0-BETA1/guides/indexing/">
-        Indexing
+      <li data-nav-id="/2.0.0-BETA1/guides/configuration/" title="Configuration" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/configuration/">
+        Configuration
         
         </a>
     </li>
@@ -282,9 +283,9 @@
  
   
     
-      <li data-nav-id="/2.0.0-BETA1/guides/jrebel/" title="JRebel" class="dd-item ">
-        <a href="/2.0.0-BETA1/guides/jrebel/">
-        JRebel
+      <li data-nav-id="/2.0.0-BETA1/guides/indexing/" title="Indexing" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/indexing/">
+        Indexing
         
         </a>
     </li>
@@ -339,6 +340,25 @@
  
   
     
+      <li data-nav-id="/2.0.0-BETA1/guides/querying-old/" title="Querying (Deprecated)" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/querying-old/">
+        Querying (Deprecated)
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
       <li data-nav-id="/2.0.0-BETA1/guides/references/" title="References" class="dd-item active">
         <a href="/2.0.0-BETA1/guides/references/">
         References
@@ -361,6 +381,25 @@
       <li data-nav-id="/2.0.0-BETA1/guides/schemavalidation/" title="Schema Validation" class="dd-item ">
         <a href="/2.0.0-BETA1/guides/schemavalidation/">
         Schema Validation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/2.0.0-BETA1/guides/textsearch/" title="Text Search" class="dd-item ">
+        <a href="/2.0.0-BETA1/guides/textsearch/">
+        Text Search
         
         </a>
     </li>
@@ -485,24 +524,10 @@
                   <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
-                    
-          
-          
-            
-            
-          
-          
-            
-            
-          
-          
-            <a href='/2.0.0-BETA1/'>Morphia</a> > <a href='/2.0.0-BETA1/guides/'>Reference Guides</a> > References
-          
-         
-          
-         
-          
-           
+                 
+                 
+                   References 
+                 
                   </span>
                 </div>
                 
@@ -516,22 +541,32 @@
               </div>
             </div>
             
-
+        <div id="head-tags">
+        
+        </div>
         
         <div id="body-inner">
           
-            <h1>References</h1>
+            <h1>
+              
+              References
+            </h1>
           
 
         
 
 
-<p>Morphia supports two styles of defining references:  the <code>@Reference</code> annotation and the experimental <a href="/2.0.0-BETA1/javadoc?dev/morphia/mapping/experimental/MorphiaReference.html
+
+<p>Morphia supports two styles of defining references:  the <a href="/2.0.0-BETA1/javadoc?dev/morphia/annotations/Reference.html
+"><code>@Reference</code></a> annotation and the experimental <a href="/2.0.0-BETA1/javadoc?dev/morphia/mapping/experimental/MorphiaReference.html
 "><code>MorphiaReference</code></a>.  The annotation based approach is discussed
-<a href="/2.0.0-BETA1/guides/annotations/">here</a>.  This guide will cover the wrapper based approach.</p>
-<!-- raw HTML omitted -->
-<p>This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</p>
-<!-- raw HTML omitted -->
+<a href="/2.0.0-BETA1/guides/annotations/#reference">here</a>.  This guide will cover the wrapper based approach.</p>
+
+<div class="notices note" ><p>This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to
+experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used
+going forward.</p>
+</div>
+
 <p>An alternative to the traditional annotation-based approach is the <a href="/2.0.0-BETA1/javadoc?dev/morphia/mapping/experimental/MorphiaReference.html
 "><code>MorphiaReference</code></a> wrapper.  This type can not be instantiated directly.  Instead a <code>wrap()</code>
 method is provided that will construct the proper type and track the necessary state.  Currently, four different types of values are
@@ -624,11 +659,12 @@ refer to documents stored in different collections.  For example, if the generic
 </code></pre></div><p>In both cases, we have a document field called <code>list</code> but as you can see in the second case, we&rsquo;re not storing just the <code>_id</code> values but
 <code>DBRef</code> instances storing both the collection name, &ldquo;books&rdquo; in this case, and <code>ObjectId</code> values from the Books.  This lets the wrapper
 properly reconstitute these references when you&rsquo;re ready to use them.</p>
-<!-- raw HTML omitted -->
-<p>Before we go too much further, it&rsquo;s important to point that, regardless of the type of the references, they are fetched lazily.  So if
+
+<div class="notices tip" ><p>Before we go too much further, it&rsquo;s important to point that, regardless of the type of the references, they are fetched lazily.  So if
 you multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.  If the type is
 a <code>Collection</code> or a <code>Map</code>, all the referenced entities are fetched and loaded via a single query if possible.  This saves on server round trips but does raise the risk of potential <code>OutOfMemoryError</code> problems if you load too many objects in to memory this way.</p>
-<!-- raw HTML omitted -->
+</div>
+
 <p>A <code>Set</code> of references will look no different in the database than the <code>List</code> does.  However, <code>Map</code>s of references are slightly more
 complicated.  A <code>Map</code> might look something like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Author</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">pretty</span>()
@@ -645,9 +681,10 @@ complicated.  A <code>Map</code> might look something like this:</p>
 	}
 }
 </code></pre></div><p>References to single entities will follow the same pattern with regards to the <code>_id</code> values vs <code>DBRef</code> entries.</p>
-<!-- raw HTML omitted -->
-<p>Currently there is no support for configuring the <code>ignoreMissing</code> parameter as there is via the annotation.  The wrapper will silently drop  missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.</p>
-<!-- raw HTML omitted -->
+
+<div class="notices info" ><p>Currently there is no support for configuring the <code>ignoreMissing</code> parameter as there is via the annotation.  The wrapper will silently drop  missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.</p>
+</div>
+
 
 
 <footer class=" footline" >
@@ -866,6 +903,22 @@ complicated.  A <code>Map</code> might look something like this:</p>
             
                 
                     
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
                     
                 
                 
@@ -945,6 +998,22 @@ complicated.  A <code>Map</code> might look something like this:</p>
             
         
                     
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
             
         
                     
@@ -954,12 +1023,8 @@ complicated.  A <code>Map</code> might look something like this:</p>
         
 
 
-        
-            <a class="nav nav-prev" href="/2.0.0-BETA1/guides/querying/" title="Querying"> <i class="fas fa-chevron-left"></i></a>
-        
-        
-            <a class="nav nav-next" href="/2.0.0-BETA1/guides/schemavalidation/" title="Schema Validation" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
-        
+	 
+	 
     </div>
 
     </section>
@@ -967,20 +1032,19 @@ complicated.  A <code>Map</code> might look something like this:</p>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-BETA1/js/clipboard.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/perfect-scrollbar.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/perfect-scrollbar.jquery.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/jquery.sticky.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/featherlight.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/html5shiv-printshiv.min.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/highlight.pack.js?1583754284"></script>
+    <script src="/2.0.0-BETA1/js/clipboard.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/perfect-scrollbar.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/perfect-scrollbar.jquery.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/jquery.sticky.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/featherlight.min.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/highlight.pack.js?1583890166"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-BETA1/js/modernizr.custom.71422.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/learn.js?1583754284"></script>
-    <script src="/2.0.0-BETA1/js/hugo-learn.js?1583754284"></script>
+    <script src="/2.0.0-BETA1/js/modernizr.custom-3.6.0.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/learn.js?1583890166"></script>
+    <script src="/2.0.0-BETA1/js/hugo-learn.js?1583890166"></script>
 
-    <link href="/2.0.0-BETA1/mermaid/mermaid.css?1583754284" type="text/css" rel="stylesheet" />
-    <script src="/2.0.0-BETA1/mermaid/mermaid.js?1583754284"></script>
+    <link href="/2.0.0-BETA1/mermaid/mermaid.css?1583890166" rel="stylesheet" />
+    <script src="/2.0.0-BETA1/mermaid/mermaid.js?1583890166"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

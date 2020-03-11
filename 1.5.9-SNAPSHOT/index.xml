@@ -38,7 +38,7 @@ Index The @Index documentation can be found here. There are two pieces to this a
       
       <guid>/1.5.9-SNAPSHOT/getting-started/installation-guide/</guid>
       <description>The recommended way to get started using Morphia in your project is with a dependency management system.
-&amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.9-SNAPSHOT&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia:morphia:1.5.9-SNAPSHOT&#39; }   You can also download the jars directly from sonatype.  </description>
+ &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;core&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.5.9-SNAPSHOT&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; &amp;lt;repositories&amp;gt; &amp;lt;repository&amp;gt; &amp;lt;id&amp;gt;sonatype-snapshots&amp;lt;/id&amp;gt; &amp;lt;name&amp;gt;Sontatype Snapshots&amp;lt;/name&amp;gt; &amp;lt;url&amp;gt;https://oss.sonatype.org/content/repositories/snapshots&amp;lt;/url&amp;gt; &amp;lt;snapshots&amp;gt; &amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt; &amp;lt;/snapshots&amp;gt; &amp;lt;/repository&amp;gt; &amp;lt;/repositories&amp;gt;    dependencies { compile &#39;dev.morphia.morphia:core:1.5.9-SNAPSHOT&#39; } repositories { maven { url &#39;https://oss.sonatype.org/content/repositories/snapshots&#39; } }   You can also download the jars directly from sonatype.  </description>
     </item>
     
     <item>

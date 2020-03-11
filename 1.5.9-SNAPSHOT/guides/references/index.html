@@ -7,24 +7,25 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/1.5.9-SNAPSHOT/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/1.5.9-SNAPSHOT/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/1.5.9-SNAPSHOT/images/favicon.png" type="image/png">
+
     <title>References :: Morphia</title>
 
     
-    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1583754541" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1583754541" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1583754541" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1583754541" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1583754541" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1583754541" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/theme.css?1583754541" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1583754541" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/atom-one-dark-reasonable.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/theme.css?1583890406" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1583890406" rel="stylesheet">
     
 
-    <script src="/1.5.9-SNAPSHOT/js/jquery-2.x.min.js?1583754541"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery-3.3.1.min.js?1583890406"></script>
 
-    <style type="text/css">
+    <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
@@ -466,24 +467,10 @@
                   <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
-                    
-          
-          
-            
-            
-          
-          
-            
-            
-          
-          
-            <a href='/1.5.9-SNAPSHOT/'>Morphia</a> > <a href='/1.5.9-SNAPSHOT/guides/'>Reference Guides</a> > References
-          
-         
-          
-         
-          
-           
+                 
+                 
+                   References 
+                 
                   </span>
                 </div>
                 
@@ -497,22 +484,29 @@
               </div>
             </div>
             
-
+        <div id="head-tags">
+        
+        </div>
         
         <div id="body-inner">
           
-            <h1>References</h1>
+            <h1>
+              
+              References
+            </h1>
           
 
         
+
 
 
 <p>Morphia supports two styles of defining references:  the <code>@Reference</code> annotation and the experimental <a href="/1.5.9-SNAPSHOT/javadoc?dev/morphia/mapping/experimental/MorphiaReference.html
 "><code>MorphiaReference</code></a>.  The annotation based approach is discussed
 <a href="/1.5.9-SNAPSHOT/guides/annotations/">here</a>.  This guide will cover the wrapper based approach.</p>
-<!-- raw HTML omitted -->
-<p>This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</p>
-<!-- raw HTML omitted -->
+
+<div class="notices warn" ><p>This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</p>
+</div>
+
 <p>An alternative to the traditional annotation-based approach is the <a href="/1.5.9-SNAPSHOT/javadoc?dev/morphia/mapping/experimental/MorphiaReference.html
 "><code>MorphiaReference</code></a> wrapper.  This type can not be instantiated directly.  Instead a <code>wrap()</code>
 method is provided that will construct the proper type and track the necessary state.  Currently, four different types of values are
@@ -605,11 +599,12 @@ refer to documents stored in different collections.  For example, if the generic
 </code></pre></div><p>In both cases, we have a document field called <code>list</code> but as you can see in the second case, we&rsquo;re not storing just the <code>_id</code> values but
 <code>DBRef</code> instances storing both the collection name, &ldquo;books&rdquo; in this case, and <code>ObjectId</code> values from the Books.  This lets the wrapper
 properly reconstitute these references when you&rsquo;re ready to use them.</p>
-<!-- raw HTML omitted -->
-<p>Before we go too much further, it&rsquo;s important to point that, regardless of the type of the references, they are fetched lazily.  So if
+
+<div class="notices tip" ><p>Before we go too much further, it&rsquo;s important to point that, regardless of the type of the references, they are fetched lazily.  So if
 you multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.  If the type is
 a <code>Collection</code> or a <code>Map</code>, all the referenced entities are fetched and loaded via a single query if possible.  This saves on server round trips but does raise the risk of potential <code>OutOfMemoryError</code> problems if you load too many objects in to memory this way.</p>
-<!-- raw HTML omitted -->
+</div>
+
 <p>A <code>Set</code> of references will look no different in the database than the <code>List</code> does.  However, <code>Map</code>s of references are slightly more
 complicated.  A <code>Map</code> might look something like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Author</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">pretty</span>()
@@ -626,9 +621,10 @@ complicated.  A <code>Map</code> might look something like this:</p>
 	}
 }
 </code></pre></div><p>References to single entities will follow the same pattern with regards to the <code>_id</code> values vs <code>DBRef</code> entries.</p>
-<!-- raw HTML omitted -->
-<p>Currently there is no support for configuring the <code>ignoreMissing</code> parameter as there is via the annotation.  The wrapper will silently drop  missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.</p>
-<!-- raw HTML omitted -->
+
+<div class="notices " ><p>Currently there is no support for configuring the <code>ignoreMissing</code> parameter as there is via the annotation.  The wrapper will silently drop  missing ID values or return null depending on the type of the reference.  Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.</p>
+</div>
+
 
 
 <footer class=" footline" >
@@ -919,12 +915,8 @@ complicated.  A <code>Map</code> might look something like this:</p>
         
 
 
-        
-            <a class="nav nav-prev" href="/1.5.9-SNAPSHOT/guides/querying/" title="Querying"> <i class="fas fa-chevron-left"></i></a>
-        
-        
-            <a class="nav nav-next" href="/1.5.9-SNAPSHOT/guides/schemavalidation/" title="Schema Validation" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
-        
+	 
+	 
     </div>
 
     </section>
@@ -932,20 +924,19 @@ complicated.  A <code>Map</code> might look something like this:</p>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/html5shiv-printshiv.min.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1583754541"></script>
+    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1583890406"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1583890406"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583890406"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1583890406"></script>
+    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1583890406"></script>
+    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1583890406"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom.71422.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/learn.js?1583754541"></script>
-    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1583754541"></script>
+    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom-3.6.0.js?1583890406"></script>
+    <script src="/1.5.9-SNAPSHOT/js/learn.js?1583890406"></script>
+    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1583890406"></script>
 
-    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1583754541" type="text/css" rel="stylesheet" />
-    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1583754541"></script>
+    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1583890406" rel="stylesheet" />
+    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1583890406"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

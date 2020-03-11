@@ -7,24 +7,25 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/1.4.1/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/1.4.1/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/1.4.1/images/favicon.png" type="image/png">
+
     <title>Indexing :: Morphia</title>
 
     
-    <link href="/1.4.1/css/nucleus.css?1583754412" rel="stylesheet">
-    <link href="/1.4.1/css/fontawesome-all.min.css?1583754412" rel="stylesheet">
-    <link href="/1.4.1/css/hybrid.css?1583754412" rel="stylesheet">
-    <link href="/1.4.1/css/featherlight.min.css?1583754412" rel="stylesheet">
-    <link href="/1.4.1/css/perfect-scrollbar.min.css?1583754412" rel="stylesheet">
-    <link href="/1.4.1/css/auto-complete.css?1583754412" rel="stylesheet">
-    <link href="/1.4.1/css/theme.css?1583754412" rel="stylesheet">
-    <link href="/1.4.1/css/hugo-theme.css?1583754412" rel="stylesheet">
+    <link href="/1.4.1/css/nucleus.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/fontawesome-all.min.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/hybrid.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/featherlight.min.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/perfect-scrollbar.min.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/auto-complete.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/atom-one-dark-reasonable.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/theme.css?1583890306" rel="stylesheet">
+    <link href="/1.4.1/css/hugo-theme.css?1583890306" rel="stylesheet">
     
 
-    <script src="/1.4.1/js/jquery-2.x.min.js?1583754412"></script>
+    <script src="/1.4.1/js/jquery-3.3.1.min.js?1583890306"></script>
 
-    <style type="text/css">
+    <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
@@ -428,24 +429,10 @@
                   <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
-                    
-          
-          
-            
-            
-          
-          
-            
-            
-          
-          
-            <a href='/1.4.1/'>Morphia</a> > <a href='/1.4.1/guides/'>Reference Guides</a> > Indexing
-          
-         
-          
-         
-          
-           
+                 
+                 
+                   Indexing 
+                 
                   </span>
                 </div>
                 
@@ -470,14 +457,20 @@
               </div>
             </div>
             
-
+        <div id="head-tags">
+        
+        </div>
         
         <div id="body-inner">
           
-            <h1>Indexing</h1>
+            <h1>
+              
+              Indexing
+            </h1>
           
 
         
+
 
 
 <p>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on
@@ -541,9 +534,10 @@ mapped document names.  Setting this to <strong>true</strong> disables this vali
 <h4 id="dropdups">dropDups()</h4>
 <p><em>Default: false</em></p>
 <p>When defining a <a href="#unique">unique</a> index, if there are duplicate values found, the index creation will.  Setting this value to true will instruct MongoDB to drop the documents with duplicate values.</p>
-<!-- raw HTML omitted -->
-<p>As of MongoDB version 3.0, the dropDups option is no longer available.</p>
-<!-- raw HTML omitted -->
+
+<div class="notices warn" ><p>As of MongoDB version 3.0, the dropDups option is no longer available.</p>
+</div>
+
 <h4 id="expireafterseconds">expireAfterSeconds()</h4>
 <p><em>Optional</em></p>
 <p>Specifies a value, in seconds, as a <a href="http://docs.mongodb.org/manual/core/index-ttl/
@@ -617,9 +611,10 @@ all fields with string content in a document.  A <a href="http://docs.mongodb.or
 incorporating a text index but it&rsquo;s important to note there can only be one text index on a collection.</p>
 <p>A wild card text index declaration would look like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#a6e22e">@Indexes</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Index</span><span style="color:#f92672">(</span>fields <span style="color:#f92672">=</span> <span style="color:#a6e22e">@Field</span><span style="color:#f92672">(</span>value <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;$**&#34;</span><span style="color:#f92672">,</span> type <span style="color:#f92672">=</span> TEXT<span style="color:#f92672">)))</span>
-</code></pre></div><!-- raw HTML omitted -->
-<p>A collection can have at most one text index.</p>
-<!-- raw HTML omitted -->
+</code></pre></div>
+<div class="notices warn" ><p>A collection can have at most one text index.</p>
+</div>
+
 
 
 <footer class=" footline" >
@@ -878,12 +873,8 @@ incorporating a text index but it&rsquo;s important to note there can only be on
         
 
 
-        
-            <a class="nav nav-prev" href="/1.4.1/guides/aggregation/" title="Aggregation"> <i class="fas fa-chevron-left"></i></a>
-        
-        
-            <a class="nav nav-next" href="/1.4.1/guides/jrebel/" title="JRebel" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
-        
+	 
+	 
     </div>
 
     </section>
@@ -891,20 +882,19 @@ incorporating a text index but it&rsquo;s important to note there can only be on
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.4.1/js/clipboard.min.js?1583754413"></script>
-    <script src="/1.4.1/js/perfect-scrollbar.min.js?1583754413"></script>
-    <script src="/1.4.1/js/perfect-scrollbar.jquery.min.js?1583754413"></script>
-    <script src="/1.4.1/js/jquery.sticky.js?1583754413"></script>
-    <script src="/1.4.1/js/featherlight.min.js?1583754413"></script>
-    <script src="/1.4.1/js/html5shiv-printshiv.min.js?1583754413"></script>
-    <script src="/1.4.1/js/highlight.pack.js?1583754413"></script>
+    <script src="/1.4.1/js/clipboard.min.js?1583890306"></script>
+    <script src="/1.4.1/js/perfect-scrollbar.min.js?1583890306"></script>
+    <script src="/1.4.1/js/perfect-scrollbar.jquery.min.js?1583890306"></script>
+    <script src="/1.4.1/js/jquery.sticky.js?1583890306"></script>
+    <script src="/1.4.1/js/featherlight.min.js?1583890306"></script>
+    <script src="/1.4.1/js/highlight.pack.js?1583890306"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.4.1/js/modernizr.custom.71422.js?1583754413"></script>
-    <script src="/1.4.1/js/learn.js?1583754413"></script>
-    <script src="/1.4.1/js/hugo-learn.js?1583754413"></script>
+    <script src="/1.4.1/js/modernizr.custom-3.6.0.js?1583890306"></script>
+    <script src="/1.4.1/js/learn.js?1583890306"></script>
+    <script src="/1.4.1/js/hugo-learn.js?1583890306"></script>
 
-    <link href="/1.4.1/mermaid/mermaid.css?1583754413" type="text/css" rel="stylesheet" />
-    <script src="/1.4.1/mermaid/mermaid.js?1583754413"></script>
+    <link href="/1.4.1/mermaid/mermaid.css?1583890306" rel="stylesheet" />
+    <script src="/1.4.1/mermaid/mermaid.js?1583890306"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

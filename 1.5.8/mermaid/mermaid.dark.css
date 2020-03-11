@@ -260,6 +260,9 @@ text.actor {
   font-family: 'trebuchet ms', verdana, arial;
   font-size: 14px;
 }
+.node.clickable {
+  cursor: pointer;
+}
 div.mermaidTooltip {
   position: absolute;
   text-align: center;

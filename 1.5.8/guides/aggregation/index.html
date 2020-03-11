@@ -7,24 +7,25 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/1.5.8/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/1.5.8/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/1.5.8/images/favicon.png" type="image/png">
+
     <title>Aggregation :: Morphia</title>
 
     
-    <link href="/1.5.8/css/nucleus.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/fontawesome-all.min.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/hybrid.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/featherlight.min.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/auto-complete.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/theme.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/hugo-theme.css?1583754350" rel="stylesheet">
+    <link href="/1.5.8/css/nucleus.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/fontawesome-all.min.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/hybrid.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/featherlight.min.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/auto-complete.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/atom-one-dark-reasonable.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/theme.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/hugo-theme.css?1583890255" rel="stylesheet">
     
 
-    <script src="/1.5.8/js/jquery-2.x.min.js?1583754350"></script>
+    <script src="/1.5.8/js/jquery-3.3.1.min.js?1583890255"></script>
 
-    <style type="text/css">
+    <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
@@ -466,24 +467,10 @@
                   <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
-                    
-          
-          
-            
-            
-          
-          
-            
-            
-          
-          
-            <a href='/1.5.8/'>Morphia</a> > <a href='/1.5.8/guides/'>Reference Guides</a> > Aggregation
-          
-         
-          
-         
-          
-           
+                 
+                 
+                   Aggregation 
+                 
                   </span>
                 </div>
                 
@@ -508,14 +495,20 @@
               </div>
             </div>
             
-
+        <div id="head-tags">
+        
+        </div>
         
         <div id="body-inner">
           
-            <h1>Aggregation</h1>
+            <h1>
+              
+              Aggregation
+            </h1>
           
 
         
+
 
 
 <p>The <a href="http://docs.mongodb.org/manual/aggregation
@@ -569,9 +562,10 @@ on the server.</p>
 ) is a new operator in MongoDB 2.6 that allows the results of a
 pipeline to be stored in to a named collection.  This collection can not be sharded or a capped collection, however.  This collection,
 if it does not exist, will be created upon execution of the pipeline.</p>
-<!-- raw HTML omitted -->
-<p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
-<!-- raw HTML omitted -->
+
+<div class="notices warn" ><p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
+</div>
+
 <p>Using <code>out()</code> is implicitly asking for the results to be returned via a cursor.  What is happening under the covers is the aggregation
 framework is writing out to the collection and is done.  Morphia goes one extra step further and executes an implicit <code>find</code> on the output
 collection and returns a cursor for all the documents in the collection.  In practice, this behaves no differently than setting the
@@ -874,12 +868,8 @@ instances, you can use [<code>out(String,Class,AggregationOptions)</code>](/java
         
 
 
-        
-            <a class="nav nav-prev" href="/1.5.8/guides/annotations/" title="Annotations"> <i class="fas fa-chevron-left"></i></a>
-        
-        
-            <a class="nav nav-next" href="/1.5.8/guides/indexing/" title="Indexing" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
-        
+	 
+	 
     </div>
 
     </section>
@@ -887,20 +877,19 @@ instances, you can use [<code>out(String,Class,AggregationOptions)</code>](/java
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.8/js/clipboard.min.js?1583754350"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583754350"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583754350"></script>
-    <script src="/1.5.8/js/jquery.sticky.js?1583754350"></script>
-    <script src="/1.5.8/js/featherlight.min.js?1583754350"></script>
-    <script src="/1.5.8/js/html5shiv-printshiv.min.js?1583754350"></script>
-    <script src="/1.5.8/js/highlight.pack.js?1583754350"></script>
+    <script src="/1.5.8/js/clipboard.min.js?1583890255"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583890255"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583890255"></script>
+    <script src="/1.5.8/js/jquery.sticky.js?1583890255"></script>
+    <script src="/1.5.8/js/featherlight.min.js?1583890255"></script>
+    <script src="/1.5.8/js/highlight.pack.js?1583890255"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.8/js/modernizr.custom.71422.js?1583754350"></script>
-    <script src="/1.5.8/js/learn.js?1583754350"></script>
-    <script src="/1.5.8/js/hugo-learn.js?1583754350"></script>
+    <script src="/1.5.8/js/modernizr.custom-3.6.0.js?1583890255"></script>
+    <script src="/1.5.8/js/learn.js?1583890255"></script>
+    <script src="/1.5.8/js/hugo-learn.js?1583890255"></script>
 
-    <link href="/1.5.8/mermaid/mermaid.css?1583754350" type="text/css" rel="stylesheet" />
-    <script src="/1.5.8/mermaid/mermaid.js?1583754350"></script>
+    <link href="/1.5.8/mermaid/mermaid.css?1583890255" rel="stylesheet" />
+    <script src="/1.5.8/mermaid/mermaid.js?1583890255"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

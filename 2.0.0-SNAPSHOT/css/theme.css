@@ -1,4 +1,8 @@
 @charset "UTF-8";
+
+/* Tags */
+@import "tags.css";
+
 #top-github-link, #body #breadcrumbs {
     position: relative;
     top: 50%;
@@ -642,7 +646,7 @@ code + .copy-to-clipboard {
 pre {
     padding: 1rem;
     margin: 2rem 0;
-    background: #1d1f21;
+    background: #282c34;
     border: 0;
     border-radius: 2px;
     line-height: 1.15;
@@ -1074,7 +1078,7 @@ pre .copy-to-clipboard {
     position: absolute;
     right: 4px;
     top: 4px;
-    background-color: #4d5257;
+    background-color: #949bab;
     color: #ccc;
     border-radius: 2px;
 }
@@ -1126,5 +1130,3 @@ pre .copy-to-clipboard:hover {
 #searchResults {
     text-align: left;
 }
-
-/*# sourceMappingURL=theme.css.map */

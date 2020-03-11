@@ -7,24 +7,25 @@
     <meta name="description" content="">
 
 
-    <link rel="shortcut icon" href="/1.5.8/images/favicon.png" type="image/x-icon" />
-<link rel="icon" href="/1.5.8/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="/1.5.8/images/favicon.png" type="image/png">
+
     <title>Querying :: Morphia</title>
 
     
-    <link href="/1.5.8/css/nucleus.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/fontawesome-all.min.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/hybrid.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/featherlight.min.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/auto-complete.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/theme.css?1583754350" rel="stylesheet">
-    <link href="/1.5.8/css/hugo-theme.css?1583754350" rel="stylesheet">
+    <link href="/1.5.8/css/nucleus.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/fontawesome-all.min.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/hybrid.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/featherlight.min.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/perfect-scrollbar.min.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/auto-complete.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/atom-one-dark-reasonable.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/theme.css?1583890255" rel="stylesheet">
+    <link href="/1.5.8/css/hugo-theme.css?1583890255" rel="stylesheet">
     
 
-    <script src="/1.5.8/js/jquery-2.x.min.js?1583754350"></script>
+    <script src="/1.5.8/js/jquery-3.3.1.min.js?1583890255"></script>
 
-    <style type="text/css">
+    <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
@@ -466,24 +467,10 @@
                   <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
-                    
-          
-          
-            
-            
-          
-          
-            
-            
-          
-          
-            <a href='/1.5.8/'>Morphia</a> > <a href='/1.5.8/guides/'>Reference Guides</a> > Querying
-          
-         
-          
-         
-          
-           
+                 
+                 
+                   Querying 
+                 
                   </span>
                 </div>
                 
@@ -517,14 +504,20 @@
               </div>
             </div>
             
-
+        <div id="head-tags">
+        
+        </div>
         
         <div id="body-inner">
           
-            <h1>Querying</h1>
+            <h1>
+              
+              Querying
+            </h1>
           
 
         
+
 
 
 <p>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.  It attempts
@@ -671,11 +664,12 @@ to define your filters.  This approach is slightly more verbose but can be valid
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">query<span style="color:#f92672">.</span><span style="color:#a6e22e">field</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;price&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">greaterThanOrEq</span><span style="color:#f92672">(</span>1000<span style="color:#f92672">);</span>
 </code></pre></div><p>This results in the exact same query as the <code>filter()</code> version but has the advantage that any typo in the operation name (method in this
 case) would easily be caught by an IDE or compiler.  Which version you use is largely a question of preference.</p>
-<!-- raw HTML omitted -->
-<p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
+
+<div class="notices tip" ><p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
 <a href="/1.5.8/javadoc?dev/morphia/annotations/Property.html"><code>@Property</code></a> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
 result in an error.</p>
-<!-- raw HTML omitted -->
+</div>
+
 <h2 id="complex-queries">Complex Queries</h2>
 <p>Of course, queries are usually more complex than single field comparisons.  Morphia offers both <code>and()</code> and <code>or()</code> to build up more
 complex queries.  An <code>and</code> query might look something like this:</p>
@@ -754,12 +748,13 @@ Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertNull
 the returned instance of our type.  It&rsquo;s also worth noting that this project works with both the mapped document field name
 <code>&quot;first_name&quot;</code> and the Java field name <code>&quot;firstName&quot;</code>.</p>
 <p>The boolean value passed in instructs Morphia to either include (<code>true</code>) or exclude (<code>false</code>) the field.  It is not currently possible to list both inclusions and exclusions in one query.</p>
-<!-- raw HTML omitted -->
-<p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
+
+<div class="notices warn" ><p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
 MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
 saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
 for this entity will be removed.  To save such instances back consider using <a href="/1.5.8/javadoc?dev/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
-<!-- raw HTML omitted -->
+</div>
+
 <h3 id="limiting-and-skipping">Limiting and Skipping</h3>
 <p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>Query.limit(int)</code> and <code>Query.offset(int)</code>
 for these cases.  An example of these methods in action would look like this:</p>
@@ -1107,12 +1102,8 @@ Artist result = datastore.createQuery(Artist.class, query).get();
         
 
 
-        
-            <a class="nav nav-prev" href="/1.5.8/guides/lifecyclemethods/" title="Life Cycle Methods"> <i class="fas fa-chevron-left"></i></a>
-        
-        
-            <a class="nav nav-next" href="/1.5.8/guides/references/" title="References" style="margin-right: 0px;"><i class="fas fa-chevron-right"></i></a>
-        
+	 
+	 
     </div>
 
     </section>
@@ -1120,20 +1111,19 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.8/js/clipboard.min.js?1583754350"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583754350"></script>
-    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583754350"></script>
-    <script src="/1.5.8/js/jquery.sticky.js?1583754350"></script>
-    <script src="/1.5.8/js/featherlight.min.js?1583754350"></script>
-    <script src="/1.5.8/js/html5shiv-printshiv.min.js?1583754350"></script>
-    <script src="/1.5.8/js/highlight.pack.js?1583754350"></script>
+    <script src="/1.5.8/js/clipboard.min.js?1583890255"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.min.js?1583890255"></script>
+    <script src="/1.5.8/js/perfect-scrollbar.jquery.min.js?1583890255"></script>
+    <script src="/1.5.8/js/jquery.sticky.js?1583890255"></script>
+    <script src="/1.5.8/js/featherlight.min.js?1583890255"></script>
+    <script src="/1.5.8/js/highlight.pack.js?1583890255"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.8/js/modernizr.custom.71422.js?1583754350"></script>
-    <script src="/1.5.8/js/learn.js?1583754350"></script>
-    <script src="/1.5.8/js/hugo-learn.js?1583754350"></script>
+    <script src="/1.5.8/js/modernizr.custom-3.6.0.js?1583890255"></script>
+    <script src="/1.5.8/js/learn.js?1583890255"></script>
+    <script src="/1.5.8/js/hugo-learn.js?1583890255"></script>
 
-    <link href="/1.5.8/mermaid/mermaid.css?1583754350" type="text/css" rel="stylesheet" />
-    <script src="/1.5.8/mermaid/mermaid.js?1583754350"></script>
+    <link href="/1.5.8/mermaid/mermaid.css?1583890255" rel="stylesheet" />
+    <script src="/1.5.8/mermaid/mermaid.js?1583890255"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

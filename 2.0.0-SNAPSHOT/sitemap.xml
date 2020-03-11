@@ -46,11 +46,11 @@
   </url>
   
   <url>
-    <loc>/2.0.0-SNAPSHOT/guides/indexing/</loc>
+    <loc>/2.0.0-SNAPSHOT/guides/configuration/</loc>
   </url>
   
   <url>
-    <loc>/2.0.0-SNAPSHOT/guides/jrebel/</loc>
+    <loc>/2.0.0-SNAPSHOT/guides/indexing/</loc>
   </url>
   
   <url>
@@ -66,6 +66,10 @@
   </url>
   
   <url>
+    <loc>/2.0.0-SNAPSHOT/guides/querying-old/</loc>
+  </url>
+  
+  <url>
     <loc>/2.0.0-SNAPSHOT/guides/references/</loc>
   </url>
   
@@ -75,6 +79,10 @@
   
   <url>
     <loc>/2.0.0-SNAPSHOT/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/textsearch/</loc>
   </url>
   
   <url>
