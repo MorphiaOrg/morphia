@@ -12,18 +12,18 @@
     <title>Querying (Deprecated) :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583899847" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1584077097" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1583899847"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1584077097"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -605,7 +605,7 @@ like this:</p>
 ">$gte</a>.  This would result
 in a query that looks like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">{ <span style="color:#a6e22e">price</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">$gte</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1000</span> } }
-</code></pre></div><p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/main/java/dev/morphia/query/FilterOperator.java
+</code></pre></div><p>The list of supported filter operations can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/dev/morphia/query/FilterOperator.java
 ">FilterOperator</a> class.</p>
 <table>
 <thead>
@@ -722,7 +722,7 @@ the equal operator, you can use the canonical <code>$eq</code> operator as you w
 either the <code>=</code> or <code>==</code> aliases which might feel a little more natural to use than the dollar operators.</p>
 <h3 id="field"><code>field()</code></h3>
 <p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.  This method takes only the field name and
-returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/main/java/dev/morphia/query/FieldEnd.java
+returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/dev/morphia/query/FieldEnd.java
 ">class</a> providing methods with which
 to define your filters.  This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
 <code>filter()</code> can be.  To perform the same query as above, you&rsquo;d write this:</p>
@@ -765,7 +765,7 @@ have a <a href="http://docs.mongodb.org/manual//core/index-text/
     <span style="color:#f92672">...</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.  A more targeted index can be created, if
-desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/query/TestTextSearching.java
+desired, by explicitly listing which fields to index.  Once the index is defined, we can start querying against it like this <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/query/TestTextSearching.java
 ">test</a> does:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">morphia<span style="color:#f92672">.</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>Greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
 datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">ensureIndexes</span><span style="color:#f92672">();</span>
@@ -791,7 +791,7 @@ the query results in different ways.</p>
 <h3 id="projections">Projections</h3>
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ContainsRenamedFields user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ContainsRenamedFields<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Frank&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Zappa&#34;</span><span style="color:#f92672">);</span>
 getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
@@ -840,7 +840,7 @@ to lowest), you would use this:</p>
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
 are added to the collection that match your query, they&rsquo;ll be returned by the <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/TestQuery.java
+">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">getMorphia<span style="color:#f92672">().</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>CappedPic<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
 getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">ensureCaps</span><span style="color:#f92672">();</span>                                                          <span style="color:#75715e">// #1
@@ -1221,19 +1221,19 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583899847"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1584077097"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583899847"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1584077097"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583899847" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583899847"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1584077097" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1584077097"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

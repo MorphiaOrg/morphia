@@ -12,18 +12,18 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1583899847" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1583899847" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1584077097" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1584077097" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1583899847"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1584077097"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -617,7 +617,7 @@ the query results in different ways.</p>
 <h3 id="projections">Projections</h3>
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
 ">Projections</a> allow you to return only a subset of the fields in a
-document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/TestQuery.java
+document.  This is useful when you need to only return a smaller view of a larger object.  Borrowing from the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a>, this is an example of this feature in action:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ContainsRenamedFields user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ContainsRenamedFields<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Frank&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Zappa&#34;</span><span style="color:#f92672">);</span>
 datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
@@ -663,7 +663,7 @@ use this:</p>
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/
 ">capped collection</a> it&rsquo;s possible to &ldquo;tail&rdquo; a query so that when new documents
 are added to the collection that match your query, they&rsquo;ll be returned by the <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor
-">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/2.0-dev/morphia/src/test/java/dev/morphia/TestQuery.java
+">tailable cursor</a>.  An example of this feature in action can be found in the <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java
 ">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">getMorphia<span style="color:#f92672">().</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>CappedPic<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
 getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">ensureCaps</span><span style="color:#f92672">();</span>                                                          <span style="color:#75715e">// #1
@@ -1031,19 +1031,19 @@ application.</li>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1583899847"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1584077097"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1583899847"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1583899847"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1584077097"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1584077097"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1583899847" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1583899847"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1584077097" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1584077097"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

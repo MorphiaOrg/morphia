@@ -4,21 +4,21 @@
 'UTF-8'
 -protected
 -sourcepath
-'/tmp/morphia-for-docs-master/morphia/src/main/java'
+'/tmp/morphia-for-docs-1.5.x/morphia/src/main/java'
 -author
 -bottom
 'Copyright &#169; 2020. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'/tmp/morphia-for-docs-master/morphia/target/site/apidocs'
+'/tmp/morphia-for-docs-1.5.x/morphia/target/site/apidocs'
 -docencoding
 'UTF-8'
 -Xdoclint:none
 -doctitle
 'Morphia 1.5.9-SNAPSHOT'
 -linkoffline
-'https://docs.oracle.com/javase/6/docs/api' '/tmp/morphia-for-docs-master/morphia/target/javadoc-bundle-options'
+'https://docs.oracle.com/javase/6/docs/api' '/tmp/morphia-for-docs-1.5.x/morphia/target/javadoc-bundle-options'
 -taglet
 'taglets.ServerReleaseTaglet'
 -taglet
