@@ -22,6 +22,6 @@ public class GuiceExtension {
     public GuiceExtension(final Mapper mapper, final Injector injector) {
         Assert.parameterNotNull("mapper", mapper);
         final MapperOptions options = mapper.getOptions();
-//        options.setObjectFactory(new GuiceObjectFactory(options.getObjectFactory(), injector));
+        options.setObjectFactory(new GuiceObjectFactory(options.getObjectFactory(), injector));
     }
 }

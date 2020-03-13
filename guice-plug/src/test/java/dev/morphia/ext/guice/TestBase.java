@@ -1,6 +1,5 @@
 package dev.morphia.ext.guice;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
@@ -10,19 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 
 public abstract class TestBase {
-    private final MongoClient mongoClient;
-
     private MongoDatabase db;
     private Datastore ds;
     private Mapper mapper;
-
-    protected TestBase() {
-        try {
-            mongoClient = new MongoClient();
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public Datastore getDs() {
         return ds;
@@ -34,8 +23,8 @@ public abstract class TestBase {
 
     @Before
     public void setUp() {
-        db = mongoClient.getDatabase("morphia_test");
-        ds = Morphia.createDatastore(this.mongoClient, this.db.getName());
+        ds = Morphia.createDatastore("morphia_test");
+        db = ds.getDatabase();
         mapper = ds.getMapper();
     }
 
@@ -45,11 +34,6 @@ public abstract class TestBase {
     }
 
     protected void dropDB() {
-        // this.mongoClient.dropDatabase("morphia_test");
-        for (final MappedClass mc : mapper.getMappedClasses()) {
-            // if( mc.getEntityAnnotation() != null )
-            db.getCollection(mc.getCollectionName()).drop();
-        }
-
+        db.drop();
     }
 }
