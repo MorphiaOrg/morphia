@@ -173,12 +173,6 @@
             <version>2.11.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>dev.morphia.morphia</groupId>
-            <artifactId>util</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <profiles>
