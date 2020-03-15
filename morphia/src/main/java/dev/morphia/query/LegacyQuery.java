@@ -41,23 +41,41 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private final DatastoreImpl datastore;
     private final Class<T> clazz;
     private final Mapper mapper;
+    private final String collectionName;
+    private final MongoCollection<T> collection;
+    private final MappedClass mappedClass;
     private boolean validateName = true;
     private boolean validateType = true;
     private Document baseQuery;
     @Deprecated
     private FindOptions options;
     private CriteriaContainer compoundContainer;
-    private final String collectionName;
-    private final MongoCollection<T> collection;
-    private final MappedClass mappedClass;
 
     /**
      * Creates a Query for the given type and collection
      *
-     * @param clazz     the type to return
      * @param datastore the Datastore to use
      */
-    protected LegacyQuery(final String collectionName, final Class<T> clazz, final Datastore datastore) {
+    protected LegacyQuery(final Datastore datastore) {
+        this.datastore = (DatastoreImpl) datastore;
+        mapper = datastore.getMapper();
+        clazz = null;
+        collection = null;
+        collectionName = null;
+        mappedClass = null;
+        validateName = false;
+        validateType = false;
+
+        compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
+    }
+
+    /**
+     * Creates a Query for the given type and collection
+     *
+     * @param datastore the Datastore to use
+     * @param clazz     the type to return
+     */
+    protected LegacyQuery(final Datastore datastore, final String collectionName, final Class<T> clazz) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();
@@ -71,6 +89,73 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
 
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
+    }
+
+    @Override
+    public void add(final Criteria... criteria) {
+        for (final Criteria c : criteria) {
+            c.attach(this);
+            compoundContainer.add(c);
+        }
+    }
+
+    @Override
+    public CriteriaContainer and(final Criteria... criteria) {
+        return compoundContainer.and(criteria);
+    }
+
+    @Override
+    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
+        add(container);
+
+        return new FieldEndImpl<CriteriaContainer>(mapper, field, container, mappedClass, this.isValidatingNames());
+    }
+
+    @Override
+    public CriteriaContainer or(final Criteria... criteria) {
+        return compoundContainer.or(criteria);
+    }
+
+    @Override
+    public void remove(final Criteria criteria) {
+        compoundContainer.remove(criteria);
+    }
+
+    @Override
+    public void attach(final CriteriaContainer container) {
+        compoundContainer.attach(container);
+    }
+
+    @Override
+    public String getFieldName() {
+        throw new UnsupportedOperationException("this method is unused on a Query");
+    }
+
+    /**
+     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     *
+     * @return the query
+     * @morphia.internal
+     */
+    public Document toDocument() {
+        final Document query = getQueryDocument();
+        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
+        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
+
+            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(mappedClass.getEntityModel().getDiscriminator());
+            for (final MappedClass subtype : subtypes) {
+                values.add(subtype.getEntityModel().getDiscriminator());
+            }
+            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+        return query;
     }
 
     @Override
@@ -96,29 +181,31 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
-        add(container);
-
-        return new FieldEndImpl<CriteriaContainer>(mapper, field, container, mappedClass, this.isValidatingNames());
+    public FieldEnd<? extends Query<T>> field(final String name) {
+        return new FieldEndImpl<>(mapper, name, this, mappedClass, this.isValidatingNames());
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
+    public Query<T> filter(final String condition, final Object value) {
+        final String[] parts = condition.trim().split(" ");
+        if (parts.length < 1 || parts.length > 6) {
+            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
         }
-        if (!(o instanceof LegacyQuery)) {
-            return false;
-        }
-        final LegacyQuery<?> query = (LegacyQuery<?>) o;
-        return validateName == query.validateName
-               && validateType == query.validateType
-               && Objects.equals(clazz, query.clazz)
-               && Objects.equals(baseQuery, query.baseQuery)
-               && Objects.equals(getOptions(), query.getOptions())
-               && Objects.equals(compoundContainer, query.compoundContainer)
-               && Objects.equals(getCollectionName(), query.getCollectionName());
+
+        final String prop = parts[0].trim();
+        final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
+
+        add(new FieldCriteria(mapper, prop, op, value, mapper.getMappedClass(this.getEntityClass()), this.isValidatingNames()));
+
+        return this;
+    }
+
+    @Override
+    public Modify<T> modify(final UpdateOperations<T> operations) {
+        Modify<T> modify = modify();
+        modify.setOps(((UpdateOpsImpl) operations).getOps());
+
+        return modify;
     }
 
     @Override
@@ -167,12 +254,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Query<T> retrieveKnownFields() {
-        getOptions().projection().knownFields();
-        return this;
-    }
-
-    @Override
     public Query<T> search(final String search) {
         this.criteria("$text").equal(new Document("$search", search));
         return this;
@@ -197,8 +278,14 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public FieldEnd<? extends Query<T>> field(final String name) {
-        return new FieldEndImpl<>(mapper, name, this, mappedClass, this.isValidatingNames());
+    public MorphiaKeyCursor<T> keys(final FindOptions options) {
+        FindOptions returnKey = new FindOptions().copy(options)
+                                                 .projection()
+                                                 .include("_id");
+
+        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
+            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
+            clazz, getCollectionName());
     }
 
     @Override
@@ -245,26 +332,14 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Query<T> filter(final String condition, final Object value) {
-        final String[] parts = condition.trim().split(" ");
-        if (parts.length < 1 || parts.length > 6) {
-            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
-        }
-
-        final String prop = parts[0].trim();
-        final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
-
-        add(new FieldCriteria(mapper, prop, op, value, mapper.getMappedClass(this.getEntityClass()), this.isValidatingNames()));
-
-        return this;
+    public Modify<T> modify() {
+        return new Modify<>(this, datastore, mapper, clazz, getCollection());
     }
 
     @Override
-    public Modify<T> modify(final UpdateOperations<T> operations) {
-        Modify<T> modify = modify();
-        modify.setOps(((UpdateOpsImpl) operations).getOps());
-
-        return modify;
+    public Query<T> retrieveKnownFields() {
+        getOptions().projection().knownFields();
+        return this;
     }
 
     @Override
@@ -296,50 +371,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return updates;
     }
 
-    @Override
-    public MorphiaKeyCursor<T> keys(final FindOptions options) {
-        FindOptions returnKey = new FindOptions().copy(options)
-                                                 .projection()
-                                                 .include("_id");
-
-        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            clazz, getCollectionName());
-    }
-
-    @Override
-    public Modify<T> modify() {
-        return new Modify<>(this, datastore, mapper, clazz, getCollection());
-    }
-
     /**
-     * Converts the query to a Document and updates for any discriminator values as my be necessary
-     *
-     * @return the query
+     * @return the collection this query targets
      * @morphia.internal
      */
-    public Document toDocument() {
-        final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
-        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
-
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
-            List<String> values = new ArrayList<>();
-            values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
-                values.add(subtype.getEntityModel().getDiscriminator());
-            }
-            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
-                new Document("$in", values));
-        }
-        return query;
-    }
-
-    private String getCollectionName() {
-        return collectionName;
+    public MongoCollection<T> getCollection() {
+        return collection;
     }
 
     /**
@@ -350,72 +387,14 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return clazz;
     }
 
-    FindOptions getOptions() {
-        if (options == null) {
-            options = new FindOptions();
-        }
-        return options;
-    }
-
     /**
-     * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and ==
-     * are EQUAL.
-     */
-    private FilterOperator translate(final String operator) {
-        return FilterOperator.fromString(operator);
-    }
-
-    @Override
-    public void add(final Criteria... criteria) {
-        for (final Criteria c : criteria) {
-            c.attach(this);
-            compoundContainer.add(c);
-        }
-    }
-
-    @Override
-    public CriteriaContainer and(final Criteria... criteria) {
-        return compoundContainer.and(criteria);
-    }
-
-    @Override
-    public CriteriaContainer or(final Criteria... criteria) {
-        return compoundContainer.or(criteria);
-    }
-
-    @Override
-    public void remove(final Criteria criteria) {
-        compoundContainer.remove(criteria);
-    }
-
-    /**
-     * @return the collection this query targets
+     * @return the Mongo fields {@link Document}.
      * @morphia.internal
      */
-    public MongoCollection<T> getCollection() {
-        return collection;
-    }
+    public Document getFieldsObject() {
+        Projection projection = getOptions().getProjection();
 
-    private Document getQueryDocument() {
-        final Document obj = new Document();
-
-        if (baseQuery != null) {
-            obj.putAll(baseQuery);
-        }
-
-        obj.putAll(compoundContainer.toDocument());
-
-        return obj;
-    }
-
-    @Override
-    public void attach(final CriteriaContainer container) {
-        compoundContainer.attach(container);
-    }
-
-    @Override
-    public String getFieldName() {
-        throw new UnsupportedOperationException("this method is unused on a Query");
+        return projection != null ? projection.map(mapper, clazz) : null;
     }
 
     /**
@@ -429,6 +408,66 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public int hashCode() {
         return Objects.hash(clazz, validateName, validateType, baseQuery, getOptions(), compoundContainer, getCollectionName());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof LegacyQuery)) {
+            return false;
+        }
+        final LegacyQuery<?> query = (LegacyQuery<?>) o;
+        return validateName == query.validateName
+               && validateType == query.validateType
+               && Objects.equals(clazz, query.clazz)
+               && Objects.equals(baseQuery, query.baseQuery)
+               && Objects.equals(getOptions(), query.getOptions())
+               && Objects.equals(compoundContainer, query.compoundContainer)
+               && Objects.equals(getCollectionName(), query.getCollectionName());
+    }
+
+    @Override
+    public String toString() {
+        return getOptions().getProjection() == null ? getQueryDocument().toString()
+                                                    : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
+    }
+
+    /**
+     * @return true if field names are being validated
+     */
+    public boolean isValidatingNames() {
+        return validateName;
+    }
+
+    /**
+     * Sets query structure directly
+     *
+     * @param query the Document containing the query
+     */
+    public void setQueryObject(final Document query) {
+        baseQuery = new Document(query);
+    }
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
+
+    private String getCollectionName() {
+        return collectionName;
+    }
+
+    private Document getQueryDocument() {
+        final Document obj = new Document();
+
+        if (baseQuery != null) {
+            obj.putAll(baseQuery);
+        }
+
+        obj.putAll(compoundContainer.toDocument());
+
+        return obj;
     }
 
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
@@ -467,39 +506,18 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    @Override
-    public String toString() {
-        return getOptions().getProjection() == null ? getQueryDocument().toString()
-                                                    : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
-    }
-
     /**
-     * @return the Mongo fields {@link Document}.
-     * @morphia.internal
+     * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and ==
+     * are EQUAL.
      */
-    public Document getFieldsObject() {
-        Projection projection = getOptions().getProjection();
-
-        return projection != null ? projection.map(mapper, clazz) : null;
+    private FilterOperator translate(final String operator) {
+        return FilterOperator.fromString(operator);
     }
 
-    /**
-     * @return true if field names are being validated
-     */
-    public boolean isValidatingNames() {
-        return validateName;
-    }
-
-    /**
-     * Sets query structure directly
-     *
-     * @param query the Document containing the query
-     */
-    public void setQueryObject(final Document query) {
-        baseQuery = new Document(query);
-    }
-
-    protected Datastore getDatastore() {
-        return datastore;
+    FindOptions getOptions() {
+        if (options == null) {
+            options = new FindOptions();
+        }
+        return options;
     }
 }
