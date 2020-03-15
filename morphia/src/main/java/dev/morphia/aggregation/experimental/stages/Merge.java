@@ -14,10 +14,11 @@ import static java.util.Arrays.asList;
 /**
  * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
  *
+ * @param <M> the entity type
  * @aggregation.expression $merge
  */
-public class Merge<T> extends Stage {
-    private Class<T> type;
+public class Merge<M> extends Stage {
+    private Class<M> type;
     private String database;
     private String collection;
     private List<String> on;
@@ -26,7 +27,7 @@ public class Merge<T> extends Stage {
     private List<Stage> whenMatchedPipeline;
     private WhenNotMatched whenNotMatched;
 
-    protected Merge(final Class<T> type) {
+    protected Merge(final Class<M> type) {
         this();
         this.type = type;
     }
@@ -50,9 +51,10 @@ public class Merge<T> extends Stage {
      * Creates a new stage targeting the collection mapped for the given type
      *
      * @param type the target type
+     * @param <M>  the entity type
      * @return the new stage
      */
-    public static <T> Merge<T> into(final Class<T> type) {
+    public static <M> Merge<M> into(final Class<M> type) {
         return new Merge<>(type);
     }
 
@@ -105,7 +107,7 @@ public class Merge<T> extends Stage {
      * @return the value
      * @morphia.internal
      */
-    public Class<T> getType() {
+    public Class<M> getType() {
         return type;
     }
 
@@ -148,7 +150,7 @@ public class Merge<T> extends Stage {
      * @param value    the value expression
      * @return this
      */
-    public Merge<T> let(final String variable, final Expression value) {
+    public Merge<M> let(final String variable, final Expression value) {
         if (variables == null) {
             variables = new LinkedHashMap<>();
         }
@@ -164,7 +166,7 @@ public class Merge<T> extends Stage {
      * @param fields the other fields
      * @return this
      */
-    public Merge<T> on(final String field, final String... fields) {
+    public Merge<M> on(final String field, final String... fields) {
         List<String> list = new ArrayList<>();
         list.add(field);
         list.addAll(asList(fields));
@@ -179,7 +181,7 @@ public class Merge<T> extends Stage {
      * @param whenMatched the behavior
      * @return this
      */
-    public Merge<T> whenMatched(final WhenMatched whenMatched) {
+    public Merge<M> whenMatched(final WhenMatched whenMatched) {
         this.whenMatched = whenMatched;
         return this;
     }
@@ -190,7 +192,7 @@ public class Merge<T> extends Stage {
      * @param pipeline the pipeline
      * @return this
      */
-    public Merge<T> whenMatched(final List<Stage> pipeline) {
+    public Merge<M> whenMatched(final List<Stage> pipeline) {
         this.whenMatchedPipeline = pipeline;
         return this;
     }
@@ -201,7 +203,7 @@ public class Merge<T> extends Stage {
      * @param whenNotMatched the behavior
      * @return this
      */
-    public Merge<T> whenNotMatched(final WhenNotMatched whenNotMatched) {
+    public Merge<M> whenNotMatched(final WhenNotMatched whenNotMatched) {
         this.whenNotMatched = whenNotMatched;
         return this;
     }
