@@ -7,7 +7,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
-import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappedClass;
@@ -42,48 +41,53 @@ import static java.lang.String.format;
  */
 public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
-    private final DatastoreImpl datastore;
+    private final Datastore datastore;
     private final Class<T> clazz;
     private final Mapper mapper;
+    private final String collectionName;
+    private final MongoCollection<T> collection;
+    private final List<Filter> filters = new ArrayList<>();
     private final Document seedQuery;
     private boolean validate = true;
-    private String collectionName;
-    private MongoCollection<T> collection;
-    private List<Filter> filters = new ArrayList<>();
 
-    protected MorphiaQuery(final Class<T> clazz, final Datastore datastore) {
-        this(clazz, null, datastore);
+    protected MorphiaQuery(final Datastore datastore) {
+        this.datastore = datastore;
+        mapper = this.datastore.getMapper();
+        clazz = null;
+        seedQuery = null;
+        collection = null;
+        collectionName = null;
     }
 
-    protected MorphiaQuery(final Class<T> clazz, final Document query, final Datastore datastore) {
+    protected MorphiaQuery(final Datastore datastore, final String collectionName, final Class<T> clazz) {
         this.clazz = clazz;
-        this.datastore = (DatastoreImpl) datastore;
+        this.datastore = datastore;
+        mapper = this.datastore.getMapper();
+        seedQuery = null;
+        if (collectionName != null) {
+            this.collection = datastore.getDatabase().getCollection(collectionName, clazz);
+            this.collectionName = collectionName;
+        } else if (mapper.isMappable(clazz)) {
+            this.collection = mapper.getCollection(clazz);
+            this.collectionName = this.collection.getNamespace().getCollectionName();
+        } else {
+            this.collection = null;
+            this.collectionName = null;
+        }
+    }
+
+    protected MorphiaQuery(final Datastore datastore, final Class<T> clazz, final Document query) {
+        this.clazz = clazz;
+        this.datastore = datastore;
         this.seedQuery = query;
         mapper = this.datastore.getMapper();
+        collection = mapper.getCollection(clazz);
+        collectionName = collection.getNamespace().getCollectionName();
     }
 
     static <V> V legacyOperation() {
         throw new UnsupportedOperationException(Sofia.legacyOperation());
     }
-
-    static <V> V modernOperation() {
-        throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
-    }
-
-/*
-    @Override
-    public CriteriaContainer and(final Criteria... criteria) {
-        List<Filter> collect = collect(criteria);
-        filters.remove(asList(criteria));
-        filter(Filters.and(collect.toArray(new Filter[0])));
-        return this;
-    }
-
-    @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
-        return new CriteriaFieldEnd(field);
-    }
-*/
 
     @Override
     public Query filter(final Filter... additional) {
@@ -100,16 +104,6 @@ public class MorphiaQuery<T> implements Query<T> {
         validate = false;
         return this;
     }
-
-/*
-    @Override
-    public CriteriaContainer or(final Criteria... criteria) {
-        List<Filter> collect = collect(criteria);
-        filters.remove(asList(criteria));
-        filter(Filters.or(collect.toArray(new Filter[0])));
-        return this;
-    }
-*/
 
     @Override
     public Query<T> enableValidation() {
@@ -277,16 +271,9 @@ public class MorphiaQuery<T> implements Query<T> {
         return clazz;
     }
 
-    Document getQueryDocument() {
-        DocumentWriter writer = new DocumentWriter(seedQuery);
-        writer.writeStartDocument();
-        EncoderContext context = EncoderContext.builder().build();
-        for (Filter filter : filters) {
-            filter.encode(mapper, writer, context);
-        }
-        writer.writeEndDocument();
-
-        return writer.getDocument();
+    @Override
+    public int hashCode() {
+        return Objects.hash(clazz, validate, getCollectionName());
     }
 
 /*
@@ -308,11 +295,6 @@ public class MorphiaQuery<T> implements Query<T> {
         return collected;
     }
 */
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clazz, validate, getCollectionName());
-    }
 
     @Override
     public boolean equals(final Object o) {
@@ -341,16 +323,10 @@ public class MorphiaQuery<T> implements Query<T> {
      * @morphia.internal
      */
     private MongoCollection<T> getCollection() {
-        if (collection == null) {
-            collection = mapper.getCollection(clazz);
-        }
         return collection;
     }
 
     private String getCollectionName() {
-        if (collectionName == null) {
-            collectionName = getCollection().getNamespace().getCollectionName();
-        }
         return collectionName;
     }
 
@@ -389,6 +365,18 @@ public class MorphiaQuery<T> implements Query<T> {
         }
     }
 
+    Document getQueryDocument() {
+        DocumentWriter writer = new DocumentWriter(seedQuery);
+        writer.writeStartDocument();
+        EncoderContext context = EncoderContext.builder().build();
+        for (Filter filter : filters) {
+            filter.encode(mapper, writer, context);
+        }
+        writer.writeEndDocument();
+
+        return writer.getDocument();
+    }
+
     private class MorphiaQueryFieldEnd extends FieldEndImpl {
         private final String name;
 
@@ -419,7 +407,7 @@ public class MorphiaQuery<T> implements Query<T> {
         }
 
         @Override
-        protected MorphiaQuery addCriteria(final FilterOperator op, final Object val, final boolean not) {
+        protected MorphiaQuery<T> addCriteria(final FilterOperator op, final Object val, final boolean not) {
             Filter converted = op.apply(name, val);
             if (not) {
                 converted.not();
@@ -434,7 +422,7 @@ public class MorphiaQuery<T> implements Query<T> {
             apply.applyOpts(opts);
             filter(apply);
             return MorphiaQuery.this;
-//            return super.addGeoCriteria(op, val, opts);
+            //            return super.addGeoCriteria(op, val, opts);
         }
     }
 }

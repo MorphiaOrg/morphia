@@ -47,8 +47,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Deprecated
     private FindOptions options;
     private CriteriaContainer compoundContainer;
-    private String collectionName;
-    private MongoCollection<T> collection;
+    private final String collectionName;
+    private final MongoCollection<T> collection;
     private final MappedClass mappedClass;
 
     /**
@@ -57,11 +57,18 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @param clazz     the type to return
      * @param datastore the Datastore to use
      */
-    protected LegacyQuery(final Class<T> clazz, final Datastore datastore) {
+    protected LegacyQuery(final String collectionName, final Class<T> clazz, final Datastore datastore) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();
         mappedClass = mapper.getMappedClass(clazz);
+        if (collectionName != null) {
+            this.collection = datastore.getDatabase().getCollection(collectionName, clazz);
+            this.collectionName = collectionName;
+        } else {
+            this.collection = mapper.getCollection(clazz);
+            this.collectionName = this.collection.getNamespace().getCollectionName();
+        }
 
         compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
     }
@@ -332,9 +339,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     private String getCollectionName() {
-        if (collectionName == null) {
-            collectionName = getCollection().getNamespace().getCollectionName();
-        }
         return collectionName;
     }
 
@@ -389,9 +393,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @morphia.internal
      */
     public MongoCollection<T> getCollection() {
-        if (collection == null) {
-            collection = mapper.getCollection(clazz);
-        }
         return collection;
     }
 

@@ -16,8 +16,8 @@ import static java.util.Arrays.asList;
  *
  * @aggregation.expression $merge
  */
-public class Merge extends Stage {
-    private Class type;
+public class Merge<T> extends Stage {
+    private Class<T> type;
     private String database;
     private String collection;
     private List<String> on;
@@ -26,7 +26,7 @@ public class Merge extends Stage {
     private List<Stage> whenMatchedPipeline;
     private WhenNotMatched whenNotMatched;
 
-    protected Merge(final Class type) {
+    protected Merge(final Class<T> type) {
         this();
         this.type = type;
     }
@@ -52,8 +52,8 @@ public class Merge extends Stage {
      * @param type the target type
      * @return the new stage
      */
-    public static Merge into(final Class type) {
-        return new Merge(type);
+    public static <T> Merge<T> into(final Class<T> type) {
+        return new Merge<>(type);
     }
 
     /**
@@ -62,8 +62,8 @@ public class Merge extends Stage {
      * @param collection the target collection
      * @return the new stage
      */
-    public static Merge into(final String collection) {
-        return new Merge(collection);
+    public static Merge<?> into(final String collection) {
+        return new Merge<>(collection);
     }
 
     /**
@@ -73,8 +73,8 @@ public class Merge extends Stage {
      * @param collection the target collection
      * @return the new stage
      */
-    public static Merge into(final String database, final String collection) {
-        return new Merge(database, collection);
+    public static Merge<?> into(final String database, final String collection) {
+        return new Merge<>(database, collection);
     }
 
     /**
@@ -105,7 +105,7 @@ public class Merge extends Stage {
      * @return the value
      * @morphia.internal
      */
-    public Class getType() {
+    public Class<T> getType() {
         return type;
     }
 
@@ -148,7 +148,7 @@ public class Merge extends Stage {
      * @param value    the value expression
      * @return this
      */
-    public Merge let(final String variable, final Expression value) {
+    public Merge<T> let(final String variable, final Expression value) {
         if (variables == null) {
             variables = new LinkedHashMap<>();
         }
@@ -164,8 +164,9 @@ public class Merge extends Stage {
      * @param fields the other fields
      * @return this
      */
-    public Merge on(final String field, final String... fields) {
-        List<String> list = new ArrayList<>(asList(field));
+    public Merge<T> on(final String field, final String... fields) {
+        List<String> list = new ArrayList<>();
+        list.add(field);
         list.addAll(asList(fields));
         this.on = list;
         return this;
@@ -178,7 +179,7 @@ public class Merge extends Stage {
      * @param whenMatched the behavior
      * @return this
      */
-    public Merge whenMatched(final WhenMatched whenMatched) {
+    public Merge<T> whenMatched(final WhenMatched whenMatched) {
         this.whenMatched = whenMatched;
         return this;
     }
@@ -189,7 +190,7 @@ public class Merge extends Stage {
      * @param pipeline the pipeline
      * @return this
      */
-    public Merge whenMatched(final List<Stage> pipeline) {
+    public Merge<T> whenMatched(final List<Stage> pipeline) {
         this.whenMatchedPipeline = pipeline;
         return this;
     }
@@ -200,7 +201,7 @@ public class Merge extends Stage {
      * @param whenNotMatched the behavior
      * @return this
      */
-    public Merge whenNotMatched(final WhenNotMatched whenNotMatched) {
+    public Merge<T> whenNotMatched(final WhenNotMatched whenNotMatched) {
         this.whenNotMatched = whenNotMatched;
         return this;
     }

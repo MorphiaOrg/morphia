@@ -60,6 +60,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.exists;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -466,17 +468,25 @@ public class TestMapping extends TestBase {
 
         getDs().save(map);
 
-        final ContainsIntKeyMap mapLoaded = getDs().find(ContainsIntKeyMap.class).filter("_id", map.id).first();
+        final ContainsIntKeyMap mapLoaded = getDs().find(ContainsIntKeyMap.class)
+                                                   .filter(eq("_id", map.id))
+                                                   .first();
 
         assertNotNull(mapLoaded);
         assertEquals(2, mapLoaded.values.size());
         assertNotNull(mapLoaded.values.get(1));
         assertNotNull(mapLoaded.values.get(2));
 
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.2").exists());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.2").doesNotExist().count());
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().count());
+        assertNotNull(getDs().find(ContainsIntKeyMap.class)
+                             .filter(exists("values.2")));
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class)
+                               .filter(exists("values.2").not())
+                               .count());
+        assertNotNull(getDs().find(ContainsIntKeyMap.class)
+                             .filter(exists("values.4").not()));
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class)
+                               .filter(exists("values.4"))
+                               .count());
     }
 
     @Test

@@ -43,7 +43,6 @@ import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -55,7 +54,6 @@ import java.util.Set;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateToString;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.month;
@@ -406,7 +404,6 @@ public class AggregationTest extends TestBase {
      * Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
      */
     @Test
-    @Ignore("custom collection name support needed")
     public void testLookup() {
         getDs().save(asList(new Order(1, "abc", 12, 2),
             new Order(2, "jkl", 20, 1),
@@ -424,12 +421,11 @@ public class AggregationTest extends TestBase {
                              .localField("item")
                              .foreignField("sku")
                              .as("inventoryDocs"))
-               .out(Out.to(Lookedup.class))
-               .execute();
-        List<Order> lookups = getAds().createQuery("lookups", Order.class)
-                                      .execute(new FindOptions()
-                                                   .sort(ascending("_id")))
-                                      .toList();
+               .out(Out.to(Lookedup.class));
+        List<Order> lookups = getDs().find("lookups", Order.class)
+                                     .execute(new FindOptions()
+                                                  .sort(ascending("_id")))
+                                     .toList();
         Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(4), lookups.get(2).inventoryDocs.get(0));
@@ -447,38 +443,6 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testOut() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
-        dev.morphia.aggregation.experimental.AggregationOptions options = new dev.morphia.aggregation.experimental.AggregationOptions();
-        Iterator<Author> aggregate = getDs().aggregate(Book.class)
-                                            .group(of(id("author"))
-                                                       .field("books", push(field("title"))))
-                                            .out(Out.to(Author.class))
-                                            .execute(Author.class, options);
-
-        Assert.assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
-        Author author;
-        do {
-            author = aggregate.next();
-        } while (!author.name.equals("Homer"));
-        Assert.assertEquals("Homer", author.name);
-        Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
-
-        getDs().aggregate(Book.class)
-               .group(of(id("author"))
-                          .field("books", push(field("title"))))
-               .out(Out.to("different"))
-               .execute();
-
-        Assert.assertEquals(2, getDatabase().getCollection("different").countDocuments());
-    }
-
-    @Test
     public void testOutNamedCollection() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
             new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
@@ -491,8 +455,7 @@ public class AggregationTest extends TestBase {
                              .filter(eq("author", "Homer")))
                .group(of(id("author"))
                           .field("copies", sum(field("copies"))))
-               .out(Out.to("testAverage"))
-               .execute();
+               .out(Out.to("testAverage"));
         try (MongoCursor<Document> testAverage = getDatabase().getCollection("testAverage").find().iterator()) {
             Assert.assertEquals(20, testAverage.next().get("copies"));
         }

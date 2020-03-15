@@ -29,11 +29,6 @@ public class Out<O> extends Stage {
                    .type(type);
     }
 
-    private Out<O> type(final Class<O> type) {
-        this.type = type;
-        return this;
-    }
-
     /**
      * Creates a $out stage with target collection
      *
@@ -43,11 +38,6 @@ public class Out<O> extends Stage {
     public static Out<Document> to(final String collection) {
         return new Out<Document>()
                    .collection(collection);
-    }
-
-    private Out<O> collection(final String collection) {
-        this.collection = collection;
-        return this;
     }
 
     /**
@@ -64,5 +54,15 @@ public class Out<O> extends Stage {
      */
     public Class<?> getType() {
         return type;
+    }
+
+    private Out<O> collection(final String collection) {
+        this.collection = collection;
+        return this;
+    }
+
+    private Out<O> type(final Class<O> type) {
+        this.type = type;
+        return this;
     }
 }

@@ -93,37 +93,6 @@ public interface Aggregation<T> {
     Aggregation<T> count(String name);
 
     /**
-     * Execute the aggregation.
-     */
-    void execute();
-
-    /**
-     * Execute the aggregation and get the results.
-     *
-     * @param resultType the type of the result
-     * @param <S> the output type
-     * @return a MorphiaCursor
-     */
-    <S> MorphiaCursor<S> execute(Class<S> resultType);
-
-    /**
-     * Execute the aggregation.
-     *
-     * @param options the options to apply
-     */
-    void execute(AggregationOptions options);
-
-    /**
-     * Execute the aggregation and get the results.
-     *
-     * @param resultType the type of the result
-     * @param options    the options to apply
-     * @param <S>        the output type
-     * @return a MorphiaCursor
-     */
-    <S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options);
-
-    /**
      * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
      * holding locks as part of a transaction. The stage returns a document for each operation or session. To run $currentOp, use the
      * db.aggregate() helper on the admin database.
@@ -143,6 +112,25 @@ public interface Aggregation<T> {
     Aggregation<T> currentOp(CurrentOp currentOp);
 
     /**
+     * Execute the aggregation and get the results.
+     *
+     * @param resultType the type of the result
+     * @param <S>        the output type
+     * @return a MorphiaCursor
+     */
+    <S> MorphiaCursor<S> execute(Class<S> resultType);
+
+    /**
+     * Execute the aggregation and get the results.
+     *
+     * @param resultType the type of the result
+     * @param options    the options to apply
+     * @param <S>        the output type
+     * @return a MorphiaCursor
+     */
+    <S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options);
+
+    /**
      * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Each sub-pipeline has its own
      * field in the output document where its results are stored as an array of documents.
      * <p>
@@ -160,6 +148,15 @@ public interface Aggregation<T> {
     Aggregation<T> facet(Facet facet);
 
     /**
+     * Outputs documents in order of nearest to farthest from a specified point.
+     *
+     * @param near the geo query definition
+     * @return this
+     * @aggregation.expression $geoNear
+     */
+    Aggregation<T> geoNear(GeoNear near);
+
+    /**
      * @return the stage documents
      * @morphia.internal
      */
@@ -167,7 +164,7 @@ public interface Aggregation<T> {
 
     /**
      * @param name the name of the stage to fetch
-     * @param <S> the type of the stage
+     * @param <S>  the type of the stage
      * @return the named stage or stages in this aggregation
      * @morphia.internal
      */
@@ -178,15 +175,6 @@ public interface Aggregation<T> {
      * @morphia.internal
      */
     List<Stage> getStages();
-
-    /**
-     * Outputs documents in order of nearest to farthest from a specified point.
-     *
-     * @param near the geo query definition
-     * @return this
-     * @aggregation.expression $geoNear
-     */
-    Aggregation<T> geoNear(GeoNear near);
 
     /**
      * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.
@@ -251,20 +239,39 @@ public interface Aggregation<T> {
      * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
      *
      * @param merge the merge definition
-     * @return this
+     * @param <M>   the output collection type
      * @aggregation.expression $merge
      */
-    Aggregation<T> merge(Merge merge);
+    <M> void merge(Merge<M> merge);
+
+    /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
+     *
+     * @param merge   the merge definition
+     * @param options the options to apply
+     * @param <M>     the output collection type
+     * @aggregation.expression $merge
+     */
+    <M> void merge(Merge<M> merge, AggregationOptions options);
 
     /**
      * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
      *
      * @param out the out definition
      * @param <O> the output collection type
-     * @return this
      * @aggregation.expression $out
      */
-    <O> Aggregation<O> out(Out<O> out);
+    <O> void out(Out<O> out);
+
+    /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
+     *
+     * @param out     the out definition
+     * @param options the options to apply
+     * @param <O>     the output collection type
+     * @aggregation.expression $out
+     */
+    <O> void out(Out<O> out, AggregationOptions options);
 
     /**
      * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.

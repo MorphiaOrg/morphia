@@ -181,6 +181,16 @@ public interface Datastore {
     <T> Query<T> find(Class<T> type);
 
     /**
+     * Find all instances by type from an alternate collection
+     *
+     * @param collection the actual collection to query.  This overrides any mapped on collection on type.
+     * @param type       the class to use for mapping the results
+     * @param <T>        the type to query
+     * @return the query
+     */
+    <T> Query<T> find(String collection, Class<T> type);
+
+    /**
      * Creates a "typeless" query suitable for using in aggregation pipelines.
      *
      * @return the query

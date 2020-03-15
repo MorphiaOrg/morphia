@@ -3,7 +3,7 @@ package dev.morphia.query;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.DatastoreImpl;
+import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
@@ -14,11 +14,11 @@ import org.bson.Document;
  * @param <T>
  */
 public class Update<T> extends UpdateBase<T, Update<T>> {
-    private Query query;
+    private Query<T> query;
     private MongoCollection<T> collection;
 
-    Update(final DatastoreImpl datastore, final Mapper mapper, final Class<T> clazz, final MongoCollection<T> collection,
-           final Query query) {
+    Update(final Datastore datastore, final Mapper mapper, final Class<T> clazz, final MongoCollection<T> collection,
+           final Query<T> query) {
         super(datastore, mapper, clazz);
         this.collection = collection;
         this.query = query;
@@ -40,7 +40,7 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
      * @return the results
      */
     public UpdateResult execute(final UpdateOptions options) {
-        MongoCollection mongoCollection = options.apply(collection);
+        MongoCollection<T> mongoCollection = options.apply(collection);
         Document updateOperations = toDocument();
         final Document queryObject = query.toDocument();
 

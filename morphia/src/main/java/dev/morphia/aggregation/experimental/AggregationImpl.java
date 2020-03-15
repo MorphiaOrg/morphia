@@ -65,6 +65,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public Aggregation<T> addFields(final AddFields fields) {
+        stages.add(fields);
+        return this;
+    }
+
+    @Override
     public Aggregation<T> autoBucket(final AutoBucket bucket) {
         stages.add(bucket);
         return this;
@@ -95,24 +101,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public void execute() {
-        collection.aggregate(getDocuments())
-                  .toCollection();
-    }
-
-    @Override
-    public <S> MorphiaCursor<S> execute(final Class<S> resultType) {
+    public <R> MorphiaCursor<R> execute(final Class<R> resultType) {
         return new MorphiaCursor<>(collection.aggregate(getDocuments(), resultType).iterator());
     }
 
     @Override
-    public void execute(final AggregationOptions options) {
-        options.apply(getDocuments(), collection, Document.class)
-               .toCollection();
-    }
-
-    @Override
-    public <S> MorphiaCursor<S> execute(final Class<S> resultType, final AggregationOptions options) {
+    public <R> MorphiaCursor<R> execute(final Class<R> resultType, final AggregationOptions options) {
         return new MorphiaCursor<>(options.apply(getDocuments(), collection, resultType)
                                           .iterator());
     }
@@ -196,16 +190,32 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> merge(final Merge merge) {
+    public <M> void merge(final Merge<M> merge) {
         stages.add(merge);
-        return this;
+        collection.aggregate(getDocuments())
+                  .toCollection();
+    }
+
+    @Override
+    public <M> void merge(final Merge<M> merge, final AggregationOptions options) {
+        stages.add(merge);
+        collection.aggregate(getDocuments())
+                  .toCollection();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <O> Aggregation<O> out(final Out<O> out) {
+    public <O> void out(final Out<O> out) {
         stages.add(out);
-        return (Aggregation<O>) this;
+        collection.aggregate(getDocuments())
+                  .toCollection();
+    }
+
+    @Override
+    public <O> void out(final Out<O> out, final AggregationOptions options) {
+        stages.add(out);
+        collection.aggregate(getDocuments())
+                  .toCollection();
     }
 
     @Override
@@ -241,12 +251,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> sample(final long sample) {
         stages.add(Sample.of(sample));
-        return this;
-    }
-
-    @Override
-    public Aggregation<T> addFields(final AddFields fields) {
-        stages.add(fields);
         return this;
     }
 

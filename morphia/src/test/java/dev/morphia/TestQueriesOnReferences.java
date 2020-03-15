@@ -10,6 +10,8 @@ import dev.morphia.query.TestQuery.PicWithObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static dev.morphia.query.experimental.filters.Filters.exists;
+
 
 public class TestQueriesOnReferences extends TestBase {
     @Test
@@ -27,7 +29,7 @@ public class TestQueriesOnReferences extends TestBase {
                                                  .limit(1))
                                     .tryNext());
         Assert.assertNull(getDs().find(ContainsPic.class)
-                                 .field("pic").doesNotExist()
+                                 .filter(exists("pic").not())
                                  .execute(new FindOptions()
                                               .projection().include("pic")
                                               .limit(1))

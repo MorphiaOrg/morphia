@@ -1,18 +1,20 @@
 package dev.morphia.issue45;
 
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import dev.morphia.DeleteOptions;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Transient;
-import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.TestEntity;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static dev.morphia.query.experimental.filters.Filters.exists;
+import static dev.morphia.query.experimental.filters.Filters.size;
 
 
 @SuppressWarnings("unused")
@@ -25,16 +27,17 @@ public class TestEmptyEntityMapping extends TestBase {
         u.setUserId("USERID");
         getDs().save(u);
 
-        Assert.assertNull("Should not find the user.", getDs().find(User.class).filter("rights size", 0)
-                                                              .execute(new FindOptions().limit(1))
+        Assert.assertNull("Should not find the user.", getDs().find(User.class)
+                                                              .filter(size("rights", 0))
+                                                              .execute()
                                                               .tryNext());
-        Assert.assertNull("Should not find the user.", getDs().find(User.class).field("rights").sizeEq(0)
-                                                              .execute(new FindOptions().limit(1))
-                                                              .tryNext());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").doesNotExist()
-                                                             .execute(new FindOptions().limit(1))
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class)
+                                                             .filter(exists("rights").not())
+                                                             .execute()
                                                              .next());
-        getDs().delete(getDs().find(User.class));
+        getDs().find(User.class)
+               .remove(new DeleteOptions()
+                           .multi(true));
 
         u = new User();
         u.setFullName("User Name");
@@ -42,17 +45,15 @@ public class TestEmptyEntityMapping extends TestBase {
         u.getRights().add(Rights.ADMIN);
         getDs().save(u);
 
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).filter("rights size", 1)
-                                                             .execute(new FindOptions().limit(1))
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class)
+                                                             .filter(size("rights", 1))
+                                                             .execute()
                                                              .next());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").sizeEq(1)
-                                                             .execute(new FindOptions().limit(1))
-                                                             .next());
-        Assert.assertNotNull("Should find the user.", getDs().find(User.class).field("rights").exists()
-                                                             .execute(new FindOptions().limit(1))
+        Assert.assertNotNull("Should find the user.", getDs().find(User.class)
+                                                             .filter(exists("rights"))
+                                                             .execute()
                                                              .next());
     }
-
 
     public enum Rights {
         ADMIN
@@ -67,10 +68,6 @@ public class TestEmptyEntityMapping extends TestBase {
     static class B {
         @Transient
         private String foo;
-    }
-
-    @Entity
-    public static class UserType extends TestEntity {
     }
 
     @Entity
@@ -125,5 +122,9 @@ public class TestEmptyEntityMapping extends TestBase {
         public void setUserType(final UserType userType) {
             this.userType = userType;
         }
+    }
+
+    @Entity
+    public static class UserType extends TestEntity {
     }
 }

@@ -41,12 +41,19 @@ public final class Filters {
      * Matches documents that have the specified field.
      *
      * @param field the field to check
-     * @param val   the value to check
      * @return the filter
      * @query.filter $exists
      */
-    public static Filter exists(final String field, final Object val) {
-        return new Filter("$exists", field, val);
+    public static Filter exists(final String field) {
+        return new Filter("$exists", field, null) {
+            @Override
+            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+                writer.writeStartDocument(field(mapper));
+                writer.writeName(getFilterName());
+                writer.writeBoolean(!isNot());
+                writer.writeEndDocument();
+            }
+        };
     }
 
     /**

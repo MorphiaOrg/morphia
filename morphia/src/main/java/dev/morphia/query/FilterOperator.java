@@ -94,7 +94,11 @@ public enum FilterOperator {
     EXISTS("$exists", "exists") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.exists(prop, value);
+            Filter exists = Filters.exists(prop);
+            if (Boolean.FALSE.equals(value)) {
+                exists.not();
+            }
+            return exists;
         }
     },
 

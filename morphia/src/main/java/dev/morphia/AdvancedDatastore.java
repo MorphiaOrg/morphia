@@ -34,7 +34,7 @@ public interface AdvancedDatastore extends Datastore {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> Query<T> createQuery(String collection, Class<T> type) {
-        return getQueryFactory().createQuery(this, type);
+        return getQueryFactory().createQuery(this, collection, type);
     }
 
     /**
