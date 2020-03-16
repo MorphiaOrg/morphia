@@ -276,12 +276,12 @@ public class TestQuery extends TestBase {
         assertEquals(1, getDs().find(Pic.class)
                                .filter(regex("name")
                                            .pattern(quote("'>   fish bones") + "$")
-                                           .options("i"))
+                                           .caseInsensitive())
                                .count());
         assertEquals(1, getDs().find(Pic.class)
                                .filter(regex("name")
                                            .pattern(quote("'>   FISH BONES") + "$")
-                                           .options("i"))
+                                           .caseInsensitive())
                                .count());
     }
 
