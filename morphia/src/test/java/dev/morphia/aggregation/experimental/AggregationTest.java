@@ -46,6 +46,7 @@ import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.Type;
@@ -58,6 +59,7 @@ import org.junit.Test;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
@@ -575,27 +577,25 @@ public class AggregationTest extends TestBase {
                                             .project(Projection.of()
                                                                .include("title")
                                                                .include("author"));
-        MorphiaCursor<Document> aggregate = pipeline.execute(Document.class);
-        doc = parse("{ '_id' : 1, title: 'abc123', author: { last: 'zzz', first: 'aaa' }}");
-        Assert.assertEquals(doc, aggregate.next());
+        MorphiaCursor<ProjectedBook> aggregate = pipeline.execute(ProjectedBook.class);
+        Assert.assertEquals(new ProjectedBook(1, "abc123", "zzz", "aaa"), aggregate.next());
 
         pipeline = getDs().aggregate(Book.class)
                           .project(Projection.of()
                                              .suppressId()
                                              .include("title")
                                              .include("author"));
-        aggregate = pipeline.execute(Document.class);
+        aggregate = pipeline.execute(ProjectedBook.class);
 
-        doc = parse("{title: 'abc123', author: { last: 'zzz', first: 'aaa' }}");
-        Assert.assertEquals(doc, aggregate.next());
+        Assert.assertEquals(new ProjectedBook(null, "abc123", "zzz", "aaa"), aggregate.next());
 
         pipeline = getDs().aggregate(Book.class)
                           .project(Projection.of()
                                              .exclude("lastModified"));
-        aggregate = pipeline.execute(Document.class);
+        final MorphiaCursor<Document> docAgg = pipeline.execute(Document.class);
 
         doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}");
-        Assert.assertEquals(doc, aggregate.next());
+        Assert.assertEquals(doc, docAgg.next());
     }
 
     @Test
@@ -827,6 +827,74 @@ public class AggregationTest extends TestBase {
     private static class Employee {
         @Id
         private ObjectId id;
+    }
+
+    @Embedded
+    static class ProjectedAuthor {
+        private String last;
+        private String first;
+
+        public ProjectedAuthor() {
+        }
+
+        public ProjectedAuthor(final String last, final String first) {
+            this.last = last;
+            this.first = first;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(last, first);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ProjectedAuthor)) {
+                return false;
+            }
+            final ProjectedAuthor that = (ProjectedAuthor) o;
+            return last.equals(that.last) &&
+                   first.equals(that.first);
+        }
+    }
+
+    @Entity
+    static class ProjectedBook {
+        @Id
+        private Integer id;
+        private String title;
+        private ProjectedAuthor author;
+
+        ProjectedBook() {
+        }
+
+        public ProjectedBook(final Integer id, final String title, final String last, final String first) {
+            this.id = id;
+            this.title = title;
+            author = new ProjectedAuthor(last, first);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, title, author);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ProjectedBook)) {
+                return false;
+            }
+            final ProjectedBook that = (ProjectedBook) o;
+            return Objects.equals(id, that.id) &&
+                   title.equals(that.title) &&
+                   author.equals(that.author);
+        }
     }
 
     @Entity("salaries")

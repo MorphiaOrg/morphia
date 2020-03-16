@@ -123,18 +123,16 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return this;
     }
 
-    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Document> getDocuments() {
-        List<Document> collect = stages.stream()
-                                       .map(s -> {
-                                           Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
-                                           DocumentWriter writer = new DocumentWriter();
-                                           codec.encode(writer, s, EncoderContext.builder().build());
-                                           return writer.getDocument();
-                                       })
-                                       .collect(Collectors.toList());
-        return collect;
+        return stages.stream()
+                     .map(s -> {
+                         Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
+                         DocumentWriter writer = new DocumentWriter();
+                         codec.encode(writer, s, EncoderContext.builder().build());
+                         return writer.getDocument();
+                     })
+                     .collect(Collectors.toList());
     }
 
     @Override
@@ -184,7 +182,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> match(final Query query) {
+    public Aggregation<T> match(final Query<?> query) {
         stages.add(Match.on(query));
         return this;
     }
@@ -204,7 +202,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <O> void out(final Out<O> out) {
         stages.add(out);
         collection.aggregate(getDocuments())

@@ -166,17 +166,17 @@ public class AggregationTest extends TestBase {
                                                   .bucket(Bucket.of()
                                                                 .groupBy(field("copies"))
                                                                 .boundaries(value(1), value(5), value(10))
-                                                                .defaultValue("test")
+                                                                .defaultValue(-1)
                                                                 .outputField("count", sum(value(1))))
                                                   .execute(BucketResult.class);
 
-        BucketResult result1 = aggregate.next();
-        assertEquals(result1.id, "1");
-        assertEquals(result1.count, 3);
-
         BucketResult result2 = aggregate.next();
-        assertEquals(result2.id, "test");
+        assertEquals(result2.id, Integer.valueOf(-1));
         assertEquals(result2.count, 2);
+
+        BucketResult result1 = aggregate.next();
+        assertEquals(result1.id, Integer.valueOf(1));
+        assertEquals(result1.count, 3);
 
     }
 
@@ -212,11 +212,11 @@ public class AggregationTest extends TestBase {
                                                                 .boundaries(value(1), value(5), value(12)))
                                                   .execute(BucketResult.class);
         BucketResult result1 = aggregate.next();
-        assertEquals(result1.id, "1");
+        assertEquals(result1.id, Integer.valueOf(1));
         assertEquals(result1.count, 3);
 
         BucketResult result2 = aggregate.next();
-        assertEquals(result2.id, "5");
+        assertEquals(result2.id, Integer.valueOf(5));
         assertEquals(result2.count, 2);
     }
 
@@ -721,7 +721,7 @@ public class AggregationTest extends TestBase {
     @Entity
     public static class BucketResult {
         @Id
-        private String id;
+        private Integer id;
         private int count;
 
         public int getCount() {
@@ -732,11 +732,11 @@ public class AggregationTest extends TestBase {
             this.count = count;
         }
 
-        public String getId() {
+        public Integer getId() {
             return id;
         }
 
-        public void setId(final String id) {
+        public void setId(final Integer id) {
             this.id = id;
         }
 

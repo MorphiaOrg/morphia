@@ -23,7 +23,6 @@ import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
-import org.bson.Document;
 
 import java.util.List;
 
@@ -155,12 +154,6 @@ public interface Aggregation<T> {
      * @aggregation.expression $geoNear
      */
     Aggregation<T> geoNear(GeoNear near);
-
-    /**
-     * @return the stage documents
-     * @morphia.internal
-     */
-    List<Document> getDocuments();
 
     /**
      * @param name the name of the stage to fetch
