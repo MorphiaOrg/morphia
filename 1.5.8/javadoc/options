@@ -4,21 +4,21 @@
 'UTF-8'
 -protected
 -sourcepath
-'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/morphia-for-docs-r1.5.8/morphia/src/main/java'
+'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/r1.5.8/morphia/src/main/java'
 -author
 -bottom
 'Copyright &#169; 2020. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/morphia-for-docs-r1.5.8/morphia/target/site/apidocs'
+'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/r1.5.8/morphia/target/site/apidocs'
 -docencoding
 'UTF-8'
 -Xdoclint:none
 -doctitle
 'Morphia'
 -linkoffline
-'https://docs.oracle.com/javase/8/docs/api' '/var/lib/jenkins/jobs/morphia-docs/workspace/repos/morphia-for-docs-r1.5.8/morphia/target/javadoc-bundle-options'
+'https://docs.oracle.com/javase/8/docs/api' '/var/lib/jenkins/jobs/morphia-docs/workspace/repos/r1.5.8/morphia/target/javadoc-bundle-options'
 -taglet
 'taglets.ServerReleaseTaglet'
 -taglet
