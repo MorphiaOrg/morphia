@@ -123,18 +123,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return this;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<Document> getDocuments() {
-        return stages.stream()
-                     .map(s -> {
-                         Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
-                         DocumentWriter writer = new DocumentWriter();
-                         codec.encode(writer, s, EncoderContext.builder().build());
-                         return writer.getDocument();
-                     })
-                     .collect(Collectors.toList());
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public <S extends Stage> S getStage(final String name) {
@@ -197,8 +185,9 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <M> void merge(final Merge<M> merge, final AggregationOptions options) {
         stages.add(merge);
-        collection.aggregate(getDocuments())
-                  .toCollection();
+        Class<?> type = merge.getType() != null ? merge.getType() : Document.class;
+        options.apply(getDocuments(), collection, type)
+               .toCollection();
     }
 
     @Override
@@ -211,8 +200,9 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <O> void out(final Out<O> out, final AggregationOptions options) {
         stages.add(out);
-        collection.aggregate(getDocuments())
-                  .toCollection();
+        Class<?> type = out.getType() != null ? out.getType() : Document.class;
+        options.apply(getDocuments(), collection, type)
+               .toCollection();
     }
 
     @Override
@@ -279,5 +269,17 @@ public class AggregationImpl<T> implements Aggregation<T> {
     public Aggregation<T> unwind(final Unwind unwind) {
         stages.add(unwind);
         return this;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private List<Document> getDocuments() {
+        return stages.stream()
+                     .map(s -> {
+                         Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
+                         DocumentWriter writer = new DocumentWriter();
+                         codec.encode(writer, s, EncoderContext.builder().build());
+                         return writer.getDocument();
+                     })
+                     .collect(Collectors.toList());
     }
 }
