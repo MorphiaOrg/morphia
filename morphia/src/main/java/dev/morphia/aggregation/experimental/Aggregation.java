@@ -18,13 +18,10 @@ import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sort;
-import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
-
-import java.util.List;
 
 /**
  * @param <T> The initial type of the aggregation.  Used for collection name resolution.
@@ -154,20 +151,6 @@ public interface Aggregation<T> {
      * @aggregation.expression $geoNear
      */
     Aggregation<T> geoNear(GeoNear near);
-
-    /**
-     * @param name the name of the stage to fetch
-     * @param <S>  the type of the stage
-     * @return the named stage or stages in this aggregation
-     * @morphia.internal
-     */
-    <S extends Stage> S getStage(String name);
-
-    /**
-     * @return the stage in this aggregation
-     * @morphia.internal
-     */
-    List<Stage> getStages();
 
     /**
      * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.

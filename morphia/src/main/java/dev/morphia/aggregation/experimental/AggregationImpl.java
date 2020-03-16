@@ -124,22 +124,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <S extends Stage> S getStage(final String name) {
-        List<Stage> list = stages.stream()
-                                 .filter(s -> s.getStageName().equals(name))
-                                 .collect(Collectors.toList());
-        return ((S) (list.size() == 1
-                     ? list.get(0)
-                     : list));
-    }
-
-    @Override
-    public List<Stage> getStages() {
-        return stages;
-    }
-
-    @Override
     public Aggregation<T> graphLookup(final GraphLookup lookup) {
         stages.add(lookup);
         return this;

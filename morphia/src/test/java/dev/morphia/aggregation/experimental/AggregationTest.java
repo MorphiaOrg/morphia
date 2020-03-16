@@ -42,7 +42,6 @@ import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
-import dev.morphia.aggregation.experimental.stages.Sample;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
@@ -497,12 +496,7 @@ public class AggregationTest extends TestBase {
                                          .group(Group.of()
                                                      .field("count", sum(value(1))));
 
-        Group group = pipeline.getStage("$group");
-        Assert.assertNull(group.getId());
-        assertEquals(1, group.getFields().size());
-
-        Document execute = pipeline.execute(Document.class).tryNext();
-        assertEquals(Integer.valueOf(4), execute.getInteger("count"));
+        assertEquals(Integer.valueOf(4), pipeline.execute(Document.class).tryNext().getInteger("count"));
     }
 
     @Test
@@ -749,11 +743,8 @@ public class AggregationTest extends TestBase {
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .sample(3);
-        Sample sample = pipeline.getStage("$sample");
-        assertEquals(3, sample.getSize());
 
-        List<User> list = pipeline.execute(User.class).toList();
-        assertEquals(3, list.size());
+        assertEquals(3, pipeline.execute(User.class).toList().size());
     }
 
     @Test
