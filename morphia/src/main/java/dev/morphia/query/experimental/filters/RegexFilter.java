@@ -27,7 +27,7 @@ public class RegexFilter extends Filter {
             writer.writeStartDocument("$not");
         }
         ExpressionCodec.writeNamedValue(mapper, writer, "$regex", new BsonRegularExpression(regex), context);
-        ExpressionCodec.writeNamedValue(mapper, writer, "options", options, context);
+        ExpressionCodec.writeNamedValue(mapper, writer, "$options", options, context);
         if (isNot()) {
             writer.writeEndDocument();
         }

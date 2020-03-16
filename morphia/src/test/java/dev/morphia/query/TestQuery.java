@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.CursorType;
 import com.mongodb.client.MongoCollection;
@@ -27,7 +26,6 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.query.QueryForSubtypeTest.User;
-import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
@@ -57,11 +55,15 @@ import static dev.morphia.query.Sort.naturalDescending;
 import static dev.morphia.query.experimental.filters.Filters.and;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.gt;
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static dev.morphia.query.experimental.filters.Filters.lt;
 import static dev.morphia.query.experimental.filters.Filters.or;
+import static dev.morphia.query.experimental.filters.Filters.regex;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
+import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.quote;
 import static org.bson.Document.parse;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
@@ -73,7 +75,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 
 @SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
@@ -89,12 +90,12 @@ public class TestQuery extends TestBase {
 
         Query<GenericKeyValue> query = getDs()
                                            .find(GenericKeyValue.class)
-                                           .field("key").hasAnyOf(keys);
+                                           .filter(in("key", keys));
         FindOptions options = new FindOptions()
                                   .logQuery();
-        final GenericKeyValue found = query
-                                          .execute(options)
-                                          .tryNext();
+        final GenericKeyValue<String> found = query
+                                                  .execute(options)
+                                                  .tryNext();
         String loggedQuery = getDs().getLoggedQuery(options);
         Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
         assertEquals(found.id, value.id);
@@ -111,8 +112,7 @@ public class TestQuery extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
         final Query<KeyValue> query = getDs().find(KeyValue.class)
-                                             .field("key")
-                                             .hasAnyOf(keys);
+                                             .filter(in("key", keys));
         query.execute(options);
         String loggedQuery = getDs().getLoggedQuery(options);
         Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
@@ -134,7 +134,7 @@ public class TestQuery extends TestBase {
         final ReferenceKeyValue key = getDs().save(value);
 
         final ReferenceKeyValue byKey = getDs().find(ReferenceKeyValue.class)
-                                               .filter("_id", key.id)
+                                               .filter(eq("_id", key.id))
                                                .first();
         assertEquals(value.id, byKey.id);
     }
@@ -165,75 +165,44 @@ public class TestQuery extends TestBase {
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").contains("PIC")
+                               .filter(regex("name")
+                                           .pattern("PIC"))
                                .count());
         assertEquals(4, getDs().find(Pic.class)
-                               .field("name").containsIgnoreCase("PIC")
+                               .filter(regex("name")
+                                           .pattern("PIC")
+                                           .options("i"))
                                .count());
 
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").equal("PIC1")
+                               .filter(regex("name")
+                                           .pattern("PIC1"))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").equalIgnoreCase("PIC1")
+                               .filter(regex("name")
+                                           .pattern("PIC1")
+                                           .options("i"))
                                .count());
 
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").endsWith("C1")
+                               .filter(regex("name")
+                                           .pattern("C1$"))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").endsWithIgnoreCase("C1")
+                               .filter(regex("name")
+                                           .pattern("C1$")
+                                           .options("i"))
                                .count());
 
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").startsWith("PIC")
+                               .filter(regex("name")
+                                           .pattern("^PIC"))
                                .count());
         assertEquals(4, getDs().find(Pic.class)
-                               .field("name").startsWithIgnoreCase("PIC")
+                               .filter(regex("name")
+                                           .pattern("^PIC")
+                                           .options("i"))
                                .count());
-    }
-
-    @Test
-    public void testProject() {
-        getDs().save(new ContainsRenamedFields("Frank", "Zappa"));
-
-        ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class)
-                                             .execute(new FindOptions()
-                                                          .projection().include("first_name")
-                                                          .limit(1))
-                                             .tryNext();
-        assertNotNull(found.firstName);
-        assertNull(found.lastName);
-
-        found = getDs().find(ContainsRenamedFields.class)
-                       .execute(new FindOptions()
-                                    .projection().include("first_name")
-                                    .limit(1))
-                       .tryNext();
-        assertNotNull(found.firstName);
-        assertNull(found.lastName);
-
-        try {
-            getDs()
-                .find(ContainsRenamedFields.class)
-                .execute(new FindOptions()
-                             .projection().include("bad field name")
-                             .limit(1))
-                .tryNext();
-            fail("Validation should have caught the bad field");
-        } catch (ValidationException e) {
-            // success!
-        }
-
-        Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class);
-
-        if (query instanceof LegacyQuery) {
-            query
-                .project("_id", true)
-                .project("first_name", true);
-            Document fields = ((LegacyQuery) query).getFieldsObject();
-            assertNull(fields.get(getMapper().getOptions().getDiscriminatorKey()));
-        }
     }
 
     @Test
@@ -244,59 +213,75 @@ public class TestQuery extends TestBase {
             new Pic("hacksaw [|^^^^^^^")));
 
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").contains("^")
+                               .filter(regex("name")
+                                           .pattern(compile(quote("^"))))
                                .count());
 
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").contains("aw [|^^")
+                               .filter(regex("name")
+                                           .pattern(compile(quote("aw [|^^"))))
                                .count());
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").contains("AW [|^^")
+                               .filter(regex("name")
+                                           .pattern(compile(quote("AW [|^^"))))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").containsIgnoreCase("aw [|^^")
+                               .filter(regex("name")
+                                           .pattern(compile(quote("aw [|^^")))
+                                           .options("i"))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").containsIgnoreCase("AW [|^^")
+                               .filter(regex("name")
+                                           .pattern(compile(quote("AW [|^^")))
+                                           .options("i"))
                                .count());
 
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").startsWith(">++('>   fish")
+                               .filter(regex("name")
+                                           .pattern(compile("^" + quote(">++('>   fish"))))
                                .count());
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").startsWith(">++('>   FIsh")
+                               .filter(regex("name")
+                                           .pattern(compile("^" + quote(">++('>   FIsh"))))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").startsWithIgnoreCase(">++('>   FISH")
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .field("name").startsWithIgnoreCase(">++('>   FISH")
+                               .filter(regex("name")
+                                           .pattern(compile("^" + quote(">++('>   FISH")))
+                                           .options("i"))
                                .count());
 
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").equal(">++('>   fish bones")
+                               .filter(eq("name", ">++('>   fish bones"))
                                .count());
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").equal(">++('>   FISH BONES")
+                               .filter(eq("name", ">++('>   FISH BONES"))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").equalIgnoreCase(">++('>   fish bones")
+                               .filter(regex("name").pattern(quote(">++('>   fish bones")))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").equalIgnoreCase(">++('>   FISH BONES")
+                               .filter(regex("name")
+                                           .pattern("^" + quote(">++('>   FISH BONES") + "$")
+                                           .options("i"))
                                .count());
 
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").endsWith("'>   fish bones")
+                               .filter(regex("name")
+                                           .pattern(quote(">++('>   fish bones") + "$"))
                                .count());
         assertEquals(0, getDs().find(Pic.class)
-                               .field("name").endsWith("'>   FISH BONES")
+                               .filter(regex("name")
+                                           .pattern(quote("'>   FISH BONES") + "$"))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").endsWithIgnoreCase("'>   fish bones")
+                               .filter(regex("name")
+                                           .pattern(quote("'>   fish bones") + "$")
+                                           .options("i"))
                                .count());
         assertEquals(1, getDs().find(Pic.class)
-                               .field("name").endsWithIgnoreCase("'>   FISH BONES")
+                               .filter(regex("name")
+                                           .pattern(quote("'>   FISH BONES") + "$")
+                                           .options("i"))
                                .count());
     }
 
@@ -484,33 +469,6 @@ public class TestQuery extends TestBase {
         check(new LegacyQueryFactory().createQuery(getDs(), User.class).disableValidation());
     }
 
-    private void check(final Query<User> query) {
-        query
-            .field("version").equal("latest")
-            .and(
-                query.or(
-                    query.criteria("fieldA").equal("a"),
-                    query.criteria("fieldB").equal("b")),
-                query.and(
-                    query.criteria("fieldC").equal("c"),
-                    query.or(
-                        query.criteria("fieldD").equal("d"),
-                        query.criteria("fieldE").equal("e"))));
-
-        query.and(query.criteria("fieldF").equal("f"));
-
-        final Document queryObject = query instanceof LegacyQuery
-                                     ? ((LegacyQuery) query).toDocument()
-                                     : ((MorphiaQuery) query).toDocument();
-
-        final Document parse = parse(
-            "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
-            + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\","
-            + "\"_t\": { \"$in\" : [ \"User\"]}}");
-
-        Assert.assertEquals(parse, queryObject);
-    }
-
     @Test
     public void testDeepQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
@@ -684,7 +642,7 @@ public class TestQuery extends TestBase {
 
         final Query<PhotoWithKeywords> query = getAds().find(PhotoWithKeywords.class);
         query.filter(
-            Filters.regex("keywords.keyword").pattern("^ralph").not());
+            regex("keywords.keyword").pattern("^ralph").not());
 
         FindOptions options = new FindOptions().logQuery();
         query.execute();
@@ -1073,40 +1031,47 @@ public class TestQuery extends TestBase {
         assertNull(getDs().find(Hotel.class).filter("_id", -1).first());
     }
 
-    @Test(expected = ValidationException.class)
-    @Category(Reference.class)
-    public void testReferenceQuery() {
-        final Photo p = new Photo();
-        final HasPhotoReference cpk = new HasPhotoReference();
-        cpk.photo = getDs().save(p);
-        getDs().save(cpk);
+    @Test
+    public void testProject() {
+        getDs().save(new ContainsRenamedFields("Frank", "Zappa"));
 
-        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class)
-                                                .filter("photo", p);
-        FindOptions options = new FindOptions()
-                                  .logQuery()
-                                  .limit(1);
-        HasPhotoReference photoKey = query.execute(options)
-                                          .tryNext();
+        ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class)
+                                             .execute(new FindOptions()
+                                                          .projection().include("first_name")
+                                                          .limit(1))
+                                             .tryNext();
+        assertNotNull(found.firstName);
+        assertNull(found.lastName);
 
-        assertNotNull(getDs().getLoggedQuery(options), photoKey);
+        found = getDs().find(ContainsRenamedFields.class)
+                       .execute(new FindOptions()
+                                    .projection().include("first_name")
+                                    .limit(1))
+                       .tryNext();
+        assertNotNull(found.firstName);
+        assertNull(found.lastName);
 
-        assertNotNull(getDs().find(HasPhotoReference.class)
-                             .filter("photo", cpk.photo)
-                             .execute(new FindOptions()
-                                          .limit(1))
-                             .tryNext());
-        assertNull(getDs().find(HasPhotoReference.class)
-                          .filter("photo", 1)
-                          .execute(new FindOptions()
-                                       .limit(1))
-                          .tryNext());
+        try {
+            getDs()
+                .find(ContainsRenamedFields.class)
+                .execute(new FindOptions()
+                             .projection().include("bad field name")
+                             .limit(1))
+                .tryNext();
+            fail("Validation should have caught the bad field");
+        } catch (ValidationException e) {
+            // success!
+        }
 
-        getDs().find(HasPhotoReference.class)
-               .filter("photo.keywords", "foo")
-               .execute(new FindOptions()
-                            .limit(1))
-               .next();
+        Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class);
+
+        if (query instanceof LegacyQuery) {
+            query
+                .project("_id", true)
+                .project("first_name", true);
+            Document fields = ((LegacyQuery) query).getFieldsObject();
+            assertNull(fields.get(getMapper().getOptions().getDiscriminatorKey()));
+        }
     }
 
     @Test
@@ -1254,41 +1219,40 @@ public class TestQuery extends TestBase {
                                .count());
     }
 
-    @Test
-    public void testTailableCursors() {
-        getMapper().map(CappedPic.class);
-        final Datastore ds = getDs();
-        ds.ensureCaps();
+    @Test(expected = ValidationException.class)
+    @Category(Reference.class)
+    public void testReferenceQuery() {
+        final Photo p = new Photo();
+        final HasPhotoReference cpk = new HasPhotoReference();
+        cpk.photo = getDs().save(p);
+        getDs().save(cpk);
 
-        final Query<CappedPic> query = ds.find(CappedPic.class);
-        final List<CappedPic> found = new ArrayList<>();
-        final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class)
+                                                .filter("photo", p);
+        FindOptions options = new FindOptions()
+                                  .logQuery()
+                                  .limit(1);
+        HasPhotoReference photoKey = query.execute(options)
+                                          .tryNext();
 
-        assertEquals(0, query.count());
+        assertNotNull(getDs().getLoggedQuery(options), photoKey);
 
-        ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(
-            () -> ds.save(new CappedPic()), 0, 100, TimeUnit.MILLISECONDS);
+        assertNotNull(getDs().find(HasPhotoReference.class)
+                             .filter("photo", cpk.photo)
+                             .execute(new FindOptions()
+                                          .limit(1))
+                             .tryNext());
+        assertNull(getDs().find(HasPhotoReference.class)
+                          .filter("photo", 1)
+                          .execute(new FindOptions()
+                                       .limit(1))
+                          .tryNext());
 
-        Awaitility
-            .await()
-            .atMost(10, TimeUnit.SECONDS)
-            .until(() -> getDs().find(CappedPic.class).count() > 0);
-
-        final Iterator<CappedPic> tail = query.execute(new FindOptions()
-                                                           .cursorType(CursorType.Tailable));
-        Awaitility
-            .await()
-            .pollDelay(500, TimeUnit.MILLISECONDS)
-            .atMost(10, TimeUnit.SECONDS)
-            .until(() -> {
-                if (tail.hasNext()) {
-                    found.add(tail.next());
-                }
-                return found.size() >= 10;
-            });
-        executorService.shutdownNow();
-        Assert.assertTrue(found.size() >= 10);
-        Assert.assertTrue(query.count() >= 10);
+        getDs().find(HasPhotoReference.class)
+               .filter("photo.keywords", "foo")
+               .execute(new FindOptions()
+                            .limit(1))
+               .next();
     }
 
     @Test
@@ -1415,8 +1379,41 @@ public class TestQuery extends TestBase {
 
     }
 
-    private Query<Pic> getQuery(final QueryFactory queryFactory) {
-        return queryFactory.createQuery(getDs(), Pic.class);
+    @Test
+    public void testTailableCursors() {
+        getMapper().map(CappedPic.class);
+        final Datastore ds = getDs();
+        ds.ensureCaps();
+
+        final Query<CappedPic> query = ds.find(CappedPic.class);
+        final List<CappedPic> found = new ArrayList<>();
+        final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
+        assertEquals(0, query.count());
+
+        ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(
+            () -> ds.save(new CappedPic()), 0, 100, TimeUnit.MILLISECONDS);
+
+        Awaitility
+            .await()
+            .atMost(10, TimeUnit.SECONDS)
+            .until(() -> getDs().find(CappedPic.class).count() > 0);
+
+        final Iterator<CappedPic> tail = query.execute(new FindOptions()
+                                                           .cursorType(CursorType.Tailable));
+        Awaitility
+            .await()
+            .pollDelay(500, TimeUnit.MILLISECONDS)
+            .atMost(10, TimeUnit.SECONDS)
+            .until(() -> {
+                if (tail.hasNext()) {
+                    found.add(tail.next());
+                }
+                return found.size() >= 10;
+            });
+        executorService.shutdownNow();
+        Assert.assertTrue(found.size() >= 10);
+        Assert.assertTrue(query.count() >= 10);
     }
 
     @Test
@@ -1463,6 +1460,33 @@ public class TestQuery extends TestBase {
         }
     }
 
+    private void check(final Query<User> query) {
+        query
+            .field("version").equal("latest")
+            .and(
+                query.or(
+                    query.criteria("fieldA").equal("a"),
+                    query.criteria("fieldB").equal("b")),
+                query.and(
+                    query.criteria("fieldC").equal("c"),
+                    query.or(
+                        query.criteria("fieldD").equal("d"),
+                        query.criteria("fieldE").equal("e"))));
+
+        query.and(query.criteria("fieldF").equal("f"));
+
+        final Document queryObject = query instanceof LegacyQuery
+                                     ? ((LegacyQuery) query).toDocument()
+                                     : ((MorphiaQuery) query).toDocument();
+
+        final Document parse = parse(
+            "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
+            + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\","
+            + "\"_t\": { \"$in\" : [ \"User\"]}}");
+
+        Assert.assertEquals(parse, queryObject);
+    }
+
     private int[] copy(final int[] array, final int start, final int count) {
         return copyOfRange(array, start, start + count);
     }
@@ -1488,6 +1512,10 @@ public class TestQuery extends TestBase {
             }
         }
         return null;
+    }
+
+    private Query<Pic> getQuery(final QueryFactory queryFactory) {
+        return queryFactory.createQuery(getDs(), Pic.class);
     }
 
     private void turnOffProfiling() {
