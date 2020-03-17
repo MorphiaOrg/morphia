@@ -10,7 +10,6 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
 import dev.morphia.TestDatastore.FacebookUser;
-import dev.morphia.TestDatastore.FacebookUserWithNoClassNameStored;
 import dev.morphia.TestDatastore.Keys;
 import dev.morphia.TestMapper.CustomId;
 import dev.morphia.TestMapper.UsesCustomIdObject;
@@ -776,94 +775,6 @@ public class TestLegacyQuery extends LegacyTestBase {
         }
 
         assertNotNull(k1Loaded.getRect().getId());
-    }
-
-    @Test
-    public void testKeyListLookups() {
-        final FacebookUser fbUser1 = new FacebookUser(1, "scott");
-        final FacebookUser fbUser2 = new FacebookUser(2, "tom");
-        final FacebookUser fbUser3 = new FacebookUser(3, "oli");
-        final FacebookUser fbUser4 = new FacebookUser(4, "frank");
-        final List<FacebookUser> users = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
-        assertEquals(1, fbUser1.getId());
-
-        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (final FacebookUser user : users) {
-            fbUserKeys.add(getMapper().getKey(user));
-        }
-
-        assertEquals(fbUser1.getId(), fbUserKeys.get(0).getId());
-        assertEquals(fbUser2.getId(), fbUserKeys.get(1).getId());
-        assertEquals(fbUser3.getId(), fbUserKeys.get(2).getId());
-        assertEquals(fbUser4.getId(), fbUserKeys.get(3).getId());
-
-        final Keys k1 = new Keys(null, fbUserKeys);
-        final Keys keys = getDs().save(k1);
-        assertEquals(k1.getId(), keys.getId());
-
-        final Keys k1Reloaded = getDs().find(Keys.class)
-                                       .filter("_id", k1.getId())
-                                       .first();
-        final Keys k1Loaded = getDs().find(Keys.class)
-                                     .filter("_id", keys.getId())
-                                     .first();
-        assertNotNull(k1Reloaded);
-        assertNotNull(k1Loaded);
-        for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
-            assertNotNull(key.getId());
-        }
-
-        assertEquals(4, k1Loaded.getUsers().size());
-
-        final List<FacebookUser> fbUsers = getDs().getByKeys(FacebookUser.class, k1Loaded.getUsers());
-        assertEquals(4, fbUsers.size());
-        for (final FacebookUser fbUser : fbUsers) {
-            assertNotNull(fbUser);
-            assertNotNull(fbUser.getId());
-            assertNotNull(fbUser.getUsername());
-        }
-    }
-
-    @Test
-    public void testKeyListLookupsWithNoClassNameStored() {
-        final FacebookUser fbUser1 = new FacebookUserWithNoClassNameStored(1, "scott");
-        final FacebookUser fbUser2 = new FacebookUserWithNoClassNameStored(2, "tom");
-        final FacebookUser fbUser3 = new FacebookUserWithNoClassNameStored(3, "oli");
-        final FacebookUser fbUser4 = new FacebookUserWithNoClassNameStored(4, "frank");
-        final List<FacebookUser> users = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
-        assertEquals(1, fbUser1.getId());
-
-        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (final FacebookUser user : users) {
-            fbUserKeys.add(getMapper().getKey(user));
-        }
-
-        assertEquals(fbUser1.getId(), fbUserKeys.get(0).getId());
-        assertEquals(fbUser2.getId(), fbUserKeys.get(1).getId());
-        assertEquals(fbUser3.getId(), fbUserKeys.get(2).getId());
-        assertEquals(fbUser4.getId(), fbUserKeys.get(3).getId());
-
-        final Keys k1 = new Keys(null, fbUserKeys);
-        final Keys keys = getDs().save(k1);
-        assertEquals(k1.getId(), keys.getId());
-
-        final Keys k1Reloaded = getDs().find(Keys.class)
-                                       .filter("_id", k1.getId())
-                                       .first();
-        assertNotNull(k1Reloaded);
-        for (final Key<FacebookUser> key : k1Reloaded.getUsers()) {
-            assertNotNull(key.getId());
-        }
-
-        assertEquals(4, k1Reloaded.getUsers().size());
-
-        final List<FacebookUser> fbUsers = getDs().getByKeys(FacebookUser.class, k1Reloaded.getUsers());
-        assertEquals(4, fbUsers.size());
-        for (final FacebookUser fbUser : fbUsers) {
-            assertNotNull(fbUser);
-            assertNotNull(fbUser.getId());
-            assertNotNull(fbUser.getUsername());
-        }
     }
 
     @Test

@@ -18,7 +18,6 @@ import static dev.morphia.aggregation.experimental.expressions.StringExpressions
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.strLenBytes;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.strLenCP;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.strcasecmp;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.substr;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.substrBytes;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.substrCP;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.toLower;
@@ -132,12 +131,6 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testStrcasecmp() {
         assertAndCheckDocShape("{ $strcasecmp: [ 'abcde', 'ABCDEF' ] }", strcasecmp(value("abcde"), value("ABCDEF")), -1);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void testSubstr() {
-        assertAndCheckDocShape("{ $substr: [ 'winter wonderland', 3, 5 ] }", substr(value("winter wonderland"), 3, 5),
-            "ter w");
     }
 
     @Test
