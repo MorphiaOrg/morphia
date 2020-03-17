@@ -16,7 +16,10 @@ import java.util.List;
  * This defines the pipeline used in aggregation operations
  *
  * @mongodb.driver.manual core/aggregation-pipeline/ Aggregation Pipeline
+ * @deprecated
  */
+@SuppressWarnings("removal")
+@Deprecated(since = "2.0", forRemoval = true)
 public interface AggregationPipeline {
 
     /**

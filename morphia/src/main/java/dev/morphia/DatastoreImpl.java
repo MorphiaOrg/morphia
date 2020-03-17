@@ -13,8 +13,6 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.aggregation.AggregationPipeline;
-import dev.morphia.aggregation.AggregationPipelineImpl;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.AggregationImpl;
 import dev.morphia.annotations.CappedAt;
@@ -46,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Collections.singletonList;
 import static org.bson.Document.parse;
 
@@ -54,7 +54,7 @@ import static org.bson.Document.parse;
  *
  * @morphia.internal
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
@@ -93,8 +93,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public AggregationPipeline createAggregation(final String collection, final Class<?> clazz) {
-        return new AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
+    public dev.morphia.aggregation.AggregationPipeline createAggregation(final String collection, final Class<?> clazz) {
+        return new dev.morphia.aggregation.AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
     }
 
     @Override
@@ -201,8 +201,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public AggregationPipeline createAggregation(final Class source) {
-        return new AggregationPipelineImpl(this, mapper.getCollection(source), source);
+    public dev.morphia.aggregation.AggregationPipeline createAggregation(final Class source) {
+        return new dev.morphia.aggregation.AggregationPipelineImpl(this, mapper.getCollection(source), source);
     }
 
     @Override
@@ -246,7 +246,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Did you mean to delete all documents? -- ds.createQuery(???.class).delete()");
         }
         return find(entity.getClass())
-                   .filter("_id", mapper.getId(entity))
+                   .filter(eq("_id", mapper.getId(entity)))
                    .remove(options);
     }
 
@@ -311,7 +311,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @SuppressWarnings("deprecation")
     public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
-        return find(clazz).disableValidation().filter("_id" + " in", ids).enableValidation();
+        return find(clazz).disableValidation().filter(in("_id", ids)).enableValidation();
     }
 
     @Override
@@ -327,7 +327,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (id instanceof Document) {
             ((Document) id).remove(mapper.getOptions().getDiscriminatorKey());
         }
-        return find(clazz).filter("_id", id)
+        return find(clazz).filter(eq("_id", id))
                           .first(new FindOptions().limit(1));
     }
 
@@ -353,7 +353,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             for (final Key key : kindKeys) {
                 objIds.add(key.getId());
             }
-            final List kindResults = find(entry.getKey()).disableValidation().filter("_id in", objIds)
+            final List kindResults = find(entry.getKey()).disableValidation().filter(in("_id", objIds))
                                                          .execute()
                                                          .toList();
             entities.addAll(kindResults);
@@ -363,7 +363,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings({"deprecated"})
+    @SuppressWarnings("deprecated")
     public <T> List<T> getByKeys(final Iterable<Key<T>> keys) {
         return getByKeys(null, keys);
     }
@@ -405,7 +405,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         final Document document = mapper.toDocument(entity);
         document.remove("_id");
 
-        final Query<T> query = (Query<T>) find(entity.getClass()).filter("_id", id);
+        final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
         if (!tryVersionedUpdate(entity, mapper.getCollection(entity.getClass()), options)) {
             UpdateResult execute = query.update()
                                         .set(entity)
@@ -522,8 +522,8 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         } else if (idValue != null) {
             final UpdateResult res = find(collection.getNamespace().getCollectionName())
-                                         .filter("_id", idValue)
-                                         .filter(versionField.getMappedFieldName(), oldVersion)
+                                         .filter(eq("_id", idValue),
+                                             eq(versionField.getMappedFieldName(), oldVersion))
                                          .update()
                                          .set(entity)
                                          .execute(new UpdateOptions()

@@ -12,7 +12,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.query.Shape.Center;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.filters.NearFilter;
@@ -120,11 +119,13 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public FieldEnd<? extends Query<T>> field(final String name) {
         return new MorphiaQueryFieldEnd(name);
     }
 
     @Override
+    @SuppressWarnings({"removal", "unchecked"})
     public Query<T> filter(final String condition, final Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
@@ -386,10 +387,11 @@ public class MorphiaQuery<T> implements Query<T> {
         }
 
         @Override
+        @SuppressWarnings("removal")
         public CriteriaContainer within(final Shape shape) {
             Filter converted;
-            if (shape instanceof Center) {
-                final Center center = (Center) shape;
+            if (shape instanceof dev.morphia.query.Shape.Center) {
+                final dev.morphia.query.Shape.Center center = (dev.morphia.query.Shape.Center) shape;
                 converted = Filters.center(getField(), center.getCenter(), center.getRadius());
             } else if (shape.getGeometry().equals("$box")) {
                 Point[] points = shape.getPoints();
@@ -407,6 +409,7 @@ public class MorphiaQuery<T> implements Query<T> {
         }
 
         @Override
+        @SuppressWarnings("removal")
         protected MorphiaQuery<T> addCriteria(final FilterOperator op, final Object val, final boolean not) {
             Filter converted = op.apply(name, val);
             if (not) {
@@ -417,6 +420,7 @@ public class MorphiaQuery<T> implements Query<T> {
         }
 
         @Override
+        @SuppressWarnings("removal")
         protected CriteriaContainer addGeoCriteria(final FilterOperator op, final Object val, final Map opts) {
             NearFilter apply = (NearFilter) op.apply(name, val);
             apply.applyOpts(opts);

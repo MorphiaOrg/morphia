@@ -11,6 +11,7 @@ import java.util.List;
  * documentation</a> for all the types.
  * @deprecated use the driver-provided types instead
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public final class GeoJson {
     private GeoJson() {

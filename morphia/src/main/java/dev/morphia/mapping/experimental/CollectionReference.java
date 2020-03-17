@@ -2,7 +2,6 @@ package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
-import dev.morphia.AdvancedDatastore;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -17,14 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Arrays.asList;
 
 /**
  * @param <C>
  * @morphia.internal
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
     private MappedClass mappedClass;
     private List ids;
@@ -141,19 +143,22 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         for (final Entry<String, List<Object>> entry : collections.entrySet()) {
             idMap.putAll(query(entry.getKey(), extractIds(entry.getValue())));
         }
-        List values = mapIds(ids, idMap).stream().filter(e -> e != null)
-            .collect(Collectors.toList());
+        List values = mapIds(ids, idMap).stream()
+                                        .filter(Objects::nonNull)
+                                        .collect(Collectors.toList());
         resolve();
         return values;
     }
 
+    abstract Collection<?> getValues();
+
     Map<Object, Object> query(final String collection, final List<Object> collectionIds) {
 
         final Map<Object, Object> idMap = new HashMap<>();
-        try (MongoCursor<?> cursor = ((AdvancedDatastore) getDatastore()).find(collection)
-                                                                         .disableValidation()
-                                                                         .filter("_id in ", collectionIds)
-                                                                         .execute()) {
+        try (MongoCursor<?> cursor = getDatastore().find(collection)
+                                                   .disableValidation()
+                                                   .filter(in("_id", collectionIds))
+                                                   .execute()) {
             while (cursor.hasNext()) {
                 final Object entity = cursor.next();
                 idMap.put(getDatastore().getMapper().getId(entity), entity);
@@ -168,6 +173,4 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
         return idMap;
     }
-
-    abstract Collection<?> getValues();
 }

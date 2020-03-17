@@ -30,6 +30,9 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
+
 /**
  * Datastore interface to get/delete/save objects
  */
@@ -62,6 +65,7 @@ public interface Datastore {
      * @return the aggregation pipeline
      * @deprecated use {@link #aggregate(Class)} instead
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     AggregationPipeline createAggregation(Class source);
 
@@ -267,7 +271,7 @@ public interface Datastore {
      */
     @Deprecated
     default <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
-        return find(clazz).filter("_id in", ids);
+        return find(clazz).filter(in("_id", ids));
     }
 
     /**
@@ -281,7 +285,7 @@ public interface Datastore {
      */
     @Deprecated
     default <T> T get(T entity) {
-        return (T) find(entity.getClass()).filter("_id", getMapper().getId(entity)).first();
+        return (T) find(entity.getClass()).filter(eq("_id", getMapper().getId(entity))).first();
     }
 
     /**

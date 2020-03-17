@@ -172,6 +172,7 @@ public final class StringExpressions {
      * @aggregation.expression $substr
      * @deprecated use {@link #substrBytes(Expression, int, int)} or {@link #substrCP(Expression, int, int)}
      */
+    @Deprecated
     public static Expression substr(final Expression input, final int start, final int length) {
         throw new UnsupportedOperationException("Use $substrBytes or $substrCP.");
     }

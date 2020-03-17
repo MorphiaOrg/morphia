@@ -6,6 +6,7 @@ import java.util.List;
  * Interface to denote which entities are classes that will serialise into a MongoDB GeoJson object.
  * @deprecated use the driver-provided types instead
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public interface Geometry {
     /**

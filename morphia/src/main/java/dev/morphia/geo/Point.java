@@ -13,6 +13,7 @@ import java.util.List;
  *
  * @deprecated use the driver-provided types instead
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class Point implements Geometry {
     private final List<Double> coordinates = new ArrayList<Double>();

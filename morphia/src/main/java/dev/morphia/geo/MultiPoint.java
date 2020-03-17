@@ -16,6 +16,7 @@ import java.util.List;
  * @see dev.morphia.geo.GeoJson#multiPoint(Point...)
  * @deprecated use the driver-provided types instead
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class MultiPoint implements Geometry {
     @Id

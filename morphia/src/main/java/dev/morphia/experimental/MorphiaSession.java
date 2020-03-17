@@ -8,5 +8,6 @@ import dev.morphia.AdvancedDatastore;
  *
  * @morphia.experimental
  */
+@SuppressWarnings("removal")
 public interface MorphiaSession extends AdvancedDatastore, ClientSession {
 }

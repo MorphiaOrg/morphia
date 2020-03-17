@@ -18,6 +18,7 @@ import java.util.List;
  * @see dev.morphia.geo.GeoJson
  * @deprecated
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 @Entity
 public class GeometryCollection {

@@ -17,6 +17,7 @@ import java.util.List;
  *
  * @deprecated
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public interface AdvancedDatastore extends Datastore {
 

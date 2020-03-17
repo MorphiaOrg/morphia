@@ -22,6 +22,7 @@ import java.util.List;
  * @see dev.morphia.geo.GeoJson#polygon(Point...)
  * @deprecated use the driver-provided types instead
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class Polygon implements Geometry {
     @Id

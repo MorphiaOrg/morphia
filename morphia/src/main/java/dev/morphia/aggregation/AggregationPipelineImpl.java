@@ -23,7 +23,11 @@ import java.util.List;
 
 /**
  * Implementation of an AggregationPipeline.
+ *
+ * @deprecated
  */
+@SuppressWarnings("removal")
+@Deprecated(since = "2.0", forRemoval = true)
 public class AggregationPipelineImpl implements AggregationPipeline {
     private static final Logger LOG = LoggerFactory.getLogger(AggregationPipelineImpl.class);
 

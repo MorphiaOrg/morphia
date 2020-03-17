@@ -2,7 +2,6 @@ package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
-import dev.morphia.AdvancedDatastore;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -17,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static dev.morphia.query.experimental.filters.Filters.in;
+
 /**
  * @param <T>
  * @morphia.internal
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
-    private MappedClass valueType;
     private Map<String, Object> ids;
     private Map<Object, T> values;
     private Map<String, List<Object>> collections = new HashMap<>();
@@ -35,15 +36,13 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      */
     public MapReference(final Datastore datastore, final Map<String, Object> ids, final MappedClass valueType) {
         super(datastore);
-        this.valueType = valueType;
-        Map<String, Object> unwrapped = ids;
         if (ids != null) {
             for (final Entry<String, Object> entry : ids.entrySet()) {
                 CollectionReference.collate(valueType, collections, entry.getValue());
             }
         }
 
-        this.ids = unwrapped;
+        this.ids = ids;
     }
 
     MapReference(final Map<Object, T> values) {
@@ -72,16 +71,6 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         return reference;
     }
 
-    @Override
-    public List<Object> getIds() {
-        return new ArrayList<>(ids.values());
-    }
-
-    @Override
-    public Class<Map<Object, T>> getType() {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -94,45 +83,13 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     }
 
     @Override
-    public Map<String, Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass field) {
-        if (ids == null) {
-            ids = new LinkedHashMap<>();
-            values.entrySet().stream()
-                  .forEach(e -> {
-                      ids.put(e.getKey().toString(),
-                          ReferenceCodec.encodeId(mapper, datastore, e.getValue(), field));
-                  });
-        }
-        return ids;
+    public Class<Map<Object, T>> getType() {
+        throw new UnsupportedOperationException();
     }
 
-    private void mergeReads() {
-        for (final Entry<String, List<Object>> entry : collections.entrySet()) {
-            readFromSingleCollection(entry.getKey(), entry.getValue());
-        }
-        resolve();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void readFromSingleCollection(final String collection, final List<Object> collectionIds) {
-
-        try (MongoCursor<T> cursor = (MongoCursor<T>) ((AdvancedDatastore) getDatastore()).find(collection)
-                                                                                          .filter("_id in ", collectionIds)
-                                                                                          .execute()) {
-            final Map<Object, T> idMap = new HashMap<>();
-            while (cursor.hasNext()) {
-                final T entity = cursor.next();
-                idMap.put(getDatastore().getMapper().getId(entity), entity);
-            }
-
-            for (final Entry<String, Object> entry : ids.entrySet()) {
-                final Object id = entry.getValue();
-                final T value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
-                if (value != null) {
-                    values.put(entry.getKey(), value);
-                }
-            }
-        }
+    @Override
+    public List<Object> getIds() {
+        return new ArrayList<>(ids.values());
     }
 
     /**
@@ -148,6 +105,46 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
             return ids;
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public Map<String, Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass field) {
+        if (ids == null) {
+            ids = new LinkedHashMap<>();
+            values.entrySet().stream()
+                  .forEach(e -> ids.put(e.getKey().toString(),
+                      ReferenceCodec.encodeId(mapper, datastore, e.getValue(), field)));
+        }
+        return ids;
+    }
+
+    private void mergeReads() {
+        for (final Entry<String, List<Object>> entry : collections.entrySet()) {
+            readFromSingleCollection(entry.getKey(), entry.getValue());
+        }
+        resolve();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readFromSingleCollection(final String collection, final List<Object> collectionIds) {
+
+        try (MongoCursor<T> cursor = (MongoCursor<T>) getDatastore().find(collection)
+                                                                    .filter(in("_id", collectionIds))
+                                                                    .execute()) {
+            final Map<Object, T> idMap = new HashMap<>();
+            while (cursor.hasNext()) {
+                final T entity = cursor.next();
+                idMap.put(getDatastore().getMapper().getId(entity), entity);
+            }
+
+            for (final Entry<String, Object> entry : ids.entrySet()) {
+                final Object id = entry.getValue();
+                final T value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
+                if (value != null) {
+                    values.put(entry.getKey(), value);
+                }
+            }
         }
     }
 

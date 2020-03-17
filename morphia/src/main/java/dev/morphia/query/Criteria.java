@@ -11,6 +11,7 @@ import static dev.morphia.query.MorphiaQuery.legacyOperation;
  *
  * @morphia.internal
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public interface Criteria {
     /**

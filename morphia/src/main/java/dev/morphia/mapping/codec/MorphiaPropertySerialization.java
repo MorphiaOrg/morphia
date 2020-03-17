@@ -15,6 +15,7 @@ import java.util.Map;
 /**
  * Determines if a property should be serialized or not
  */
+@SuppressWarnings("removal")
 public class MorphiaPropertySerialization implements PropertySerialization {
     private final List<Annotation> annotations;
     private MapperOptions options;

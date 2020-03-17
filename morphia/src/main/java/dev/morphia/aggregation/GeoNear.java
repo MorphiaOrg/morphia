@@ -24,6 +24,8 @@ import dev.morphia.query.Query;
  *
  * @mongodb.driver.manual reference/operator/aggregation/geoNear/ geoNear
  */
+@SuppressWarnings("removal")
+@Deprecated(since = "2.0", forRemoval = true)
 public final class GeoNear {
     private final double[] nearLegacy;
     private final com.mongodb.client.model.geojson.Geometry nearGeoJson;

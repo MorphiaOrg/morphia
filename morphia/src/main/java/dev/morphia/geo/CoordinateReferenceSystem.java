@@ -6,6 +6,7 @@ package dev.morphia.geo;
  * @mongodb.driver.manual reference/operator/query/geometry $geometry
  * @deprecated use the driver-provided types instead
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public abstract class CoordinateReferenceSystem {
 

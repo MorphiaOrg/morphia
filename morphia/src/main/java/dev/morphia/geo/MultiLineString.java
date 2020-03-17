@@ -17,6 +17,7 @@ import java.util.List;
  * @see dev.morphia.geo.GeoJson#multiLineString(LineString...)
  * @deprecated use the driver-provided types instead
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class MultiLineString implements Geometry {
     @Id

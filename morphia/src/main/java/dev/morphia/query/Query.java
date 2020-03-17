@@ -19,6 +19,7 @@ import static dev.morphia.query.MorphiaQuery.legacyOperation;
 /**
  * @param <T> The java type to query against
  */
+@SuppressWarnings("removal")
 public interface Query<T> extends CriteriaContainer {
     /**
      * Creates a container to hold 'and' clauses
