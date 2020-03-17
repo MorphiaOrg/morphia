@@ -139,7 +139,7 @@ public class TestDatastore extends TestBase {
         assertNotNull(res.get(1).username);
 
         getDs().find(FacebookUser.class).remove(new DeleteOptions().multi(true));
-        getAds().insert(fbUsers);
+        getDs().insert(fbUsers);
         assertEquals(4, getDs().find(FacebookUser.class).count());
         assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
         res = getDs().find(FacebookUser.class).filter("_id in", asList(1L, 2L)).execute().toList();

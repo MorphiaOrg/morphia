@@ -27,34 +27,34 @@ import static java.util.Collections.emptyList;
 
 public class TestAdvancedDatastore extends TestBase {
     @Test
+    public void testBulkInsert() {
+
+        MongoCollection collection = getMapper().getCollection(TestEntity.class);
+        this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+            new InsertManyOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
+        Assert.assertEquals(5, collection.countDocuments());
+
+        collection.drop();
+        this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+            new InsertManyOptions()
+                .writeConcern(WriteConcern.ACKNOWLEDGED));
+        Assert.assertEquals(5, collection.countDocuments());
+    }
+
+    @Test
     public void testInsert() {
         MongoCollection collection = getMapper().getCollection(TestEntity.class);
-        this.getAds().insert(new TestEntity());
+        this.getDs().insert(new TestEntity());
         Assert.assertEquals(1, collection.countDocuments());
-        this.getAds().insert(new TestEntity(), new InsertOptions()
-            .writeConcern(WriteConcern.ACKNOWLEDGED));
+        this.getDs().insert(new TestEntity(), new InsertOneOptions()
+                                                  .writeConcern(WriteConcern.ACKNOWLEDGED));
         Assert.assertEquals(2, collection.countDocuments());
     }
 
     @Test
-    public void testBulkInsert() {
-
-        MongoCollection collection = getMapper().getCollection(TestEntity.class);
-        this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             new InsertOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(5, collection.countDocuments());
-
-        collection.drop();
-        this.getAds().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
-                             new InsertOptions()
-                                 .writeConcern(WriteConcern.ACKNOWLEDGED));
-        Assert.assertEquals(5, collection.countDocuments());
-    }
-
-    @Test
     public void testInsertEmpty() {
-        this.getAds().insert(emptyList());
-        this.getAds().insert(emptyList(), new InsertOptions()
-            .writeConcern(WriteConcern.ACKNOWLEDGED));
+        this.getDs().insert(emptyList());
+        this.getDs().insert(emptyList(), new InsertManyOptions()
+                                             .writeConcern(WriteConcern.ACKNOWLEDGED));
     }
 }

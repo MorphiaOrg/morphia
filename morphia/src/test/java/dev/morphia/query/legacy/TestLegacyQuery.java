@@ -9,7 +9,6 @@ import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
-import dev.morphia.TestBase;
 import dev.morphia.TestDatastore.FacebookUser;
 import dev.morphia.TestDatastore.FacebookUserWithNoClassNameStored;
 import dev.morphia.TestDatastore.Keys;
@@ -35,7 +34,7 @@ import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.QueryForSubtypeTest.User;
+import dev.morphia.query.TestQuery.User;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
@@ -81,7 +80,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "removal"})
 public class TestLegacyQuery extends LegacyTestBase {
 
     @Before
@@ -576,22 +575,6 @@ public class TestLegacyQuery extends LegacyTestBase {
     }
 
     @Test
-    public void testDocumentOrQuery() {
-        getDs().save(new PhotoWithKeywords("scott", "hernandez"));
-
-        final List<Document> orList = new ArrayList<>();
-        orList.add(new Document("keywords.keyword", "scott"));
-        orList.add(new Document("keywords.keyword", "ralph"));
-        final Document orQuery = new Document("$or", orList);
-
-        Query<PhotoWithKeywords> q = getAds().createQuery(PhotoWithKeywords.class, orQuery);
-        assertEquals(1, q.count());
-
-        q = getAds().find(PhotoWithKeywords.class).disableValidation().filter("$or", orList);
-        assertEquals(1, q.count());
-    }
-
-    @Test
     public void testElemMatchQuery() {
         getDs().save(asList(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah")));
         assertNotNull(getDs().find(PhotoWithKeywords.class)
@@ -676,7 +659,7 @@ public class TestLegacyQuery extends LegacyTestBase {
     public void testFluentAndOrQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> q = getDs().find(PhotoWithKeywords.class);
         q.and(
             q.or(q.criteria("keywords.keyword").equal("scott")),
             q.or(q.criteria("keywords.keyword").equal("hernandez")));
@@ -689,7 +672,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> query = getAds().find(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class);
         query.criteria("keywords.keyword").not().startsWith("ralph");
 
         assertEquals(1, query.count());
@@ -700,7 +683,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> q = getDs().find(PhotoWithKeywords.class);
         q.or(
             q.criteria("keywords.keyword").equal("scott"),
             q.criteria("keywords.keyword").equal("ralph"));

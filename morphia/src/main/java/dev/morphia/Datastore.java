@@ -40,6 +40,7 @@ public interface Datastore {
      * @param source The collection aggregation against
      * @return the aggregation pipeline
      * @morphia.experimental
+     * @since 2.0
      */
     Aggregation<Document> aggregate(String source);
 
@@ -50,6 +51,7 @@ public interface Datastore {
      * @param <T>    the source type
      * @return the aggregation pipeline
      * @morphia.experimental
+     * @since 2.0
      */
     <T> Aggregation<T> aggregate(Class<T> source);
 
@@ -243,11 +245,14 @@ public interface Datastore {
     }
 
     /**
-     * @param configurable the configurable
-     * @return any session found first on the configurable then on this
+     * Find all instances by type in a different collection than what is mapped on the class given.
+     *
+     * @param collection the collection to query against
+     * @param <T>        the type to query
+     * @return the query
      * @morphia.internal
      */
-    ClientSession findSession(SessionConfigurable configurable);
+    <T> Query<T> find(String collection);
 
     /**
      * Find the given entities (by id); shorthand for {@code find("_id in", ids)}
@@ -346,10 +351,12 @@ public interface Datastore {
     Mapper getMapper();
 
     /**
-     * @return the current {@link QueryFactory}.
-     * @see QueryFactory
+     * @param configurable the configurable
+     * @return any session found first on the configurable then on this
+     * @morphia.internal
+     * @since 2.0
      */
-    QueryFactory getQueryFactory();
+    ClientSession findSession(SessionConfigurable configurable);
 
     /**
      * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
@@ -581,4 +588,43 @@ public interface Datastore {
      * @since 2.0
      */
     <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);
+
+    /**
+     * @return the current {@link QueryFactory}.
+     * @morphia.internal
+     * @see QueryFactory
+     */
+    QueryFactory getQueryFactory();
+
+    /**
+     * Inserts an entity in to the mapped collection.
+     *
+     * @param entity the entity to insert
+     * @param <T>    the type of the entity
+     */
+    <T> void insert(T entity);
+
+    /**
+     * Inserts an entity in to the mapped collection.
+     *
+     * @param entity  the entity to insert
+     * @param options the options to apply to the insert operation
+     * @param <T>     the type of the entity
+     * @since 2.0
+     */
+    <T> void insert(T entity, InsertOneOptions options);
+
+    default <T> void insert(List<T> entities) {
+        insert(entities, new InsertManyOptions());
+    }
+
+    /**
+     * Inserts entities in to the mapped collection.
+     *
+     * @param entities the entities to insert
+     * @param options  the options to apply to the insert operation
+     * @param <T>      the type of the entity
+     * @since 2.0
+     */
+    <T> void insert(List<T> entities, InsertManyOptions options);
 }

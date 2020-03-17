@@ -8,20 +8,12 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
-import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.DefaultQueryFactory;
-import dev.morphia.testmodel.User;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 
@@ -63,10 +55,6 @@ public abstract class TestBase {
 
     protected static String getMongoURI() {
         return System.getProperty("MONGO_URI", "mongodb://localhost:27017");
-    }
-
-    public AdvancedDatastore getAds() {
-        return (AdvancedDatastore) getDs();
     }
 
     public MongoDatabase getDatabase() {

@@ -25,7 +25,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
-import dev.morphia.query.QueryForSubtypeTest.User;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
@@ -585,7 +584,7 @@ public class TestQuery extends TestBase {
     public void testFluentAndOrQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        final Query<PhotoWithKeywords> q = getAds().find(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> q = getDs().find(PhotoWithKeywords.class);
         q.filter(
             and(
                 or(eq("keywords.keyword", "scott")),
@@ -600,7 +599,7 @@ public class TestQuery extends TestBase {
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
-        final Query<PhotoWithKeywords> query = getAds().find(PhotoWithKeywords.class);
+        final Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class);
         query.filter(
             regex("keywords.keyword").pattern("^ralph").not());
 
@@ -615,10 +614,10 @@ public class TestQuery extends TestBase {
         getDs().save(pwk);
 
         final Query<PhotoWithKeywords> q =
-            getAds().find(PhotoWithKeywords.class)
-                    .filter(or(
-                        eq("keywords.keyword", "scott"),
-                        eq("keywords.keyword", "ralph")));
+            getDs().find(PhotoWithKeywords.class)
+                   .filter(or(
+                       eq("keywords.keyword", "scott"),
+                       eq("keywords.keyword", "ralph")));
 
         assertEquals(1, q.count());
     }
@@ -1447,6 +1446,11 @@ public class TestQuery extends TestBase {
         getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
     }
 
+    @Entity
+    public
+    interface User {
+    }
+
     @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))
     public static class CappedPic extends Pic {
         public CappedPic() {
@@ -1891,5 +1895,11 @@ public class TestQuery extends TestBase {
          */
         @Indexed
         private ObjectId value;
+    }
+
+    static class UserImpl implements User {
+        @Id
+        @SuppressWarnings("unused")
+        private ObjectId id;
     }
 }

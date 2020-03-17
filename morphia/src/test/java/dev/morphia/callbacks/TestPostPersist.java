@@ -27,7 +27,7 @@ public class TestPostPersist extends TestBase {
     public void testBulkLifecycleEvents() {
         TestObject to1 = new TestObject("post value 1");
         TestObject to2 = new TestObject("post value 2");
-        getAds().insert(asList(to1, to2));
+        getDs().insert(asList(to1, to2));
 
         assertNotNull(to1.id);
         assertNotNull(to1.one);

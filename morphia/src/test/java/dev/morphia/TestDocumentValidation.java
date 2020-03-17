@@ -235,14 +235,14 @@ public class TestDocumentValidation extends TestBase {
         getDs().enableDocumentValidation();
 
         try {
-            getAds().insert(new DocumentValidation("Harold", 8, new Date()));
+            getDs().insert(new DocumentValidation("Harold", 8, new Date()));
             fail("Document validation should have complained");
         } catch (MongoWriteException e) {
             // expected
         }
 
-        getAds().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
-            .bypassDocumentValidation(true));
+        getDs().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
+                                                                            .bypassDocumentValidation(true));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .field("number").equal(8);
@@ -254,14 +254,14 @@ public class TestDocumentValidation extends TestBase {
                                                new DocumentValidation("Amy", 8, new Date()),
                                                new DocumentValidation("James", 8, new Date()));
         try {
-            getAds().insert(list);
+            getDs().insert(list);
             fail("Document validation should have complained");
         } catch (MongoBulkWriteException e) {
             // expected
         }
 
-        getAds().insert(list, new InsertOptions()
-            .bypassDocumentValidation(true));
+        getDs().insert(list, new InsertManyOptions()
+                                 .bypassDocumentValidation(true));
 
         Assert.assertTrue(query.field("number").equal(8).execute().hasNext());
     }

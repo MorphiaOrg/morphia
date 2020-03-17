@@ -14,7 +14,10 @@ import java.util.List;
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with Document and low-level options. It implements matching
  * methods from the {@code Datastore} interface but with a specified kind (collection name), or raw types (Document).
+ *
+ * @deprecated
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public interface AdvancedDatastore extends Datastore {
 
     /**
@@ -23,7 +26,9 @@ public interface AdvancedDatastore extends Datastore {
      * @param collection the collection to query
      * @param clazz      The class to create aggregation against
      * @return the aggregation pipeline
+     * @deprecated
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     AggregationPipeline createAggregation(String collection, Class<?> clazz);
 
     /**
@@ -112,23 +117,6 @@ public interface AdvancedDatastore extends Datastore {
         upOps.setOps(ops);
         return upOps;
     }
-    /**
-     * Find all instances by type in a different collection than what is mapped on the class given.
-     *
-     * @param collection the collection to query against
-     * @param <T>        the type to query
-     * @return the query
-     * @morphia.internal
-     */
-    <T> Query<T> find(String collection);
-
-    /**
-     * Inserts an entity in to the mapped collection.
-     *
-     * @param entity the entity to insert
-     * @param <T>    the type of the entity
-     */
-    <T> void insert(T entity);
 
     /**
      * Inserts an entity in to the mapped collection.
@@ -145,36 +133,6 @@ public interface AdvancedDatastore extends Datastore {
     default <T> void insert(T entity, InsertOptions options) {
         insert(entity, options.toInsertOneOptions());
     }
-
-    /**
-     * Inserts an entity in to the mapped collection.
-     *
-     * @param entity  the entity to insert
-     * @param options the options to apply to the insert operation
-     * @param <T>     the type of the entity
-     * @since 2.0
-     */
-    <T> void insert(T entity, InsertOneOptions options);
-
-    /**
-     * Inserts entities in to the mapped collection.
-     *
-     * @param entities the entities to insert
-     * @param <T>      the type of the entities
-     */
-    default <T> void insert(List<T> entities) {
-        insert(entities, new InsertManyOptions());
-    }
-
-    /**
-     * Inserts entities in to the mapped collection.
-     *
-     * @param entities the entities to insert
-     * @param options  the options to apply to the insert operation
-     * @param <T>      the type of the entity
-     * @since 2.0
-     */
-    <T> void insert(List<T> entities, InsertManyOptions options);
 
     /**
      * Inserts entities in to the mapped collection.
