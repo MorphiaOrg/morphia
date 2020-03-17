@@ -93,7 +93,7 @@ public interface FieldEnd<T> {
      * @param query the query to find certain field values
      * @return T
      * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
-     * @deprecated use {@link Filters#elemMatch(String, Query)} instead
+     * @deprecated use {@link Filters#elemMatch(String, Filter...)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T elemMatch(Query<?> query);
