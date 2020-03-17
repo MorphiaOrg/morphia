@@ -6,8 +6,8 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
-public class ElemMatchFilter extends Filter {
-    public ElemMatchFilter(final String field, final List<Filter> query) {
+class ElemMatchFilter extends Filter {
+    ElemMatchFilter(final String field, final List<Filter> query) {
         super("$elemMatch", field, query);
     }
 
