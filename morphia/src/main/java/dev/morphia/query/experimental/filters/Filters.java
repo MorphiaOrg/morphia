@@ -9,6 +9,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 /**
  * Defines helper methods to generate filter operations for queries.
@@ -226,13 +227,13 @@ public final class Filters {
     /**
      * Selects documents if element in the array field matches all the specified $elemMatch conditions.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param field   the field to check
+     * @param filters the filters to evaluate against
      * @return the filter
      * @query.filter $elemMatch
      */
-    public static Filter elemMatch(final String field, final Object val) {
-        return new Filter("$elemMatch", field, val);
+    public static Filter elemMatch(final String field, final Filter... filters) {
+        return new ElemMatchFilter(field, asList(filters));
     }
 
     /**
@@ -274,7 +275,7 @@ public final class Filters {
     /**
      * Matches numeric or binary values in which a set of bit positions all have a value of 1.
      *
-     * @param field the field to check
+     * @param field   the field to check
      * @param bitMask the numeric bitmask to use
      * @return the filter
      * @query.filter $bitsAllSet

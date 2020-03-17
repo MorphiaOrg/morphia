@@ -154,7 +154,8 @@ public enum FilterOperator {
     ELEMENT_MATCH("$elemMatch", "elem", "elemMatch") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.elemMatch(prop, value);
+            throw new UnsupportedOperationException(Sofia.filterMappingNotSupported(ELEMENT_MATCH));
+            //            return Filters.elemMatch(prop, (Query<?>) value);
         }
     },
 

@@ -38,7 +38,7 @@ public interface FieldEnd<T> {
      *
      * @return T
      * @mongodb.driver.manual reference/operator/query/exists/ $exists
-     * @deprecated use {@link Filters#exists(String, Object)} with {@link Filter#not()} instead
+     * @deprecated use {@link Filters#exists(String)} with {@link Filter#not()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T doesNotExist();
@@ -88,14 +88,15 @@ public interface FieldEnd<T> {
     T equalIgnoreCase(Object val);
 
     /**
-     * Checks that a field exists in a document
+     * Checks that a field matches the provided query definition
      *
+     * @param query the query to find certain field values
      * @return T
-     * @mongodb.driver.manual reference/operator/query/exists/ $exists
-     * @deprecated use {@link Filters#exists(String, Object)} instead
+     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
+     * @deprecated use {@link Filters#elemMatch(String, Query)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    T exists();
+    T elemMatch(Query<?> query);
 
     /**
      * Checks that a field is greater than the value given
@@ -153,15 +154,14 @@ public interface FieldEnd<T> {
     T hasNoneOf(Iterable<?> values);
 
     /**
-     * Checks that a field matches the provided query definition
+     * Checks that a field exists in a document
      *
-     * @param query the query to find certain field values
      * @return T
-     * @mongodb.driver.manual reference/operator/query/elemMatch/ $elemMatch
-     * @deprecated use {@link Filters#elemMatch(String, Object)} instead
+     * @mongodb.driver.manual reference/operator/query/exists/ $exists
+     * @deprecated use {@link Filters#exists(String)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    T elemMatch(Query<?> query);
+    T exists();
 
     /**
      * Checks that a field has the value listed.
