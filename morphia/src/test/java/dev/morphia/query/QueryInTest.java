@@ -10,27 +10,18 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.exists;
 import static dev.morphia.query.experimental.filters.Filters.in;
-import static dev.morphia.query.experimental.filters.Filters.or;
 import static java.util.Collections.singletonList;
-import static org.slf4j.LoggerFactory.getLogger;
 
 
-/**
- * @author scotthernandez
- */
 public class QueryInTest extends TestBase {
-    private static final Logger LOG = getLogger(QueryInTest.class);
-
     @Test
     @Category(Reference.class)
     public void testIdOnly() {
@@ -60,12 +51,12 @@ public class QueryInTest extends TestBase {
         getDs().save(doc);
 
         // this works
-        getDs().find(Doc.class).field("_id").equal(1).execute();
+        getDs().find(Doc.class).filter(eq("_id", 1)).execute();
 
         final List<Long> idList = new ArrayList<>();
         idList.add(1L);
         // this causes an NPE
-        getDs().find(Doc.class).field("_id").in(idList).execute();
+        getDs().find(Doc.class).filter(in("_id", idList)).execute();
 
     }
 
@@ -80,7 +71,7 @@ public class QueryInTest extends TestBase {
         getDs().save(hr.refs);
         getDs().save(hr);
 
-        Query<HasRefs> query = getDs().find(HasRefs.class).field("refs").in(hr.refs.subList(1, 3));
+        Query<HasRefs> query = getDs().find(HasRefs.class).filter(in("refs", hr.refs.subList(1, 3)));
         Assert.assertEquals(1, query.count());
     }
 
@@ -96,7 +87,7 @@ public class QueryInTest extends TestBase {
 
         getDs().save(hr);
 
-        Assert.assertEquals(1, getDs().find(HasRef.class).field("ref").in(refs).count());
+        Assert.assertEquals(1, getDs().find(HasRef.class).filter(in("ref", refs)).count());
     }
 
     @Test
@@ -111,19 +102,8 @@ public class QueryInTest extends TestBase {
         getDs().save(hr);
 
         final Query<HasRefs> q = getDs().find(HasRefs.class);
-        q.field("refs").doesNotExist();
+        q.filter(exists("refs").not());
         Assert.assertEquals(1, q.count());
-    }
-
-    @Entity("data")
-    private static final class Data {
-        @Id
-        private ObjectId id;
-        private Set<ObjectId> otherIds;
-
-        private Data() {
-            otherIds = new HashSet<>();
-        }
     }
 
     @Entity
