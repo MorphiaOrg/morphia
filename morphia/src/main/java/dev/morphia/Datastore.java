@@ -614,6 +614,13 @@ public interface Datastore {
      */
     <T> void insert(T entity, InsertOneOptions options);
 
+    /**
+     * Inserts a List of entities in to the mapped collection.
+     *
+     * @param entities the entities to insert
+     * @param <T>      the type of the entity
+     * @since 2.0
+     */
     default <T> void insert(List<T> entities) {
         insert(entities, new InsertManyOptions());
     }
