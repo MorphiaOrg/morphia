@@ -18,6 +18,8 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 public class TestCallbackEscalation extends TestBase {
     @Test
@@ -36,7 +38,9 @@ public class TestCallbackEscalation extends TestBase {
         Assert.assertFalse(a.b.isPreLoad());
         Assert.assertFalse(a.bs.get(0).isPreLoad());
 
-        a = getDs().find(A.class).filter("_id", a.id).execute(new FindOptions().limit(1))
+        a = getDs().find(A.class)
+                   .filter(eq("_id", a.id))
+                   .execute(new FindOptions().limit(1))
                    .tryNext();
 
         Assert.assertTrue(a.isPostLoad());
@@ -78,7 +82,9 @@ public class TestCallbackEscalation extends TestBase {
         Assert.assertFalse(a.b.isPreLoad());
         Assert.assertFalse(a.bs.get(0).isPreLoad());
 
-        a = getDs().find(A.class).filter("_id", a.id).execute(new FindOptions().limit(1))
+        a = getDs().find(A.class)
+                   .filter(eq("_id", a.id))
+                   .execute(new FindOptions().limit(1))
                    .tryNext();
 
         Assert.assertTrue(a.isPreLoad());
@@ -108,7 +114,7 @@ public class TestCallbackEscalation extends TestBase {
     static class A extends Callbacks {
         @Id
         private ObjectId id;
-        private final List<B> bs = new LinkedList<B>();
+        private final List<B> bs = new LinkedList<>();
         private B b;
     }
 

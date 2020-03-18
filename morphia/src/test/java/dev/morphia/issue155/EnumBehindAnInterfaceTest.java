@@ -1,7 +1,6 @@
 package dev.morphia.issue155;
 
 
-import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -9,6 +8,8 @@ import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class EnumBehindAnInterfaceTest extends TestBase {
@@ -19,7 +20,7 @@ public class EnumBehindAnInterfaceTest extends TestBase {
         ContainerEntity n = new ContainerEntity();
         getDs().save(n);
         n = getDs().find(ContainerEntity.class)
-                   .filter("_id", n.getId())
+                   .filter(eq("_id", n.getId()))
                    .first();
         Assert.assertSame(EnumBehindAnInterface.A, n.foo);
     }

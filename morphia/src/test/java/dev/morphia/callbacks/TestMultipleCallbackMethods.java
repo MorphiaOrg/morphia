@@ -1,17 +1,19 @@
 package dev.morphia.callbacks;
 
 
-import dev.morphia.annotations.Entity;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class TestMultipleCallbackMethods extends TestBase {
@@ -25,7 +27,8 @@ public class TestMultipleCallbackMethods extends TestBase {
         Assert.assertEquals(4, entity.getFoo());
         Assert.assertEquals(0, loading);
 
-        final SomeEntity someEntity = getDs().find(SomeEntity.class).filter("_id", entity.getId())
+        final SomeEntity someEntity = getDs().find(SomeEntity.class)
+                                             .filter(eq("_id", entity.getId()))
                                              .execute(new FindOptions().limit(1))
                                              .next();
 

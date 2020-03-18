@@ -17,16 +17,15 @@
 package dev.morphia.entities;
 
 import com.mongodb.client.MongoCursor;
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +40,6 @@ import static org.junit.Assert.assertNotNull;
 public class TestEmbeddedValidation extends TestBase {
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testCreateEntityWithBasicDBList() {
         getMapper().map(TestEntity.class);
         TestEntity entity = new TestEntity();
@@ -82,7 +80,7 @@ public class TestEmbeddedValidation extends TestBase {
 
         Query<ParentType> query = ds.find(ParentType.class)
                                     .disableValidation()
-                                    .field("embedded.flag").equal(true);
+                                    .filter(eq("embedded.flag", true));
 
         Assert.assertEquals(parentType, query.execute(new FindOptions().limit(1)).tryNext());
     }
@@ -95,7 +93,7 @@ public class TestEmbeddedValidation extends TestBase {
         getDs().save(entity);
 
         Query<EntityWithListsAndArrays> query = getDs().find(EntityWithListsAndArrays.class)
-                                                          .field("listEmbeddedType.number").equal(42L);
+                                                       .filter(eq("listEmbeddedType.number", 42L));
         MongoCursor<EntityWithListsAndArrays> cursor = query.execute();
 
         Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
@@ -109,7 +107,7 @@ public class TestEmbeddedValidation extends TestBase {
 
         fortyTwo.setNumber(0L);
         query = getDs().find(EntityWithListsAndArrays.class)
-                       .field("listEmbeddedType.number").equal(0);
+                       .filter(eq("listEmbeddedType.number", 0));
         cursor = query.execute();
 
         Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
@@ -118,7 +116,7 @@ public class TestEmbeddedValidation extends TestBase {
     }
 
     private Map<String, Object> mapOf(final String key, final Object value) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put(key, value);
         return map;
     }
@@ -135,7 +133,7 @@ public class TestEmbeddedValidation extends TestBase {
         }
 
         public void setData(final List<Map<String, Object>> data) {
-            this.data = new ArrayList<Map<String, Object>>();
+            this.data = new ArrayList<>();
             this.data.addAll(data);
         }
 

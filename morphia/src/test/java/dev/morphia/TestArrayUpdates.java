@@ -1,20 +1,20 @@
 package dev.morphia;
 
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
@@ -30,8 +30,8 @@ public class TestArrayUpdates extends TestBase {
             new Grade(90, singletonMap("name", "Test"))));
 
         Query<Student> testQuery = datastore.find(Student.class)
-                                            .field("_id").equal(1L)
-                                            .field("grades.data.name").equal("Test");
+                                            .filter(eq("_id", 1L),
+                                                eq("grades.data.name", "Test"));
         Assert.assertNotNull(testQuery.execute(new FindOptions().limit(1))
                                       .tryNext());
 
@@ -43,38 +43,8 @@ public class TestArrayUpdates extends TestBase {
                                    .tryNext());
 
         Assert.assertNotNull(datastore.find(Student.class)
-                                      .field("_id").equal(1L)
-                                      .field("grades.data.name").equal("Makeup Test")
-                                      .execute(new FindOptions().limit(1))
-                                      .tryNext());
-    }
-
-    @Test
-    public void testUpdatesWithArrayIndexPosition() {
-        getMapper().map(Student.class);
-        final Datastore datastore = getDs();
-        datastore.ensureIndexes();
-
-        datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
-            new Grade(90, singletonMap("name", "Test"))));
-
-        Query<Student> testQuery = datastore.find(Student.class)
-                                            .field("_id").equal(1L)
-                                            .field("grades.data.name").equal("Test");
-        Assert.assertNotNull(testQuery.execute(new FindOptions().limit(1))
-                                      .tryNext());
-
-        // Update the second element. Array indexes are zero-based.
-        testQuery.update()
-                 .set("grades.1.data.name", "Makeup Test")
-                 .execute();
-
-        Assert.assertNull(testQuery.execute(new FindOptions().limit(1))
-                                   .tryNext());
-
-        Assert.assertNotNull(datastore.find(Student.class)
-                                      .field("_id").equal(1L)
-                                      .field("grades.data.name").equal("Makeup Test")
+                                      .filter(eq("_id", 1L),
+                                          eq("grades.data.name", "Makeup Test"))
                                       .execute(new FindOptions().limit(1))
                                       .tryNext());
     }
@@ -94,15 +64,15 @@ public class TestArrayUpdates extends TestBase {
         ObjectId id2 = theBatch.id;
 
         getDs().find(BatchData.class)
-               .filter("_id", id)
-               .filter("files.fileName", "fileName1")
+               .filter(eq("_id", id),
+                   eq("files.fileName", "fileName1"))
                .update()
                .set("files.$.fileHash", "new hash")
                .execute();
 
 
         BatchData data = getDs().find(BatchData.class)
-                                .filter("_id", id)
+                                .filter(eq("_id", id))
                                 .execute(new FindOptions().limit(1))
                                 .tryNext();
 
@@ -110,7 +80,7 @@ public class TestArrayUpdates extends TestBase {
         Assert.assertEquals("fileHash2", data.files.get(1).fileHash);
 
         data = getDs().find(BatchData.class)
-                      .filter("_id", id2)
+                      .filter(eq("_id", id2))
                       .execute(new FindOptions().limit(1))
                       .tryNext();
 
@@ -118,12 +88,42 @@ public class TestArrayUpdates extends TestBase {
         Assert.assertEquals("fileHash4", data.files.get(1).fileHash);
     }
 
+    @Test
+    public void testUpdatesWithArrayIndexPosition() {
+        getMapper().map(Student.class);
+        final Datastore datastore = getDs();
+        datastore.ensureIndexes();
+
+        datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
+            new Grade(90, singletonMap("name", "Test"))));
+
+        Query<Student> testQuery = datastore.find(Student.class)
+                                            .filter(eq("_id", 1L),
+                                                eq("grades.data.name", "Test"));
+        Assert.assertNotNull(testQuery.execute(new FindOptions().limit(1))
+                                      .tryNext());
+
+        // Update the second element. Array indexes are zero-based.
+        testQuery.update()
+                 .set("grades.1.data.name", "Makeup Test")
+                 .execute();
+
+        Assert.assertNull(testQuery.execute(new FindOptions().limit(1))
+                                   .tryNext());
+
+        Assert.assertNotNull(datastore.find(Student.class)
+                                      .filter(eq("_id", 1L),
+                                          eq("grades.data.name", "Makeup Test"))
+                                      .execute(new FindOptions().limit(1))
+                                      .tryNext());
+    }
+
     @Entity
     public static class BatchData {
 
         @Id
         private ObjectId id;
-        private List<Files> files = new ArrayList<Files>();
+        private List<Files> files = new ArrayList<>();
 
         @Override
         public String toString() {
@@ -152,6 +152,26 @@ public class TestArrayUpdates extends TestBase {
         }
     }
 
+    @Embedded
+    public static class Grade {
+        private int marks;
+
+        @Property("d")
+        private Map<String, String> data;
+
+        public Grade() {
+        }
+
+        public Grade(final int marks, final Map<String, String> data) {
+            this.marks = marks;
+            this.data = data;
+        }
+
+        @Override
+        public String toString() {
+            return ("marks: " + marks + ", data: " + data);
+        }
+    }
 
     @Entity
     public static class Student {
@@ -171,27 +191,6 @@ public class TestArrayUpdates extends TestBase {
         @Override
         public String toString() {
             return ("id: " + id + ", grades: " + grades);
-        }
-    }
-
-    @Embedded
-    public static class Grade {
-        private int marks;
-
-        @Property("d")
-        private Map<String, String> data;
-
-        public Grade() {
-        }
-
-        public Grade(final int marks, final Map<String, String> data) {
-            this.marks = marks;
-            this.data = data;
-        }
-
-        @Override
-        public String toString() {
-            return ("marks: " + marks + ", data: " + data);
         }
     }
 

@@ -17,6 +17,7 @@
 package dev.morphia.generics;
 
 import dev.morphia.Datastore;
+import dev.morphia.DeleteOptions;
 import dev.morphia.Morphia;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
@@ -29,6 +30,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -37,9 +39,9 @@ public class TestJavaLists extends TestBase {
     @Test
     public void emptyModel() {
         MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                                           .storeEmpties(true)
-                                           .storeNulls(false)
-                                           .build();
+                                             .storeEmpties(true)
+                                             .storeNulls(false)
+                                             .build();
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
 
         TestEmptyModel model = new TestEmptyModel();
@@ -47,7 +49,8 @@ public class TestJavaLists extends TestBase {
         model.wrapped = new TestEmptyModel.Wrapped();
         model.wrapped.text = "textWrapper";
         datastore.save(model);
-        TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
+        TestEmptyModel model2 = getDs().find(TestEmptyModel.class)
+                                       .filter(eq("id", model.id))
                                        .execute(new FindOptions().limit(1))
                                        .next();
         assertNull(model.wrapped.others);
@@ -71,7 +74,7 @@ public class TestJavaLists extends TestBase {
     }
 
     private void empties(final Datastore ds) {
-        ds.delete(ds.find(Employee.class));
+        ds.find(Employee.class).remove(new DeleteOptions().multi(true));
         Employee employee = new Employee();
         employee.byteList = asList((byte) 1, (byte) 2);
         ds.save(employee);

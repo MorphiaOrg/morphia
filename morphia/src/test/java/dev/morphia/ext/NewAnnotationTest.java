@@ -23,7 +23,6 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Query;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,6 +32,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 /**
@@ -50,8 +51,9 @@ public class NewAnnotationTest extends TestBase {
 
         getDs().save(u);
 
-        Query<User> query = getDs().find(User.class).disableValidation().filter("email_lowercase", u.email.toLowerCase());
-        final User uScott = query
+        final User uScott = getDs().find(User.class)
+                                   .disableValidation()
+                                   .filter(eq("email_lowercase", u.email.toLowerCase()))
                                    .execute(new FindOptions()
                                                 .logQuery()
                                                 .limit(1))

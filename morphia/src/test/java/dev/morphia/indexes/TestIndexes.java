@@ -21,6 +21,7 @@ import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
+import dev.morphia.DeleteOptions;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Entity;
@@ -29,15 +30,12 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.MapperOptions.Builder;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
@@ -50,7 +48,7 @@ public class TestIndexes extends TestBase {
     public void testIndexes() {
 
         final Datastore datastore = getDs();
-        datastore.delete(datastore.find(TestWithIndexOption.class));
+        datastore.find(TestWithIndexOption.class).remove(new DeleteOptions().multi(true));
 
         final MongoCollection<Document> indexOptionColl = getDatabase().getCollection(TestWithIndexOption.class.getSimpleName());
         indexOptionColl.drop();
@@ -95,52 +93,18 @@ public class TestIndexes extends TestBase {
         assertHashed(getIndexInfo(TestWithHashedIndex.class));
     }
 
-    @Test
-    public void embeddedIndexPartialFilters() {
-        getMapper().map(FeedEvent.class, InboxEvent.class);
-        getDs().ensureIndexes();
-        final MongoCollection<Document> inboxEvent = getDatabase().getCollection("InboxEvent");
-        for (final Document index : inboxEvent.listIndexes()) {
-            if (!"_id_".equals(index.get("name"))) {
-                for (String name : index.get("key", Document.class).keySet()) {
-                    Assert.assertTrue("Key names should start with the field name: " + name, name.startsWith("feedEvent."));
-                }
-            }
-        }
-
-        // check the logging is disabled
-        inboxEvent.drop();
-        final Builder builder = MapperOptions
-                                    .builder(getMapper().getOptions())
-                                    .disableEmbeddedIndexes(true);
-        getMapper().setOptions(builder.build());
-        getDs().ensureIndexes();
-        Assert.assertNull("No indexes should be generated for InboxEvent", inboxEvent.listIndexes().iterator().tryNext());
-    }
-
-    @Entity
-    private static class MongoSettingsHistory {
-        @Id
-        ObjectId id;
-        String key;
-        Date date;
-        Integer newValue;
-    }
-
     private void assertBackground(final List<Document> indexInfo) {
         for (final Document document : indexInfo) {
-            Document index = (Document) document;
-            if (!index.getString("name").equals("_id_")) {
-                Assert.assertTrue(index.getBoolean("background"));
+            if (!document.getString("name").equals("_id_")) {
+                Assert.assertTrue(document.getBoolean("background"));
             }
         }
     }
 
     private void assertHashed(final List<Document> indexInfo) {
         for (final Document document : indexInfo) {
-            Document index = (Document) document;
-            if (!index.getString("name").equals("_id_")) {
-                assertEquals(((Document) index.get("key")).get("hashedValue"), "hashed");
+            if (!document.getString("name").equals("_id_")) {
+                assertEquals(((Document) document.get("key")).get("hashedValue"), "hashed");
             }
         }
     }

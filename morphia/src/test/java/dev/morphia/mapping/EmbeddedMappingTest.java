@@ -35,23 +35,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 public class EmbeddedMappingTest extends TestBase {
     @Test
     public void mapGenericEmbeds() {
         getMapper().map(AuditEntry.class, Delta.class);
 
-        final AuditEntry<String> entry = new AuditEntry<>();
+        final AuditEntry entry = new AuditEntry();
 
         final HashMap<String, Object> before = new HashMap<>();
         final HashMap<String, Object> after = new HashMap<>();
         before.put("before", 42);
         after.put("after", 84);
 
-        entry.delta = new Delta<>(before, after);
+        entry.delta = new Delta(before, after);
         getDs().save(entry);
 
         final AuditEntry fetched = getDs().find(AuditEntry.class)
-                                          .filter("id = ", entry.id)
+                                          .filter(eq("id", entry.id))
                                           .execute(new FindOptions().limit(1))
                                           .next();
 
@@ -76,7 +78,7 @@ public class EmbeddedMappingTest extends TestBase {
         WithNested found;
         try {
             getDs().find(WithNested.class)
-                   .field("nested.field").equal("nested value")
+                   .filter(eq("nested.field", "nested value"))
                    .execute(new FindOptions().limit(1))
                    .next();
         } catch (ValidationException ignore) {
@@ -84,7 +86,7 @@ public class EmbeddedMappingTest extends TestBase {
         }
         found = getDs().find(WithNested.class)
                        .disableValidation()
-                       .field("nested.field").equal("nested value")
+                       .filter(eq("nested.field", "nested value"))
                        .execute(new FindOptions().limit(1))
                        .next();
         Assert.assertNotNull(found);
@@ -92,7 +94,7 @@ public class EmbeddedMappingTest extends TestBase {
 
         found = getDs().find(WithNested.class)
                        .disableValidation()
-                       .field("nested.field.fails").equal("nested value")
+                       .filter(eq("nested.field.fails", "nested value"))
                        .execute(new FindOptions().limit(1))
                        .tryNext();
         Assert.assertNull(found);
@@ -121,11 +123,11 @@ public class EmbeddedMappingTest extends TestBase {
     }
 
     @Entity(value = "audit", useDiscriminator = false)
-    public static class AuditEntry<T> {
+    public static class AuditEntry {
         @Id
         private ObjectId id;
 
-        private Delta<T> delta;
+        private Delta delta;
 
         @Override
         public int hashCode() {
@@ -143,7 +145,7 @@ public class EmbeddedMappingTest extends TestBase {
                 return false;
             }
 
-            final AuditEntry<?> that = (AuditEntry<?>) o;
+            final AuditEntry that = (AuditEntry) o;
 
             if (id != null ? !id.equals(that.id) : that.id != null) {
                 return false;
@@ -155,7 +157,7 @@ public class EmbeddedMappingTest extends TestBase {
     }
 
     @Embedded
-    public static class Delta<T> {
+    public static class Delta {
         private Map<String, Object> before;
         private Map<String, Object> after;
 
@@ -176,7 +178,7 @@ public class EmbeddedMappingTest extends TestBase {
                 return false;
             }
 
-            final Delta<?> delta = (Delta<?>) o;
+            final Delta delta = (Delta) o;
 
             if (!before.equals(delta.before)) {
                 return false;

@@ -12,6 +12,8 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 public class NameValuePairTest extends TestBase {
 
@@ -24,7 +26,7 @@ public class NameValuePairTest extends TestBase {
         getDs().save(container);
 
         getDs().find(NameValuePairContainer.class)
-               .filter("_id", container.id)
+               .filter(eq("_id", container.id))
                .first();
     }
 

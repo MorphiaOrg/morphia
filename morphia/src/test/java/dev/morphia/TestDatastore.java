@@ -1,16 +1,3 @@
-/*
-  Copyright (C) 2010 Olafur Gauti Gudmundsson
-  <p/>
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
-  obtain a copy of the License at
-  <p/>
-  http://www.apache.org/licenses/LICENSE-2.0
-  <p/>
-  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
- */
-
 package dev.morphia;
 
 import com.mongodb.client.model.Collation;
@@ -48,6 +35,8 @@ import java.util.List;
 
 import static com.mongodb.client.model.ReturnDocument.AFTER;
 import static com.mongodb.client.model.ReturnDocument.BEFORE;
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -81,6 +70,24 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    public void testDeleteWithCollation() {
+        getMapper().getCollection(FacebookUser.class).drop();
+        getDs().save(asList(new FacebookUser(1, "John Doe"),
+            new FacebookUser(2, "john doe")));
+
+        Query<FacebookUser> query = getDs().find(FacebookUser.class)
+                                           .filter(eq("username", "john doe"));
+        assertEquals(1, query.remove().getDeletedCount());
+
+        assertEquals(1, query.remove(new DeleteOptions()
+                                         .collation(Collation.builder()
+                                                             .locale("en")
+                                                             .collationStrength(CollationStrength.SECONDARY)
+                                                             .build()))
+                             .getDeletedCount());
+    }
+
+    @Test
     public void testDoesNotExistAfterDelete() {
         // given
         long id = System.currentTimeMillis();
@@ -91,7 +98,7 @@ public class TestDatastore extends TestBase {
 
         // then
         assertNull("Shouldn't exist after delete", getDs().find(FacebookUser.class)
-                                                          .filter("_id", key)
+                                                          .filter(eq("_id", key))
                                                           .first());
     }
 
@@ -114,9 +121,183 @@ public class TestDatastore extends TestBase {
         assertEquals(1, getDs().find(Hotel.class).count());
         assertNotNull(borg.getId());
 
-        final Hotel hotelLoaded = getDs().find(Hotel.class).filter("_id", borg.getId()).first();
+        final Hotel hotelLoaded = getDs().find(Hotel.class)
+                                         .filter(eq("_id", borg.getId()))
+                                         .first();
         assertEquals(borg.getName(), hotelLoaded.getName());
         assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
+    }
+
+    @Test
+    public void testFindAndDeleteWithCollation() {
+        getMapper().getCollection(FacebookUser.class).drop();
+        getDs().save(asList(new FacebookUser(1, "John Doe"),
+            new FacebookUser(2, "john doe")));
+
+        Query<FacebookUser> query = getDs().find(FacebookUser.class)
+                                           .filter(eq("username", "john doe"));
+        assertNotNull(query.delete());
+        assertNull(query.delete());
+
+        FindAndDeleteOptions options = new FindAndDeleteOptions()
+                                           .collation(Collation.builder()
+                                                               .locale("en")
+                                                               .collationStrength(CollationStrength.SECONDARY)
+                                                               .build());
+        assertNotNull(query.delete(options));
+        assertNull(query.execute().tryNext());
+    }
+
+    @Test
+    public void testFindAndDeleteWithNoQueryMatch() {
+        assertNull(getDs().find(FacebookUser.class)
+                          .filter(eq("username", "David S. Pumpkins"))
+                          .delete());
+    }
+
+    @Test
+    public void testFindAndModify() {
+        getDs().save(asList(new FacebookUser(1, "John Doe"),
+            new FacebookUser(2, "john doe")));
+
+        Query<FacebookUser> query = getDs().find(FacebookUser.class)
+                                           .filter(eq("username", "john doe"));
+        Modify<FacebookUser> modify = query.modify().inc("loginCount");
+        FacebookUser results = modify.execute();
+
+        assertEquals(0, getDs().find(FacebookUser.class)
+                               .filter(eq("id", 1))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class)
+                               .filter(eq("id", 2))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(1, results.loginCount);
+
+        results = modify.execute(new FindAndModifyOptions().returnDocument(BEFORE));
+        assertEquals(0, getDs().find(FacebookUser.class)
+                               .filter(eq("id", 1))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(2, getDs().find(FacebookUser.class)
+                               .filter(eq("id", 2))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(1, results.loginCount);
+
+        query = getDs().find(FacebookUser.class)
+                       .filter(eq("id", 3L),
+                           eq("username", "Jon Snow"));
+        results = query.modify()
+                       .inc("loginCount")
+                       .execute(new FindAndModifyOptions()
+                                    .returnDocument(BEFORE)
+                                    .upsert(true));
+
+        assertNull(results);
+        FacebookUser user = getDs().find(FacebookUser.class)
+                                   .filter(eq("id", 3))
+                                   .execute(new FindOptions().limit(1))
+                                   .next();
+        assertEquals(1, user.loginCount);
+        assertEquals("Jon Snow", user.username);
+
+
+        query = getDs().find(FacebookUser.class)
+                       .filter(eq("id", 4L),
+                           eq("username", "Ron Swanson"));
+        results = query.modify().inc("loginCount").execute(new FindAndModifyOptions().returnDocument(AFTER).upsert(true));
+
+        assertNotNull(results);
+        user = getDs().find(FacebookUser.class).filter(eq("id", 4))
+                      .execute(new FindOptions().limit(1))
+                      .next();
+        assertEquals(1, results.loginCount);
+        assertEquals("Ron Swanson", results.username);
+        assertEquals(1, user.loginCount);
+        assertEquals("Ron Swanson", user.username);
+    }
+
+    @Test
+    public void testFindAndModifyWithOptions() {
+        getMapper().getCollection(FacebookUser.class).drop();
+        getDs().save(asList(new FacebookUser(1, "John Doe"),
+            new FacebookUser(2, "john doe")));
+
+        FacebookUser result = getDs().find(FacebookUser.class)
+                                     .filter(eq("username", "john doe"))
+                                     .modify()
+                                     .inc("loginCount")
+                                     .execute();
+
+        assertEquals(0, getDs().find(FacebookUser.class).filter(eq("id", 1))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 2))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(1, result.loginCount);
+
+        result = getDs().find(FacebookUser.class)
+                        .filter(eq("username", "john doe"))
+                        .modify()
+                        .inc("loginCount").execute(new FindAndModifyOptions()
+                                                       .returnDocument(BEFORE)
+                                                       .collation(Collation.builder()
+                                                                           .locale("en")
+                                                                           .collationStrength(CollationStrength.SECONDARY)
+                                                                           .build()));
+        assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 1))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(0, result.loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 2))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+
+        result = getDs().find(FacebookUser.class)
+                        .filter(eq("id", 3L),
+                            eq("username", "Jon Snow"))
+                        .modify()
+                        .inc("loginCount")
+                        .execute(new FindAndModifyOptions()
+                                     .returnDocument(BEFORE)
+                                     .upsert(true));
+
+        assertNull(result);
+        FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3))
+                                   .execute(new FindOptions().limit(1))
+                                   .next();
+        assertEquals(1, user.loginCount);
+        assertEquals("Jon Snow", user.username);
+
+
+        result = getDs().find(FacebookUser.class)
+                        .filter(eq("id", 4L),
+                            eq("username", "Ron Swanson"))
+                        .modify()
+                        .inc("loginCount")
+                        .execute(new FindAndModifyOptions()
+                                     .returnDocument(AFTER)
+                                     .upsert(true));
+
+        assertNotNull(result);
+        user = getDs().find(FacebookUser.class).filter(eq("id", 4))
+                      .execute(new FindOptions().limit(1))
+                      .next();
+        assertEquals(1, result.loginCount);
+        assertEquals("Ron Swanson", result.username);
+        assertEquals(1, user.loginCount);
+        assertEquals("Ron Swanson", user.username);
     }
 
     @Test
@@ -131,8 +312,13 @@ public class TestDatastore extends TestBase {
 
         getDs().save(fbUsers);
         assertEquals(4, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
-        List<FacebookUser> res = getDs().find(FacebookUser.class).filter("_id in", asList(1L, 2L)).execute().toList();
+        assertNotNull(getDs().find(FacebookUser.class)
+                             .filter(eq("_id", 1))
+                             .first());
+        List<FacebookUser> res = getDs().find(FacebookUser.class)
+                                        .filter(in("_id", asList(1L, 2L)))
+                                        .execute()
+                                        .toList();
         assertEquals(2, res.size());
         assertNotNull(res.get(0));
         assertNotNull(res.get(1));
@@ -141,8 +327,13 @@ public class TestDatastore extends TestBase {
         getDs().find(FacebookUser.class).remove(new DeleteOptions().multi(true));
         getDs().insert(fbUsers);
         assertEquals(4, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().find(FacebookUser.class).filter("_id", 1).first());
-        res = getDs().find(FacebookUser.class).filter("_id in", asList(1L, 2L)).execute().toList();
+        assertNotNull(getDs().find(FacebookUser.class)
+                             .filter(eq("_id", 1))
+                             .first());
+        res = getDs().find(FacebookUser.class)
+                     .filter(in("_id", asList(1L, 2L)))
+                     .execute()
+                     .toList();
         assertEquals(2, res.size());
         assertNotNull(res.get(0));
         assertNotNull(res.get(1));
@@ -171,7 +362,7 @@ public class TestDatastore extends TestBase {
         final Datastore datastore = getDs();
 
         final LifecycleTestObj loaded = datastore.find(LifecycleTestObj.class)
-                                                 .filter("_id", life1.id)
+                                                 .filter(eq("_id", life1.id))
                                                  .first();
         assertTrue(loaded.preLoad);
         assertTrue(loaded.preLoadWithParam);
@@ -228,290 +419,6 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
-    public void testSaveAndRemove() {
-        getMapper().getCollection(Rectangle.class).drop();
-
-        final Rectangle rect = new Rectangle(10, 10);
-        ObjectId id = new ObjectId();
-        rect.setId(id);
-
-        //test delete(entity)
-        getDs().save(rect);
-        assertEquals(1, getDs().find(rect.getClass()).count());
-        getDs().delete(rect);
-        assertEquals(0, getDs().find(rect.getClass()).count());
-
-        //test delete(entity, id)
-        getDs().save(rect);
-        assertEquals(1, getDs().find(rect.getClass()).count());
-        getDs().find(rect.getClass()).filter("_id", 1).delete();
-        assertEquals(1, getDs().find(rect.getClass()).count());
-        getDs().find(rect.getClass()).filter("_id", id).delete();
-        assertEquals(0, getDs().find(rect.getClass()).count());
-
-        //test delete(entity, {id})
-        getDs().save(rect);
-        assertEquals(1, getDs().find(rect.getClass()).count());
-        getDs().find(rect.getClass()).filter("_id in", singletonList(rect.getId())).delete();
-        assertEquals(0, getDs().find(rect.getClass()).count());
-
-        //test delete(entity, {id,id})
-        ObjectId id1 = getDs().save(new Rectangle(10, 10)).getId();
-        ObjectId id2 = getDs().save(new Rectangle(10, 10)).getId();
-        assertEquals(2, getDs().find(rect.getClass()).count());
-        Query<? extends Rectangle> query = getDs().find(rect.getClass())
-                                                  .filter("_id in", asList(id1, id2));
-
-        query.remove(new DeleteOptions()
-                         .multi(true));
-        assertEquals(0, getDs().find(rect.getClass()).count());
-
-        //test delete(Class, {id,id})
-        id1 = getDs().save(new Rectangle(20, 20)).getId();
-        id2 = getDs().save(new Rectangle(20, 20)).getId();
-        assertEquals("datastore should have saved two entities with autogenerated ids", 2, getDs().find(rect.getClass()).count());
-        getDs().find(rect.getClass())
-               .filter("_id in", asList(id1, id2))
-               .remove(new DeleteOptions()
-                           .multi(true));
-        assertEquals("datastore should have deleted two entities with autogenerated ids", 0, getDs().find(rect.getClass()).count());
-
-        //test delete(entity, {id}) with one left
-        id1 = getDs().save(new Rectangle(20, 20)).getId();
-        getDs().save(new Rectangle(20, 20));
-        assertEquals(2, getDs().find(rect.getClass()).count());
-        getDs().find(rect.getClass()).filter("_id in", singletonList(id1)).delete();
-        assertEquals(1, getDs().find(rect.getClass()).count());
-        getMapper().getCollection(Rectangle.class).drop();
-
-        //test delete(Class, {id}) with one left
-        id1 = getDs().save(new Rectangle(20, 20)).getId();
-        getDs().save(new Rectangle(20, 20));
-        assertEquals(2, getDs().find(rect.getClass()).count());
-        getDs().find(Rectangle.class).filter("_id in", singletonList(id1)).delete();
-        assertEquals(1, getDs().find(rect.getClass()).count());
-    }
-
-    @Test
-    public void testUpdateWithCollation() {
-        getMapper().getCollection(FacebookUser.class).drop();
-        getDs().save(asList(new FacebookUser(1, "John Doe"),
-            new FacebookUser(2, "john doe")));
-
-        final Update update = getDs().find(FacebookUser.class)
-                                     .field("username").equal("john doe")
-                                     .update()
-                                     .inc("loginCount");
-
-        UpdateResult results = update.execute();
-
-        assertEquals(1, results.getModifiedCount());
-        assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
-                               .execute(new FindOptions().limit(1)).next()
-                            .loginCount);
-        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 2)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-
-        results = update.execute(new UpdateOptions()
-                                     .multi(true)
-                                     .collation(Collation.builder()
-                                                         .locale("en")
-                                                         .collationStrength(CollationStrength.SECONDARY)
-                                                         .build()));
-        assertEquals(2, results.getModifiedCount());
-        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 1)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(2, getDs().find(FacebookUser.class).filter("id", 2)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-    }
-
-    @Test
-    public void testFindAndModify() {
-        getDs().save(asList(new FacebookUser(1, "John Doe"),
-            new FacebookUser(2, "john doe")));
-
-        Query<FacebookUser> query = getDs().find(FacebookUser.class)
-                                           .field("username").equal("john doe");
-        Modify<FacebookUser> modify = query.modify().inc("loginCount");
-        FacebookUser results = modify.execute();
-
-        assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 2)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, results.loginCount);
-
-        results = modify.execute(new FindAndModifyOptions().returnDocument(BEFORE));
-        assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(2, getDs().find(FacebookUser.class).filter("id", 2)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, results.loginCount);
-
-        query = getDs().find(FacebookUser.class)
-                       .field("id").equal(3L)
-                       .field("username").equal("Jon Snow");
-        results = query.modify().inc("loginCount").execute(new FindAndModifyOptions().returnDocument(BEFORE).upsert(true));
-
-        assertNull(results);
-        FacebookUser user = getDs().find(FacebookUser.class).filter("id", 3)
-                                   .execute(new FindOptions().limit(1))
-                                   .next();
-        assertEquals(1, user.loginCount);
-        assertEquals("Jon Snow", user.username);
-
-
-        query = getDs().find(FacebookUser.class)
-                       .field("id").equal(4L)
-                       .field("username").equal("Ron Swanson");
-        results = query.modify().inc("loginCount").execute(new FindAndModifyOptions().returnDocument(AFTER).upsert(true));
-
-        assertNotNull(results);
-        user = getDs().find(FacebookUser.class).filter("id", 4)
-                      .execute(new FindOptions().limit(1))
-                      .next();
-        assertEquals(1, results.loginCount);
-        assertEquals("Ron Swanson", results.username);
-        assertEquals(1, user.loginCount);
-        assertEquals("Ron Swanson", user.username);
-    }
-
-    @Test
-    public void testFindAndModifyWithOptions() {
-        getMapper().getCollection(FacebookUser.class).drop();
-        getDs().save(asList(new FacebookUser(1, "John Doe"),
-            new FacebookUser(2, "john doe")));
-
-        FacebookUser result = getDs().find(FacebookUser.class)
-                                     .field("username").equal("john doe")
-                                     .modify()
-                                     .inc("loginCount")
-                                     .execute();
-
-        assertEquals(0, getDs().find(FacebookUser.class).filter("id", 1)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 2)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, result.loginCount);
-
-        result = getDs().find(FacebookUser.class)
-                        .field("username").equal("john doe").modify()
-                        .inc("loginCount").execute(new FindAndModifyOptions()
-                                     .returnDocument(BEFORE)
-                                     .collation(Collation.builder()
-                                                         .locale("en")
-                                                         .collationStrength(CollationStrength.SECONDARY)
-                                                         .build()));
-        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 1)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(0, result.loginCount);
-        assertEquals(1, getDs().find(FacebookUser.class).filter("id", 2)
-                               .execute(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-
-        result = getDs().find(FacebookUser.class)
-                        .field("id").equal(3L)
-                        .field("username").equal("Jon Snow")
-                        .modify()
-                        .inc("loginCount")
-                        .execute(new FindAndModifyOptions()
-                                      .returnDocument(BEFORE)
-                                      .upsert(true));
-
-        assertNull(result);
-        FacebookUser user = getDs().find(FacebookUser.class).filter("id", 3)
-                                   .execute(new FindOptions().limit(1))
-                                   .next();
-        assertEquals(1, user.loginCount);
-        assertEquals("Jon Snow", user.username);
-
-
-        result = getDs().find(FacebookUser.class)
-                        .field("id").equal(4L)
-                        .field("username").equal("Ron Swanson")
-                        .modify()
-                        .inc("loginCount")
-                        .execute(new FindAndModifyOptions()
-                                     .returnDocument(AFTER)
-                                     .upsert(true));
-
-        assertNotNull(result);
-        user = getDs().find(FacebookUser.class).filter("id", 4)
-                      .execute(new FindOptions().limit(1))
-                      .next();
-        assertEquals(1, result.loginCount);
-        assertEquals("Ron Swanson", result.username);
-        assertEquals(1, user.loginCount);
-        assertEquals("Ron Swanson", user.username);
-    }
-
-    @Test
-    public void testDeleteWithCollation() {
-        getMapper().getCollection(FacebookUser.class).drop();
-        getDs().save(asList(new FacebookUser(1, "John Doe"),
-            new FacebookUser(2, "john doe")));
-
-        Query<FacebookUser> query = getDs().find(FacebookUser.class)
-                                           .field("username").equal("john doe");
-        assertEquals(1, query.remove().getDeletedCount());
-
-        assertEquals(1, query.remove(new DeleteOptions()
-                                         .collation(Collation.builder()
-                                                             .locale("en")
-                                                             .collationStrength(CollationStrength.SECONDARY)
-                                                             .build()))
-                             .getDeletedCount());
-    }
-
-    @Test
-    public void testFindAndDeleteWithCollation() {
-        getMapper().getCollection(FacebookUser.class).drop();
-        getDs().save(asList(new FacebookUser(1, "John Doe"),
-            new FacebookUser(2, "john doe")));
-
-        Query<FacebookUser> query = getDs().find(FacebookUser.class)
-                                           .field("username").equal("john doe");
-        assertNotNull(query.delete());
-        assertNull(query.delete());
-
-        FindAndDeleteOptions options = new FindAndDeleteOptions()
-                                           .collation(Collation.builder()
-                                                               .locale("en")
-                                                               .collationStrength(CollationStrength.SECONDARY)
-                                                               .build());
-        assertNotNull(query.delete(options));
-        assertNull(query.execute().tryNext());
-    }
-
-    @Test
-    public void testFindAndDeleteWithNoQueryMatch() {
-        assertNull(getDs().find(FacebookUser.class)
-                          .field("username").equal("David S. Pumpkins")
-                          .delete());
-    }
-
-    @Test
     public void testRefresh() {
         FacebookUser steve = getDs().save(new FacebookUser(1, "Steve"));
 
@@ -539,39 +446,143 @@ public class TestDatastore extends TestBase {
 
     }
 
+    @Test
+    public void testSaveAndRemove() {
+        getMapper().getCollection(Rectangle.class).drop();
+
+        final Rectangle rect = new Rectangle(10, 10);
+        ObjectId id = new ObjectId();
+        rect.setId(id);
+
+        //test delete(entity)
+        getDs().save(rect);
+        assertEquals(1, getDs().find(rect.getClass()).count());
+        getDs().delete(rect);
+        assertEquals(0, getDs().find(rect.getClass()).count());
+
+        //test delete(entity, id)
+        getDs().save(rect);
+        assertEquals(1, getDs().find(rect.getClass()).count());
+        getDs().find(rect.getClass()).filter(eq("_id", 1)).delete();
+        assertEquals(1, getDs().find(rect.getClass()).count());
+        getDs().find(rect.getClass()).filter(eq("_id", id)).delete();
+        assertEquals(0, getDs().find(rect.getClass()).count());
+
+        //test delete(entity, {id})
+        getDs().save(rect);
+        assertEquals(1, getDs().find(rect.getClass()).count());
+        getDs().find(rect.getClass()).filter(in("_id", singletonList(rect.getId()))).delete();
+        assertEquals(0, getDs().find(rect.getClass()).count());
+
+        //test delete(entity, {id,id})
+        ObjectId id1 = getDs().save(new Rectangle(10, 10)).getId();
+        ObjectId id2 = getDs().save(new Rectangle(10, 10)).getId();
+        assertEquals(2, getDs().find(rect.getClass()).count());
+        Query<? extends Rectangle> query = getDs().find(rect.getClass())
+                                                  .filter(in("_id", asList(id1, id2)));
+
+        query.remove(new DeleteOptions()
+                         .multi(true));
+        assertEquals(0, getDs().find(rect.getClass()).count());
+
+        //test delete(Class, {id,id})
+        id1 = getDs().save(new Rectangle(20, 20)).getId();
+        id2 = getDs().save(new Rectangle(20, 20)).getId();
+        assertEquals("datastore should have saved two entities with autogenerated ids", 2, getDs().find(rect.getClass()).count());
+        getDs().find(rect.getClass())
+               .filter(in("_id", asList(id1, id2)))
+               .remove(new DeleteOptions()
+                           .multi(true));
+        assertEquals("datastore should have deleted two entities with autogenerated ids", 0, getDs().find(rect.getClass()).count());
+
+        //test delete(entity, {id}) with one left
+        id1 = getDs().save(new Rectangle(20, 20)).getId();
+        getDs().save(new Rectangle(20, 20));
+        assertEquals(2, getDs().find(rect.getClass()).count());
+        getDs().find(rect.getClass()).filter(in("_id", singletonList(id1))).delete();
+        assertEquals(1, getDs().find(rect.getClass()).count());
+        getMapper().getCollection(Rectangle.class).drop();
+
+        //test delete(Class, {id}) with one left
+        id1 = getDs().save(new Rectangle(20, 20)).getId();
+        getDs().save(new Rectangle(20, 20));
+        assertEquals(2, getDs().find(rect.getClass()).count());
+        getDs().find(Rectangle.class).filter(in("_id", singletonList(id1))).delete();
+        assertEquals(1, getDs().find(rect.getClass()).count());
+    }
+
+    @Test
+    public void testUpdateWithCollation() {
+        getMapper().getCollection(FacebookUser.class).drop();
+        getDs().save(asList(new FacebookUser(1, "John Doe"),
+            new FacebookUser(2, "john doe")));
+
+        final Update<FacebookUser> update = getDs().find(FacebookUser.class)
+                                                   .filter(eq("username", "john doe"))
+                                                   .update()
+                                                   .inc("loginCount");
+
+        UpdateResult results = update.execute();
+
+        assertEquals(1, results.getModifiedCount());
+        assertEquals(0, getDs().find(FacebookUser.class).filter(eq("id", 1))
+                               .execute(new FindOptions().limit(1)).next()
+                            .loginCount);
+        assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 2))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+
+        results = update.execute(new UpdateOptions()
+                                     .multi(true)
+                                     .collation(Collation.builder()
+                                                         .locale("en")
+                                                         .collationStrength(CollationStrength.SECONDARY)
+                                                         .build()));
+        assertEquals(2, results.getModifiedCount());
+        assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 1))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+        assertEquals(2, getDs().find(FacebookUser.class).filter(eq("id", 2))
+                               .execute(new FindOptions().limit(1))
+                               .next()
+                            .loginCount);
+    }
+
     private void testFirstDatastore(final Datastore ds1) {
-        final FacebookUser user = ds1.find(FacebookUser.class).filter("id", 1)
+        final FacebookUser user = ds1.find(FacebookUser.class).filter(eq("id", 1))
                                      .execute(new FindOptions().limit(1))
                                      .next();
         Assert.assertNotNull(user);
-        Assert.assertNotNull(ds1.find(FacebookUser.class).filter("id", 3)
+        Assert.assertNotNull(ds1.find(FacebookUser.class).filter(eq("id", 3))
                                 .execute(new FindOptions().limit(1))
                                 .next());
 
         Assert.assertEquals("Should find 1 friend", 1, user.friends.size());
         Assert.assertEquals("Should find the right friend", 3, user.friends.get(0).id);
 
-        Assert.assertNull(ds1.find(FacebookUser.class).filter("id", 2)
+        Assert.assertNull(ds1.find(FacebookUser.class).filter(eq("id", 2))
                              .execute(new FindOptions().limit(1))
                              .tryNext());
-        Assert.assertNull(ds1.find(FacebookUser.class).filter("id", 4)
+        Assert.assertNull(ds1.find(FacebookUser.class).filter(eq("id", 4))
                              .execute(new FindOptions().limit(1))
                              .tryNext());
     }
 
     private void testSecondDatastore(final Datastore ds2) {
-        Assert.assertNull(ds2.find(FacebookUser.class).filter("id", 1)
+        Assert.assertNull(ds2.find(FacebookUser.class).filter(eq("id", 1))
                              .execute(new FindOptions().limit(1))
                              .tryNext());
-        Assert.assertNull(ds2.find(FacebookUser.class).filter("id", 3)
+        Assert.assertNull(ds2.find(FacebookUser.class).filter(eq("id", 3))
                              .execute(new FindOptions().limit(1))
                              .tryNext());
 
-        final FacebookUser db2FoundUser = ds2.find(FacebookUser.class).filter("id", 2)
+        final FacebookUser db2FoundUser = ds2.find(FacebookUser.class).filter(eq("id", 2))
                                              .execute(new FindOptions().limit(1))
                                              .next();
         Assert.assertNotNull(db2FoundUser);
-        Assert.assertNotNull(ds2.find(FacebookUser.class).filter("id", 4)
+        Assert.assertNotNull(ds2.find(FacebookUser.class).filter(eq("id", 4))
                                 .execute(new FindOptions().limit(1))
                                 .next());
         Assert.assertEquals("Should find 1 friend", 1, db2FoundUser.friends.size());
@@ -579,26 +590,26 @@ public class TestDatastore extends TestBase {
     }
 
     private void testStandardDatastore() {
-        Assert.assertNull(getDs().find(FacebookUser.class).filter("id", 1)
+        Assert.assertNull(getDs().find(FacebookUser.class).filter(eq("id", 1))
                                  .execute(new FindOptions().limit(1))
                                  .tryNext());
-        Assert.assertNull(getDs().find(FacebookUser.class).filter("id", 2)
+        Assert.assertNull(getDs().find(FacebookUser.class).filter(eq("id", 2))
                                  .execute(new FindOptions().limit(1))
                                  .tryNext());
-        Assert.assertNull(getDs().find(FacebookUser.class).filter("id", 3)
+        Assert.assertNull(getDs().find(FacebookUser.class).filter(eq("id", 3))
                                  .execute(new FindOptions().limit(1))
                                  .tryNext());
-        Assert.assertNull(getDs().find(FacebookUser.class).filter("id", 4)
+        Assert.assertNull(getDs().find(FacebookUser.class).filter(eq("id", 4))
                                  .execute(new FindOptions().limit(1))
                                  .tryNext());
     }
 
     @Entity("facebook_users")
     public static class FacebookUser {
+        public int loginCount;
         @Id
         private long id;
         private String username;
-        public int loginCount;
         @Reference
         private List<FacebookUser> friends = new ArrayList<>();
 
@@ -614,23 +625,34 @@ public class TestDatastore extends TestBase {
         public long getId() {
             return id;
         }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public int getLoginCount() {
-            return loginCount;
-        }
     }
 
-    @Entity(value = "facebook_users", useDiscriminator = false)
-    public static class FacebookUserWithNoClassNameStored extends FacebookUser {
-        public FacebookUserWithNoClassNameStored(long id, String name) {
-            super(id, name);
+    @Entity
+    @SuppressWarnings("UnusedDeclaration")
+    public static class Keys {
+        @Id
+        private ObjectId id;
+        private List<Key<FacebookUser>> users;
+        private Key<Rectangle> rect;
+
+        private Keys() {
         }
 
-        public FacebookUserWithNoClassNameStored() {
+        public Keys(final Key<Rectangle> rectKey, final List<Key<FacebookUser>> users) {
+            rect = rectKey;
+            this.users = users;
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public Key<Rectangle> getRect() {
+            return rect;
+        }
+
+        public List<Key<FacebookUser>> getUsers() {
+            return users;
         }
     }
 
@@ -703,13 +725,21 @@ public class TestDatastore extends TestBase {
 
         }
 
-        @PrePersist
-        void prePersist() {
-            if (prePersist) {
+        @PostLoad
+        void postLoad() {
+            if (postLoad) {
                 throw new RuntimeException("already called");
             }
 
-            prePersist = true;
+            postLoad = true;
+        }
+
+        @PostLoad
+        void postLoadWithParam(final Document document) {
+            if (postLoadWithParam) {
+                throw new RuntimeException("already called");
+            }
+            postLoadWithParam = true;
         }
 
         @PostPersist
@@ -742,65 +772,13 @@ public class TestDatastore extends TestBase {
             return retObj;
         }
 
-        @PostLoad
-        void postLoad() {
-            if (postLoad) {
+        @PrePersist
+        void prePersist() {
+            if (prePersist) {
                 throw new RuntimeException("already called");
             }
 
-            postLoad = true;
-        }
-
-        @PostLoad
-        void postLoadWithParam(final Document document) {
-            if (postLoadWithParam) {
-                throw new RuntimeException("already called");
-            }
-            postLoadWithParam = true;
+            prePersist = true;
         }
     }
-
-    @Entity
-    @SuppressWarnings("UnusedDeclaration")
-    public static class Keys {
-        @Id
-        private ObjectId id;
-        private List<Key<FacebookUser>> users;
-        private Key<Rectangle> rect;
-
-        private Keys() {
-        }
-
-        public Keys(final Key<Rectangle> rectKey, final List<Key<FacebookUser>> users) {
-            rect = rectKey;
-            this.users = users;
-        }
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public Key<Rectangle> getRect() {
-            return rect;
-        }
-
-        public List<Key<FacebookUser>> getUsers() {
-            return users;
-        }
-    }
-
-    @Entity(concern = "ACKNOWLEDGED")
-    static class Simple {
-        @Id
-        private String id;
-
-        Simple(final String id) {
-            this();
-            this.id = id;
-        }
-
-        private Simple() {
-        }
-    }
-
 }

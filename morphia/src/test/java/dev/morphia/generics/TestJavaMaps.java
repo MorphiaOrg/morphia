@@ -1,24 +1,25 @@
 package dev.morphia.generics;
 
-import dev.morphia.Morphia;
-import dev.morphia.annotations.Property;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
+import dev.morphia.DeleteOptions;
+import dev.morphia.Morphia;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.TestEntity;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -39,22 +40,6 @@ public class TestJavaMaps extends TestBase {
     }
 
 
-    private void empties(final Datastore datastore) {
-        datastore.delete(datastore.find(Employee.class));
-        Employee employee = new Employee();
-        HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
-        byteMap.put("b", (byte) 1);
-        employee.byteMap = byteMap;
-        datastore.save(employee);
-
-        Employee loaded = datastore.find(Employee.class)
-                                   .execute(new FindOptions().limit(1))
-                                   .next();
-
-        assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
-        assertNull(loaded.floatMap);
-    }
-
     @Test
     public void emptyModel() {
         MapperOptions options = MapperOptions.builder(getMapper().getOptions())
@@ -68,11 +53,28 @@ public class TestJavaMaps extends TestBase {
         model.wrapped = new TestEmptyModel.Wrapped();
         model.wrapped.text = "textWrapper";
         datastore.save(model);
-        TestEmptyModel model2 = getDs().find(TestEmptyModel.class).filter("id", model.id)
+        TestEmptyModel model2 = getDs().find(TestEmptyModel.class)
+                                       .filter(eq("id", model.id))
                                        .execute(new FindOptions().limit(1))
                                        .next();
         Assert.assertNull(model.wrapped.others);
         Assert.assertNull(model2.wrapped.others);
+    }
+
+    private void empties(final Datastore datastore) {
+        datastore.find(Employee.class).remove(new DeleteOptions().multi(true));
+        Employee employee = new Employee();
+        HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
+        byteMap.put("b", (byte) 1);
+        employee.byteMap = byteMap;
+        datastore.save(employee);
+
+        Employee loaded = datastore.find(Employee.class)
+                                   .execute(new FindOptions().limit(1))
+                                   .next();
+
+        assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
+        assertNull(loaded.floatMap);
     }
 
     @Test

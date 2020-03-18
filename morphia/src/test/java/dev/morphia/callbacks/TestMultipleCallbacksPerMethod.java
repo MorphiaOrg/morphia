@@ -1,16 +1,18 @@
 package dev.morphia.callbacks;
 
 
-import dev.morphia.annotations.Entity;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class TestMultipleCallbacksPerMethod extends TestBase {
@@ -20,7 +22,8 @@ public class TestMultipleCallbacksPerMethod extends TestBase {
         Assert.assertFalse(entity.isPersistent());
         getDs().save(entity);
         Assert.assertTrue(entity.isPersistent());
-        final SomeEntity reloaded = getDs().find(SomeEntity.class).filter("id", entity.getId())
+        final SomeEntity reloaded = getDs().find(SomeEntity.class)
+                                           .filter(eq("id", entity.getId()))
                                            .execute(new FindOptions().limit(1))
                                            .tryNext();
         Assert.assertTrue(reloaded.isPersistent());

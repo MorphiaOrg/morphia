@@ -21,8 +21,8 @@ import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
-import java.util.Arrays;
-
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -30,64 +30,63 @@ import static org.junit.Assert.assertThat;
 /**
  * Test driving features for Issue 643 - add support for saving entities with GeoJSON.
  */
-@SuppressWarnings("unchecked")
 public class GeoEntitiesTest extends TestBase {
 
     @Test
     public void shouldRetrieveGeoCollectionType() {
         String name = "What, everything?";
-        LineString lineString = new LineString(Arrays.asList(
+        LineString lineString = new LineString(asList(
             new Position(1.0, 2.0),
             new Position(3.0, 5.0),
             new Position(19.0, 13.0)));
 
         Polygon polygonWithHoles = new Polygon(
-            new PolygonCoordinates(Arrays.asList(new Position(1.1, 2.0),
+            new PolygonCoordinates(asList(new Position(1.1, 2.0),
                 new Position(2.3, 3.5),
                 new Position(3.7, 1.0),
                 new Position(1.1, 2.0)),
 
-                Arrays.asList(new Position(1.5, 2.0),
+                asList(new Position(1.5, 2.0),
                     new Position(1.9, 2.0),
                     new Position(1.9, 1.8),
                     new Position(1.5, 2.0)),
 
-                Arrays.asList(new Position(2.2, 2.1),
+                asList(new Position(2.2, 2.1),
                     new Position(2.4, 1.9),
                     new Position(2.4, 1.7),
                     new Position(2.1, 1.8),
                     new Position(2.2, 2.1))));
 
-        MultiPoint multiPoint = new MultiPoint(Arrays.asList(
+        MultiPoint multiPoint = new MultiPoint(asList(
             new Position(1.0, 2.0),
             new Position(3.0, 5.0),
             new Position(19.0, 13.0)));
 
-        MultiLineString multiLineString = new MultiLineString(Arrays.asList(
-            Arrays.asList(new Position(1, 2), new Position(3, 5), new Position(19, 13)),
+        MultiLineString multiLineString = new MultiLineString(asList(
+            asList(new Position(1, 2), new Position(3, 5), new Position(19, 13)),
 
-            Arrays.asList(new Position(1.5, 2.0),
+            asList(new Position(1.5, 2.0),
                 new Position(1.9, 2.0),
                 new Position(1.9, 1.8),
                 new Position(1.5, 2.0))));
 
-        MultiPolygon multiPolygon = new MultiPolygon(Arrays.asList(
-            new PolygonCoordinates(Arrays.asList(
-                new Position(1.1, 2.0), 
-                new Position(2.3, 3.5), 
+        MultiPolygon multiPolygon = new MultiPolygon(asList(
+            new PolygonCoordinates(asList(
+                new Position(1.1, 2.0),
+                new Position(2.3, 3.5),
                 new Position(3.7, 1.0),
                 new Position(1.1, 2.0)))));
-        
-        GeometryCollection geometryCollection = new GeometryCollection(Arrays.asList(lineString, polygonWithHoles, multiPoint,
-            multiLineString, multiPolygon));
-        
+
+        GeometryCollection geometryCollection = new GeometryCollection(asList(lineString, polygonWithHoles, multiPoint, multiLineString,
+            multiPolygon));
+
         AllTheThings allTheThings = new AllTheThings(name, geometryCollection);
         getDs().save(allTheThings);
 
         // when
         AllTheThings found = getDs()
                                  .find(AllTheThings.class)
-                                 .field("name").equal(name)
+                                 .filter(eq("name", name))
                                  .execute(new FindOptions().limit(1))
                                  .tryNext();
 
@@ -99,14 +98,16 @@ public class GeoEntitiesTest extends TestBase {
     @Test
     public void shouldRetrieveGeoJsonLineString() {
         // given
-        Route route = new Route("My Route", new LineString(Arrays.asList(
+        Route route = new Route("My Route", new LineString(asList(
             new Position(1, 2),
             new Position(3, 5),
             new Position(19, 13))));
         getDs().save(route);
 
         // when
-        Route found = getDs().find(Route.class).field("name").equal("My Route").execute(new FindOptions().limit(1)).tryNext();
+        Route found = getDs().find(Route.class)
+                             .filter(eq("name", "My Route"))
+                             .execute(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -118,13 +119,13 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String name = "Many Paths";
         Paths paths = new Paths(name, new MultiLineString(
-            Arrays.asList(
-                Arrays.asList(
+            asList(
+                asList(
                     new Position(1, 2),
                     new Position(3, 5),
                     new Position(19, 13)),
 
-                Arrays.asList(
+                asList(
                     new Position(1.5, 2.0),
                     new Position(1.9, 2.0),
                     new Position(1.9, 1.8),
@@ -133,7 +134,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(paths);
 
         // when
-        Paths found = getDs().find(Paths.class).field("name").equal(name).execute(new FindOptions().limit(1)).tryNext();
+        Paths found = getDs().find(Paths.class).filter(eq("name", name)).execute(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -144,14 +145,14 @@ public class GeoEntitiesTest extends TestBase {
     public void shouldRetrieveGeoJsonMultiPoint() {
         // given
         String name = "My stores";
-        Stores stores = new Stores(name, new MultiPoint(Arrays.asList(
-            new Position(1, 2), 
-            new Position(3, 5), 
+        Stores stores = new Stores(name, new MultiPoint(asList(
+            new Position(1, 2),
+            new Position(3, 5),
             new Position(19, 13))));
         getDs().save(stores);
 
         // when
-        Stores found = getDs().find(Stores.class).field("name").equal(name).execute(new FindOptions().limit(1)).tryNext();
+        Stores found = getDs().find(Stores.class).filter(eq("name", name)).execute(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -163,26 +164,26 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String name = "All these shapes";
         PolygonCoordinates polygonWithHoles = new PolygonCoordinates(
-            Arrays.asList(
+            asList(
                 new Position(1.1, 2.0),
                 new Position(2.3, 3.5),
                 new Position(3.7, 1.0),
                 new Position(1.1, 2.0)),
 
-            Arrays.asList(
+            asList(
                 new Position(1.5, 2.0),
                 new Position(1.9, 2.0),
                 new Position(1.9, 1.8),
                 new Position(1.5, 2.0)),
-            Arrays.asList(
+            asList(
                 new Position(2.2, 2.1),
                 new Position(2.4, 1.9),
                 new Position(2.4, 1.7),
                 new Position(2.1, 1.8),
                 new Position(2.2, 2.1)));
 
-        Regions regions = new Regions(name, new MultiPolygon(Arrays.asList(
-            new PolygonCoordinates(Arrays.asList(
+        Regions regions = new Regions(name, new MultiPolygon(asList(
+            new PolygonCoordinates(asList(
                 new Position(1.1, 2.0),
                 new Position(2.3, 3.5),
                 new Position(3.7, 1.0),
@@ -191,7 +192,10 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(regions);
 
         // when
-        Regions found = getDs().find(Regions.class).field("name").equal(name).execute(new FindOptions().limit(1)).tryNext();
+        Regions found = getDs().find(Regions.class)
+                               .filter(eq("name", name))
+                               .execute(new FindOptions().limit(1))
+                               .tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -203,17 +207,17 @@ public class GeoEntitiesTest extends TestBase {
         // given
         String polygonName = "A polygon with holes";
         Polygon polygonWithHoles = new Polygon(
-            Arrays.asList(
+            asList(
                 new Position(1.1, 2.0),
                 new Position(2.3, 3.5),
                 new Position(3.7, 1.0),
                 new Position(1.1, 2.0)),
-            Arrays.asList(
+            asList(
                 new Position(1.5, 2.0),
                 new Position(1.9, 2.0),
                 new Position(1.9, 1.8),
                 new Position(1.5, 2.0)),
-            Arrays.asList(
+            asList(
                 new Position(2.2, 2.1),
                 new Position(2.4, 1.9),
                 new Position(2.4, 1.7),
@@ -224,7 +228,10 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(area);
 
         // when
-        Area found = getDs().find(Area.class).field("name").equal(polygonName).execute(new FindOptions().limit(1)).tryNext();
+        Area found = getDs().find(Area.class)
+                            .filter(eq("name", polygonName))
+                            .execute(new FindOptions().limit(1))
+                            .tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -238,7 +245,10 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(city);
 
         // when
-        City found = getDs().find(City.class).field("name").equal("New City").execute(new FindOptions().limit(1)).tryNext();
+        City found = getDs().find(City.class)
+                            .filter(eq("name", "New City"))
+                            .execute(new FindOptions().limit(1))
+                            .tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -248,7 +258,7 @@ public class GeoEntitiesTest extends TestBase {
     @Test
     public void shouldRetrieveGeoJsonPolygon() {
         // given
-        Area area = new Area("The Area", new Polygon(Arrays.asList(
+        Area area = new Area("The Area", new Polygon(asList(
             new Position(2.0, 1.1),
             new Position(3.5, 2.3),
             new Position(1.0, 3.7),
@@ -256,7 +266,10 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(area);
 
         // when
-        Area found = getDs().find(Area.class).field("name").equal("The Area").execute(new FindOptions().limit(1)).tryNext();
+        Area found = getDs().find(Area.class)
+                            .filter(eq("name", "The Area"))
+                            .execute(new FindOptions().limit(1))
+                            .tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
