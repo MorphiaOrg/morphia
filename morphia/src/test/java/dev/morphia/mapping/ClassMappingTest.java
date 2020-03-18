@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -28,7 +30,7 @@ public class ClassMappingTest extends TestBase {
         getDs().save(e);
 
         Assert.assertNull(getDs().find(E.class)
-                                 .field("testClass2").equal(ArrayList.class)
+                                 .filter(eq("testClass2", ArrayList.class))
                                  .execute(new FindOptions()
                                               .limit(1))
                                  .tryNext());
@@ -42,7 +44,7 @@ public class ClassMappingTest extends TestBase {
         getDs().save(e);
 
         e = getDs().find(E.class)
-                   .filter("_id", e.id)
+                   .filter(eq("_id", e.id))
                    .first();
         Assert.assertEquals(LinkedList.class, e.testClass);
     }

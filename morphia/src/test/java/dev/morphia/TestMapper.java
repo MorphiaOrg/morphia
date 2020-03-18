@@ -24,6 +24,7 @@ import org.junit.experimental.categories.Category;
 import java.io.Serializable;
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
 
@@ -59,7 +60,7 @@ public class TestMapper extends TestBase {
         holder.a1 = a;
         holder.a2 = a;
         getDs().save(asList(a, holder));
-        holder = getDs().find(HoldsMultipleA.class).filter("_id", holder.id).first();
+        holder = getDs().find(HoldsMultipleA.class).filter(eq("_id", holder.id)).first();
         Assert.assertEquals(1, A.loadCount);
         Assert.assertTrue(holder.a1 == holder.a2);
     }
@@ -77,7 +78,7 @@ public class TestMapper extends TestBase {
         holder.a3 = a;
         getDs().save(asList(a, holder));
         Assert.assertEquals(0, A.loadCount);
-        holder = getDs().find(HoldsMultipleALazily.class).filter("_id", holder.id).first();
+        holder = getDs().find(HoldsMultipleALazily.class).filter(eq("_id", holder.id)).first();
         Assert.assertNotNull(holder.a2);
         Assert.assertEquals(1, A.loadCount);
         Assert.assertFalse(holder.a1 == holder.a2);
