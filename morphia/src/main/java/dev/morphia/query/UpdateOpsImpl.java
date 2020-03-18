@@ -216,7 +216,6 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         this.ops = ops;
     }
 
-    //TODO Clean this up a little.
     protected void add(final UpdateOperator op, final String f, final Object value, final boolean convert) {
         if (value == null) {
             throw new QueryException("Val cannot be null");

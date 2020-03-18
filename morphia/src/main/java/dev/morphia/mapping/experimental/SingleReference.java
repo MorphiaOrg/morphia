@@ -1,7 +1,6 @@
 package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
-import dev.morphia.AdvancedDatastore;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
@@ -12,6 +11,8 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 /**
  * @param <T>
@@ -91,11 +92,11 @@ public class SingleReference<T> extends MorphiaReference<T> {
             final Class<?> clazz = getDatastore()
                                        .getMapper()
                                        .getClassFromCollection(((DBRef) id).getCollectionName());
-            query = ((AdvancedDatastore) getDatastore()).find(clazz)
-                                                        .filter("_id", ((DBRef) id).getId());
+            query = getDatastore().find(clazz)
+                                  .filter(eq("_id", ((DBRef) id).getId()));
         } else {
-            query = ((AdvancedDatastore) getDatastore()).find(mappedClass.getType())
-                                                        .filter("_id", id);
+            query = getDatastore().find(mappedClass.getType())
+                                  .filter(eq("_id", id));
         }
         return query;
     }

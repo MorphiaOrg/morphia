@@ -1,9 +1,9 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.AggregationException;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.Fields;
 import dev.morphia.aggregation.experimental.expressions.impls.PipelineField;
+import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
@@ -42,18 +42,23 @@ public class Projection extends Stage {
      * @return this
      */
     public Projection exclude(final String name) {
-        exclude(name, value(false));
-        return this;
+        return exclude(name, value(false));
     }
 
-    private void exclude(final String name, final Expression value) {
-        if (includes != null) {
-            throw new AggregationException(Sofia.mixedModeProjections());
+    /**
+     * Includes a field.
+     *
+     * @param name  the field name
+     * @param value the value expression
+     * @return this
+     */
+    public Projection include(final String name, final Expression value) {
+        if (includes == null) {
+            includes = Fields.on(this);
         }
-        if (excludes == null) {
-            excludes = Fields.on(this);
-        }
-        excludes.add(name, value);
+        includes.add(name, value);
+        validateProjections();
+        return this;
     }
 
     /**
@@ -86,21 +91,13 @@ public class Projection extends Stage {
         return include(name, value(true));
     }
 
-    /**
-     * Includes a field.
-     *
-     * @param name  the field name
-     * @param value the value expression
-     * @return this
-     */
-    public Projection include(final String name, final Expression value) {
-        if (excludes != null) {
-            throw new AggregationException(Sofia.mixedModeProjections());
+    private Projection exclude(final String name, final Expression value) {
+        if (excludes == null) {
+            excludes = Fields.on(this);
         }
-        if (includes == null) {
-            includes = Fields.on(this);
-        }
-        return includes.add(name, value);
+        excludes.add(name, value);
+        validateProjections();
+        return this;
     }
 
     /**
@@ -113,4 +110,11 @@ public class Projection extends Stage {
         return this;
     }
 
+    private void validateProjections() {
+        if (includes != null && excludes != null) {
+            if (excludes.size() > 1 || !"_id".equals(excludes.getFields().get(0).getName())) {
+                throw new ValidationException(Sofia.mixedProjections());
+            }
+        }
+    }
 }

@@ -48,6 +48,8 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.N
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.PRUNE;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.ROOT;
 import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.exists;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 
@@ -65,17 +67,14 @@ public class CodecStructureTest extends TestBase {
                   .outputField("titles", push().single(field("title"))));
     }
 
-    @SuppressWarnings("unchecked")
-    private void evaluate(final Document expected, final Object value) {
-        DocumentWriter writer = new DocumentWriter();
-        ((Codec) getMapper().getCodecRegistry()
-                            .get(value.getClass()))
-            .encode(writer, value, EncoderContext.builder().build());
-        Document actual = writer.getDocument();
-        assertEquals(0, writer.getDocsLevel());
-        assertEquals(0, writer.getArraysLevel());
-
-        assertDocumentEquals(expected, actual);
+    @Test
+    public void testGeoNear() {
+        evaluate(parse("{ $geoNear: { near: { type: 'Point', coordinates: [ -73.98142 , 40.71782 ] }, key: 'location', distanceField: "
+                       + "'dist.calculated', query: { 'category': 'Parks' } } }"),
+            to(new Point(new Position(-73.98142, 40.71782)))
+                .key("location")
+                .distanceField("dist.calculated")
+                .query(getDs().find().filter(eq("category", "Parks"))));
     }
 
     @Test
@@ -120,13 +119,10 @@ public class CodecStructureTest extends TestBase {
     }
 
     @Test
-    public void testGeoNear() {
-        evaluate(parse("{ $geoNear: { near: { type: 'Point', coordinates: [ -73.98142 , 40.71782 ] }, key: 'location', distanceField: "
-                       + "'dist.calculated', query: { 'category': 'Parks' } } }"),
-            to(new Point(new Position(-73.98142, 40.71782)))
-                .key("location")
-                .distanceField("dist.calculated")
-                .query(getDs().find().filter("category", "Parks")));
+    public void testMatch() {
+        evaluate(parse("{ $match: { price: { $exists: true } } }"),
+            Match.on(getDs().find(Artwork.class)
+                            .filter(exists("price"))));
     }
 
     @Test
@@ -150,11 +146,17 @@ public class CodecStructureTest extends TestBase {
                                   .field("missingName", value(true)));
     }
 
-    @Test
-    public void testMatch() {
-        evaluate(parse("{ $match: { price: { $exists: true } } }"),
-            Match.on(getDs().find(Artwork.class)
-                            .field("price").exists()));
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void evaluate(final Document expected, final Object value) {
+        DocumentWriter writer = new DocumentWriter();
+        ((Codec) getMapper().getCodecRegistry()
+                            .get(value.getClass()))
+            .encode(writer, value, EncoderContext.builder().build());
+        Document actual = writer.getDocument();
+        assertEquals(0, writer.getDocsLevel());
+        assertEquals(0, writer.getArraysLevel());
+
+        assertDocumentEquals(expected, actual);
     }
 
     @Test

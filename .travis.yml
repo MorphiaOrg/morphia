@@ -11,6 +11,7 @@ jdk:
   - openjdk11
   - openjdk12
   - openjdk13
+  - openjdk14
 
 env:
   - MONGODB=4.2.2 DRIVER=4.0.0

@@ -3,6 +3,7 @@ package dev.morphia.query;
 /**
  * Defines the base Criteria implementation.
  */
+@SuppressWarnings("removal")
 public abstract class AbstractCriteria implements Criteria {
     private CriteriaContainer attachedTo;
 

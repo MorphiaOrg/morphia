@@ -3,11 +3,15 @@ package dev.morphia.aggregation;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.TestBase;
+import dev.morphia.aggregation.experimental.Aggregation;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
+import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.zipcode.City;
 import dev.morphia.aggregation.zipcode.Population;
 import dev.morphia.aggregation.zipcode.State;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Query;
+import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -21,17 +25,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static dev.morphia.aggregation.Group.average;
-import static dev.morphia.aggregation.Group.first;
-import static dev.morphia.aggregation.Group.grouping;
-import static dev.morphia.aggregation.Group.id;
-import static dev.morphia.aggregation.Group.last;
-import static dev.morphia.aggregation.Group.sum;
-import static dev.morphia.aggregation.Projection.projection;
-import static dev.morphia.query.Sort.ascending;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.avg;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.first;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.last;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.stages.Group.id;
+import static dev.morphia.aggregation.experimental.stages.Group.of;
+import static dev.morphia.query.experimental.filters.Filters.gte;
 import static java.lang.String.format;
 
 /**
@@ -40,28 +45,37 @@ import static java.lang.String.format;
  * @mongodb.driver.manual tutorial/aggregation-zip-code-data-set/ Aggregation with the Zip Code Data Set
  */
 public class ZipCodeDataSetTest extends TestBase {
-    public static final String MONGO_IMPORT;
+    public static final File MONGO_IMPORT;
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
 
     static {
         String property = System.getProperty("mongodb_server");
         String serverType = property != null ? property.replaceAll("-release", "") : "UNKNOWN";
-        String path = format("/mnt/jenkins/mongodb/%s/%s/bin/mongoimport", serverType, property);
-        if (new File(path).exists()) {
+        File path = new File(format("/mnt/jenkins/mongodb/%s/%s/bin/mongoimport", serverType, property));
+        if (path.exists()) {
             MONGO_IMPORT = path;
         } else {
-            MONGO_IMPORT = "/usr/local/bin/mongoimport";
+            MONGO_IMPORT = Arrays.stream(System.getenv("PATH").split(File.pathSeparator))
+                                 .map(p -> new File(p, "mongoimport"))
+                                 .filter(f -> f.exists())
+                                 .findFirst()
+                                 .orElseGet(() -> new File("/notreally here"));
         }
     }
 
     @Test
     public void averageCitySizeByState() {
-        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
+        Assume.assumeTrue(MONGO_IMPORT.exists());
         installSampleData();
-        AggregationPipeline pipeline = getDs().createAggregation(City.class)
-                                              .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
-                                              .group("_id.state", grouping("avgCityPop", average("pop")));
-        validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "MN", 5372);
+
+        Aggregation pipeline = getDs().aggregate(City.class)
+                                      .group(of(id().field("state")
+                                                    .field("city"))
+                                                 .field("pop", sum(field("pop"))))
+                                      .group(of(
+                                          id("_id.state"))
+                                                 .field("avgCityPop", avg(field("pop"))));
+        validate(pipeline.execute(Population.class), "MN", 5372);
     }
 
     public void installSampleData() {
@@ -75,7 +89,7 @@ public class ZipCodeDataSetTest extends TestBase {
             }
             MongoCollection<Document> zips = getDatabase().getCollection("zips");
             if (zips.countDocuments() == 0) {
-                new ProcessExecutor().command(MONGO_IMPORT,
+                new ProcessExecutor().command(MONGO_IMPORT.getAbsolutePath(),
                     "--db", getDatabase().getName(),
                     "--collection", "zipcodes",
                     "--file", file.getAbsolutePath())
@@ -90,46 +104,55 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void populationsAbove10M() {
-        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
+        Assume.assumeTrue(MONGO_IMPORT.exists());
         installSampleData();
         Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
 
-        AggregationPipeline pipeline
-            = getDs().createAggregation(City.class)
-                     .group("state", grouping("totalPop", sum("pop")))
-                     .match(query.field("totalPop").greaterThanOrEq(10000000));
+        Aggregation pipeline
+            = getDs().aggregate(City.class)
+                     .group(of(id("state"))
+                                .field("totalPop", sum(field("pop"))))
+                     .match(query.filter(gte("totalPop", 10000000)));
 
-        validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "CA", 29754890);
-        validate((MongoCursor<Population>) pipeline.aggregate(Population.class), "OH", 10846517);
+        validate(pipeline.execute(Population.class), "CA", 29754890);
+        validate(pipeline.execute(Population.class), "OH", 10846517);
     }
 
     @Test
     public void smallestAndLargestCities() {
-        Assume.assumeTrue(new File(MONGO_IMPORT).exists());
+        Assume.assumeTrue(MONGO_IMPORT.exists());
         installSampleData();
         getMapper().mapPackage(getClass().getPackage().getName());
-        AggregationPipeline pipeline = getDs().createAggregation(City.class)
 
-                                              .group(id(grouping("state"), grouping("city")), grouping("pop", sum("pop")))
+        Aggregation pipeline = getDs().aggregate(City.class)
 
-                                              .sort(ascending("pop"))
+                                      .group(of(id().field("state")
+                                                    .field("city"))
+                                                 .field("pop", sum(field("pop"))))
 
-                                              .group("_id.state",
-                                                     grouping("biggestCity", last("_id.city")),
-                                                     grouping("biggestPop", last("pop")),
-                                                     grouping("smallestCity", first("_id.city")),
-                                                     grouping("smallestPop", first("pop")))
+                                      .sort(Sort.on().ascending("pop"))
 
-                                              .project(projection("_id").suppress(),
-                                                       projection("state", "_id"),
-                                                       projection("biggestCity",
-                                                                  projection("name", "biggestCity"),
-                                                                  projection("pop", "biggestPop")),
-                                                       projection("smallestCity",
-                                                                  projection("name", "smallestCity"),
-                                                                  projection("pop", "smallestPop")));
+                                      .group(of(
+                                          id("_id.state"))
+                                                 .field("biggestCity", last(field("_id.city")))
+                                                 .field("biggestPop", last(field("pop")))
+                                                 .field("smallestCity", first(field("_id.city")))
+                                                 .field("smallestPop", first(field("pop"))))
 
-        MongoCursor<State> cursor = (MongoCursor<State>) pipeline.aggregate(State.class);
+                                      .project(
+                                          Projection.of()
+                                                    .exclude("_id")
+                                                    .include("state", field("_id"))
+                                                    .include("biggestCity",
+                                                        Expressions.of()
+                                                                   .field("name", field("biggestCity"))
+                                                                   .field("pop", field("biggestPop")))
+                                                    .include("smallestCity",
+                                                        Expressions.of()
+                                                                   .field("name", field("smallestCity"))
+                                                                   .field("pop", field("smallestPop"))));
+
+        MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class);
         try {
             Map<String, State> states = new HashMap<String, State>();
             while (cursor.hasNext()) {
@@ -160,7 +183,7 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
-    private void validate(final MongoCursor<Population> cursor, final String state, final long value) {
+    private void validate(final MorphiaCursor<Population> cursor, final String state, final long value) {
         boolean found = false;
         try (cursor) {
             while (cursor.hasNext()) {

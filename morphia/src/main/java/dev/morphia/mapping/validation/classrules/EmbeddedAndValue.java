@@ -10,10 +10,7 @@ import dev.morphia.mapping.validation.ConstraintViolation.Level;
 
 import java.util.Set;
 
-
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
+@SuppressWarnings("removal")
 public class EmbeddedAndValue implements ClassConstraint {
 
     @Override

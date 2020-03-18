@@ -23,17 +23,14 @@ public enum FilterOperator {
     WITHIN_CIRCLE("$center") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            // TODO
-            throw new UnsupportedOperationException();
-            //            return Filters.center(prop, value);
+            throw new UnsupportedOperationException(Sofia.filterMappingNotSupported(WITHIN_CIRCLE));
         }
     },
 
     WITHIN_CIRCLE_SPHERE("$centerSphere") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            // TODO
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(Sofia.filterMappingNotSupported(WITHIN_CIRCLE_SPHERE));
         }
     },
 

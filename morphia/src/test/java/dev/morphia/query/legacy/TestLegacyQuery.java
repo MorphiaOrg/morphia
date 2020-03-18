@@ -82,8 +82,8 @@ import static org.junit.Assert.fail;
 @SuppressWarnings({"unchecked", "unused", "removal"})
 public class TestLegacyQuery extends LegacyTestBase {
 
-    @Before
     @Test
+    @Before
     public void testCheckQueryClass() {
         Assume.assumeTrue("Should be using a LegacyQuery.", getDs().find(User.class) instanceof LegacyQuery);
     }
@@ -938,27 +938,6 @@ public class TestLegacyQuery extends LegacyTestBase {
     }
 
     @Test
-    public void testNoLifeCycleEventsOnParameters() {
-        final ContainsPic cpk = new ContainsPic();
-        final Pic p = new Pic("some pic");
-        getDs().save(p);
-        cpk.setPic(p);
-        getDs().save(cpk);
-
-        Pic queryPic = new Pic("some pic");
-        queryPic.setId(p.getId());
-        Query query = getDs().find(ContainsPic.class)
-                             .field("pic").equal(queryPic);
-        assertFalse(queryPic.isPrePersist());
-        assertNotNull(query.execute(new FindOptions().limit(1))
-                           .tryNext());
-
-        getDs().find(ContainsPic.class)
-               .field("pic").elemMatch(query);
-        assertFalse(queryPic.isPrePersist());
-    }
-
-    @Test
     public void testNonexistentFindGet() {
         assertNull(getDs().find(Hotel.class).filter("_id", -1)
                           .execute(new FindOptions().limit(1))
@@ -968,42 +947,6 @@ public class TestLegacyQuery extends LegacyTestBase {
     @Test
     public void testNonexistentGet() {
         assertNull(getDs().find(Hotel.class).filter("_id", -1).first());
-    }
-
-    @Test(expected = ValidationException.class)
-    @Category(Reference.class)
-    public void testReferenceQuery() {
-        final Photo p = new Photo();
-        final HasPhotoReference cpk = new HasPhotoReference();
-        cpk.photo = getDs().save(p);
-        getDs().save(cpk);
-
-        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class)
-                                                .filter("photo", p);
-        FindOptions options = new FindOptions()
-                                  .logQuery()
-                                  .limit(1);
-        HasPhotoReference photoKey = query.execute(options)
-                                          .tryNext();
-
-        assertNotNull(getDs().getLoggedQuery(options), photoKey);
-
-        assertNotNull(getDs().find(HasPhotoReference.class)
-                             .filter("photo", cpk.photo)
-                             .execute(new FindOptions()
-                                          .limit(1))
-                             .tryNext());
-        assertNull(getDs().find(HasPhotoReference.class)
-                          .filter("photo", 1)
-                          .execute(new FindOptions()
-                                       .limit(1))
-                          .tryNext());
-
-        getDs().find(HasPhotoReference.class)
-               .filter("photo.keywords", "foo")
-               .execute(new FindOptions()
-                            .limit(1))
-               .next();
     }
 
     @Test

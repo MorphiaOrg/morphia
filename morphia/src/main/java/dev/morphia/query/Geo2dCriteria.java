@@ -10,6 +10,8 @@ import java.util.Map;
 /**
  * Geospatial specific FieldCriteria logic
  */
+@SuppressWarnings("removal")
+@Deprecated(since = "2.0", forRemoval = true)
 class Geo2dCriteria extends FieldCriteria {
 
     private final Map<String, Object> opts;
