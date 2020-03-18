@@ -89,7 +89,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Query filter(final Filter... additional) {
+    public Query<T> filter(final Filter... additional) {
         for (final Filter filter : additional) {
             filters.add(filter
                             .entityType(getEntityClass())
@@ -119,13 +119,13 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    @SuppressWarnings("removal")
+    @SuppressWarnings({"removal", "unchecked"})
     public FieldEnd<? extends Query<T>> field(final String name) {
         return new MorphiaQueryFieldEnd(name);
     }
 
     @Override
-    @SuppressWarnings({"removal", "unchecked"})
+    @SuppressWarnings({"removal"})
     public Query<T> filter(final String condition, final Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
@@ -264,10 +264,7 @@ public class MorphiaQuery<T> implements Query<T> {
         return new Update<>(datastore, mapper, clazz, getCollection(), this);
     }
 
-    /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
-     */
+    @Override
     public Class<T> getEntityClass() {
         return clazz;
     }
@@ -331,6 +328,7 @@ public class MorphiaQuery<T> implements Query<T> {
         return collectionName;
     }
 
+    @SuppressWarnings("ConstantConditions")
     private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
         final Document query = toDocument();
 
@@ -378,6 +376,7 @@ public class MorphiaQuery<T> implements Query<T> {
         return writer.getDocument();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private class MorphiaQueryFieldEnd extends FieldEndImpl {
         private final String name;
 

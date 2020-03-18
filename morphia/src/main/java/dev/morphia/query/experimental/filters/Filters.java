@@ -447,7 +447,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $polygon
      */
-    public static Filter polygon(final String field, final Point[] points) {
+    public static Filter polygon(final String field, final Point... points) {
         return new PolygonFilter(field, points);
     }
 
@@ -496,7 +496,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $in
      */
-    public static Filter in(final String field, final Object val) {
+    public static Filter in(final String field, final Iterable<?> val) {
         return new Filter("$in", field, val);
     }
 

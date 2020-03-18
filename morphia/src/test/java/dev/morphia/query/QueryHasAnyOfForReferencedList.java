@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static org.junit.Assert.assertEquals;
 
 @Category(Reference.class)
@@ -37,7 +38,7 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         plans.add(plan1);
 
         count = getDs().find(Org.class)
-                       .field("plan").hasAnyOf(plans)
+                       .filter(in("plan", plans))
                        .count();
         assertEquals(1, count);
 
@@ -45,7 +46,7 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         plans.add(plan1);
         plans.add(plan2);
 
-        count = getDs().find(Org.class).field("plan").hasAnyOf(plans).count();
+        count = getDs().find(Org.class).filter(in("plan", plans)).count();
         assertEquals(2, count);
     }
 

@@ -17,6 +17,7 @@ import static java.util.Collections.singletonList;
  * @param <T> the type to update
  */
 @SuppressWarnings("removal")
+@Deprecated(since = "2.0", forRemoval = true)
 public class UpdateOpsImpl<T> implements UpdateOperations<T> {
     private final Mapper mapper;
     private final Class<T> clazz;

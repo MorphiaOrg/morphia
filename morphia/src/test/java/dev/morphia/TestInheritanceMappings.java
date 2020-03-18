@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -54,7 +55,7 @@ public class TestInheritanceMappings extends TestBase {
         getMapper().map(MapLike.class);
         MapLike m = new MapLike();
         m.put("Name", "Scott");
-        getDs().save(m);
+        getDs().save(singletonList(m));
         assertNotNull(m.id);
         assertEquals(1, getDs().find(MapLike.class).count());
 

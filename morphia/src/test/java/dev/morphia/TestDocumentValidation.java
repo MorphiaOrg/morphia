@@ -66,64 +66,6 @@ public class TestDocumentValidation extends TestBase {
     }
 
     @Test
-    public void overwriteValidation() {
-        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
-        MongoDatabase database = addValidation(validator, "validation");
-
-        assertEquals(validator, getValidator());
-
-        Document rhubarb = new Document("jelly", "rhubarb").append("number", 20);
-        database.getCollection("validation").insertOne(new Document("jelly", "grape"));
-        try {
-            database.getCollection("validation").insertOne(rhubarb);
-            fail("Document should have failed validation");
-        } catch (MongoWriteException e) {
-            assertTrue(e.getMessage().contains("Document failed validation"));
-        }
-
-        getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
-        assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
-
-        try {
-            database.getCollection("validation").insertOne(rhubarb);
-        } catch (MongoWriteException e) {
-            assertFalse(e.getMessage().contains("Document failed validation"));
-        }
-
-        try {
-            getDs().save(new DocumentValidation("John", 1, new Date()));
-            fail("Document should have failed validation");
-        } catch (MongoWriteException e) {
-            assertTrue(e.getMessage().contains("Document failed validation"));
-        }
-    }
-
-    private MongoDatabase addValidation(final Document validator, final String collectionName) {
-        ValidationOptions options = new ValidationOptions()
-            .validator(validator)
-            .validationLevel(ValidationLevel.MODERATE)
-            .validationAction(ValidationAction.ERROR);
-        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
-        database.getCollection(collectionName).drop();
-        database.createCollection(collectionName, new CreateCollectionOptions().validationOptions(options));
-        return database;
-    }
-
-    @Test
-    public void validationDocuments() {
-        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
-        getMapper().map(DocumentValidation.class);
-        MappedClass mappedClass = getMapper().getMappedClass(DocumentValidation.class);
-
-        for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
-            for (ValidationAction action : EnumSet.allOf(ValidationAction.class)) {
-                checkValidation(validator, mappedClass, level, action);
-            }
-        }
-    }
-
-    @Test
     public void findAndModify() {
         getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
@@ -132,7 +74,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         FindAndModifyOptions options = new FindAndModifyOptions()
-            .bypassDocumentValidation(false);
+                                           .bypassDocumentValidation(false);
         Modify<DocumentValidation> modify = query.modify().set("number", 5);
         try {
             modify.execute(options);
@@ -187,6 +129,40 @@ public class TestDocumentValidation extends TestBase {
     }
 
     @Test
+    public void overwriteValidation() {
+        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
+        MongoDatabase database = addValidation(validator);
+
+        assertEquals(validator, getValidator());
+
+        Document rhubarb = new Document("jelly", "rhubarb").append("number", 20);
+        database.getCollection("validation").insertOne(new Document("jelly", "grape"));
+        try {
+            database.getCollection("validation").insertOne(rhubarb);
+            fail("Document should have failed validation");
+        } catch (MongoWriteException e) {
+            assertTrue(e.getMessage().contains("Document failed validation"));
+        }
+
+        getMapper().map(DocumentValidation.class);
+        getDs().enableDocumentValidation();
+        assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
+
+        try {
+            database.getCollection("validation").insertOne(rhubarb);
+        } catch (MongoWriteException e) {
+            assertFalse(e.getMessage().contains("Document failed validation"));
+        }
+
+        try {
+            getDs().save(new DocumentValidation("John", 1, new Date()));
+            fail("Document should have failed validation");
+        } catch (MongoWriteException e) {
+            assertTrue(e.getMessage().contains("Document failed validation"));
+        }
+    }
+
+    @Test
     public void save() {
         getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
@@ -198,18 +174,18 @@ public class TestDocumentValidation extends TestBase {
             // expected
         }
 
-        getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
-                    .bypassDocumentValidation(true));
+        getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
+                                                                          .bypassDocumentValidation(true));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .filter(eq("number", 8));
         Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()));
+            new DocumentValidation("Harold", 8, new Date()),
+            new DocumentValidation("Harold", 8, new Date()),
+            new DocumentValidation("Harold", 8, new Date()),
+            new DocumentValidation("Harold", 8, new Date()));
         try {
             getDs().save(list);
             fail("Document validation should have complained");
@@ -217,7 +193,7 @@ public class TestDocumentValidation extends TestBase {
             // expected
         }
 
-        getDs().save(list, new InsertOptions().bypassDocumentValidation(true));
+        getDs().save(list, new InsertManyOptions().bypassDocumentValidation(true));
 
         Assert.assertTrue(query.filter(eq("number", 8)).execute().hasNext());
     }
@@ -236,7 +212,7 @@ public class TestDocumentValidation extends TestBase {
         } catch (MongoWriteException ignored) {
         }
 
-        getDs().save(user, new InsertOptions().bypassDocumentValidation(true));
+        getDs().save(user, new InsertOneOptions().bypassDocumentValidation(true));
 
         Assert.assertEquals(1, getDs().find(User.class).count());
     }
@@ -267,13 +243,36 @@ public class TestDocumentValidation extends TestBase {
                                   .tryNext());
     }
 
+    @Test
+    public void validationDocuments() {
+        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
+        getMapper().map(DocumentValidation.class);
+        MappedClass mappedClass = getMapper().getMappedClass(DocumentValidation.class);
+
+        for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
+            for (ValidationAction action : EnumSet.allOf(ValidationAction.class)) {
+                checkValidation(validator, mappedClass, level, action);
+            }
+        }
+    }
+
+    private MongoDatabase addValidation(final Document validator) {
+        ValidationOptions options = new ValidationOptions()
+                                        .validator(validator)
+                                        .validationLevel(ValidationLevel.MODERATE)
+                                        .validationAction(ValidationAction.ERROR);
+        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
+        database.getCollection("validation").drop();
+        database.createCollection("validation", new CreateCollectionOptions().validationOptions(options));
+        return database;
+    }
 
     private void checkValidation(final Document validator, final MappedClass mappedClass, final ValidationLevel level,
                                  final ValidationAction action) {
         updateValidation(mappedClass, level, action);
         Document expected = new Document("validator", validator)
-            .append("validationLevel", level.getValue())
-            .append("validationAction", action.getValue());
+                                .append("validationLevel", level.getValue())
+                                .append("validationAction", action.getValue());
 
         Document validation = getValidation();
         for (String key : expected.keySet()) {
@@ -291,7 +290,6 @@ public class TestDocumentValidation extends TestBase {
         return (Document) firstBatch.get(0).get("options");
     }
 
-    @SuppressWarnings("unchecked")
     private Document getValidator() {
         return (Document) getValidation().get("validator");
     }

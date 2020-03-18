@@ -1,16 +1,3 @@
-/*
-  Copyright (C) 2010 Olafur Gauti Gudmundsson
-  <p/>
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
-  obtain a copy of the License at
-  <p/>
-  http://www.apache.org/licenses/LICENSE-2.0
-  <p/>
-  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
- */
-
 package dev.morphia;
 
 import dev.morphia.testmodel.Circle;
@@ -32,7 +19,7 @@ public class TestSuperDatastore extends TestBase {
         assertEquals(1, getDs().find(Rectangle.class).count());
 
         // when giving an ID that is not the entity ID.  Note that at the time of writing this will also log a validation warning
-        getDs().delete(getDs().find(Rectangle.class).filter(eq("_id", 1)));
+        getDs().find(Rectangle.class).filter(eq("_id", 1)).delete();
 
         // then
         assertEquals(1, getDs().find(Rectangle.class).count());
@@ -52,7 +39,7 @@ public class TestSuperDatastore extends TestBase {
         assertEquals(2, getDs().find(Rectangle.class).count());
 
         // when
-        getDs().delete(getDs().find(Circle.class).filter(eq("_id", rectangleId)));
+        getDs().find(Circle.class).filter(eq("_id", rectangleId)).delete();
 
         // then
         assertEquals(1, getDs().find(Circle.class).count());
@@ -68,7 +55,7 @@ public class TestSuperDatastore extends TestBase {
         assertEquals(1, getDs().find(Rectangle.class).count());
 
         // when
-        getDs().delete(getDs().find(Rectangle.class).filter(eq("_id", id)));
+        getDs().find(Rectangle.class).filter(eq("_id", id)).delete();
 
         // then
         assertEquals(0, getDs().find(Rectangle.class).count());

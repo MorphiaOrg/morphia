@@ -164,7 +164,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public ClientSession findSession(final SessionConfigurable configurable) {
+    public ClientSession findSession(final SessionConfigurable<?> configurable) {
         return configurable.clientSession() != null
                ? configurable.clientSession()
                : getSession();
@@ -332,7 +332,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked", "deprecated"})
     public <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
 
         final Map<String, List<Key>> kindMap = new HashMap<>();

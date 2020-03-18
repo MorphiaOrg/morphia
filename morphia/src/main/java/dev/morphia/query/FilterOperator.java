@@ -134,7 +134,7 @@ public enum FilterOperator {
     IN("$in", "in") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.in(prop, value);
+            return Filters.in(prop, (Iterable<?>) value);
         }
     },
 

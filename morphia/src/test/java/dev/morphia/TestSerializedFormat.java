@@ -21,7 +21,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -40,11 +39,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static dev.morphia.query.experimental.filters.Filters.elemMatch;
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
 @Category(Reference.class)
 @Ignore("get around to this later")
 public class TestSerializedFormat extends TestBase {
@@ -57,35 +58,33 @@ public class TestSerializedFormat extends TestBase {
 
                                             .filter(eq("string", "some value"))
 
-                                            .field("embeddedArray").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                     .filter(eq("number", 3)).filter(eq("text", "strikes")))
-                                            .field("embeddedSet").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                   .filter(eq("number", 3)).filter(eq("text", "strikes")))
-                                            .field("embeddedList").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                    .filter(eq("number", 3)).filter(eq("text", "strikes")))
+                                            .filter(elemMatch("embeddedArray", eq("number", 3),
+                                                eq("text", "strikes")))
+                                            .filter(elemMatch("embeddedSet", eq("number", 3),
+                                                eq("text", "strikes")))
+                                            .filter(elemMatch("embeddedList", eq("number", 3),
+                                                eq("text", "strikes")))
 
                                             .filter(eq("map.bar", new EmbeddedReferenceType(1, "chance")))
-                                            .field("mapOfList.bar").in(singletonList(new EmbeddedReferenceType(1, "chance")))
-                                            .field("mapOfList.foo").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                     .filter(eq("number", 1))
-                                                                                     .filter(eq("text", "chance")))
+                                            .filter(in("mapOfList.bar", asList(new EmbeddedReferenceType(1, "chance"))))
+                                            .filter(elemMatch("mapOfList.foo", eq("number", 1),
+                                                eq("text", "chance")))
 
                                             .filter(eq("selfReference", new ReferenceType(1, "blah")))
 
-                                            .field("mixedTypeList").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                     .filter(eq("number", 3)).filter(eq("text", "strikes")))
-                                            .field("mixedTypeList").in(singletonList(new EmbeddedReferenceType(1, "chance")))
+                                            .filter(elemMatch("mixedTypeList", eq("number", 3),
+                                                eq("text", "strikes")))
+                                            .filter(in("mixedTypeList", asList(new EmbeddedReferenceType(1, "chance"))))
                                             .filter(eq("mixedTypeMap.foo", new ReferenceType(3, "strikes")))
                                             .filter(eq("mixedTypeMap.bar", new EmbeddedReferenceType(3, "strikes")))
-                                            .field("mixedTypeMapOfList.bar").in(singletonList(new EmbeddedReferenceType(1, "chance")))
-                                            .field("mixedTypeMapOfList.foo").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                              .filter(eq("number", 3))
-                                                                                              .filter(eq("text", "strikes")))
+                                            .filter(in("mixedTypeMapOfList.bar", asList(new EmbeddedReferenceType(1, "chance"))))
+                                            .filter(elemMatch("mixedTypeMapOfList.foo", eq("number", 3),
+                                                eq("text", "strikes")))
 
                                             .filter(eq("referenceMap.foo", new ReferenceType(1, "chance")))
                                             .filter(eq("referenceMap.bar", new EmbeddedReferenceType(1, "chance")));
 
-        Document document = ((LegacyQuery) query).toDocument();
+        Document document = query.toDocument();
         final Document parse = Document.parse(readFully("/QueryStructure.json"));
         Assert.assertEquals(parse, document);
     }
@@ -115,7 +114,7 @@ public class TestSerializedFormat extends TestBase {
             new EmbeddedReferenceType(1, "Love"))));
         entity.setEmbeddedList(asList(new EmbeddedReferenceType(42, "Douglas Adams"), new EmbeddedReferenceType(1, "Love")));
         entity.setEmbeddedArray(new EmbeddedReferenceType[]{new EmbeddedReferenceType(42, "Douglas Adams"),
-            new EmbeddedReferenceType(1, "Love")});
+                                                            new EmbeddedReferenceType(1, "Love")});
 
         entity.getMap().put("first", new EmbeddedReferenceType(42, "Douglas Adams"));
         entity.getMap().put("second", new EmbeddedReferenceType(1, "Love"));
@@ -138,7 +137,7 @@ public class TestSerializedFormat extends TestBase {
         entity.getReferenceMap().put("first", new ReferenceType(2, "text 2"));
         entity.getReferenceMap().put("second", new ReferenceType(3, "text 3"));
         entity.getReferenceMapOfList().put("first", asList(new ReferenceType(2, "text 2"), new ReferenceType(3, "text 3")));
-        entity.getReferenceMapOfList().put("second", singletonList(new ReferenceType(3, "text 3")));
+        entity.getReferenceMapOfList().put("second", asList(new ReferenceType(3, "text 3")));
 
         entity.setMixedTypeArray(new ReferenceType[]{new ReferenceType(2, "text 2"), new ClassNameReferenceType(3, "text 3")});
         entity.setMixedTypeList(asList(new ReferenceType(2, "text 2"), new ClassNameReferenceType(3, "text 3")));
@@ -147,8 +146,8 @@ public class TestSerializedFormat extends TestBase {
         entity.getMixedTypeMap().put("first", new ReferenceType(2, "text 2"));
         entity.getMixedTypeMap().put("second", new ClassNameReferenceType(3, "text 3"));
         entity.getMixedTypeMapOfList().put("first", asList(new ReferenceType(2, "text 2"),
-                                                           new ClassNameReferenceType(3, "text 3")));
-        entity.getMixedTypeMapOfList().put("second", singletonList(new ClassNameReferenceType(3, "text 3")));
+            new ClassNameReferenceType(3, "text 3")));
+        entity.getMixedTypeMapOfList().put("second", asList(new ClassNameReferenceType(3, "text 3")));
 
         getDs().save(entity);
 
@@ -160,8 +159,8 @@ public class TestSerializedFormat extends TestBase {
 
     private String readFully(final String name) {
         return new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(name)))
-            .lines()
-            .collect(java.util.stream.Collectors.joining("\n"));
+                   .lines()
+                   .collect(java.util.stream.Collectors.joining("\n"));
     }
 }
 
@@ -443,9 +442,7 @@ class ReferenceType {
             return false;
         }
         return Objects.equals(referenceMapOfList, that.referenceMapOfList);
-
     }
-
 }
 
 @Entity

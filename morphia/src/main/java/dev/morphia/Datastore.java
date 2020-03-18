@@ -8,7 +8,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
@@ -19,11 +18,8 @@ import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
 import org.bson.Document;
 
@@ -36,6 +32,7 @@ import static dev.morphia.query.experimental.filters.Filters.in;
 /**
  * Datastore interface to get/delete/save objects
  */
+@SuppressWarnings({"unchecked", "UnusedReturnValue", "unused"})
 public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -67,7 +64,7 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    AggregationPipeline createAggregation(Class source);
+    dev.morphia.aggregation.AggregationPipeline createAggregation(Class<?> source);
 
     /**
      * Returns a new query bound to the collection (a specific {@link DBCollection})
@@ -92,8 +89,8 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
-        return new UpdateOpsImpl<>(clazz, getMapper());
+    default <T> dev.morphia.query.UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
+        return new dev.morphia.query.UpdateOpsImpl<>(clazz, getMapper());
     }
 
     /**
@@ -243,7 +240,7 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> T findAndModify(Query<T> query, UpdateOperations<T> operations) {
+    default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.modify(operations).execute(new FindAndModifyOptions()
                                                     .returnDocument(ReturnDocument.AFTER));
     }
@@ -360,7 +357,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 2.0
      */
-    ClientSession findSession(SessionConfigurable configurable);
+    ClientSession findSession(SessionConfigurable<?> configurable);
 
     /**
      * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
@@ -438,12 +435,12 @@ public interface Datastore {
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
-     * @deprecated
+     * @deprecated use {@link #save(List)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> void save(Iterable<T> entities) {
         List<T> list = new ArrayList<>();
-        entities.forEach(e -> list.add(e));
+        entities.forEach(list::add);
         save(list);
     }
 
@@ -482,7 +479,7 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> List<T> save(Iterable<T> entities, InsertOptions options) {
         List<T> list = new ArrayList<>();
-        entities.forEach(e -> list.add(e));
+        entities.forEach(list::add);
         return save(list, options.toInsertManyOptions());
     }
 
@@ -552,7 +549,7 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations, UpdateOptions options) {
+    default <T> UpdateResult update(Query<T> query, dev.morphia.query.UpdateOperations<T> operations, UpdateOptions options) {
         return query.update(operations).execute(options);
     }
 
@@ -567,11 +564,11 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> UpdateResult update(Query<T> query, UpdateOperations<T> operations) {
+    default <T> UpdateResult update(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.update(operations).execute(new UpdateOptions()
                                                     .upsert(false)
                                                     .multi(true)
-                                                    .writeConcern(getMapper().getWriteConcern(((LegacyQuery) query).getEntityClass())));
+                                                    .writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
     }
 
     /**

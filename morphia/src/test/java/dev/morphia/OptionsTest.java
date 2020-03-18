@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
+@SuppressWarnings("SameParameterValue")
 public class OptionsTest {
     @Test
     public void aggregationOptions() {
@@ -26,7 +27,21 @@ public class OptionsTest {
             WriteConcern.class));
     }
 
-    private void scan(final Class<?> driverType, final Class morphiaType, final boolean subclass, List<Class> localFields) {
+    private void checkOverride(final Class<?> driverType, final Class<?> morphiaType, final Method method) throws NoSuchMethodException {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
+        Assert.assertTrue(method.toString(), !method.getReturnType().equals(driverType)
+                                             || morphiaMethod.getReturnType().equals(morphiaType));
+
+        if (parameterTypes.equals(new Class[]{Bson.class})) {
+            Assert.assertTrue(method.toString(), !method.getReturnType().equals(driverType)
+                                                 || morphiaType.getMethod(method.getName(), Document.class)
+                                                               .getReturnType().equals(morphiaType));
+
+        }
+    }
+
+    private void scan(final Class<?> driverType, final Class<?> morphiaType, final boolean subclass, List<Class<?>> localFields) {
         try {
             Method[] methods = driverType.getDeclaredMethods();
             Assert.assertEquals("Options class should be a subclass", subclass, driverType.equals(morphiaType.getSuperclass()));
@@ -35,7 +50,7 @@ public class OptionsTest {
                     checkOverride(driverType, morphiaType, method);
                 }
             }
-            for (final Class localField : localFields) {
+            for (final Class<?> localField : localFields) {
                 String name = localField.getSimpleName()
                                         .replaceAll("^get", "");
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
@@ -51,20 +66,6 @@ public class OptionsTest {
             }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private void checkOverride(final Class<?> driverType, final Class morphiaType, final Method method) throws NoSuchMethodException {
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
-        Assert.assertTrue(method.toString(), !method.getReturnType().equals(driverType)
-                                             || morphiaMethod.getReturnType().equals(morphiaType));
-
-        if (parameterTypes.equals(new Class[]{Bson.class})) {
-            Assert.assertTrue(method.toString(), !method.getReturnType().equals(driverType)
-                                                 || morphiaType.getMethod(method.getName(), Document.class)
-                                                           .getReturnType().equals(morphiaType));
-
         }
     }
 
@@ -93,7 +94,7 @@ public class OptionsTest {
         beanScan(FindIterable.class, FindOptions.class, List.of("filter", "projection"));
     }
 
-    void beanScan(final Class driver, final Class morphia, final List<String> filtered) {
+    void beanScan(final Class<?> driver, final Class<?> morphia, final List<String> filtered) {
         try {
             Method[] methods = driver.getDeclaredMethods();
             for (final Method method : methods) {

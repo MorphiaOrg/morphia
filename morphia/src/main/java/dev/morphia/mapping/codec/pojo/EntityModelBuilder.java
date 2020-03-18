@@ -39,6 +39,7 @@ import static org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
  * @morphia.internal
  * @since 2.0
  */
+@SuppressWarnings("UnusedReturnValue")
 public class EntityModelBuilder<T> {
     private final Datastore datastore;
     private final List<FieldModelBuilder<?>> fieldModels = new ArrayList<>();
@@ -166,7 +167,8 @@ public class EntityModelBuilder<T> {
      */
     public FieldModelBuilder<?> fieldModelByFieldName(final String name) throws NoSuchElementException {
         return fieldModels.stream().filter(f -> f.getField().getName().equals(name))
-                          .findFirst().get();
+                          .findFirst()
+                          .orElseThrow();
     }
 
     /**
@@ -181,6 +183,7 @@ public class EntityModelBuilder<T> {
      * @param <A>  the annotation type
      * @return the annotation or null if it doesn't exist
      */
+    @SuppressWarnings("unchecked")
     public <A extends Annotation> A getAnnotation(final Class<A> type) {
         List<A> annotations = (List<A>) annotationsMap.get(type);
         if (annotations != null && !annotations.isEmpty()) {
@@ -243,7 +246,7 @@ public class EntityModelBuilder<T> {
     protected void configure() {
         TypeData<?> parentClassTypeData = null;
         Set<Class<?>> classes = buildHierarchy(type);
-        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<String, TypeParameterMap>();
+        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
 
         List<Annotation> annotations = new ArrayList<>();
         for (Class<?> klass : classes) {
@@ -281,16 +284,17 @@ public class EntityModelBuilder<T> {
         return set;
     }
 
-    private <T, S> void cachePropertyTypeData(final FieldMetadata<?> metadata,
-                                              final Map<String, TypeParameterMap> propertyTypeParameterMap,
-                                              final TypeData<S> parentClassTypeData,
-                                              final List<String> genericTypeNames,
-                                              final Type genericType) {
+    private <S> void cachePropertyTypeData(final FieldMetadata<?> metadata,
+                                           final Map<String, TypeParameterMap> propertyTypeParameterMap,
+                                           final TypeData<S> parentClassTypeData,
+                                           final List<String> genericTypeNames,
+                                           final Type genericType) {
         TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
         propertyTypeParameterMap.put(metadata.getName(), typeParameterMap);
         metadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private String getMappedFieldName(final FieldModelBuilder<?> fieldBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
         if (fieldBuilder.hasAnnotation(Id.class)) {

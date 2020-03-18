@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -51,7 +52,10 @@ public class TestIdField extends TestBase {
 
         assertEquals(a.data, getDs().find(EmbeddedId.class).filter(eq("_id", id)).first().data);
 
-        final EmbeddedId embeddedId = getDs().find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).execute().next();
+        final EmbeddedId embeddedId = getDs().find(EmbeddedId.class)
+                                             .filter(in("_id", Arrays.asList(id)))
+                                             .execute()
+                                             .next();
         Assert.assertEquals(a.data, embeddedId.data);
         Assert.assertEquals(a.id, embeddedId.id);
     }

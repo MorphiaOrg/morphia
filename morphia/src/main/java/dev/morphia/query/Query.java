@@ -455,4 +455,10 @@ public interface Query<T> extends CriteriaContainer {
     default Update<T> update(final UpdateOperations operations) {
         return legacyOperation();
     }
+
+    /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
+    Class<T> getEntityClass();
 }

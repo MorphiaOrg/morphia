@@ -20,7 +20,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.NotSaved;
+import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.experimental.Constructor;
 import dev.morphia.annotations.experimental.Name;
@@ -454,10 +454,10 @@ public class TestMapping extends TestBase {
         assertNotNull(mapLoaded.values.get(2));
         assertEquals(1, mapLoaded.values.get(1).size());
 
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.2").exists());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.2").doesNotExist().count());
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().count());
+        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.2")));
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.2").not()).count());
+        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4").not()));
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.4")).count());
     }
 
     @Test
@@ -598,10 +598,10 @@ public class TestMapping extends TestBase {
         assertNotNull(mapLoaded.values.get(o1));
         assertNotNull(mapLoaded.values.get(o2));
 
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.111111111111111111111111").exists());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.111111111111111111111111").doesNotExist().count());
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).field("values.4").doesNotExist());
-        assertEquals(0, getDs().find(ContainsIntKeyMap.class).field("values.4").exists().count());
+        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111")));
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111").not()).count());
+        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4").not()));
+        assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.4")).count());
     }
 
     @Test
@@ -1057,7 +1057,7 @@ public class TestMapping extends TestBase {
 
     @Entity(value = "Normal", useDiscriminator = false)
     private static class NormalWithNotSaved {
-        @NotSaved
+        @LoadOnly
         private final String name = "never";
         @Id
         private ObjectId id = new ObjectId();

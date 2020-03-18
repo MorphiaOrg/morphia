@@ -13,6 +13,7 @@ import java.io.Serializable;
  *
  * @param <T> The type of the entity
  */
+@SuppressWarnings({"unchecked", "rawtypes", "NullableProblems"})
 public class Key<T> implements Serializable, Comparable<Key<T>> {
     private String collection;
     private Class<? extends T> type;
@@ -148,7 +149,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
     @Override
     @SuppressWarnings("unchecked")
     public boolean equals(final Object obj) {
-        return obj != null && obj instanceof Key<?> && compareTo((Key<T>) obj) == 0;
+        return obj instanceof Key<?> && compareTo((Key<T>) obj) == 0;
 
     }
 

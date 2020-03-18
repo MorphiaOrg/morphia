@@ -24,7 +24,7 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Assert.assertNotNull(getDs().find(ContainsPic.class)
-                                    .field("pic").exists()
+                                    .filter(exists("pic"))
                                     .execute(new FindOptions()
                                                  .projection().include("pic")
                                                  .limit(1))
@@ -63,14 +63,12 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
-        Assert.assertNotNull(query.field("lazyPic")
-                                  .equal(p)
+        Assert.assertNotNull(query.filter(eq("lazyPic", p))
                                   .execute(new FindOptions().limit(1))
                                   .tryNext());
 
         query = getDs().find(ContainsPic.class);
-        Assert.assertNotNull(query.field("lazyObjectIdPic")
-                                  .equal(withObjectId)
+        Assert.assertNotNull(query.filter(eq("lazyObjectIdPic", withObjectId))
                                   .execute(new FindOptions().limit(1))
                                   .tryNext());
     }
@@ -85,8 +83,7 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
-        final ContainsPic object = query.field("pic")
-                                        .equal(p)
+        final ContainsPic object = query.filter(eq("pic", p))
                                         .execute(new FindOptions().limit(1))
                                         .tryNext();
         Assert.assertNotNull(object);
