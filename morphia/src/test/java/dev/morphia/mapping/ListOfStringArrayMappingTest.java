@@ -12,6 +12,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 /**
  * @author scotthernandez
@@ -28,7 +30,7 @@ public class ListOfStringArrayMappingTest extends TestBase {
         getDs().save(ent);
         final Datastore datastore = getDs();
         final ContainsListStringArray loaded = datastore.find(ContainsListStringArray.class)
-                                                        .filter("_id", ent.id)
+                                                        .filter(eq("_id", ent.id))
                                                         .first();
         Assert.assertNotNull(loaded.id);
         Assert.assertArrayEquals(ent.listOfStrings.get(0), loaded.listOfStrings.get(0));
@@ -38,7 +40,7 @@ public class ListOfStringArrayMappingTest extends TestBase {
 
     @Entity
     private static class ContainsListStringArray {
-        private final List<String[]> listOfStrings = new ArrayList<String[]>();
+        private final List<String[]> listOfStrings = new ArrayList<>();
         @Id
         private ObjectId id;
         private String[] arrayOfStrings;

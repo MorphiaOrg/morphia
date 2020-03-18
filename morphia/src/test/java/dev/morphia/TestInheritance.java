@@ -1,10 +1,11 @@
 package dev.morphia;
 
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -17,7 +18,7 @@ public class TestInheritance extends TestBase {
         getDs().save(jimmy);
 
         // when
-        final Child loaded = getDs().find(Child.class).filter("_id", jimmy.getId()).first();
+        final Child loaded = getDs().find(Child.class).filter(eq("_id", jimmy.getId())).first();
 
         // then
         assertNotNull(loaded);

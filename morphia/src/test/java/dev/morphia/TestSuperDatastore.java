@@ -18,6 +18,7 @@ import dev.morphia.testmodel.Rectangle;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 
 public class TestSuperDatastore extends TestBase {
@@ -31,7 +32,7 @@ public class TestSuperDatastore extends TestBase {
         assertEquals(1, getDs().find(Rectangle.class).count());
 
         // when giving an ID that is not the entity ID.  Note that at the time of writing this will also log a validation warning
-        getDs().delete(getDs().find(Rectangle.class).filter("_id", 1));
+        getDs().delete(getDs().find(Rectangle.class).filter(eq("_id", 1)));
 
         // then
         assertEquals(1, getDs().find(Rectangle.class).count());
@@ -51,7 +52,7 @@ public class TestSuperDatastore extends TestBase {
         assertEquals(2, getDs().find(Rectangle.class).count());
 
         // when
-        getDs().delete(getDs().find(Circle.class).filter("_id", rectangleId));
+        getDs().delete(getDs().find(Circle.class).filter(eq("_id", rectangleId)));
 
         // then
         assertEquals(1, getDs().find(Circle.class).count());
@@ -67,7 +68,7 @@ public class TestSuperDatastore extends TestBase {
         assertEquals(1, getDs().find(Rectangle.class).count());
 
         // when
-        getDs().delete(getDs().find(Rectangle.class).filter("_id", id));
+        getDs().delete(getDs().find(Rectangle.class).filter(eq("_id", id)));
 
         // then
         assertEquals(0, getDs().find(Rectangle.class).count());

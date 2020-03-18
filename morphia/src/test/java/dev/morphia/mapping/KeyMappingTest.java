@@ -1,17 +1,19 @@
 package dev.morphia.mapping;
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 public class KeyMappingTest extends TestBase {
     @Test
@@ -23,7 +25,7 @@ public class KeyMappingTest extends TestBase {
         User user = datastore.find(User.class).execute(new FindOptions().limit(1)).tryNext();
         List<Key<Channel>> followedChannels = user.followedChannels;
 
-        Channel channel = datastore.find(Channel.class).filter("name", "Sport channel")
+        Channel channel = datastore.find(Channel.class).filter(eq("name", "Sport channel"))
                                    .execute(new FindOptions().limit(1))
                                    .tryNext();
 

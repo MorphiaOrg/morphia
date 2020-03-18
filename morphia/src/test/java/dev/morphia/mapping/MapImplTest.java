@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertTrue;
 
 
@@ -56,7 +57,7 @@ public class MapImplTest extends TestBase {
         contains.values.put("first", g1);
         getDs().save(contains);
         getDs().find(ContainsGoo.class)
-               .filter("_id", contains.id)
+               .filter(eq("_id", contains.id))
                .update()
                .set("values.second", g2)
                .execute();
@@ -83,7 +84,7 @@ public class MapImplTest extends TestBase {
         cmoei.values.put("first", g1);
         getDs().save(cmoei);
         getDs().find(MapOfInterfaces.class)
-               .filter("_id", cmoei.id)
+               .filter(eq("_id", cmoei.id))
                .update()
                .set("values.second", g2)
                .execute();
@@ -131,7 +132,7 @@ public class MapImplTest extends TestBase {
 
         final Datastore datastore = getDs();
         e = datastore.find(E.class)
-                     .filter("_id", e.id)
+                     .filter(eq("_id", e.id))
                      .first();
         Assert.assertEquals("a", e.mymap.get("1"));
         Assert.assertEquals("b", e.mymap.get("2"));

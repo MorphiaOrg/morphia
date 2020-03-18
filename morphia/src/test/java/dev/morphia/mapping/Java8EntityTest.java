@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class Java8EntityTest extends TestBase {
@@ -53,6 +54,28 @@ public class Java8EntityTest extends TestBase {
     }
 
     @Test
+    public void dateForm() {
+        LocalDate localDate = LocalDate.of(1995, 10, 15);
+        LocalDateTime localDateTime = LocalDateTime.of(2016, 4, 10, 2, 15, 16, 123 * 1000000);
+
+        final MongoCollection<Java8Entity> collection = getMapper().getCollection(Java8Entity.class);
+
+        Java8Entity created = createEntity(getDs(), null, localDate, localDateTime, null);
+        final Java8Entity loaded = getDs().find(Java8Entity.class).first();
+
+        final Java8Entity loaded3 = getDs().find(Java8Entity.class).first();
+
+        Java8Entity created2 = createEntity(getDs(), null, localDate, localDateTime, null);
+        final Java8Entity loaded2 = getDs().find(Java8Entity.class).first();
+
+        Assert.assertNotEquals(created, created2);
+        Assert.assertEquals(loaded.getLocalDate(), loaded2.getLocalDate());
+        Assert.assertEquals(loaded.getLocalDateTime(), loaded2.getLocalDateTime());
+
+        Assert.assertEquals(loaded.getLocalDate(), loaded3.getLocalDate());
+    }
+
+    @Test
     public void rangeQueries() {
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
         LocalDate localDate = LocalDate.of(1995, 10, 15);
@@ -67,32 +90,10 @@ public class Java8EntityTest extends TestBase {
                 localTime.plus(i, ChronoUnit.HOURS));
         }
         Assert.assertEquals(2L, getDs().find(Java8Entity.class).field("instant").lessThanOrEq(instant.plus(1, DAYS)).count());
-        Assert.assertEquals(1L, getDs().find(Java8Entity.class).field("localDate").equal(localDate.plus(1, DAYS)).count());
-        Assert.assertEquals(0L, getDs().find(Java8Entity.class).field("localDate").equal(localDate.minus(1, DAYS)).count());
+        Assert.assertEquals(1L, getDs().find(Java8Entity.class).filter(eq("localDate", localDate.plus(1, DAYS))).count());
+        Assert.assertEquals(0L, getDs().find(Java8Entity.class).filter(eq("localDate", localDate.minus(1, DAYS))).count());
         Assert.assertEquals(9L, getDs().find(Java8Entity.class).field("localDateTime")
                                        .notEqual(localDateTime.plus(6, DAYS)).count());
-    }
-
-    @Test
-    public void dateForm() {
-        LocalDate localDate = LocalDate.of(1995, 10, 15);
-        LocalDateTime localDateTime = LocalDateTime.of(2016, 4, 10, 2, 15, 16, 123 * 1000000);
-
-        final MongoCollection<Java8Entity> collection = getMapper().getCollection(Java8Entity.class);
-
-        Java8Entity created = createEntity(getDs(), null, localDate, localDateTime, null);
-        final Java8Entity loaded = getDs().createQuery(Java8Entity.class).first();
-
-        final Java8Entity loaded3 = getDs().createQuery(Java8Entity.class).first();
-
-        Java8Entity created2 = createEntity(getDs(), null, localDate, localDateTime, null);
-        final Java8Entity loaded2 = getDs().createQuery(Java8Entity.class).first();
-
-        Assert.assertNotEquals(created, created2);
-        Assert.assertEquals(loaded.getLocalDate(), loaded2.getLocalDate());
-        Assert.assertEquals(loaded.getLocalDateTime(), loaded2.getLocalDateTime());
-
-        Assert.assertEquals(loaded.getLocalDate(), loaded3.getLocalDate());
     }
 
     private void compare(final Datastore datastore, final Java8Entity entity, final String field, final Object value) {

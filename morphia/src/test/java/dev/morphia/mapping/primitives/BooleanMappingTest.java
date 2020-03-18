@@ -1,17 +1,18 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.lang.String.format;
 
 
@@ -34,7 +35,7 @@ public class BooleanMappingTest extends TestBase {
         getDs().save(ent);
 
         final Booleans loaded = getDs().find(Booleans.class)
-                                       .filter("_id", ent.id)
+                                       .filter(eq("_id", ent.id))
                                        .first();
 
         Assert.assertNotNull(loaded.id);
@@ -68,11 +69,11 @@ public class BooleanMappingTest extends TestBase {
 
     @Entity
     private static class Booleans {
+        private final List<Boolean[]> booleans = new ArrayList<>();
+        private final List<boolean[]> booleanPrimitives = new ArrayList<>();
+        private final List<Boolean> list = new ArrayList<>();
         @Id
         private ObjectId id;
-        private final List<Boolean[]> booleans = new ArrayList<Boolean[]>();
-        private final List<boolean[]> booleanPrimitives = new ArrayList<boolean[]>();
-        private final List<Boolean> list = new ArrayList<Boolean>();
         private boolean singlePrimitive;
         private Boolean singleWrapper;
         private boolean[] primitiveArray;

@@ -7,7 +7,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 @Entity
@@ -56,7 +57,7 @@ public abstract class LongIdEntity {
     void prePersist() {
         if (myLongId == null) {
             final String collName = ds.getMapper().getCollection(getClass()).getNamespace().getCollectionName();
-            final Query<StoredId> q = ds.find(StoredId.class).filter("_id", collName);
+            final Query<StoredId> q = ds.find(StoredId.class).filter(eq("_id", collName));
             StoredId newId = q.modify().inc("value").execute();
             if (newId == null) {
                 newId = new StoredId(collName);

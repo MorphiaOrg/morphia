@@ -10,6 +10,7 @@ import dev.morphia.query.TestQuery.PicWithObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
 
 
@@ -101,7 +102,7 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class)
-                                          .field("pic").equal(new Key<>(Pic.class, "Pic", p.getId()));
+                                          .filter(eq("pic", new Key<>(Pic.class, "Pic", p.getId())));
         FindOptions options = new FindOptions()
                                   .logQuery()
                                   .limit(1);

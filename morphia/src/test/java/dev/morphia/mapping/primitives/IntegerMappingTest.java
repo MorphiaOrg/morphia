@@ -1,17 +1,18 @@
 package dev.morphia.mapping.primitives;
 
 
-import dev.morphia.Datastore;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class IntegerMappingTest extends TestBase {
@@ -32,7 +33,7 @@ public class IntegerMappingTest extends TestBase {
         getDs().save(ent);
 
         final Integers loaded = getDs().find(Integers.class)
-                                       .filter("_id", ent.id)
+                                       .filter(eq("_id", ent.id))
                                        .first();
 
         Assert.assertNotNull(loaded.id);
@@ -52,11 +53,11 @@ public class IntegerMappingTest extends TestBase {
 
     @Entity
     private static class Integers {
+        private final List<Integer[]> listWrapperArray = new ArrayList<>();
+        private final List<int[]> listPrimitiveArray = new ArrayList<>();
+        private final List<Integer> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
-        private final List<Integer[]> listWrapperArray = new ArrayList<Integer[]>();
-        private final List<int[]> listPrimitiveArray = new ArrayList<int[]>();
-        private final List<Integer> listWrapper = new ArrayList<Integer>();
         private int singlePrimitive;
         private Integer singleWrapper;
         private int[] primitiveArray;

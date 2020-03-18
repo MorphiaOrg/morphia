@@ -2,9 +2,6 @@ package dev.morphia.optimisticlocks;
 
 
 import com.mongodb.client.result.UpdateResult;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -14,11 +11,15 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.Query;
 import dev.morphia.testutil.TestEntity;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.UUID;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 
 
@@ -38,7 +39,7 @@ public class VersionTest extends TestBase {
         assertEquals(1, a.version);
 
         Query<ALongPrimitive> query = getDs().find(ALongPrimitive.class)
-                                          .filter("_id", a.getId());
+                                             .filter(eq("_id", a.getId()));
         getDs().save(query.execute().next());
 
         assertEquals(2, query.execute().next().version);
@@ -53,7 +54,7 @@ public class VersionTest extends TestBase {
         getDs().save(a);
 
         getDs().save(getDs().find(ALong.class)
-                            .filter("_id", a.getId())
+                            .filter(eq("_id", a.getId()))
                             .first());
 
         getDs().save(a);
@@ -67,7 +68,7 @@ public class VersionTest extends TestBase {
 
         a.text = " foosdfds ";
         final ALong a2 = getDs().find(ALong.class)
-                                .filter("_id", a.getId())
+                                .filter(eq("_id", a.getId()))
                                 .first();
         getDs().save(a2);
 
@@ -117,7 +118,7 @@ public class VersionTest extends TestBase {
         ds.save(initial);
 
         Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
-                                        .field("id").equal(initial.getId());
+                                        .filter(eq("id", initial.getId()));
         ALongPrimitive postUpdate = query.modify()
                                          .set("text", "some new value")
                                          .execute();
@@ -132,12 +133,12 @@ public class VersionTest extends TestBase {
         ds.save(initial);
 
         Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
-                                     .field("id").equal(initial.getId());
+                                        .filter(eq("id", initial.getId()));
         UpdateResult results = query.update()
                                     .set("text", "some new value")
                                     .execute();
         assertEquals(1, results.getModifiedCount());
-        ALongPrimitive postUpdate = ds.find(ALongPrimitive.class).filter("_id", initial.getId()).first();
+        ALongPrimitive postUpdate = ds.find(ALongPrimitive.class).filter(eq("_id", initial.getId())).first();
 
         assertEquals(initial.version + 1, postUpdate.version);
     }

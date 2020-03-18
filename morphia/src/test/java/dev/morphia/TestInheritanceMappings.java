@@ -15,15 +15,13 @@
 package dev.morphia;
 
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.mapping.validation.ConstraintViolationException;
-import dev.morphia.query.FindOptions;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,6 +30,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -76,7 +75,7 @@ public class TestInheritanceMappings extends TestBase {
         c.b = "eh";
         c.setK(12L);
         getDs().save(c);
-        c = getDs().find(ParameterizedEntity.class).filter("_id", "foo").first();
+        c = getDs().find(ParameterizedEntity.class).filter(eq("_id", "foo")).first();
         assertNotNull(c.getId());
         assertNotNull(c.b);
         assertNotNull(c.getK());
@@ -93,7 +92,7 @@ public class TestInheritanceMappings extends TestBase {
         ParameterizedIdEntity c = new ParameterizedIdEntity();
         c.setId("foo");
         getDs().save(c);
-        c = getDs().find(ParameterizedIdEntity.class).filter("_id", "foo").first();
+        c = getDs().find(ParameterizedIdEntity.class).filter(eq("_id", "foo")).first();
         assertNotNull(c.getId());
 
         assertEquals("foo", c.getId());
@@ -106,7 +105,7 @@ public class TestInheritanceMappings extends TestBase {
         ParameterizedIdEntity2 c = new ParameterizedIdEntity2();
         c.setId("foo");
         getDs().save(c);
-        c = getDs().find(ParameterizedIdEntity2.class).filter("_id", "foo").first();
+        c = getDs().find(ParameterizedIdEntity2.class).filter(eq("_id", "foo")).first();
         assertNotNull(c.getId());
 
         assertEquals("foo", c.getId());

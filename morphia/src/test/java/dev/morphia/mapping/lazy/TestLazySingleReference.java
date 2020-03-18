@@ -11,37 +11,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 @Category(Reference.class)
 public class TestLazySingleReference extends ProxyTestBase {
-
-    @Test
-    public final void testGetKeyWithoutFetching() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
-
-        RootEntity root = new RootEntity();
-        final ReferencedEntity reference = new ReferencedEntity();
-
-        root.r = reference;
-        reference.setFoo("bar");
-
-        final ObjectId id = getDs().save(reference).getId();
-        getDs().save(root);
-
-        RootEntity loaded = getDs().find(RootEntity.class)
-                                   .filter("_id", root.getId())
-                                   .first();
-
-        final ReferencedEntity p = loaded.r;
-
-        assertIsProxy(p);
-        assertNotFetched(p);
-        Assert.assertEquals(id, getDs().getKey(p).getId());
-        p.getFoo();
-        // should be fetched now.
-        assertFetched(p);
-
-    }
 
     @Test
     public final void testCallIdGetterWithoutFetching() {
@@ -57,7 +31,7 @@ public class TestLazySingleReference extends ProxyTestBase {
         getDs().save(root);
 
         root = getDs().find(RootEntity.class)
-                      .filter("_id", root.getId())
+                      .filter(eq("_id", root.getId()))
                       .first();
 
         final ReferencedEntity p = root.r;
@@ -80,6 +54,34 @@ public class TestLazySingleReference extends ProxyTestBase {
     }
 
     @Test
+    public final void testGetKeyWithoutFetching() {
+        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+
+        root.r = reference;
+        reference.setFoo("bar");
+
+        final ObjectId id = getDs().save(reference).getId();
+        getDs().save(root);
+
+        RootEntity loaded = getDs().find(RootEntity.class)
+                                   .filter(eq("_id", root.getId()))
+                                   .first();
+
+        final ReferencedEntity p = loaded.r;
+
+        assertIsProxy(p);
+        assertNotFetched(p);
+        Assert.assertEquals(id, getDs().getKey(p).getId());
+        p.getFoo();
+        // should be fetched now.
+        assertFetched(p);
+
+    }
+
+    @Test
     @Ignore("entity caching needs to be implemented")
     public final void testSameProxy() {
         Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
@@ -95,7 +97,7 @@ public class TestLazySingleReference extends ProxyTestBase {
         getDs().save(root);
 
         root = getDs().find(RootEntity.class)
-                      .filter("_id", root.getId())
+                      .filter(eq("_id", root.getId()))
                       .first();
         Assert.assertSame(root.r, root.secondReference);
     }
@@ -117,7 +119,7 @@ public class TestLazySingleReference extends ProxyTestBase {
         getDs().save(root);
 
         root = getDs().find(RootEntity.class)
-                      .filter("_id", root.getId())
+                      .filter(eq("_id", root.getId()))
                       .first();
 
         ReferencedEntity referenced = root.r;
@@ -133,7 +135,7 @@ public class TestLazySingleReference extends ProxyTestBase {
         assertFetched(root.secondReference);
 
         root = getDs().find(RootEntity.class)
-                      .filter("_id", root.getId())
+                      .filter(eq("_id", root.getId()))
                       .first();
         assertNotFetched(root.r);
         assertNotFetched(root.secondReference);

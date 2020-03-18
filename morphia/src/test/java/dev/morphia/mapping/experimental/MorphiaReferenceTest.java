@@ -1,13 +1,12 @@
 package dev.morphia.mapping.experimental;
 
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,7 +31,7 @@ public class MorphiaReferenceTest extends TestBase {
         book.setAuthor(author);
         getDs().save(book);
 
-        final Book loaded = getDs().find(Book.class).filter("_id", book.id).first();
+        final Book loaded = getDs().find(Book.class).filter(eq("_id", book.id)).first();
         Assert.assertFalse(loaded.author.isResolved());
         Assert.assertEquals(author, loaded.author.get());
         assertTrue(loaded.author.isResolved());
@@ -55,41 +55,10 @@ public class MorphiaReferenceTest extends TestBase {
         author.setList(list);
         getDs().save(author);
 
-        final Author loaded = getDs().find(Author.class).filter("_id", author.getId()).first();
+        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.getId())).first();
         Assert.assertFalse(loaded.list.isResolved());
         Assert.assertEquals(list, loaded.getList());
         assertTrue(loaded.list.isResolved());
-    }
-
-    @Test
-    public void setReference() {
-        final Author author = new Author("Jane Austen");
-        getDs().save(author);
-
-        Set<Book> set = new HashSet<Book>(5);
-        set.add(new Book("Sense and Sensibility"));
-        set.add(new Book("Pride and Prejudice"));
-        set.add(new Book("Mansfield Park"));
-        set.add(new Book("Emma"));
-        set.add(new Book("Northanger Abbey"));
-        for (final Book book : set) {
-            book.setAuthor(author);
-            getDs().save(book);
-        }
-        author.setSet(set);
-        getDs().save(author);
-
-        final Author loaded = getDs().find(Author.class).filter("_id", author.getId()).first();
-        Assert.assertFalse(loaded.set.isResolved());
-        final Set<Book> set1 = loaded.getSet();
-
-        assertEquals(set.size(), set1.size());
-
-        for (final Book book : set) {
-            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
-        }
-
-        assertTrue(loaded.set.isResolved());
     }
 
     @Test
@@ -111,10 +80,41 @@ public class MorphiaReferenceTest extends TestBase {
         author.setMap(books);
         getDs().save(author);
 
-        final Author loaded = getDs().find(Author.class).filter("_id", author.getId()).first();
+        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.getId())).first();
         Assert.assertFalse(loaded.map.isResolved());
         Assert.assertEquals(books, loaded.getMap());
         assertTrue(loaded.map.isResolved());
+    }
+
+    @Test
+    public void setReference() {
+        final Author author = new Author("Jane Austen");
+        getDs().save(author);
+
+        Set<Book> set = new HashSet<Book>(5);
+        set.add(new Book("Sense and Sensibility"));
+        set.add(new Book("Pride and Prejudice"));
+        set.add(new Book("Mansfield Park"));
+        set.add(new Book("Emma"));
+        set.add(new Book("Northanger Abbey"));
+        for (final Book book : set) {
+            book.setAuthor(author);
+            getDs().save(book);
+        }
+        author.setSet(set);
+        getDs().save(author);
+
+        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.getId())).first();
+        Assert.assertFalse(loaded.set.isResolved());
+        final Set<Book> set1 = loaded.getSet();
+
+        assertEquals(set.size(), set1.size());
+
+        for (final Book book : set) {
+            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
+        }
+
+        assertTrue(loaded.set.isResolved());
     }
 
     @Entity

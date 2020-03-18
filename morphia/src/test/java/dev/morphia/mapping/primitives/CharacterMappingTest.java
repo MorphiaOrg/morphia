@@ -1,7 +1,6 @@
 package dev.morphia.mapping.primitives;
 
 
-import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -12,6 +11,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 public class CharacterMappingTest extends TestBase {
     @Test
@@ -30,7 +31,7 @@ public class CharacterMappingTest extends TestBase {
         getDs().save(entity);
 
         final Characters loaded = getDs().find(Characters.class)
-                                         .filter("_id", entity.id)
+                                         .filter(eq("_id", entity.id))
                                          .first();
         Assert.assertNotNull(loaded.id);
         Assert.assertArrayEquals(entity.listWrapperArray.get(0), loaded.listWrapperArray.get(0));

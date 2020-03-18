@@ -10,13 +10,12 @@ import dev.morphia.annotations.Version;
 import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class CompoundIdTest extends TestBase {
@@ -38,7 +37,7 @@ public class CompoundIdTest extends TestBase {
         entity.id = new CompoundId("test");
 
         getDs().save(entity);
-        entity = getDs().find(entity.getClass()).filter("_id", entity.id).first();
+        entity = getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first();
         Assert.assertEquals("test", entity.id.name);
         Assert.assertNotNull(entity.id.id);
     }
@@ -50,7 +49,7 @@ public class CompoundIdTest extends TestBase {
 
         getDs().save(entity);
         getDs().delete(getDs().find(CompoundIdEntity.class)
-                               .filter("_id", entity.id));
+                              .filter(eq("_id", entity.id)));
     }
 
     @Test
@@ -68,7 +67,7 @@ public class CompoundIdTest extends TestBase {
         entity.sibling = sibling;
         getDs().save(entity);
 
-        Assert.assertEquals(entity, getDs().find(entity.getClass()).filter("_id", entity.id).first());
+        Assert.assertEquals(entity, getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first());
     }
 
     @Embedded

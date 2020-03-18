@@ -13,6 +13,8 @@ import org.junit.Test;
 
 import java.io.Serializable;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 /**
  * @author scott hernandez
@@ -34,7 +36,7 @@ public class MapWithDotInKeyTest extends TestBase {
         Assert.assertFalse("Should have got rejection for dot in field names", true);
         final Datastore datastore = getDs();
         e = datastore.find(E.class)
-                     .filter("_id", e.id)
+                     .filter(eq("_id", e.id))
                      .first();
         Assert.assertEquals("a", e.mymap.get("a.b"));
         Assert.assertEquals("b", e.mymap.get("c.e.g"));

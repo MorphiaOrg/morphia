@@ -12,6 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
 @Category(Reference.class)
@@ -55,7 +56,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
 
         final Datastore datastore = getDs();
         root = datastore.find(RootEntity.class)
-                        .filter("_id", root.getId())
+                        .filter(eq("_id", root.getId()))
                         .first();
 
         final ReferencedEntity p = root.r;

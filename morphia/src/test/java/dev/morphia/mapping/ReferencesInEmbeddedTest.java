@@ -10,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 @Category(Reference.class)
 public class ReferencesInEmbeddedTest extends TestBase {
@@ -26,7 +28,7 @@ public class ReferencesInEmbeddedTest extends TestBase {
         getDs().save(container);
 
         Assert.assertNotNull(getDs().find(Container.class)
-                                    .filter("_id", container.getId())
+                                    .filter(eq("_id", container.getId()))
                                     .first());
     }
 
@@ -49,7 +51,7 @@ public class ReferencesInEmbeddedTest extends TestBase {
         getDs().save(container);
 
         Assert.assertNotNull(getDs().find(Container.class)
-                                    .filter("_id", container.getId())
+                                    .filter(eq("_id", container.getId()))
                                     .first());
     }
 

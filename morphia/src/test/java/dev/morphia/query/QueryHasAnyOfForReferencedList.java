@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 
 @Category(Reference.class)
@@ -28,7 +29,7 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         Org org2 = getDs().save(new Org("Test Org2", plan2));
 
         long count = getDs().find(Org.class)
-                            .field("name").equal("Test Org1")
+                            .filter(eq("name", "Test Org1"))
                             .count();
         assertEquals(1, count);
 

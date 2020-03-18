@@ -1,17 +1,18 @@
 package dev.morphia.mapping.primitives;
 
 
-import dev.morphia.Datastore;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class LongMappingTest extends TestBase {
@@ -30,7 +31,7 @@ public class LongMappingTest extends TestBase {
         ent.nestedWrapperArray = new Long[][]{{99L, 1L}, {55L, 16L, 99L}};
         getDs().save(ent);
         final Longs loaded = getDs().find(Longs.class)
-                                    .filter("_id", ent.id)
+                                    .filter(eq("_id", ent.id))
                                     .first();
 
         Assert.assertNotNull(loaded.id);
@@ -49,11 +50,11 @@ public class LongMappingTest extends TestBase {
 
     @Entity
     private static class Longs {
+        private final List<Long[]> listWrapperArray = new ArrayList<>();
+        private final List<long[]> listPrimitiveArray = new ArrayList<>();
+        private final List<Long> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
-        private final List<Long[]> listWrapperArray = new ArrayList<Long[]>();
-        private final List<long[]> listPrimitiveArray = new ArrayList<long[]>();
-        private final List<Long> listWrapper = new ArrayList<Long>();
         private long singlePrimitive;
         private Long singleWrapper;
         private long[] primitiveArray;

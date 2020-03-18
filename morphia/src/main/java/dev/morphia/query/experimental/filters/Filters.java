@@ -106,13 +106,25 @@ public final class Filters {
     /**
      * Performs a modulo operation on the value of a field and selects documents with a specified result.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param field     the field to check
+     * @param divisor   the value to divide by
+     * @param remainder the remainder to check for
      * @return the filter
      * @query.filter $mod
      */
-    public static Filter mod(final String field, final Object val) {
-        return new Filter("$mod", field, val);
+    public static Filter mod(final String field, final long divisor, final long remainder) {
+        return new Filter("$mod", field, null) {
+            @Override
+            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+                writer.writeStartDocument(field(mapper));
+                writer.writeName(getFilterName());
+                writer.writeStartArray();
+                writeUnnamedValue(divisor, mapper, writer, context);
+                writeUnnamedValue(remainder, mapper, writer, context);
+                writer.writeEndArray();
+                writer.writeEndDocument();
+            }
+        };
     }
 
     /**

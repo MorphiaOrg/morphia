@@ -1,12 +1,10 @@
 package dev.morphia.mapping;
 
-import com.mongodb.BasicDBList;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import org.bson.Document;
 import org.bson.codecs.pojo.TypeData;
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -14,12 +12,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static java.util.Arrays.asList;
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -107,8 +103,8 @@ public class MappedFieldTest extends TestBase {
         getDs().save(testEntity);
 
         assertEquals(list, getDs().find(TestEntity.class)
-                               .filter("_id", testEntity.id)
-                               .first()
+                                  .filter(eq("_id", testEntity.id))
+                                  .first()
                                .listOfListOfString);
     }
 

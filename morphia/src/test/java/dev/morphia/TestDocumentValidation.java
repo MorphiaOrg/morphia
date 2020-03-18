@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -143,9 +144,101 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         modify.execute(options);
 
-        Assert.assertNotNull(query.field("number").equal(5)
+        Assert.assertNotNull(query.filter(eq("number", 5))
                                   .execute(new FindOptions().limit(1))
                                   .next());
+    }
+
+    @Test
+    public void insert() {
+        getMapper().map(DocumentValidation.class);
+        getDs().enableDocumentValidation();
+
+        try {
+            getDs().insert(new DocumentValidation("Harold", 8, new Date()));
+            fail("Document validation should have complained");
+        } catch (MongoWriteException e) {
+            // expected
+        }
+
+        getDs().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
+                                                                            .bypassDocumentValidation(true));
+
+        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
+                                                 .filter(eq("number", 8));
+        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
+
+        List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
+            new DocumentValidation("John", 8, new Date()),
+            new DocumentValidation("Sarah", 8, new Date()),
+            new DocumentValidation("Amy", 8, new Date()),
+            new DocumentValidation("James", 8, new Date()));
+        try {
+            getDs().insert(list);
+            fail("Document validation should have complained");
+        } catch (MongoBulkWriteException e) {
+            // expected
+        }
+
+        getDs().insert(list, new InsertManyOptions()
+                                 .bypassDocumentValidation(true));
+
+        Assert.assertTrue(query.filter(eq("number", 8)).execute().hasNext());
+    }
+
+    @Test
+    public void save() {
+        getMapper().map(DocumentValidation.class);
+        getDs().enableDocumentValidation();
+
+        try {
+            getDs().save(new DocumentValidation("Harold", 8, new Date()));
+            fail("Document validation should have complained");
+        } catch (MongoWriteException e) {
+            // expected
+        }
+
+        getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
+                    .bypassDocumentValidation(true));
+
+        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
+                                                 .filter(eq("number", 8));
+        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
+
+        List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()),
+                                               new DocumentValidation("Harold", 8, new Date()));
+        try {
+            getDs().save(list);
+            fail("Document validation should have complained");
+        } catch (MongoBulkWriteException e) {
+            // expected
+        }
+
+        getDs().save(list, new InsertOptions().bypassDocumentValidation(true));
+
+        Assert.assertTrue(query.filter(eq("number", 8)).execute().hasNext());
+    }
+
+    @Test
+    public void testBypassDocumentValidation() {
+        getMapper().map(User.class);
+        getDs().enableDocumentValidation();
+
+        final User user = new User("Jim Halpert", new Date());
+        user.age = 5;
+
+        try {
+            getDs().save(user);
+            fail("Document validation should have rejected the document");
+        } catch (MongoWriteException ignored) {
+        }
+
+        getDs().save(user, new InsertOptions().bypassDocumentValidation(true));
+
+        Assert.assertEquals(1, getDs().find(User.class).count());
     }
 
     @Test
@@ -169,101 +262,9 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         update.execute(options);
 
-        Assert.assertNotNull(query.field("number").equal(5)
+        Assert.assertNotNull(query.filter(eq("number", 5))
                                   .execute(new FindOptions().limit(1))
                                   .tryNext());
-    }
-
-    @Test
-    public void save() {
-        getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
-
-        try {
-            getDs().save(new DocumentValidation("Harold", 8, new Date()));
-            fail("Document validation should have complained");
-        } catch (MongoWriteException e) {
-            // expected
-        }
-
-        getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOptions()
-                    .bypassDocumentValidation(true));
-
-        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
-                                                 .field("number").equal(8);
-        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
-
-        List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("Harold", 8, new Date()));
-        try {
-            getDs().save(list);
-            fail("Document validation should have complained");
-        } catch (MongoBulkWriteException e) {
-            // expected
-        }
-
-        getDs().save(list, new InsertOptions().bypassDocumentValidation(true));
-
-        Assert.assertTrue(query.field("number").equal(8).execute().hasNext());
-    }
-
-    @Test
-    public void testBypassDocumentValidation() {
-        getMapper().map(User.class);
-        getDs().enableDocumentValidation();
-
-        final User user = new User("Jim Halpert", new Date());
-        user.age = 5;
-
-        try {
-            getDs().save(user);
-            fail("Document validation should have rejected the document");
-        } catch (MongoWriteException ignored) {
-        }
-
-        getDs().save(user, new InsertOptions().bypassDocumentValidation(true));
-
-        Assert.assertEquals(1, getDs().find(User.class).count());
-    }
-
-    @Test
-    public void insert() {
-        getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
-
-        try {
-            getDs().insert(new DocumentValidation("Harold", 8, new Date()));
-            fail("Document validation should have complained");
-        } catch (MongoWriteException e) {
-            // expected
-        }
-
-        getDs().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
-                                                                            .bypassDocumentValidation(true));
-
-        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
-                                                 .field("number").equal(8);
-        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
-
-        List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
-                                               new DocumentValidation("John", 8, new Date()),
-                                               new DocumentValidation("Sarah", 8, new Date()),
-                                               new DocumentValidation("Amy", 8, new Date()),
-                                               new DocumentValidation("James", 8, new Date()));
-        try {
-            getDs().insert(list);
-            fail("Document validation should have complained");
-        } catch (MongoBulkWriteException e) {
-            // expected
-        }
-
-        getDs().insert(list, new InsertManyOptions()
-                                 .bypassDocumentValidation(true));
-
-        Assert.assertTrue(query.field("number").equal(8).execute().hasNext());
     }
 
 

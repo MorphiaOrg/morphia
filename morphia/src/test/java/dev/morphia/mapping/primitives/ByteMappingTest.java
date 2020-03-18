@@ -2,18 +2,18 @@ package dev.morphia.mapping.primitives;
 
 
 import dev.morphia.Datastore;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
-import org.bson.Document;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class ByteMappingTest extends TestBase {
@@ -34,7 +34,7 @@ public class ByteMappingTest extends TestBase {
         getDs().save(ent);
         final Datastore datastore = getDs();
 
-        final Bytes loaded = datastore.find(Bytes.class).filter("_id", ent.id).first();
+        final Bytes loaded = datastore.find(Bytes.class).filter(eq("_id", ent.id)).first();
 
         Assert.assertNotNull(loaded.id);
 
@@ -53,11 +53,11 @@ public class ByteMappingTest extends TestBase {
 
     @Entity
     private static class Bytes {
+        private final List<Byte[]> listWrapperArray = new ArrayList<>();
+        private final List<byte[]> listPrimitiveArray = new ArrayList<>();
         @Id
         private ObjectId id;
-        private final List<Byte[]> listWrapperArray = new ArrayList<Byte[]>();
-        private final List<byte[]> listPrimitiveArray = new ArrayList<byte[]>();
-        private List<Byte> listWrapper = new ArrayList<Byte>();
+        private List<Byte> listWrapper = new ArrayList<>();
         private byte singlePrimitive;
         private Byte singleWrapper;
         private byte[] primitiveArray;

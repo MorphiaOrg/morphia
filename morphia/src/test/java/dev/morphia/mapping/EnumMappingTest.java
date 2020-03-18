@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
@@ -42,7 +44,7 @@ public class EnumMappingTest extends TestBase {
 
         getDs().save(customer);
         Customer loaded = getDs().find(Customer.class)
-                                 .filter("_id", customer.id)
+                                 .filter(eq("_id", customer.id))
                                  .first();
         Assert.assertEquals(customer.map, loaded.map);
     }
@@ -73,7 +75,7 @@ public class EnumMappingTest extends TestBase {
         getDs().save(customer);
         final Datastore datastore1 = getDs();
         CustomerWithArrayList loaded = datastore1.find(CustomerWithArrayList.class)
-                                                 .filter("_id", customer.id)
+                                                 .filter(eq("_id", customer.id))
                                                  .first();
 
         Assert.assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
@@ -105,7 +107,7 @@ public class EnumMappingTest extends TestBase {
         getDs().save(customer);
         final Datastore datastore1 = getDs();
         CustomerWithList loaded = datastore1.find(CustomerWithList.class)
-                                            .filter("_id", customer.id)
+                                            .filter(eq("_id", customer.id))
                                             .first();
 
         Assert.assertEquals(customer.mapWithList, loaded.mapWithList);
@@ -118,11 +120,9 @@ public class EnumMappingTest extends TestBase {
         getMapper().map(ContainsEnum.class);
 
         getDs().save(new ContainsEnum());
-        Assert.assertEquals(1, getDs().find(ContainsEnum.class).field("foo").equal(Foo.BAR)
+        Assert.assertEquals(1, getDs().find(ContainsEnum.class).filter(eq("foo", Foo.BAR))
                                       .count());
-        Assert.assertEquals(1, getDs().find(ContainsEnum.class).filter("foo", Foo.BAR)
-                                      .count());
-        Assert.assertEquals(1, getDs().find(ContainsEnum.class).disableValidation().filter("foo", Foo.BAR)
+        Assert.assertEquals(1, getDs().find(ContainsEnum.class).disableValidation().filter(eq("foo", Foo.BAR))
                                       .count());
     }
 

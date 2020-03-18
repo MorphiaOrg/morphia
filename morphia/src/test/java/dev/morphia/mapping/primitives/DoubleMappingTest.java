@@ -1,17 +1,18 @@
 package dev.morphia.mapping.primitives;
 
 
-import dev.morphia.Datastore;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 public class DoubleMappingTest extends TestBase {
     @Test
@@ -30,7 +31,7 @@ public class DoubleMappingTest extends TestBase {
         getDs().save(ent);
 
         final Doubles loaded = getDs().find(Doubles.class)
-                                      .filter("_id", ent.id)
+                                      .filter(eq("_id", ent.id))
                                       .first();
         Assert.assertNotNull(loaded.id);
 
@@ -49,11 +50,11 @@ public class DoubleMappingTest extends TestBase {
 
     @Entity
     private static class Doubles {
+        private final List<Double[]> listWrapperArray = new ArrayList<>();
+        private final List<double[]> listPrimitiveArray = new ArrayList<>();
+        private final List<Double> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
-        private final List<Double[]> listWrapperArray = new ArrayList<Double[]>();
-        private final List<double[]> listPrimitiveArray = new ArrayList<double[]>();
-        private final List<Double> listWrapper = new ArrayList<Double>();
         private double singlePrimitive;
         private Double singleWrapper;
         private double[] primitiveArray;

@@ -21,8 +21,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedField;
-import dev.morphia.query.Query;
 import dev.morphia.query.LegacyQuery;
+import dev.morphia.query.Query;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -40,6 +40,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
@@ -50,39 +51,39 @@ public class TestSerializedFormat extends TestBase {
     @Test
     public void testQueryFormat() {
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
-                                            .field("id").equal(new ObjectId(0, 0))
-                                            .field("referenceType").equal(new ReferenceType(2, "far"))
-                                            .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
+                                            .filter(eq("id", new ObjectId(0, 0)))
+                                            .filter(eq("referenceType", new ReferenceType(2, "far")))
+                                            .filter(eq("embeddedType", new EmbeddedReferenceType(3, "strikes")))
 
-                                            .field("string").equal("some value")
+                                            .filter(eq("string", "some value"))
 
                                             .field("embeddedArray").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                    .filter("number", 3).filter("text", "strikes"))
+                                                                                     .filter(eq("number", 3)).filter(eq("text", "strikes")))
                                             .field("embeddedSet").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                    .filter("number", 3).filter("text", "strikes"))
+                                                                                   .filter(eq("number", 3)).filter(eq("text", "strikes")))
                                             .field("embeddedList").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                    .filter("number", 3).filter("text", "strikes"))
+                                                                                    .filter(eq("number", 3)).filter(eq("text", "strikes")))
 
-                                            .field("map.bar").equal(new EmbeddedReferenceType(1, "chance"))
+                                            .filter(eq("map.bar", new EmbeddedReferenceType(1, "chance")))
                                             .field("mapOfList.bar").in(singletonList(new EmbeddedReferenceType(1, "chance")))
                                             .field("mapOfList.foo").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                     .filter("number", 1)
-                                                                                     .filter("text", "chance"))
+                                                                                     .filter(eq("number", 1))
+                                                                                     .filter(eq("text", "chance")))
 
-                                            .field("selfReference").equal(new ReferenceType(1, "blah"))
+                                            .filter(eq("selfReference", new ReferenceType(1, "blah")))
 
                                             .field("mixedTypeList").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                     .filter("number", 3).filter("text", "strikes"))
+                                                                                     .filter(eq("number", 3)).filter(eq("text", "strikes")))
                                             .field("mixedTypeList").in(singletonList(new EmbeddedReferenceType(1, "chance")))
-                                            .field("mixedTypeMap.foo").equal(new ReferenceType(3, "strikes"))
-                                            .field("mixedTypeMap.bar").equal(new EmbeddedReferenceType(3, "strikes"))
+                                            .filter(eq("mixedTypeMap.foo", new ReferenceType(3, "strikes")))
+                                            .filter(eq("mixedTypeMap.bar", new EmbeddedReferenceType(3, "strikes")))
                                             .field("mixedTypeMapOfList.bar").in(singletonList(new EmbeddedReferenceType(1, "chance")))
                                             .field("mixedTypeMapOfList.foo").elemMatch(getDs().find(EmbeddedReferenceType.class)
-                                                                                              .filter("number", 3)
-                                                                                              .filter("text", "strikes"))
+                                                                                              .filter(eq("number", 3))
+                                                                                              .filter(eq("text", "strikes")))
 
-                                            .field("referenceMap.foo").equal(new ReferenceType(1, "chance"))
-                                            .field("referenceMap.bar").equal(new EmbeddedReferenceType(1, "chance"));
+                                            .filter(eq("referenceMap.foo", new ReferenceType(1, "chance")))
+                                            .filter(eq("referenceMap.bar", new EmbeddedReferenceType(1, "chance")));
 
         Document document = ((LegacyQuery) query).toDocument();
         final Document parse = Document.parse(readFully("/QueryStructure.json"));

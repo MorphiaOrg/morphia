@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -38,7 +40,7 @@ public class CollectionOfValuesTest extends TestBase {
 
         getDs().save(city);
         City loaded = getDs().find(City.class)
-                             .filter("_id", city.id)
+                             .filter(eq("_id", city.id))
                              .first();
         Assert.assertEquals(city.name, loaded.name);
         compare(city.array, loaded.array);
@@ -48,7 +50,6 @@ public class CollectionOfValuesTest extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testCreateEntityWithBasicDBList() {
 
         TestEntity entity = new TestEntity();
@@ -61,7 +62,7 @@ public class CollectionOfValuesTest extends TestBase {
         getDs().save(entity);
 
         final TestEntity fetched = getDs().find(TestEntity.class)
-                                          .filter("_id", entity.getId())
+                                          .filter(eq("_id", entity.getId()))
                                           .first();
         Assert.assertEquals(entity, fetched);
     }
@@ -82,7 +83,7 @@ public class CollectionOfValuesTest extends TestBase {
 
         final Datastore datastore = getDs();
         final ContainsListOfList loaded = datastore.find(ContainsListOfList.class)
-                                                   .filter("_id", entity.id)
+                                                   .filter(eq("_id", entity.id))
                                                    .first();
 
         Assert.assertNotNull(loaded.strings);
@@ -106,7 +107,7 @@ public class CollectionOfValuesTest extends TestBase {
         entity.twoDimArray = new byte[][]{"Joseph".getBytes(), "uwe".getBytes()};
         getDs().save(entity);
         final ContainsTwoDimensionalArray loaded = getDs().find(ContainsTwoDimensionalArray.class)
-                                                          .filter("_id", entity.id)
+                                                          .filter(eq("_id", entity.id))
                                                           .first();
         Assert.assertNotNull(loaded.id);
         Assert.assertNotNull(loaded.oneDimArray);

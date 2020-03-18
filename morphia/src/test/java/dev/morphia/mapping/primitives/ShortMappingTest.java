@@ -1,17 +1,18 @@
 package dev.morphia.mapping.primitives;
 
 
-import dev.morphia.Datastore;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 public class ShortMappingTest extends TestBase {
@@ -30,7 +31,7 @@ public class ShortMappingTest extends TestBase {
         ent.nestedWrapperArray = new Short[][]{{55, 16, 99}, {-47}};
         getDs().save(ent);
         final Shorts loaded = getDs().find(Shorts.class)
-                                     .filter("_id", ent.id)
+                                     .filter(eq("_id", ent.id))
                                      .first();
 
         Assert.assertNotNull(loaded.id);
@@ -49,11 +50,11 @@ public class ShortMappingTest extends TestBase {
 
     @Entity
     private static class Shorts {
+        private final List<Short[]> listWrapperArray = new ArrayList<>();
+        private final List<short[]> listPrimitiveArray = new ArrayList<>();
+        private final List<Short> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
-        private final List<Short[]> listWrapperArray = new ArrayList<Short[]>();
-        private final List<short[]> listPrimitiveArray = new ArrayList<short[]>();
-        private final List<Short> listWrapper = new ArrayList<Short>();
         private short singlePrimitive;
         private Short singleWrapper;
         private short[] primitiveArray;

@@ -21,8 +21,8 @@ import dev.morphia.annotations.Version;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class TestDatastoreMerge extends TestBase {
@@ -56,12 +56,12 @@ public class TestDatastoreMerge extends TestBase {
         test1.name = "foobar";
         ds.save(test1);
 
-        Test2 test2 = ds.createQuery(Test2.class).first();
+        Test2 test2 = ds.find(Test2.class).first();
         assertNotNull(test2.id);
         test2.blarg = "barfoo";
         ds.merge(test2);
 
-        test1 = ds.createQuery(Test1.class).field("_id").equal(test1.id).first();
+        test1 = ds.find(Test1.class).filter(eq("_id", test1.id)).first();
 
         assertNotNull(test1.name);//fails
     }

@@ -1,18 +1,15 @@
 package dev.morphia.mapping.primitives;
 
 
-import dev.morphia.Datastore;
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class ByteArrayMappingTest extends TestBase {
     @Test
     public void testCharMapping() {
@@ -22,7 +19,7 @@ public class ByteArrayMappingTest extends TestBase {
         entity.ba = test;
         getDs().save(entity);
         final ContainsByteArray loaded = getDs().find(ContainsByteArray.class)
-                                                .filter("_id", entity.id)
+                                                .filter(eq("_id", entity.id))
                                                 .first();
 
         for (int i = 0; i < test.length; i++) {

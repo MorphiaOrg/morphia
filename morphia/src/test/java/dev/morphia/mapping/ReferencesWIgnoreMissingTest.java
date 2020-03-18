@@ -1,18 +1,19 @@
 package dev.morphia.mapping;
 
 
-import dev.morphia.Datastore;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.util.List;
+
+import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
 @Category(Reference.class)
@@ -32,7 +33,7 @@ public class ReferencesWIgnoreMissingTest extends TestBase {
         Assert.assertEquals(1, reloadedContainer.refs.length);
 
         reloadedContainer = getDs().find(Container.class)
-                                   .filter("_id", c.id)
+                                   .filter(eq("_id", c.id))
                                    .first();
         Assert.assertNotNull(reloadedContainer);
         Assert.assertNotNull(reloadedContainer.refs);

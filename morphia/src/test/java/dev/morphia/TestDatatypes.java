@@ -16,11 +16,12 @@ package dev.morphia;
 
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
-import dev.morphia.annotations.Id;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -39,7 +40,7 @@ public class TestDatatypes extends TestBase {
         final ContainsByte cb = new ContainsByte();
         getDs().save(cb);
         final ContainsByte loaded = getDs().find(ContainsByte.class)
-                                           .filter("_id", cb.id)
+                                           .filter(eq("_id", cb.id))
                                            .first();
 
         assertNotNull(loaded);
@@ -52,8 +53,8 @@ public class TestDatatypes extends TestBase {
         final ContainsFloat cf = new ContainsFloat();
         getDs().save(cf);
         final ContainsFloat loaded = getDs().find(ContainsFloat.class)
-                                             .filter("_id", cf.id)
-                                             .first();
+                                            .filter(eq("_id", cf.id))
+                                            .first();
 
         assertNotNull(loaded);
         assertTrue(loaded.val0 == cf.val0);
@@ -65,7 +66,7 @@ public class TestDatatypes extends TestBase {
         final ContainsShort cs = new ContainsShort();
         getDs().save(cs);
         final ContainsShort loaded = getDs().find(ContainsShort.class)
-                                            .filter("_id", cs.id)
+                                            .filter(eq("_id", cs.id))
                                             .first();
 
         assertNotNull(loaded);

@@ -11,6 +11,8 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
+
 
 public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
@@ -25,7 +27,7 @@ public class ConcreteClassEmbeddedOverrideTest extends TestBase {
 
         final Datastore datastore = getDs();
         final E e2 = datastore.find(E.class)
-                              .filter("_id", e1.id)
+                              .filter(eq("_id", e1.id))
                               .first();
 
         Assert.assertEquals("A", e2.a1.s);

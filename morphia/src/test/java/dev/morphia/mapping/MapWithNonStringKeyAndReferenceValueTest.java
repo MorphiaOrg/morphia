@@ -1,19 +1,20 @@
 package dev.morphia.mapping;
 
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.testutil.TestEntity;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
 
@@ -34,7 +35,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
 
         getDs().save(asList(ce1, ce2, pe));
 
-        final ParentEntity fetched = getDs().find(ParentEntity.class).filter("_id", pe.getId()).first();
+        final ParentEntity fetched = getDs().find(ParentEntity.class).filter(eq("_id", pe.getId())).first();
         Assert.assertNotNull(fetched);
         Assert.assertNotNull(fetched.childMap);
         Assert.assertEquals(2, fetched.childMap.size());
@@ -62,7 +63,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         getDs().save(asList(ce1, ce2, pe));
 
         final ParentEntity fetched = getDs().find(ParentEntity.class)
-                                            .filter("_id", pe.getId())
+                                            .filter(eq("_id", pe.getId()))
                                             .first();
         Assert.assertNotNull(fetched);
         assertIsProxy(fetched.lazyChildMap);

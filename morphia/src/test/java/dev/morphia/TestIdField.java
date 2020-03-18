@@ -15,19 +15,19 @@
 package dev.morphia;
 
 
-import dev.morphia.mapping.Mapper;
-import org.bson.Document;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.testmodel.Rectangle;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -49,7 +49,7 @@ public class TestIdField extends TestBase {
         getDs().save(a);
         getDs().save(b);
 
-        assertEquals(a.data, getDs().find(EmbeddedId.class).filter("_id", id).first().data);
+        assertEquals(a.data, getDs().find(EmbeddedId.class).filter(eq("_id", id)).first().data);
 
         final EmbeddedId embeddedId = getDs().find(EmbeddedId.class).field("_id").in(Arrays.asList(id)).execute().next();
         Assert.assertEquals(a.data, embeddedId.data);
@@ -77,7 +77,7 @@ public class TestIdField extends TestBase {
         //        Key<Rectangle> r2Key = ds.save(r2);
         final KeyAsId kai = new KeyAsId(rKey);
         final Key<KeyAsId> kaiKey = getMapper().getKey(getDs().save(kai));
-        final KeyAsId kaiLoaded = getDs().find(KeyAsId.class).filter("_id", rKey).first();
+        final KeyAsId kaiLoaded = getDs().find(KeyAsId.class).filter(eq("_id", rKey)).first();
         assertNotNull(kaiLoaded);
         assertNotNull(kaiKey);
     }
@@ -89,7 +89,7 @@ public class TestIdField extends TestBase {
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");
         final Key<MapAsId> maiKey = getMapper().getKey(getDs().save(mai));
-        final MapAsId maiLoaded = getDs().find(MapAsId.class).filter("_id", new Document("test", "string")).first();
+        final MapAsId maiLoaded = getDs().find(MapAsId.class).filter(eq("_id", new Document("test", "string"))).first();
         assertNotNull(maiLoaded);
         assertNotNull(maiKey);
     }

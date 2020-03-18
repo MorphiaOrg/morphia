@@ -116,7 +116,8 @@ public enum FilterOperator {
     MOD("$mod", "mod") {
         @Override
         public Filter apply(final String prop, final Object value) {
-            return Filters.mod(prop, value);
+            long[] values = (long[]) value;
+            return Filters.mod(prop, values[0], values[1]);
         }
     },
 

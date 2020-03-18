@@ -11,18 +11,19 @@ import org.junit.Test;
 import java.util.List;
 
 import static dev.morphia.query.Sort.ascending;
+import static dev.morphia.query.experimental.filters.Filters.mod;
 
 
 public class TestModOperator extends TestBase {
     @Test
-    public void mod() {
+    public void testMod() {
         getMapper().map(Inventory.class);
         getDs().save(new Inventory("Flowers", 8));
         getDs().save(new Inventory("Candy", 2));
         getDs().save(new Inventory("Basketballs", 12));
 
         List<Inventory> list = getDs().find(Inventory.class)
-                                      .filter("quantity mod", new Integer[]{4, 0})
+                                      .filter(mod("quantity", 4, 0))
                                       .execute(new FindOptions()
                                                    .sort(ascending("name")))
                                       .toList();
@@ -32,7 +33,7 @@ public class TestModOperator extends TestBase {
         Assert.assertEquals("Flowers", list.get(1).name);
 
         list = getDs().find(Inventory.class)
-                      .filter("quantity mod", new Integer[]{4, 2})
+                      .filter(mod("quantity", 4, 2))
                       .execute(new FindOptions()
                                    .sort(ascending("name")))
                       .toList();
@@ -41,7 +42,7 @@ public class TestModOperator extends TestBase {
         Assert.assertEquals("Candy", list.get(0).name);
 
         list = getDs().find(Inventory.class)
-                      .filter("quantity mod", new Integer[]{6, 0})
+                      .filter(mod("quantity", 6, 0))
                       .execute(new FindOptions()
                                    .sort(ascending("name")))
                       .toList();
@@ -50,7 +51,7 @@ public class TestModOperator extends TestBase {
         Assert.assertEquals("Basketballs", list.get(0).name);
 
         list = getDs().find(Inventory.class)
-                      .field("quantity").mod(4, 0)
+                      .filter(mod("quantity", 4, 0))
                       .execute(new FindOptions()
                                    .sort(ascending("name")))
                       .toList();
@@ -60,7 +61,7 @@ public class TestModOperator extends TestBase {
         Assert.assertEquals("Flowers", list.get(1).name);
 
         list = getDs().find(Inventory.class)
-                      .field("quantity").mod(4, 2)
+                      .filter(mod("quantity", 4, 2))
                       .execute(new FindOptions()
                                    .sort(ascending("name")))
                       .toList();
@@ -69,7 +70,7 @@ public class TestModOperator extends TestBase {
         Assert.assertEquals("Candy", list.get(0).name);
 
         list = getDs().find(Inventory.class)
-                      .field("quantity").mod(6, 0)
+                      .filter(mod("quantity", 6, 0))
                       .execute(new FindOptions()
                                    .sort(ascending("name")))
                       .toList();
