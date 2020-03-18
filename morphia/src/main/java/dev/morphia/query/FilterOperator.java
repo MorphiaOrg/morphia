@@ -1,7 +1,9 @@
 package dev.morphia.query;
 
 import com.mongodb.client.model.geojson.Geometry;
+import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
@@ -17,6 +19,7 @@ import static java.lang.String.format;
  *
  * @deprecated use {@link Filters} and {@link Filter} instead
  */
+@SuppressWarnings("DeprecatedIsStillUsed")
 @Deprecated(since = "2.0", forRemoval = true)
 public enum FilterOperator {
 
@@ -188,8 +191,30 @@ public enum FilterOperator {
 
     GEO_WITHIN("$geoWithin", "geoWithin") {
         @Override
+        @SuppressWarnings("removal")
         public Filter apply(final String prop, final Object value) {
-            return Filters.geoWithin(prop, convertToGeometry(value));
+            if (value instanceof Shape) {
+                Shape shape = (Shape) value;
+                if (shape instanceof dev.morphia.query.Shape.Center) {
+                    final dev.morphia.query.Shape.Center center = (dev.morphia.query.Shape.Center) shape;
+                    if ("$center".equals(center.getGeometry())) {
+                        return Filters.center(prop, shape.getPoints()[0], center.getRadius());
+                    } else if ("$centerSphere".equals(center.getGeometry())) {
+                        return Filters.centerSphere(prop, shape.getPoints()[0], center.getRadius());
+                    }
+                } else if ("$box".equals(shape.getGeometry())) {
+                    return Filters.box(prop, shape.getPoints()[0], shape.getPoints()[1]);
+                } else if ("$polygon".equals(shape.getGeometry())) {
+                    return Filters.polygon(prop, shape.getPoints());
+                }
+                throw new UnsupportedOperationException(Sofia.conversionNotSupported(value.getClass().getCanonicalName()));
+            } else if (value instanceof Polygon) {
+                return Filters.geoWithin(prop, (Polygon) value);
+            } else if (value instanceof MultiPolygon) {
+                return Filters.geoWithin(prop, (MultiPolygon) value);
+            } else {
+                throw new UnsupportedOperationException(Sofia.conversionNotSupported(value.getClass().getCanonicalName()));
+            }
         }
     },
 
@@ -199,6 +224,14 @@ public enum FilterOperator {
             return Filters.geoIntersects(prop, convertToGeometry(value));
         }
     };
+
+    private final String value;
+    private final List<String> filters;
+
+    FilterOperator(final String val, final String... filterValues) {
+        value = val;
+        filters = Arrays.asList(filterValues);
+    }
 
     private static Geometry convertToGeometry(final Object value) {
         Geometry converted;
@@ -212,14 +245,6 @@ public enum FilterOperator {
         }
 
         return converted;
-    }
-
-    private final String value;
-    private final List<String> filters;
-
-    FilterOperator(final String val, final String... filterValues) {
-        value = val;
-        filters = Arrays.asList(filterValues);
     }
 
     /**
@@ -240,7 +265,8 @@ public enum FilterOperator {
 
     /**
      * Converts a {@link FilterOperator} to a {@link Filter}
-     * @param prop the document property name
+     *
+     * @param prop  the document property name
      * @param value the value to apply to the filter
      * @return the new Filter
      * @morphia.internal

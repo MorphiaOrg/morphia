@@ -14,18 +14,17 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
-import dev.morphia.query.legacy.LegacyTestBase;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.geoIntersects;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class GeoIntersectsQueriesWithPolygonTest extends LegacyTestBase {
+public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
     @Test
     public void shouldFindAPointThatLiesInAQueryPolygon() {
         // given
@@ -40,12 +39,11 @@ public class GeoIntersectsQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<City> matchingCity = getDs().find(City.class)
-                                         .field("location")
-                                         .intersects(new Polygon(asList(
+                                         .filter(geoIntersects("location", new Polygon(asList(
                                              new Position(37.40759155713022, -5.964911067858338),
                                              new Position(37.40341208875179, -5.9643941558897495),
                                              new Position(37.40297396667302, -5.970452763140202),
-                                             new Position(37.40759155713022, -5.964911067858338))))
+                                             new Position(37.40759155713022, -5.964911067858338)))))
                                          .execute().toList();
 
         // then
@@ -84,8 +82,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends LegacyTestBase {
             new Position(37.407239, -5.962988),
             new Position(37.4056048, -5.9666089));
         List<Area> areaContainingPoint = getDs().find(Area.class)
-                                                .field("area")
-                                                .intersects(new Polygon(es))
+                                                .filter(geoIntersects("area", new Polygon(es)))
                                                 .execute().toList();
 
         // then
@@ -140,12 +137,11 @@ public class GeoIntersectsQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .field("everything")
-                                                      .intersects(new Polygon(asList(
+                                                      .filter(geoIntersects("everything", new Polygon(asList(
                                                           new Position(37.4056048, -5.9666089),
                                                           new Position(37.404497, -5.9640557),
                                                           new Position(37.407239, -5.962988),
-                                                          new Position(37.4056048, -5.9666089))))
+                                                          new Position(37.4056048, -5.9666089)))))
                                                       .execute().toList();
 
         // then
@@ -199,12 +195,11 @@ public class GeoIntersectsQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .field("regions")
-                                              .intersects(new Polygon(asList(
+                                              .filter(geoIntersects("regions", new Polygon(asList(
                                                   new Position(37.4056048, -5.9666089),
                                                   new Position(37.404497, -5.9640557),
                                                   new Position(37.407239, -5.962988),
-                                                  new Position(37.4056048, -5.9666089))))
+                                                  new Position(37.4056048, -5.9666089)))))
                                               .execute()
                                               .toList();
 
@@ -239,12 +234,11 @@ public class GeoIntersectsQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<Route> routeContainingPoint = getDs().find(Route.class)
-                                                  .field("route")
-                                                  .intersects(new Polygon(asList(
+                                                  .filter(geoIntersects("route", new Polygon(asList(
                                                       new Position(37.40759155713022, -5.964911067858338),
                                                       new Position(37.40341208875179, -5.9643941558897495),
                                                       new Position(37.40297396667302, -5.970452763140202),
-                                                      new Position(37.40759155713022, -5.964911067858338))))
+                                                      new Position(37.40759155713022, -5.964911067858338)))))
                                                   .execute()
                                                   .toList();
 

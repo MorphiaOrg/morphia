@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class InstanceCreatorFactoryImplTest extends TestBase {
     @Test
     public void noarg() {

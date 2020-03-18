@@ -1,5 +1,8 @@
 package dev.morphia.query;
 
+import com.mongodb.client.model.geojson.MultiPolygon;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Polygon;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 
@@ -275,7 +278,7 @@ public interface FieldEnd<T> {
      * @param remainder the remainder to check for
      * @return T
      * @mongodb.driver.manual reference/operator/query/mod/ $mod
-     * @deprecated use {@link Filters#mod(String, Object)} instead
+     * @deprecated use {@link Filters#mod(String, long, long)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T mod(long divisor, long remainder);
@@ -526,7 +529,10 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, Polygon)}, {@link Filters#geoWithin(String, MultiPolygon)},
+     * {@link Filters#box(String, Point, Point)}, {@link Filters#center(String, Point, double)},
+     * {@link Filters#centerSphere(String, Point, double)}, or {@link Filters#polygon(String, Point[])} instead
+     * instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(Shape shape);
@@ -539,7 +545,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, Polygon)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T within(dev.morphia.geo.Polygon boundary) {
@@ -555,7 +561,7 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
      * @since 2.0
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, Polygon)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.Polygon boundary);
@@ -569,7 +575,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.6
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, MultiPolygon)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T within(dev.morphia.geo.MultiPolygon boundaries) {
@@ -586,7 +592,7 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.6
      * @since 2.0
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, MultiPolygon)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.MultiPolygon boundaries);
@@ -600,7 +606,7 @@ public interface FieldEnd<T> {
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, Polygon)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default T within(dev.morphia.geo.Polygon boundary, dev.morphia.geo.CoordinateReferenceSystem crs) {
@@ -617,7 +623,7 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
      * @since 2.0
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, Polygon)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(com.mongodb.client.model.geojson.Polygon boundary, com.mongodb.client.model.geojson.CoordinateReferenceSystem crs);
@@ -633,7 +639,7 @@ public interface FieldEnd<T> {
      * @param crs        the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, MultiPolygon)} instead
      * @mongodb.server.release 2.6
      */
     @Deprecated(since = "2.0", forRemoval = true)
@@ -652,7 +658,7 @@ public interface FieldEnd<T> {
      * @param crs      the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
-     * @deprecated use {@link Filters#geoWithin(String, com.mongodb.client.model.geojson.Geometry)} instead
+     * @deprecated use {@link Filters#geoWithin(String, MultiPolygon)} instead
      * @mongodb.server.release 2.6
      * @since 2.0
      */

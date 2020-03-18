@@ -426,7 +426,6 @@ public class MorphiaQuery<T> implements Query<T> {
             apply.applyOpts(opts);
             filter(apply);
             return MorphiaQuery.this;
-            //            return super.addGeoCriteria(op, val, opts);
         }
     }
 }

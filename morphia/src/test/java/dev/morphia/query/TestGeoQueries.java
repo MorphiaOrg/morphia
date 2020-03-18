@@ -16,6 +16,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.StringJoiner;
 
+import static dev.morphia.query.experimental.filters.Filters.box;
+
 
 public class TestGeoQueries extends TestBase {
     @Override
@@ -30,8 +32,7 @@ public class TestGeoQueries extends TestBase {
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
-                                   .field("loc")
-                                   .within(Shape.box(new Point(new Position(0, 0)), new Point(new Position(2, 2))))
+                                   .filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(2, 2))))
                                    .execute(new FindOptions().limit(1))
                                    .next();
         Assert.assertNotNull(found);
@@ -43,8 +44,7 @@ public class TestGeoQueries extends TestBase {
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
-                                   .field("loc")
-                                   .within(Shape.box(new Point(new Position(0, 0)), new Point(new Position(.4, .5))))
+                                   .filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(.4, .5))))
                                    .execute(new FindOptions().limit(1))
                                    .tryNext();
         Assert.assertNull(found);

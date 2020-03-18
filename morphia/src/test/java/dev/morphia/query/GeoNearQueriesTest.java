@@ -15,20 +15,17 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
-import dev.morphia.query.legacy.LegacyTestBase;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.near;
+import static dev.morphia.query.experimental.filters.Filters.nearSphere;
 import static java.util.Arrays.asList;
-import static java.util.List.of;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("unchecked")
-public class GeoNearQueriesTest extends LegacyTestBase {
+public class GeoNearQueriesTest extends TestBase {
     @Test
     public void shouldFindAreasCloseToAGivenPointWithinARadiusOfMeters() {
         // given
@@ -54,8 +51,8 @@ public class GeoNearQueriesTest extends LegacyTestBase {
 
         // when
         List<Area> routesOrderedByDistanceFromLondon = getDs().find(Area.class)
-                                                              .field("area")
-                                                              .near(new Point(new Position(51.5286416, -0.1015987)), 20000.0, null)
+                                                              .filter(near("area", new Point(new Position(51.5286416, -0.1015987)))
+                                                                          .maxDistance(20000.0))
                                                               .execute()
                                                               .toList();
 
@@ -89,8 +86,7 @@ public class GeoNearQueriesTest extends LegacyTestBase {
 
         // when
         List<Area> routesOrderedByDistanceFromLondon = getDs().find(Area.class)
-                                                              .field("area")
-                                                              .near(new Point(new Position(51.5286416, -0.1015987)))
+                                                              .filter(near("area", new Point(new Position(51.5286416, -0.1015987))))
                                                               .execute()
                                                               .toList();
 
@@ -99,47 +95,6 @@ public class GeoNearQueriesTest extends LegacyTestBase {
         assertThat(routesOrderedByDistanceFromLondon.get(0), is(london));
         assertThat(routesOrderedByDistanceFromLondon.get(1), is(sevilla));
         assertThat(routesOrderedByDistanceFromLondon.get(2), is(newYork));
-    }
-
-    @Test
-    public void shouldFindNearAPoint() {
-        // given
-        Datastore datastore = getDs();
-        City london = new City("London", new Point(new Position(51.5286416, -0.1015987)));
-        datastore.save(london);
-        City manchester = new City("Manchester", new Point(new Position(53.4722454, -2.2235922)));
-        datastore.save(manchester);
-        City sevilla = new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
-        datastore.save(sevilla);
-
-        getDs().ensureIndexes();
-
-        final Point searchPoint = new Point(new Position(50, 0.1278));
-        List<City> cities = datastore.find(City.class)
-                                     .field("location")
-                                     .near(searchPoint, 200000.0, null)
-                                     .execute().toList();
-
-        assertThat(cities.size(), is(1));
-        assertThat(cities.get(0), is(london));
-
-        cities = datastore.find(City.class)
-                          .field("location")
-                          .nearSphere(searchPoint, 200000D, null)
-                          .execute().toList();
-
-        assertThat(cities.size(), is(1));
-        assertThat(cities.get(0), is(london));
-
-        assertThat(datastore.find(City.class)
-                            .field("location")
-                            .near(searchPoint, 200000D, 195000D)
-                            .execute().toList().size(), is(0));
-
-        assertThat(datastore.find(City.class)
-                            .field("location")
-                            .nearSphere(searchPoint, 200000D, 195000D)
-                            .execute().toList().size(), is(0));
     }
 
     @Test
@@ -156,8 +111,7 @@ public class GeoNearQueriesTest extends LegacyTestBase {
         getDs().ensureIndexes();
 
         List<City> cities = getDs().find(City.class)
-                                   .field("location")
-                                   .near(new Point(new Position(latitudeLondon, longitudeLondon)))
+                                   .filter(near("location", new Point(new Position(latitudeLondon, longitudeLondon))))
                                    .execute()
                                    .toList();
 
@@ -167,8 +121,7 @@ public class GeoNearQueriesTest extends LegacyTestBase {
         assertThat(cities.get(2), is(sevilla));
 
         cities = getDs().find(City.class)
-                        .field("location")
-                        .nearSphere(new Point(new Position(latitudeLondon, longitudeLondon)))
+                        .filter(nearSphere("location", new Point(new Position(latitudeLondon, longitudeLondon))))
                         .execute()
                         .toList();
 
@@ -229,8 +182,8 @@ public class GeoNearQueriesTest extends LegacyTestBase {
 
         // when
         List<AllTheThings> list = getDs().find(AllTheThings.class)
-                                         .field("everything")
-                                         .near(new Point(new Position(37.3753707, -5.9550583)), 20000.0, null)
+                                         .filter(near("everything", new Point(new Position(37.3753707, -5.9550583)))
+                                                     .maxDistance(20000.0))
                                          .execute()
                                          .toList();
 
@@ -289,16 +242,56 @@ public class GeoNearQueriesTest extends LegacyTestBase {
         getDs().ensureIndexes();
 
         // when
-        List<AllTheThings> resultsOrderedByDistanceFromLondon = getDs().find(AllTheThings.class)
-                                                                       .field("everything")
-                                                                       .near(new Point(new Position(51.5286416, -0.1015987)))
-                                                                       .execute()
-                                                                       .toList();
+        List<AllTheThings> results = getDs().find(AllTheThings.class)
+                                            .filter(near("everything", new Point(new Position(51.5286416, -0.1015987))))
+                                            .execute()
+                                            .toList();
 
         // then
-        assertThat(resultsOrderedByDistanceFromLondon.size(), is(2));
-        assertThat(resultsOrderedByDistanceFromLondon.get(0), is(london));
-        assertThat(resultsOrderedByDistanceFromLondon.get(1), is(sevilla));
+        assertThat(results.size(), is(2));
+        assertThat(results.get(0), is(london));
+        assertThat(results.get(1), is(sevilla));
+    }
+
+    @Test
+    public void shouldFindNearAPoint() {
+        // given
+        Datastore datastore = getDs();
+        City london = new City("London", new Point(new Position(51.5286416, -0.1015987)));
+        datastore.save(london);
+        City manchester = new City("Manchester", new Point(new Position(53.4722454, -2.2235922)));
+        datastore.save(manchester);
+        City sevilla = new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
+        datastore.save(sevilla);
+
+        getDs().ensureIndexes();
+
+        final Point searchPoint = new Point(new Position(50, 0.1278));
+        List<City> cities = datastore.find(City.class)
+                                     .filter(near("location", searchPoint).maxDistance(200000.0))
+                                     .execute().toList();
+
+        assertThat(cities.size(), is(1));
+        assertThat(cities.get(0), is(london));
+
+        cities = datastore.find(City.class)
+                          .filter(near("location", searchPoint).maxDistance(200000D))
+                          .execute().toList();
+
+        assertThat(cities.size(), is(1));
+        assertThat(cities.get(0), is(london));
+
+        assertThat(datastore.find(City.class)
+                            .filter(near("location", searchPoint)
+                                        .maxDistance(200000D)
+                                        .minDistance(195000D))
+                            .execute().toList().size(), is(0));
+
+        assertThat(datastore.find(City.class)
+                            .filter(nearSphere("location", searchPoint)
+                                        .maxDistance(200000D)
+                                        .minDistance(195000D))
+                            .execute().toList().size(), is(0));
     }
 
     @Test
@@ -347,8 +340,8 @@ public class GeoNearQueriesTest extends LegacyTestBase {
 
         // when
         List<Regions> regions = getDs().find(Regions.class)
-                                       .field("regions")
-                                       .near(new Point(new Position(51.5286416, -0.1015987)), 20000.0, null)
+                                       .filter(near("regions", new Point(new Position(51.5286416, -0.1015987)))
+                                                   .maxDistance(20000.0))
                                        .execute()
                                        .toList();
 
@@ -402,17 +395,16 @@ public class GeoNearQueriesTest extends LegacyTestBase {
         getDs().ensureIndexes();
 
         // when
-        List<Regions> regionsOrderedByDistanceFromLondon = getDs().find(Regions.class)
-                                                                  .field("regions")
-                                                                  .near(new Point(new Position(51.5286416, -0.1015987)))
-                                                                  .execute()
-                                                                  .toList();
+        List<Regions> regions = getDs().find(Regions.class)
+                                       .filter(near("regions", new Point(new Position(51.5286416, -0.1015987))))
+                                       .execute()
+                                       .toList();
 
         // then
-        assertThat(regionsOrderedByDistanceFromLondon.size(), is(3));
-        assertThat(regionsOrderedByDistanceFromLondon.get(0), is(london));
-        assertThat(regionsOrderedByDistanceFromLondon.get(1), is(sevilla));
-        assertThat(regionsOrderedByDistanceFromLondon.get(2), is(usa));
+        assertThat(regions.size(), is(3));
+        assertThat(regions.get(0), is(london));
+        assertThat(regions.get(1), is(sevilla));
+        assertThat(regions.get(2), is(usa));
     }
 
     @Test
@@ -437,9 +429,10 @@ public class GeoNearQueriesTest extends LegacyTestBase {
 
         // when
         List<Route> routes = getDs().find(Route.class)
-                                    .field("route")
-                                    .near(new Point(new Position(51.5286416, -0.1015987)), 20000.0, null)
-                                    .execute().toList();
+                                    .filter(near("route", new Point(new Position(51.5286416, -0.1015987)))
+                                                .maxDistance(20000.0))
+                                    .execute()
+                                    .toList();
 
         // then
         assertThat(routes.size(), is(1));
@@ -465,8 +458,7 @@ public class GeoNearQueriesTest extends LegacyTestBase {
 
         // when
         List<Route> routes = getDs().find(Route.class)
-                                    .field("route")
-                                    .near(new Point(new Position(51.5286416, -0.1015987)))
+                                    .filter(near("route", new Point(new Position(51.5286416, -0.1015987))))
                                     .execute()
                                     .toList();
 

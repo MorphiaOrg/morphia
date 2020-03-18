@@ -16,11 +16,11 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
-import dev.morphia.query.legacy.LegacyTestBase;
 import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.geoWithin;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
+public class GeoWithinQueriesWithPolygonTest extends TestBase {
     @Test
     public void shouldFindAreasWithinTheUK() {
         // given
@@ -67,8 +67,7 @@ public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         MongoCursor<Area> areasInTheUK = getDs().find(Area.class)
-                                                .field("area")
-                                                .within(uk)
+                                                .filter(geoWithin("area", uk))
                                                 .execute();
 
         // then
@@ -76,8 +75,8 @@ public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
         assertFalse(areasInTheUK.hasNext());
 
         getDs().find(Area.class)
-               .field("area")
-               .within(uk, NamedCoordinateReferenceSystem.EPSG_4326_STRICT_WINDING)
+               .filter(geoWithin("area", uk)
+                           .crs(NamedCoordinateReferenceSystem.EPSG_4326_STRICT_WINDING))
                .execute();
     }
 
@@ -100,8 +99,7 @@ public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<City> citiesInTheUK = getDs().find(City.class)
-                                          .field("location")
-                                          .within(uk)
+                                          .filter(geoWithin("location", uk))
                                           .execute().toList();
 
         // then
@@ -166,8 +164,7 @@ public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .field("everything")
-                                                      .within(uk)
+                                                      .filter(geoWithin("everything", uk))
                                                       .execute().toList();
 
         // then
@@ -228,8 +225,7 @@ public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .field("regions")
-                                              .within(uk)
+                                              .filter(geoWithin("regions", uk))
                                               .execute().toList();
 
         // then
@@ -269,8 +265,7 @@ public class GeoWithinQueriesWithPolygonTest extends LegacyTestBase {
 
         // when
         List<Route> routesInTheUK = getDs().find(Route.class)
-                                           .field("route")
-                                           .within(uk)
+                                           .filter(geoWithin("route", uk))
                                            .execute().toList();
 
         // then

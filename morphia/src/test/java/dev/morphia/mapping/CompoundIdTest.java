@@ -48,8 +48,9 @@ public class CompoundIdTest extends TestBase {
         entity.id = new CompoundId("test");
 
         getDs().save(entity);
-        getDs().delete(getDs().find(CompoundIdEntity.class)
-                              .filter(eq("_id", entity.id)));
+        getDs().find(CompoundIdEntity.class)
+               .filter(eq("_id", entity.id))
+               .delete();
     }
 
     @Test

@@ -5,16 +5,15 @@ import com.mongodb.client.model.geojson.Position;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.geo.model.City;
-import dev.morphia.query.legacy.LegacyTestBase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.near;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class GeoQueriesTest extends LegacyTestBase {
+public class GeoQueriesTest extends TestBase {
     @Test
     public void shouldFindCitiesCloseToAGivenPointWithinARadiusOfMeters() {
         // given
@@ -31,14 +30,14 @@ public class GeoQueriesTest extends LegacyTestBase {
         getDs().ensureIndexes();
 
         // when
-        List<City> citiesOrderedByDistanceFromLondon = datastore.find(City.class)
-                                                                .field("location")
-                                                                .near(new Point(new Position(latitude, longitude)), 200000.0, null)
-                                                                .execute()
-                                                                .toList();
+        List<City> cities = datastore.find(City.class)
+                                     .filter(near("location", new Point(new Position(latitude, longitude)))
+                                                 .maxDistance(200000.0))
+                                     .execute()
+                                     .toList();
 
         // then
-        assertThat(citiesOrderedByDistanceFromLondon.size(), is(1));
-        assertThat(citiesOrderedByDistanceFromLondon.get(0), is(london));
+        assertThat(cities.size(), is(1));
+        assertThat(cities.get(0), is(london));
     }
 }

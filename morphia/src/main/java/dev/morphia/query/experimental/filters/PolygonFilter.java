@@ -1,9 +1,11 @@
 package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.Point;
+import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
-class PolygonFilter extends GeoWithinFilter {
+class PolygonFilter extends Filter {
     private final Point[] points;
 
     PolygonFilter(final String field, final Point[] points) {
@@ -12,7 +14,9 @@ class PolygonFilter extends GeoWithinFilter {
     }
 
     @Override
-    protected void encodeShape(final BsonWriter writer) {
+    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+        writer.writeStartDocument(field(mapper));
+        writer.writeStartDocument("$geoWithin");
         writer.writeStartArray("$polygon");
         for (final Point point : points) {
             writer.writeStartArray();
@@ -22,5 +26,7 @@ class PolygonFilter extends GeoWithinFilter {
             writer.writeEndArray();
         }
         writer.writeEndArray();
+        writer.writeEndDocument();
+        writer.writeEndDocument();
     }
 }

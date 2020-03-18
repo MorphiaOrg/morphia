@@ -15,17 +15,16 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
-import dev.morphia.query.legacy.LegacyTestBase;
-import org.junit.Before;
 import org.junit.Test;
 
+import static dev.morphia.query.experimental.filters.Filters.geoIntersects;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoIntersectsQueriesWithLineTest extends LegacyTestBase {
+public class GeoIntersectsQueriesWithLineTest extends TestBase {
 
     @Test
     public void shouldFindAPointThatLiesOnTheQueryLine() {
@@ -44,8 +43,7 @@ public class GeoIntersectsQueriesWithLineTest extends LegacyTestBase {
 
         // when
         MongoCursor<City> matchingCity = getDs().find(City.class)
-                                                .field("location")
-                                                .intersects(spanishLine)
+                                                .filter(geoIntersects("location", spanishLine))
                                                 .execute();
 
         // then
@@ -81,10 +79,9 @@ public class GeoIntersectsQueriesWithLineTest extends LegacyTestBase {
 
         // when
         MongoCursor<Area> areaContainingPoint = getDs().find(Area.class)
-                                                       .field("area")
-                                                       .intersects(new LineString(asList(
+                                                       .filter(geoIntersects("area", new LineString(asList(
                                                            new Position(37.4056048, -5.9666089),
-                                                           new Position(37.404497, -5.9640557))))
+                                                           new Position(37.404497, -5.9640557)))))
                                                        .execute();
 
         // then
@@ -143,10 +140,9 @@ public class GeoIntersectsQueriesWithLineTest extends LegacyTestBase {
 
         // when
         MongoCursor<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                             .field("everything")
-                                                             .intersects(new LineString(asList(
+                                                             .filter(geoIntersects("everything", new LineString(asList(
                                                                  new Position(37.4056048, -5.9666089),
-                                                                 new Position(37.404497, -5.9640557))))
+                                                                 new Position(37.404497, -5.9640557)))))
                                                              .execute();
 
         // then
@@ -200,10 +196,9 @@ public class GeoIntersectsQueriesWithLineTest extends LegacyTestBase {
 
         // when
         MongoCursor<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                                     .field("regions")
-                                                     .intersects(new LineString(asList(
+                                                     .filter(geoIntersects("regions", new LineString(asList(
                                                          new Position(37.4056048, -5.9666089),
-                                                         new Position(37.404497, -5.9640557))))
+                                                         new Position(37.404497, -5.9640557)))))
                                                      .execute();
 
         // then
@@ -239,10 +234,9 @@ public class GeoIntersectsQueriesWithLineTest extends LegacyTestBase {
 
         // when
         MongoCursor<Route> route = getDs().find(Route.class)
-                                          .field("route")
-                                          .intersects(new LineString(asList(
+                                          .filter(geoIntersects("route", new LineString(asList(
                                               new Position(37.4043709, -5.9643244),
-                                              new Position(37.4045286, -5.9642332))))
+                                              new Position(37.4045286, -5.9642332)))))
                                           .execute();
 
         // then

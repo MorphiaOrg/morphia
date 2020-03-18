@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.filters.Filters.ne;
+
 
 public class MapperOptionsTest extends TestBase {
 
@@ -174,7 +176,7 @@ public class MapperOptionsTest extends TestBase {
         getDs().save(List.of(entityDiscriminator, entityDiscriminator2));
 
         Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
-                                                   .field("name").notEqual("hi");
+                                                   .filter(ne("name", "hi"));
         FindOptions options = new FindOptions()
                                   .logQuery();
         List<EntityDiscriminator2> list = query.execute(options)

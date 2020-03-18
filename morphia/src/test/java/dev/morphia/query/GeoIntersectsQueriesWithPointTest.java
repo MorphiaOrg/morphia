@@ -14,21 +14,17 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
-import dev.morphia.query.legacy.LegacyTestBase;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.*;
-import static java.util.List.of;
+import static dev.morphia.query.experimental.filters.Filters.geoIntersects;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoIntersectsQueriesWithPointTest extends LegacyTestBase {
+public class GeoIntersectsQueriesWithPointTest extends TestBase {
     @Test
     public void shouldFindAPointThatExactlyMatchesTheQueryPoint() {
         // given
@@ -44,8 +40,7 @@ public class GeoIntersectsQueriesWithPointTest extends LegacyTestBase {
 
         // when
         List<City> matchingCity = getDs().find(City.class)
-                                         .field("location")
-                                         .intersects(coordsOfManchester)
+                                         .filter(geoIntersects("location", coordsOfManchester))
                                          .execute().toList();
 
         // then
@@ -78,8 +73,8 @@ public class GeoIntersectsQueriesWithPointTest extends LegacyTestBase {
 
         // when
         List<Area> areaContainingPoint = getDs().find(Area.class)
-                                                .field("area")
-                                                .intersects(new Point(new Position(51.507780365645885, -0.21786745637655258)))
+                                                .filter(geoIntersects("area", new Point(new Position(51.507780365645885,
+                                                    -0.21786745637655258))))
                                                 .execute()
                                                 .toList();
 
@@ -138,8 +133,8 @@ public class GeoIntersectsQueriesWithPointTest extends LegacyTestBase {
 
         // when
         List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .field("everything")
-                                                      .intersects(new Point(new Position(51.50802478194237, -0.21474729292094707)))
+                                                      .filter(geoIntersects("everything",
+                                                          new Point(new Position(51.50802478194237, -0.21474729292094707))))
                                                       .execute()
                                                       .toList();
 
@@ -194,8 +189,8 @@ public class GeoIntersectsQueriesWithPointTest extends LegacyTestBase {
 
         // when
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .field("regions")
-                                              .intersects(new Point(new Position(51.498216362670064, 0.0074849557131528854)))
+                                              .filter(geoIntersects("regions",
+                                                  new Point(new Position(51.498216362670064, 0.0074849557131528854))))
                                               .execute()
                                               .toList();
 
@@ -230,8 +225,8 @@ public class GeoIntersectsQueriesWithPointTest extends LegacyTestBase {
 
         // when
         List<Route> routeContainingPoint = getDs().find(Route.class)
-                                                  .field("route")
-                                                  .intersects(new Point(new Position(37.40759155713022, -5.964911067858338)))
+                                                  .filter(geoIntersects("route",
+                                                      new Point(new Position(37.40759155713022, -5.964911067858338))))
                                                   .execute()
                                                   .toList();
 

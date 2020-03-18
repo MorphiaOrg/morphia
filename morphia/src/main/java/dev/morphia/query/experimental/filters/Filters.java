@@ -1,7 +1,9 @@
 package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.Geometry;
+import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Polygon;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Type;
@@ -200,13 +202,25 @@ public final class Filters {
     /**
      * Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param field   the field to check
+     * @param polygon the polygon to check
      * @return the filter
      * @query.filter $geoWithin
      */
-    public static Filter geoWithin(final String field, final Geometry val) {
-        return new Filter("$geoWithin", field, val);
+    public static GeoWithinFilter geoWithin(final String field, final Polygon polygon) {
+        return new GeoWithinFilter(field, polygon);
+    }
+
+    /**
+     * Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.
+     *
+     * @param field   the field to check
+     * @param polygon the polygon to check
+     * @return the filter
+     * @query.filter $geoWithin
+     */
+    public static GeoWithinFilter geoWithin(final String field, final MultiPolygon polygon) {
+        return new GeoWithinFilter(field, polygon);
     }
 
     /**

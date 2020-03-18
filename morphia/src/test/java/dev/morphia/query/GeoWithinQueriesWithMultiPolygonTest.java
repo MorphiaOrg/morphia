@@ -14,21 +14,18 @@ import dev.morphia.geo.model.Area;
 import dev.morphia.geo.model.City;
 import dev.morphia.geo.model.Regions;
 import dev.morphia.geo.model.Route;
-import dev.morphia.query.legacy.LegacyTestBase;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+import static dev.morphia.query.experimental.filters.Filters.geoWithin;
 import static java.util.Arrays.asList;
-import static java.util.List.of;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("unchecked")
-public class GeoWithinQueriesWithMultiPolygonTest extends LegacyTestBase {
+public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
     private final PolygonCoordinates uk = new PolygonCoordinates(asList(new Position(49.78, -10.5),
         new Position(49.78, 1.78),
         new Position((double) 59, 1.78),
@@ -69,8 +66,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends LegacyTestBase {
 
         // when
         List<Area> areasInTheUK = getDs().find(Area.class)
-                                         .field("area")
-                                         .within(europeanCountries)
+                                         .filter(geoWithin("area", europeanCountries))
                                          .execute().toList();
 
         // then
@@ -94,8 +90,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends LegacyTestBase {
         // when
         List<City> citiesInTheUK;
         citiesInTheUK = getDs().find(City.class)
-                               .field("location")
-                               .within(europeanCountries)
+                               .filter(geoWithin("location", europeanCountries))
                                .execute().toList();
 
         // then
@@ -152,8 +147,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends LegacyTestBase {
 
         // when
         List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .field("everything")
-                                                      .within(europeanCountries)
+                                                      .filter(geoWithin("everything", europeanCountries))
                                                       .execute().toList();
 
         // then
@@ -206,8 +200,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends LegacyTestBase {
 
         // when
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .field("regions")
-                                              .within(europeanCountries)
+                                              .filter(geoWithin("regions", europeanCountries))
                                               .execute()
                                               .toList();
 
@@ -241,8 +234,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends LegacyTestBase {
 
         // when
         List<Route> routesInTheUK = getDs().find(Route.class)
-                                           .field("route")
-                                           .within(europeanCountries)
+                                           .filter(geoWithin("route", europeanCountries))
                                            .execute()
                                            .toList();
 

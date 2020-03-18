@@ -44,6 +44,7 @@ import static java.lang.String.format;
  *
  * @mongodb.driver.manual tutorial/aggregation-zip-code-data-set/ Aggregation with the Zip Code Data Set
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ZipCodeDataSetTest extends TestBase {
     public static final File MONGO_IMPORT;
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
@@ -57,7 +58,7 @@ public class ZipCodeDataSetTest extends TestBase {
         } else {
             MONGO_IMPORT = Arrays.stream(System.getenv("PATH").split(File.pathSeparator))
                                  .map(p -> new File(p, "mongoimport"))
-                                 .filter(f -> f.exists())
+                                 .filter(File::exists)
                                  .findFirst()
                                  .orElseGet(() -> new File("/notreally here"));
         }
@@ -152,9 +153,8 @@ public class ZipCodeDataSetTest extends TestBase {
                                                                    .field("name", field("smallestCity"))
                                                                    .field("pop", field("smallestPop"))));
 
-        MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class);
-        try {
-            Map<String, State> states = new HashMap<String, State>();
+        try (MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class)) {
+            Map<String, State> states = new HashMap<>();
             while (cursor.hasNext()) {
                 State state = cursor.next();
                 states.put(state.getState(), state);
@@ -167,8 +167,6 @@ public class ZipCodeDataSetTest extends TestBase {
 
             Assert.assertEquals("ZEONA", state.getSmallest().getName());
             Assert.assertEquals(8, state.getSmallest().getPopulation().longValue());
-        } finally {
-            cursor.close();
         }
     }
 
