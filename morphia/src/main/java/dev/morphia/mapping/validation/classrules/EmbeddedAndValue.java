@@ -10,6 +10,9 @@ import dev.morphia.mapping.validation.ConstraintViolation.Level;
 
 import java.util.Set;
 
+/**
+ * Ensures value() isn't used on @Embedded
+ */
 @SuppressWarnings("removal")
 public class EmbeddedAndValue implements ClassConstraint {
 
@@ -18,8 +21,8 @@ public class EmbeddedAndValue implements ClassConstraint {
 
         if (mc.getEmbeddedAnnotation() != null && !mc.getEmbeddedAnnotation().value().equals(Mapper.IGNORED_FIELDNAME)) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(),
-                                           "@" + Embedded.class.getSimpleName()
-                                           + " classes cannot specify a fieldName value(); this is on applicable on fields"));
+                "@" + Embedded.class.getSimpleName()
+                + " classes cannot specify a fieldName value(); this is on applicable on fields"));
         }
     }
 
