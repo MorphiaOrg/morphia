@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bson.codecs.pojo;
+package morphia.org.bson.codecs.pojo;
 
 import java.util.HashMap;
 import java.util.Map;

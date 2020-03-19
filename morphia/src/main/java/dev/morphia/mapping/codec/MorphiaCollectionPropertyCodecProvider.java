@@ -1,9 +1,9 @@
 package dev.morphia.mapping.codec;
 
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
-import org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import java.util.Collection;

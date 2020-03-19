@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.bson.codecs.pojo;
+package morphia.org.bson.codecs.pojo;
+
+import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -30,7 +32,6 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static org.bson.assertions.Assertions.notNull;
-import static org.bson.codecs.pojo.PropertyReflectionUtils.isGetter;
 
 /**
  * Holds type information about a type element
@@ -261,5 +262,16 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
         map.put(long.class, Long.class);
         map.put(short.class, Short.class);
         PRIMITIVE_CLASS_MAP = map;
+    }
+
+    private static boolean isGetter(Method method) {
+        if (method.getParameterTypes().length > 0) {
+            return false;
+        } else if (method.getName().startsWith("get") && method.getName().length() > "get".length()) {
+            return Character.isUpperCase(method.getName().charAt("get".length()));
+        } else {
+            return method.getName().startsWith("is") && method.getName().length() > "is".length() ? Character.isUpperCase(
+                method.getName().charAt("is".length())) : false;
+        }
     }
 }

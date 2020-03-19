@@ -6,7 +6,7 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
-import org.bson.codecs.pojo.TypeData;
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.types.ObjectId;
 
 import java.net.URI;

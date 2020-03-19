@@ -56,7 +56,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @return either the passed collection or the updated collection
      * @since 2.0
      */
-    public <T> MongoCollection<T> apply(final MongoCollection collection) {
+    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
         return writeConcern == null
                ? collection
                : collection.withWriteConcern(writeConcern);

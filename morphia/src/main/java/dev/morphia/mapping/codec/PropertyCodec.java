@@ -3,8 +3,8 @@ package dev.morphia.mapping.codec;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.codec.pojo.FieldModel;
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.Codec;
-import org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Field;
 

@@ -17,10 +17,10 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.sofia.Sofia;
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
-import org.bson.codecs.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

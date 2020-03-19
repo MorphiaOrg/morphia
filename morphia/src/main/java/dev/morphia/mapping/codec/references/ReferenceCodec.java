@@ -20,6 +20,7 @@ import dev.morphia.mapping.experimental.SetReference;
 import dev.morphia.mapping.experimental.SingleReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
+import morphia.org.bson.codecs.pojo.TypeData;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType.Loaded;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
@@ -33,7 +34,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
-import org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

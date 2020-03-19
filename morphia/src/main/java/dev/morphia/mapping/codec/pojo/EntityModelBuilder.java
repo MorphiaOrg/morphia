@@ -10,8 +10,8 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MorphiaConvention;
 import dev.morphia.sofia.Sofia;
-import org.bson.codecs.pojo.TypeData;
-import org.bson.codecs.pojo.TypeParameterMap;
+import morphia.org.bson.codecs.pojo.TypeData;
+import morphia.org.bson.codecs.pojo.TypeParameterMap;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -29,8 +29,8 @@ import java.util.Set;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.groupingBy;
+import static morphia.org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
 import static org.bson.assertions.Assertions.notNull;
-import static org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
 
 /**
  * Builder for EntityModels

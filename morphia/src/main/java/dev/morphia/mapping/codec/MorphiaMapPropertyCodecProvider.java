@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -8,7 +9,6 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
-import org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import java.lang.reflect.Constructor;

@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import org.bson.codecs.pojo.TypeData;
+import morphia.org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;

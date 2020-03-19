@@ -5,13 +5,13 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.pojo.TypeData;
 
 import java.lang.reflect.Field;
 import java.util.Collection;

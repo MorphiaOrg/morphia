@@ -24,8 +24,8 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.Document;
-import org.bson.codecs.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

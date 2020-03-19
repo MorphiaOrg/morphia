@@ -5,7 +5,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import org.bson.codecs.pojo.TypeData;
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;

@@ -13,8 +13,8 @@ import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
+import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.pojo.PropertyAccessor;
-import org.bson.codecs.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

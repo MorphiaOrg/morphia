@@ -16,8 +16,8 @@
 
 package dev.morphia.mapping.codec.pojo;
 
-import org.bson.codecs.pojo.TypeData;
-import org.bson.codecs.pojo.TypeParameterMap;
+import morphia.org.bson.codecs.pojo.TypeData;
+import morphia.org.bson.codecs.pojo.TypeParameterMap;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
