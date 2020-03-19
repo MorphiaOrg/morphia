@@ -32,14 +32,5 @@ The following code snippets come from the QuickTour.java example code that can b
 Setting up Morphia The following example shows how to create the initial Morphia instance.</description>
     </item>
     
-    <item>
-      <title>Migration Guide</title>
-      <link>/2.0.0-SNAPSHOT/getting-started/migration/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/2.0.0-SNAPSHOT/getting-started/migration/</guid>
-      <description>Migrating to 1.5  Indexing of @Embedded fields is being deprecated in favor of declaring all indexes at the top level @Entity level. The new index definitions just need to use the dotted path names to recreate these indexes. To turn off the warning in the logs about embedded indexing, simply pass false to MapperOptions#setDisableEmbeddedIndexes. Query#asList() is deprecated. Usages should be updated to use find().toList() instead.  </description>
-    </item>
-    
   </channel>
 </rss>
