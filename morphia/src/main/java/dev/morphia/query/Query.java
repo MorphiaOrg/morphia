@@ -4,6 +4,7 @@ package dev.morphia.query;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
 import dev.morphia.FindAndModifyOptions;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -11,7 +12,9 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.Map;
+import java.util.Spliterator;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
 
@@ -20,7 +23,7 @@ import static dev.morphia.query.MorphiaQuery.legacyOperation;
  * @param <T> The java type to query against
  */
 @SuppressWarnings("removal")
-public interface Query<T> extends CriteriaContainer {
+public interface Query<T> extends CriteriaContainer, Iterable<T> {
     /**
      * Creates a container to hold 'and' clauses
      *
@@ -44,13 +47,70 @@ public interface Query<T> extends CriteriaContainer {
     }
 
     /**
-     * Adds filters to this query.  This operation is cumulative.
+     * Count the total number of values in the result, ignoring limit and offset
      *
-     * @param filters the filters to add
-     * @return this
+     * @return the count
+     * @since 1.3
      */
-    default Query<T> filter(Filter... filters) {
-        throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
+    long count();
+
+    /**
+     * Count the total number of values in the result, ignoring limit and offset
+     *
+     * @param options the options to apply to the count operation
+     * @return the count
+     * @since 1.3
+     */
+    long count(CountOptions options);
+
+    /**
+     * Deletes an entity from the database and returns it.
+     *
+     * @return the deleted entity
+     */
+    default T delete() {
+        return delete(new FindAndDeleteOptions());
+    }
+
+    /**
+     * Deletes an entity from the database and returns it.
+     *
+     * @param options the options to apply
+     * @return the deleted entity
+     */
+    T delete(FindAndDeleteOptions options);
+
+    /**
+     * Deletes an entity from the database and returns it.
+     *
+     * @param options the options to apply
+     * @return the deleted entity
+     * @deprecated use {@link #delete(FindAndDeleteOptions)}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default T delete(FindAndModifyOptions options) {
+        return delete(new FindAndDeleteOptions()
+                          .writeConcern(options.getWriteConcern())
+                          .collation(options.getCollation())
+                          .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+                          .sort(options.getSort())
+                          .projection(options.getProjection()));
+
+    }
+
+    /**
+     * Execute the query and get the results.
+     * <p>
+     * *note* the return type of this will change in 2.0.
+     *
+     * @return a MorphiaCursor
+     * @see #execute(FindOptions)
+     * @since 1.4
+     * @deprecated use {@link #iterator(FindOptions)} instead.  This method will be removed after BETA2.
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> execute() {
+        return iterator();
     }
 
     /**
@@ -66,6 +126,29 @@ public interface Query<T> extends CriteriaContainer {
      * @return this
      */
     Query<T> enableValidation();
+
+    /**
+     * Execute the query and get the results.
+     *
+     * @param options the options to apply to the find operation
+     * @return a MorphiaCursor
+     * @since 1.4
+     * @deprecated use {@link #iterator(FindOptions)} instead.  This method will be removed after BETA2.
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> execute(FindOptions options) {
+        return iterator(options);
+    }
+
+    /**
+     * Adds filters to this query.  This operation is cumulative.
+     *
+     * @param filters the filters to add
+     * @return this
+     */
+    default Query<T> filter(Filter... filters) {
+        throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
+    }
 
     /**
      * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
@@ -90,25 +173,6 @@ public interface Query<T> extends CriteriaContainer {
     Map<String, Object> explain(FindOptions options);
 
     /**
-     * Allows the use of aggregation expressions within the query language.
-     * @param expression the expression to include
-     * @return this
-     * @since 2.0
-     */
-    //    Query<T> expr(Expression expression);
-
-    /**
-     * Creates a container to hold 'or' clauses
-     *
-     * @param criteria the clauses to 'or' together
-     * @return the container
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default CriteriaContainer or(final Criteria... criteria) {
-        return legacyOperation();
-    }
-
-    /**
      * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}
      *
      * @param name the field
@@ -117,6 +181,21 @@ public interface Query<T> extends CriteriaContainer {
     @Deprecated(since = "2.0", forRemoval = true)
     default FieldEnd<? extends Query<T>> field(final String name) {
         return legacyOperation();
+    }
+
+    /**
+     * Execute the query and get the results.
+     * <p>
+     * *note* the return type of this will change in 2.0.
+     *
+     * @return a MorphiaCursor
+     * @see #execute(FindOptions)
+     * @since 1.4
+     * @deprecated use {@link #execute()}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> find() {
+        return execute();
     }
 
     /**
@@ -154,6 +233,119 @@ public interface Query<T> extends CriteriaContainer {
     }
 
     /**
+     * Execute the query and get the results.
+     *
+     * @param options the options to apply to the find operation
+     * @return a MorphiaCursor
+     * @since 1.4
+     * @deprecated use {@link #execute(FindOptions)}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> find(FindOptions options) {
+        return execute(options);
+    }
+
+    /**
+     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
+     *
+     * @return the only instance in the result, or null if the result set is empty.
+     * @since 1.5
+     */
+    T first();
+
+    /**
+     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
+     *
+     * @param options the options to apply to the find operation
+     * @return the only instance in the result, or null if the result set is empty.
+     * @since 1.5
+     */
+    T first(FindOptions options);
+
+    /**
+     * Performs the given action for each element.
+     * <p>
+     * *NOTE*:  Only available using the modern implementation.
+     *
+     * @param options the options to apply to the find operation
+     * @param action  the action to apply to each element
+     * @since 2.0
+     */
+    void forEach(FindOptions options, Consumer<? super T> action);
+
+    /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
+    Class<T> getEntityClass();
+
+    /**
+     * Execute the query and get the results.
+     * <p>
+     * *NOTE*:  Only available using the modern implementation.
+     *
+     * @param options the options to apply to the find operation
+     * @return a MorphiaCursor
+     * @since 2.0
+     */
+    MorphiaCursor<T> iterator(FindOptions options);
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     * <p>
+     * *NOTE*:  Only available using the modern implementation.
+     *
+     * @return a MorphiaCursor
+     * @see MapperOptions#legacy()
+     * @since 2.0
+     */
+    @Override
+    MorphiaCursor<T> iterator();
+
+    /**
+     * Performs the given action for each element.
+     * <p>
+     * *NOTE*:  Only available using the modern implementation.
+     *
+     * @param action the action to apply to each element
+     * @since 2.0
+     */
+    @Override
+    void forEach(Consumer<? super T> action);
+
+    /**
+     * @return a MorphiaCursor
+     * @since 2.0
+     */
+    @Override
+    default Spliterator<T> spliterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
+     *
+     * @return the keys of the documents returned by this query
+     */
+    MorphiaKeyCursor<T> keys();
+
+    /**
+     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
+     *
+     * @param options the options to apply to the find operation
+     * @return the keys of the documents returned by this query
+     * @since 1.4
+     */
+    MorphiaKeyCursor<T> keys(FindOptions options);
+
+    /**
+     * Create a modify operation based on this query
+     *
+     * @return the modify operation
+     */
+    Modify<T> modify();
+
+    /**
      * This is only intended for migration of legacy uses of UpdateOperations
      *
      * @param operations the prebuilt operations
@@ -164,6 +356,17 @@ public interface Query<T> extends CriteriaContainer {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default Modify<T> modify(final UpdateOperations<T> operations) {
+        return legacyOperation();
+    }
+
+    /**
+     * Creates a container to hold 'or' clauses
+     *
+     * @param criteria the clauses to 'or' together
+     * @return the container
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default CriteriaContainer or(final Criteria... criteria) {
         return legacyOperation();
     }
 
@@ -189,12 +392,6 @@ public interface Query<T> extends CriteriaContainer {
     default Query<T> order(final Sort... sorts) {
         return legacyOperation();
     }
-
-    /**
-     * @return the document form of this query
-     * @morphia.internal
-     */
-    Document toDocument();
 
     /**
      * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
@@ -242,6 +439,35 @@ public interface Query<T> extends CriteriaContainer {
     }
 
     /**
+     * Deletes elements matching this query
+     *
+     * @return the results
+     * @see DeleteOptions
+     */
+    default DeleteResult remove() {
+        return remove(new DeleteOptions());
+    }
+
+    /**
+     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
+     *
+     * @param options the options to apply
+     * @return the results
+     */
+    DeleteResult remove(DeleteOptions options);
+
+    /**
+     * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
+     *
+     * @return this
+     * @deprecated use {@link FindOptions#projection()}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default Query<T> retrieveKnownFields() {
+        return legacyOperation();
+    }
+
+    /**
      * Perform a text search on the content of the fields indexed with a text index..
      *
      * @param text the text to search for
@@ -261,181 +487,10 @@ public interface Query<T> extends CriteriaContainer {
     Query<T> search(String text, String language);
 
     /**
-     * Limit the query using this javascript block; only one per query
-     *
-     * @param js the javascript block to apply
-     * @return this
+     * @return the document form of this query
+     * @morphia.internal
      */
-    Query<T> where(String js);
-
-    /**
-     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
-     *
-     * @return the keys of the documents returned by this query
-     */
-    MorphiaKeyCursor<T> keys();
-
-    /**
-     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
-     *
-     * @param options the options to apply to the find operation
-     * @return the keys of the documents returned by this query
-     * @since 1.4
-     */
-    MorphiaKeyCursor<T> keys(FindOptions options);
-
-    /**
-     * Count the total number of values in the result, ignoring limit and offset
-     *
-     * @return the count
-     * @since 1.3
-     */
-    long count();
-
-    /**
-     * Count the total number of values in the result, ignoring limit and offset
-     *
-     * @param options the options to apply to the count operation
-     * @return the count
-     * @since 1.3
-     */
-    long count(CountOptions options);
-
-    /**
-     * Execute the query and get the results.
-     * <p>
-     * *note* the return type of this will change in 2.0.
-     *
-     * @return a MorphiaCursor
-     * @see #execute(FindOptions)
-     * @since 1.4
-     * @deprecated use {@link #execute()}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default MorphiaCursor<T> find() {
-        return execute();
-    }
-
-    /**
-     * Execute the query and get the results.
-     * <p>
-     * *note* the return type of this will change in 2.0.
-     *
-     * @return a MorphiaCursor
-     * @see #execute(FindOptions)
-     * @since 1.4
-     */
-    MorphiaCursor<T> execute();
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return a MorphiaCursor
-     * @since 1.4
-     * @deprecated use {@link #execute(FindOptions)}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default MorphiaCursor<T> find(FindOptions options) {
-        return execute(options);
-    }
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return a MorphiaCursor
-     * @since 1.4
-     */
-    MorphiaCursor<T> execute(FindOptions options);
-
-    /**
-     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
-     *
-     * @return the only instance in the result, or null if the result set is empty.
-     * @since 1.5
-     */
-    T first();
-
-    /**
-     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
-     *
-     * @param options the options to apply to the find operation
-     * @return the only instance in the result, or null if the result set is empty.
-     * @since 1.5
-     */
-    T first(FindOptions options);
-
-    /**
-     * Deletes an entity from the database and returns it.
-     *
-     * @return the deleted entity
-     */
-    default T delete() {
-        return delete(new FindAndDeleteOptions());
-    }
-
-    /**
-     * Deletes an entity from the database and returns it.
-     *
-     * @param options the options to apply
-     * @return the deleted entity
-     */
-    T delete(FindAndDeleteOptions options);
-
-    /**
-     * Deletes an entity from the database and returns it.
-     *
-     * @param options the options to apply
-     * @return the deleted entity
-     * @deprecated use {@link #delete(FindAndDeleteOptions)}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default T delete(FindAndModifyOptions options) {
-        return delete(new FindAndDeleteOptions()
-                          .writeConcern(options.getWriteConcern())
-                          .collation(options.getCollation())
-                          .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-                          .sort(options.getSort())
-                          .projection(options.getProjection()));
-
-    }
-
-    /**
-     * Create a modify operation based on this query
-     *
-     * @return the modify operation
-     */
-    Modify<T> modify();
-
-    /**
-     * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
-     *
-     * @return this
-     * @deprecated use {@link FindOptions#projection()}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> retrieveKnownFields() {
-        return legacyOperation();
-    }
-
-    /**
-     * Deletes elements matching this query
-     *
-     * @return the results
-     * @see DeleteOptions
-     */
-    default DeleteResult remove() {
-        return remove(new DeleteOptions());
-    }
-
-    /**
-     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
-     *
-     * @param options the options to apply
-     * @return the results
-     */
-    DeleteResult remove(DeleteOptions options);
+    Document toDocument();
 
     /**
      * Creates an update operation based on this query
@@ -452,13 +507,17 @@ public interface Query<T> extends CriteriaContainer {
      * @deprecated
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default Update<T> update(final UpdateOperations operations) {
+    default Update<T> update(final UpdateOperations<T> operations) {
         return legacyOperation();
     }
 
     /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
+     * Limit the query using this javascript block; only one per query
+     *
+     * @param js the javascript block to apply
+     * @return this
+     * @deprecated use {@link dev.morphia.query.experimental.filters.Filters#where(String)} instead
      */
-    Class<T> getEntityClass();
+    @Deprecated(since = "2.0", forRemoval = true)
+    Query<T> where(String js);
 }

@@ -24,6 +24,7 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
+import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
@@ -1281,8 +1282,8 @@ public class TestQuery extends TestBase {
     public void testWhereStringQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class)
-                             .where("return this.keywords != null;")
-                             .execute(new FindOptions().limit(1))
+                             .filter(Filters.where("return this.keywords != null;"))
+                             .iterator(new FindOptions().limit(1))
                              .next());
     }
 
