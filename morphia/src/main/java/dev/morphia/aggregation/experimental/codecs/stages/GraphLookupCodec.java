@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -34,7 +35,14 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
         writeNamedValue(writer, "as", value.getAs(), encoderContext);
         writeNamedValue(writer, "maxDepth", value.getMaxDepth(), encoderContext);
         writeNamedValue(writer, "depthField", value.getDepthField(), encoderContext);
-        writeNamedValue(writer, "restrictSearchWithMatch", value.getRestriction(), encoderContext);
+        Filter[] restriction = value.getRestriction();
+        if (restriction != null) {
+            writer.writeStartDocument("restrictSearchWithMatch");
+            for (final Filter filter : restriction) {
+                filter.encode(getMapper(), writer, encoderContext);
+            }
+            writer.writeEndDocument();
+        }
 
         writer.writeEndDocument();
     }

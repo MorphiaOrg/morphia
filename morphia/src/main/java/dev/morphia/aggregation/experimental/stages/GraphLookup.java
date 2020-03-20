@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
 
 /**
  * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.
@@ -16,7 +16,7 @@ public class GraphLookup extends Stage {
     private String as;
     private Integer maxDepth;
     private String depthField;
-    private Query restriction;
+    private Filter[] restriction;
     private Class fromType;
 
     /**
@@ -171,7 +171,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
-    public Query getRestriction() {
+    public Filter[] getRestriction() {
         return restriction;
     }
 
@@ -197,11 +197,11 @@ public class GraphLookup extends Stage {
     /**
      * Optional. A query specifying additional conditions for the recursive search
      *
-     * @param query the query to restrict the matching
+     * @param filters the filters to restrict the matching
      * @return this
      */
-    public GraphLookup restrict(final Query query) {
-        this.restriction = query;
+    public GraphLookup restrict(final Filter... filters) {
+        this.restriction = filters;
         return this;
     }
 
