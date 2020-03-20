@@ -17,7 +17,11 @@ import java.util.function.Function;
 import static java.lang.Boolean.FALSE;
 
 /**
- * Defines basic type conversions
+ * Defines basic type conversions.  This class is mostly intended for internal use only but its methods are public so that when cases
+ * arise where certain conversions are missing, users can add their in between releases.  However, this must be done with the understand
+ * that, however unlikely, this API is subject to change and any uses might break at some point.
+ *
+ * @morphia.internal
  */
 public final class Conversions {
     private static final Logger LOG = LoggerFactory.getLogger(Conversions.class);
@@ -79,22 +83,51 @@ public final class Conversions {
         register(String.class, URI.class, str -> URI.create(str.replace("%46", ".")));
     }
 
-    private static <F, T> void register(final Class<F> fromType, final Class<T> toType, final Function<F, T> function) {
-        register(fromType, toType, function, null);
+    /**
+     * Register a conversion between two types.  For example, to register the conversion of {@link Date} to a {@link Long}, this method
+     * could be invoked as follows:
+     *
+     * <code>
+     * register(Date.class, Long.class, Date::getTime);
+     * </code>
+     *
+     * @param source   the source type
+     * @param target   the target type
+     * @param function the function that performs the conversion.  This is often just a method reference.
+     * @param <S>      the source type
+     * @param <T>      the target type.
+     */
+    public static <S, T> void register(final Class<S> source, final Class<T> target, final Function<S, T> function) {
+        register(source, target, function, null);
     }
 
-    private static <F, T> void register(final Class<F> fromType, final Class<T> toType, final Function<F, T> function,
-                                        final String warning) {
-        final Function<F, T> conversion = warning == null
+    /**
+     * Register a conversion between two types.  For example, to register the conversion of {@link Date} to a {@link Long}, this method
+     * could be invoked as follows:
+     *
+     * <code>
+     * register(Date.class, Long.class, Date::getTime);
+     * </code>
+     *
+     * @param source   the source type
+     * @param target   the target type
+     * @param function the function that performs the conversion.  This is often just a method reference.
+     * @param warning  if non-null, this will be the message logged on the WARN level indicating the conversion is taking place.
+     * @param <S>      the source type
+     * @param <T>      the target type.
+     */
+    public static <S, T> void register(final Class<S> source, final Class<T> target, final Function<S, T> function,
+                                       final String warning) {
+        final Function<S, T> conversion = warning == null
                                           ? function
-                                          : f -> {
+                                          : s -> {
                                               if (LOG.isWarnEnabled()) {
                                                   LOG.warn(warning);
                                               }
-                                              return function.apply(f);
+                                              return function.apply(s);
                                           };
-        conversions.computeIfAbsent(fromType, (Class<?> c) -> new HashMap<>())
-                   .put(toType, conversion);
+        conversions.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
+                   .put(target, conversion);
     }
 
     /**
