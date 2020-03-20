@@ -51,12 +51,12 @@ public class QueryInTest extends TestBase {
         getDs().save(doc);
 
         // this works
-        getDs().find(Doc.class).filter(eq("_id", 1)).execute();
+        getDs().find(Doc.class).filter(eq("_id", 1)).iterator();
 
         final List<Long> idList = new ArrayList<>();
         idList.add(1L);
         // this causes an NPE
-        getDs().find(Doc.class).filter(in("_id", idList)).execute();
+        getDs().find(Doc.class).filter(in("_id", idList)).iterator();
 
     }
 
@@ -106,6 +106,24 @@ public class QueryInTest extends TestBase {
         Assert.assertEquals(1, q.count());
     }
 
+    @Entity("docs")
+    private static class Doc {
+        @Id
+        private long id = 4;
+
+    }
+
+    @Entity(value = "as", useDiscriminator = false)
+    private static class HasIdOnly {
+        @Id
+        private ObjectId id;
+        private String name;
+        @Reference(idOnly = true)
+        private List<ReferencedEntity> list;
+        @Reference(idOnly = true)
+        private ReferencedEntity entity;
+    }
+
     @Entity
     private static class HasRef implements Serializable {
         @Id
@@ -132,23 +150,5 @@ public class QueryInTest extends TestBase {
         ReferencedEntity(final String s) {
             foo = s;
         }
-    }
-
-    @Entity(value = "as", useDiscriminator = false)
-    private static class HasIdOnly {
-        @Id
-        private ObjectId id;
-        private String name;
-        @Reference(idOnly = true)
-        private List<ReferencedEntity> list;
-        @Reference(idOnly = true)
-        private ReferencedEntity entity;
-    }
-
-    @Entity("docs")
-    private static class Doc {
-        @Id
-        private long id = 4;
-
     }
 }

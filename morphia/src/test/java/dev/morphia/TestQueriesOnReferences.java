@@ -24,16 +24,14 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Assert.assertNotNull(getDs().find(ContainsPic.class)
-                                    .filter(exists("pic"))
-                                    .execute(new FindOptions()
-                                                 .projection().include("pic")
-                                                 .limit(1))
+                                    .filter(exists("pic")).iterator(new FindOptions()
+                                                                        .projection().include("pic")
+                                                                        .limit(1))
                                     .tryNext());
         Assert.assertNull(getDs().find(ContainsPic.class)
-                                 .filter(exists("pic").not())
-                                 .execute(new FindOptions()
-                                              .projection().include("pic")
-                                              .limit(1))
+                                 .filter(exists("pic").not()).iterator(new FindOptions()
+                                                                           .projection().include("pic")
+                                                                           .limit(1))
                                  .tryNext());
     }
 
@@ -47,7 +45,7 @@ public class TestQueriesOnReferences extends TestBase {
 
         getDs().delete(p);
 
-        getDs().find(ContainsPic.class).execute().toList();
+        getDs().find(ContainsPic.class).iterator().toList();
     }
 
     @Test
@@ -63,13 +61,11 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
-        Assert.assertNotNull(query.filter(eq("lazyPic", p))
-                                  .execute(new FindOptions().limit(1))
+        Assert.assertNotNull(query.filter(eq("lazyPic", p)).iterator(new FindOptions().limit(1))
                                   .tryNext());
 
         query = getDs().find(ContainsPic.class);
-        Assert.assertNotNull(query.filter(eq("lazyObjectIdPic", withObjectId))
-                                  .execute(new FindOptions().limit(1))
+        Assert.assertNotNull(query.filter(eq("lazyObjectIdPic", withObjectId)).iterator(new FindOptions().limit(1))
                                   .tryNext());
     }
 
@@ -83,8 +79,7 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
-        final ContainsPic object = query.filter(eq("pic", p))
-                                        .execute(new FindOptions().limit(1))
+        final ContainsPic object = query.filter(eq("pic", p)).iterator(new FindOptions().limit(1))
                                         .tryNext();
         Assert.assertNotNull(object);
 
@@ -103,12 +98,12 @@ public class TestQueriesOnReferences extends TestBase {
         FindOptions options = new FindOptions()
                                   .logQuery()
                                   .limit(1);
-        ContainsPic containsPic = query.execute(options)
+        ContainsPic containsPic = query.iterator(options)
                                        .tryNext();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), cpk.getId(), containsPic.getId());
 
-        containsPic = query.execute(new FindOptions().limit(1))
+        containsPic = query.iterator(new FindOptions().limit(1))
                            .tryNext();
         Assert.assertEquals(cpk.getId(), containsPic.getId());
     }

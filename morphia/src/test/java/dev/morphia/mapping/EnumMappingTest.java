@@ -30,7 +30,7 @@ public class EnumMappingTest extends TestBase {
 
         getMapper().map(Class1.class);
 
-        entity = getDs().find(Class1.class).execute(new FindOptions().limit(1)).tryNext();
+        entity = getDs().find(Class1.class).iterator(new FindOptions().limit(1)).tryNext();
         final Map<String, Foo> map = entity.getMap();
         Foo b = map.get("key");
         Assert.assertNotNull(b);

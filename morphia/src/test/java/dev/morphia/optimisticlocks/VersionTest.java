@@ -40,9 +40,9 @@ public class VersionTest extends TestBase {
 
         Query<ALongPrimitive> query = getDs().find(ALongPrimitive.class)
                                              .filter(eq("_id", a.getId()));
-        getDs().save(query.execute().next());
+        getDs().save(query.iterator().next());
 
-        assertEquals(2, query.execute().next().version);
+        assertEquals(2, query.iterator().next().version);
 
         getDs().save(a);
     }

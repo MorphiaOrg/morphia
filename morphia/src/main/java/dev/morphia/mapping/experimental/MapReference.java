@@ -130,8 +130,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private void readFromSingleCollection(final String collection, final List<Object> collectionIds) {
 
         try (MongoCursor<T> cursor = (MongoCursor<T>) getDatastore().find(collection)
-                                                                    .filter(in("_id", collectionIds))
-                                                                    .execute()) {
+                                                                    .filter(in("_id", collectionIds)).iterator()) {
             final Map<Object, T> idMap = new HashMap<>();
             while (cursor.hasNext()) {
                 final T entity = cursor.next();

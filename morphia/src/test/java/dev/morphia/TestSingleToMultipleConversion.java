@@ -20,19 +20,16 @@ public class TestSingleToMultipleConversion extends TestBase {
         getDs().find(HasSingleString.class)
                .remove();
         getDs().save(new HasSingleString());
-        Assert.assertNotNull(getDs().find(HasSingleString.class)
-                                    .execute(new FindOptions().limit(1))
+        Assert.assertNotNull(getDs().find(HasSingleString.class).iterator(new FindOptions().limit(1))
                                     .next());
         Assert.assertEquals(1, getDs().find(HasSingleString.class).count());
-        final HasManyStringsArray hms = getDs().find(HasManyStringsArray.class)
-                                               .execute(new FindOptions().limit(1))
+        final HasManyStringsArray hms = getDs().find(HasManyStringsArray.class).iterator(new FindOptions().limit(1))
                                                .next();
         Assert.assertNotNull(hms);
         Assert.assertNotNull(hms.strings);
         Assert.assertEquals(1, hms.strings.length);
 
-        final HasManyStringsList hms2 = getDs().find(HasManyStringsList.class)
-                                               .execute(new FindOptions().limit(1))
+        final HasManyStringsList hms2 = getDs().find(HasManyStringsList.class).iterator(new FindOptions().limit(1))
                                                .next();
         Assert.assertNotNull(hms2);
         Assert.assertNotNull(hms2.strings);
@@ -42,19 +39,16 @@ public class TestSingleToMultipleConversion extends TestBase {
     @Test
     public void testEmbeddedType() {
         getDs().save(new HasEmbeddedStringy());
-        Assert.assertNotNull(getDs().find(HasEmbeddedStringy.class)
-                                    .execute(new FindOptions().limit(1))
+        Assert.assertNotNull(getDs().find(HasEmbeddedStringy.class).iterator(new FindOptions().limit(1))
                                     .next());
         Assert.assertEquals(1, getDs().find(HasEmbeddedStringy.class).count());
-        final HasEmbeddedStringyArray has = getDs().find(HasEmbeddedStringyArray.class)
-                                                   .execute(new FindOptions().limit(1))
+        final HasEmbeddedStringyArray has = getDs().find(HasEmbeddedStringyArray.class).iterator(new FindOptions().limit(1))
                                                    .next();
         Assert.assertNotNull(has);
         Assert.assertNotNull(has.hss);
         Assert.assertEquals(1, has.hss.length);
 
-        final HasEmbeddedStringySet has2 = getDs().find(HasEmbeddedStringySet.class)
-                                                  .execute(new FindOptions().limit(1))
+        final HasEmbeddedStringySet has2 = getDs().find(HasEmbeddedStringySet.class).iterator(new FindOptions().limit(1))
                                                   .next();
         Assert.assertNotNull(has2);
         Assert.assertNotNull(has2.hss);

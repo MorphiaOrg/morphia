@@ -43,8 +43,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                              new Position(37.40759155713022, -5.964911067858338),
                                              new Position(37.40341208875179, -5.9643941558897495),
                                              new Position(37.40297396667302, -5.970452763140202),
-                                             new Position(37.40759155713022, -5.964911067858338)))))
-                                         .execute().toList();
+                                             new Position(37.40759155713022, -5.964911067858338))))).iterator().toList();
 
         // then
         assertThat(matchingCity.size(), is(1));
@@ -82,8 +81,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
             new Position(37.407239, -5.962988),
             new Position(37.4056048, -5.9666089));
         List<Area> areaContainingPoint = getDs().find(Area.class)
-                                                .filter(geoIntersects("area", new Polygon(es)))
-                                                .execute().toList();
+                                                .filter(geoIntersects("area", new Polygon(es))).iterator().toList();
 
         // then
         assertThat(areaContainingPoint.size(), is(1));
@@ -141,8 +139,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                           new Position(37.4056048, -5.9666089),
                                                           new Position(37.404497, -5.9640557),
                                                           new Position(37.407239, -5.962988),
-                                                          new Position(37.4056048, -5.9666089)))))
-                                                      .execute().toList();
+                                                          new Position(37.4056048, -5.9666089))))).iterator().toList();
 
         // then
         assertThat(everythingInTheUK.size(), is(1));
@@ -199,8 +196,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                   new Position(37.4056048, -5.9666089),
                                                   new Position(37.404497, -5.9640557),
                                                   new Position(37.407239, -5.962988),
-                                                  new Position(37.4056048, -5.9666089)))))
-                                              .execute()
+                                                  new Position(37.4056048, -5.9666089))))).iterator()
                                               .toList();
 
         // then
@@ -238,8 +234,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
                                                       new Position(37.40759155713022, -5.964911067858338),
                                                       new Position(37.40341208875179, -5.9643941558897495),
                                                       new Position(37.40297396667302, -5.970452763140202),
-                                                      new Position(37.40759155713022, -5.964911067858338)))))
-                                                  .execute()
+                                                      new Position(37.40759155713022, -5.964911067858338))))).iterator()
                                                   .toList();
 
         // then

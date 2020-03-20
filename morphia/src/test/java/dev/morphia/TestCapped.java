@@ -1,12 +1,11 @@
 package dev.morphia;
 
-import dev.morphia.mapping.Mapper;
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,8 +23,7 @@ public class TestCapped extends TestBase {
         assertEquals(1, getDs().find(CurrentStatus.class).count());
         getDs().save(new CurrentStatus("Kinda Bad"));
         assertEquals(1, getDs().find(CurrentStatus.class).count());
-        assertTrue(getDs().find(CurrentStatus.class)
-                          .execute(new FindOptions().limit(1))
+        assertTrue(getDs().find(CurrentStatus.class).iterator(new FindOptions().limit(1))
                           .next()
                        .message.contains("Bad"));
         getDs().save(new CurrentStatus("Kinda Bad2"));

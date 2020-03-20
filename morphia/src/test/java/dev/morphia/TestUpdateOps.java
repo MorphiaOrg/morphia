@@ -96,8 +96,7 @@ public class TestUpdateOps extends TestBase {
         // then
         assertThat(updateResult.getModifiedCount(), is(1L));
         assertThat(getDs().find(Parent.class)
-                          .filter(eq("id", parentId))
-                          .execute(new FindOptions().limit(1))
+                          .filter(eq("id", parentId)).iterator(new FindOptions().limit(1))
                           .next()
                        .children, hasItem(new Child(childName, updatedLastName)));
     }
@@ -246,8 +245,7 @@ public class TestUpdateOps extends TestBase {
         assertUpdated(circle.update().inc("radius").execute(new UpdateOptions().multi(true)), 2);
 
         //test possible data type change.
-        final Circle updatedCircle = circle.filter(eq("radius", 13))
-                                           .execute(new FindOptions().limit(1))
+        final Circle updatedCircle = circle.filter(eq("radius", 13)).iterator(new FindOptions().limit(1))
                                            .next();
         assertThat(updatedCircle, is(notNullValue()));
         assertThat(updatedCircle.getRadius(), is(13D));
@@ -303,12 +301,10 @@ public class TestUpdateOps extends TestBase {
 
         assertThat(getDs().find(Rectangle.class).count(), is(5L));
         assertThat(getDs().find(Rectangle.class)
-                          .filter(eq("height", 1D))
-                          .execute(new FindOptions().limit(1))
+                          .filter(eq("height", 1D)).iterator(new FindOptions().limit(1))
                           .next(), is(notNullValue()));
         assertThat(getDs().find(Rectangle.class)
-                          .filter(eq("width", 30D))
-                          .execute(new FindOptions().limit(1))
+                          .filter(eq("width", 30D)).iterator(new FindOptions().limit(1))
                           .next(), is(notNullValue()));
 
         getDs().find(Rectangle.class)
@@ -317,12 +313,10 @@ public class TestUpdateOps extends TestBase {
                .set("height", 2D).set("width", 2D)
                .execute();
         assertThat(getDs().find(Rectangle.class)
-                          .filter(eq("width", 1D))
-                          .execute(new FindOptions().limit(1))
+                          .filter(eq("width", 1D)).iterator(new FindOptions().limit(1))
                           .tryNext(), is(nullValue()));
         assertThat(getDs().find(Rectangle.class)
-                          .filter(eq("width", 2D))
-                          .execute(new FindOptions().limit(1))
+                          .filter(eq("width", 2D)).iterator(new FindOptions().limit(1))
                           .next(), is(notNullValue()));
 
         heightOf35.update().dec("height", 1).execute();
@@ -371,8 +365,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(getDs().find(ContainsPic.class).count(), is(1L));
 
         //test reading the object.
-        final ContainsPic cp = getDs().find(ContainsPic.class)
-                                      .execute(new FindOptions().limit(1))
+        final ContainsPic cp = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
                                       .next();
         assertThat(cp, is(notNullValue()));
         assertThat(cp.getName(), is("second"));
@@ -415,7 +408,7 @@ public class TestUpdateOps extends TestBase {
               .inc("size")
               .execute(new UpdateOptions().multi(true));
 
-        final MorphiaCursor<ContainsPic> iterator = finder.execute(new FindOptions().sort(Sort.ascending("size")));
+        final MorphiaCursor<ContainsPic> iterator = finder.iterator(new FindOptions().sort(Sort.ascending("size")));
         for (int i = 0; i < 3; i++) {
             assertEquals(i + 1, iterator.next().getSize());
         }
@@ -478,8 +471,7 @@ public class TestUpdateOps extends TestBase {
                                  .execute();
 
         assertEquals(1, results.getModifiedCount());
-        LogHolder updated = ds.find(LogHolder.class)
-                              .execute(new FindOptions().limit(1))
+        LogHolder updated = ds.find(LogHolder.class).iterator(new FindOptions().limit(1))
                               .next();
         assertEquals(4, updated.logs.size());
         assertTrue(updated.logs.stream()
@@ -622,7 +614,7 @@ public class TestUpdateOps extends TestBase {
              .set("raw", object)
              .execute();
 
-        List<LogHolder> list = getDs().find(LogHolder.class).execute().toList();
+        List<LogHolder> list = getDs().find(LogHolder.class).iterator().toList();
         for (int i = 0; i < list.size(); i++) {
             final LogHolder logHolder = list.get(i);
             assertEquals(logHolder.id.equals(logs1.id) ? object : logs.get(i).raw, logHolder.raw);
@@ -652,8 +644,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(res.getModifiedCount(), is(1L));
 
         //test reading the object.
-        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class)
-                                      .execute(new FindOptions().limit(1))
+        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
                                       .next();
         assertThat(cpk2, is(notNullValue()));
         assertThat(cpk.name, is(cpk2.name));
@@ -680,8 +671,7 @@ public class TestUpdateOps extends TestBase {
                         .execute().getModifiedCount(), is(1L));
 
         //test reading the object.
-        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class)
-                                      .execute(new FindOptions().limit(1))
+        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
                                       .next();
         assertThat(cpk2, is(notNullValue()));
         assertThat(cpk.name, is(cpk2.name));
@@ -691,8 +681,7 @@ public class TestUpdateOps extends TestBase {
         query.update().set("pic", pic).execute();
 
         //test reading the object.
-        final ContainsPicKey cpk3 = ds.find(ContainsPicKey.class)
-                                      .execute(new FindOptions().limit(1))
+        final ContainsPicKey cpk3 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
                                       .next();
         assertThat(cpk3, is(notNullValue()));
         assertThat(cpk.name, is(cpk3.name));
@@ -720,8 +709,7 @@ public class TestUpdateOps extends TestBase {
         assertEquals(result.getModifiedCount(), 1);
 
         //test reading the object.
-        final ContainsPic cp2 = getDs().find(ContainsPic.class)
-                                       .execute(new FindOptions().limit(1))
+        final ContainsPic cp2 = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
                                        .next();
         assertThat(cp2, is(notNullValue()));
         assertThat(cp.getName(), is(cp2.getName()));
@@ -730,8 +718,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(pic.getName(), is(cp2.getPic().getName()));
 
         //test reading the object.
-        final ContainsPic cp3 = getDs().find(ContainsPic.class)
-                                       .execute(new FindOptions().limit(1))
+        final ContainsPic cp3 = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
                                        .next();
         assertThat(cp3, is(notNullValue()));
         assertThat(cp.getName(), is(cp3.getName()));
@@ -751,8 +738,8 @@ public class TestUpdateOps extends TestBase {
         final UpdateResult res = query.update().inc("val", 1.1D).execute();
         assertUpdated(res, 1);
 
-        assertEquals(22, query.execute(new FindOptions()
-                                           .limit(1))
+        assertEquals(22, query.iterator(new FindOptions()
+                                            .limit(1))
                               .next().val);
     }
 

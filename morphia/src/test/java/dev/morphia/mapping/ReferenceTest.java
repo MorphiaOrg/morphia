@@ -134,29 +134,19 @@ public class ReferenceTest extends ProxyTestBase {
         getDs().save(container);
 
         Assert.assertNotNull(getDs().find(Container.class)
-                                    .filter(eq("singleRef", ref))
-                                    .execute(new FindOptions().limit(1))
+                                    .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
                                     .next());
     }
 
     @Test
-    public void testReferencesWithoutMapping() {
-        Child child1 = new Child();
-        getDs().save(child1);
+    public void testReferenceQueryWithoutValidation() {
+        Ref ref = getDs().save(new Ref("no validation"));
+        getDs().save(new Container(singletonList(ref)));
 
-        Parent parent1 = new Parent();
-        parent1.children.add(child1);
-        getDs().save(parent1);
-
-        List<Parent> parentList = getDs().find(Parent.class).execute().toList();
-        Assert.assertEquals(1, parentList.size());
-
-        // reset Datastore to reset internal Mapper cache, so Child class
-        // already cached by previous save is cleared
-        Datastore localDs = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
-
-        parentList = localDs.find(Parent.class).execute().toList();
-        Assert.assertEquals(1, parentList.size());
+        final Query<Container> query = getDs().find(Container.class)
+                                              .disableValidation()
+                                              .filter(eq("singleRef", ref));
+        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).next());
     }
 
     @Test
@@ -249,14 +239,23 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Test
-    public void testReferenceQueryWithoutValidation() {
-        Ref ref = getDs().save(new Ref("no validation"));
-        getDs().save(new Container(singletonList(ref)));
+    public void testReferencesWithoutMapping() {
+        Child child1 = new Child();
+        getDs().save(child1);
 
-        final Query<Container> query = getDs().find(Container.class)
-                                              .disableValidation()
-                                              .filter(eq("singleRef", ref));
-        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).next());
+        Parent parent1 = new Parent();
+        parent1.children.add(child1);
+        getDs().save(parent1);
+
+        List<Parent> parentList = getDs().find(Parent.class).iterator().toList();
+        Assert.assertEquals(1, parentList.size());
+
+        // reset Datastore to reset internal Mapper cache, so Child class
+        // already cached by previous save is cleared
+        Datastore localDs = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
+
+        parentList = localDs.find(Parent.class).iterator().toList();
+        Assert.assertEquals(1, parentList.size());
     }
 
     private void allNull(final Container container) {

@@ -40,8 +40,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
 
         // when
         List<City> matchingCity = getDs().find(City.class)
-                                         .filter(geoIntersects("location", coordsOfManchester))
-                                         .execute().toList();
+                                         .filter(geoIntersects("location", coordsOfManchester)).iterator().toList();
 
         // then
         assertThat(matchingCity.size(), is(1));
@@ -74,8 +73,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         // when
         List<Area> areaContainingPoint = getDs().find(Area.class)
                                                 .filter(geoIntersects("area", new Point(new Position(51.507780365645885,
-                                                    -0.21786745637655258))))
-                                                .execute()
+                                                    -0.21786745637655258)))).iterator()
                                                 .toList();
 
         // then
@@ -134,8 +132,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         // when
         List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
                                                       .filter(geoIntersects("everything",
-                                                          new Point(new Position(51.50802478194237, -0.21474729292094707))))
-                                                      .execute()
+                                                          new Point(new Position(51.50802478194237, -0.21474729292094707)))).iterator()
                                                       .toList();
 
         // then
@@ -190,8 +187,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         // when
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
                                               .filter(geoIntersects("regions",
-                                                  new Point(new Position(51.498216362670064, 0.0074849557131528854))))
-                                              .execute()
+                                                  new Point(new Position(51.498216362670064, 0.0074849557131528854)))).iterator()
                                               .toList();
 
         // then
@@ -226,8 +222,7 @@ public class GeoIntersectsQueriesWithPointTest extends TestBase {
         // when
         List<Route> routeContainingPoint = getDs().find(Route.class)
                                                   .filter(geoIntersects("route",
-                                                      new Point(new Position(37.40759155713022, -5.964911067858338))))
-                                                  .execute()
+                                                      new Point(new Position(37.40759155713022, -5.964911067858338)))).iterator()
                                                   .toList();
 
         // then

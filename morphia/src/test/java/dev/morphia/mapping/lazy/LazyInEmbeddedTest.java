@@ -90,7 +90,7 @@ public class LazyInEmbeddedTest extends TestBase {
         Assert.assertNotNull(containerWithRefInList);
 
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
-        containerWithRefInList = createQuery.execute(new FindOptions().limit(1)).tryNext();
+        containerWithRefInList = createQuery.iterator(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(containerWithRefInList);
 
     }
@@ -163,7 +163,7 @@ public class LazyInEmbeddedTest extends TestBase {
                                         .first();
         Assert.assertNotNull(containerWithRefInList);
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
-        containerWithRefInList = createQuery.execute(new FindOptions().limit(1)).tryNext();
+        containerWithRefInList = createQuery.iterator(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(containerWithRefInList);
 
     }

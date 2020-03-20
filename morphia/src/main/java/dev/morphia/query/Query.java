@@ -49,7 +49,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * Execute the query and get the results.
      *
      * @return a MorphiaCursor
-     * @see #execute(FindOptions)
+     * @see #iterator(FindOptions)
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default MorphiaCursor<T> execute() {
@@ -123,41 +123,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     Query<T> enableValidation();
 
     /**
-     * Create a filter based on the specified condition and value. </p>
-     *
-     * <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
-     * <p/>
-     * <p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
-     * <p/>
-     * <p>Examples:</p>
-     * <p/>
-     * <ul>
-     * <li>{@code filter("yearsOfOperation >", 5)}</li>
-     * <li>{@code filter("rooms.maxBeds >=", 2)}</li>
-     * <li>{@code filter("rooms.bathrooms exists", 1)}</li>
-     * <li>{@code filter("stars in", new Long[]{3, 4}) //3 and 4 stars (midrange?)}</li>
-     * <li>{@code filter("quantity mod", new Long[]{4, 0}) // customers ordered in packs of 4)}</li>
-     * <li>{@code filter("age >=", age)}</li>
-     * <li>{@code filter("age =", age)}</li>
-     * <li>{@code filter("age", age)} (if no operator, = is assumed)</li>
-     * <li>{@code filter("age !=", age)}</li>
-     * <li>{@code filter("age in", ageList)}</li>
-     * <li>{@code filter("customers.loyaltyYears in", yearsList)}</li>
-     * </ul>
-     * <p/>
-     * <p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<T>.
-     *
-     * @param condition the condition to apply
-     * @param value     the value to apply against
-     * @return this
-     * @deprecated use {@link #filter(Filter...)} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> filter(final String condition, final Object value) {
-        return legacyOperation();
-    }
-
-    /**
      * Execute the query and get the results.
      *
      * @param options the options to apply to the find operation
@@ -202,6 +167,56 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
+     * Execute the query and get the results.
+     * <p>
+     * *note* the return type of this will change in 2.0.
+     *
+     * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
+     * @since 1.4
+     * @deprecated use {@link #iterator()}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> find() {
+        return iterator();
+    }
+
+    /**
+     * Create a filter based on the specified condition and value. </p>
+     *
+     * <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
+     * <p/>
+     * <p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
+     * <p/>
+     * <p>Examples:</p>
+     * <p/>
+     * <ul>
+     * <li>{@code filter("yearsOfOperation >", 5)}</li>
+     * <li>{@code filter("rooms.maxBeds >=", 2)}</li>
+     * <li>{@code filter("rooms.bathrooms exists", 1)}</li>
+     * <li>{@code filter("stars in", new Long[]{3, 4}) //3 and 4 stars (midrange?)}</li>
+     * <li>{@code filter("quantity mod", new Long[]{4, 0}) // customers ordered in packs of 4)}</li>
+     * <li>{@code filter("age >=", age)}</li>
+     * <li>{@code filter("age =", age)}</li>
+     * <li>{@code filter("age", age)} (if no operator, = is assumed)</li>
+     * <li>{@code filter("age !=", age)}</li>
+     * <li>{@code filter("age in", ageList)}</li>
+     * <li>{@code filter("customers.loyaltyYears in", yearsList)}</li>
+     * </ul>
+     * <p/>
+     * <p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<T>.
+     *
+     * @param condition the condition to apply
+     * @param value     the value to apply against
+     * @return this
+     * @deprecated use {@link #filter(Filter...)} instead
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default Query<T> filter(final String condition, final Object value) {
+        return legacyOperation();
+    }
+
+    /**
      * Adds filters to this query.  This operation is cumulative.
      *
      * @param filters the filters to add
@@ -213,35 +228,20 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
 
     /**
      * Execute the query and get the results.
-     * <p>
-     * *note* the return type of this will change in 2.0.
      *
+     * @param options the options to apply to the find operation
      * @return a MorphiaCursor
-     * @see #execute(FindOptions)
      * @since 1.4
-     * @deprecated use {@link #execute()}
+     * @deprecated use {@link #iterator(FindOptions)}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default MorphiaCursor<T> find() {
-        return execute();
+    default MorphiaCursor<T> find(FindOptions options) {
+        return iterator(options);
     }
 
     @Override
     default void forEach(Consumer<? super T> action) {
         iterator().forEachRemaining(action);
-    }
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return a MorphiaCursor
-     * @since 1.4
-     * @deprecated use {@link #execute(FindOptions)}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default MorphiaCursor<T> find(FindOptions options) {
-        return execute(options);
     }
 
     /**
@@ -276,15 +276,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     @Override
     MorphiaCursor<T> iterator();
 
-    /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return a MorphiaCursor
-     * @since 2.0
-     */
-    MorphiaCursor<T> iterator(FindOptions options);
-
     @Override
     default Spliterator<T> spliterator() {
         throw new UnsupportedOperationException();
@@ -296,6 +287,15 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the modify operation
      */
     Modify<T> modify();
+
+    /**
+     * Execute the query and get the results.
+     *
+     * @param options the options to apply to the find operation
+     * @return a MorphiaCursor
+     * @since 2.0
+     */
+    MorphiaCursor<T> iterator(FindOptions options);
 
     /**
      * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
@@ -314,6 +314,17 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     MorphiaKeyCursor<T> keys(FindOptions options);
 
     /**
+     * Creates a container to hold 'or' clauses
+     *
+     * @param criteria the clauses to 'or' together
+     * @return the container
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default CriteriaContainer or(final Criteria... criteria) {
+        return legacyOperation();
+    }
+
+    /**
      * This is only intended for migration of legacy uses of UpdateOperations
      *
      * @param operations the prebuilt operations
@@ -324,17 +335,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default Modify<T> modify(final UpdateOperations<T> operations) {
-        return legacyOperation();
-    }
-
-    /**
-     * Creates a container to hold 'or' clauses
-     *
-     * @param criteria the clauses to 'or' together
-     * @return the container
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default CriteriaContainer or(final Criteria... criteria) {
         return legacyOperation();
     }
 

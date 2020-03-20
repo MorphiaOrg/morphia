@@ -420,9 +420,8 @@ public class AggregationTest extends TestBase {
                              .foreignField("sku")
                              .as("inventoryDocs"))
                .out(Out.to(Lookedup.class));
-        List<Order> lookups = getDs().find("lookups", Order.class)
-                                     .execute(new FindOptions()
-                                                  .sort(ascending("_id")))
+        List<Order> lookups = getDs().find("lookups", Order.class).iterator(new FindOptions()
+                                                                                .sort(ascending("_id")))
                                      .toList();
         Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));

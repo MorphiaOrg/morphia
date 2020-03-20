@@ -27,7 +27,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("unchecked")
 public class GeoWithinQueriesWithPolygonTest extends TestBase {
     @Test
     public void shouldFindAreasWithinTheUK() {
@@ -67,8 +66,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
         // when
         MongoCursor<Area> areasInTheUK = getDs().find(Area.class)
-                                                .filter(geoWithin("area", uk))
-                                                .execute();
+                                                .filter(geoWithin("area", uk)).iterator();
 
         // then
         assertThat(areasInTheUK.next(), is(london));
@@ -77,7 +75,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
         getDs().find(Area.class)
                .filter(geoWithin("area", uk)
                            .crs(NamedCoordinateReferenceSystem.EPSG_4326_STRICT_WINDING))
-               .execute();
+               .iterator();
     }
 
     @Test
@@ -99,8 +97,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
         // when
         List<City> citiesInTheUK = getDs().find(City.class)
-                                          .filter(geoWithin("location", uk))
-                                          .execute().toList();
+                                          .filter(geoWithin("location", uk)).iterator().toList();
 
         // then
         assertThat(citiesInTheUK.size(), is(2));
@@ -164,8 +161,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
         // when
         List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .filter(geoWithin("everything", uk))
-                                                      .execute().toList();
+                                                      .filter(geoWithin("everything", uk)).iterator().toList();
 
         // then
         assertThat(everythingInTheUK.size(), is(1));
@@ -225,8 +221,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
         // when
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .filter(geoWithin("regions", uk))
-                                              .execute().toList();
+                                              .filter(geoWithin("regions", uk)).iterator().toList();
 
         // then
         assertThat(regionsInTheUK.size(), is(1));
@@ -265,8 +260,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
         // when
         List<Route> routesInTheUK = getDs().find(Route.class)
-                                           .filter(geoWithin("route", uk))
-                                           .execute().toList();
+                                           .filter(geoWithin("route", uk)).iterator().toList();
 
         // then
         assertThat(routesInTheUK.size(), is(1));

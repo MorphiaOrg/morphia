@@ -53,8 +53,7 @@ public class TestIdField extends TestBase {
         assertEquals(a.data, getDs().find(EmbeddedId.class).filter(eq("_id", id)).first().data);
 
         final EmbeddedId embeddedId = getDs().find(EmbeddedId.class)
-                                             .filter(in("_id", Arrays.asList(id)))
-                                             .execute()
+                                             .filter(in("_id", Arrays.asList(id))).iterator()
                                              .next();
         Assert.assertEquals(a.data, embeddedId.data);
         Assert.assertEquals(a.id, embeddedId.id);

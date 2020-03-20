@@ -71,7 +71,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     @Override
     public T get() {
         if (!isResolved() && value == null && id != null) {
-            value = (T) buildQuery().execute().tryNext();
+            value = (T) buildQuery().iterator().tryNext();
             if (value == null && !ignoreMissing()) {
                 throw new ReferenceException(
                     Sofia.missingReferencedEntity(mappedClass.getType().getSimpleName()));

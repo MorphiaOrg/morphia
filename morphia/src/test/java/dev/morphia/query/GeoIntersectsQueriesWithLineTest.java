@@ -43,8 +43,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
 
         // when
         MongoCursor<City> matchingCity = getDs().find(City.class)
-                                                .filter(geoIntersects("location", spanishLine))
-                                                .execute();
+                                                .filter(geoIntersects("location", spanishLine)).iterator();
 
         // then
         assertThat(matchingCity.next(), is(sevilla));
@@ -81,8 +80,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         MongoCursor<Area> areaContainingPoint = getDs().find(Area.class)
                                                        .filter(geoIntersects("area", new LineString(asList(
                                                            new Position(37.4056048, -5.9666089),
-                                                           new Position(37.404497, -5.9640557)))))
-                                                       .execute();
+                                                           new Position(37.404497, -5.9640557))))).iterator();
 
         // then
         assertThat(areaContainingPoint.next(), is(sevilla));
@@ -142,8 +140,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         MongoCursor<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
                                                              .filter(geoIntersects("everything", new LineString(asList(
                                                                  new Position(37.4056048, -5.9666089),
-                                                                 new Position(37.404497, -5.9640557)))))
-                                                             .execute();
+                                                                 new Position(37.404497, -5.9640557))))).iterator();
 
         // then
         assertThat(everythingInTheUK.next(), is(sevilla));
@@ -198,8 +195,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         MongoCursor<Regions> regionsInTheUK = getDs().find(Regions.class)
                                                      .filter(geoIntersects("regions", new LineString(asList(
                                                          new Position(37.4056048, -5.9666089),
-                                                         new Position(37.404497, -5.9640557)))))
-                                                     .execute();
+                                                         new Position(37.404497, -5.9640557))))).iterator();
 
         // then
         assertThat(regionsInTheUK.next(), is(sevilla));
@@ -236,8 +232,7 @@ public class GeoIntersectsQueriesWithLineTest extends TestBase {
         MongoCursor<Route> route = getDs().find(Route.class)
                                           .filter(geoIntersects("route", new LineString(asList(
                                               new Position(37.4043709, -5.9643244),
-                                              new Position(37.4045286, -5.9642332)))))
-                                          .execute();
+                                              new Position(37.4045286, -5.9642332))))).iterator();
 
         // then
         assertThat(route.next(), is(sevilla));

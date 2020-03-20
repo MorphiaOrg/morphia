@@ -39,16 +39,14 @@ public class FiltersTest extends TestBase {
 
         List<User> found = getDs().find(User.class)
                                   .disableValidation()
-                                  .filter(bitsAllClear("a", 35))
-                                  .execute(options)
+                                  .filter(bitsAllClear("a", 35)).iterator(options)
                                   .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 2, found.size());
 
         found = getDs().find(User.class)
                        .disableValidation()
-                       .filter(bitsAllClear("a", new int[]{1, 5}))
-                       .execute(options)
+                       .filter(bitsAllClear("a", new int[]{1, 5})).iterator(options)
                        .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 2, found.size());
@@ -68,8 +66,7 @@ public class FiltersTest extends TestBase {
 
         List<User> found = getDs().find(User.class)
                                   .disableValidation()
-                                  .filter(bitsAllSet("a", 50))
-                                  .execute(options)
+                                  .filter(bitsAllSet("a", 50)).iterator(options)
                                   .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
@@ -77,8 +74,7 @@ public class FiltersTest extends TestBase {
         options = new FindOptions().logQuery();
         found = getDs().find(User.class)
                        .disableValidation()
-                       .filter(bitsAllSet("a", new int[]{1, 5}))
-                       .execute(options)
+                       .filter(bitsAllSet("a", new int[]{1, 5})).iterator(options)
                        .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
@@ -98,8 +94,7 @@ public class FiltersTest extends TestBase {
 
         List<User> found = getDs().find(User.class)
                                   .disableValidation()
-                                  .filter(bitsAnyClear("a", 35))
-                                  .execute(options)
+                                  .filter(bitsAnyClear("a", 35)).iterator(options)
                                   .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 3, found.size());
@@ -107,8 +102,7 @@ public class FiltersTest extends TestBase {
         options = new FindOptions().logQuery();
         found = getDs().find(User.class)
                        .disableValidation()
-                       .filter(bitsAnyClear("a", new int[]{1, 5}))
-                       .execute(options)
+                       .filter(bitsAnyClear("a", new int[]{1, 5})).iterator(options)
                        .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 2, found.size());
@@ -128,8 +122,7 @@ public class FiltersTest extends TestBase {
 
         List<User> found = getDs().find(User.class)
                                   .disableValidation()
-                                  .filter(bitsAnySet("a", 35))
-                                  .execute(options)
+                                  .filter(bitsAnySet("a", 35)).iterator(options)
                                   .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
@@ -137,8 +130,7 @@ public class FiltersTest extends TestBase {
         options = new FindOptions().logQuery();
         found = getDs().find(User.class)
                        .disableValidation()
-                       .filter(bitsAnySet("a", new int[]{1, 5}))
-                       .execute(options)
+                       .filter(bitsAnySet("a", new int[]{1, 5})).iterator(options)
                        .toList();
 
         Assert.assertEquals(getDs().getLoggedQuery(options), 1, found.size());
@@ -154,8 +146,7 @@ public class FiltersTest extends TestBase {
             Document.parse("{ '_id' : 5, 'category' : 'travel', 'budget': 200, 'spent': 650 }")));
 
         List<Budget> budgets = getDs().find(Budget.class)
-                                      .filter(expr(gt(field("spent"), field("budget"))))
-                                      .execute()
+                                      .filter(expr(gt(field("spent"), field("budget")))).iterator()
                                       .toList();
 
         Assert.assertEquals(3, budgets.size());
@@ -167,22 +158,19 @@ public class FiltersTest extends TestBase {
             new User("Janice", new Date(), "Chandler", "NYC")));
 
         User likes = getDs().find(User.class)
-                            .filter(size("likes", 3))
-                            .execute()
+                            .filter(size("likes", 3)).iterator()
                             .next();
 
         Assert.assertEquals("John", likes.name);
 
         likes = getDs().find(User.class)
-                       .filter(size("likes", 2))
-                       .execute()
+                       .filter(size("likes", 2)).iterator()
                        .next();
 
         Assert.assertEquals("Janice", likes.name);
 
         likes = getDs().find(User.class)
-                       .filter(size("likes", 20))
-                       .execute()
+                       .filter(size("likes", 20)).iterator()
                        .tryNext();
 
         Assert.assertNull(likes);

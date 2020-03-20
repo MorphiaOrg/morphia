@@ -54,27 +54,10 @@ public class TestJavaMaps extends TestBase {
         model.wrapped.text = "textWrapper";
         datastore.save(model);
         TestEmptyModel model2 = getDs().find(TestEmptyModel.class)
-                                       .filter(eq("id", model.id))
-                                       .execute(new FindOptions().limit(1))
+                                       .filter(eq("id", model.id)).iterator(new FindOptions().limit(1))
                                        .next();
         Assert.assertNull(model.wrapped.others);
         Assert.assertNull(model2.wrapped.others);
-    }
-
-    private void empties(final Datastore datastore) {
-        datastore.find(Employee.class).remove(new DeleteOptions().multi(true));
-        Employee employee = new Employee();
-        HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
-        byteMap.put("b", (byte) 1);
-        employee.byteMap = byteMap;
-        datastore.save(employee);
-
-        Employee loaded = datastore.find(Employee.class)
-                                   .execute(new FindOptions().limit(1))
-                                   .next();
-
-        assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
-        assertNull(loaded.floatMap);
     }
 
     @Test
@@ -85,15 +68,29 @@ public class TestJavaMaps extends TestBase {
             expectedEntity.getLinkedHashMap().put(i, "a" + i);
         }
         getDs().save(expectedEntity);
-        LinkedHashMapTestEntity storedEntity = getDs().find(LinkedHashMapTestEntity.class)
-                                                      .execute(new FindOptions().limit(1))
+        LinkedHashMapTestEntity storedEntity = getDs().find(LinkedHashMapTestEntity.class).iterator(new FindOptions().limit(1))
                                                       .next();
         Assert.assertNotNull(storedEntity);
         Assert.assertEquals(expectedEntity.getLinkedHashMap(), storedEntity.getLinkedHashMap());
     }
 
+    private void empties(final Datastore datastore) {
+        datastore.find(Employee.class).remove(new DeleteOptions().multi(true));
+        Employee employee = new Employee();
+        HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
+        byteMap.put("b", (byte) 1);
+        employee.byteMap = byteMap;
+        datastore.save(employee);
+
+        Employee loaded = datastore.find(Employee.class).iterator(new FindOptions().limit(1))
+                                   .next();
+
+        assertEquals(Byte.valueOf((byte) 1), loaded.byteMap.get("b"));
+        assertNull(loaded.floatMap);
+    }
+
     @Entity
-    static class TestEmptyModel{
+    static class TestEmptyModel {
         @Id
         private ObjectId id;
         private String text;

@@ -188,7 +188,7 @@ public class TestVersionAnnotation extends TestBase {
              .set("name", "Value 3")
              .execute(new UpdateOptions().upsert(true));
 
-        entity = datastore.find(Versioned.class).execute(new FindOptions().limit(1)).tryNext();
+        entity = datastore.find(Versioned.class).iterator(new FindOptions().limit(1)).tryNext();
         Assert.assertEquals("Value 3", entity.getName());
         Assert.assertEquals(1, entity.getVersion().longValue());
     }

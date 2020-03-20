@@ -23,9 +23,8 @@ public class TestModOperator extends TestBase {
         getDs().save(new Inventory("Basketballs", 12));
 
         List<Inventory> list = getDs().find(Inventory.class)
-                                      .filter(mod("quantity", 4, 0))
-                                      .execute(new FindOptions()
-                                                   .sort(ascending("name")))
+                                      .filter(mod("quantity", 4, 0)).iterator(new FindOptions()
+                                                                                  .sort(ascending("name")))
                                       .toList();
 
         Assert.assertEquals(2, list.size());
@@ -33,27 +32,24 @@ public class TestModOperator extends TestBase {
         Assert.assertEquals("Flowers", list.get(1).name);
 
         list = getDs().find(Inventory.class)
-                      .filter(mod("quantity", 4, 2))
-                      .execute(new FindOptions()
-                                   .sort(ascending("name")))
+                      .filter(mod("quantity", 4, 2)).iterator(new FindOptions()
+                                                                  .sort(ascending("name")))
                       .toList();
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("Candy", list.get(0).name);
 
         list = getDs().find(Inventory.class)
-                      .filter(mod("quantity", 6, 0))
-                      .execute(new FindOptions()
-                                   .sort(ascending("name")))
+                      .filter(mod("quantity", 6, 0)).iterator(new FindOptions()
+                                                                  .sort(ascending("name")))
                       .toList();
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("Basketballs", list.get(0).name);
 
         list = getDs().find(Inventory.class)
-                      .filter(mod("quantity", 4, 0))
-                      .execute(new FindOptions()
-                                   .sort(ascending("name")))
+                      .filter(mod("quantity", 4, 0)).iterator(new FindOptions()
+                                                                  .sort(ascending("name")))
                       .toList();
 
         Assert.assertEquals(2, list.size());
@@ -61,18 +57,16 @@ public class TestModOperator extends TestBase {
         Assert.assertEquals("Flowers", list.get(1).name);
 
         list = getDs().find(Inventory.class)
-                      .filter(mod("quantity", 4, 2))
-                      .execute(new FindOptions()
-                                   .sort(ascending("name")))
+                      .filter(mod("quantity", 4, 2)).iterator(new FindOptions()
+                                                                  .sort(ascending("name")))
                       .toList();
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("Candy", list.get(0).name);
 
         list = getDs().find(Inventory.class)
-                      .filter(mod("quantity", 6, 0))
-                      .execute(new FindOptions()
-                                   .sort(ascending("name")))
+                      .filter(mod("quantity", 6, 0)).iterator(new FindOptions()
+                                                                  .sort(ascending("name")))
                       .toList();
 
         Assert.assertEquals(1, list.size());

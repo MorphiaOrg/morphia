@@ -468,7 +468,7 @@ public class AggregationTest extends TestBase {
                            .on("_id")
                            .whenMatched(WhenMatched.REPLACE)
                            .whenNotMatched(WhenNotMatched.INSERT));
-        List<Document> actual = getDs().find("budgets", Document.class).execute().toList();
+        List<Document> actual = getDs().find("budgets", Document.class).iterator().toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'A' }, 'salaries' : 220000 }"),

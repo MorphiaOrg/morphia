@@ -50,8 +50,7 @@ public class TestJavaLists extends TestBase {
         model.wrapped.text = "textWrapper";
         datastore.save(model);
         TestEmptyModel model2 = getDs().find(TestEmptyModel.class)
-                                       .filter(eq("id", model.id))
-                                       .execute(new FindOptions().limit(1))
+                                       .filter(eq("id", model.id)).iterator(new FindOptions().limit(1))
                                        .next();
         assertNull(model.wrapped.others);
         assertNull(model2.wrapped.others);
@@ -79,8 +78,7 @@ public class TestJavaLists extends TestBase {
         employee.byteList = asList((byte) 1, (byte) 2);
         ds.save(employee);
 
-        Employee loaded = ds.find(Employee.class)
-                            .execute(new FindOptions().limit(1))
+        Employee loaded = ds.find(Employee.class).iterator(new FindOptions().limit(1))
                             .next();
 
         assertEquals(employee.byteList, loaded.byteList);

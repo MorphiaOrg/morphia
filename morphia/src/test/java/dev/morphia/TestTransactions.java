@@ -67,7 +67,7 @@ public class TestTransactions extends TestBase {
             session.insert(rectangles);
 
             Assert.assertNull(getDs().find(Rectangle.class).first());
-            Assert.assertEquals(rectangles, session.find(Rectangle.class).execute().toList());
+            Assert.assertEquals(rectangles, session.find(Rectangle.class).iterator().toList());
 
             return null;
         });

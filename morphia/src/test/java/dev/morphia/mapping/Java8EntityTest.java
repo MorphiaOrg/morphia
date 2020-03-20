@@ -99,7 +99,7 @@ public class Java8EntityTest extends TestBase {
                                             .filter(eq(field, value));
         FindOptions options = new FindOptions().logQuery()
                                                .limit(1);
-        Java8Entity actual = query.execute(options)
+        Java8Entity actual = query.iterator(options)
                                   .tryNext();
         Assert.assertEquals(getDs().getLoggedQuery(options), entity, actual);
     }

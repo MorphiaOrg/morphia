@@ -32,8 +32,7 @@ public class GeoQueriesTest extends TestBase {
         // when
         List<City> cities = datastore.find(City.class)
                                      .filter(near("location", new Point(new Position(latitude, longitude)))
-                                                 .maxDistance(200000.0))
-                                     .execute()
+                                                 .maxDistance(200000.0)).iterator()
                                      .toList();
 
         // then

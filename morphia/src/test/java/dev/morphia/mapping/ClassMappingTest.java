@@ -30,9 +30,8 @@ public class ClassMappingTest extends TestBase {
         getDs().save(e);
 
         Assert.assertNull(getDs().find(E.class)
-                                 .filter(eq("testClass2", ArrayList.class))
-                                 .execute(new FindOptions()
-                                              .limit(1))
+                                 .filter(eq("testClass2", ArrayList.class)).iterator(new FindOptions()
+                                                                                         .limit(1))
                                  .tryNext());
     }
 

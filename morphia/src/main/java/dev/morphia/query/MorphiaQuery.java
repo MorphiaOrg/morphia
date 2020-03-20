@@ -225,7 +225,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T first(final FindOptions options) {
-        try (MongoCursor<T> it = this.execute(options.copy().limit(1))) {
+        try (MongoCursor<T> it = iterator(options.copy().limit(1))) {
             return it.tryNext();
         }
     }

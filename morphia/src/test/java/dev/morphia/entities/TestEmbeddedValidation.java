@@ -63,7 +63,7 @@ public class TestEmbeddedValidation extends TestBase {
         query.disableValidation();
         query.filter(eq("data.data.id", "123"));
 
-        assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
+        assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class TestEmbeddedValidation extends TestBase {
                                     .disableValidation()
                                     .filter(eq("embedded.flag", true));
 
-        Assert.assertEquals(parentType, query.execute(new FindOptions().limit(1)).tryNext());
+        Assert.assertEquals(parentType, query.iterator(new FindOptions().limit(1)).tryNext());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class TestEmbeddedValidation extends TestBase {
 
         Query<EntityWithListsAndArrays> query = getDs().find(EntityWithListsAndArrays.class)
                                                        .filter(eq("listEmbeddedType.number", 42L));
-        MongoCursor<EntityWithListsAndArrays> cursor = query.execute();
+        MongoCursor<EntityWithListsAndArrays> cursor = query.iterator();
 
         Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
         Assert.assertFalse(cursor.hasNext());
@@ -108,7 +108,7 @@ public class TestEmbeddedValidation extends TestBase {
         fortyTwo.setNumber(0L);
         query = getDs().find(EntityWithListsAndArrays.class)
                        .filter(eq("listEmbeddedType.number", 0));
-        cursor = query.execute();
+        cursor = query.iterator();
 
         Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
         Assert.assertFalse(cursor.hasNext());

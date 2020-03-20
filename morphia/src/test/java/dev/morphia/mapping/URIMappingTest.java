@@ -1,13 +1,13 @@
 package dev.morphia.mapping;
 
 
+import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,7 +27,7 @@ public class URIMappingTest extends TestBase {
 
         entity.uri = testURI;
         getDs().save(entity);
-        final ContainsURI loaded = getDs().find(ContainsURI.class).execute(new FindOptions().limit(1)).tryNext();
+        final ContainsURI loaded = getDs().find(ContainsURI.class).iterator(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(loaded.uri);
         Assert.assertEquals(testURI, loaded.uri);
 
@@ -40,7 +40,7 @@ public class URIMappingTest extends TestBase {
 
         entity.uris.put(testURI, "first");
         getDs().save(entity);
-        final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).execute(new FindOptions().limit(1)).tryNext();
+        final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).iterator(new FindOptions().limit(1)).tryNext();
         Assert.assertNotNull(loaded.uris);
         Assert.assertEquals(1, loaded.uris.size());
         Assert.assertEquals(testURI, loaded.uris.keySet().iterator().next());

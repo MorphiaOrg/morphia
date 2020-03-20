@@ -322,8 +322,7 @@ public class TestMapping extends TestBase {
     public void testEmbeddedDocument() {
         getMapper().map(ContainsDocument.class);
         getDs().save(new ContainsDocument());
-        assertNotNull(getDs().find(ContainsDocument.class)
-                             .execute(new FindOptions().limit(1))
+        assertNotNull(getDs().find(ContainsDocument.class).iterator(new FindOptions().limit(1))
                              .next());
     }
 
@@ -331,8 +330,7 @@ public class TestMapping extends TestBase {
     public void testEmbeddedEntity() {
         getMapper().map(ContainsEmbeddedEntity.class);
         getDs().save(new ContainsEmbeddedEntity());
-        final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
-                                                        .execute(new FindOptions().limit(1))
+        final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class).iterator(new FindOptions().limit(1))
                                                         .next();
         assertNotNull(ceeLoaded);
         assertNotNull(ceeLoaded.id);
@@ -524,11 +522,32 @@ public class TestMapping extends TestBase {
     }
 
     @Test
+    public void testLoadOnly() {
+        getDs().save(new Normal("value"));
+        Normal n = getDs().find(Normal.class).iterator(new FindOptions().limit(1))
+                          .next();
+        Assert.assertNotNull(n);
+        Assert.assertNotNull(n.name);
+        getDs().delete(n);
+        getDs().save(new NormalWithNotSaved());
+        n = getDs().find(Normal.class).iterator(new FindOptions().limit(1))
+                   .next();
+        Assert.assertNotNull(n);
+        Assert.assertNull(n.name);
+        getDs().delete(n);
+        getDs().save(new Normal("value21"));
+        final NormalWithNotSaved notSaved = getDs().find(NormalWithNotSaved.class).iterator(new FindOptions().limit(1))
+                                                   .next();
+        Assert.assertNotNull(notSaved);
+        Assert.assertNotNull(notSaved.name);
+        Assert.assertEquals("never", notSaved.name);
+    }
+
+    @Test
     public void testLongArrayMapping() {
         getMapper().map(ContainsLongAndStringArray.class);
         getDs().save(new ContainsLongAndStringArray());
-        ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class)
-                                                   .execute(new FindOptions().limit(1))
+        ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).iterator(new FindOptions().limit(1))
                                                    .next();
         assertArrayEquals(loaded.longs, (new ContainsLongAndStringArray()).longs);
         assertArrayEquals(loaded.strings, (new ContainsLongAndStringArray()).strings);
@@ -551,33 +570,11 @@ public class TestMapping extends TestBase {
         final ContainsMapLike ml = new ContainsMapLike();
         ml.m.put("first", "test");
         getDs().save(ml);
-        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class)
-                                                .execute(new FindOptions().limit(1))
+        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).iterator(new FindOptions().limit(1))
                                                 .next();
         assertNotNull(mlLoaded);
         assertNotNull(mlLoaded.m);
         assertNotNull(mlLoaded.m.containsKey("first"));
-    }
-
-    @Test
-    public void testMapWithEmbeddedInterface() {
-        final ContainsMapWithEmbeddedInterface aMap = new ContainsMapWithEmbeddedInterface();
-        final Foo f1 = new Foo1();
-        final Foo f2 = new Foo2();
-
-        aMap.embeddedValues.put("first", f1);
-        aMap.embeddedValues.put("second", f2);
-        getDs().save(aMap);
-
-        final ContainsMapWithEmbeddedInterface mapLoaded = getDs().find(ContainsMapWithEmbeddedInterface.class)
-                                                                  .execute(new FindOptions().limit(1))
-                                                                  .next();
-
-        assertNotNull(mapLoaded);
-        assertEquals(2, mapLoaded.embeddedValues.size());
-        assertTrue(mapLoaded.embeddedValues.get("first") instanceof Foo1);
-        assertTrue(mapLoaded.embeddedValues.get("second") instanceof Foo2);
-
     }
 
     @Test
@@ -685,18 +682,24 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void testUUID() {
-        getMapper().map(ContainsUUID.class);
-        final ContainsUUID uuid = new ContainsUUID();
-        final UUID before = uuid.uuid;
-        getDs().save(uuid);
-        final ContainsUUID loaded = getDs().find(ContainsUUID.class)
-                                           .execute(new FindOptions().limit(1))
-                                           .next();
-        assertNotNull(loaded);
-        assertNotNull(loaded.id);
-        assertNotNull(loaded.uuid);
-        assertEquals(before, loaded.uuid);
+    public void testMapWithEmbeddedInterface() {
+        final ContainsMapWithEmbeddedInterface aMap = new ContainsMapWithEmbeddedInterface();
+        final Foo f1 = new Foo1();
+        final Foo f2 = new Foo2();
+
+        aMap.embeddedValues.put("first", f1);
+        aMap.embeddedValues.put("second", f2);
+        getDs().save(aMap);
+
+        final ContainsMapWithEmbeddedInterface mapLoaded = getDs().find(ContainsMapWithEmbeddedInterface.class)
+                                                                  .iterator(new FindOptions().limit(1))
+                                                                  .next();
+
+        assertNotNull(mapLoaded);
+        assertEquals(2, mapLoaded.embeddedValues.size());
+        assertTrue(mapLoaded.embeddedValues.get("first") instanceof Foo1);
+        assertTrue(mapLoaded.embeddedValues.get("second") instanceof Foo2);
+
     }
 
     @Test
@@ -712,28 +715,17 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void testLoadOnly() {
-        getDs().save(new Normal("value"));
-        Normal n = getDs().find(Normal.class)
-                          .execute(new FindOptions().limit(1))
-                          .next();
-        Assert.assertNotNull(n);
-        Assert.assertNotNull(n.name);
-        getDs().delete(n);
-        getDs().save(new NormalWithNotSaved());
-        n = getDs().find(Normal.class)
-                   .execute(new FindOptions().limit(1))
-                   .next();
-        Assert.assertNotNull(n);
-        Assert.assertNull(n.name);
-        getDs().delete(n);
-        getDs().save(new Normal("value21"));
-        final NormalWithNotSaved notSaved = getDs().find(NormalWithNotSaved.class)
-                                                   .execute(new FindOptions().limit(1))
-                                                   .next();
-        Assert.assertNotNull(notSaved);
-        Assert.assertNotNull(notSaved.name);
-        Assert.assertEquals("never", notSaved.name);
+    public void testUUID() {
+        getMapper().map(ContainsUUID.class);
+        final ContainsUUID uuid = new ContainsUUID();
+        final UUID before = uuid.uuid;
+        getDs().save(uuid);
+        final ContainsUUID loaded = getDs().find(ContainsUUID.class).iterator(new FindOptions().limit(1))
+                                           .next();
+        assertNotNull(loaded);
+        assertNotNull(loaded.id);
+        assertNotNull(loaded.uuid);
+        assertEquals(before, loaded.uuid);
     }
 
     public enum Enum1 {

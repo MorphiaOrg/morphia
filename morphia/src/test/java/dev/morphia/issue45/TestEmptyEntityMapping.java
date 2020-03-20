@@ -25,12 +25,10 @@ public class TestEmptyEntityMapping extends TestBase {
         getDs().save(u);
 
         Assert.assertNull("Should not find the user.", getDs().find(User.class)
-                                                              .filter(size("rights", 0))
-                                                              .execute()
+                                                              .filter(size("rights", 0)).iterator()
                                                               .tryNext());
         Assert.assertNotNull("Should find the user.", getDs().find(User.class)
-                                                             .filter(exists("rights").not())
-                                                             .execute()
+                                                             .filter(exists("rights").not()).iterator()
                                                              .next());
         getDs().find(User.class)
                .remove(new DeleteOptions()
@@ -43,12 +41,10 @@ public class TestEmptyEntityMapping extends TestBase {
         getDs().save(u);
 
         Assert.assertNotNull("Should find the user.", getDs().find(User.class)
-                                                             .filter(size("rights", 1))
-                                                             .execute()
+                                                             .filter(size("rights", 1)).iterator()
                                                              .next());
         Assert.assertNotNull("Should find the user.", getDs().find(User.class)
-                                                             .filter(exists("rights"))
-                                                             .execute()
+                                                             .filter(exists("rights")).iterator()
                                                              .next());
     }
 

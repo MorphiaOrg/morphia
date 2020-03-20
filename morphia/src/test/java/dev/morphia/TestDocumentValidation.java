@@ -86,8 +86,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         modify.execute(options);
 
-        Assert.assertNotNull(query.filter(eq("number", 5))
-                                  .execute(new FindOptions().limit(1))
+        Assert.assertNotNull(query.filter(eq("number", 5)).iterator(new FindOptions().limit(1))
                                   .next());
     }
 
@@ -108,7 +107,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .filter(eq("number", 8));
-        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
             new DocumentValidation("John", 8, new Date()),
@@ -125,7 +124,7 @@ public class TestDocumentValidation extends TestBase {
         getDs().insert(list, new InsertManyOptions()
                                  .bypassDocumentValidation(true));
 
-        Assert.assertTrue(query.filter(eq("number", 8)).execute().hasNext());
+        Assert.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
 
     @Test
@@ -179,7 +178,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                                                  .filter(eq("number", 8));
-        Assert.assertNotNull(query.execute(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
             new DocumentValidation("Harold", 8, new Date()),
@@ -195,7 +194,7 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(list, new InsertManyOptions().bypassDocumentValidation(true));
 
-        Assert.assertTrue(query.filter(eq("number", 8)).execute().hasNext());
+        Assert.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
 
     @Test
@@ -238,8 +237,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         update.execute(options);
 
-        Assert.assertNotNull(query.filter(eq("number", 5))
-                                  .execute(new FindOptions().limit(1))
+        Assert.assertNotNull(query.filter(eq("number", 5)).iterator(new FindOptions().limit(1))
                                   .tryNext());
     }
 

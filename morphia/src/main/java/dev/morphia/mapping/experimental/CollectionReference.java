@@ -157,8 +157,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         final Map<Object, Object> idMap = new HashMap<>();
         try (MongoCursor<?> cursor = getDatastore().find(collection)
                                                    .disableValidation()
-                                                   .filter(in("_id", collectionIds))
-                                                   .execute()) {
+                                                   .filter(in("_id", collectionIds)).iterator()) {
             while (cursor.hasNext()) {
                 final Object entity = cursor.next();
                 idMap.put(getDatastore().getMapper().getId(entity), entity);

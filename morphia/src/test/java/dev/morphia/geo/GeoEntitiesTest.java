@@ -86,8 +86,7 @@ public class GeoEntitiesTest extends TestBase {
         // when
         AllTheThings found = getDs()
                                  .find(AllTheThings.class)
-                                 .filter(eq("name", name))
-                                 .execute(new FindOptions().limit(1))
+                                 .filter(eq("name", name)).iterator(new FindOptions().limit(1))
                                  .tryNext();
 
         // then
@@ -106,8 +105,7 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         Route found = getDs().find(Route.class)
-                             .filter(eq("name", "My Route"))
-                             .execute(new FindOptions().limit(1)).tryNext();
+                             .filter(eq("name", "My Route")).iterator(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -134,7 +132,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(paths);
 
         // when
-        Paths found = getDs().find(Paths.class).filter(eq("name", name)).execute(new FindOptions().limit(1)).tryNext();
+        Paths found = getDs().find(Paths.class).filter(eq("name", name)).iterator(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -152,7 +150,7 @@ public class GeoEntitiesTest extends TestBase {
         getDs().save(stores);
 
         // when
-        Stores found = getDs().find(Stores.class).filter(eq("name", name)).execute(new FindOptions().limit(1)).tryNext();
+        Stores found = getDs().find(Stores.class).filter(eq("name", name)).iterator(new FindOptions().limit(1)).tryNext();
 
         // then
         assertThat(found, is(notNullValue()));
@@ -193,8 +191,7 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         Regions found = getDs().find(Regions.class)
-                               .filter(eq("name", name))
-                               .execute(new FindOptions().limit(1))
+                               .filter(eq("name", name)).iterator(new FindOptions().limit(1))
                                .tryNext();
 
         // then
@@ -229,8 +226,7 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         Area found = getDs().find(Area.class)
-                            .filter(eq("name", polygonName))
-                            .execute(new FindOptions().limit(1))
+                            .filter(eq("name", polygonName)).iterator(new FindOptions().limit(1))
                             .tryNext();
 
         // then
@@ -246,8 +242,7 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         City found = getDs().find(City.class)
-                            .filter(eq("name", "New City"))
-                            .execute(new FindOptions().limit(1))
+                            .filter(eq("name", "New City")).iterator(new FindOptions().limit(1))
                             .tryNext();
 
         // then
@@ -267,8 +262,7 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         Area found = getDs().find(Area.class)
-                            .filter(eq("name", "The Area"))
-                            .execute(new FindOptions().limit(1))
+                            .filter(eq("name", "The Area")).iterator(new FindOptions().limit(1))
                             .tryNext();
 
         // then

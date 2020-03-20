@@ -1,14 +1,13 @@
 package dev.morphia.mapping;
 
 
-import dev.morphia.annotations.Entity;
-import org.bson.types.ObjectId;
-import org.junit.Test;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateOperations;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +35,7 @@ public class UpdateRetainsClassInfoTest extends TestBase {
 
 
         // fails due to type now missing
-        getDs().find(X.class)
-               .execute(new FindOptions().limit(1))
+        getDs().find(X.class).iterator(new FindOptions().limit(1))
                .next();
     }
 

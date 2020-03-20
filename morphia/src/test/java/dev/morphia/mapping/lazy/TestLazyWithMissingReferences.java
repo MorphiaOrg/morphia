@@ -22,7 +22,7 @@ public class TestLazyWithMissingReferences extends TestBase {
 
         getDs().save(source); // does not fail due to pre-initialized Ids
 
-        getDs().find(Source.class).execute().toList();
+        getDs().find(Source.class).iterator().toList();
     }
 
     @Test(expected = ReferenceException.class)
@@ -31,8 +31,7 @@ public class TestLazyWithMissingReferences extends TestBase {
         e.setLazy(new Target());
 
         getDs().save(e); // does not fail due to pre-initialized Ids
-        Source source = getDs().find(Source.class)
-                               .execute(new FindOptions().limit(1))
+        Source source = getDs().find(Source.class).iterator(new FindOptions().limit(1))
                                .tryNext();
         Assert.assertNull(source.getLazy().getFoo());
     }
@@ -44,7 +43,7 @@ public class TestLazyWithMissingReferences extends TestBase {
 
         getDs().save(e); // does not fail due to pre-initialized Ids
 
-        Source source = getDs().find(Source.class).execute(new FindOptions().limit(1)).tryNext();
+        Source source = getDs().find(Source.class).iterator(new FindOptions().limit(1)).tryNext();
         source.getIgnoreMissing().getFoo();
     }
 

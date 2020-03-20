@@ -1,13 +1,12 @@
 package dev.morphia;
 
 
-import dev.morphia.mapping.Mapper;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.TestMapping.BaseEntity;
 import dev.morphia.annotations.Entity;
 import dev.morphia.query.Query;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
         Query<E> query = getDs().find(E.class);
         final long countAll = query.count();
         query = getDs().find(E.class);
-        final List<E> list = query.execute().toList();
+        final List<E> list = query.iterator().toList();
         Assert.assertEquals(documentsNb, countAll);
         Assert.assertEquals(documentsNb, list.size());
     }

@@ -66,8 +66,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
         // when
         List<Area> areasInTheUK = getDs().find(Area.class)
-                                         .filter(geoWithin("area", europeanCountries))
-                                         .execute().toList();
+                                         .filter(geoWithin("area", europeanCountries)).iterator().toList();
 
         // then
         assertThat(areasInTheUK.size(), is(2));
@@ -90,8 +89,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
         // when
         List<City> citiesInTheUK;
         citiesInTheUK = getDs().find(City.class)
-                               .filter(geoWithin("location", europeanCountries))
-                               .execute().toList();
+                               .filter(geoWithin("location", europeanCountries)).iterator().toList();
 
         // then
         assertThat(citiesInTheUK.size(), is(3));
@@ -147,8 +145,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
         // when
         List<AllTheThings> everythingInTheUK = getDs().find(AllTheThings.class)
-                                                      .filter(geoWithin("everything", europeanCountries))
-                                                      .execute().toList();
+                                                      .filter(geoWithin("everything", europeanCountries)).iterator().toList();
 
         // then
         assertThat(everythingInTheUK.size(), is(2));
@@ -200,8 +197,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
         // when
         List<Regions> regionsInTheUK = getDs().find(Regions.class)
-                                              .filter(geoWithin("regions", europeanCountries))
-                                              .execute()
+                                              .filter(geoWithin("regions", europeanCountries)).iterator()
                                               .toList();
 
         // then
@@ -234,8 +230,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
 
         // when
         List<Route> routesInTheUK = getDs().find(Route.class)
-                                           .filter(geoWithin("route", europeanCountries))
-                                           .execute()
+                                           .filter(geoWithin("route", europeanCountries)).iterator()
                                            .toList();
 
         // then

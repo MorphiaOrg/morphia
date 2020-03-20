@@ -32,20 +32,19 @@ public class TestArrayUpdates extends TestBase {
         Query<Student> testQuery = datastore.find(Student.class)
                                             .filter(eq("_id", 1L),
                                                 eq("grades.data.name", "Test"));
-        Assert.assertNotNull(testQuery.execute(new FindOptions().limit(1))
+        Assert.assertNotNull(testQuery.iterator(new FindOptions().limit(1))
                                       .tryNext());
 
         testQuery.update()
                  .set("grades.$.data.name", "Makeup Test")
                  .execute();
 
-        Assert.assertNull(testQuery.execute(new FindOptions().limit(1))
+        Assert.assertNull(testQuery.iterator(new FindOptions().limit(1))
                                    .tryNext());
 
         Assert.assertNotNull(datastore.find(Student.class)
                                       .filter(eq("_id", 1L),
-                                          eq("grades.data.name", "Makeup Test"))
-                                      .execute(new FindOptions().limit(1))
+                                          eq("grades.data.name", "Makeup Test")).iterator(new FindOptions().limit(1))
                                       .tryNext());
     }
 
@@ -72,16 +71,14 @@ public class TestArrayUpdates extends TestBase {
 
 
         BatchData data = getDs().find(BatchData.class)
-                                .filter(eq("_id", id))
-                                .execute(new FindOptions().limit(1))
+                                .filter(eq("_id", id)).iterator(new FindOptions().limit(1))
                                 .tryNext();
 
         Assert.assertEquals("new hash", data.files.get(0).fileHash);
         Assert.assertEquals("fileHash2", data.files.get(1).fileHash);
 
         data = getDs().find(BatchData.class)
-                      .filter(eq("_id", id2))
-                      .execute(new FindOptions().limit(1))
+                      .filter(eq("_id", id2)).iterator(new FindOptions().limit(1))
                       .tryNext();
 
         Assert.assertEquals("fileHash3", data.files.get(0).fileHash);
@@ -100,7 +97,7 @@ public class TestArrayUpdates extends TestBase {
         Query<Student> testQuery = datastore.find(Student.class)
                                             .filter(eq("_id", 1L),
                                                 eq("grades.data.name", "Test"));
-        Assert.assertNotNull(testQuery.execute(new FindOptions().limit(1))
+        Assert.assertNotNull(testQuery.iterator(new FindOptions().limit(1))
                                       .tryNext());
 
         // Update the second element. Array indexes are zero-based.
@@ -108,13 +105,12 @@ public class TestArrayUpdates extends TestBase {
                  .set("grades.1.data.name", "Makeup Test")
                  .execute();
 
-        Assert.assertNull(testQuery.execute(new FindOptions().limit(1))
+        Assert.assertNull(testQuery.iterator(new FindOptions().limit(1))
                                    .tryNext());
 
         Assert.assertNotNull(datastore.find(Student.class)
                                       .filter(eq("_id", 1L),
-                                          eq("grades.data.name", "Makeup Test"))
-                                      .execute(new FindOptions().limit(1))
+                                          eq("grades.data.name", "Makeup Test")).iterator(new FindOptions().limit(1))
                                       .tryNext());
     }
 

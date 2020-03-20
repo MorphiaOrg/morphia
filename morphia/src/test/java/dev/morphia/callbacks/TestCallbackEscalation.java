@@ -39,8 +39,7 @@ public class TestCallbackEscalation extends TestBase {
         Assert.assertFalse(a.bs.get(0).isPreLoad());
 
         a = getDs().find(A.class)
-                   .filter(eq("_id", a.id))
-                   .execute(new FindOptions().limit(1))
+                   .filter(eq("_id", a.id)).iterator(new FindOptions().limit(1))
                    .tryNext();
 
         Assert.assertTrue(a.isPostLoad());
@@ -83,8 +82,7 @@ public class TestCallbackEscalation extends TestBase {
         Assert.assertFalse(a.bs.get(0).isPreLoad());
 
         a = getDs().find(A.class)
-                   .filter(eq("_id", a.id))
-                   .execute(new FindOptions().limit(1))
+                   .filter(eq("_id", a.id)).iterator(new FindOptions().limit(1))
                    .tryNext();
 
         Assert.assertTrue(a.isPreLoad());
