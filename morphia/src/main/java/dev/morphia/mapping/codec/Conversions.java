@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,11 +29,16 @@ public final class Conversions {
 
         register(Binary.class, byte[].class, Binary::getData);
 
-        register(Integer.class, Byte.class, Integer::byteValue);
+        register(Date.class, Long.class, Date::getTime);
+        register(Instant.class, Long.class, Instant::toEpochMilli);
+        register(Date.class, long.class, Date::getTime);
+        register(Instant.class, long.class, Instant::toEpochMilli);
 
         register(Double.class, Long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
         register(Double.class, Integer.class, Double::intValue, "Converting a double value to an int.  Possible loss of precision.");
         register(Double.class, Float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
+
+        register(Integer.class, Byte.class, Integer::byteValue);
 
         register(Long.class, Double.class, Long::doubleValue);
         register(Long.class, Float.class, Long::floatValue);
@@ -98,14 +105,14 @@ public final class Conversions {
      * @return the potentially converted value
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static Object convert(final Object value, final Class<?> target) {
+    public static <T> T convert(final Object value, final Class<T> target) {
         if (value == null) {
-            return convertNull(target);
+            return (T) convertNull(target);
         }
 
         final Class<?> fromType = value.getClass();
         if (fromType.equals(target)) {
-            return value;
+            return (T) value;
         }
 
         final Function function = conversions
@@ -113,14 +120,14 @@ public final class Conversions {
                                       .get(target);
         if (function == null) {
             if (target.equals(String.class)) {
-                return value.toString();
+                return (T) value.toString();
             }
             if (target.isEnum() && fromType.equals(String.class)) {
-                return Enum.valueOf((Class<? extends Enum>) target, (String) value);
+                return (T) Enum.valueOf((Class<? extends Enum>) target, (String) value);
             }
-            return value;
+            return (T) value;
         }
-        return function.apply(value);
+        return (T) function.apply(value);
     }
 
     private static Object convertNull(final Class<?> toType) {

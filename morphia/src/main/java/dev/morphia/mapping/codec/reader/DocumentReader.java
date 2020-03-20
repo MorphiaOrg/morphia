@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.reader;
 
 import dev.morphia.mapping.codec.BsonTypeMap;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.reader.ReaderState.InitialReaderState;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
@@ -86,7 +87,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public long readDateTime() {
-        return (long) stage().value();
+        return Conversions.convert(stage().value(), long.class);
     }
 
     @Override
