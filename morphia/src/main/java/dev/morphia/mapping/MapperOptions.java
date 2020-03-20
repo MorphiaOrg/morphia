@@ -29,7 +29,7 @@ public class MapperOptions {
     private final boolean storeEmpties;
     private final boolean cacheClassLookups;
     private final boolean mapSubPackages;
-//    private final MorphiaInstanceCreator creator;
+    private final MorphiaInstanceCreator creator;
     private final String discriminatorKey;
     private final DiscriminatorFunction discriminator;
     private final List<MorphiaConvention> conventions;
@@ -45,7 +45,7 @@ public class MapperOptions {
         storeEmpties = builder.storeEmpties;
         cacheClassLookups = builder.cacheClassLookups;
         mapSubPackages = builder.mapSubPackages;
-        //        creator = builder.creator;
+        creator = builder.creator;
         classLoader = builder.classLoader;
         discriminatorKey = builder.discriminatorKey;
         discriminator = builder.discriminator;
@@ -57,18 +57,13 @@ public class MapperOptions {
     }
 
     /**
-     * Returns a configuration matching the modern defaults found as defined by 2.0.
-     *
      * @return a builder to set mapping options
-     * @see #DEFAULT
      */
     public static Builder builder() {
         return new Builder();
     }
 
     /**
-     * Returns a legacy configuration matching the defaults found prior to 2.0.
-     *
      * @return a builder to set mapping options
      */
     public static Builder legacy() {
@@ -91,7 +86,7 @@ public class MapperOptions {
         builder.storeEmpties = original.isStoreEmpties();
         builder.cacheClassLookups = original.isCacheClassLookups();
         builder.mapSubPackages = original.isMapSubPackages();
-        //        builder.creator = original.getCreator();
+        builder.creator = original.getCreator();
         builder.classLoader = original.getClassLoader();
         return builder;
     }
@@ -122,6 +117,13 @@ public class MapperOptions {
      */
     public List<MorphiaConvention> getConventions() {
         return Collections.unmodifiableList(conventions);
+    }
+
+    /**
+     * @return the factory to use when creating new instances
+     */
+    public MorphiaInstanceCreator getCreator() {
+        return creator;
     }
 
     /**
@@ -207,7 +209,7 @@ public class MapperOptions {
         private boolean storeEmpties;
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
-        //        private MorphiaInstanceCreator creator;
+        private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName();
@@ -335,9 +337,8 @@ public class MapperOptions {
          * @return this
          */
         public Builder objectFactory(final MorphiaInstanceCreator creator) {
-            throw new UnsupportedOperationException("coming soon");
-            //            this.creator = creator;
-            //            return this;
+            this.creator = creator;
+            return this;
         }
 
         /**

@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
 
 /**
  * Limits the number of documents passed to the next stage in the pipeline.
@@ -8,28 +8,28 @@ import dev.morphia.query.Query;
  * @aggregation.expression $match
  */
 public class Match extends Stage {
-    private Query query;
+    private Filter[] filters;
 
-    protected Match(final Query query) {
+    protected Match(final Filter... filters) {
         super("$match");
-        this.query = query;
+        this.filters = filters;
     }
 
     /**
-     * Creates the new stage using the query for matching
+     * Creates the new stage using the filters for matching
      *
-     * @param query the query
+     * @param filters the filters to apply
      * @return this
      */
-    public static Match on(final Query<?> query) {
-        return new Match(query);
+    public static Match on(final Filter... filters) {
+        return new Match(filters);
     }
 
     /**
-     * @return the query
+     * @return the filters
      * @morphia.internal
      */
-    public Query getQuery() {
-        return query;
+    public Filter[] getFilters() {
+        return filters;
     }
 }

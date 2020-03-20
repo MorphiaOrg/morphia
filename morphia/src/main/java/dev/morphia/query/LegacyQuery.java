@@ -24,11 +24,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.query.CriteriaJoin.AND;
-import static dev.morphia.query.MorphiaQuery.modernOperation;
 import static java.lang.String.format;
 
 
@@ -161,27 +159,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public long count() {
-        return count(new CountOptions());
-    }
-
-    @Override
-    public long count(final CountOptions options) {
-        ClientSession session = datastore.findSession(options);
-        return session == null ? getCollection().countDocuments(getQueryDocument(), options)
-                               : getCollection().countDocuments(session, getQueryDocument(), options);
-    }
-
-    @Override
-    public T delete(final FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.apply(getCollection());
-        ClientSession session = datastore.findSession(options);
-        return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
-    }
-
-    @Override
     public Query<T> disableValidation() {
         validateName = false;
         validateType = false;
@@ -193,16 +170,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         validateName = true;
         validateType = true;
         return this;
-    }
-
-    @Override
-    public MorphiaCursor<T> execute() {
-        return this.execute(getOptions());
-    }
-
-    @Override
-    public MorphiaCursor<T> execute(final FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
 
     @Override
@@ -234,72 +201,11 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public T first() {
-        return first(new FindOptions());
-    }
-
-    @Override
-    public T first(final FindOptions options) {
-        try (MongoCursor<T> it = this.execute(options.copy().limit(1))) {
-            return it.tryNext();
-        }
-    }
-
-    /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
-     */
-    public Class<T> getEntityClass() {
-        return clazz;
-    }
-
-    @Override
-    public MorphiaCursor<T> iterator(final FindOptions options) {
-        return modernOperation();
-    }
-
-    @Override
-    public MorphiaCursor<T> iterator() {
-        return modernOperation();
-    }
-
-    @Override
-    public void forEach(final FindOptions options, final Consumer<? super T> action) {
-        modernOperation();
-    }
-
-    @Override
-    public void forEach(final Consumer<? super T> action) {
-        modernOperation();
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys() {
-        return keys(new FindOptions());
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys(final FindOptions options) {
-        FindOptions returnKey = new FindOptions().copy(options)
-                                                 .projection()
-                                                 .include("_id");
-
-        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            clazz, getCollectionName());
-    }
-
-    @Override
     public Modify<T> modify(final UpdateOperations<T> operations) {
         Modify<T> modify = modify();
         modify.setOps(((UpdateOpsImpl) operations).getOps());
 
         return modify;
-    }
-
-    @Override
-    public Modify<T> modify() {
-        return new Modify<>(this, datastore, mapper, clazz, getCollection());
     }
 
     @Override
@@ -348,18 +254,75 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public DeleteResult remove(final DeleteOptions options) {
-        MongoCollection<T> collection = options.apply(getCollection());
+    public long count() {
+        return count(new CountOptions());
+    }
+
+    @Override
+    public long count(final CountOptions options) {
         ClientSession session = datastore.findSession(options);
-        if (options.isMulti()) {
-            return session == null
-                   ? collection.deleteMany(getQueryDocument(), options)
-                   : collection.deleteMany(session, getQueryDocument(), options);
-        } else {
-            return session == null
-                   ? collection.deleteOne(getQueryDocument(), options)
-                   : collection.deleteOne(session, getQueryDocument(), options);
+        return session == null ? getCollection().countDocuments(getQueryDocument(), options)
+                               : getCollection().countDocuments(session, getQueryDocument(), options);
+    }
+
+    @Override
+    public T delete(final FindAndDeleteOptions options) {
+        MongoCollection<T> mongoCollection = options.apply(getCollection());
+        ClientSession session = datastore.findSession(options);
+        return session == null
+               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
+               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
+    }
+
+    @Override
+    public T first() {
+        return first(new FindOptions());
+    }
+
+    @Override
+    public T first(final FindOptions options) {
+        try (MongoCursor<T> it = this.execute(options.copy().limit(1))) {
+            return it.tryNext();
         }
+    }
+
+    /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
+    public Class<T> getEntityClass() {
+        return clazz;
+    }
+
+    @Override
+    public MorphiaCursor<T> iterator() {
+        return this.iterator(new FindOptions());
+    }
+
+    @Override
+    public MorphiaCursor<T> iterator(final FindOptions options) {
+        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
+    }
+
+    @Override
+    public MorphiaKeyCursor<T> keys() {
+        return keys(new FindOptions());
+    }
+
+    @Override
+    public MorphiaKeyCursor<T> keys(final FindOptions options) {
+        FindOptions returnKey = new FindOptions().copy(options)
+                                                 .projection()
+                                                 .include("_id");
+
+        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
+            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
+            clazz, getCollectionName());
+    }
+
+    @Override
+    public Modify<T> modify() {
+        return new Modify<>(this, datastore, mapper, clazz, getCollection());
     }
 
     @Override
@@ -382,23 +345,32 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public DeleteResult remove(final DeleteOptions options) {
+        MongoCollection<T> collection = options.apply(getCollection());
+        ClientSession session = datastore.findSession(options);
+        if (options.isMulti()) {
+            return session == null
+                   ? collection.deleteMany(getQueryDocument(), options)
+                   : collection.deleteMany(session, getQueryDocument(), options);
+        } else {
+            return session == null
+                   ? collection.deleteOne(getQueryDocument(), options)
+                   : collection.deleteOne(session, getQueryDocument(), options);
+        }
+    }
+
+    @Override
     public Update<T> update() {
         return new Update<>(datastore, mapper, clazz, getCollection(), this);
     }
 
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
-    public Update<T> update(final UpdateOperations operations) {
+    public Update<T> update(final UpdateOperations<T> operations) {
         final Update<T> updates = update();
-        updates.setOps(((UpdateOpsImpl) operations).getOps());
+        updates.setOps(((UpdateOpsImpl<T>) operations).getOps());
 
         return updates;
-    }
-
-    @Override
-    public Query<T> where(final String js) {
-        add(new WhereCriteria(js));
-        return this;
     }
 
     /**
@@ -407,6 +379,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      */
     public MongoCollection<T> getCollection() {
         return collection;
+    }
+
+    @Override
+    public Query<T> where(final String js) {
+        add(new WhereCriteria(js));
+        return this;
     }
 
     /**

@@ -37,7 +37,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.geo.PlaceWithLegacyCoords;
 import dev.morphia.geo.model.City;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
@@ -224,9 +223,8 @@ public class AggregationTest extends TestBase {
     public void testCollation() {
         getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
-        Query<User> query = getDs().find(User.class).filter(eq("name", "john doe"));
         Aggregation<User> pipeline = getDs().aggregate(User.class)
-                                            .match(query);
+                                            .match(eq("name", "john doe"));
         Assert.assertEquals(1, count(pipeline.execute(User.class)));
 
         Assert.assertEquals(2, count(pipeline.execute(User.class,
@@ -451,8 +449,7 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel")));
 
         getDs().aggregate(Book.class)
-               .match(getDs().getQueryFactory().createQuery(getDs())
-                             .filter(eq("author", "Homer")))
+               .match(eq("author", "Homer"))
                .group(of(id("author"))
                           .field("copies", sum(field("copies"))))
                .out(Out.to("testAverage"));
@@ -593,9 +590,7 @@ public class AggregationTest extends TestBase {
                                                     .group(of(
                                                         id("state"))
                                                                .field("total_pop", sum(field("pop"))))
-                                                    .match(getDs().find(Book.class)
-                                                                  .disableValidation()
-                                                                  .filter(gte("total_pop", 10000000)))
+                                                    .match(gte("total_pop", 10000000))
                                                     .execute(City.class);
         while (pipeline.hasNext()) {
             pipeline.next();

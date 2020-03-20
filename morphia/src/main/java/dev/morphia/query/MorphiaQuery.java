@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.function.Consumer;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.query.experimental.filters.Filters.text;
@@ -87,10 +86,6 @@ public class MorphiaQuery<T> implements Query<T> {
 
     static <V> V legacyOperation() {
         throw new UnsupportedOperationException(Sofia.legacyOperation());
-    }
-
-    static <V> V modernOperation() {
-        throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
     }
 
     @Override
@@ -229,16 +224,6 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public void forEach(final FindOptions options, final Consumer<? super T> action) {
-        iterator(options).forEachRemaining(action);
-    }
-
-    @Override
-    public void forEach(final Consumer<? super T> action) {
-        iterator().forEachRemaining(action);
-    }
-
-    @Override
     public T first(final FindOptions options) {
         try (MongoCursor<T> it = this.execute(options.copy().limit(1))) {
             return it.tryNext();
@@ -284,7 +269,12 @@ public class MorphiaQuery<T> implements Query<T> {
         return clazz;
     }
 
-    /*
+    @Override
+    public int hashCode() {
+        return Objects.hash(clazz, validate, getCollectionName());
+    }
+
+/*
     private List<Filter> collect(final Criteria[] criteria) {
         List<Filter> collected = new ArrayList<>();
         for (final Criteria criterion : criteria) {
@@ -305,11 +295,6 @@ public class MorphiaQuery<T> implements Query<T> {
 */
 
     @Override
-    public int hashCode() {
-        return Objects.hash(clazz, getCollectionName(), filters, seedQuery, validate);
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -317,12 +302,10 @@ public class MorphiaQuery<T> implements Query<T> {
         if (!(o instanceof MorphiaQuery)) {
             return false;
         }
-        final MorphiaQuery<?> that = (MorphiaQuery<?>) o;
-        return validate == that.validate &&
-               Objects.equals(clazz, that.clazz) &&
-               Objects.equals(getCollectionName(), that.getCollectionName()) &&
-               Objects.equals(filters, that.filters) &&
-               Objects.equals(seedQuery, that.seedQuery);
+        final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
+        return validate == query20.validate
+               && Objects.equals(clazz, query20.clazz)
+               && Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
     @Override

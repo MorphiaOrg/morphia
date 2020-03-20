@@ -10,7 +10,6 @@ import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.zipcode.City;
 import dev.morphia.aggregation.zipcode.Population;
 import dev.morphia.aggregation.zipcode.State;
-import dev.morphia.query.Query;
 import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.Document;
 import org.junit.Assert;
@@ -107,13 +106,12 @@ public class ZipCodeDataSetTest extends TestBase {
     public void populationsAbove10M() {
         Assume.assumeTrue(MONGO_IMPORT.exists());
         installSampleData();
-        Query<Object> query = getDs().getQueryFactory().createQuery(getDs());
 
         Aggregation pipeline
             = getDs().aggregate(City.class)
                      .group(of(id("state"))
                                 .field("totalPop", sum(field("pop"))))
-                     .match(query.filter(gte("totalPop", 10000000)));
+                     .match(gte("totalPop", 10000000));
 
         validate(pipeline.execute(Population.class), "CA", 29754890);
         validate(pipeline.execute(Population.class), "OH", 10846517);

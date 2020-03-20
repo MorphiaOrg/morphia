@@ -10,6 +10,7 @@ import java.util.List;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.meta;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.query.experimental.filters.Filters.text;
 import static org.bson.Document.parse;
 
 public class ExpressionsTest extends ExpressionsTestBase {
@@ -25,7 +26,7 @@ public class ExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'title' : 'some cakes' }")));
 
         List<Document> actual = getDs().aggregate("articles")
-                                       .match(getDs().find().search("cake"))
+                                       .match(text("cake"))
                                        .group(Group.of(Group.id(meta()))
                                                    .field("count", sum(value(1))))
                                        .execute(Document.class)

@@ -12,7 +12,7 @@ import java.util.Map;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
-public class PrimitiveCodecProvider implements CodecRegistry {
+public class PrimitiveCodecRegistry implements CodecRegistry {
     private Map<Class, Codec> primitiveCodecs = new HashMap<>();
 
     /**
@@ -20,7 +20,7 @@ public class PrimitiveCodecProvider implements CodecRegistry {
      *
      * @param codecRegistry the registry
      */
-    public PrimitiveCodecProvider(final CodecRegistry codecRegistry) {
+    public PrimitiveCodecRegistry(final CodecRegistry codecRegistry) {
         primitiveCodecs.put(byte.class, codecRegistry.get(Byte.class));
         primitiveCodecs.put(char.class, codecRegistry.get(Character.class));
         primitiveCodecs.put(short.class, codecRegistry.get(Short.class));

@@ -32,7 +32,7 @@ import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -154,8 +154,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> match(final Query<?> query) {
-        stages.add(Match.on(query));
+    public Aggregation<T> match(final Filter... filters) {
+        stages.add(Match.on(filters));
         return this;
     }
 

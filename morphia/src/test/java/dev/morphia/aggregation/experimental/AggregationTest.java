@@ -211,8 +211,7 @@ public class AggregationTest extends TestBase {
 
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
-                                         .match(getDs().find(User.class)
-                                                       .filter(eq("name", "john doe")));
+                                         .match(eq("name", "john doe"));
         assertEquals(1, count(pipeline.execute(User.class)));
 
         assertEquals(2, count(pipeline.execute(User.class,
@@ -249,8 +248,7 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("scores").insertMany(list);
 
         Document scores = getDs().aggregate(Score.class)
-                                 .match(getDs().find(Score.class)
-                                               .filter(gt("score", 80)))
+                                 .match(gt("score", 80))
                                  .count("passing_scores")
                                  .execute(Document.class)
                                  .next();
@@ -284,8 +282,7 @@ public class AggregationTest extends TestBase {
                                                  Unwind.on("tags"),
                                                  SortByCount.on(field("tags")))
                                              .field("categorizedByPrice",
-                                                 Match.on(getDs().find(Artwork.class)
-                                                                 .filter(exists("price"))),
+                                                 Match.on(exists("price")),
                                                  Bucket.of()
                                                        .groupBy(field("price"))
                                                        .boundaries(value(0), value(150), value(200), value(300), value(400))
@@ -369,8 +366,7 @@ public class AggregationTest extends TestBase {
         getDs().ensureIndexes();
         Document stats = getDs().aggregate(Author.class)
                                 .indexStats()
-                                .match(getDs().find()
-                                              .filter(eq("name", "books_1")))
+                                .match(eq("name", "books_1"))
                                 .execute(Document.class)
                                 .next();
 
@@ -603,7 +599,7 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("forecasts").insertOne(document);
 
         Document actual = getDs().aggregate("forecasts")
-                                 .match(getDs().find().filter(eq("year", 2014)))
+                                 .match(eq("year", 2014))
                                  .redact(Redact.on(
                                      condition(
                                          gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))),
@@ -630,10 +626,9 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("authors").insertMany(documents);
 
         List<Document> actual = getDs().aggregate(Author.class)
-                                       .match(getDs().find()
-                                                     .filter(exists("name"),
-                                                         type("name", Type.ARRAY).not(),
-                                                         type("name", Type.OBJECT)))
+                                       .match(exists("name"),
+                                           type("name", Type.ARRAY).not(),
+                                           type("name", Type.OBJECT))
                                        .replaceRoot(ReplaceRoot.with(field("name")))
                                        .execute(Document.class)
                                        .toList();
@@ -688,10 +683,9 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("authors").insertMany(documents);
 
         List<Document> actual = getDs().aggregate(Author.class)
-                                       .match(getDs().find()
-                                                     .filter(exists("name"),
-                                                         type("name", Type.ARRAY).not(),
-                                                         type("name", Type.OBJECT)))
+                                       .match(exists("name"),
+                                           type("name", Type.ARRAY).not(),
+                                           type("name", Type.OBJECT))
                                        .replaceWith(with(field("name")))
                                        .execute(Document.class)
                                        .toList();

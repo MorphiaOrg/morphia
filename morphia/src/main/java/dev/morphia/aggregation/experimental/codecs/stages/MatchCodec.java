@@ -2,9 +2,8 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 public class MatchCodec extends StageCodec<Match> {
@@ -16,9 +15,12 @@ public class MatchCodec extends StageCodec<Match> {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected void encodeStage(final BsonWriter writer, final Match value, final EncoderContext encoderContext) {
-        Query query = value.getQuery();
-        Codec codec = getCodecRegistry().get(query.getClass());
-        encoderContext.encodeWithChildContext(codec, writer, value.getQuery());
+        Filter[] filters = value.getFilters();
+        writer.writeStartDocument();
+        for (final Filter filter : filters) {
+            filter.encode(getMapper(), writer, encoderContext);
+        }
+        writer.writeEndDocument();
     }
 
     @Override

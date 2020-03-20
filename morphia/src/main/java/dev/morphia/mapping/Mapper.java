@@ -14,7 +14,7 @@ import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
-import dev.morphia.mapping.codec.PrimitiveCodecProvider;
+import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.reader.DocumentReader;
@@ -91,11 +91,11 @@ public class Mapper {
         this.options = options;
         morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
         this.codecRegistry = fromRegistries(
-            new PrimitiveCodecProvider(codecRegistry),
+            fromProviders(new MorphiaTypesCodecProvider(this)),
+            new PrimitiveCodecRegistry(codecRegistry),
             codecRegistry,
             fromProviders(
                 new EnumCodecProvider(),
-                new MorphiaTypesCodecProvider(this),
                 new AggregationCodecProvider(this),
                 morphiaCodecProvider));
     }

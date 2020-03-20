@@ -5,7 +5,6 @@ import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.TestBase;
-import dev.morphia.aggregation.experimental.AggregationTest.Artwork;
 import dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions;
 import dev.morphia.aggregation.experimental.expressions.ConditionalExpressions;
 import dev.morphia.aggregation.experimental.expressions.MathExpressions;
@@ -74,7 +73,7 @@ public class CodecStructureTest extends TestBase {
             to(new Point(new Position(-73.98142, 40.71782)))
                 .key("location")
                 .distanceField("dist.calculated")
-                .query(getDs().find().filter(eq("category", "Parks"))));
+                .query(eq("category", "Parks")));
     }
 
     @Test
@@ -121,8 +120,7 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testMatch() {
         evaluate(parse("{ $match: { price: { $exists: true } } }"),
-            Match.on(getDs().find(Artwork.class)
-                            .filter(exists("price"))));
+            Match.on(exists("price")));
     }
 
     @Test

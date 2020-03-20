@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 
 import dev.morphia.aggregation.experimental.stages.GeoNear;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -25,7 +26,14 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
         writeNamedValue(writer, "spherical", value.getSpherical(), encoderContext);
         writeNamedValue(writer, "maxDistance", value.getMaxDistance(), encoderContext);
         writeNamedValue(writer, "minDistance", value.getMinDistance(), encoderContext);
-        writeNamedValue(writer, "query", value.getQuery(), encoderContext);
+        Filter[] filters = value.getFilters();
+        if (filters != null) {
+            writer.writeStartDocument("query");
+            for (final Filter filter : filters) {
+                filter.encode(getMapper(), writer, encoderContext);
+            }
+            writer.writeEndDocument();
+        }
         writeNamedValue(writer, "distanceMultiplier", value.getDistanceMultiplier(), encoderContext);
         writeNamedValue(writer, "includeLocs", value.getIncludeLocs(), encoderContext);
         writer.writeEndDocument();

@@ -62,7 +62,9 @@ public class OperationTarget {
                                            .getFieldModelByName(mappedField.getJavaFieldName())
                               : null;
 
-        Codec cachedCodec = model != null ? model.getCachedCodec() : null;
+        Codec cachedCodec = model != null && !(mappedValue instanceof LegacyQuery)
+                            ? model.getCachedCodec()
+                            : null;
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
         } else if (mappedValue != null) {

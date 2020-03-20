@@ -20,7 +20,7 @@ import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
-import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 
 /**
@@ -205,11 +205,11 @@ public interface Aggregation<T> {
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard
      * MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
      *
-     * @param query the query to use when matching
+     * @param filters the filters to use when matching
      * @return this
      * @aggregation.expression $match
      */
-    Aggregation<T> match(Query<?> query);
+    Aggregation<T> match(Filter... filters);
 
     /**
      * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.

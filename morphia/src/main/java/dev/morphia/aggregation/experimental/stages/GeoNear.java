@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.geojson.Point;
-import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
 
 /**
  * Outputs documents in order of nearest to farthest from a specified point.
@@ -14,7 +14,7 @@ public class GeoNear extends Stage {
     private String distanceField;
     private Boolean spherical;
     private Number maxDistance;
-    private Query query;
+    private Filter[] filters;
     private Number distanceMultiplier;
     private String includeLocs;
     private Number minDistance;
@@ -145,8 +145,8 @@ public class GeoNear extends Stage {
      * @return the query
      * @morphia.internal
      */
-    public Query getQuery() {
-        return query;
+    public Filter[] getFilters() {
+        return filters;
     }
 
     /**
@@ -213,11 +213,11 @@ public class GeoNear extends Stage {
      * <p>
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      *
-     * @param query the query
+     * @param filters the filters to apply
      * @return this
      */
-    public GeoNear query(final Query query) {
-        this.query = query;
+    public GeoNear query(final Filter... filters) {
+        this.filters = filters;
         return this;
     }
 
