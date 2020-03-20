@@ -169,6 +169,7 @@ public final class GeoNear {
     /**
      * Provides a builder for GeoNear instances.
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     public static class GeoNearBuilder {
         private final String distanceField;
         private Long limit;
