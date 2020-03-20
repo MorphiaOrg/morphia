@@ -21,7 +21,6 @@
         </Not>
     </Match>
     <Match>
-        <Class name="~.*\.*GeoNear"/>
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
     <Match>
@@ -53,14 +52,6 @@
     <Match>
         <!-- Ignore test entities as these will often have unused things -->
         <Package name="~org\.mongodb\.morphia\.testmappackage.*"/>
-    </Match>
-    <Match>
-        <Class name="dev.morphia.testmodel.Hotel"/>
-        <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
-    </Match>
-    <Match>
-        <Class name="dev.morphia.utils.E1"/>
-        <Bug pattern="SS_SHOULD_BE_STATIC"/>
     </Match>
     <Match>
         <Class name="dev.morphia.mapping.MappedClass"/>
