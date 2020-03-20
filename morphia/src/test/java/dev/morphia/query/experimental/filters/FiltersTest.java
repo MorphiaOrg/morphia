@@ -20,6 +20,9 @@ import static dev.morphia.query.experimental.filters.Filters.bitsAllSet;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnyClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnySet;
 import static dev.morphia.query.experimental.filters.Filters.expr;
+import static dev.morphia.query.experimental.filters.Filters.gt;
+import static dev.morphia.query.experimental.filters.Filters.lt;
+import static dev.morphia.query.experimental.filters.Filters.nor;
 import static dev.morphia.query.experimental.filters.Filters.size;
 import static java.util.Arrays.asList;
 
@@ -176,6 +179,12 @@ public class FiltersTest extends TestBase {
         Assert.assertNull(likes);
     }
 
+    @Test
+    public void testNor() {
+        getDs().find(Budget.class)
+               .filter(nor(lt("budget", 10000), gt("budget", 12)))
+               .iterator();
+    }
 
     @Entity(value = "budget", useDiscriminator = false)
     static class Budget {

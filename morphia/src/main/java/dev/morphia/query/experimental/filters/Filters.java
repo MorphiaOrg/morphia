@@ -555,6 +555,17 @@ public final class Filters {
     }
 
     /**
+     * Applies $nor to a set of filters
+     *
+     * @param filters the filters
+     * @return the filter
+     * @query.filter $nor
+     */
+    public static Filter nor(final Filter... filters) {
+        return new LogicalFilter("$nor", filters);
+    }
+
+    /**
      * Applies $or to a set of filters
      *
      * @param filters the filters

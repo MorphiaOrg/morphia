@@ -23,7 +23,7 @@ public class ConditionalExpressions {
      * @param then      the expression for the true branch
      * @param otherwise the expresion for the else branch
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/cond $cond
+     * @aggregation.expression $cond
      */
     public static Expression condition(final Expression condition, final Expression then, final Expression otherwise) {
         return new Expression("$cond", List.of(condition, then, otherwise));
@@ -35,7 +35,7 @@ public class ConditionalExpressions {
      * replacement expression.
      *
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/ifNull $ifNull
+     * @aggregation.expression $ifNull
      */
     public static IfNull ifNull() {
         return new IfNull();
@@ -46,7 +46,7 @@ public class ConditionalExpressions {
      * expression and breaks out of the control flow.
      *
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/switch $switch
+     * @aggregation.expression $switch
      */
     public static SwitchExpression switchExpression() {
         return new SwitchExpression();

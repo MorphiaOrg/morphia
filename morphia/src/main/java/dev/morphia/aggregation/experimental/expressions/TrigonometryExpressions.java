@@ -18,7 +18,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/sin $sin
+     * @aggregation.expression $sin
      */
     public static Expression sin(final Expression value) {
         return new Expression("$sin", value);
@@ -29,7 +29,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/cos $cos
+     * @aggregation.expression $cos
      */
     public static Expression cos(final Expression value) {
         return new Expression("$cos", value);
@@ -40,7 +40,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/tan $tan
+     * @aggregation.expression $tan
      */
     public static Expression tan(final Expression value) {
         return new Expression("$tan", value);
@@ -51,7 +51,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/asin $asin
+     * @aggregation.expression $asin
      */
     public static Expression asin(final Expression value) {
         return new Expression("$asin", value);
@@ -62,7 +62,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/acos $acos
+     * @aggregation.expression $acos
      */
     public static Expression acos(final Expression value) {
         return new Expression("$acos", value);
@@ -73,7 +73,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/atan $atan
+     * @aggregation.expression $atan
      */
     public static Expression atan(final Expression value) {
         return new Expression("$atan", value);
@@ -86,7 +86,7 @@ public final class TrigonometryExpressions {
      * @param yValue the y value
      * @param xValue the x value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/atan2 $atan2
+     * @aggregation.expression $atan2
      */
     public static Expression atan2(final Expression yValue, final Expression xValue) {
         return new Expression("$atan2", List.of(yValue, xValue));
@@ -97,7 +97,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/asinh $asinh
+     * @aggregation.expression $asinh
      */
     public static Expression asinh(final Expression value) {
         return new Expression("$asinh", value);
@@ -108,7 +108,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/acosh $acosh
+     * @aggregation.expression $acosh
      */
     public static Expression acosh(final Expression value) {
         return new Expression("$acosh", value);
@@ -119,7 +119,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/atanh $atanh
+     * @aggregation.expression $atanh
      */
     public static Expression atanh(final Expression value) {
         return new Expression("$atanh", value);
@@ -130,7 +130,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/degreesToRadians $degreesToRadians
+     * @aggregation.expression $degreesToRadians
      */
     public static Expression degreesToRadians(final Expression value) {
         return new Expression("$degreesToRadians", value);
@@ -141,7 +141,7 @@ public final class TrigonometryExpressions {
      *
      * @param value the value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/radiansToDegrees $radiansToDegrees
+     * @aggregation.expression $radiansToDegrees
      */
     public static Expression radiansToDegrees(final Expression value) {
         return new Expression("$radiansToDegrees", value);

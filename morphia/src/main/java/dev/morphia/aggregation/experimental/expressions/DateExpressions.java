@@ -27,7 +27,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/toDate $toDate
+     * @aggregation.expression $toDate
      */
     public static DateExpression toDate(final Expression value) {
         return new DateExpression("$toDate", value);
@@ -38,7 +38,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfMonth $dayOfMonth
+     * @aggregation.expression $dayOfMonth
      */
     public static DateExpression dayOfMonth(final Expression value) {
         return new DateExpression("$dayOfMonth", value);
@@ -49,7 +49,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfYear $dayOfYear
+     * @aggregation.expression $dayOfYear
      */
     public static DateExpression dayOfYear(final Expression value) {
         return new DateExpression("$dayOfYear", value);
@@ -60,7 +60,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/dayOfWeek $dayOfWeek
+     * @aggregation.expression $dayOfWeek
      */
     public static DateExpression dayOfWeek(final Expression value) {
         return new DateExpression("$dayOfWeek", value);
@@ -71,7 +71,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/month $month
+     * @aggregation.expression $month
      */
     public static DateExpression month(final Expression value) {
         return new DateExpression("$month", value);
@@ -82,7 +82,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/hour $hour
+     * @aggregation.expression $hour
      */
     public static DateExpression hour(final Expression value) {
         return new DateExpression("$hour", value);
@@ -93,7 +93,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/minute $minute
+     * @aggregation.expression $minute
      */
     public static DateExpression minute(final Expression value) {
         return new DateExpression("$minute", value);
@@ -104,7 +104,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/second $second
+     * @aggregation.expression $second
      */
     public static DateExpression second(final Expression value) {
         return new DateExpression("$second", value);
@@ -116,7 +116,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/week $week
+     * @aggregation.expression $week
      */
     public static DateExpression week(final Expression value) {
         return new DateExpression("$week", value);
@@ -127,7 +127,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/millisecond $millisecond
+     * @aggregation.expression $millisecond
      */
     public static DateExpression milliseconds(final Expression value) {
         return new DateExpression("$millisecond", value);
@@ -138,7 +138,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/year $year
+     * @aggregation.expression $year
      */
     public static DateExpression year(final Expression value) {
         return new DateExpression("$year", value);
@@ -148,7 +148,7 @@ public final class DateExpressions {
      * Returns the date as a formatted string.
      *
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/dateToString $dateToString
+     * @aggregation.expression $dateToString
      */
     public static DateToString dateToString() {
         return new DateToString();
@@ -158,7 +158,7 @@ public final class DateExpressions {
      * Converts a date/time string to a date object.
      *
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/dateFromString $dateFromString
+     * @aggregation.expression $dateFromString
      */
     public static DateFromString dateFromString() {
         return new DateFromString();
@@ -168,7 +168,7 @@ public final class DateExpressions {
      * Constructs and returns a Date object given the date’s constituent properties.
      *
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/dateFromParts $dateFromParts
+     * @aggregation.expression $dateFromParts
      */
     public static DateFromParts dateFromParts() {
         return new DateFromParts();
@@ -179,7 +179,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/isoDayOfWeek $isoDayOfWeek
+     * @aggregation.expression $isoDayOfWeek
      */
     public static IsoDates isoDayOfWeek(final Expression value) {
         return new IsoDates("$isoDayOfWeek", value);
@@ -191,7 +191,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/isoWeek $isoWeek
+     * @aggregation.expression $isoWeek
      */
     public static IsoDates isoWeek(final Expression value) {
         return new IsoDates("$isoWeek", value);
@@ -204,7 +204,7 @@ public final class DateExpressions {
      *
      * @param value the expression containing the date value
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/isoWeekYear $isoWeekYear
+     * @aggregation.expression $isoWeekYear
      */
     public static IsoDates isoWeekYear(final Expression value) {
         return new IsoDates("$isoWeekYear", value);
@@ -215,7 +215,7 @@ public final class DateExpressions {
      *
      * @param date The input date for which to return parts.
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/dateToParts $dateToParts
+     * @aggregation.expression $dateToParts
      */
     public static DateToParts dateToParts(final Expression date) {
         return new DateToParts(date);

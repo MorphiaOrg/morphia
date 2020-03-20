@@ -87,6 +87,7 @@ public class Filter {
      * Negates this filter by wrapping in "$not: {}"
      *
      * @return this
+     * @query.filter $not
      */
     public Filter not() {
         this.not = true;

@@ -20,7 +20,7 @@ public final class SetExpressions {
      * @param first      an expression to evaluate
      * @param additional any additional expressions
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/allElementsTrue $allElementsTrue
+     * @aggregation.expression $allElementsTrue
      */
     public static Expression allElementsTrue(final Expression first, final Expression... additional) {
         return new Expression("$allElementsTrue", Expressions.toList(first, additional));
@@ -32,7 +32,7 @@ public final class SetExpressions {
      * @param first      an expression to evaluate
      * @param additional any additional expressions
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/anyElementTrue $anyElementTrue
+     * @aggregation.expression $anyElementTrue
      */
     public static Expression anyElementTrue(final Expression first, final Expression... additional) {
         return new Expression("$anyElementTrue", Expressions.toList(first, additional));
@@ -45,7 +45,7 @@ public final class SetExpressions {
      * @param first  the first array expression
      * @param second the second expression
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/setDifference $setDifference
+     * @aggregation.expression $setDifference
      */
     public static Expression setDifference(final Expression first, final Expression second) {
         return new Expression("$setDifference", List.of(first, second));
@@ -57,7 +57,7 @@ public final class SetExpressions {
      * @param first      the first array expression
      * @param additional additional expressions
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/setEquals $setEquals
+     * @aggregation.expression $setEquals
      */
     public static Expression setEquals(final Expression first, final Expression... additional) {
         return new Expression("$setEquals", Expressions.toList(first, additional));
@@ -69,7 +69,7 @@ public final class SetExpressions {
      * @param first      the first array expression
      * @param additional additional expressions
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/setIntersection $setIntersection
+     * @aggregation.expression $setIntersection
      */
     public static Expression setIntersection(final Expression first, final Expression... additional) {
         return new Expression("$setIntersection", Expressions.toList(first, additional));
@@ -82,7 +82,7 @@ public final class SetExpressions {
      * @param first  the first array expression
      * @param second the second expression
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/setIsSubset $setIsSubset
+     * @aggregation.expression $setIsSubset
      */
     public static Expression setIsSubset(final Expression first, final Expression second) {
         return new Expression("$setIsSubset", List.of(first, second));
@@ -94,7 +94,7 @@ public final class SetExpressions {
      * @param first      the first array expression
      * @param additional additional expressions
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/setUnion $setUnion
+     * @aggregation.expression $setUnion
      */
     public static Expression setUnion(final Expression first, final Expression... additional) {
         return new Expression("$setUnion", Expressions.toList(first, additional));

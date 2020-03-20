@@ -22,7 +22,7 @@ public final class ObjectExpressions {
      * Combines multiple documents into a single document.
      *
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/mergeObjects $mergeObjects
+     * @aggregation.expression $mergeObjects
      */
     public static MergeObjects mergeObjects() {
         return new MergeObjects();

@@ -21,7 +21,7 @@ public final class ComparisonExpressions {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/cmp $cmp
+     * @aggregation.expression $cmp
      */
     public static Expression cmp(final Expression first, final Expression second) {
         return new Expression("$cmp", List.of(first, second));
@@ -36,7 +36,7 @@ public final class ComparisonExpressions {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/gt $gt
+     * @aggregation.expression $gt
      */
     public static Expression gt(final Expression first, final Expression second) {
         return new Expression("$gt", List.of(first, second));
@@ -51,7 +51,7 @@ public final class ComparisonExpressions {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/gte $gte
+     * @aggregation.expression $gte
      */
     public static Expression gte(final Expression first, final Expression second) {
         return new Expression("$gte", List.of(first, second));
@@ -66,7 +66,7 @@ public final class ComparisonExpressions {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/lte $lte
+     * @aggregation.expression $lte
      */
     public static Expression lte(final Expression first, final Expression second) {
         return new Expression("$lte", List.of(first, second));
@@ -78,7 +78,7 @@ public final class ComparisonExpressions {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/eq $eq
+     * @aggregation.expression $eq
      */
     public static Expression eq(final Expression first, final Expression second) {
         return new Expression("$eq", List.of(first, second));
@@ -90,7 +90,7 @@ public final class ComparisonExpressions {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/lt $lt
+     * @aggregation.expression $lt
      */
     public static Expression lt(final Expression first, final Expression second) {
         return new Expression("$lt", List.of(first, second));
@@ -102,7 +102,7 @@ public final class ComparisonExpressions {
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
      * @return the new expression
-     * @mongodb.driver.manual manual/reference/operator/aggregation/ne $ne
+     * @aggregation.expression $ne
      */
     public static Expression ne(final Expression first, final Expression second) {
         return new Expression("$ne", List.of(first, second));
