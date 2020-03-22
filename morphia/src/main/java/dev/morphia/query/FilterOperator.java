@@ -17,7 +17,7 @@ import static java.lang.String.format;
 /**
  * Defines various query filter operators
  *
- * @deprecated use {@link Filters} and {@link Filter} instead
+ * @deprecated use {@link Filters} and {@link Filter} references instead
  */
 @SuppressWarnings("DeprecatedIsStillUsed")
 @Deprecated(since = "2.0", forRemoval = true)

@@ -58,8 +58,7 @@ public class DocumentWriter implements BsonWriter {
      * @return this
      */
     public DocumentWriter encode(final CodecRegistry codecRegistry, final Object value, final EncoderContext encoderContext) {
-        ((Codec) codecRegistry
-                     .get(value.getClass()))
+        ((Codec) codecRegistry.get(value.getClass()))
             .encode(this, value, encoderContext);
 
         return this;
@@ -93,14 +92,6 @@ public class DocumentWriter implements BsonWriter {
             throw new IllegalStateException(Sofia.unbalancedOpens(arraysLevel, docsLevel, state));
         }
         return ((DocumentState) state).getDocument();
-    }
-
-    /**
-     * @return the stack
-     * @morphia.internal
-     */
-    public WriteState state() {
-        return state;
     }
 
     @Override

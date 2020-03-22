@@ -215,12 +215,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return getQueryFactory().createQuery(this, collection, type);
     }
 
-    @Override
-    public Query<Document> find() {
-        return getQueryFactory().createQuery(this, Document.class)
-                                .disableValidation();
-    }
-
     /**
      * @return the Mapper used by this Datastore
      */

@@ -194,13 +194,6 @@ public interface Datastore {
     <T> Query<T> find(String collection, Class<T> type);
 
     /**
-     * Creates a "typeless" query suitable for using in aggregation pipelines.
-     *
-     * @return the query
-     */
-    Query<Document> find();
-
-    /**
      * Deletes the given entities based on the query (first item only).
      *
      * @param query the query to use when finding entities to delete

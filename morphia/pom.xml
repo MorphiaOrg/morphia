@@ -230,12 +230,12 @@
                     <plugin>
                         <groupId>org.revapi</groupId>
                         <artifactId>revapi-maven-plugin</artifactId>
-                        <version>0.11.2</version>
+                        <version>${revapi.maven.plugin.version}</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.revapi</groupId>
                                 <artifactId>revapi-java</artifactId>
-                                <version>${revapi-java.version}</version>
+                                <version>${revapi.java.version}</version>
                             </dependency>
                         </dependencies>
                         <executions>
@@ -264,6 +264,56 @@
                                         <minor>nonBreaking</minor>
                                         <patch>equivalent</patch>
                                     </versionIncreaseAllows>
+                                </revapi.semver.ignore>
+                            </analysisConfiguration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>api-audit</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.revapi</groupId>
+                        <artifactId>revapi-maven-plugin</artifactId>
+                        <version>${revapi.maven.plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.revapi</groupId>
+                                <artifactId>revapi-java</artifactId>
+                                <version>${revapi.java.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>revapi</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
+                            <oldArtifacts>
+                                <artifact>${project.groupId}:core:1.5.7</artifact>
+                            </oldArtifacts>
+                            <oldVersion>1.5.8</oldVersion>
+                            <analysisConfigurationFiles>
+                                <analysisConfigurationFile>../config/api-audit.json</analysisConfigurationFile>
+                            </analysisConfigurationFiles>
+                            <analysisConfiguration>
+                                <revapi.semver.ignore>
+                                    <enabled>false</enabled>
+                                    <!--
+                                                                        <versionIncreaseAllows>
+                                                                            <major>breaking</major>
+                                                                            <minor>nonBreaking</minor>
+                                                                            <patch>equivalent</patch>
+                                                                        </versionIncreaseAllows>
+                                    -->
                                 </revapi.semver.ignore>
                             </analysisConfiguration>
                         </configuration>

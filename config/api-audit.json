@@ -1,0 +1,61 @@
+[
+  {
+    "extension": "revapi.ignore",
+    "configuration": [
+      {
+        "regex": true,
+        "code": "java.method.*",
+        "package": "com\\.mongodb\\..*",
+        "justification": "Driver classes should be ignored"
+      },
+      {
+        "regex": true,
+        "code": "java.method.*",
+        "package": "org\\.bson\\..*",
+        "justification": "Driver classes should be ignored"
+      },
+      {
+        "regex": true,
+        "code": "java.class.*",
+        "package": ".*\\.org\\.bson\\..*",
+        "justification": "Driver classes should be ignored"
+      },
+      {
+        "code": "java.class.removed",
+        "class": "relocated..*",
+        "justification": "relocated classes should be ignored"
+      },
+      {
+        "code": "java.method.addedToInterface",
+        "justification": "relocated classes should be ignored"
+      },
+      {
+        "regex": true,
+        "code": "java.method.*",
+        "class": "dev\\.morphia\\.mapping\\.MappedClass",
+        "justification": "relocated classes should be ignored"
+      },
+      {
+        "regex": true,
+        "code": "java.method.*",
+        "class": "dev\\.morphia\\.mapping\\.MappedFieldClass",
+        "justification": "relocated classes should be ignored"
+      },
+      {
+        "code": "java.field.enumConstantOrderChanged",
+        "classSimpleName": "FilterOperator",
+        "justification": "order doesn't matter here"
+      },
+      {
+        "code": "java.annotation.added",
+        "annotation": "@com.mongodb.lang.Nullable",
+        "justification": "..."
+      },
+      {
+        "code": "java.field.removed",
+        "old": "field dev.morphia.query.FilterOperator.WITHIN",
+        "justification": "it was deprecated already"
+      }
+    ]
+  }
+]
