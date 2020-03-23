@@ -1,30 +1,30 @@
 -classpath
-'/var/lib/jenkins/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar:/var/lib/jenkins/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/var/lib/jenkins/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar:/var/lib/jenkins/.m2/repository/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar'
+'/home/jenkins/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar:/home/jenkins/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/home/jenkins/.m2/repository/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar:/home/jenkins/.m2/repository/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar'
 -encoding
 'UTF-8'
 -protected
 -sourcepath
-'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/r1.4.1/morphia/src/main/java'
+'/var/lib/jenkins/workspace/morphia-docs/repos/r1.4.1/morphia/src/main/java'
 -author
 -bottom
 'Copyright &#169; 2020. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/r1.4.1/morphia/target/site/apidocs'
+'/var/lib/jenkins/workspace/morphia-docs/repos/r1.4.1/morphia/target/site/apidocs'
 -docencoding
 'UTF-8'
 -Xdoclint:none
 -doctitle
 'Morphia'
 -linkoffline
-'https://docs.oracle.com/javase/6/docs/api' '/var/lib/jenkins/jobs/morphia-docs/workspace/repos/r1.4.1/morphia/target/javadoc-bundle-options'
--taglet
-'taglets.ServerReleaseTaglet'
+'https://docs.oracle.com/javase/6/docs/api' '/var/lib/jenkins/workspace/morphia-docs/repos/r1.4.1/morphia/target/javadoc-bundle-options'
 -taglet
 'taglets.ManualTaglet'
+-taglet
+'taglets.ServerReleaseTaglet'
 -tagletpath
-'/var/lib/jenkins/.m2/repository/dev/morphia/morphia/util/1.4.1/util-1.4.1.jar'
+'/home/jenkins/.m2/repository/dev/morphia/morphia/util/1.4.1/util-1.4.1.jar'
 -use
 -version
 -windowtitle

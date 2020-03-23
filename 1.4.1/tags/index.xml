@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Morphia</title>
-    <link>/1.4.1/tags/</link>
+    <link>/%20@%20/tags/</link>
     <description>Recent content in Tags on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="/1.4.1/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/%20@%20/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

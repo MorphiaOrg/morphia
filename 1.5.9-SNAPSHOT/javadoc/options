@@ -1,34 +1,34 @@
 -classpath
-'/var/lib/jenkins/.m2/repository/org/mongodb/mongo-java-driver/3.10.1/mongo-java-driver-3.10.1.jar:/var/lib/jenkins/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/var/lib/jenkins/.m2/repository/io/github/classgraph/classgraph/4.8.47/classgraph-4.8.47.jar:/var/lib/jenkins/.m2/repository/cglib/cglib-nodep/3.2.9/cglib-nodep-3.2.9.jar:/var/lib/jenkins/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:/var/lib/jenkins/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar'
+'/home/jenkins/.m2/repository/org/mongodb/mongo-java-driver/3.10.1/mongo-java-driver-3.10.1.jar:/home/jenkins/.m2/repository/com/thoughtworks/proxytoys/proxytoys/1.0/proxytoys-1.0.jar:/home/jenkins/.m2/repository/io/github/classgraph/classgraph/4.8.47/classgraph-4.8.47.jar:/home/jenkins/.m2/repository/cglib/cglib-nodep/3.2.9/cglib-nodep-3.2.9.jar:/home/jenkins/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:/home/jenkins/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar'
 -encoding
 'UTF-8'
 -protected
 -sourcepath
-'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/1.5.x/morphia/src/main/java'
+'/var/lib/jenkins/workspace/morphia-docs/repos/1.5.x/morphia/src/main/java'
 -author
 -bottom
 'Copyright &#169; 2020. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'/var/lib/jenkins/jobs/morphia-docs/workspace/repos/1.5.x/morphia/target/site/apidocs'
+'/var/lib/jenkins/workspace/morphia-docs/repos/1.5.x/morphia/target/site/apidocs'
 -docencoding
 'UTF-8'
 -Xdoclint:none
 -doctitle
 'Morphia 1.5.9-SNAPSHOT'
 -linkoffline
-'https://docs.oracle.com/javase/6/docs/api' '/var/lib/jenkins/jobs/morphia-docs/workspace/repos/1.5.x/morphia/target/javadoc-bundle-options'
--taglet
-'taglets.ServerReleaseTaglet'
--taglet
-'taglets.ManualTaglet'
+'https://docs.oracle.com/javase/6/docs/api' '/var/lib/jenkins/workspace/morphia-docs/repos/1.5.x/morphia/target/javadoc-bundle-options'
 -taglet
 'taglets.InlineTaglet'
 -taglet
 'taglets.InternalTaglet'
+-taglet
+'taglets.ManualTaglet'
+-taglet
+'taglets.ServerReleaseTaglet'
 -tagletpath
-'/var/lib/jenkins/.m2/repository/dev/morphia/morphia/util/1.5.9-SNAPSHOT/util-1.5.9-SNAPSHOT.jar'
+'/home/jenkins/.m2/repository/dev/morphia/morphia/util/1.5.9-SNAPSHOT/util-1.5.9-SNAPSHOT.jar'
 -use
 -version
 -windowtitle
