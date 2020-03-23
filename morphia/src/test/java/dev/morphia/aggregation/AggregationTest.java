@@ -53,6 +53,7 @@ import java.util.Set;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateToString;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.month;
@@ -74,6 +75,26 @@ import static org.junit.Assert.fail;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class AggregationTest extends TestBase {
+
+    @Test
+    public void testBasicGrouping() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        MorphiaCursor<Author> aggregate = getDs().aggregate(Book.class)
+                                                 .group(of(id("author"))
+                                                            .field("books", push(field("title"))))
+                                                 .sort(Sort.on().ascending("name"))
+                                                 .execute(Author.class);
+
+        List<Author> authors = aggregate.toList();
+        Assert.assertEquals("Expecting two results", 2, authors.size());
+        Assert.assertEquals(List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.get(0).books);
+        Assert.assertEquals(List.of("The Odyssey", "Iliad"), authors.get(1).books);
+    }
 
     @Test
     public void testBucketAutoWithGranularity() {
@@ -276,8 +297,7 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10)));
 
         Iterator<CountResult> aggregation = getDs().aggregate(Book.class)
-                                                   .group(of(
-                                                       dev.morphia.aggregation.experimental.stages.Group.id("author"))
+                                                   .group(of(id("author"))
                                                               .field("count", sum(value(1))))
                                                    .sort(Sort.on()
                                                              .ascending("_id"))
