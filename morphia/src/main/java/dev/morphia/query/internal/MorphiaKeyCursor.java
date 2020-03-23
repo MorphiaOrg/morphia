@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
  *
  * @param <T> the entity type
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     private final MongoCursor<Document> wrapped;
     private final Mapper mapper;

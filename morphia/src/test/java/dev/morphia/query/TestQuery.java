@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.CursorType;
+import com.mongodb.MongoNamespace;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
@@ -80,6 +81,17 @@ import static org.junit.Assert.fail;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
+
+    @Test
+    public void testAlternateCollections() {
+        getDs().save(new Photo(List.of("i", "am", "keywords")));
+
+        getDs().getMapper().getCollection(Photo.class)
+               .renameCollection(new MongoNamespace(getDatabase().getName(), "alternate"));
+        assertEquals(0, getDs().find(Photo.class).count());
+
+        assertEquals(1, getDs().find("alternate", Photo.class).count());
+    }
 
     @Test
     public void genericMultiKeyValueQueries() {

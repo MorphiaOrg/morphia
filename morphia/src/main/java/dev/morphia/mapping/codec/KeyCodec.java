@@ -19,6 +19,7 @@ import java.util.List;
  * Defines the codec for Key types
  */
 @SuppressWarnings("unchecked")
+@Deprecated(since = "2.0", forRemoval = true)
 public class KeyCodec implements Codec<Key> {
 
     private Mapper mapper;

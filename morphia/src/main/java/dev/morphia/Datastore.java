@@ -194,6 +194,16 @@ public interface Datastore {
     <T> Query<T> find(String collection, Class<T> type);
 
     /**
+     * Find all instances by type in a different collection than what is mapped on the class given.
+     *
+     * @param collection the collection to query against
+     * @param <T>        the type to query
+     * @return the query
+     * @morphia.internal
+     */
+    <T> Query<T> find(String collection);
+
+    /**
      * Deletes the given entities based on the query (first item only).
      *
      * @param query the query to use when finding entities to delete
@@ -239,14 +249,12 @@ public interface Datastore {
     }
 
     /**
-     * Find all instances by type in a different collection than what is mapped on the class given.
-     *
-     * @param collection the collection to query against
-     * @param <T>        the type to query
-     * @return the query
+     * @param configurable the configurable
+     * @return any session found first on the configurable then on this
      * @morphia.internal
+     * @since 2.0
      */
-    <T> Query<T> find(String collection);
+    ClientSession findSession(SessionConfigurable<?> configurable);
 
     /**
      * Find the given entities (by id); shorthand for {@code find("_id in", ids)}
@@ -259,7 +267,7 @@ public interface Datastore {
      * @morphia.inline
      * @deprecated use {@link Query} instead.
      */
-    @Deprecated
+    @Deprecated(since = "2.0", forRemoval = true)
     default <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
         return find(clazz).filter(in("_id", ids));
     }
@@ -273,7 +281,7 @@ public interface Datastore {
      * @morphia.inline
      * @deprecated use {@link Query} instead
      */
-    @Deprecated
+    @Deprecated(since = "2.0", forRemoval = true)
     default <T> T get(T entity) {
         return (T) find(entity.getClass()).filter(eq("_id", getMapper().getId(entity))).first();
     }
@@ -287,7 +295,7 @@ public interface Datastore {
      * @return the matched entity.  may be null.
      * @deprecated use a {@link Query} instead
      */
-    @Deprecated
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> T getByKey(Class<T> clazz, Key<T> key);
 
     /**
@@ -299,7 +307,7 @@ public interface Datastore {
      * @return the matched entities.  may be null.
      * @deprecated use a {@link Query} instead
      */
-    @Deprecated
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys);
 
     /**
@@ -310,7 +318,7 @@ public interface Datastore {
      * @return the matched entities.  may be null.
      * @deprecated use a {@link Query} instead
      */
-    @Deprecated
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> List<T> getByKeys(Iterable<Key<T>> keys);
 
     /**
@@ -327,6 +335,7 @@ public interface Datastore {
      * @param <T>    the type of the entity
      * @return the Key
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     <T> Key<T> getKey(T entity);
 
     /**
@@ -345,23 +354,20 @@ public interface Datastore {
     Mapper getMapper();
 
     /**
-     * @param configurable the configurable
-     * @return any session found first on the configurable then on this
+     * @return the current {@link QueryFactory}.
      * @morphia.internal
-     * @since 2.0
+     * @see QueryFactory
      */
-    ClientSession findSession(SessionConfigurable<?> configurable);
+    QueryFactory getQueryFactory();
 
     /**
-     * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
-     * latest persisted state while preserving the entity's reference and object identity.
+     * Replaces the current {@link QueryFactory} with the given value.
      *
-     * @param entity the entity to refresh
-     * @param <T>    the entity type
-     * @morphia.experimental
-     * @since 2.0
+     * @param queryFactory the QueryFactory to use
+     * @morphia.internal
+     * @see QueryFactory
      */
-    <T> void refresh(T entity);
+    void setQueryFactory(QueryFactory queryFactory);
 
     /**
      * Returns the session this datastore is attached to or null if none is attached.
@@ -373,6 +379,45 @@ public interface Datastore {
     default ClientSession getSession() {
         return null;
     }
+
+    /**
+     * Inserts an entity in to the mapped collection.
+     *
+     * @param entity the entity to insert
+     * @param <T>    the type of the entity
+     */
+    <T> void insert(T entity);
+
+    /**
+     * Inserts an entity in to the mapped collection.
+     *
+     * @param entity  the entity to insert
+     * @param options the options to apply to the insert operation
+     * @param <T>     the type of the entity
+     * @since 2.0
+     */
+    <T> void insert(T entity, InsertOneOptions options);
+
+    /**
+     * Inserts a List of entities in to the mapped collection.
+     *
+     * @param entities the entities to insert
+     * @param <T>      the type of the entity
+     * @since 2.0
+     */
+    default <T> void insert(List<T> entities) {
+        insert(entities, new InsertManyOptions());
+    }
+
+    /**
+     * Inserts entities in to the mapped collection.
+     *
+     * @param entities the entities to insert
+     * @param options  the options to apply to the insert operation
+     * @param <T>      the type of the entity
+     * @since 2.0
+     */
+    <T> void insert(List<T> entities, InsertManyOptions options);
 
     /**
      * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
@@ -415,13 +460,15 @@ public interface Datastore {
     <T> Query<T> queryByExample(T example);
 
     /**
-     * Replaces the current {@link QueryFactory} with the given value.
+     * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
+     * latest persisted state while preserving the entity's reference and object identity.
      *
-     * @param queryFactory the QueryFactory to use
-     * @morphia.internal
-     * @see QueryFactory
+     * @param entity the entity to refresh
+     * @param <T>    the entity type
+     * @morphia.experimental
+     * @since 2.0
      */
-    void setQueryFactory(QueryFactory queryFactory);
+    <T> void refresh(T entity);
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -483,7 +530,9 @@ public interface Datastore {
      * @param <T>    the type of the entity
      * @return the saved entity
      */
-    <T> T save(T entity);
+    default <T> T save(T entity) {
+        return save(entity, new InsertOneOptions());
+    }
 
     /**
      * Saves an entity (Object) and updates the @Id field
@@ -582,50 +631,4 @@ public interface Datastore {
      * @since 2.0
      */
     <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);
-
-    /**
-     * @return the current {@link QueryFactory}.
-     * @morphia.internal
-     * @see QueryFactory
-     */
-    QueryFactory getQueryFactory();
-
-    /**
-     * Inserts an entity in to the mapped collection.
-     *
-     * @param entity the entity to insert
-     * @param <T>    the type of the entity
-     */
-    <T> void insert(T entity);
-
-    /**
-     * Inserts an entity in to the mapped collection.
-     *
-     * @param entity  the entity to insert
-     * @param options the options to apply to the insert operation
-     * @param <T>     the type of the entity
-     * @since 2.0
-     */
-    <T> void insert(T entity, InsertOneOptions options);
-
-    /**
-     * Inserts a List of entities in to the mapped collection.
-     *
-     * @param entities the entities to insert
-     * @param <T>      the type of the entity
-     * @since 2.0
-     */
-    default <T> void insert(List<T> entities) {
-        insert(entities, new InsertManyOptions());
-    }
-
-    /**
-     * Inserts entities in to the mapped collection.
-     *
-     * @param entities the entities to insert
-     * @param options  the options to apply to the insert operation
-     * @param <T>      the type of the entity
-     * @since 2.0
-     */
-    <T> void insert(List<T> entities, InsertManyOptions options);
 }

@@ -298,7 +298,7 @@
                         <configuration>
                             <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                             <oldArtifacts>
-                                <artifact>${project.groupId}:core:1.5.7</artifact>
+                                <artifact>${project.groupId}:core:1.5.8</artifact>
                             </oldArtifacts>
                             <oldVersion>1.5.8</oldVersion>
                             <analysisConfigurationFiles>
@@ -307,13 +307,6 @@
                             <analysisConfiguration>
                                 <revapi.semver.ignore>
                                     <enabled>false</enabled>
-                                    <!--
-                                                                        <versionIncreaseAllows>
-                                                                            <major>breaking</major>
-                                                                            <minor>nonBreaking</minor>
-                                                                            <patch>equivalent</patch>
-                                                                        </versionIncreaseAllows>
-                                    -->
                                 </revapi.semver.ignore>
                             </analysisConfiguration>
                         </configuration>

@@ -14,6 +14,7 @@ import java.io.Serializable;
  * @param <T> The type of the entity
  */
 @SuppressWarnings({"unchecked", "rawtypes", "NullableProblems"})
+@Deprecated(since = "2.0", forRemoval = true)
 public class Key<T> implements Serializable, Comparable<Key<T>> {
     private String collection;
     private Class<? extends T> type;

@@ -1,7 +1,6 @@
 package dev.morphia.mapping;
 
 
-import com.mongodb.DBRef;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
@@ -301,6 +300,7 @@ public class Mapper {
      * @param <T>    the type of the entity
      * @return the Key
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     public <T> Key<T> getKey(final T entity) {
         if (entity instanceof Key) {
             return (Key<T>) entity;
@@ -319,6 +319,7 @@ public class Mapper {
      * @param <T>        the type of the entity
      * @return the Key
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     public <T> Key<T> getKey(final T entity, final String collection) {
         if (entity instanceof Key) {
             return (Key<T>) entity;
@@ -327,40 +328,6 @@ public class Mapper {
         final Object id = getId(entity);
         final Class<T> aClass = (Class<T>) entity.getClass();
         return id == null ? null : new Key<>(aClass, collection, id);
-    }
-
-    /**
-     * Gets the Keys for a list of objects
-     *
-     * @param clazz the Class of the objects
-     * @param refs  the objects to fetch the keys for
-     * @param <T>   the type of the entity
-     * @return the list of Keys
-     */
-    public <T> List<Key<T>> getKeysByManualRefs(final Class<T> clazz, final List<Object> refs) {
-        final String collection = getMappedClass(clazz).getCollectionName();
-        final List<Key<T>> keys = new ArrayList<>(refs.size());
-        for (final Object ref : refs) {
-            keys.add(this.manualRefToKey(collection, ref));
-        }
-
-        return keys;
-    }
-
-    /**
-     * Gets the Keys for a list of objects
-     *
-     * @param refs the objects to process
-     * @param <T>  the type of the objects
-     * @return the list of Keys
-     */
-    public <T> List<Key<T>> getKeysByRefs(final List<DBRef> refs) {
-        final List<Key<T>> keys = new ArrayList<>(refs.size());
-        for (final DBRef ref : refs) {
-            final Key<T> testKey = refToKey(ref);
-            keys.add(testKey);
-        }
-        return keys;
     }
 
     /**
@@ -517,18 +484,6 @@ public class Mapper {
     }
 
     /**
-     * Converts a DBRef to a Key
-     *
-     * @param ref the DBRef to convert
-     * @param <T> the type of the referenced entity
-     * @return the Key
-     */
-    public <T> Key<T> refToKey(final DBRef ref) {
-        return ref == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(ref.getCollectionName()),
-            ref.getCollectionName(), ref.getId());
-    }
-
-    /**
      * Refreshes an entity with the current state in the database.
      *
      * @param entity the entity to refresh
@@ -572,6 +527,7 @@ public class Mapper {
      * @param key the Key to update
      * @return the collection name on the Key
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     public String updateCollection(final Key key) {
         if (key.getCollection() == null && key.getType() == null) {
             throw new IllegalStateException("Key is invalid! " + key);
@@ -650,7 +606,4 @@ public class Mapper {
                         .reduce(false, (l, r) -> l || r);
     }
 
-    <T> Key<T> manualRefToKey(final String collection, final Object id) {
-        return id == null ? null : new Key<>((Class<? extends T>) getClassFromCollection(collection), collection, id);
-    }
 }

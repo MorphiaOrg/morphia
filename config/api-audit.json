@@ -48,13 +48,30 @@
       },
       {
         "code": "java.annotation.added",
-        "annotation": "@com.mongodb.lang.Nullable",
+        "justification": "..."
+      },
+      {
+        "code": "java.annotation.attributeAdded",
+        "justification": "..."
+      },
+      {
+        "code": "java.class.defaultSerializationChanged",
         "justification": "..."
       },
       {
         "code": "java.field.removed",
         "old": "field dev.morphia.query.FilterOperator.WITHIN",
         "justification": "it was deprecated already"
+      },
+      {
+        "code": "java.field.removedWithConstant",
+        "old": "field dev.morphia.mapping.Mapper.CLASS_NAME_FIELDNAME",
+        "justification": "internally used"
+      },
+      {
+        "code": "java.field.removedWithConstant",
+        "old": "field dev.morphia.mapping.Mapper.ID_KEY",
+        "justification": "internally used"
       }
     ]
   }
