@@ -140,7 +140,7 @@ public interface FieldEnd<T> {
      * @param values the values to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/in/ $in
-     * @deprecated use {@link Filters#in(String, Object)} instead
+     * @deprecated use {@link Filters#in(String, Iterable)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T hasAnyOf(Iterable<?> values);
@@ -183,7 +183,7 @@ public interface FieldEnd<T> {
      * @param values the values to check against
      * @return T
      * @mongodb.driver.manual reference/operator/query/in/ $in
-     * @deprecated use {@link Filters#in(String, Object)} instead
+     * @deprecated use {@link Filters#in(String, Iterable)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T in(Iterable<?> values);
