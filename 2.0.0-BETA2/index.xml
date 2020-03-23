@@ -108,7 +108,7 @@ filter() The most significant method filter(Filter...). This method takes a numb
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/2.0.0-BETA2/guides/querying-old/</guid>
-      <description>This page describes the older approach to querying. While this older API is still supported, efforts should be made to update to the new API as outlined in the other querying guide. This old API is active using the legacy. The new API will attempt to redirect most calls to use the new Filters based approach.
+      <description>This page describes the older approach to querying. While this older API is still supported, efforts should be made to update to the new API as outlined in the other querying guide. This old API is active using the legacy configuration. The new API will attempt to redirect most calls to use the new Filters based approach.
 Note that at this time complex queries using and or or clauses can not be correctly transparently translated and will require manual effort to update to the new API.</description>
     </item>
     

@@ -12,18 +12,18 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1584995583" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1584995583" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1584998596" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1584998596" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1584995583"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1584998596"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -428,25 +428,6 @@
 
             
           
-            
-            
-
-
- 
-  
-    
-      <li data-nav-id="/2.0.0-SNAPSHOT/guides/validationextension/" title="Validation Extension" class="dd-item ">
-        <a href="/2.0.0-SNAPSHOT/guides/validationextension/">
-        Validation Extension
-        
-        </a>
-    </li>
-     
-  
- 
-
-            
-          
         
         </ul>
               
@@ -605,7 +586,7 @@ datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">save</s
 
 ContainsRenamedFields found <span style="color:#f92672">=</span> datastore
                                   <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>ContainsRenamedFields<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-                                  <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
+                                  <span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
                                                <span style="color:#f92672">.</span><span style="color:#a6e22e">projection</span><span style="color:#f92672">().</span><span style="color:#a6e22e">include</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;first_name&#34;</span><span style="color:#f92672">)</span>
                                                <span style="color:#f92672">.</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">(</span>1<span style="color:#f92672">))</span>
                                   <span style="color:#f92672">.</span><span style="color:#a6e22e">tryNext</span><span style="color:#f92672">();</span>
@@ -625,7 +606,7 @@ for this entity will be removed.  To save such instances back consider using <a 
 <p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>FindOptions.limit(int)</code> and
 <code>FindOptions.offset(int)</code> for these cases.  An example of these methods in action would look like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Person<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
 	    <span style="color:#f92672">.</span><span style="color:#a6e22e">offset</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
 	    <span style="color:#f92672">.</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">(</span>10<span style="color:#f92672">))</span>
 </code></pre></div><p>This query will skip the first element and take up to the next 10 items found by the query.  There&rsquo;s a caveat to using skip/limit for
@@ -636,7 +617,7 @@ pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/
 and a handful of other overloads. For example, to sort by <code>age</code> (youngest to oldest) and then <code>income</code> (highest to lowest), you would
 use this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>User<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-       <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
+       <span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
                     <span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>ascending<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">),</span> descending<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;income&#34;</span><span style="color:#f92672">))</span>
                     <span style="color:#f92672">.</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">(</span>1<span style="color:#f92672">))</span>
        <span style="color:#f92672">.</span><span style="color:#a6e22e">tryNext</span><span style="color:#f92672">();</span>
@@ -651,15 +632,16 @@ getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">ensureCap
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">final</span> Query<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>CappedPic<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
 <span style="color:#66d9ef">final</span> List<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> found <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
 
-<span style="color:#66d9ef">final</span> Iterator<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> tail <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
+<span style="color:#66d9ef">final</span> MorphiaCursor<span style="color:#f92672">&lt;</span>CappedPic<span style="color:#f92672">&gt;</span> tail <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
                                                    <span style="color:#f92672">.</span><span style="color:#a6e22e">cursorType</span><span style="color:#f92672">(</span>CursorType<span style="color:#f92672">.</span><span style="color:#a6e22e">Tailable</span><span style="color:#f92672">));</span>
 <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>found<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 	found<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tail<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">());</span>                                                    <span style="color:#75715e">// #2
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div><p>There are two things to note about this code sample:</p>
 <ol>
-<li>This tells Morphia to make sure that any entity <a href="/guides/annotations/#entity">configured</a> to use a capped collection has its collection
-created correctly.  If the collection already exists and is not capped, you will have to manually <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
+<li>This tells Morphia to make sure that any entity <a href="/2.0.0-SNAPSHOT/guides/annotations/#entity">configured</a> to use a capped
+collection has its collection created correctly.  If the collection already exists and is not capped, you will have to manually
+<a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 ">update</a> your collection to be a capped collection.</li>
 <li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.  In this
 version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
@@ -962,22 +944,6 @@ application.</li>
             
         
                     
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
             
         
                     
@@ -996,19 +962,19 @@ application.</li>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1584995583"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1584995583"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1584995583"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1584995583"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1584995583"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1584995583"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1584998596"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1584998596"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1584998596"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1584998596"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1584998596"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1584998596"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1584995583"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1584995583"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1584995583"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1584998596"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1584998596"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1584998596"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1584995583" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1584995583"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1584998596" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1584998596"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

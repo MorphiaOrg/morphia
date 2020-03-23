@@ -12,18 +12,18 @@
     <title>Querying (Deprecated) :: Morphia</title>
 
     
-    <link href="/2.0.0-BETA2/css/nucleus.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/fontawesome-all.min.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/hybrid.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/featherlight.min.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/perfect-scrollbar.min.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/auto-complete.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/atom-one-dark-reasonable.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/theme.css?1584995407" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/hugo-theme.css?1584995407" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/nucleus.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/fontawesome-all.min.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/hybrid.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/featherlight.min.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/perfect-scrollbar.min.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/auto-complete.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/atom-one-dark-reasonable.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/theme.css?1584998420" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/hugo-theme.css?1584998420" rel="stylesheet">
     
 
-    <script src="/2.0.0-BETA2/js/jquery-3.3.1.min.js?1584995407"></script>
+    <script src="/2.0.0-BETA2/js/jquery-3.3.1.min.js?1584998420"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -560,7 +560,8 @@
 
 
 <div class="notices warning" ><p>This page describes the older approach to querying.  While this older API is still supported, efforts should be made to update to the new
-API as outlined in the other <a href="/2.0.0-BETA2/guides/querying/">querying</a> guide.  This old API is active using the <a href="/2.0.0-BETA2/guides/configuration/">legacy</a>.  The new API will attempt to redirect most calls to use the new
+API as outlined in the other <a href="/2.0.0-BETA2/guides/querying/">querying</a> guide.  This old API is active using the
+<a href="/2.0.0-BETA2/guides/configuration/#legacy">legacy configuration</a>.  The new API will attempt to redirect most calls to use the new
 <a href="/2.0.0-BETA2/javadoc/dev/morphia/query/experimental/filters/Filters">Filters</a> based approach.</p>
 <p>Note that at this time complex queries using <code>and</code> or <code>or</code> clauses can not be correctly transparently translated and will require manual
 effort to update to the new API.</p>
@@ -836,8 +837,9 @@ getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">ensureCap
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div><p>There are two things to note about this code sample:</p>
 <ol>
-<li>This tells Morphia to make sure that any entity <a href="/guides/annotations/#entity">configured</a> to use a capped collection has its collection
-created correctly.  If the collection already exists and is not capped, you will have to manually <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
+<li>This tells Morphia to make sure that any entity <a href="/2.0.0-BETA2/guides/annotations/#entity">configured</a> to use a capped
+collection has its collection created correctly.  If the collection already exists and is not capped, you will have to manually
+<a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 ">update</a> your collection to be a capped collection.</li>
 <li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.  In this
 version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
@@ -1186,19 +1188,19 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-BETA2/js/clipboard.min.js?1584995408"></script>
-    <script src="/2.0.0-BETA2/js/perfect-scrollbar.min.js?1584995408"></script>
-    <script src="/2.0.0-BETA2/js/perfect-scrollbar.jquery.min.js?1584995408"></script>
-    <script src="/2.0.0-BETA2/js/jquery.sticky.js?1584995408"></script>
-    <script src="/2.0.0-BETA2/js/featherlight.min.js?1584995408"></script>
-    <script src="/2.0.0-BETA2/js/highlight.pack.js?1584995408"></script>
+    <script src="/2.0.0-BETA2/js/clipboard.min.js?1584998420"></script>
+    <script src="/2.0.0-BETA2/js/perfect-scrollbar.min.js?1584998420"></script>
+    <script src="/2.0.0-BETA2/js/perfect-scrollbar.jquery.min.js?1584998420"></script>
+    <script src="/2.0.0-BETA2/js/jquery.sticky.js?1584998420"></script>
+    <script src="/2.0.0-BETA2/js/featherlight.min.js?1584998420"></script>
+    <script src="/2.0.0-BETA2/js/highlight.pack.js?1584998420"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-BETA2/js/modernizr.custom-3.6.0.js?1584995408"></script>
-    <script src="/2.0.0-BETA2/js/learn.js?1584995408"></script>
-    <script src="/2.0.0-BETA2/js/hugo-learn.js?1584995408"></script>
+    <script src="/2.0.0-BETA2/js/modernizr.custom-3.6.0.js?1584998420"></script>
+    <script src="/2.0.0-BETA2/js/learn.js?1584998420"></script>
+    <script src="/2.0.0-BETA2/js/hugo-learn.js?1584998420"></script>
 
-    <link href="/2.0.0-BETA2/mermaid/mermaid.css?1584995408" rel="stylesheet" />
-    <script src="/2.0.0-BETA2/mermaid/mermaid.js?1584995408"></script>
+    <link href="/2.0.0-BETA2/mermaid/mermaid.css?1584998420" rel="stylesheet" />
+    <script src="/2.0.0-BETA2/mermaid/mermaid.js?1584998420"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
