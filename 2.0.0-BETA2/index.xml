@@ -164,17 +164,5 @@ Updating (on the server) The update method on Datastore is used to issue a comma
 The Field Expression The field expression, used by all update operations, can be either a single field name or any dot-notation form (for embedded elements).</description>
     </item>
     
-    <item>
-      <title>Validation Extension</title>
-      <link>/2.0.0-BETA2/guides/validationextension/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/2.0.0-BETA2/guides/validationextension/</guid>
-      <description>This is a simple extension to Morphia to process JSR 303 Validation Annotations.
-Using Add this at the start of your application (or wherever you create your morphia instances).
-new ValidationExtension(morphia); Example Here is a simple example using (as an example) Hibernate validation:
-... import org.hibernate.validator.constraints.Email; ... @Entity public class Userlike { @Id ObjectId id; @Email String email; } Implementation This is a lightweight wrapper around the JSR 303 API. It installs a simple global entity interceptor which listens to all life cycle methods needed for validation.</description>
-    </item>
-    
   </channel>
 </rss>
