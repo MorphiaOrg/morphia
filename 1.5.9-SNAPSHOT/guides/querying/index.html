@@ -12,18 +12,18 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/atom-one-dark-reasonable.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/theme.css?1584898537" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1584898537" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/atom-one-dark-reasonable.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/theme.css?1584981482" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1584981482" rel="stylesheet">
     
 
-    <script src="/1.5.9-SNAPSHOT/js/jquery-3.3.1.min.js?1584898537"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery-3.3.1.min.js?1584981482"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -666,7 +666,7 @@ to define your filters.  This approach is slightly more verbose but can be valid
 case) would easily be caught by an IDE or compiler.  Which version you use is largely a question of preference.</p>
 
 <div class="notices tip" ><p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-<a href="/1.5.9-SNAPSHOT/javadoc?dev/morphia/annotations/Property.html"><code>@Property</code></a> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
+<a href="/1.5.9-SNAPSHOT/javadoc/dev/morphia/annotations/Property"><code>@Property</code></a> annotation on the field.  Morphia will normalize the name and validate the name such that a query with a bad field name will
 result in an error.</p>
 </div>
 
@@ -752,7 +752,7 @@ the returned instance of our type.  It&rsquo;s also worth noting that this proje
 <div class="notices warn" ><p>While projections can be a nice performance win in some cases, it&rsquo;s important to note that this object can not be safely saved back to
 MongoDB.  Any fields in the existing document in the database that are missing from the entity will be removed if this entity is
 saved. For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database
-for this entity will be removed.  To save such instances back consider using <a href="/1.5.9-SNAPSHOT/javadoc?dev/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
+for this entity will be removed.  To save such instances back consider using <a href="/1.5.9-SNAPSHOT/javadoc/dev/morphia/Datastore#merge-T-"><code>Datastore#merge(T)</code></a></p>
 </div>
 
 <h3 id="limiting-and-skipping">Limiting and Skipping</h3>
@@ -1111,19 +1111,19 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1584898538"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1584898538"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1584898538"></script>
-    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1584898538"></script>
-    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1584898538"></script>
-    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1584898538"></script>
+    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1584981482"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1584981482"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1584981482"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1584981482"></script>
+    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1584981482"></script>
+    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1584981482"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom-3.6.0.js?1584898538"></script>
-    <script src="/1.5.9-SNAPSHOT/js/learn.js?1584898538"></script>
-    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1584898538"></script>
+    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom-3.6.0.js?1584981482"></script>
+    <script src="/1.5.9-SNAPSHOT/js/learn.js?1584981482"></script>
+    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1584981482"></script>
 
-    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1584898538" rel="stylesheet" />
-    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1584898538"></script>
+    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1584981482" rel="stylesheet" />
+    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1584981482"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
