@@ -105,11 +105,6 @@ class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements Ind
         return this;
     }
 
-    IndexOptionsBuilder dropDups(final boolean dropDups) {
-        put("dropDups", dropDups);
-        return this;
-    }
-
     IndexOptionsBuilder expireAfterSeconds(final int expireAfterSeconds) {
         put("expireAfterSeconds", expireAfterSeconds);
         return this;
