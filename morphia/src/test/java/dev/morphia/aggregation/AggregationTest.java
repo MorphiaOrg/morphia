@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
@@ -92,8 +93,8 @@ public class AggregationTest extends TestBase {
 
         List<Author> authors = aggregate.toList();
         Assert.assertEquals("Expecting two results", 2, authors.size());
-        Assert.assertEquals(List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.get(0).books);
-        Assert.assertEquals(List.of("The Odyssey", "Iliad"), authors.get(1).books);
+        Assert.assertEquals(authors.toString(), List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.get(0).books);
+        Assert.assertEquals(authors.toString(), List.of("The Odyssey", "Iliad"), authors.get(1).books);
     }
 
     @Test
@@ -631,6 +632,14 @@ public class AggregationTest extends TestBase {
         @Id
         private String name;
         private List<String> books;
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", Author.class.getSimpleName() + "[", "]")
+                       .add("name='" + name + "'")
+                       .add("books=" + books)
+                       .toString();
+        }
     }
 
     @Entity(value = "books", useDiscriminator = false)

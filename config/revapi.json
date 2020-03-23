@@ -1,6 +1,6 @@
 [ {
-  "extension" : "revapi.ignore",
-  "configuration" : [
+  "extension": "revapi.ignore",
+  "configuration": [
     {
       "code": "java.annotation.added",
       "class": "com.mongodb.*",
@@ -56,12 +56,13 @@
       "code": "java.method.numberOfParametersChanged",
       "classQualifiedName": "dev.morphia.converters.LocalDateTimeConverter",
       "methodName": "<init>",
-    "justification" : "These are largely used internally and should rarely be seen in user code"
-  }, {
-    "code" : "java.method.parameterTypeChanged",
-    "class" : "com.mongodb.*",
-    "justification" : "Driver classes should be ignored"
-  },
+      "justification": "These are largely used internally and should rarely be seen in user code"
+    },
+    {
+      "code": "java.method.parameterTypeChanged",
+      "class": "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
+    },
     {
       "code": "java.method.removed",
       "classQualifiedName": "dev.morphia.query.QueryResults",
@@ -71,26 +72,31 @@
       "code": "java.method.removed",
       "class": "com.mongodb..*",
       "justification": "Driver classes should be ignored"
-    }, {
-    "code" : "java.method.returnTypeChanged",
-    "class" : "dev.morphia.query.QueryImpl",
-    "justification" : "Necessary API fixes"
-  }, {
-    "code" : "java.method.returnTypeChangedCovariantly",
-    "class" : "dev.morphia.dao.BasicDAO",
-    "justification" : "Necessary API fixes"
-  }, {
-    "code" : "java.method.returnTypeChangedCovariantly",
-    "class" : "dev.morphia.dao.DAO",
-    "justification" : "Necessary API fixes"
-  }, {
-    "code" : "java.method.returnTypeTypeParametersChanged",
-    "class" : "dev.morphia.query.FieldEndImpl",
-    "justification" : "An internal implementation detail leak"
-  },
+    },
+    {
+      "code": "java.method.returnTypeChanged",
+      "class": "dev.morphia.query.QueryImpl",
+      "justification": "Necessary API fixes"
+    },
+    {
+      "code": "java.method.returnTypeChangedCovariantly",
+      "class": "dev.morphia.dao.BasicDAO",
+      "justification": "Necessary API fixes"
+    },
+    {
+      "code": "java.method.returnTypeChangedCovariantly",
+      "class": "dev.morphia.dao.DAO",
+      "justification": "Necessary API fixes"
+    },
+    {
+      "code": "java.method.returnTypeTypeParametersChanged",
+      "class": "dev.morphia.query.FieldEndImpl",
+      "justification": "An internal implementation detail leak"
+    },
     {
       "code": "java.method.visibilityReduced",
       "class": "com.mongodb.*",
       "justification": "Driver classes should be ignored"
-    } ]
+    }
+  ]
 } ]
