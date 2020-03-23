@@ -168,7 +168,6 @@ public class IndexHelperTest extends TestBase {
                                           .background(true)
                                           .collation(collation())
                                           .disableValidation(true)
-                                          .dropDups(true)
                                           .language("en")
                                           .languageOverride("de")
                                           .sparse(true)
@@ -227,7 +226,6 @@ public class IndexHelperTest extends TestBase {
                                                .background(true)
                                                .collation(collation())
                                                .disableValidation(true)
-                                               .dropDups(true)
                                                .expireAfterSeconds(42)
                                                .language("en")
                                                .languageOverride("de")
@@ -256,7 +254,6 @@ public class IndexHelperTest extends TestBase {
             .options(new IndexOptionsBuilder()
                          .name("index_name")
                          .background(true)
-                         .dropDups(true)
                          .expireAfterSeconds(42)
                          .sparse(true)
                          .unique(true));
@@ -280,7 +277,6 @@ public class IndexHelperTest extends TestBase {
             .value(IndexDirection.DESC)
             .options(new IndexOptionsBuilder().name("index_name")
                                               .background(true)
-                                              .dropDups(true)
                                               .expireAfterSeconds(42)
                                               .sparse(true)
                                               .unique(true));
