@@ -19,6 +19,10 @@
 'Morphia'
 -linkoffline
 'https://docs.oracle.com/javase/6/docs/api' '/var/lib/jenkins/jobs/morphia-docs/workspace/repos/r1.4.1/morphia/target/javadoc-bundle-options'
+-taglet
+'taglets.ServerReleaseTaglet'
+-taglet
+'taglets.ManualTaglet'
 -tagletpath
 '/var/lib/jenkins/.m2/repository/dev/morphia/morphia/util/1.4.1/util-1.4.1.jar'
 -use
