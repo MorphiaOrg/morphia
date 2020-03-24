@@ -53,7 +53,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default MorphiaCursor<T> execute() {
-        return iterator();
+        return legacyOperation();
     }
 
     /**
@@ -130,7 +130,22 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default MorphiaCursor<T> execute(FindOptions options) {
-        return iterator(options);
+        return legacyOperation();
+    }
+
+    /**
+     * Execute the query and get the results.
+     * <p>
+     * *note* the return type of this will change in 2.0.
+     *
+     * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
+     * @since 1.4
+     * @deprecated use {@link #iterator()}
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    default MorphiaCursor<T> find() {
+        return iterator();
     }
 
     /**
@@ -164,21 +179,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     @Deprecated(since = "2.0", forRemoval = true)
     default FieldEnd<? extends Query<T>> field(final String name) {
         return legacyOperation();
-    }
-
-    /**
-     * Execute the query and get the results.
-     * <p>
-     * *note* the return type of this will change in 2.0.
-     *
-     * @return a MorphiaCursor
-     * @see #iterator(FindOptions)
-     * @since 1.4
-     * @deprecated use {@link #iterator()}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default MorphiaCursor<T> find() {
-        return iterator();
     }
 
     /**
@@ -226,6 +226,11 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
         throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
     }
 
+    @Override
+    default void forEach(Consumer<? super T> action) {
+        iterator().forEachRemaining(action);
+    }
+
     /**
      * Execute the query and get the results.
      *
@@ -237,11 +242,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     @Deprecated(since = "2.0", forRemoval = true)
     default MorphiaCursor<T> find(FindOptions options) {
         return iterator(options);
-    }
-
-    @Override
-    default void forEach(Consumer<? super T> action) {
-        iterator().forEachRemaining(action);
     }
 
     /**
@@ -276,17 +276,17 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     @Override
     MorphiaCursor<T> iterator();
 
-    @Override
-    default Spliterator<T> spliterator() {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Create a modify operation based on this query
      *
      * @return the modify operation
      */
     Modify<T> modify();
+
+    @Override
+    default Spliterator<T> spliterator() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Execute the query and get the results.

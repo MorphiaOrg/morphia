@@ -143,6 +143,7 @@ public class MorphiaQuery<T> implements Query<T> {
      * @return the query
      * @morphia.internal
      */
+    @Override
     public Document toDocument() {
         final Document query = getQueryDocument();
         MappedClass mappedClass = mapper.getMappedClass(getEntityClass());

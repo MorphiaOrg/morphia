@@ -133,29 +133,15 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     /**
-     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     * Execute the query and get the results.
      *
-     * @return the query
-     * @morphia.internal
+     * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
      */
-    public Document toDocument() {
-        final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
-        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
-
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
-            List<String> values = new ArrayList<>();
-            values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
-                values.add(subtype.getEntityModel().getDiscriminator());
-            }
-            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
-                new Document("$in", values));
-        }
-        return query;
+    @Override
+    @Deprecated(since = "2.0", forRemoval = true)
+    public MorphiaCursor<T> execute() {
+        return iterator();
     }
 
     @Override
@@ -287,11 +273,15 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
+     * Execute the query and get the results.
+     *
+     * @param options the options to apply to the find operation
+     * @return a MorphiaCursor
      */
-    public Class<T> getEntityClass() {
-        return clazz;
+    @Override
+    @Deprecated(since = "2.0", forRemoval = true)
+    public MorphiaCursor<T> execute(FindOptions options) {
+        return iterator(options);
     }
 
     @Override
@@ -512,6 +502,42 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      */
     private FilterOperator translate(final String operator) {
         return FilterOperator.fromString(operator);
+    }
+
+    /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
+    @Override
+    public Class<T> getEntityClass() {
+        return clazz;
+    }
+
+    /**
+     * Converts the query to a Document and updates for any discriminator values as my be necessary
+     *
+     * @return the query
+     * @morphia.internal
+     */
+    @Override
+    public Document toDocument() {
+        final Document query = getQueryDocument();
+        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
+        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
+
+            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(mappedClass.getEntityModel().getDiscriminator());
+            for (final MappedClass subtype : subtypes) {
+                values.add(subtype.getEntityModel().getDiscriminator());
+            }
+            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+        return query;
     }
 
     FindOptions getOptions() {
