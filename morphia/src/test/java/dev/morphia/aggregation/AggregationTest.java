@@ -49,8 +49,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
@@ -91,10 +93,12 @@ public class AggregationTest extends TestBase {
                                                  .sort(Sort.on().ascending("name"))
                                                  .execute(Author.class);
 
-        List<Author> authors = aggregate.toList();
+        Map<Object, List<Author>> authors = aggregate.toList()
+                                                     .stream()
+                                                     .collect(Collectors.groupingBy(a -> a.name));
         Assert.assertEquals("Expecting two results", 2, authors.size());
-        Assert.assertEquals(authors.toString(), List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.get(0).books);
-        Assert.assertEquals(authors.toString(), List.of("The Odyssey", "Iliad"), authors.get(1).books);
+        Assert.assertEquals(authors.toString(), List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.get("Dante").get(0).books);
+        Assert.assertEquals(authors.toString(), List.of("The Odyssey", "Iliad"), authors.get("Homer").get(0).books);
     }
 
     @Test
