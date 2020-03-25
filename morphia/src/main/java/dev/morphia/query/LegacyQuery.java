@@ -280,7 +280,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      */
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
-    public MorphiaCursor<T> execute(FindOptions options) {
+    public MorphiaCursor<T> execute(final FindOptions options) {
         return iterator(options);
     }
 
