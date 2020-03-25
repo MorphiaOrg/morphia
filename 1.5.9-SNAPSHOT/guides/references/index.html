@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.66.0" />
     <meta name="description" content="">
 
 
@@ -12,18 +12,18 @@
     <title>References :: Morphia</title>
 
     
-    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/atom-one-dark-reasonable.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/theme.css?1585002733" rel="stylesheet">
-    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1585002733" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/nucleus.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/fontawesome-all.min.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hybrid.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/featherlight.min.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/perfect-scrollbar.min.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/auto-complete.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/atom-one-dark-reasonable.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/theme.css?1585099674" rel="stylesheet">
+    <link href="/1.5.9-SNAPSHOT/css/hugo-theme.css?1585099674" rel="stylesheet">
     
 
-    <script src="/1.5.9-SNAPSHOT/js/jquery-3.3.1.min.js?1585002733"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery-3.3.1.min.js?1585099674"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -501,15 +501,15 @@
 
 
 <p>Morphia supports two styles of defining references:  the <code>@Reference</code> annotation and the experimental <a href="/1.5.9-SNAPSHOT/javadoc/dev/morphia/mapping/experimental/MorphiaReference
-"><code>MorphiaReference</code></a>.  The annotation based approach is discussed
+"><code>MorphiaReference</code></a>.  The annotation based approach is discussed 
 <a href="/1.5.9-SNAPSHOT/guides/annotations/">here</a>.  This guide will cover the wrapper based approach.</p>
 
 <div class="notices warn" ><p>This API is experimental.  Its implementation and API subject to change based on user feedback.  However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</p>
 </div>
 
 <p>An alternative to the traditional annotation-based approach is the <a href="/1.5.9-SNAPSHOT/javadoc/dev/morphia/mapping/experimental/MorphiaReference
-"><code>MorphiaReference</code></a> wrapper.  This type can not be instantiated directly.  Instead a <code>wrap()</code>
-method is provided that will construct the proper type and track the necessary state.  Currently, four different types of values are
+"><code>MorphiaReference</code></a> wrapper.  This type can not be instantiated directly.  Instead a <code>wrap()</code> 
+method is provided that will construct the proper type and track the necessary state.  Currently, four different types of values are 
 supported by <code>wrap()</code>:  a reference to a single entity, a List of references to entities, a Set, and a Map.  <code>wrap()</code> will determine how
 best to handle the type passed and create the appropriate structures internally.  This is how this type might be used in practice:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Author</span> <span style="color:#f92672">{</span>
@@ -564,9 +564,9 @@ best to handle the type passed and create the appropriate structures internally.
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 
-</code></pre></div><p>As you can see we have 3 different references from <code>Author</code> to <code>Book</code> and one in the opposite direction.  It would also be good to note
+</code></pre></div><p>As you can see we have 3 different references from <code>Author</code> to <code>Book</code> and one in the opposite direction.  It would also be good to note 
 that the public API of those two classes don&rsquo;t expose the <code>MorphiaReference</code> externally.  This is, of course, a stylistic choice but is the encouraged approach as it avoids leaking out implementation and mapping details outside of your model.</p>
-<p><code>setList()</code> accepts a <code>List&lt;Book&gt;</code> and stores them as references to <code>Book</code> instances stored in the collection as defined by
+<p><code>setList()</code> accepts a <code>List&lt;Book&gt;</code> and stores them as references to <code>Book</code> instances stored in the collection as defined by 
 the mapping metadata for <code>Book</code>.  Because these references point to the mapped collection name for the type, we can get away with storing only the <code>_id</code> fields for each book.  This gives us data in the database that looks like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Author</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">pretty</span>()
 {
@@ -581,7 +581,7 @@ the mapping metadata for <code>Book</code>.  Because these references point to t
 		<span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;5c3e99276a44c77dfc1b5dc2&#34;</span>)
 	]
 }
-</code></pre></div><p>As you can see, we only need to store the ID values because the collection is already known elsewhere.  However, sometimes we need to
+</code></pre></div><p>As you can see, we only need to store the ID values because the collection is already known elsewhere.  However, sometimes we need to 
 refer to documents stored in different collections.  For example, if the generic type of the reference is a parent interface or class, we sometimes need to store extra information.  For these cases, we store the references as full <code>DBRef</code> instances so we can track the appropriate collection for each reference.  Using this version, we get data in the database that looks like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">jane</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">pretty</span>()
 {
@@ -596,16 +596,16 @@ refer to documents stored in different collections.  For example, if the generic
 		<span style="color:#a6e22e">DBRef</span>(<span style="color:#e6db74">&#34;books&#34;</span>, <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;5c3e99c16a44c77e5a9b5706&#34;</span>))
 	]
 }
-</code></pre></div><p>In both cases, we have a document field called <code>list</code> but as you can see in the second case, we&rsquo;re not storing just the <code>_id</code> values but
-<code>DBRef</code> instances storing both the collection name, &ldquo;books&rdquo; in this case, and <code>ObjectId</code> values from the Books.  This lets the wrapper
+</code></pre></div><p>In both cases, we have a document field called <code>list</code> but as you can see in the second case, we&rsquo;re not storing just the <code>_id</code> values but 
+<code>DBRef</code> instances storing both the collection name, &ldquo;books&rdquo; in this case, and <code>ObjectId</code> values from the Books.  This lets the wrapper 
 properly reconstitute these references when you&rsquo;re ready to use them.</p>
 
-<div class="notices tip" ><p>Before we go too much further, it&rsquo;s important to point that, regardless of the type of the references, they are fetched lazily.  So if
-you multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.  If the type is
+<div class="notices tip" ><p>Before we go too much further, it&rsquo;s important to point that, regardless of the type of the references, they are fetched lazily.  So if 
+you multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.  If the type is 
 a <code>Collection</code> or a <code>Map</code>, all the referenced entities are fetched and loaded via a single query if possible.  This saves on server round trips but does raise the risk of potential <code>OutOfMemoryError</code> problems if you load too many objects in to memory this way.</p>
 </div>
 
-<p>A <code>Set</code> of references will look no different in the database than the <code>List</code> does.  However, <code>Map</code>s of references are slightly more
+<p>A <code>Set</code> of references will look no different in the database than the <code>List</code> does.  However, <code>Map</code>s of references are slightly more 
 complicated.  A <code>Map</code> might look something like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Author</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">pretty</span>()
 {
@@ -924,19 +924,19 @@ complicated.  A <code>Map</code> might look something like this:</p>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1585002733"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1585002733"></script>
-    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1585002733"></script>
-    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1585002733"></script>
-    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1585002733"></script>
-    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1585002733"></script>
+    <script src="/1.5.9-SNAPSHOT/js/clipboard.min.js?1585099674"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.min.js?1585099674"></script>
+    <script src="/1.5.9-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1585099674"></script>
+    <script src="/1.5.9-SNAPSHOT/js/jquery.sticky.js?1585099674"></script>
+    <script src="/1.5.9-SNAPSHOT/js/featherlight.min.js?1585099674"></script>
+    <script src="/1.5.9-SNAPSHOT/js/highlight.pack.js?1585099674"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom-3.6.0.js?1585002733"></script>
-    <script src="/1.5.9-SNAPSHOT/js/learn.js?1585002733"></script>
-    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1585002733"></script>
+    <script src="/1.5.9-SNAPSHOT/js/modernizr.custom-3.6.0.js?1585099674"></script>
+    <script src="/1.5.9-SNAPSHOT/js/learn.js?1585099674"></script>
+    <script src="/1.5.9-SNAPSHOT/js/hugo-learn.js?1585099674"></script>
 
-    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1585002733" rel="stylesheet" />
-    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1585002733"></script>
+    <link href="/1.5.9-SNAPSHOT/mermaid/mermaid.css?1585099674" rel="stylesheet" />
+    <script src="/1.5.9-SNAPSHOT/mermaid/mermaid.js?1585099674"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

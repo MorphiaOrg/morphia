@@ -12,15 +12,6 @@
     
     
     <item>
-      <title>Issues &amp; Help</title>
-      <link>/2.0.0-SNAPSHOT/issues-help/</link>
-      <pubDate>Wed, 18 Mar 2015 16:56:14 +0000</pubDate>
-      
-      <guid>/2.0.0-SNAPSHOT/issues-help/</guid>
-      <description>Issues &amp;amp; Help We are lucky to have a vibrant MongoDB Java community with lots of varying experience of using Morphia. We often find the quickest way to get support for general questions is through the Morphia google group, mongodb-user google group, or through stackoverflow. Please also refer to our own support channels documentation. If you have a question or think you&amp;rsquo;ve encountered a bug, the mailing list is the place to start.</description>
-    </item>
-    
-    <item>
       <title>Annotations</title>
       <link>/2.0.0-SNAPSHOT/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -38,7 +29,7 @@ Index The @Index documentation can be found here. There are two pieces to this a
       
       <guid>/2.0.0-SNAPSHOT/getting-started/installation-guide/</guid>
       <description>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle. To use Morphia using either build tool, you will need to update your build configurations with the following information.
- &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia-core&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.0.0-SNAPSHOT&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt; &amp;lt;repositories&amp;gt; &amp;lt;repository&amp;gt; &amp;lt;id&amp;gt;sonatype-snapshots&amp;lt;/id&amp;gt; &amp;lt;name&amp;gt;Sontatype Snapshots&amp;lt;/name&amp;gt; &amp;lt;url&amp;gt;https://oss.sonatype.org/content/repositories/snapshots&amp;lt;/url&amp;gt; &amp;lt;snapshots&amp;gt; &amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt; &amp;lt;/snapshots&amp;gt; &amp;lt;/repository&amp;gt; &amp;lt;/repositories&amp;gt;    dependencies { compile &#39;dev.morphia.morphia:morphia-core:2.0.0-SNAPSHOT&#39; } repositories { maven { url &#39;https://oss.</description>
+&amp;lt;dependencies&amp;gt;&amp;lt;dependency&amp;gt;&amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;morphia-core&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;2.0.0-SNAPSHOT&amp;lt;/version&amp;gt;&amp;lt;/dependency&amp;gt;&amp;lt;/dependencies&amp;gt;&amp;lt;repositories&amp;gt;&amp;lt;repository&amp;gt;&amp;lt;id&amp;gt;sonatype-snapshots&amp;lt;/id&amp;gt;&amp;lt;name&amp;gt;Sontatype Snapshots&amp;lt;/name&amp;gt;&amp;lt;url&amp;gt;https://oss.sonatype.org/content/repositories/snapshots&amp;lt;/url&amp;gt;&amp;lt;snapshots&amp;gt;&amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt;&amp;lt;/snapshots&amp;gt;&amp;lt;/repository&amp;gt;&amp;lt;/repositories&amp;gt;dependencies {compile &#39;dev.morphia.morphia:morphia-core:2.0.0-SNAPSHOT&#39;}repositories {maven {url &#39;https://oss.</description>
     </item>
     
     <item>
@@ -50,6 +41,16 @@ Index The @Index documentation can be found here. There are two pieces to this a
       <description>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful. Morphia does its best to abstract much of that away but if something is confusing, please consult the Java driver documentation as well.
 The following code snippets come from the QuickTour.java example code that can be found with the Morphia source.
 Setting up Morphia The following example shows how to create the initial Morphia instance.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/2.0.0-SNAPSHOT/issues-help/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/2.0.0-SNAPSHOT/issues-help/</guid>
+      <description>Issues &amp;amp; Help We are lucky to have a vibrant MongoDB Java community with lots of varying experience of using Morphia. We often find the quickest way to get support for general questions is through the Morphia google group, the mongoDB community forums, or through stackoverflow.
+Bugs / Feature Requests If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on github.</description>
     </item>
     
     <item>
@@ -98,7 +99,7 @@ There are two ways to define indexes: at the class level and at the field level.
       
       <guid>/2.0.0-SNAPSHOT/guides/querying/</guid>
       <description>Creating a Query Morphia provides Query&amp;lt;T&amp;gt; class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible. To create the Query, we invoke the following code:
-Query&amp;lt;Product&amp;gt; query = datastore.find(Product.class); find() returns an instance of Query which we can use to build a query.
+Query&amp;lt;Product&amp;gt; query = datastore.find(Product.class);find() returns an instance of Query which we can use to build a query.
 filter() The most significant method filter(Filter...). This method takes a number of filters to apply to the query being built.</description>
     </item>
     
@@ -130,7 +131,7 @@ This API is experimental. Its implementation and API subject to change based on 
       <guid>/2.0.0-SNAPSHOT/guides/schemavalidation/</guid>
       <description>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. Schema validationprovides the capability to perform schema validation during updates and insertions. Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
 Below we have a basic entity definition. Note the new annotation @Validation.
-@Entity(&amp;#34;validation&amp;#34;) @Validation(&amp;#34;{ number : { $gt : 10 } }&amp;#34;) public class DocumentValidation { @Id private ObjectId id; private String string; private int number; private Date date; .</description>
+@Entity(&amp;#34;validation&amp;#34;)@Validation(&amp;#34;{ number : { $gt : 10 } }&amp;#34;)public class DocumentValidation {@Idprivate ObjectId id;private String string;private int number;private Date date;.</description>
     </item>
     
     <item>
@@ -140,7 +141,7 @@ Below we have a basic entity definition. Note the new annotation @Validation.
       
       <guid>/2.0.0-SNAPSHOT/guides/textsearch/</guid>
       <description>Text Searching Morphia also supports MongoDB&amp;rsquo;s text search capabilities. In order to execute a text search against a collection, the collection must have a text index defined first. Using Morphia that definition would look like this:
-@Indexes(@Index(fields = @Field(value = &amp;#34;$**&amp;#34;, type = IndexType.TEXT))) public static class Greeting { @Id private ObjectId id; private String value; private String language; ... } The $** value tells MongoDB to create a text index on all the text fields in a document.</description>
+@Indexes(@Index(fields = @Field(value = &amp;#34;$**&amp;#34;, type = IndexType.TEXT)))public static class Greeting {@Idprivate ObjectId id;private String value;private String language;...}The $** value tells MongoDB to create a text index on all the text fields in a document.</description>
     </item>
     
     <item>

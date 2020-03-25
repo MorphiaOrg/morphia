@@ -5,10 +5,10 @@ dev.morphia.converters
 dev.morphia.dao
 dev.morphia.geo
 dev.morphia.internal
-dev.morphia.logging
 dev.morphia.logging.jdk
-dev.morphia.mapping
+dev.morphia.logging
 dev.morphia.mapping.cache
+dev.morphia.mapping
 dev.morphia.mapping.lazy
 dev.morphia.mapping.lazy.proxy
 dev.morphia.mapping.validation

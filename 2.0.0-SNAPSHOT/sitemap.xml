@@ -3,11 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/2.0.0-SNAPSHOT/issues-help/</loc>
-    <lastmod>2015-03-18T16:56:14+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/2.0.0-SNAPSHOT/guides/annotations/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
@@ -35,6 +30,10 @@
   <url>
     <loc>/2.0.0-SNAPSHOT/guides/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/issues-help/</loc>
   </url>
   
   <url>

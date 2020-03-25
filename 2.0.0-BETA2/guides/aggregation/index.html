@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.66.0" />
     <meta name="description" content="">
 
 
@@ -12,18 +12,18 @@
     <title>Aggregation :: Morphia</title>
 
     
-    <link href="/2.0.0-BETA2/css/nucleus.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/fontawesome-all.min.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/hybrid.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/featherlight.min.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/perfect-scrollbar.min.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/auto-complete.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/atom-one-dark-reasonable.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/theme.css?1585003008" rel="stylesheet">
-    <link href="/2.0.0-BETA2/css/hugo-theme.css?1585003008" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/nucleus.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/fontawesome-all.min.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/hybrid.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/featherlight.min.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/perfect-scrollbar.min.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/auto-complete.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/atom-one-dark-reasonable.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/theme.css?1585099949" rel="stylesheet">
+    <link href="/2.0.0-BETA2/css/hugo-theme.css?1585099949" rel="stylesheet">
     
 
-    <script src="/2.0.0-BETA2/js/jquery-3.3.1.min.js?1585003008"></script>
+    <script src="/2.0.0-BETA2/js/jquery-3.3.1.min.js?1585099949"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -554,7 +554,7 @@ equivalent of the <a href="http://docs.mongodb.org/manual/reference/operator/agg
 "><code>$group</code></a> operator.  This stage, as the name
 suggests, groups together documents based on various criteria.  In this example, we are collecting together all the books by
 author.  <code>group()</code> takes one parameter:  a <code>Group</code> instance.  This instance is created using the <code>Group.of()</code> method which will return a
-new <code>Group</code> stage instance.  There are a few overloads but the simplest version, <code>of()</code>, will generate a <code>$group</code> stage with no <code>_id</code> field in the document.  In this case, we&rsquo;re passing the output of the <code>id(String)</code> method which creates an <code>_id</code> field using the
+new <code>Group</code> stage instance.  There are a few overloads but the simplest version, <code>of()</code>, will generate a <code>$group</code> stage with no <code>_id</code> field in the document.  In this case, we&rsquo;re passing the output of the <code>id(String)</code> method which creates an <code>_id</code> field using the
 values found in the <code>author</code> properties found in the collection&rsquo;s documents.</p>
 <p>The next step defines a new field, <code>books</code> comprised of the titles of the books found in each document.  (For reference, this example is
 the Morphia equivalent of an <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author
@@ -565,7 +565,7 @@ aggregation tutorials.)  This results in a series of documents that look like th
 </code></pre></div><h2 id="executing-the-pipeline">Executing the Pipeline</h2>
 <p>Once your pipeline is complete, you can execute it via the <code>execute()</code> method.  This method takes a <code>Class</code> reference for the target
 type of your aggregation.  Given this type, Morphia will map each document in the results and return it.  Additionally, you can also
-include some options to <code>execute()</code>. We can use the various options on the
+include some options to <code>execute()</code>. We can use the various options on the 
 <a href="/2.0.0-BETA2/javadoc/dev/morphia/aggregation/experimental/AggregationOptions.html
 "><code>AggregationOptions</code></a> class to configure how we want the
 pipeline to execute.</p>
@@ -934,19 +934,19 @@ they don&rsquo;t we&rsquo;re instructing the operation to insert the new documen
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-BETA2/js/clipboard.min.js?1585003008"></script>
-    <script src="/2.0.0-BETA2/js/perfect-scrollbar.min.js?1585003008"></script>
-    <script src="/2.0.0-BETA2/js/perfect-scrollbar.jquery.min.js?1585003008"></script>
-    <script src="/2.0.0-BETA2/js/jquery.sticky.js?1585003008"></script>
-    <script src="/2.0.0-BETA2/js/featherlight.min.js?1585003008"></script>
-    <script src="/2.0.0-BETA2/js/highlight.pack.js?1585003008"></script>
+    <script src="/2.0.0-BETA2/js/clipboard.min.js?1585099949"></script>
+    <script src="/2.0.0-BETA2/js/perfect-scrollbar.min.js?1585099949"></script>
+    <script src="/2.0.0-BETA2/js/perfect-scrollbar.jquery.min.js?1585099949"></script>
+    <script src="/2.0.0-BETA2/js/jquery.sticky.js?1585099949"></script>
+    <script src="/2.0.0-BETA2/js/featherlight.min.js?1585099949"></script>
+    <script src="/2.0.0-BETA2/js/highlight.pack.js?1585099949"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-BETA2/js/modernizr.custom-3.6.0.js?1585003008"></script>
-    <script src="/2.0.0-BETA2/js/learn.js?1585003008"></script>
-    <script src="/2.0.0-BETA2/js/hugo-learn.js?1585003008"></script>
+    <script src="/2.0.0-BETA2/js/modernizr.custom-3.6.0.js?1585099949"></script>
+    <script src="/2.0.0-BETA2/js/learn.js?1585099949"></script>
+    <script src="/2.0.0-BETA2/js/hugo-learn.js?1585099949"></script>
 
-    <link href="/2.0.0-BETA2/mermaid/mermaid.css?1585003008" rel="stylesheet" />
-    <script src="/2.0.0-BETA2/mermaid/mermaid.js?1585003008"></script>
+    <link href="/2.0.0-BETA2/mermaid/mermaid.css?1585099949" rel="stylesheet" />
+    <script src="/2.0.0-BETA2/mermaid/mermaid.js?1585099949"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

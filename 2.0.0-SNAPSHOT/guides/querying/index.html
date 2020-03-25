@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.66.0" />
     <meta name="description" content="">
 
 
@@ -12,18 +12,18 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1585002804" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1585099746" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1585002804"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1585099746"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -548,7 +548,7 @@ predefined in Morphia and can be found in the <code>dev.morphia.query.experiment
 
 <div class="notices note" ><p>The package is currently <code>experimental</code>.  This done to signify that this API is a new one and might change based on user feedback
 prior to a final release.  It is expected that the API will be largely the same in the final release and you are highly encouraged
-to try it out before then.  If you encounter and bugs or usability issues, please file an
+to try it out before then.  If you encounter and bugs or usability issues, please file an 
 <a href="https://github.com/MorphiaOrg/morphia/issues">issue</a></p>
 </div>
 
@@ -603,7 +603,7 @@ for this entity will be removed.  To save such instances back consider using <a 
 </div>
 
 <h3 id="limiting-and-skipping">Limiting and Skipping</h3>
-<p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>FindOptions.limit(int)</code> and
+<p>Pagination of query results is often done as a combination of skips and limits.  Morphia offers <code>FindOptions.limit(int)</code> and 
 <code>FindOptions.offset(int)</code> for these cases.  An example of these methods in action would look like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Person<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FindOptions<span style="color:#f92672">()</span>
@@ -613,7 +613,7 @@ for this entity will be removed.  To save such instances back consider using <a 
 pagination, however.  See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip
 ">skip</a> documentation for more detail.</p>
 <h3 id="ordering">Ordering</h3>
-<p>Ordering the results of a query is done via <a href="/javadoc/dev/morphia/query/Query.html#order-java.lang.String-"><code>FindOptions.sort(Sort...)</code></a>
+<p>Ordering the results of a query is done via <a href="/javadoc/dev/morphia/query/Query.html#order-java.lang.String-"><code>FindOptions.sort(Sort...)</code></a> 
 and a handful of other overloads. For example, to sort by <code>age</code> (youngest to oldest) and then <code>income</code> (highest to lowest), you would
 use this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>User<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
@@ -640,7 +640,7 @@ getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">ensureCap
 </code></pre></div><p>There are two things to note about this code sample:</p>
 <ol>
 <li>This tells Morphia to make sure that any entity <a href="/2.0.0-SNAPSHOT/guides/annotations/#entity">configured</a> to use a capped
-collection has its collection created correctly.  If the collection already exists and is not capped, you will have to manually
+collection has its collection created correctly.  If the collection already exists and is not capped, you will have to manually 
 <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 ">update</a> your collection to be a capped collection.</li>
 <li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.  In this
@@ -962,19 +962,19 @@ application.</li>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1585002804"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1585099746"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1585002804"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1585099746"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1585002804" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1585002804"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1585099746" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1585099746"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

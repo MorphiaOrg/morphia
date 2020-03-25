@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.66.0" />
     <meta name="description" content="">
 
 
@@ -12,18 +12,18 @@
     <title>Querying (Deprecated) :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1585002804" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1585002804" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1585099746" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1585099746" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1585002804"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1585099746"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -541,8 +541,8 @@
 
 
 <div class="notices warning" ><p>This page describes the older approach to querying.  While this older API is still supported, efforts should be made to update to the new
-API as outlined in the other <a href="/2.0.0-SNAPSHOT/guides/querying/">querying</a> guide.  This old API is active using the
-<a href="/2.0.0-SNAPSHOT/guides/configuration/#legacy">legacy configuration</a>.  The new API will attempt to redirect most calls to use the new
+API as outlined in the other <a href="/2.0.0-SNAPSHOT/guides/querying/">querying</a> guide.  This old API is active using the 
+<a href="/2.0.0-SNAPSHOT/guides/configuration/#legacy">legacy configuration</a>.  The new API will attempt to redirect most calls to use the new 
 <a href="/2.0.0-SNAPSHOT/javadoc/dev/morphia/query/experimental/filters/Filters">Filters</a> based approach.</p>
 <p>Note that at this time complex queries using <code>and</code> or <code>or</code> clauses can not be correctly transparently translated and will require manual
 effort to update to the new API.</p>
@@ -819,7 +819,7 @@ getDs<span style="color:#f92672">().</span><span style="color:#a6e22e">ensureCap
 </code></pre></div><p>There are two things to note about this code sample:</p>
 <ol>
 <li>This tells Morphia to make sure that any entity <a href="/2.0.0-SNAPSHOT/guides/annotations/#entity">configured</a> to use a capped
-collection has its collection created correctly.  If the collection already exists and is not capped, you will have to manually
+collection has its collection created correctly.  If the collection already exists and is not capped, you will have to manually 
 <a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped
 ">update</a> your collection to be a capped collection.</li>
 <li>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.  In this
@@ -1153,19 +1153,19 @@ Artist result = datastore.createQuery(Artist.class, query).get();
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1585002804"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1585099746"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1585002804"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1585002804"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1585099746"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1585099746"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1585002804" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1585002804"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1585099746" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1585099746"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

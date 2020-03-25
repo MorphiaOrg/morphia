@@ -18,7 +18,7 @@
       
       <guid>/2.0.0-BETA2/getting-started/installation-guide/</guid>
       <description>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle. To use Morphia using either build tool, you will need to update your build configurations with the following information.
- &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia-core&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.0.0-BETA2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia.morphia:morphia-core:2.0.0-BETA2&#39; }   You can also download the jars directly from sonatype.  </description>
+&amp;lt;dependencies&amp;gt;&amp;lt;dependency&amp;gt;&amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;morphia-core&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;2.0.0-BETA2&amp;lt;/version&amp;gt;&amp;lt;/dependency&amp;gt;&amp;lt;/dependencies&amp;gt;dependencies {compile &#39;dev.morphia.morphia:morphia-core:2.0.0-BETA2&#39;}Morphia 2.0 requires Java 11 or greater. Morphia has been tested on mongodb servers as old as 3.</description>
     </item>
     
     <item>
