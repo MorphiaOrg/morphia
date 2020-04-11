@@ -16,21 +16,23 @@
 
 package dev.morphia.query;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.CursorType;
 import com.mongodb.DBObject;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.DBCollectionFindOptions;
+import com.mongodb.lang.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * The options to apply to a find operation (also commonly referred to as a query).
  *
- * @since 1.3
  * @mongodb.driver.manual tutorial/query-documents/ Find
  * @mongodb.driver.manual ../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY
+ * @since 1.3
  */
 public class FindOptions {
     private DBCollectionFindOptions options = new DBCollectionFindOptions();
@@ -46,7 +48,37 @@ public class FindOptions {
     }
 
     /**
+     * Sets the number of documents to return per batch.
+     *
+     * @param batchSize the batch size
+     * @return this
+     * @mongodb.driver.manual reference/method/cursor.batchSize/#cursor.batchSize Batch Size
+     */
+    public FindOptions batchSize(final int batchSize) {
+        options.batchSize(batchSize);
+        return this;
+    }
+
+    /**
+     * Sets the collation
+     *
+     * @param collation the collation
+     * @return this
+     * @mongodb.server.release 3.4
+     */
+    public FindOptions collation(final Collation collation) {
+        options.collation(collation);
+        return this;
+    }
+
+    public FindOptions comment(final String comment) {
+        options.comment(comment);
+        return this;
+    }
+
+    /**
      * Makes a copy of these find options
+     *
      * @return the new copy
      */
     public FindOptions copy() {
@@ -54,104 +86,13 @@ public class FindOptions {
     }
 
     /**
-     * Gets the limit to apply.  The default is null.
+     * Sets the cursor type.
      *
-     * @return the limit
-     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
-     */
-    public int getLimit() {
-        return options.getLimit();
-    }
-
-    /**
-     * Sets the limit to apply.
-     *
-     * @param limit the limit, which may be null
+     * @param cursorType the cursor type
      * @return this
-     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
      */
-    public FindOptions limit(final int limit) {
-        options.limit(limit);
-        return this;
-    }
-
-    /**
-     * Gets the number of documents to skip.  The default is 0.
-     *
-     * @return the number of documents to skip, which may be null
-     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
-     */
-    public int getSkip() {
-        return options.getSkip();
-    }
-
-    /**
-     * Sets the number of documents to skip.
-     *
-     * @param skip the number of documents to skip
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
-     */
-    public FindOptions skip(final int skip) {
-        options.skip(skip);
-        return this;
-    }
-
-    /**
-     * Gets the maximum execution time on the server for this operation.  The default is 0, which places no limit on the execution time.
-     *
-     * @param timeUnit the time unit to return the result in
-     * @return the maximum execution time in the given time unit
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public long getMaxTime(final TimeUnit timeUnit) {
-        return options.getMaxTime(timeUnit);
-    }
-
-    /**
-     * Sets the maximum execution time on the server for this operation.
-     *
-     * @param maxTime  the max time
-     * @param timeUnit the time unit, which may not be null
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public FindOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
-        options.maxTime(maxTime, timeUnit);
-        return this;
-    }
-
-    /**
-     * The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor
-     * query. This only applies to a TAILABLE_AWAIT cursor. When the cursor is not a TAILABLE_AWAIT cursor,
-     * this option is ignored.
-     *
-     * On servers &gt;= 3.2, this option will be specified on the getMore command as "maxTimeMS". The default
-     * is no value: no "maxTimeMS" is sent to the server with the getMore command.
-     *
-     * On servers &lt; 3.2, this option is ignored, and indicates that the driver should respect the server's default value
-     *
-     * A zero value will be ignored.
-     *
-     * @param timeUnit the time unit to return the result in
-     * @return the maximum await execution time in the given time unit
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public long getMaxAwaitTime(final TimeUnit timeUnit) {
-        return options.getMaxAwaitTime(timeUnit);
-    }
-
-    /**
-     * Sets the maximum await execution time on the server for this operation.
-     *
-     * @param maxAwaitTime  the max await time.  A zero value will be ignored, and indicates that the driver should respect the server's
-     *                      default value
-     * @param timeUnit the time unit, which may not be null
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
-     */
-    public FindOptions maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
-        options.maxAwaitTime(maxAwaitTime, timeUnit);
+    public FindOptions cursorType(final CursorType cursorType) {
+        options.cursorType(cursorType);
         return this;
     }
 
@@ -167,81 +108,132 @@ public class FindOptions {
     }
 
     /**
-     * Sets the number of documents to return per batch.
+     * Returns the collation options
      *
-     * @param batchSize the batch size
-     * @return this
-     * @mongodb.driver.manual reference/method/cursor.batchSize/#cursor.batchSize Batch Size
+     * @return the collation options
+     * @mongodb.server.release 3.4
      */
-    public FindOptions batchSize(final int batchSize) {
-        options.batchSize(batchSize);
-        return this;
+    public Collation getCollation() {
+        return options.getCollation();
+    }
+
+    @Nullable
+    public String getComment() {
+        return options.getComment();
     }
 
     /**
-     * Gets the query modifiers to apply to this operation.  The default is not to apply any modifiers.
+     * Get the cursor type.
      *
-     * @return the query modifiers, which may be null
-     * @mongodb.driver.manual reference/operator/query-modifier/ Query Modifiers
+     * @return the cursor type
      */
-    DBObject getModifiers() {
-        return options.getModifiers();
+    public CursorType getCursorType() {
+        return options.getCursorType();
+    }
+
+    @Nullable
+    public DBObject getHint() {
+        return options.getHint();
     }
 
     /**
-     * Adds a modifier to the find operation
+     * Gets the limit to apply.  The default is null.
      *
-     * @param key the modifier name
-     * @param value the modifier value
-     * @return this
+     * @return the limit
+     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
      */
-    public FindOptions modifier(final String key, final Object value) {
-        options.getModifiers().put(key, value);
-        return this;
+    public int getLimit() {
+        return options.getLimit();
+    }
+
+    @Nullable
+    public DBObject getMax() {
+        return options.getMax();
     }
 
     /**
-     * Gets a document describing the fields to return for all matching documents.
+     * The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor
+     * query. This only applies to a TAILABLE_AWAIT cursor. When the cursor is not a TAILABLE_AWAIT cursor,
+     * this option is ignored.
+     * <p>
+     * On servers &gt;= 3.2, this option will be specified on the getMore command as "maxTimeMS". The default
+     * is no value: no "maxTimeMS" is sent to the server with the getMore command.
+     * <p>
+     * On servers &lt; 3.2, this option is ignored, and indicates that the driver should respect the server's default value
+     * <p>
+     * A zero value will be ignored.
      *
-     * @return the project document, which may be null
-     * @mongodb.driver.manual reference/method/db.collection.find/ Projection
+     * @param timeUnit the time unit to return the result in
+     * @return the maximum await execution time in the given time unit
+     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
      */
-    DBObject getProjection() {
-        return options.getProjection();
+    public long getMaxAwaitTime(final TimeUnit timeUnit) {
+        return options.getMaxAwaitTime(timeUnit);
     }
 
     /**
-     * Sets a document describing the fields to return for all matching documents.
+     * Gets the maximum execution time on the server for this operation.  The default is 0, which places no limit on the execution time.
      *
-     * @param projection the project document, which may be null.
-     * @return this
-     * @mongodb.driver.manual reference/method/db.collection.find/ Projection
+     * @param timeUnit the time unit to return the result in
+     * @return the maximum execution time in the given time unit
+     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
      */
-    FindOptions projection(final DBObject projection) {
-        options.projection(projection);
-        return this;
+    public long getMaxTime(final TimeUnit timeUnit) {
+        return options.getMaxTime(timeUnit);
+    }
+
+    @Nullable
+    public DBObject getMin() {
+        return options.getMin();
     }
 
     /**
-     * Gets the sort criteria to apply to the query. The default is null, which means that the documents will be returned in an undefined
-     * order.
+     * Returns the readConcern
      *
-     * @return a document describing the sort criteria
-     * @mongodb.driver.manual reference/method/cursor.sort/ Sort
+     * @return the readConcern
+     * @mongodb.server.release 3.2
      */
-    DBObject getSortDBObject() {
+    public ReadConcern getReadConcern() {
+        return options.getReadConcern();
+    }
+
+    /**
+     * Returns the readPreference
+     *
+     * @return the readPreference
+     */
+    public ReadPreference getReadPreference() {
+        return options.getReadPreference();
+    }
+
+    /**
+     * Gets the number of documents to skip.  The default is 0.
+     *
+     * @return the number of documents to skip, which may be null
+     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
+     */
+    public int getSkip() {
+        return options.getSkip();
+    }
+
+    @Nullable
+    public DBObject getSort() {
         return options.getSort();
     }
 
+    public FindOptions hint(final DBObject hint) {
+        options.hint(hint);
+        return this;
+    }
+
     /**
-     * Sets the sort criteria to apply to the query.
+     * Defines the index hint value
      *
-     * @param sort the sort criteria, which may be null.
+     * @param hint the hint
      * @return this
-     * @mongodb.driver.manual reference/method/cursor.sort/ Sort
      */
-    FindOptions sort(final DBObject sort) {
-        options.sort(sort);
+    public FindOptions hintString(final String hint) {
+        options.hint(new BasicDBObject(hint, 1));
         return this;
     }
 
@@ -253,6 +245,101 @@ public class FindOptions {
      */
     public boolean isNoCursorTimeout() {
         return options.isNoCursorTimeout();
+    }
+
+    /**
+     * Users should not set this under normal circumstances.
+     *
+     * @return if oplog replay is enabled
+     */
+    public boolean isOplogReplay() {
+        return options.isOplogReplay();
+    }
+
+    /**
+     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
+     *
+     * @return if partial results for sharded clusters is enabled
+     */
+    public boolean isPartial() {
+        return options.isPartial();
+    }
+
+    public boolean isReturnKey() {
+        return options.isReturnKey();
+    }
+
+    public boolean isShowRecordId() {
+        return options.isShowRecordId();
+    }
+
+    /**
+     * Sets the limit to apply.
+     *
+     * @param limit the limit, which may be null
+     * @return this
+     * @mongodb.driver.manual reference/method/cursor.limit/#cursor.limit Limit
+     */
+    public FindOptions limit(final int limit) {
+        options.limit(limit);
+        return this;
+    }
+
+    public FindOptions max(final DBObject max) {
+        options.max(max);
+        return this;
+    }
+
+    /**
+     * Sets the maximum await execution time on the server for this operation.
+     *
+     * @param maxAwaitTime the max await time.  A zero value will be ignored, and indicates that the driver should respect the server's
+     *                     default value
+     * @param timeUnit     the time unit, which may not be null
+     * @return this
+     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
+     */
+    public FindOptions maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
+        options.maxAwaitTime(maxAwaitTime, timeUnit);
+        return this;
+    }
+
+    /**
+     * Sets the maximum execution time on the server for this operation.
+     *
+     * @param maxTime  the max time
+     * @param timeUnit the time unit, which may not be null
+     * @return this
+     * @mongodb.driver.manual reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time
+     */
+    public FindOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
+        options.maxTime(maxTime, timeUnit);
+        return this;
+    }
+
+    public FindOptions min(final DBObject min) {
+        options.min(min);
+        return this;
+    }
+
+    /**
+     * Adds a modifier to the find operation
+     *
+     * @param key   the modifier name
+     * @param value the modifier value
+     * @return this
+     * @deprecated This feature is unavailable in the 4.0 driver and Morphia 2.0.  use the individual setters instead
+     */
+    @Deprecated
+    public FindOptions modifier(final String key, final Object value) {
+        options.getModifiers().put(key, value);
+        return this;
+    }
+
+    @Deprecated
+    public FindOptions modifiers(final DBObject modifiers) {
+        options.modifiers(modifiers);
+        return this;
     }
 
     /**
@@ -270,15 +357,6 @@ public class FindOptions {
     /**
      * Users should not set this under normal circumstances.
      *
-     * @return if oplog replay is enabled
-     */
-    public boolean isOplogReplay() {
-        return options.isOplogReplay();
-    }
-
-    /**
-     * Users should not set this under normal circumstances.
-     *
      * @param oplogReplay if oplog replay is enabled
      * @return this
      */
@@ -290,71 +368,12 @@ public class FindOptions {
     /**
      * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
      *
-     * @return if partial results for sharded clusters is enabled
-     */
-    public boolean isPartial() {
-        return options.isPartial();
-    }
-
-    /**
-     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
-     *
      * @param partial if partial results for sharded clusters is enabled
      * @return this
      */
     public FindOptions partial(final boolean partial) {
         options.partial(partial);
         return this;
-    }
-
-    /**
-     * Get the cursor type.
-     *
-     * @return the cursor type
-     */
-    public CursorType getCursorType() {
-        return options.getCursorType();
-    }
-
-    /**
-     * Sets the cursor type.
-     *
-     * @param cursorType the cursor type
-     * @return this
-     */
-    public FindOptions cursorType(final CursorType cursorType) {
-        options.cursorType(cursorType);
-        return this;
-    }
-
-    /**
-     * Returns the readPreference
-     *
-     * @return the readPreference
-     */
-    public ReadPreference getReadPreference() {
-        return options.getReadPreference();
-    }
-
-    /**
-     * Sets the readPreference
-     *
-     * @param readPreference the readPreference
-     * @return this
-     */
-    public FindOptions readPreference(final ReadPreference readPreference) {
-        options.readPreference(readPreference);
-        return this;
-    }
-
-    /**
-     * Returns the readConcern
-     *
-     * @return the readConcern
-     * @mongodb.server.release 3.2
-     */
-    public ReadConcern getReadConcern() {
-        return options.getReadConcern();
     }
 
     /**
@@ -370,29 +389,75 @@ public class FindOptions {
     }
 
     /**
-     * Returns the collation options
+     * Sets the readPreference
      *
-     * @return the collation options
-     * @mongodb.server.release 3.4
+     * @param readPreference the readPreference
+     * @return this
      */
-    public Collation getCollation() {
-        return options.getCollation();
+    public FindOptions readPreference(final ReadPreference readPreference) {
+        options.readPreference(readPreference);
+        return this;
+    }
+
+    public FindOptions returnKey(final boolean returnKey) {
+        options.returnKey(returnKey);
+        return this;
+    }
+
+    public FindOptions showRecordId(final boolean showRecordId) {
+        options.showRecordId(showRecordId);
+        return this;
     }
 
     /**
-     * Sets the collation
+     * Sets the number of documents to skip.
      *
-     * @param collation the collation
+     * @param skip the number of documents to skip
      * @return this
-     * @mongodb.server.release 3.4
+     * @mongodb.driver.manual reference/method/cursor.skip/#cursor.skip Skip
      */
-    public FindOptions collation(final Collation collation) {
-        options.collation(collation);
+    public FindOptions skip(final int skip) {
+        options.skip(skip);
         return this;
+    }
+
+    /**
+     * Gets the query modifiers to apply to this operation.  The default is not to apply any modifiers.
+     *
+     * @return the query modifiers, which may be null
+     * @mongodb.driver.manual reference/operator/query-modifier/ Query Modifiers
+     */
+    DBObject getModifiers() {
+        return options.getModifiers();
     }
 
     DBCollectionFindOptions getOptions() {
         return options;
+    }
+
+    /**
+     * Gets a document describing the fields to return for all matching documents.
+     *
+     * @return the project document, which may be null
+     * @mongodb.driver.manual reference/method/db.collection.find/ Projection
+     */
+    DBObject getProjection() {
+        return options.getProjection();
+    }
+
+    /**
+     * Gets the sort criteria to apply to the query. The default is null, which means that the documents will be returned in an undefined
+     * order.
+     *
+     * @return a document describing the sort criteria
+     * @mongodb.driver.manual reference/method/cursor.sort/ Sort
+     */
+    DBObject getSortDBObject() {
+        return options.getSort();
+    }
+
+    boolean hasHint() {
+        return getModifiers().get("$indexHint") != null;
     }
 
     boolean isSnapshot() {
@@ -400,7 +465,27 @@ public class FindOptions {
         return snapshot != null ? (Boolean) snapshot : false;
     }
 
-    boolean hasHint() {
-        return getModifiers().get("$indexHint") != null;
+    /**
+     * Sets a document describing the fields to return for all matching documents.
+     *
+     * @param projection the project document, which may be null.
+     * @return this
+     * @mongodb.driver.manual reference/method/db.collection.find/ Projection
+     */
+    FindOptions projection(final DBObject projection) {
+        options.projection(projection);
+        return this;
+    }
+
+    /**
+     * Sets the sort criteria to apply to the query.
+     *
+     * @param sort the sort criteria, which may be null.
+     * @return this
+     * @mongodb.driver.manual reference/method/cursor.sort/ Sort
+     */
+    FindOptions sort(final DBObject sort) {
+        options.sort(sort);
+        return this;
     }
 }

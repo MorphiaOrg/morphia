@@ -2,10 +2,8 @@ package dev.morphia.query;
 
 
 import com.jayway.awaitility.Awaitility;
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CursorType;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
@@ -394,8 +392,8 @@ public class TestQuery extends TestBase {
         String expectedComment = "test comment";
 
         toList(getDs().find(Pic.class)
-               .find(new FindOptions()
-                           .modifier("$comment", expectedComment)));
+                      .find(new FindOptions()
+                                .comment(expectedComment)));
 
         DBCollection profileCollection = getDb().getCollection("system.profile");
         assertNotEquals(0, profileCollection.count());
@@ -1467,7 +1465,7 @@ public class TestQuery extends TestBase {
                                .returnKey()
                                .field("name").equal("pic2")
                                .find(new FindOptions().limit(1)
-                                    .modifier("$returnKey", true))
+                                                      .returnKey(true))
                                .tryNext();
         assertNotNull(foundItem);
         assertThat("Name should be populated", foundItem.getName(), is("pic2"));

@@ -88,6 +88,18 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>${driver.version}</version>
         </dependency>
+<!--
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-legacy</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+-->
         <dependency>
             <groupId>com.thoughtworks.proxytoys</groupId>
             <artifactId>proxytoys</artifactId>

@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 
-import com.mongodb.Bytes;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
@@ -53,9 +52,8 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * @param comment the comment to add
      * @return the Query to enable chaining of commands
-     * @see FindOptions#modifier(String, Object)
-     * @deprecated use the methods that accept Options directly. This can be replicated with {@code options.modifier("$comment", comment)}
      * @mongodb.driver.manual reference/operator/meta/comment $comment
+     * @deprecated use the methods that accept Options directly. This can be replicated with {@link FindOptions#comment(String)}
      */
     @Deprecated
     Query<T> comment(String comment);
@@ -82,8 +80,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates.
      *
      * @return this
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$snapshot", false)}
-     * @see FindOptions#modifier(String, Object)
+     * @deprecated no replacement is planned
      */
     @Deprecated
     Query<T> disableSnapshotMode();
@@ -110,8 +107,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * compatible with order/sort and hint.
      *
      * @return this
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$snapshot", true)}
-     * @see FindOptions#modifier(String, Object)
+     * @deprecated no replacement is planned
      */
     @Deprecated
     Query<T> enableSnapshotMode();
@@ -255,8 +251,8 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * @param idxName the index name to hint
      * @return this
+     * @see FindOptions#hint(DBObject)
      * @deprecated use the methods that accept Options directly. This can be replicated with {@code options.modifier("$hint", idxName)}
-     * @see FindOptions#modifier(String, Object)
      */
     @Deprecated
     Query<T> hintIndex(String idxName);
@@ -281,9 +277,8 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @param lowerBound The inclusive lower bound.
      * @return this
      * @mongodb.driver.manual reference/operator/meta/min/ $min
-     * @deprecated use the methods that accept Options directly.  This can be replicated using
-     * {@code options.modifier("$min", new Document(...)) }
-     * @see FindOptions#modifier(String, Object)
+     * @deprecated use the methods that accept Options directly.
+     * @see FindOptions#min(DBObject)
      */
     @Deprecated
     Query<T> lowerIndexBound(DBObject lowerBound);
@@ -294,8 +289,7 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @param value must be &gt; 0.  A value &lt; 0 indicates no limit
      * @return this
      * @mongodb.driver.manual reference/operator/meta/maxScan/#op._S_maxScan $maxScan
-     * @deprecated use the methods that accept Options directly.  This can be replicated using {@code options.modifier("$maxScan", value) }
-     * @see FindOptions#modifier(String, Object)
+     * @deprecated no replacement is planned
      */
     @Deprecated
     Query<T> maxScan(int value);
@@ -306,8 +300,8 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @param maxTime     must be &gt; 0.  A value &lt; 0 indicates no limit
      * @param maxTimeUnit the unit of time to use
      * @return this
-     * @see FindOptions#modifier(String, Object)
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.maxTime(value, unit) }
+     * @deprecated use {@link FindOptions#maxTime(long, TimeUnit)} instead
+     * @see FindOptions#maxTime(long, TimeUnit)
      */
     @Deprecated
     Query<T> maxTime(long maxTime, TimeUnit maxTimeUnit);
@@ -448,8 +442,8 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/meta/returnKey/#op._S_returnKey $returnKey
-     * @deprecated use the methods that accept Options directly. This can be replicated using {@code options.modifier("$returnKey", true) }
-     * @see FindOptions#modifier(String, Object)
+     * @deprecated use the methods that accept Options directly.
+     * @see FindOptions#returnKey(boolean)
      */
     @Deprecated
     Query<T> returnKey();
@@ -481,9 +475,8 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      * @param upperBound The exclusive upper bound.
      * @return this
      * @mongodb.driver.manual reference/operator/meta/max/ $max
-     * @deprecated use the methods that accept Options directly.  This can be replicated using
-     * {@code options.modifier("$max", new Document(...)) }
-     * @see FindOptions#modifier(String, Object)
+     * @deprecated use the methods that accept Options directly.
+     * @see FindOptions#max(DBObject)
      */
     @Deprecated
     Query<T> upperIndexBound(DBObject upperBound);
@@ -752,7 +745,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * @param awaitData passes the awaitData to the cursor
      * @return an Iterator.
-     * @see Bytes#QUERYOPTION_AWAITDATA
      * @deprecated set the CursorType on {@link FindOptions}  and use {@link #find(FindOptions)} instead. This can be replicated using
      * {@code findOptions.cursorType (awaitData ? TailableAwait : Tailable)}
      */

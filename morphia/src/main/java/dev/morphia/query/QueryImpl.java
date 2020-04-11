@@ -22,7 +22,6 @@ import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.query.internal.MappingIterable;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
-import org.bson.Document;
 import org.bson.types.CodeWScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -312,7 +311,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated
     public Query<T> comment(final String comment) {
-        getOptions().modifier("$comment", comment);
+        getOptions().comment(comment);
         return this;
     }
 
@@ -480,7 +479,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated
     public Query<T> hintIndex(final String idxName) {
-        getOptions().modifier("$hint", idxName);
+        getOptions().hint(new BasicDBObject(idxName, 1));
         return this;
     }
 
@@ -496,7 +495,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @SuppressWarnings("unchecked")
     public Query<T> lowerIndexBound(final DBObject lowerBound) {
         if (lowerBound != null) {
-            getOptions().modifier("$min", new Document(lowerBound.toMap()));
+            getOptions().min(lowerBound);
         }
         return this;
     }
@@ -732,6 +731,11 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public MongoCursor<T> iterator() {
+        return find();
+    }
+
+    @Override
+    public MongoCursor<T> cursor() {
         return find();
     }
 
