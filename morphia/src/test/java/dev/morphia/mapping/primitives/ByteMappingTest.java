@@ -1,12 +1,11 @@
 package dev.morphia.mapping.primitives;
 
 
+import dev.morphia.TestBase;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import dev.morphia.TestBase;
-import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,14 +13,6 @@ import java.util.List;
 
 
 public class ByteMappingTest extends TestBase {
-    @Test
-    public void blobs() {
-        getMorphia().map(Bytes.class);
-        final String data = "{ \"primitiveArray\": BinData(0, "
-                            + "\"V2hlbiBpbiB0aGUgY291cnNlIG9mIGh1bWFuIGV2ZW50cyBpdCBiZWNvbWVzIG5lY2Vzc2FyeSB0byBzdWJzY3JpYmUu\") }";
-        getDb().eval("db.Bytes.insert(" + data + ")");
-        final Bytes loaded = getDs().find(Bytes.class).find(new FindOptions().limit(1)).tryNext();
-    }
 
     @Test
     public void testMapping() {

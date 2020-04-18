@@ -77,15 +77,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
     Query<T> disableCursorTimeout();
 
     /**
-     * Disable snapshotted mode (default mode). This will be faster but changes made during the cursor may cause duplicates.
-     *
-     * @return this
-     * @deprecated no replacement is planned
-     */
-    @Deprecated
-    Query<T> disableSnapshotMode();
-
-    /**
      * Turns off validation (for all calls made after)
      *
      * @return this
@@ -101,16 +92,6 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      */
     @Deprecated
     Query<T> enableCursorTimeout();
-
-    /**
-     * Enables snapshotted mode where duplicate results (which may be updated during the lifetime of the cursor) will not be returned. Not
-     * compatible with order/sort and hint.
-     *
-     * @return this
-     * @deprecated no replacement is planned
-     */
-    @Deprecated
-    Query<T> enableSnapshotMode();
 
     /**
      * Turns on validation (for all calls made after); by default validation is on

@@ -18,16 +18,16 @@ package dev.morphia;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.query.Query;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,10 +38,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static dev.morphia.converters.DefaultConverters.JAVA_8;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
-import static dev.morphia.converters.DefaultConverters.JAVA_8;
 
 @SuppressWarnings("Since15")
 public class TestSerializedFormat extends TestBase {
@@ -50,7 +50,7 @@ public class TestSerializedFormat extends TestBase {
     public void testQueryFormat() {
         Assume.assumeTrue("This test requires Java 8", JAVA_8);
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
-                                            .field("id").equal(new ObjectId(0, 0, (short) 0, 0))
+                                            .field("id").equal(new ObjectId(0, 0))
                                             .field("referenceType").equal(new ReferenceType(2, "far"))
                                             .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
 

@@ -323,26 +323,6 @@ public class FindOptions {
     }
 
     /**
-     * Adds a modifier to the find operation
-     *
-     * @param key   the modifier name
-     * @param value the modifier value
-     * @return this
-     * @deprecated This feature is unavailable in the 4.0 driver and Morphia 2.0.  use the individual setters instead
-     */
-    @Deprecated
-    public FindOptions modifier(final String key, final Object value) {
-        options.getModifiers().put(key, value);
-        return this;
-    }
-
-    @Deprecated
-    public FindOptions modifiers(final DBObject modifiers) {
-        options.modifiers(modifiers);
-        return this;
-    }
-
-    /**
      * The server normally times out idle cursors after an inactivity period (10 minutes)
      * to prevent excess memory use. Set this option to prevent that.
      *
@@ -421,16 +401,6 @@ public class FindOptions {
         return this;
     }
 
-    /**
-     * Gets the query modifiers to apply to this operation.  The default is not to apply any modifiers.
-     *
-     * @return the query modifiers, which may be null
-     * @mongodb.driver.manual reference/operator/query-modifier/ Query Modifiers
-     */
-    DBObject getModifiers() {
-        return options.getModifiers();
-    }
-
     DBCollectionFindOptions getOptions() {
         return options;
     }
@@ -454,15 +424,6 @@ public class FindOptions {
      */
     DBObject getSortDBObject() {
         return options.getSort();
-    }
-
-    boolean hasHint() {
-        return getModifiers().get("$indexHint") != null;
-    }
-
-    boolean isSnapshot() {
-        Object snapshot = getModifiers().get("$snapshot");
-        return snapshot != null ? (Boolean) snapshot : false;
     }
 
     /**

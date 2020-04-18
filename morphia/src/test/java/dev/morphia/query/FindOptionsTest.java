@@ -39,8 +39,6 @@ public class FindOptionsTest {
         DBCollectionFindOptions options = new FindOptions()
             .batchSize(42)
             .limit(18)
-            .modifier("i'm a", "modifier")
-            .modifier("i am", 2)
             .projection(new BasicDBObject("field", "value"))
             .maxTime(15, TimeUnit.MINUTES)
             .maxAwaitTime(45, TimeUnit.SECONDS)
@@ -56,8 +54,6 @@ public class FindOptionsTest {
 
         assertEquals(42, options.getBatchSize());
         assertEquals(18, options.getLimit());
-        assertEquals(new BasicDBObject("i'm a", "modifier")
-                         .append("i am", 2), options.getModifiers());
         assertEquals(new BasicDBObject("field", "value"), options.getProjection());
         assertEquals(15, options.getMaxTime(TimeUnit.MINUTES));
         assertEquals(45, options.getMaxAwaitTime(TimeUnit.SECONDS));
