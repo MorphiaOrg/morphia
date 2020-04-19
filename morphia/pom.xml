@@ -86,12 +86,12 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
-            <version>4.0.0</version>
+            <version>${driver.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-legacy</artifactId>
-            <version>4.0.0</version>
+            <version>${driver.version}</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.proxytoys</groupId>
