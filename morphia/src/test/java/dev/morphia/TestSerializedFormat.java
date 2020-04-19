@@ -50,7 +50,7 @@ public class TestSerializedFormat extends TestBase {
     public void testQueryFormat() {
         Assume.assumeTrue("This test requires Java 8", JAVA_8);
         Query<ReferenceType> query = getDs().find(ReferenceType.class)
-                                            .field("id").equal(new ObjectId(0, 0))
+                                            .field("id").equal(new ObjectId("000000000000000000000000"))
                                             .field("referenceType").equal(new ReferenceType(2, "far"))
                                             .field("embeddedType").equal(new EmbeddedReferenceType(3, "strikes"))
 

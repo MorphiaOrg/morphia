@@ -1,14 +1,16 @@
 package dev.morphia;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import org.bson.Document;
+import org.bson.UuidRepresentation;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -27,8 +29,17 @@ public abstract class TestBase {
     private final Datastore ds;
 
     protected TestBase() {
-        this(new MongoClient(new MongoClientURI(getMongoURI())));
+        this(new MongoClient(new MongoClientURI(getMongoURI(), MongoClientOptions.builder()
+                                                                                 .uuidRepresentation(UuidRepresentation.JAVA_LEGACY))));
     }
+/*
+    protected TestBase() {
+        this(MongoClients.create(MongoClientSettings.builder()
+                                                    .uuidRepresentation(UuidRepresentation.STANDARD)
+                                                    .applyConnectionString(new ConnectionString(getMongoURI()))
+                                                    .build()));
+    }
+*/
 
     protected TestBase(final MongoClient mongoClient) {
         morphia = new Morphia(new Mapper(MapperOptions
@@ -103,35 +114,8 @@ public abstract class TestBase {
         return count;
     }
 
-    /**
-     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
-     * @return true if server is at least specified version
-     */
-    protected boolean serverIsAtLeastVersion(final double version) {
-        String serverVersion = (String) getMongoClient().getDB("admin").command("serverStatus").get("version");
-        return Double.parseDouble(serverVersion.substring(0, 3)) >= version;
-    }
-
-    /**
-     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
-     * @return true if server is at least specified version
-     */
-    protected boolean serverIsAtMostVersion(final double version) {
-        String serverVersion = (String) getMongoClient().getDB("admin").command("serverStatus").get("version");
-        return Double.parseDouble(serverVersion.substring(0, 3)) <= version;
-    }
-
-    private CommandResult runIsMaster() {
-        // Check to see if this is a replica set... if not, get out of here.
-        return mongoClient.getDB("admin").command(new BasicDBObject("ismaster", 1));
-    }
-
-    public BasicDBObject obj(final String key, final Object value) {
-        return new BasicDBObject(key, value);
-    }
-
     protected static <E> List<E> toList(final MongoCursor<E> cursor) {
-        final List<E> results = new ArrayList<E>();
+        final List<E> results = new ArrayList<>();
         try {
             while (cursor.hasNext()) {
                 results.add(cursor.next());
@@ -140,6 +124,35 @@ public abstract class TestBase {
             cursor.close();
         }
         return results;
+    }
+
+    public BasicDBObject obj(final String key, final Object value) {
+        return new BasicDBObject(key, value);
+    }
+
+    /**
+     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
+     * @return true if server is at least specified version
+     */
+    protected boolean serverIsAtLeastVersion(final double version) {
+        String serverVersion = (String) getMongoClient().getDatabase("admin").runCommand(new Document("serverStatus", 1))
+                                                        .get("version");
+        return Double.parseDouble(serverVersion.substring(0, 3)) >= version;
+    }
+
+    /**
+     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
+     * @return true if server is at least specified version
+     */
+    protected boolean serverIsAtMostVersion(final double version) {
+        String serverVersion = (String) getMongoClient().getDatabase("admin").runCommand(new Document("serverStatus", 1))
+                                                        .get("version");
+        return Double.parseDouble(serverVersion.substring(0, 3)) <= version;
+    }
+
+    private Document runIsMaster() {
+        // Check to see if this is a replica set... if not, get out of here.
+        return mongoClient.getDatabase("admin").runCommand(new Document("ismaster", 1));
     }
 
 }

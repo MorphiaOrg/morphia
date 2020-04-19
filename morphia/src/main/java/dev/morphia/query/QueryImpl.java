@@ -184,7 +184,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             LOG.trace("Getting cursor(" + dbColl.getName() + ")  for query:" + cursor.getQuery());
         }
 
-        return new MorphiaIterator<T, T>(ds, prepareCursor(options), ds.getMapper(), clazz, dbColl.getName(), cache);
+        return new MorphiaIterator<T, T>(ds, cursor, ds.getMapper(), clazz, dbColl.getName(), cache);
     }
 
     @Override
