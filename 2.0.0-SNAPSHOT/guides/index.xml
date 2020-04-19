@@ -68,7 +68,7 @@ There are two ways to define indexes: at the class level and at the field level.
       
       <guid>/2.0.0-SNAPSHOT/guides/querying/</guid>
       <description>Creating a Query Morphia provides Query&amp;lt;T&amp;gt; class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible. To create the Query, we invoke the following code:
-Query&amp;lt;Product&amp;gt; query = datastore.find(Product.class);find() returns an instance of Query which we can use to build a query.
+Query&amp;lt;Product&amp;gt; query = datastore.find(Product.class); find() returns an instance of Query which we can use to build a query.
 filter() The most significant method filter(Filter...). This method takes a number of filters to apply to the query being built.</description>
     </item>
     
@@ -100,7 +100,7 @@ This API is experimental. Its implementation and API subject to change based on 
       <guid>/2.0.0-SNAPSHOT/guides/schemavalidation/</guid>
       <description>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. Schema validationprovides the capability to perform schema validation during updates and insertions. Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
 Below we have a basic entity definition. Note the new annotation @Validation.
-@Entity(&amp;#34;validation&amp;#34;)@Validation(&amp;#34;{ number : { $gt : 10 } }&amp;#34;)public class DocumentValidation {@Idprivate ObjectId id;private String string;private int number;private Date date;.</description>
+@Entity(&amp;#34;validation&amp;#34;) @Validation(&amp;#34;{ number : { $gt : 10 } }&amp;#34;) public class DocumentValidation { @Id private ObjectId id; private String string; private int number; private Date date; .</description>
     </item>
     
     <item>
@@ -110,7 +110,7 @@ Below we have a basic entity definition. Note the new annotation @Validation.
       
       <guid>/2.0.0-SNAPSHOT/guides/textsearch/</guid>
       <description>Text Searching Morphia also supports MongoDB&amp;rsquo;s text search capabilities. In order to execute a text search against a collection, the collection must have a text index defined first. Using Morphia that definition would look like this:
-@Indexes(@Index(fields = @Field(value = &amp;#34;$**&amp;#34;, type = IndexType.TEXT)))public static class Greeting {@Idprivate ObjectId id;private String value;private String language;...}The $** value tells MongoDB to create a text index on all the text fields in a document.</description>
+@Indexes(@Index(fields = @Field(value = &amp;#34;$**&amp;#34;, type = IndexType.TEXT))) public static class Greeting { @Id private ObjectId id; private String value; private String language; ... } The $** value tells MongoDB to create a text index on all the text fields in a document.</description>
     </item>
     
     <item>
