@@ -19,7 +19,10 @@ import static java.lang.String.format;
 
 /**
  * Defines a bundle of converters
+ *
+ * @deprecated this mechanism is being replaced in 2.0
  */
+@Deprecated
 public abstract class Converters {
     private static final Logger LOG = LoggerFactory.getLogger(Converters.class);
 
