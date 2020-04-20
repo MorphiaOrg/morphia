@@ -243,6 +243,21 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
+    default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations, FindAndModifyOptions options) {
+        return query.modify(operations).execute(options);
+    }
+
+    /**
+     * Find the first Entity from the Query, and modify it.
+     *
+     * @param query      the query to use when finding entities to update
+     * @param operations the updates to apply to the matched documents
+     * @param <T>        the type to query
+     * @return The modified Entity (the result of the update)
+     * @deprecated use {@link Query#modify()} instead
+     */
+    @SuppressWarnings("removal")
+    @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.modify(operations).execute(new FindAndModifyOptions()
                                                     .returnDocument(ReturnDocument.AFTER));
@@ -473,15 +488,16 @@ public interface Datastore {
     /**
      * Saves the entities (Objects) and updates the @Id field
      *
-     * @param entities the entities to save
      * @param <T>      the type of the entity
+     * @param entities the entities to save
+     * @return
      * @deprecated use {@link #save(List)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> void save(Iterable<T> entities) {
+    default <T> List<T> save(Iterable<T> entities) {
         List<T> list = new ArrayList<>();
         entities.forEach(list::add);
-        save(list);
+        return save(list);
     }
 
     /**
