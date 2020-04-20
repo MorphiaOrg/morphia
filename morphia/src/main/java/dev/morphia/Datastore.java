@@ -237,6 +237,7 @@ public interface Datastore {
      *
      * @param query      the query to use when finding entities to update
      * @param operations the updates to apply to the matched documents
+     * @param options    the options to apply
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
      * @deprecated use {@link Query#modify()} instead
@@ -490,7 +491,7 @@ public interface Datastore {
      *
      * @param <T>      the type of the entity
      * @param entities the entities to save
-     * @return
+     * @return the list of updated entities
      * @deprecated use {@link #save(List)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
