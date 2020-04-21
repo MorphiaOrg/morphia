@@ -12,6 +12,7 @@ import dev.morphia.query.experimental.filters.Filters;
  * @param <T> the type of the FieldEnd
  */
 @SuppressWarnings("removal")
+@Deprecated(since = "2.0", forRemoval = true)
 public interface FieldEnd<T> {
 
     /**
@@ -455,6 +456,7 @@ public interface FieldEnd<T> {
      *
      * @return this
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     FieldEnd<T> not();
 
     /**

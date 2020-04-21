@@ -25,6 +25,7 @@ import static java.util.regex.Pattern.quote;
  * @morphia.internal
  */
 @SuppressWarnings("removal")
+@Deprecated(since = "2.0", forRemoval = true)
 public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);
     private final String field;

@@ -378,6 +378,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
+    @Deprecated(since = "2.0", forRemoval = true)
     private class MorphiaQueryFieldEnd extends FieldEndImpl {
         private final String name;
 

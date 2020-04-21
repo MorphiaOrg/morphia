@@ -11,7 +11,6 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.Map;
-import java.util.Spliterator;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -283,11 +282,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      */
     Modify<T> modify();
 
-    @Override
-    default Spliterator<T> spliterator() {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Execute the query and get the results.
      *
@@ -301,7 +295,9 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
      *
      * @return the keys of the documents returned by this query
+     * @deprecated use a project to retrieve only the ID values
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     MorphiaKeyCursor<T> keys();
 
     /**
@@ -311,6 +307,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the keys of the documents returned by this query
      * @since 1.4
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     MorphiaKeyCursor<T> keys(FindOptions options);
 
     /**
@@ -441,7 +438,9 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param text the text to search for
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/query/text/ $text
+     * @deprecated use {@link dev.morphia.query.experimental.filters.Filters#text(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Query<T> search(String text);
 
     /**
@@ -451,7 +450,9 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param language the language to use during the search
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/query/text/ $text
+     * @deprecated use {@link dev.morphia.query.experimental.filters.Filters#text(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Query<T> search(String text, String language);
 
     /**
@@ -484,6 +485,8 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      *
      * @param js the javascript block to apply
      * @return this
+     * @deprecated use {@link dev.morphia.query.experimental.filters.Filters#where(String)} instead
      */
+    @Deprecated(since = "2.0", forRemoval = true)
     Query<T> where(String js);
 }
