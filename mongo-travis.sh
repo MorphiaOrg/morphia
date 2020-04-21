@@ -14,8 +14,7 @@ download() {
   fi
   [ -e ${FILE} ] || wget ${URL} -O ${FILE}
 
-  [ -e mongodb-linux-x86_64-${MONGODB} ] && sudo rm -rf mongodb-linux-*
-  tar -xvf ${FILE}
+  [ -e mongodb-linux-x86_64-${MONGODB} ] || tar -xvf ${FILE}
   rm -rf /tmp/data
   mkdir -p /tmp/data
 
@@ -42,7 +41,9 @@ then
   download
   if [ -z "$DRIVER" ]
   then
-    mvn install
+#    mvn install
+    echo waiting to exit
+    read WAIT
     killall -9 mongod
   fi
 else

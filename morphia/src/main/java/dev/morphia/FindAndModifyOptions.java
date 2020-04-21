@@ -20,6 +20,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.DBCollectionFindAndModifyOptions;
+import dev.morphia.query.Query;
 
 import java.util.concurrent.TimeUnit;
 
@@ -102,7 +103,9 @@ public final class FindAndModifyOptions {
      *
      * @param remove true if the matching elements should be deleted
      * @return this
+     * @deprecated This will be removed in 2.0.  use {@link Datastore#findAndDelete(Query)} to remove items.
      */
+    @Deprecated
     public FindAndModifyOptions remove(final boolean remove) {
         options.remove(remove);
         return this;
