@@ -10,7 +10,6 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
 
@@ -235,11 +234,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the deleted entity
      */
     T findAndDelete(FindAndDeleteOptions options);
-
-    @Override
-    default void forEach(Consumer<? super T> action) {
-        iterator().forEachRemaining(action);
-    }
 
     /**
      * Gets the first entity in the result set.  Obeys the {@link Query} offset value.

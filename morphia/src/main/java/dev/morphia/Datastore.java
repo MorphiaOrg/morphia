@@ -250,7 +250,7 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations, ModifyOptions options) {
+    default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations, FindAndModifyOptions options) {
         return query.modify(operations).execute(options);
     }
 
