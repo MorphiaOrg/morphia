@@ -12,18 +12,18 @@
     <title>Quick Tour :: Morphia</title>
 
     
-    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/theme.css?1587439124" rel="stylesheet">
-    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1587439124" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/nucleus.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/fontawesome-all.min.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hybrid.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/featherlight.min.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/perfect-scrollbar.min.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/auto-complete.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/atom-one-dark-reasonable.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/theme.css?1587444262" rel="stylesheet">
+    <link href="/2.0.0-SNAPSHOT/css/hugo-theme.css?1587444262" rel="stylesheet">
     
 
-    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1587439124"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery-3.3.1.min.js?1587444262"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -685,10 +685,10 @@ the query to find all the underpaid employees.  This is one we&rsquo;ve already 
 statistics about the update operation.</p>
 <h2 id="removes">Removes</h2>
 <p>After everything else, removes are really quite simple.  Removing just needs a query to find and delete the documents in question and
-then call <code>remove()</code> the remove them from the database:</p>
+then call <code>delete()</code> the remove them from the database:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Employee<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
          <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>Filters<span style="color:#f92672">.</span><span style="color:#a6e22e">gt</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;salary&#34;</span><span style="color:#f92672">,</span> 100000<span style="color:#f92672">))</span>
-         <span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DeleteOptions<span style="color:#f92672">()</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DeleteOptions<span style="color:#f92672">()</span>
                 <span style="color:#f92672">.</span><span style="color:#a6e22e">multi</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>
 </code></pre></div><p>Take note of the <code>DeleteOptions</code> being passed in here.  By default, mongodb will only delete the first matching document.  If you want to
 delete all of them, you need to pass the <code>multi(true)</code> option as well.</p>
@@ -1004,19 +1004,19 @@ delete all of them, you need to pass the <code>multi(true)</code> option as well
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1587439125"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1587439125"></script>
-    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1587439125"></script>
-    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1587439125"></script>
-    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1587439125"></script>
-    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1587439125"></script>
+    <script src="/2.0.0-SNAPSHOT/js/clipboard.min.js?1587444262"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.min.js?1587444262"></script>
+    <script src="/2.0.0-SNAPSHOT/js/perfect-scrollbar.jquery.min.js?1587444262"></script>
+    <script src="/2.0.0-SNAPSHOT/js/jquery.sticky.js?1587444262"></script>
+    <script src="/2.0.0-SNAPSHOT/js/featherlight.min.js?1587444262"></script>
+    <script src="/2.0.0-SNAPSHOT/js/highlight.pack.js?1587444262"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1587439125"></script>
-    <script src="/2.0.0-SNAPSHOT/js/learn.js?1587439125"></script>
-    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1587439125"></script>
+    <script src="/2.0.0-SNAPSHOT/js/modernizr.custom-3.6.0.js?1587444262"></script>
+    <script src="/2.0.0-SNAPSHOT/js/learn.js?1587444262"></script>
+    <script src="/2.0.0-SNAPSHOT/js/hugo-learn.js?1587444262"></script>
 
-    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1587439125" rel="stylesheet" />
-    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1587439125"></script>
+    <link href="/2.0.0-SNAPSHOT/mermaid/mermaid.css?1587444262" rel="stylesheet" />
+    <script src="/2.0.0-SNAPSHOT/mermaid/mermaid.js?1587444262"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
