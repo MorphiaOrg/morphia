@@ -9,7 +9,9 @@ import static java.util.Arrays.asList;
  * Defines a group pipeline stage.
  *
  * @aggregation.expression $group
+ * @deprecated use {@link dev.morphia.aggregation.experimental.stages.Group} instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public final class Group {
     private final String name;
     private Group nested;

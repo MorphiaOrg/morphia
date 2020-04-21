@@ -10,7 +10,9 @@ import java.util.Map;
  * The options for a bucket stage of aggregation pipeline.
  *
  * @author Roman Lapin
+ * @deprecated use {@link dev.morphia.aggregation.experimental.stages.Bucket} instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class BucketOptions {
 
     private Object defaultField;

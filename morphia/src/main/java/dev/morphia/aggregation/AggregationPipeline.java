@@ -16,7 +16,7 @@ import java.util.List;
  * This defines the pipeline used in aggregation operations
  *
  * @mongodb.driver.manual core/aggregation-pipeline/ Aggregation Pipeline
- * @deprecated
+ * @deprecated use {@link dev.morphia.aggregation.experimental.Aggregation} instead
  */
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)

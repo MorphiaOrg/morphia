@@ -10,7 +10,9 @@ import java.util.Map;
  * The options for a bucket auto stage of aggregation pipeline.
  *
  * @author Roman Lapin
+ * @deprecated use {@link dev.morphia.aggregation.experimental.stages.AutoBucket} instead
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class BucketAutoOptions {
 
     private Granularity granularity;
