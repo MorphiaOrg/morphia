@@ -518,7 +518,7 @@ public class TestQuery extends TestBase {
         assertEquals(5, getDs().find(Rectangle.class).count());
         getDs().find(Rectangle.class)
                .filter(eq("height", 1))
-               .remove(new DeleteOptions()
+               .delete(new DeleteOptions()
                            .multi(true));
         assertEquals(2, getDs().find(Rectangle.class).count());
     }
@@ -840,7 +840,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNegativeBatchSize() {
-        getDs().find(PhotoWithKeywords.class).remove(new DeleteOptions().multi(true));
+        getDs().find(PhotoWithKeywords.class).delete(new DeleteOptions().multi(true));
         getDs().save(asList(new PhotoWithKeywords("scott", "hernandez"),
             new PhotoWithKeywords("scott", "hernandez"),
             new PhotoWithKeywords("scott", "hernandez"),

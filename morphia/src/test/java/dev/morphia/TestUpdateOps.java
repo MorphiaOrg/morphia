@@ -126,7 +126,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4}));
 
         //cleanup for next tests
-        getDs().find(ContainsIntArray.class).delete();
+        getDs().find(ContainsIntArray.class).findAndDelete();
         cIntArray = getDs().find(ContainsIntArray.class)
                            .filter(eq("_id", getDs().save(new ContainsIntArray()).id))
                            .first();
@@ -354,7 +354,7 @@ public class TestUpdateOps extends TestBase {
                             .set("name", "A")
                             .execute(new UpdateOptions().upsert(true)));
         assertThat(getDs().find(ContainsPic.class).count(), is(1L));
-        getDs().find(ContainsPic.class).remove(new DeleteOptions().multi(true));
+        getDs().find(ContainsPic.class).delete(new DeleteOptions().multi(true));
 
         query = getDs().find(ContainsPic.class)
                        .filter(eq("name", "first"),
@@ -602,7 +602,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testUpdateFirstNoCreate() {
-        getDs().find(LogHolder.class).remove(new DeleteOptions().multi(true));
+        getDs().find(LogHolder.class).delete(new DeleteOptions().multi(true));
         List<LogHolder> logs = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             logs.add(createEntryLogs("logs" + i));

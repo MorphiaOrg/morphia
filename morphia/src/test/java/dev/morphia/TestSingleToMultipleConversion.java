@@ -18,7 +18,7 @@ public class TestSingleToMultipleConversion extends TestBase {
     @Test
     public void testBasicType() {
         getDs().find(HasSingleString.class)
-               .remove();
+               .delete();
         getDs().save(new HasSingleString());
         Assert.assertNotNull(getDs().find(HasSingleString.class).iterator(new FindOptions().limit(1))
                                     .next());

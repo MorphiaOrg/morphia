@@ -75,7 +75,7 @@ public class TestJavaMaps extends TestBase {
     }
 
     private void empties(final Datastore datastore) {
-        datastore.find(Employee.class).remove(new DeleteOptions().multi(true));
+        datastore.find(Employee.class).delete(new DeleteOptions().multi(true));
         Employee employee = new Employee();
         HashMap<String, Byte> byteMap = new HashMap<String, Byte>();
         byteMap.put("b", (byte) 1);

@@ -31,7 +31,7 @@ public class TestEmptyEntityMapping extends TestBase {
                                                              .filter(exists("rights").not()).iterator()
                                                              .next());
         getDs().find(User.class)
-               .remove(new DeleteOptions()
+               .delete(new DeleteOptions()
                            .multi(true));
 
         u = new User();

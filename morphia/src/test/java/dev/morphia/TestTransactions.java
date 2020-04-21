@@ -17,9 +17,9 @@ public class TestTransactions extends TestBase {
         checkMinServerVersion(4.0);
         Assume.assumeTrue(isReplicaSet());
         getDs().save(new Rectangle(1, 1));
-        getDs().find(Rectangle.class).delete();
+        getDs().find(Rectangle.class).findAndDelete();
         getDs().save(new User("", new Date()));
-        getDs().find(User.class).delete();
+        getDs().find(User.class).findAndDelete();
     }
 
     @Test
@@ -156,7 +156,7 @@ public class TestTransactions extends TestBase {
             Assert.assertNotNull(session.find(Rectangle.class).first());
 
             session.find(Rectangle.class)
-                   .remove();
+                   .delete();
 
             Assert.assertNotNull(getDs().find(Rectangle.class).first());
             Assert.assertNull(session.find(Rectangle.class).first());

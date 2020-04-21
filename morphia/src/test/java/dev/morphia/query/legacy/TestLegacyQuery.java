@@ -568,7 +568,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         assertEquals(5, getDs().find(Rectangle.class).count());
         getDs().find(Rectangle.class)
                .filter("height", 1)
-               .remove(new DeleteOptions()
+               .delete(new DeleteOptions()
                            .multi(true));
         assertEquals(2, getDs().find(Rectangle.class).count());
     }

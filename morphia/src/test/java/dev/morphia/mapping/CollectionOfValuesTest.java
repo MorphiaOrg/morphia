@@ -70,7 +70,7 @@ public class CollectionOfValuesTest extends TestBase {
     @Test
     public void testListOfListMapping() {
         getMapper().map(ContainsListOfList.class);
-        getDs().find(ContainsListOfList.class).delete();
+        getDs().find(ContainsListOfList.class).findAndDelete();
         final ContainsListOfList entity = new ContainsListOfList();
 
         entity.strings = new ArrayList<>();

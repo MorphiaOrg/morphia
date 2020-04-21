@@ -49,7 +49,7 @@ public class CompoundIdTest extends TestBase {
         getDs().save(entity);
         getDs().find(CompoundIdEntity.class)
                .filter(eq("_id", entity.id))
-               .delete();
+               .findAndDelete();
     }
 
     @Test

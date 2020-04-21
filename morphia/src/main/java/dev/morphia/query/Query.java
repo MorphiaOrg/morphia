@@ -3,7 +3,6 @@ package dev.morphia.query;
 
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
-import dev.morphia.FindAndModifyOptions;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -11,7 +10,6 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
@@ -45,14 +43,13 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Execute the query and get the results.
+     * Deletes elements matching this query
      *
-     * @return a MorphiaCursor
-     * @see #iterator(FindOptions)
+     * @return the results
+     * @see DeleteOptions
      */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default MorphiaCursor<T> execute() {
-        return legacyOperation();
+    default DeleteResult delete() {
+        return delete(new DeleteOptions());
     }
 
     /**
@@ -73,38 +70,22 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     long count(CountOptions options);
 
     /**
-     * Deletes an entity from the database and returns it.
-     *
-     * @return the deleted entity
-     */
-    default T delete() {
-        return delete(new FindAndDeleteOptions());
-    }
-
-    /**
-     * Deletes an entity from the database and returns it.
+     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
      *
      * @param options the options to apply
-     * @return the deleted entity
+     * @return the results
      */
-    T delete(FindAndDeleteOptions options);
+    DeleteResult delete(DeleteOptions options);
 
     /**
-     * Deletes an entity from the database and returns it.
+     * Execute the query and get the results.
      *
-     * @param options the options to apply
-     * @return the deleted entity
-     * @deprecated use {@link #delete(FindAndDeleteOptions)}
+     * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T delete(FindAndModifyOptions options) {
-        return delete(new FindAndDeleteOptions()
-                          .writeConcern(options.getWriteConcern())
-                          .collation(options.getCollation())
-                          .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-                          .sort(options.getSort())
-                          .projection(options.getProjection()));
-
+    default MorphiaCursor<T> execute() {
+        return legacyOperation();
     }
 
     /**
@@ -225,9 +206,13 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
         throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
     }
 
-    @Override
-    default void forEach(Consumer<? super T> action) {
-        iterator().forEachRemaining(action);
+    /**
+     * Deletes an entity from the database and returns it.
+     *
+     * @return the deleted entity
+     */
+    default T findAndDelete() {
+        return findAndDelete(new FindAndDeleteOptions());
     }
 
     /**
@@ -241,6 +226,19 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     @Deprecated(since = "2.0", forRemoval = true)
     default MorphiaCursor<T> find(FindOptions options) {
         return iterator(options);
+    }
+
+    /**
+     * Deletes an entity from the database and returns it.
+     *
+     * @param options the options to apply
+     * @return the deleted entity
+     */
+    T findAndDelete(FindAndDeleteOptions options);
+
+    @Override
+    default void forEach(Consumer<? super T> action) {
+        iterator().forEachRemaining(action);
     }
 
     /**
@@ -402,24 +400,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     default Query<T> project(final Meta meta) {
         return legacyOperation();
     }
-
-    /**
-     * Deletes elements matching this query
-     *
-     * @return the results
-     * @see DeleteOptions
-     */
-    default DeleteResult remove() {
-        return remove(new DeleteOptions());
-    }
-
-    /**
-     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
-     *
-     * @param options the options to apply
-     * @return the results
-     */
-    DeleteResult remove(DeleteOptions options);
 
     /**
      * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes

@@ -74,7 +74,7 @@ public final class QuickTour {
 
         datastore.find(Employee.class)
                  .filter(gt("salary", 100000))
-                 .delete();
+                 .findAndDelete();
     }
 }
 

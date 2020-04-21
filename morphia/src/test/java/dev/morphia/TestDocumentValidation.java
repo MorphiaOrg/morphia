@@ -73,8 +73,8 @@ public class TestDocumentValidation extends TestBase {
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
-        FindAndModifyOptions options = new FindAndModifyOptions()
-                                           .bypassDocumentValidation(false);
+        ModifyOptions options = new FindAndModifyOptions()
+                                    .bypassDocumentValidation(false);
         Modify<DocumentValidation> modify = query.modify().set("number", 5);
         try {
             modify.execute(options);

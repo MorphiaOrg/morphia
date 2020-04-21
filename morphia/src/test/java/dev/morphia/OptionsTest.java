@@ -27,6 +27,59 @@ public class OptionsTest {
             WriteConcern.class));
     }
 
+    @Test
+    public void countOptions() {
+        scan(com.mongodb.client.model.CountOptions.class, CountOptions.class, true, List.of(ReadConcern.class, ReadPreference.class));
+    }
+
+    @Test
+    public void deleteOptions() {
+        scan(com.mongodb.client.model.DeleteOptions.class, DeleteOptions.class, true, List.of(WriteConcern.class));
+    }
+
+    @Test
+    public void findAndDeleteOptions() {
+        scan(FindOneAndDeleteOptions.class, FindAndDeleteOptions.class, true, List.of(WriteConcern.class));
+    }
+
+    @Test
+    public void findAndModifyOptions() {
+        scan(FindOneAndUpdateOptions.class, ModifyOptions.class, true, List.of(WriteConcern.class));
+    }
+
+    @Test
+    public void findOptions() {
+        beanScan(FindIterable.class, FindOptions.class, List.of("filter", "projection"));
+    }
+
+    @Test
+    public void insertManyOptions() {
+        scan(com.mongodb.client.model.InsertManyOptions.class, InsertManyOptions.class, false, List.of(WriteConcern.class));
+    }
+
+    @Test
+    public void insertOneOptions() {
+        scan(com.mongodb.client.model.InsertOneOptions.class, InsertOneOptions.class, false, List.of(WriteConcern.class));
+    }
+
+    @Test
+    public void updateOptions() {
+        scan(com.mongodb.client.model.UpdateOptions.class, UpdateOptions.class, true, List.of(WriteConcern.class));
+    }
+
+    private void beanScan(final Class<?> driver, final Class<?> morphia, final List<String> filtered) {
+        try {
+            Method[] methods = driver.getDeclaredMethods();
+            for (final Method method : methods) {
+                if (!filtered.contains(method.getName()) && method.getAnnotation(Deprecated.class) == null) {
+                    morphia.getDeclaredMethod(method.getName(), convert(method.getParameterTypes()));
+                }
+            }
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     private void checkOverride(final Class<?> driverType, final Class<?> morphiaType, final Method method) throws NoSuchMethodException {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
@@ -39,6 +92,15 @@ public class OptionsTest {
                                                                .getReturnType().equals(morphiaType));
 
         }
+    }
+
+    private Class<?>[] convert(final Class<?>[] types) {
+        for (int i = 0; i < types.length; i++) {
+            if (types[i].equals(Bson.class)) {
+                types[i] = Document.class;
+            }
+        }
+        return types;
     }
 
     private void scan(final Class<?> driverType, final Class<?> morphiaType, final boolean subclass, List<Class<?>> localFields) {
@@ -67,67 +129,5 @@ public class OptionsTest {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-    }
-
-    @Test
-    public void countOptions() {
-        scan(com.mongodb.client.model.CountOptions.class, CountOptions.class, true, List.of(ReadConcern.class, ReadPreference.class));
-    }
-
-    @Test
-    public void deleteOptions() {
-        scan(com.mongodb.client.model.DeleteOptions.class, DeleteOptions.class, true, List.of(WriteConcern.class));
-    }
-
-    @Test
-    public void findAndDeleteOptions() {
-        scan(FindOneAndDeleteOptions.class, FindAndDeleteOptions.class, true, List.of(WriteConcern.class));
-    }
-
-    @Test
-    public void findAndModifyOptions() {
-        scan(FindOneAndUpdateOptions.class, FindAndModifyOptions.class, true, List.of(WriteConcern.class));
-    }
-
-    @Test
-    public void findOptions() {
-        beanScan(FindIterable.class, FindOptions.class, List.of("filter", "projection"));
-    }
-
-    void beanScan(final Class<?> driver, final Class<?> morphia, final List<String> filtered) {
-        try {
-            Method[] methods = driver.getDeclaredMethods();
-            for (final Method method : methods) {
-                if (!filtered.contains(method.getName()) && method.getAnnotation(Deprecated.class) == null) {
-                    morphia.getDeclaredMethod(method.getName(), convert(method.getParameterTypes()));
-                }
-            }
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private Class<?>[] convert(final Class<?>[] types) {
-        for (int i = 0; i < types.length; i++) {
-            if (types[i].equals(Bson.class)) {
-                types[i] = Document.class;
-            }
-        }
-        return types;
-    }
-
-    @Test
-    public void insertManyOptions() {
-        scan(com.mongodb.client.model.InsertManyOptions.class, InsertManyOptions.class, false, List.of(WriteConcern.class));
-    }
-
-    @Test
-    public void insertOneOptions() {
-        scan(com.mongodb.client.model.InsertOneOptions.class, InsertOneOptions.class, false, List.of(WriteConcern.class));
-    }
-
-    @Test
-    public void updateOptions() {
-        scan(com.mongodb.client.model.UpdateOptions.class, UpdateOptions.class, true, List.of(WriteConcern.class));
     }
 }

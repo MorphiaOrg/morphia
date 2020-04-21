@@ -48,7 +48,7 @@ public class TestIndexes extends TestBase {
     public void testIndexes() {
 
         final Datastore datastore = getDs();
-        datastore.find(TestWithIndexOption.class).remove(new DeleteOptions().multi(true));
+        datastore.find(TestWithIndexOption.class).delete(new DeleteOptions().multi(true));
 
         final MongoCollection<Document> indexOptionColl = getDatabase().getCollection(TestWithIndexOption.class.getSimpleName());
         indexOptionColl.drop();

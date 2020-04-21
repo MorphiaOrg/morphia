@@ -73,7 +73,7 @@ public class TestJavaLists extends TestBase {
     }
 
     private void empties(final Datastore ds) {
-        ds.find(Employee.class).remove(new DeleteOptions().multi(true));
+        ds.find(Employee.class).delete(new DeleteOptions().multi(true));
         Employee employee = new Employee();
         employee.byteList = asList((byte) 1, (byte) 2);
         ds.save(employee);

@@ -241,7 +241,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         return find(entity.getClass())
                    .filter(eq("_id", mapper.getId(entity)))
-                   .remove(options);
+                   .delete(options);
     }
 
     @Override

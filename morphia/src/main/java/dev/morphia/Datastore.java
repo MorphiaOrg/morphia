@@ -25,6 +25,7 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.in;
@@ -99,11 +100,11 @@ public interface Datastore {
      * @param <T>   the type to delete
      * @param query the query to use when finding documents to delete
      * @return results of the delete
-     * @deprecated use {@link Query#remove()} instead
+     * @deprecated use {@link Query#delete()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> DeleteResult delete(Query<T> query) {
-        return query.remove(new DeleteOptions());
+        return query.delete(new DeleteOptions());
     }
 
     /**
@@ -114,11 +115,11 @@ public interface Datastore {
      * @param options the options to apply to the delete
      * @return results of the delete
      * @since 1.3
-     * @deprecated use {@link Query#remove(DeleteOptions)} instead
+     * @deprecated use {@link Query#delete(DeleteOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> DeleteResult delete(Query<T> query, DeleteOptions options) {
-        return query.remove(options);
+        return query.delete(options);
     }
 
     /**
@@ -209,11 +210,11 @@ public interface Datastore {
      * @param query the query to use when finding entities to delete
      * @param <T>   the type to query
      * @return the deleted Entity
-     * @deprecated use {@link Query#delete()} instead
+     * @deprecated use {@link Query#findAndDelete()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query) {
-        return query.delete();
+        return query.findAndDelete();
     }
 
     /**
@@ -224,12 +225,17 @@ public interface Datastore {
      * @param <T>     the type to query
      * @return the deleted Entity
      * @since 1.3
-     * @deprecated use {@link Query#delete(FindAndDeleteOptions)} instead
+     * @deprecated use {@link Query#findAndDelete(FindAndDeleteOptions)} instead
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
-        return query.delete(options);
+        return query.findAndDelete(new FindAndDeleteOptions()
+                                       .writeConcern(options.getWriteConcern())
+                                       .collation(options.getCollation())
+                                       .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+                                       .sort(options.getSort())
+                                       .projection(options.getProjection()));
     }
 
     /**
@@ -244,7 +250,7 @@ public interface Datastore {
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations, FindAndModifyOptions options) {
+    default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations, ModifyOptions options) {
         return query.modify(operations).execute(options);
     }
 
@@ -260,7 +266,7 @@ public interface Datastore {
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
-        return query.modify(operations).execute(new FindAndModifyOptions()
+        return query.modify(operations).execute(new ModifyOptions()
                                                     .returnDocument(ReturnDocument.AFTER));
     }
 

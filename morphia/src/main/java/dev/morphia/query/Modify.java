@@ -4,8 +4,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.Datastore;
-import dev.morphia.DatastoreImpl;
-import dev.morphia.FindAndModifyOptions;
+import dev.morphia.ModifyOptions;
 import dev.morphia.mapping.Mapper;
 
 /**
@@ -18,7 +17,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
     private final MongoCollection<T> collection;
 
     Modify(final Query<T> query, final Datastore datastore, final Mapper mapper, final Class<T> type, final MongoCollection<T> collection) {
-        super((DatastoreImpl) datastore, mapper, type);
+        super(datastore, mapper, type);
         this.query = query;
         this.collection = collection;
     }
@@ -29,7 +28,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      * @return the operation result
      */
     public T execute() {
-        return execute(new FindAndModifyOptions()
+        return execute(new ModifyOptions()
                            .returnDocument(ReturnDocument.AFTER));
     }
 
@@ -39,7 +38,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      * @param options the options to apply
      * @return the operation result
      */
-    public T execute(final FindAndModifyOptions options) {
+    public T execute(final ModifyOptions options) {
         ClientSession session = getDatastore().findSession(options);
 
         return session == null

@@ -89,13 +89,31 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Query<T> filter(final Filter... additional) {
-        for (final Filter filter : additional) {
-            filters.add(filter
-                            .entityType(getEntityClass())
-                            .isValidating(validate && getEntityClass() != null));
+    public long count() {
+        return count(new CountOptions());
+    }
+
+    @Override
+    public long count(final CountOptions options) {
+        ClientSession session = datastore.findSession(options);
+        Document query = getQueryDocument();
+        return session == null ? getCollection().countDocuments(query, options)
+                               : getCollection().countDocuments(session, query, options);
+    }
+
+    @Override
+    public DeleteResult delete(final DeleteOptions options) {
+        MongoCollection<T> collection = options.apply(getCollection());
+        ClientSession session = datastore.findSession(options);
+        if (options.isMulti()) {
+            return session == null
+                   ? collection.deleteMany(getQueryDocument(), options)
+                   : collection.deleteMany(session, getQueryDocument(), options);
+        } else {
+            return session == null
+                   ? collection.deleteOne(getQueryDocument(), options)
+                   : collection.deleteOne(session, getQueryDocument(), options);
         }
-        return this;
     }
 
     @Override
@@ -137,6 +155,83 @@ public class MorphiaQuery<T> implements Query<T> {
         return filter(op.apply(parts[0].trim(), value));
     }
 
+    @Override
+    public Query<T> filter(final Filter... additional) {
+        for (final Filter filter : additional) {
+            filters.add(filter
+                            .entityType(getEntityClass())
+                            .isValidating(validate && getEntityClass() != null));
+        }
+        return this;
+    }
+
+    @Override
+    public T findAndDelete(final FindAndDeleteOptions options) {
+        MongoCollection<T> mongoCollection = options.apply(getCollection());
+        ClientSession session = datastore.findSession(options);
+        return session == null
+               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
+               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
+    }
+
+    @Override
+    public T first() {
+        return first(new FindOptions());
+    }
+
+    @Override
+    public T first(final FindOptions options) {
+        try (MongoCursor<T> it = iterator(options.copy().limit(1))) {
+            return it.tryNext();
+        }
+    }
+
+    @Override
+    public Class<T> getEntityClass() {
+        return clazz;
+    }
+
+    @Override
+    public MorphiaCursor<T> iterator() {
+        return this.iterator(new FindOptions());
+    }
+
+    @Override
+    public MorphiaCursor<T> iterator(final FindOptions options) {
+        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
+    }
+
+    @Override
+    public MorphiaKeyCursor<T> keys() {
+        return keys(new FindOptions());
+    }
+
+    @Override
+    public MorphiaKeyCursor<T> keys(final FindOptions options) {
+        FindOptions includeId = new FindOptions().copy(options)
+                                                 .projection()
+                                                 .include("_id");
+
+        return new MorphiaKeyCursor<>(prepareCursor(includeId,
+            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
+            clazz, getCollectionName());
+    }
+
+    @Override
+    public Modify<T> modify() {
+        return new Modify<>(this, datastore, mapper, getEntityClass(), getCollection());
+    }
+
+    @Override
+    public Query<T> search(final String searchText) {
+        return filter(text(searchText));
+    }
+
+    @Override
+    public Query<T> search(final String searchText, final String language) {
+        return filter(text(searchText).language(language));
+    }
+
     /**
      * Converts the query to a Document and updates for any discriminator values as my be necessary
      *
@@ -165,109 +260,14 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Query<T> search(final String searchText) {
-        return filter(text(searchText));
-    }
-
-    @Override
-    public Query<T> search(final String searchText, final String language) {
-        return filter(text(searchText).language(language));
+    public Update<T> update() {
+        return new Update<>(datastore, mapper, clazz, getCollection(), this);
     }
 
     @Override
     public Query<T> where(final String js) {
         filter(Filters.where(js));
         return this;
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys() {
-        return keys(new FindOptions());
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys(final FindOptions options) {
-        FindOptions includeId = new FindOptions().copy(options)
-                                                 .projection()
-                                                 .include("_id");
-
-        return new MorphiaKeyCursor<>(prepareCursor(includeId,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            clazz, getCollectionName());
-    }
-
-    @Override
-    public long count() {
-        return count(new CountOptions());
-    }
-
-    @Override
-    public long count(final CountOptions options) {
-        ClientSession session = datastore.findSession(options);
-        Document query = getQueryDocument();
-        return session == null ? getCollection().countDocuments(query, options)
-                               : getCollection().countDocuments(session, query, options);
-    }
-
-    @Override
-    public T first() {
-        return first(new FindOptions());
-    }
-
-    @Override
-    public MorphiaCursor<T> iterator(final FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
-    }
-
-    @Override
-    public MorphiaCursor<T> iterator() {
-        return this.iterator(new FindOptions());
-    }
-
-    @Override
-    public T first(final FindOptions options) {
-        try (MongoCursor<T> it = iterator(options.copy().limit(1))) {
-            return it.tryNext();
-        }
-    }
-
-    @Override
-    public T delete(final FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.apply(getCollection());
-        ClientSession session = datastore.findSession(options);
-        return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
-    }
-
-    @Override
-    public Modify<T> modify() {
-        return new Modify<>(this, datastore, mapper, getEntityClass(), getCollection());
-    }
-
-    @Override
-    public DeleteResult remove(final DeleteOptions options) {
-        MongoCollection<T> collection = options.apply(getCollection());
-        ClientSession session = datastore.findSession(options);
-        if (options.isMulti()) {
-            return session == null
-                   ? collection.deleteMany(getQueryDocument(), options)
-                   : collection.deleteMany(session, getQueryDocument(), options);
-        } else {
-            return session == null
-                   ? collection.deleteOne(getQueryDocument(), options)
-                   : collection.deleteOne(session, getQueryDocument(), options);
-        }
-    }
-
-    @Override
-    public Update<T> update() {
-        return new Update<>(datastore, mapper, clazz, getCollection(), this);
-    }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return clazz;
     }
 
     @Override
