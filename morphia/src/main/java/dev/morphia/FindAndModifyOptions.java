@@ -16,6 +16,8 @@
 
 package dev.morphia;
 
+import com.mongodb.client.model.ReturnDocument;
+
 /**
  * The options for find and modify operations.
  *
@@ -24,5 +26,16 @@ package dev.morphia;
  */
 @Deprecated(since = "2.0", forRemoval = true)
 public final class FindAndModifyOptions extends ModifyOptions {
+    /**
+     * Sets the returnNew
+     *
+     * @param returnNew the returnNew
+     * @return this
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public FindAndModifyOptions returnNew(final boolean returnNew) {
+        returnDocument(returnNew ? ReturnDocument.AFTER : ReturnDocument.BEFORE);
+        return this;
+    }
 
 }
