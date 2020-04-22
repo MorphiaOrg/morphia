@@ -64,7 +64,9 @@ public class InsertOptions {
      *
      * @param continueOnError whether to continue on error
      * @return this
+     * @deprecated this value is not supported in 2.0
      */
+    @Deprecated
     public InsertOptions continueOnError(final boolean continueOnError) {
         options.continueOnError(continueOnError);
         return this;
@@ -84,7 +86,9 @@ public class InsertOptions {
      * this only is relevant for multi-document inserts. The default value is false.
      *
      * @return whether insertion will continue on error.
+     * @deprecated this value is not supported in 2.0
      */
+    @Deprecated
     public boolean isContinueOnError() {
         return options.isContinueOnError();
     }
