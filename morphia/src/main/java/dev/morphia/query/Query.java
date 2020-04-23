@@ -43,7 +43,9 @@ public interface Query<T> extends QueryResults<T>, MongoIterable<T> {
      *
      * @return this
      * @morphia.internal
+     * @deprecated not supported in 2.0
      */
+    @Deprecated
     Query<T> cloneQuery();
 
     /**
