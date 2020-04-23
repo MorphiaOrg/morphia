@@ -17,6 +17,8 @@
 package dev.morphia.query;
 
 import com.mongodb.CursorType;
+import com.mongodb.DBObject;
+import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.ClientSession;
@@ -61,6 +63,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     private boolean returnKey;
     private boolean showRecordId;
     private boolean snapshot;
+    private ReadConcern readConcern;
     private ReadPreference readPreference;
     private Projection projection;
     private String queryLogId;
@@ -206,6 +209,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         this.returnKey = original.returnKey;
         this.showRecordId = original.showRecordId;
         this.snapshot = original.snapshot;
+        this.readConcern = original.readConcern;
         this.readPreference = original.readPreference;
         this.projection = original.projection;
         this.queryLogId = original.queryLogId;
@@ -481,14 +485,23 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
+     * Gets the read concern
+     *
+     * @return the read concern
+     */
+    public ReadConcern getReadConcern() {
+        return readConcern;
+    }
+
+    /**
      * Defines the index hint value
      *
      * @param hint the hint
      * @return this
      */
-    public FindOptions hintString(final String hint) {
-        this.hintString = hint;
-        return this;
+    @Deprecated(since = "2.0", forRemoval = true)
+    public FindOptions hint(DBObject hint) {
+        return hint(new Document(hint.toMap()));
     }
 
     /**
@@ -571,6 +584,17 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hintString(final String hint) {
+        this.hintString = hint;
+        return this;
+    }
+
+    /**
      * Sets the max await time
      *
      * @param maxAwaitTime the max
@@ -607,6 +631,17 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     public FindOptions min(final Document min) {
         this.min = min;
         return this;
+    }
+
+    /**
+     * Defines the max value
+     *
+     * @param max the max
+     * @return this
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public FindOptions max(DBObject max) {
+        return hint(new Document(max.toMap()));
     }
 
     /**
@@ -650,6 +685,28 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
             projection = new Projection(this);
         }
         return projection;
+    }
+
+    /**
+     * Defines the min value
+     *
+     * @param min the min
+     * @return this
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public FindOptions min(DBObject min) {
+        return hint(new Document(min.toMap()));
+    }
+
+    /**
+     * Sets the read concern to apply
+     *
+     * @param readConcern the read concern
+     * @return this
+     */
+    public FindOptions readConcern(final ReadConcern readConcern) {
+        this.readConcern = readConcern;
+        return this;
     }
 
     /**
@@ -732,4 +789,5 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         }
         return this;
     }
+
 }
