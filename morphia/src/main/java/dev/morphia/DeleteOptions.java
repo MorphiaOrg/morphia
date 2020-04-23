@@ -18,9 +18,9 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.internal.WriteConfigurable;
 
 /**
  * The options to apply when removing documents from the MongoCollection
@@ -28,7 +28,8 @@ import dev.morphia.internal.SessionConfigurable;
  * @mongodb.driver.manual tutorial/remove-documents/ Remove Documents
  * @since 1.3
  */
-public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions implements SessionConfigurable<DeleteOptions> {
+public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions implements SessionConfigurable<DeleteOptions>,
+                                                                                               WriteConfigurable<DeleteOptions> {
     private boolean multi;
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
@@ -50,20 +51,6 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
         this.clientSession = that.clientSession;
     }
 
-    /**
-     * Applies the options to the collection
-     *
-     * @param collection the collection to update
-     * @param <T>        the collection type
-     * @return either the passed collection or the updated collection
-     * @since 2.0
-     */
-    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
-        return writeConcern == null
-               ? collection
-               : collection.withWriteConcern(writeConcern);
-    }
-
     @Override
     public DeleteOptions clientSession(final ClientSession clientSession) {
         this.clientSession = clientSession;
@@ -79,17 +66,6 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     public DeleteOptions collation(final Collation collation) {
         super.collation(collation);
         return this;
-    }
-
-    /**
-     * The write concern to use for the delete.
-     *
-     * @return the write concern, or null if the default will be used.
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
     }
 
     /**

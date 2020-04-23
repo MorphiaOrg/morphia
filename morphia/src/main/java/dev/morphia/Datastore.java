@@ -470,7 +470,9 @@ public interface Datastore {
      * @deprecated use {@link #merge(Object, InsertOneOptions)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> void merge(T entity, WriteConcern wc);
+    default <T> void merge(T entity, WriteConcern wc) {
+        merge(entity, new InsertOneOptions().writeConcern(wc));
+    }
 
     /**
      * Returns a new query based on the example object

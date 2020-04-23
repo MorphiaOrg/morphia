@@ -18,9 +18,9 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.internal.WriteConfigurable;
 import org.bson.conversions.Bson;
 
 import java.util.List;
@@ -34,23 +34,10 @@ import java.util.List;
  * @since 1.3
  */
 public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
-    implements SessionConfigurable<UpdateOptions> {
+    implements SessionConfigurable<UpdateOptions>, WriteConfigurable<UpdateOptions> {
     private WriteConcern writeConcern;
     private boolean multi;
     private ClientSession clientSession;
-
-    /**
-     * Updates the collection with the configured WriteConcern
-     *
-     * @param collection the collection to update
-     * @param <T>        the collection type
-     * @return the potentially updated collection
-     */
-    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
-        return writeConcern == null
-               ? collection
-               : collection.withWriteConcern(writeConcern);
-    }
 
     @Override
     public UpdateOptions clientSession(final ClientSession clientSession) {
@@ -61,17 +48,6 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     @Override
     public ClientSession clientSession() {
         return clientSession;
-    }
-
-    /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
-     *
-     * @return the write concern, or null if the default will be used.
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
     }
 
     /**

@@ -2,10 +2,10 @@ package dev.morphia.query;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -14,23 +14,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Defines options to use for find and delete operations
  */
-public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements SessionConfigurable<FindAndDeleteOptions> {
+public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements SessionConfigurable<FindAndDeleteOptions>,
+                                                                                 WriteConfigurable<FindAndDeleteOptions> {
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
-
-    /**
-     * Applies the options to the collection
-     *
-     * @param collection the collection to update
-     * @param <T>        the collection type
-     * @return either the passed collection or the updated collection
-     * @since 2.0
-     */
-    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
-        return writeConcern == null
-               ? collection
-               : collection.withWriteConcern(writeConcern);
-    }
 
     @Override
     public FindAndDeleteOptions clientSession(final ClientSession clientSession) {

@@ -7,7 +7,9 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
+import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
 
 import java.util.List;
@@ -17,7 +19,8 @@ import java.util.concurrent.TimeUnit;
  * Defines options to be applied to an aggregation pipeline.
  */
 @SuppressWarnings("unused")
-public class AggregationOptions implements SessionConfigurable<AggregationOptions> {
+public class AggregationOptions implements SessionConfigurable<AggregationOptions>, ReadConfigurable<AggregationOptions>,
+                                               WriteConfigurable<AggregationOptions> {
     private boolean allowDiskUse;
     private Integer batchSize;
     private boolean bypassDocumentValidation;
@@ -28,6 +31,22 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     private ReadConcern readConcern;
     private WriteConcern writeConcern;
     private Document hint;
+
+    @Override
+    public <C> MongoCollection<C> prepare(final MongoCollection<C> collection) {
+        MongoCollection<C> updated = collection;
+        if (writeConcern() != null) {
+            updated = updated.withWriteConcern(writeConcern());
+        }
+        if (getReadConcern() != null) {
+            updated = updated.withReadConcern(getReadConcern());
+        }
+        if (getReadPreference() != null) {
+            updated = updated.withReadPreference(getReadPreference());
+        }
+
+        return updated;
+    }
 
     /**
      * @return the configuration value
@@ -233,13 +252,6 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      */
     public ReadPreference getReadPreference() {
         return readPreference;
-    }
-
-    /**
-     * @return the configuration value
-     */
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
     }
 
     /**

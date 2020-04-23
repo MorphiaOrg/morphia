@@ -40,7 +40,7 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
      * @return the results
      */
     public UpdateResult execute(final UpdateOptions options) {
-        MongoCollection<T> mongoCollection = options.apply(collection);
+        MongoCollection<T> mongoCollection = options.prepare(collection);
         Document updateOperations = toDocument();
         final Document queryObject = query.toDocument();
 

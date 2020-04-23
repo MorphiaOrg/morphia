@@ -2,11 +2,11 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.internal.WriteConfigurable;
 import org.bson.conversions.Bson;
 
 import java.util.List;
@@ -17,22 +17,10 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 2.0
  */
-public class ModifyOptions extends FindOneAndUpdateOptions implements SessionConfigurable<ModifyOptions> {
+public class ModifyOptions extends FindOneAndUpdateOptions implements SessionConfigurable<ModifyOptions>,
+                                                                          WriteConfigurable<ModifyOptions> {
     private WriteConcern writeConcern;
     private ClientSession clientSession;
-
-    /**
-     * Applies the options to the collection
-     *
-     * @param collection the collection to update
-     * @param <T>        the collection type
-     * @return either the passed collection or the updated collection
-     */
-    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
-        return writeConcern == null
-               ? collection
-               : collection.withWriteConcern(writeConcern);
-    }
 
     @Override
     public ModifyOptions clientSession(final ClientSession clientSession) {
@@ -43,15 +31,6 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     @Override
     public ClientSession clientSession() {
         return clientSession;
-    }
-
-    /**
-     * @return the write concern
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
     }
 
     @Override

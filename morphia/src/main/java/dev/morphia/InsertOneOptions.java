@@ -18,15 +18,15 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoCollection;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.internal.WriteConfigurable;
 
 /**
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
  *
  * @since 1.3
  */
-public class InsertOneOptions implements SessionConfigurable<InsertOneOptions> {
+public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, WriteConfigurable<InsertOneOptions> {
     private com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
@@ -80,17 +80,6 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions> {
     }
 
     /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
-     *
-     * @return the write concern, or null if the default will be used.
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
-    }
-
-    /**
      * Gets the the bypass document level validation flag
      *
      * @return the bypass document level validation flag
@@ -116,16 +105,5 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions> {
      */
     public com.mongodb.client.model.InsertOneOptions getOptions() {
         return options;
-    }
-
-    /**
-     * Applies the configured WriteConcern to the collection
-     *
-     * @param collection the collection to update
-     * @param <T>        the collection type
-     * @return the updated collection
-     */
-    public <T> MongoCollection<T> apply(final MongoCollection<T> collection) {
-        return writeConcern != null ? collection.withWriteConcern(writeConcern) : collection;
     }
 }

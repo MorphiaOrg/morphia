@@ -42,7 +42,7 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
         ClientSession session = getDatastore().findSession(options);
 
         return session == null
-               ? options.apply(collection).findOneAndUpdate(query.toDocument(), toDocument(), options)
-               : options.apply(collection).findOneAndUpdate(session, query.toDocument(), toDocument(), options);
+               ? options.prepare(collection).findOneAndUpdate(query.toDocument(), toDocument(), options)
+               : options.prepare(collection).findOneAndUpdate(session, query.toDocument(), toDocument(), options);
     }
 }

@@ -146,7 +146,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public DeleteResult delete(final DeleteOptions options) {
-        MongoCollection<T> collection = options.apply(getCollection());
+        MongoCollection<T> collection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
         if (options.isMulti()) {
             return session == null
@@ -199,7 +199,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T findAndDelete(final FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.apply(getCollection());
+        MongoCollection<T> mongoCollection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
         return session == null
                ? mongoCollection.findOneAndDelete(getQueryDocument(), options)

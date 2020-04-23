@@ -25,6 +25,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  * @mongodb.driver.manual ../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY
  * @since 1.3
  */
-public final class FindOptions implements SessionConfigurable<FindOptions> {
+public final class FindOptions implements SessionConfigurable<FindOptions>, ReadConfigurable<FindOptions> {
     private int batchSize;
     private int limit;
     private long maxTimeMS;
@@ -62,7 +63,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     private Document min;
     private boolean returnKey;
     private boolean showRecordId;
-    private boolean snapshot;
     private ReadConcern readConcern;
     private ReadPreference readPreference;
     private Projection projection;
@@ -208,7 +208,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         this.min = original.min;
         this.returnKey = original.returnKey;
         this.showRecordId = original.showRecordId;
-        this.snapshot = original.snapshot;
         this.readConcern = original.readConcern;
         this.readPreference = original.readPreference;
         this.projection = original.projection;
@@ -318,11 +317,26 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         return queryLogId;
     }
 
-    /**
-     * @return the read preference
-     */
+    @Override
+    public ReadConcern getReadConcern() {
+        return readConcern;
+    }
+
+    @Override
     public ReadPreference getReadPreference() {
         return readPreference;
+    }
+
+    @Override
+    public FindOptions readConcern(final ReadConcern readConcern) {
+        this.readConcern = readConcern;
+        return this;
+    }
+
+    @Override
+    public FindOptions readPreference(final ReadPreference readPreference) {
+        this.readPreference = readPreference;
+        return this;
     }
 
     /**
@@ -330,109 +344,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
      */
     public int getSkip() {
         return this.skip;
-    }
-
-    /**
-     * @return the sort criteria
-     */
-    public Document getSort() {
-        return this.sort;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getBatchSize();
-        result = 31 * result + getLimit();
-        result = 31 * result + (int) (maxTimeMS ^ (maxTimeMS >>> 32));
-        result = 31 * result + (int) (maxAwaitTimeMS ^ (maxAwaitTimeMS >>> 32));
-        result = 31 * result + getSkip();
-        result = 31 * result + (getSort() != null ? getSort().hashCode() : 0);
-        result = 31 * result + (getCursorType() != null ? getCursorType().hashCode() : 0);
-        result = 31 * result + (isNoCursorTimeout() ? 1 : 0);
-        result = 31 * result + (isOplogReplay() ? 1 : 0);
-        result = 31 * result + (isPartial() ? 1 : 0);
-        result = 31 * result + (getCollation() != null ? getCollation().hashCode() : 0);
-        result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
-        result = 31 * result + (getHint() != null ? getHint().hashCode() : 0);
-        result = 31 * result + (getMax() != null ? getMax().hashCode() : 0);
-        result = 31 * result + (getMin() != null ? getMin().hashCode() : 0);
-        result = 31 * result + (isReturnKey() ? 1 : 0);
-        result = 31 * result + (isShowRecordId() ? 1 : 0);
-        result = 31 * result + (snapshot ? 1 : 0);
-        result = 31 * result + (getReadPreference() != null ? getReadPreference().hashCode() : 0);
-        result = 31 * result + (getProjection() != null ? getProjection().hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof FindOptions)) {
-            return false;
-        }
-
-        final FindOptions that = (FindOptions) o;
-
-        if (getBatchSize() != that.getBatchSize()) {
-            return false;
-        }
-        if (getLimit() != that.getLimit()) {
-            return false;
-        }
-        if (maxTimeMS != that.maxTimeMS) {
-            return false;
-        }
-        if (maxAwaitTimeMS != that.maxAwaitTimeMS) {
-            return false;
-        }
-        if (getSkip() != that.getSkip()) {
-            return false;
-        }
-        if (isNoCursorTimeout() != that.isNoCursorTimeout()) {
-            return false;
-        }
-        if (isOplogReplay() != that.isOplogReplay()) {
-            return false;
-        }
-        if (isPartial() != that.isPartial()) {
-            return false;
-        }
-        if (isReturnKey() != that.isReturnKey()) {
-            return false;
-        }
-        if (isShowRecordId() != that.isShowRecordId()) {
-            return false;
-        }
-        if (snapshot != that.snapshot) {
-            return false;
-        }
-        if (getSort() != null ? !getSort().equals(that.getSort()) : that.getSort() != null) {
-            return false;
-        }
-        if (getCursorType() != that.getCursorType()) {
-            return false;
-        }
-        if (getCollation() != null ? !getCollation().equals(that.getCollation()) : that.getCollation() != null) {
-            return false;
-        }
-        if (getComment() != null ? !getComment().equals(that.getComment()) : that.getComment() != null) {
-            return false;
-        }
-        if (getHint() != null ? !getHint().equals(that.getHint()) : that.getHint() != null) {
-            return false;
-        }
-        if (getMax() != null ? !getMax().equals(that.getMax()) : that.getMax() != null) {
-            return false;
-        }
-        if (getMin() != null ? !getMin().equals(that.getMin()) : that.getMin() != null) {
-            return false;
-        }
-        if (getReadPreference() != null ? !getReadPreference().equals(that.getReadPreference()) : that.getReadPreference() != null) {
-            return false;
-        }
-        return getProjection() != null ? getProjection().equals(that.getProjection()) : that.getProjection() == null;
     }
 
     @Override
@@ -455,7 +366,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
                    .add("min=" + min)
                    .add("returnKey=" + returnKey)
                    .add("showRecordId=" + showRecordId)
-                   .add("snapshot=" + snapshot)
                    .add("readPreference=" + readPreference)
                    .add("projection=" + projection)
                    .add("queryLogId='" + queryLogId + "'")
@@ -485,12 +395,10 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
     }
 
     /**
-     * Gets the read concern
-     *
-     * @return the read concern
+     * @return the sort criteria
      */
-    public ReadConcern getReadConcern() {
-        return readConcern;
+    public Document getSort() {
+        return this.sort;
     }
 
     /**
@@ -698,26 +606,99 @@ public final class FindOptions implements SessionConfigurable<FindOptions> {
         return hint(new Document(min.toMap()));
     }
 
-    /**
-     * Sets the read concern to apply
-     *
-     * @param readConcern the read concern
-     * @return this
-     */
-    public FindOptions readConcern(final ReadConcern readConcern) {
-        this.readConcern = readConcern;
-        return this;
+    @Override
+    public int hashCode() {
+        int result = getBatchSize();
+        result = 31 * result + getLimit();
+        result = 31 * result + (int) (maxTimeMS ^ (maxTimeMS >>> 32));
+        result = 31 * result + (int) (maxAwaitTimeMS ^ (maxAwaitTimeMS >>> 32));
+        result = 31 * result + getSkip();
+        result = 31 * result + (getSort() != null ? getSort().hashCode() : 0);
+        result = 31 * result + (getCursorType() != null ? getCursorType().hashCode() : 0);
+        result = 31 * result + (isNoCursorTimeout() ? 1 : 0);
+        result = 31 * result + (isOplogReplay() ? 1 : 0);
+        result = 31 * result + (isPartial() ? 1 : 0);
+        result = 31 * result + (getCollation() != null ? getCollation().hashCode() : 0);
+        result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
+        result = 31 * result + (getHint() != null ? getHint().hashCode() : 0);
+        result = 31 * result + (getMax() != null ? getMax().hashCode() : 0);
+        result = 31 * result + (getMin() != null ? getMin().hashCode() : 0);
+        result = 31 * result + (isReturnKey() ? 1 : 0);
+        result = 31 * result + (isShowRecordId() ? 1 : 0);
+        result = 31 * result + (getReadPreference() != null ? getReadPreference().hashCode() : 0);
+        result = 31 * result + (getProjection() != null ? getProjection().hashCode() : 0);
+        return result;
     }
 
-    /**
-     * Sets the read preference to apply
-     *
-     * @param readPreference the read preference
-     * @return this
-     */
-    public FindOptions readPreference(final ReadPreference readPreference) {
-        this.readPreference = readPreference;
-        return this;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FindOptions)) {
+            return false;
+        }
+
+        final FindOptions that = (FindOptions) o;
+
+        if (getBatchSize() != that.getBatchSize()) {
+            return false;
+        }
+        if (getLimit() != that.getLimit()) {
+            return false;
+        }
+        if (maxTimeMS != that.maxTimeMS) {
+            return false;
+        }
+        if (maxAwaitTimeMS != that.maxAwaitTimeMS) {
+            return false;
+        }
+        if (getSkip() != that.getSkip()) {
+            return false;
+        }
+        if (isNoCursorTimeout() != that.isNoCursorTimeout()) {
+            return false;
+        }
+        if (isOplogReplay() != that.isOplogReplay()) {
+            return false;
+        }
+        if (isPartial() != that.isPartial()) {
+            return false;
+        }
+        if (isReturnKey() != that.isReturnKey()) {
+            return false;
+        }
+        if (isShowRecordId() != that.isShowRecordId()) {
+            return false;
+        }
+        if (getSort() != null ? !getSort().equals(that.getSort()) : that.getSort() != null) {
+            return false;
+        }
+        if (getCursorType() != that.getCursorType()) {
+            return false;
+        }
+        if (getCollation() != null ? !getCollation().equals(that.getCollation()) : that.getCollation() != null) {
+            return false;
+        }
+        if (getComment() != null ? !getComment().equals(that.getComment()) : that.getComment() != null) {
+            return false;
+        }
+        if (getHint() != null ? !getHint().equals(that.getHint()) : that.getHint() != null) {
+            return false;
+        }
+        if (getMax() != null ? !getMax().equals(that.getMax()) : that.getMax() != null) {
+            return false;
+        }
+        if (getMin() != null ? !getMin().equals(that.getMin()) : that.getMin() != null) {
+            return false;
+        }
+        if (getReadPreference() != null ? !getReadPreference().equals(that.getReadPreference()) : that.getReadPreference() != null) {
+            return false;
+        }
+        if (getReadConcern() != null ? !getReadConcern().equals(that.getReadConcern()) : that.getReadConcern() != null) {
+            return false;
+        }
+        return getProjection() != null ? getProjection().equals(that.getProjection()) : that.getProjection() == null;
     }
 
     /**

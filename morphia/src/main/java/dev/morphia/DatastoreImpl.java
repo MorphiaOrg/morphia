@@ -3,7 +3,6 @@ package dev.morphia;
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
-import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -113,25 +112,30 @@ public class DatastoreImpl implements AdvancedDatastore {
         insert(mapper.getCollection(entity.getClass()), entity, options);
     }
 
+    /**
+     * @return the logged query
+     * @morphia.internal
+     */
     @Override
-    public <T> void insert(final List<T> entities, final InsertManyOptions options) {
-        if (!entities.isEmpty()) {
-            Class<?> type = entities.get(0).getClass();
-            MappedClass mappedClass = mapper.getMappedClass(type);
-            final MongoCollection collection = mapper.getCollection(type);
-            MappedField versionField = mappedClass.getVersionField();
-            if (versionField != null) {
-                for (final T entity : entities) {
-                    setInitialVersion(versionField, entity);
+    public String getLoggedQuery(final FindOptions options) {
+        if (options != null && options.isLogQuery()) {
+            String json = "{}";
+            Document first = getDatabase()
+                                 .getCollection("system.profile")
+                                 .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
+                                     Document.class)
+                                 .projection(new Document("command.filter", 1))
+                                 .first();
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
                 }
             }
-
-            MongoCollection mongoCollection = options.apply(collection);
-            if (options.clientSession() == null) {
-                mongoCollection.insertMany(entities, options.getOptions());
-            } else {
-                mongoCollection.insertMany(options.clientSession(), entities, options.getOptions());
-            }
+            return json;
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
         }
     }
 
@@ -415,52 +419,31 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings("removal")
-    public <T> void merge(final T entity, final WriteConcern wc) {
-        merge(entity, new InsertOneOptions().writeConcern(wc));
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public <T> Query<T> queryByExample(final T example) {
         return getQueryFactory().createQuery(this, (Class<T>) example.getClass(), mapper.toDocument(example));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
-        if (entities.isEmpty()) {
-            return List.of();
-        }
-
-        Map<Class, List<T>> grouped = new LinkedHashMap<>();
-        List<T> list = new ArrayList<>();
-        for (final T entity : entities) {
-            if (getMapper().getId(entity) != null) {
-                list.add(entity);
-            } else {
-                grouped.computeIfAbsent(mapper.getCollection(entity.getClass()).getDocumentClass(), c -> new ArrayList<>())
-                       .add(entity);
+    public <T> void insert(final List<T> entities, final InsertManyOptions options) {
+        if (!entities.isEmpty()) {
+            Class<?> type = entities.get(0).getClass();
+            MappedClass mappedClass = mapper.getMappedClass(type);
+            final MongoCollection collection = mapper.getCollection(type);
+            MappedField versionField = mappedClass.getVersionField();
+            if (versionField != null) {
+                for (final T entity : entities) {
+                    setInitialVersion(versionField, entity);
+                }
             }
-        }
 
-        for (Entry<Class, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = options.apply(mapper.getCollection(entry.getKey()));
+            MongoCollection mongoCollection = options.prepare(collection);
             if (options.clientSession() == null) {
-                collection.insertMany(entry.getValue(), options.getOptions());
+                mongoCollection.insertMany(entities, options.getOptions());
             } else {
-                collection.insertMany(options.clientSession(), entry.getValue(), options.getOptions());
+                mongoCollection.insertMany(options.clientSession(), entities, options.getOptions());
             }
         }
-
-        InsertOneOptions insertOneOptions = new InsertOneOptions()
-                                                .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                .clientSession(findSession(options))
-                                                .writeConcern(options.writeConcern());
-        for (final T entity : list) {
-            save(entity, insertOneOptions);
-        }
-        return entities;
     }
 
     @Override
@@ -488,6 +471,69 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
+        if (entities.isEmpty()) {
+            return List.of();
+        }
+
+        Map<Class, List<T>> grouped = new LinkedHashMap<>();
+        List<T> list = new ArrayList<>();
+        for (final T entity : entities) {
+            if (getMapper().getId(entity) != null) {
+                list.add(entity);
+            } else {
+                grouped.computeIfAbsent(mapper.getCollection(entity.getClass()).getDocumentClass(), c -> new ArrayList<>())
+                       .add(entity);
+            }
+        }
+
+        for (Entry<Class, List<T>> entry : grouped.entrySet()) {
+            MongoCollection<T> collection = options.prepare(mapper.getCollection(entry.getKey()));
+            if (options.clientSession() == null) {
+                collection.insertMany(entry.getValue(), options.getOptions());
+            } else {
+                collection.insertMany(options.clientSession(), entry.getValue(), options.getOptions());
+            }
+        }
+
+        InsertOneOptions insertOneOptions = new InsertOneOptions()
+                                                .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                                .clientSession(findSession(options))
+                                                .writeConcern(options.writeConcern());
+        for (final T entity : list) {
+            save(entity, insertOneOptions);
+        }
+        return entities;
+    }
+
+    protected <T> void saveDocument(final T entity, final MongoCollection<T> collection, final InsertOneOptions options) {
+        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
+        ClientSession clientSession = findSession(options);
+
+        if (id == null) {
+            if (clientSession == null) {
+                options.prepare(collection).insertOne(entity, options.getOptions());
+            } else {
+                options.prepare(collection).insertOne(clientSession, entity, options.getOptions());
+            }
+        } else {
+            ReplaceOptions updateOptions = new ReplaceOptions()
+                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                               .upsert(true);
+            MongoCollection<T> updated = collection;
+            if (options.writeConcern() != null) {
+                updated = collection.withWriteConcern(options.writeConcern());
+            }
+            if (clientSession == null) {
+                updated.replaceOne(new Document("_id", id), entity, updateOptions);
+            } else {
+                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
+            }
+        }
+    }
+
     private <T> boolean tryVersionedUpdate(final T entity, final MongoCollection collection, final InsertOneOptions options) {
         final MappedClass mc = mapper.getMappedClass(entity.getClass());
         if (mc.getVersionField() == null) {
@@ -506,9 +552,9 @@ public class DatastoreImpl implements AdvancedDatastore {
             try {
                 updateVersion(entity, versionField, newVersion);
                 if (session == null) {
-                    options.apply(collection).insertOne(entity, options.getOptions());
+                    options.prepare(collection).insertOne(entity, options.getOptions());
                 } else {
-                    options.apply(collection).insertOne(session, entity, options.getOptions());
+                    options.prepare(collection).insertOne(session, entity, options.getOptions());
                 }
             } catch (MongoWriteException e) {
                 updateVersion(entity, versionField, oldVersion);
@@ -532,59 +578,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return true;
-    }
-
-    /**
-     * @return the logged query
-     * @morphia.internal
-     */
-    @Override
-    public String getLoggedQuery(final FindOptions options) {
-        if (options != null && options.isLogQuery()) {
-            String json = "{}";
-            Document first = getDatabase()
-                                 .getCollection("system.profile")
-                                 .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
-                                     Document.class)
-                                 .projection(new Document("command.filter", 1))
-                                 .first();
-            if (first != null) {
-                Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
-                if (filter != null) {
-                    json = filter.toJson(mapper.getCodecRegistry().get(Document.class));
-                }
-            }
-            return json;
-        } else {
-            throw new IllegalStateException(Sofia.queryNotLogged());
-        }
-    }
-
-    protected <T> void saveDocument(final T entity, final MongoCollection<T> collection, final InsertOneOptions options) {
-        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
-        ClientSession clientSession = findSession(options);
-
-        if (id == null) {
-            if (clientSession == null) {
-                options.apply(collection).insertOne(entity, options.getOptions());
-            } else {
-                options.apply(collection).insertOne(clientSession, entity, options.getOptions());
-            }
-        } else {
-            ReplaceOptions updateOptions = new ReplaceOptions()
-                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                               .upsert(true);
-            MongoCollection<T> updated = collection;
-            if (options.writeConcern() != null) {
-                updated = collection.withWriteConcern(options.writeConcern());
-            }
-            if (clientSession == null) {
-                updated.replaceOne(new Document("_id", id), entity, updateOptions);
-            } else {
-                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
-            }
-        }
     }
 
     private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
