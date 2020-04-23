@@ -408,7 +408,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions hint(DBObject hint) {
+    public FindOptions hint(final DBObject hint) {
         return hint(new Document(hint.toMap()));
     }
 
@@ -548,7 +548,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions max(DBObject max) {
+    public FindOptions max(final DBObject max) {
         return hint(new Document(max.toMap()));
     }
 
@@ -602,7 +602,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions min(DBObject min) {
+    public FindOptions min(final DBObject min) {
         return hint(new Document(min.toMap()));
     }
 
