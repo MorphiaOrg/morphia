@@ -22,7 +22,9 @@ public class BucketOptions {
      * Converts a BucketOptions to a DBObject for use by the Java driver.
      *
      * @return the DBObject
+     * @deprecated this is an internal method and is removed in 2.0
      */
+    @Deprecated
     public DBObject toDBObject() {
         DBObject dbObject = new BasicDBObject();
         if (defaultField != null) {

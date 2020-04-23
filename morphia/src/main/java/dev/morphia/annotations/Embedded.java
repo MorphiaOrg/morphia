@@ -37,7 +37,9 @@ public @interface Embedded {
 
     /**
      * @return the concrete class to instantiate.
+     * @deprecated unused in 2.x
      */
+    @Deprecated
     Class<?> concreteClass() default Object.class;
 
     /**

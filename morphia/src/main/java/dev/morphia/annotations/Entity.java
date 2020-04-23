@@ -50,13 +50,16 @@ public @interface Entity {
 
     /**
      * @return When true, instructs Morphia to not include when serializing an entity to mongodb.
+     * @deprecated to be replaced in 2.0 where the default will be to store the discriminator
      */
-    //@Deprecated //to be replaced. This is a temp hack until polymorphism and discriminators are implemented
+    @Deprecated
     boolean noClassnameStored() default false;
 
     /**
      * @return slaveOk for queries for this Entity.
+     * @deprecated no replacement is planned
      */
+    @Deprecated
     boolean queryNonPrimary() default false;
 
     /**
