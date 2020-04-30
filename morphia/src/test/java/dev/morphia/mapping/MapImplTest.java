@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static org.junit.Assert.assertTrue;
 
 
@@ -58,8 +59,7 @@ public class MapImplTest extends TestBase {
         getDs().save(contains);
         getDs().find(ContainsGoo.class)
                .filter(eq("_id", contains.id))
-               .update()
-               .set("values.second", g2)
+               .update(set("values.second", g2))
                .execute();
 
         MongoCollection<Document> collection = getDatabase().getCollection(getMapper()
@@ -85,8 +85,7 @@ public class MapImplTest extends TestBase {
         getDs().save(cmoei);
         getDs().find(MapOfInterfaces.class)
                .filter(eq("_id", cmoei.id))
-               .update()
-               .set("values.second", g2)
+               .update(set("values.second", g2))
                .execute();
 
         MongoCollection<Document> collection = getDatabase()

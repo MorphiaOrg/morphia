@@ -12,6 +12,8 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
+
 
 public class UpdateRetainsClassInfoTest extends TestBase {
     @Test
@@ -29,8 +31,7 @@ public class UpdateRetainsClassInfoTest extends TestBase {
         getDs().save(x);
 
         final Query<X> query = getDs().find(X.class);
-        query.update()
-             .set("map.k2", e2)
+        query.update(set("map.k2", e2))
              .execute();
 
 

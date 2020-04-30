@@ -7,6 +7,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
+import dev.morphia.query.experimental.updates.UpdateOperator;
 import org.bson.Document;
 
 import java.util.List;
@@ -94,28 +95,13 @@ public interface AdvancedDatastore extends Datastore {
      * @param type The type of the entity
      * @param ops  The operations to perform
      * @return the UpdateOperations instance
-     * @deprecated use {@link Query#update()} instead
+     * @deprecated use {@link Query#update(UpdateOperator, UpdateOperator...)} instead
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateOperations<T> createUpdateOperations(Class<T> type, DBObject ops) {
-        return createUpdateOperations(type, new Document(ops.toMap()));
-    }
-
-    /**
-     * Creates an UpdateOperations instance for the given type.
-     *
-     * @param <T>  The type of the entity
-     * @param type The type of the entity
-     * @param ops  The operations to perform
-     * @return the UpdateOperations instance
-     * @deprecated use {@link Query#update()} instead
-     */
-    @SuppressWarnings("removal")
-    @Deprecated(since = "2.0", forRemoval = true)
-    default <T> UpdateOperations<T> createUpdateOperations(Class<T> type, Document ops){
         final UpdateOpsImpl<T> upOps = (UpdateOpsImpl<T>) createUpdateOperations(type);
-        upOps.setOps(ops);
+        upOps.setOps(new Document(ops.toMap()));
         return upOps;
     }
 

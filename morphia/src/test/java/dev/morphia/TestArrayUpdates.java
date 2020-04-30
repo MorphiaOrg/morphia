@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
@@ -35,8 +36,7 @@ public class TestArrayUpdates extends TestBase {
         Assert.assertNotNull(testQuery.iterator(new FindOptions().limit(1))
                                       .tryNext());
 
-        testQuery.update()
-                 .set("grades.$.data.name", "Makeup Test")
+        testQuery.update(set("grades.$.data.name", "Makeup Test"))
                  .execute();
 
         Assert.assertNull(testQuery.iterator(new FindOptions().limit(1))
@@ -65,8 +65,7 @@ public class TestArrayUpdates extends TestBase {
         getDs().find(BatchData.class)
                .filter(eq("_id", id),
                    eq("files.fileName", "fileName1"))
-               .update()
-               .set("files.$.fileHash", "new hash")
+               .update(set("files.$.fileHash", "new hash"))
                .execute();
 
 
@@ -101,8 +100,7 @@ public class TestArrayUpdates extends TestBase {
                                       .tryNext());
 
         // Update the second element. Array indexes are zero-based.
-        testQuery.update()
-                 .set("grades.1.data.name", "Makeup Test")
+        testQuery.update(set("grades.1.data.name", "Makeup Test"))
                  .execute();
 
         Assert.assertNull(testQuery.iterator(new FindOptions().limit(1))

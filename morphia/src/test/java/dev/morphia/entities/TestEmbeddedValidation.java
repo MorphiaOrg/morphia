@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -99,8 +100,7 @@ public class TestEmbeddedValidation extends TestBase {
         Assert.assertEquals(fortyTwo, cursor.next().getListEmbeddedType().get(0));
         Assert.assertFalse(cursor.hasNext());
 
-        query.update()
-             .set("listEmbeddedType.$.number", 0)
+        query.update(set("listEmbeddedType.$.number", 0))
              .execute();
 
         Assert.assertEquals(0, query.count());

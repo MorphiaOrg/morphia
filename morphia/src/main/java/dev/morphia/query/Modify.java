@@ -6,20 +6,26 @@ import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.Datastore;
 import dev.morphia.ModifyOptions;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.updates.UpdateOperator;
+import org.bson.Document;
 
 /**
  * Represents a modify operation
  *
  * @param <T> the entity type
  */
-public class Modify<T> extends UpdateBase<T, Modify<T>> {
-    private final Query<T> query;
-    private final MongoCollection<T> collection;
+public class Modify<T> extends UpdateBase<T> {
 
-    Modify(final Query<T> query, final Datastore datastore, final Mapper mapper, final Class<T> type, final MongoCollection<T> collection) {
-        super(datastore, mapper, type);
-        this.query = query;
-        this.collection = collection;
+    @SuppressWarnings("rawtypes")
+    Modify(final Datastore datastore, final Mapper mapper, final MongoCollection<T> collection, final Query<T> query, final Class<T> type,
+           final UpdateOpsImpl operations) {
+        super(datastore, mapper, collection, query, type, operations.getUpdates());
+
+    }
+
+    Modify(final Datastore datastore, final Mapper mapper, final MongoCollection<T> collection, final Query<T> query, final Class<T> type,
+           final UpdateOperator first, final UpdateOperator[] updates) {
+        super(datastore, mapper, collection, query, type, first, updates);
     }
 
     /**
@@ -40,9 +46,10 @@ public class Modify<T> extends UpdateBase<T, Modify<T>> {
      */
     public T execute(final ModifyOptions options) {
         ClientSession session = getDatastore().findSession(options);
+        Document update = toDocument();
 
         return session == null
-               ? options.prepare(collection).findOneAndUpdate(query.toDocument(), toDocument(), options)
-               : options.prepare(collection).findOneAndUpdate(session, query.toDocument(), toDocument(), options);
+               ? options.prepare(getCollection()).findOneAndUpdate(getQuery().toDocument(), update, options)
+               : options.prepare(getCollection()).findOneAndUpdate(session, getQuery().toDocument(), update, options);
     }
 }

@@ -16,6 +16,8 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -47,8 +49,7 @@ public class TestVersionAnnotation extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("id", entity.getId()));
-        query.update()
-             .set("name", "Value 3")
+        query.update(set("name", "Value 3"))
              .execute();
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
@@ -93,9 +94,8 @@ public class TestVersionAnnotation extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("name", "Value 1"));
-        entity = query.modify()
-                      .set("name", "Value 3")
-                      .execute(new FindAndModifyOptions()
+        entity = query.modify(set("name", "Value 3"))
+                      .execute(new ModifyOptions()
                                    .returnDocument(ReturnDocument.AFTER)
                                    .upsert(true));
 
@@ -115,8 +115,7 @@ public class TestVersionAnnotation extends TestBase {
 
         Query<Versioned> query = getDs().find(Versioned.class);
         query.filter(eq("_id", version1.getId()));
-        query.update()
-             .inc("count")
+        query.update(inc("count"))
              .execute(new UpdateOptions().upsert(true));
 
         final Versioned version2 = getDs().find(Versioned.class)
@@ -184,8 +183,7 @@ public class TestVersionAnnotation extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("name", "Value 1"));
-        query.update()
-             .set("name", "Value 3")
+        query.update(set("name", "Value 3"))
              .execute(new UpdateOptions().upsert(true));
 
         entity = datastore.find(Versioned.class).iterator(new FindOptions().limit(1)).tryNext();

@@ -51,7 +51,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 /**
  * @morphia.internal
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class Mapper {
 
     /**

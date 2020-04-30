@@ -4,6 +4,7 @@ package dev.morphia.query;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.DeleteOptions;
 import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
@@ -69,14 +70,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     long count(CountOptions options);
 
     /**
-     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
-     *
-     * @param options the options to apply
-     * @return the results
-     */
-    DeleteResult delete(DeleteOptions options);
-
-    /**
      * Execute the query and get the results.
      *
      * @return a MorphiaCursor
@@ -86,6 +79,14 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     default MorphiaCursor<T> execute() {
         return legacyOperation();
     }
+
+    /**
+     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
+     *
+     * @param options the options to apply
+     * @return the results
+     */
+    DeleteResult delete(DeleteOptions options);
 
     /**
      * Turns off validation (for all calls made after)
@@ -228,6 +229,15 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
+     * Create a modify operation based on this query
+     *
+     * @param first   the first and required update operator
+     * @param updates lists the set of updates to apply
+     * @return the modify operation
+     */
+    Modify<T> modify(UpdateOperator first, UpdateOperator... updates);
+
+    /**
      * Deletes an entity from the database and returns it.
      *
      * @param options the options to apply
@@ -266,13 +276,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      */
     @Override
     MorphiaCursor<T> iterator();
-
-    /**
-     * Create a modify operation based on this query
-     *
-     * @return the modify operation
-     */
-    Modify<T> modify();
 
     /**
      * Execute the query and get the results.
@@ -438,9 +441,11 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     /**
      * Creates an update operation based on this query
      *
+     * @param first   the first and required update operator
+     * @param updates lists the set of updates to apply
      * @return the update operation
      */
-    Update<T> update();
+    Update<T> update(UpdateOperator first, UpdateOperator... updates);
 
     /**
      * @param operations the prebuilt operations

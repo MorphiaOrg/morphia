@@ -41,6 +41,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -73,9 +74,9 @@ public class TestDocumentValidation extends TestBase {
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
-        ModifyOptions options = new FindAndModifyOptions()
+        ModifyOptions options = new ModifyOptions()
                                     .bypassDocumentValidation(false);
-        Modify<DocumentValidation> modify = query.modify().set("number", 5);
+        Modify<DocumentValidation> modify = query.modify(set("number", 5));
         try {
             modify.execute(options);
             fail("Document validation should have complained");
@@ -226,7 +227,7 @@ public class TestDocumentValidation extends TestBase {
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         UpdateOptions options = new UpdateOptions()
                                     .bypassDocumentValidation(false);
-        Update update = query.update().set("number", 5);
+        Update update = query.update(set("number", 5));
         try {
             update.execute(options);
             fail("Document validation should have complained");

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static org.junit.Assert.assertEquals;
 
 
@@ -119,8 +120,7 @@ public class VersionTest extends TestBase {
 
         Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
                                         .filter(eq("id", initial.getId()));
-        ALongPrimitive postUpdate = query.modify()
-                                         .set("text", "some new value")
+        ALongPrimitive postUpdate = query.modify(set("text", "some new value"))
                                          .execute();
 
         assertEquals(initial.version + 1, postUpdate.version);
@@ -134,8 +134,7 @@ public class VersionTest extends TestBase {
 
         Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
                                         .filter(eq("id", initial.getId()));
-        UpdateResult results = query.update()
-                                    .set("text", "some new value")
+        UpdateResult results = query.update(set("text", "some new value"))
                                     .execute();
         assertEquals(1, results.getModifiedCount());
         ALongPrimitive postUpdate = ds.find(ALongPrimitive.class).filter(eq("_id", initial.getId())).first();

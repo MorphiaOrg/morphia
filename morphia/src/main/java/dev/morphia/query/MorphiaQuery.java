@@ -15,6 +15,7 @@ import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.filters.NearFilter;
+import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
@@ -218,8 +219,8 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Modify<T> modify() {
-        return new Modify<>(this, datastore, mapper, getEntityClass(), getCollection());
+    public Modify<T> modify(final UpdateOperator first, final UpdateOperator... updates) {
+        return new Modify<>(datastore, mapper, getCollection(), this, getEntityClass(), first, updates);
     }
 
     @Override
@@ -260,8 +261,8 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Update<T> update() {
-        return new Update<>(datastore, mapper, clazz, getCollection(), this);
+    public Update<T> update(final UpdateOperator first, final UpdateOperator... updates) {
+        return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
     }
 
     @Override

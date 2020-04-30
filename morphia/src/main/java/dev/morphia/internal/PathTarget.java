@@ -53,7 +53,6 @@ public class PathTarget {
         this(mapper, root, path, true);
     }
 
-
     /**
      * Creates a resolution context for the given root and path.
      *

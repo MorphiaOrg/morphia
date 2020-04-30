@@ -16,7 +16,11 @@
 
 package dev.morphia.query;
 
+import dev.morphia.query.experimental.updates.PushOperator;
 import org.bson.Document;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * The options to apply to a $push update operator.
@@ -85,6 +89,23 @@ public class PushOptions {
         }
         sortDocument.put(field, direction);
         return this;
+    }
+
+    void update(final PushOperator push) {
+        if (position != null) {
+            push.position(position);
+        }
+        if (slice != null) {
+            push.slice(slice);
+        }
+        if (sort != null) {
+            push.sort(sort);
+        }
+        if (sortDocument != null) {
+            Map.Entry<String, Integer> next = (Entry<String, Integer>) sortDocument.values().iterator().next();
+            push.sort(new Sort(next.getKey(), next.getValue()));
+        }
+
     }
 
     void update(final Document document) {

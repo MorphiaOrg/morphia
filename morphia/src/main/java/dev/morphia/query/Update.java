@@ -6,6 +6,7 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.updates.UpdateOperator;
 import org.bson.Document;
 
 /**
@@ -13,15 +14,16 @@ import org.bson.Document;
  *
  * @param <T>
  */
-public class Update<T> extends UpdateBase<T, Update<T>> {
-    private Query<T> query;
-    private MongoCollection<T> collection;
+public class Update<T> extends UpdateBase<T> {
+    @SuppressWarnings("rawtypes")
+    Update(final Datastore datastore, final Mapper mapper, final MongoCollection<T> collection,
+           final Query<T> query, final Class<T> type, final UpdateOpsImpl operations) {
+        super(datastore, mapper, collection, query, type, operations.getUpdates());
+    }
 
-    Update(final Datastore datastore, final Mapper mapper, final Class<T> clazz, final MongoCollection<T> collection,
-           final Query<T> query) {
-        super(datastore, mapper, clazz);
-        this.collection = collection;
-        this.query = query;
+    Update(final Datastore datastore, final Mapper mapper, final MongoCollection<T> collection,
+           final Query<T> query, final Class<T> type, final UpdateOperator first, final UpdateOperator[] updates) {
+        super(datastore, mapper, collection, query, type, first, updates);
     }
 
     /**
@@ -40,11 +42,11 @@ public class Update<T> extends UpdateBase<T, Update<T>> {
      * @return the results
      */
     public UpdateResult execute(final UpdateOptions options) {
-        MongoCollection<T> mongoCollection = options.prepare(collection);
         Document updateOperations = toDocument();
-        final Document queryObject = query.toDocument();
+        final Document queryObject = getQuery().toDocument();
 
         ClientSession session = getDatastore().findSession(options);
+        MongoCollection<T> mongoCollection = options.prepare(getCollection());
         if (options.isMulti()) {
             return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
                                    : mongoCollection.updateMany(session, queryObject, updateOperations, options);

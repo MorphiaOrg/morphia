@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.List;
 
+import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
+
 public class TestTransactions extends TestBase {
     @Before
     public void before() {
@@ -129,8 +131,7 @@ public class TestTransactions extends TestBase {
             Assert.assertNull(getDs().find(Rectangle.class).first());
 
             Rectangle modified = session.find(Rectangle.class)
-                                        .modify()
-                                        .inc("width", 13)
+                                        .modify(inc("width", 13))
                                         .execute();
 
             Assert.assertNull(getDs().find(Rectangle.class).first());
@@ -215,8 +216,7 @@ public class TestTransactions extends TestBase {
             Assert.assertNull(getDs().find(Rectangle.class).first());
 
             session.find(Rectangle.class)
-                   .update()
-                   .inc("width", 13)
+                   .update(inc("width", 13))
                    .execute();
 
             Assert.assertEquals(rectangle.getWidth() + 13, session.find(Rectangle.class)

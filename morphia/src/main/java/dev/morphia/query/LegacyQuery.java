@@ -13,6 +13,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.Document;
@@ -132,6 +133,18 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         throw new UnsupportedOperationException("this method is unused on a Query");
     }
 
+    /**
+     * Execute the query and get the results.
+     *
+     * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
+     */
+    @Override
+    @Deprecated(since = "2.0", forRemoval = true)
+    public MorphiaCursor<T> execute() {
+        return iterator();
+    }
+
     @Override
     public long count() {
         return count(new CountOptions());
@@ -159,18 +172,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    /**
-     * Execute the query and get the results.
-     *
-     * @return a MorphiaCursor
-     * @see #iterator(FindOptions)
-     */
-    @Override
-    @Deprecated(since = "2.0", forRemoval = true)
-    public MorphiaCursor<T> execute() {
-        return iterator();
-    }
-
     @Override
     public Query<T> disableValidation() {
         validateName = false;
@@ -185,6 +186,15 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return this;
     }
 
+    @Override
+    public T findAndDelete(final FindAndDeleteOptions options) {
+        MongoCollection<T> mongoCollection = options.prepare(getCollection());
+        ClientSession session = datastore.findSession(options);
+        return session == null
+               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
+               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
+    }
+
     /**
      * Execute the query and get the results.
      *
@@ -195,15 +205,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Deprecated(since = "2.0", forRemoval = true)
     public MorphiaCursor<T> execute(final FindOptions options) {
         return iterator(options);
-    }
-
-    @Override
-    public T findAndDelete(final FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.prepare(getCollection());
-        ClientSession session = datastore.findSession(options);
-        return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
     }
 
     @Override
@@ -232,6 +233,11 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         add(new FieldCriteria(mapper, prop, op, value, mapper.getMappedClass(this.getEntityClass()), this.isValidatingNames()));
 
         return this;
+    }
+
+    @Override
+    public Modify<T> modify(final UpdateOperator first, final UpdateOperator... updates) {
+        return new Modify<>(datastore, mapper, getCollection(), this, clazz, first, updates);
     }
 
     @Override
@@ -282,22 +288,13 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Modify<T> modify() {
-        return new Modify<>(this, datastore, mapper, clazz, getCollection());
-    }
-
-    @Override
-    public Query<T> where(final String js) {
-        add(new WhereCriteria(js));
-        return this;
-    }
-
-    @Override
     public Modify<T> modify(final UpdateOperations<T> operations) {
-        Modify<T> modify = modify();
-        modify.setOps(((UpdateOpsImpl) operations).getOps());
+        return new Modify<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl) operations);
+    }
 
-        return modify;
+    @Override
+    public Update<T> update(final UpdateOperator first, final UpdateOperator... updates) {
+        return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
     }
 
     @Override
@@ -365,17 +362,15 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Update<T> update() {
-        return new Update<>(datastore, mapper, clazz, getCollection(), this);
+    @Deprecated(since = "2.0", forRemoval = true)
+    public Update<T> update(final UpdateOperations<T> operations) {
+        return new Update<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
     }
 
     @Override
-    @Deprecated(since = "2.0", forRemoval = true)
-    public Update<T> update(final UpdateOperations<T> operations) {
-        final Update<T> updates = update();
-        updates.setOps(((UpdateOpsImpl<T>) operations).getOps());
-
-        return updates;
+    public Query<T> where(final String js) {
+        add(new WhereCriteria(js));
+        return this;
     }
 
     /**

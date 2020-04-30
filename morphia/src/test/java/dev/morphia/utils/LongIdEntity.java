@@ -9,6 +9,7 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.query.Query;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 
 
 @Entity
@@ -58,7 +59,7 @@ public abstract class LongIdEntity {
         if (myLongId == null) {
             final String collName = ds.getMapper().getCollection(getClass()).getNamespace().getCollectionName();
             final Query<StoredId> q = ds.find(StoredId.class).filter(eq("_id", collName));
-            StoredId newId = q.modify().inc("value").execute();
+            StoredId newId = q.modify(inc("value")).execute();
             if (newId == null) {
                 newId = new StoredId(collName);
                 ds.save(newId);

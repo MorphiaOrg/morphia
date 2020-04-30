@@ -19,7 +19,7 @@ import java.util.StringJoiner;
  * @morphia.internal
  */
 class Operations {
-    private Map<UpdateOperator, List<OperationTarget>> ops = new HashMap<>();
+    private Map<String, List<OperationTarget>> ops = new HashMap<>();
     private Mapper mapper;
     private MappedClass mappedClass;
 
@@ -35,40 +35,27 @@ class Operations {
                    .toString();
     }
 
-    /**
-     * @return the Document form of this instance
-     */
-    public Document toDocument() {
-        versionUpdate();
-
-        Document document = new Document();
-        for (final Entry<UpdateOperator, List<OperationTarget>> entry : ops.entrySet()) {
-            Document targets = new Document();
-            for (OperationTarget operationTarget : entry.getValue()) {
-                Object encode = operationTarget.encode(mapper);
-                if (encode instanceof Document) {
-                    targets.putAll((Document) encode);
-                } else {
-                    document.put(entry.getKey().val(), encode);
-                }
-            }
-            if (!targets.isEmpty()) {
-                document.put(entry.getKey().val(), targets);
-            }
+    public void replaceEntity(final Object entity) {
+        if (entity == null) {
+            throw new UpdateException(Sofia.nullUpdateEntity());
         }
-        return document;
+        if (!ops.isEmpty()) {
+            throw new UpdateException(Sofia.mixedUpdateOperationsNotAllowed());
+        }
+
+        add("$set", new OperationTarget(null, new UpdateDocument(entity)));
     }
 
     protected void versionUpdate() {
         MappedField versionField = mappedClass.getVersionField();
         if (versionField != null) {
-            List<OperationTarget> operationTargets = ops.get(UpdateOperator.INC);
+            List<OperationTarget> operationTargets = ops.get("$inc");
             String version = versionField.getMappedFieldName();
             boolean already = operationTargets != null
                               && operationTargets.stream()
                                                  .anyMatch(tv -> tv.getTarget().translatedPath().equals(version));
             if (!already) {
-                add(UpdateOperator.INC, new OperationTarget(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
+                add("$inc", new OperationTarget(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
             }
         }
     }
@@ -79,19 +66,33 @@ class Operations {
      * @param operator the operator
      * @param value    the value
      */
-    void add(final UpdateOperator operator, final OperationTarget value) {
+    void add(final String operator, final OperationTarget value) {
         ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
     }
 
-    public void replaceEntity(final Object entity) {
-        if (entity == null) {
-            throw new UpdateException(Sofia.nullUpdateEntity());
-        }
-        if (!ops.isEmpty()) {
-            throw new UpdateException(Sofia.mixedUpdateOperationsNotAllowed());
-        }
+    /**
+     * @return the Document form of this instance
+     * @morphia.internal
+     */
+    Document toDocument() {
+        versionUpdate();
 
-        add(UpdateOperator.SET, new OperationTarget(null, new UpdateDocument(entity)));
+        Document document = new Document();
+        for (final Entry<String, List<OperationTarget>> entry : ops.entrySet()) {
+            Document targets = new Document();
+            for (OperationTarget operationTarget : entry.getValue()) {
+                Object encode = operationTarget.encode(mapper);
+                if (encode instanceof Document) {
+                    targets.putAll((Document) encode);
+                } else {
+                    document.put(entry.getKey(), encode);
+                }
+            }
+            if (!targets.isEmpty()) {
+                document.put(entry.getKey(), targets);
+            }
+        }
+        return document;
     }
 
 }

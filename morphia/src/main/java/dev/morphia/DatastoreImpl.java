@@ -29,6 +29,7 @@ import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.ValidationException;
+import dev.morphia.query.experimental.updates.UpdateOperators;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
 import org.bson.Document;
@@ -405,8 +406,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
         if (!tryVersionedUpdate(entity, mapper.getCollection(entity.getClass()), options)) {
-            UpdateResult execute = query.update()
-                                        .set(entity)
+            UpdateResult execute = query.update(UpdateOperators.set(entity))
                                         .execute(new UpdateOptions()
                                                      .clientSession(findSession(options))
                                                      .writeConcern(options.writeConcern()));
@@ -564,8 +564,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             final UpdateResult res = find(collection.getNamespace().getCollectionName())
                                          .filter(eq("_id", idValue),
                                              eq(versionField.getMappedFieldName(), oldVersion))
-                                         .update()
-                                         .set(entity)
+                                         .update(UpdateOperators.set(entity))
                                          .execute(new UpdateOptions()
                                                       .bypassDocumentValidation(options.getBypassDocumentValidation())
                                                       .clientSession(session)

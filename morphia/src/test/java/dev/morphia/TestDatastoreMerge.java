@@ -19,6 +19,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
@@ -59,8 +60,10 @@ public class TestDatastoreMerge extends TestBase {
         Test2 test2 = ds.find(Test2.class).first();
         assertNotNull(test2.id);
         test2.blarg = "barfoo";
+        long version = test2.version;
         ds.merge(test2);
 
+        Assert.assertEquals(version + 1, test2.version);
         test1 = ds.find(Test1.class).filter(eq("_id", test1.id)).first();
 
         assertNotNull(test1.name);//fails

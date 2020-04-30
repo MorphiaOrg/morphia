@@ -20,6 +20,8 @@ import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
+import dev.morphia.query.UpdateOperations;
+import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
 import org.bson.Document;
 
@@ -33,7 +35,7 @@ import static dev.morphia.query.experimental.filters.Filters.in;
 /**
  * Datastore interface to get/delete/save objects
  */
-@SuppressWarnings({"unchecked", "UnusedReturnValue", "unused"})
+@SuppressWarnings({"unchecked", "UnusedReturnValue", "unused", "removal"})
 public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -86,12 +88,12 @@ public interface Datastore {
      * @param clazz the type to update
      * @param <T>   the type to update
      * @return the new UpdateOperations instance
-     * @deprecated use {@link Query#update()} instead
+     * @deprecated use {@link Query#update(UpdateOperator, UpdateOperator...)} instead
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> dev.morphia.query.UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
-        return new dev.morphia.query.UpdateOpsImpl<>(clazz, getMapper());
+        return new dev.morphia.query.UpdateOpsImpl<>(this, clazz, getMapper());
     }
 
     /**
@@ -246,7 +248,7 @@ public interface Datastore {
      * @param options    the options to apply
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
-     * @deprecated use {@link Query#modify()} instead
+     * @deprecated use {@link Query#modify(UpdateOperations)} instead
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
@@ -261,7 +263,7 @@ public interface Datastore {
      * @param operations the updates to apply to the matched documents
      * @param <T>        the type to query
      * @return The modified Entity (the result of the update)
-     * @deprecated use {@link Query#modify()} instead
+     * @deprecated use {@link Query#modify(UpdateOperations)} instead
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
@@ -612,7 +614,7 @@ public interface Datastore {
      * @param options    the options to apply to the update
      * @return the results of the updates
      * @since 1.3
-     * @deprecated use {@link Query#update()} instead
+     * @deprecated use {@link Query#update(UpdateOperator, UpdateOperator...)} instead
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
@@ -627,7 +629,8 @@ public interface Datastore {
      * @param operations the update operations to perform
      * @param <T>        the type of the entity
      * @return the results of the updates
-     * @deprecated use {@link Query#update()} instead.  Please note the default has changed from multi- to single- document updates.
+     * @deprecated use {@link Query#update(UpdateOperator, UpdateOperator...)} instead.  Please note the default has changed from multi-
+     * to single-document updates.
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)

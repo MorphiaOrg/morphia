@@ -28,6 +28,7 @@ import dev.morphia.query.TestQuery.ContainsPic;
 import dev.morphia.query.TestQuery.Pic;
 import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
+import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
@@ -44,14 +45,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static dev.morphia.query.PushOptions.options;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.regex;
+import static dev.morphia.query.experimental.updates.UpdateOperators.addToSet;
+import static dev.morphia.query.experimental.updates.UpdateOperators.dec;
+import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
+import static dev.morphia.query.experimental.updates.UpdateOperators.max;
+import static dev.morphia.query.experimental.updates.UpdateOperators.pop;
+import static dev.morphia.query.experimental.updates.UpdateOperators.pull;
+import static dev.morphia.query.experimental.updates.UpdateOperators.pullAll;
+import static dev.morphia.query.experimental.updates.UpdateOperators.push;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
+import static dev.morphia.query.experimental.updates.UpdateOperators.setOnInsert;
+import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -89,8 +101,7 @@ public class TestUpdateOps extends TestBase {
         Query<Parent> query = getDs().find(Parent.class)
                                      .filter(eq("_id", parentId),
                                          eq("children.first", childName));
-        UpdateResult updateResult = query.update()
-                                         .set("children.$.last", updatedLastName)
+        UpdateResult updateResult = query.update(set("children.$.last", updatedLastName))
                                          .execute();
 
         // then
@@ -110,19 +121,18 @@ public class TestUpdateOps extends TestBase {
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
         //add 4 to array
-        assertUpdated(query.update()
-                           .addToSet("values", 4)
+        assertUpdated(query.update(addToSet("values", 4))
                            .execute(),
             1);
 
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4}));
 
         //add unique (4) -- noop
-        assertEquals(1, query.update().addToSet("values", 4).execute().getMatchedCount());
+        assertEquals(1, query.update(addToSet("values", 4)).execute().getMatchedCount());
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4}));
 
         //add dup 4
-        assertUpdated(query.update().push("values", 4).execute(), 1);
+        assertUpdated(query.update(push("values", 4)).execute(), 1);
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4}));
 
         //cleanup for next tests
@@ -136,15 +146,15 @@ public class TestUpdateOps extends TestBase {
         newValues.add(4);
         newValues.add(5);
 
-        assertUpdated(query.update().addToSet("values", newValues).execute(), 1);
+        assertUpdated(query.update(addToSet("values", newValues)).execute(), 1);
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add them again... noop
-        assertEquals(1, query.update().addToSet("values", newValues).execute().getMatchedCount());
+        assertEquals(1, query.update(addToSet("values", newValues)).execute().getMatchedCount());
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 5}));
 
         //add dups [4,5]
-        assertUpdated(query.update().push("values", newValues).execute(), 1);
+        assertUpdated(query.update(push("values", newValues)).execute(), 1);
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 5, 4, 5}));
     }
 
@@ -163,8 +173,7 @@ public class TestUpdateOps extends TestBase {
         // both of these entries will have a className attribute
         List<Log> latestLogs = asList(new Log(1), new Log(2));
 
-        finder.update()
-              .addToSet("logs", latestLogs)
+        finder.update(addToSet("logs", latestLogs))
               .execute(new UpdateOptions()
                            .upsert(true));
         LogHolder first = finder.first();
@@ -173,14 +182,12 @@ public class TestUpdateOps extends TestBase {
         // this entry will NOT have a className attribute
         Log log = new Log(3);
         finder
-            .update()
-            .addToSet("logs", log)
+            .update(addToSet("logs", log))
             .execute(new UpdateOptions().upsert(true));
         validateClassName(finder.first());
 
         // this entry will NOT have a className attribute
-        finder.update()
-              .addToSet("logs", new Log(4))
+        finder.update(addToSet("logs", new Log(4)))
               .execute(new UpdateOptions().upsert(true));
         validateClassName(finder.first());
     }
@@ -195,20 +202,20 @@ public class TestUpdateOps extends TestBase {
 
         assertThat(query.first().values, is((new ContainsIntArray()).values));
 
-        assertUpdated(query.update().addToSet("values", 5).execute(), 1);
+        assertUpdated(query.update(addToSet("values", 5)).execute(), 1);
 
         assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5}));
 
-        assertUpdated(query.update().addToSet("values", 4).execute(), 1);
+        assertUpdated(query.update(addToSet("values", 4)).execute(), 1);
         assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4}));
 
-        assertUpdated(query.update().addToSet("values", asList(8, 9)).execute(), 1);
+        assertUpdated(query.update(addToSet("values", asList(8, 9))).execute(), 1);
         assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9}));
 
-        assertEquals(1, query.update().addToSet("values", asList(4, 5)).execute().getMatchedCount());
+        assertEquals(1, query.update(addToSet("values", asList(4, 5))).execute().getMatchedCount());
         assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9}));
 
-        assertUpdated(query.update().addToSet("values", new HashSet<>(asList(10, 11))).execute(), 1);
+        assertUpdated(query.update(addToSet("values", new HashSet<>(asList(10, 11)))).execute(), 1);
         assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9, 10, 11}));
     }
 
@@ -225,8 +232,7 @@ public class TestUpdateOps extends TestBase {
         getDs().find(ContainsIntArray.class)
                .filter(eq("id", id),
                    eq("values", 2))
-               .update()
-               .set("values.$", 5)
+               .update(set("values.$", 5))
                .execute();
 
         // expected
@@ -240,9 +246,9 @@ public class TestUpdateOps extends TestBase {
         getDs().save(new Circle(100D));
         getDs().save(new Circle(12D));
         Query<Circle> circle = getDs().find(Circle.class);
-        assertUpdated(circle.update().inc("radius", 1D).execute(), 1);
+        assertUpdated(circle.update(inc("radius", 1D)).execute(), 1);
 
-        assertUpdated(circle.update().inc("radius").execute(new UpdateOptions().multi(true)), 2);
+        assertUpdated(circle.update(inc("radius")).execute(new UpdateOptions().multi(true)), 2);
 
         //test possible data type change.
         final Circle updatedCircle = circle.filter(eq("radius", 13)).iterator(new FindOptions().limit(1))
@@ -272,31 +278,30 @@ public class TestUpdateOps extends TestBase {
         assertThat(heightOf2.count(), is(0L));
 
         UpdateResult results = heightOf1
-                                   .update()
-                                   .inc("height")
+                                   .update(inc("height"))
                                    .execute(new UpdateOptions().multi(true));
         assertUpdated(results, 3);
 
         assertThat(heightOf1.count(), is(0L));
         assertThat(heightOf2.count(), is(3L));
 
-        heightOf2.update().dec("height").execute(new UpdateOptions().multi(true));
+        heightOf2.update(dec("height")).execute(new UpdateOptions().multi(true));
         assertThat(heightOf1.count(), is(3L));
         assertThat(heightOf2.count(), is(0L));
 
-        heightOf1.update().inc("height", 2.5D).execute(new UpdateOptions().multi(true));
+        heightOf1.update(inc("height", 2.5D)).execute(new UpdateOptions().multi(true));
         assertThat(heightOf1.count(), is(0L));
         assertThat(heightOf35.count(), is(3L));
 
-        heightOf35.update().dec("height", 2.5D).execute(new UpdateOptions().multi(true));
+        heightOf35.update(dec("height", 2.5D)).execute(new UpdateOptions().multi(true));
         assertThat(heightOf1.count(), is(3L));
         assertThat(heightOf35.count(), is(0L));
 
         getDs().find(Rectangle.class)
                .filter(eq("height", 1D))
-               .update()
-               .set("height", 1D)
-               .inc("width", 20D)
+               .update(
+                   set("height", 1D),
+                   inc("width", 20D))
                .execute();
 
         assertThat(getDs().find(Rectangle.class).count(), is(5L));
@@ -309,8 +314,9 @@ public class TestUpdateOps extends TestBase {
 
         getDs().find(Rectangle.class)
                .filter(eq("width", 30D))
-               .update()
-               .set("height", 2D).set("width", 2D)
+               .update(
+                   set("height", 2D),
+                   set("width", 2D))
                .execute();
         assertThat(getDs().find(Rectangle.class)
                           .filter(eq("width", 1D)).iterator(new FindOptions().limit(1))
@@ -319,13 +325,12 @@ public class TestUpdateOps extends TestBase {
                           .filter(eq("width", 2D)).iterator(new FindOptions().limit(1))
                           .next(), is(notNullValue()));
 
-        heightOf35.update().dec("height", 1).execute();
-        heightOf35.update().dec("height", Long.MAX_VALUE).execute();
-        heightOf35.update().dec("height", 1.5f).execute();
-        heightOf35.update().dec("height", Double.MAX_VALUE).execute();
+        heightOf35.update(dec("height", 1)).execute();
+        heightOf35.update(dec("height", Long.MAX_VALUE)).execute();
+        heightOf35.update(dec("height", 1.5f)).execute();
+        heightOf35.update(dec("height", Double.MAX_VALUE)).execute();
         try {
-            heightOf35.update()
-                      .dec("height", new AtomicInteger(1));
+            heightOf35.update(dec("height", new AtomicInteger(1)));
             fail("Wrong data type not recognized.");
         } catch (IllegalArgumentException ignore) {
         }
@@ -335,8 +340,7 @@ public class TestUpdateOps extends TestBase {
     public void testInsertUpdate() {
         assertInserted(getDs().find(Circle.class)
                               .filter(eq("radius", 0))
-                              .update()
-                              .inc("radius", 1D)
+                              .update(inc("radius", 1D))
                               .execute(new UpdateOptions().upsert(true)));
     }
 
@@ -350,8 +354,7 @@ public class TestUpdateOps extends TestBase {
         Query<ContainsPic> query = getDs().find(ContainsPic.class)
                                           .filter(eq("name", "first"),
                                               eq("pic", picKey));
-        assertInserted(query.update()
-                            .set("name", "A")
+        assertInserted(query.update(set("name", "A"))
                             .execute(new UpdateOptions().upsert(true)));
         assertThat(getDs().find(ContainsPic.class).count(), is(1L));
         getDs().find(ContainsPic.class).delete(new DeleteOptions().multi(true));
@@ -359,8 +362,7 @@ public class TestUpdateOps extends TestBase {
         query = getDs().find(ContainsPic.class)
                        .filter(eq("name", "first"),
                            eq("pic", pic));
-        assertInserted(query.update()
-                            .set("name", "second")
+        assertInserted(query.update(set("name", "second"))
                             .execute(new UpdateOptions().upsert(true)));
         assertThat(getDs().find(ContainsPic.class).count(), is(1L));
 
@@ -382,12 +384,10 @@ public class TestUpdateOps extends TestBase {
         Datastore ds = getDs();
         Query<Circle> query = ds.find(Circle.class)
                                 .filter(eq("id", id));
-        assertInserted(query.update()
-                            .setOnInsert("radius", originalValue)
+        assertInserted(query.update(setOnInsert(Map.of("radius", originalValue)))
                             .execute(new UpdateOptions().upsert(true)));
 
-        assertEquals(1, query.update()
-                             .max("radius", 1D)
+        assertEquals(1, query.update(max("radius", 1D))
                              .execute(new UpdateOptions().upsert(true)).getMatchedCount());
 
         assertThat(ds.find(Circle.class)
@@ -404,8 +404,7 @@ public class TestUpdateOps extends TestBase {
         createContainsPic(1);
         createContainsPic(2);
 
-        finder.update()
-              .inc("size")
+        finder.update(inc("size"))
               .execute(new UpdateOptions().multi(true));
 
         final MorphiaCursor<ContainsPic> iterator = finder.iterator(new FindOptions().sort(Sort.ascending("size")));
@@ -421,31 +420,27 @@ public class TestUpdateOps extends TestBase {
         assertThat(get(cIntArray), is((new ContainsIntArray()).values));
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
-        query.update()
-             .push("values", 4)
+        query.update(push("values", 4))
              .execute();
 
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4}));
 
-        query.update()
-             .push("values", 4)
+        query.update(push("values", 4))
              .execute();
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4}));
 
-        query.update()
-             .push("values", asList(5, 6))
+        query.update(push("values", asList(5, 6)))
              .execute();
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4, 5, 6}));
 
-        query.update()
-             .push("values", 12, options().position(2))
+        query.update(push("values", 12)
+                         .position(2))
              .execute();
 
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 12, 3, 4, 4, 5, 6}));
 
-
-        query.update()
-             .push("values", asList(99, 98, 97), options().position(4))
+        query.update(push("values", asList(99, 98, 97))
+                         .position(4))
              .execute();
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 12, 3, 99, 98, 97, 4, 4, 5, 6}));
     }
@@ -466,8 +461,7 @@ public class TestUpdateOps extends TestBase {
         ds.save(logs);
 
         UpdateResult results = ds.find(LogHolder.class)
-                                 .update()
-                                 .pullAll("logs", singletonList(new Log(3)))
+                                 .update(pullAll("logs", singletonList(new Log(3))))
                                  .execute();
 
         assertEquals(1, results.getModifiedCount());
@@ -489,10 +483,10 @@ public class TestUpdateOps extends TestBase {
         assertThat(values, is((new ContainsIntArray()).values));
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
-        assertUpdated(query.update().removeFirst("values").execute(), 1);
+        assertUpdated(query.update(pop("values").removeFirst()).execute(), 1);
         assertThat(get(cIntArray), is(new Integer[]{2, 3}));
 
-        assertUpdated(query.update().removeLast("values").execute(), 1);
+        assertUpdated(query.update(pop("values")).execute(), 1);
         assertThat(get(cIntArray), is(new Integer[]{2}));
     }
 
@@ -508,16 +502,14 @@ public class TestUpdateOps extends TestBase {
                .filter(regex("opaqueId")
                            .pattern("ID")
                            .caseInsensitive())
-               .update()
-               .pull("fromArray", new Document("whereId", "not there"))
+               .update(pull("fromArray", Filters.eq("whereId", "not there")))
                .execute();
 
         getDs().find(DumbColl.class)
                .filter(regex("opaqueId")
                            .pattern("ID")
                            .caseInsensitive())
-               .update()
-               .pull("fromArray", new DumbArrayElement("something"))
+               .update(pullAll("fromArray", List.of(new DumbArrayElement("something"))))
                .execute();
     }
 
@@ -527,8 +519,7 @@ public class TestUpdateOps extends TestBase {
 
         Query<Circle> query = getDs().find(Circle.class)
                                      .filter(eq("id", id));
-        assertInserted(query.update()
-                            .setOnInsert("radius", 2D)
+        assertInserted(query.update(setOnInsert(Map.of("radius", 2D)))
                             .execute(new UpdateOptions().upsert(true)));
 
         final Circle updatedCircle = getDs().find(Circle.class)
@@ -547,13 +538,11 @@ public class TestUpdateOps extends TestBase {
                                   .find(Circle.class)
                                   .filter(eq("id", id));
 
-        assertInserted(query.update()
-                            .setOnInsert("radius", 1D)
+        assertInserted(query.update(setOnInsert(Map.of("radius", 1D)))
                             .execute(new UpdateOptions()
                                          .upsert(true)));
 
-        assertEquals(1, query.update()
-                             .setOnInsert("radius", 2D)
+        assertEquals(1, query.update(setOnInsert(Map.of("radius", 2D)))
                              .execute(new UpdateOptions()
                                           .upsert(true)).getMatchedCount());
 
@@ -573,7 +562,7 @@ public class TestUpdateOps extends TestBase {
 
         Query<Circle> circle = ds.find(Circle.class)
                                  .filter(eq("radius", 1D));
-        assertUpdated(circle.update().set("radius", 2D).execute(), 1);
+        assertUpdated(circle.update(set("radius", 2D)).execute(), 1);
 
         Query<Circle> idQuery = ds.find(Circle.class)
                                   .filter(eq("_id", key));
@@ -581,7 +570,7 @@ public class TestUpdateOps extends TestBase {
 
         circle = ds.find(Circle.class)
                    .filter(eq("radius", 2D));
-        assertUpdated(circle.update().unset("radius")
+        assertUpdated(circle.update(unset("radius"))
                             .execute(new UpdateOptions().multi(false)), 1);
 
         assertThat(idQuery.first().getRadius(), is(0D));
@@ -591,12 +580,10 @@ public class TestUpdateOps extends TestBase {
         ds.save(article);
 
         Query<Article> query = ds.find(Article.class);
-        query.update()
-             .set("translations", new HashMap<String, Translation>())
+        query.update(set("translations", new HashMap<String, Translation>()))
              .execute();
 
-        query.update()
-             .unset("translations")
+        query.update(unset("translations"))
              .execute();
     }
 
@@ -610,8 +597,7 @@ public class TestUpdateOps extends TestBase {
         LogHolder logs1 = logs.get(0);
         Query<LogHolder> query = getDs().find(LogHolder.class);
         Document object = new Document("new", "value");
-        query.update()
-             .set("raw", object)
+        query.update(set("raw", object))
              .execute();
 
         List<LogHolder> list = getDs().find(LogHolder.class).iterator().toList();
@@ -638,8 +624,8 @@ public class TestUpdateOps extends TestBase {
         //test with Key<Pic>
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class)
                                         .filter(eq("name", cpk.name));
-        final UpdateResult res = query.update()
-                                      .set("keys", cpk.keys).execute();
+        final UpdateResult res = query.update(set("keys", cpk.keys))
+                                      .execute();
 
         assertThat(res.getModifiedCount(), is(1L));
 
@@ -666,8 +652,7 @@ public class TestUpdateOps extends TestBase {
 
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class)
                                         .filter(eq("name", cpk.name));
-        assertThat(query.update()
-                        .set("pic", pic)
+        assertThat(query.update(set("pic", pic))
                         .execute().getModifiedCount(), is(1L));
 
         //test reading the object.
@@ -678,7 +663,7 @@ public class TestUpdateOps extends TestBase {
         assertThat(cpk2.pic, is(notNullValue()));
         assertThat(pic, is(cpk2.pic.get()));
 
-        query.update().set("pic", pic).execute();
+        query.update(set("pic", pic)).execute();
 
         //test reading the object.
         final ContainsPicKey cpk3 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
@@ -703,8 +688,7 @@ public class TestUpdateOps extends TestBase {
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class)
                                           .filter(eq("name", cp.getName()));
-        UpdateResult result = query.update()
-                                   .set("pic", pic)
+        UpdateResult result = query.update(set("pic", pic))
                                    .execute();
         assertEquals(result.getModifiedCount(), 1);
 
@@ -735,7 +719,7 @@ public class TestUpdateOps extends TestBase {
 
         Query<ContainsInt> query = getDs().find(ContainsInt.class);
 
-        final UpdateResult res = query.update().inc("val", 1.1D).execute();
+        final UpdateResult res = query.update(inc("val", 1.1D)).execute();
         assertUpdated(res, 1);
 
         assertEquals(22, query.iterator(new FindOptions()
@@ -751,18 +735,17 @@ public class TestUpdateOps extends TestBase {
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
 
-        doUpdates(cIntArray, control, query.update().addToSet("values", 4),
+        doUpdates(cIntArray, control, query.update(addToSet("values", 4)),
             new Integer[]{1, 2, 3, 4});
 
 
-        doUpdates(cIntArray, control, query.update().addToSet("values", asList(4, 5)),
+        doUpdates(cIntArray, control, query.update(addToSet("values", asList(4, 5))),
             new Integer[]{1, 2, 3, 4, 5});
 
 
         assertInserted(getDs().find(ContainsIntArray.class)
                               .filter(eq("values", new Integer[]{4, 5, 7}))
-                              .update()
-                              .addToSet("values", 6)
+                              .update(addToSet("values", 6))
                               .execute(new UpdateOptions().upsert(true)));
 
         query = getDs().find(ContainsIntArray.class)
@@ -777,7 +760,7 @@ public class TestUpdateOps extends TestBase {
     public void testValidationBadFieldName() {
         Query<Circle> query = getDs().find(Circle.class)
                                      .filter(eq("radius", 0));
-        query.update().inc("r", 1D).execute();
+        query.update(inc("r", 1D)).execute();
     }
 
     private void assertInserted(final UpdateResult res) {

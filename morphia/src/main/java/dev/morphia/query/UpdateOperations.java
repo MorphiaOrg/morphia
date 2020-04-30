@@ -1,16 +1,19 @@
 package dev.morphia.query;
 
 
+import dev.morphia.query.experimental.updates.UpdateOperator;
+
 import java.util.List;
 
 
 /**
- * <p> A nicer interface to the update operations in monogodb. All these operations happen at the server and can cause the server and
+ * <p> A nicer interface to the update operations in mongodb. All these operations happen at the server and can cause the server and
  * client
  * version of the Entity to be different </p>
  *
  * @param <T> The Java type used in the updates
- * @deprecated updates should be performed using the {@link Query#update()} instead of this class directly
+ * @deprecated updates should be performed using the {@link Query#update(UpdateOperator, UpdateOperator...)} instead
+ * of this class directly
  */
 @Deprecated(since = "2.0", forRemoval = true)
 public interface UpdateOperations<T> {

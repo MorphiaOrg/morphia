@@ -1,94 +1,68 @@
 package dev.morphia.query;
 
-
-import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedField;
+import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.filters.Filters;
+import dev.morphia.query.experimental.updates.PopOperator;
+import dev.morphia.query.experimental.updates.PushOperator;
+import dev.morphia.query.experimental.updates.UpdateOperators;
 import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static dev.morphia.query.UpdateBase.iterToList;
-import static java.util.Collections.singletonList;
-
+import java.util.Map;
 
 /**
  * @param <T> the type to update
  */
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
-public class UpdateOpsImpl<T> implements UpdateOperations<T> {
-    private final Mapper mapper;
-    private final Class<T> clazz;
+public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<T> {
     private Document ops = new Document();
     private boolean validateNames = true;
 
     /**
      * Creates an UpdateOpsImpl for the type given.
      *
-     * @param type   the type to update
-     * @param mapper the Mapper to use
+     * @param datastore the datastore to use
+     * @param type      the type to update
+     * @param mapper    the Mapper to use
      */
-    public UpdateOpsImpl(final Class<T> type, final Mapper mapper) {
-        this.mapper = mapper;
-        clazz = type;
+    public UpdateOpsImpl(final Datastore datastore, final Class<T> type, final Mapper mapper) {
+        super(datastore, mapper, null, null, type);
+    }
+
+    static <T> List<T> iterToList(final Iterable<T> it) {
+        if (it instanceof List) {
+            return (List<T>) it;
+        }
+        if (it == null) {
+            return null;
+        }
+
+        final List<T> ar = new ArrayList<>();
+        for (final T o : it) {
+            ar.add(o);
+        }
+
+        return ar;
     }
 
     @Override
     public UpdateOperations<T> addToSet(final String field, final Object value) {
-        if (value == null) {
-            throw new QueryException("Value cannot be null.");
-        }
-
-        add(UpdateOperator.ADD_TO_SET, field, value, true);
+        add(UpdateOperators.addToSet(field, value));
         return this;
     }
 
     @Override
     public UpdateOperations<T> addToSet(final String field, final List<?> values) {
-        if (values == null || values.isEmpty()) {
-            throw new QueryException("Values cannot be null or empty.");
-        }
-
-        add(UpdateOperator.ADD_TO_SET_EACH, field, values, true);
+        add(UpdateOperators.addToSet(field, values));
         return this;
     }
 
     @Override
     public UpdateOperations<T> addToSet(final String field, final Iterable<?> values) {
         return addToSet(field, iterToList(values));
-    }
-
-    @Override
-    public UpdateOperations<T> push(final String field, final Object value) {
-        return push(field, value instanceof List ? (List<?>) value : singletonList(value), new PushOptions());
-    }
-
-    @Override
-    public UpdateOperations<T> push(final String field, final Object value, final PushOptions options) {
-        return push(field, value instanceof List ? (List<?>) value : singletonList(value), options);
-    }
-
-    @Override
-    public UpdateOperations<T> push(final String field, final List<?> values) {
-        return push(field, values, new PushOptions());
-    }
-
-    @Override
-    public UpdateOperations<T> push(final String field, final List<?> values, final PushOptions options) {
-        if (values == null || values.isEmpty()) {
-            throw new QueryException("Values cannot be null or empty.");
-        }
-
-        PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(clazz), field, validateNames);
-
-        pathTarget.getTarget();
-        Document document = new Document(UpdateOperator.EACH.val(), values);
-        options.update(document);
-        addOperation(UpdateOperator.PUSH, pathTarget.translatedPath(), document);
-
-        return this;
     }
 
     @Override
@@ -105,7 +79,7 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
             return inc(field, (value.doubleValue() * -1));
         }
         throw new IllegalArgumentException(
-                "Currently only the following types are allowed: integer, long, double, float.");
+            "Currently only the following types are allowed: integer, long, double, float.");
     }
 
     @Override
@@ -127,41 +101,61 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
     @Override
     public UpdateOperations<T> inc(final String field, final Number value) {
-        if (value == null) {
-            throw new QueryException("Value cannot be null.");
-        }
-        add(UpdateOperator.INC, field, value, false);
+        add(UpdateOperators.inc(field, value));
         return this;
     }
 
     @Override
     public UpdateOperations<T> max(final String field, final Number value) {
-        add(UpdateOperator.MAX, field, value, false);
+        add(UpdateOperators.max(field, value));
         return this;
     }
 
     @Override
     public UpdateOperations<T> min(final String field, final Number value) {
-        add(UpdateOperator.MIN, field, value, false);
+        add(UpdateOperators.min(field, value));
+        return this;
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final Object value) {
+        add(UpdateOperators.push(field, value));
+        return this;
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final Object value, final PushOptions options) {
+        PushOperator push = UpdateOperators.push(field, value);
+        options.update(push);
+
+        add(push);
+        return this;
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final List<?> values) {
+        add(UpdateOperators.push(field, values));
+        return this;
+    }
+
+    @Override
+    public UpdateOperations<T> push(final String field, final List<?> values, final PushOptions options) {
+        PushOperator push = UpdateOperators.push(field, values);
+        options.update(push);
+
+        add(push);
         return this;
     }
 
     @Override
     public UpdateOperations<T> removeAll(final String field, final Object value) {
-        if (value == null) {
-            throw new QueryException("Value cannot be null.");
-        }
-        add(UpdateOperator.PULL, field, value, true);
+        add(UpdateOperators.pull(field, Filters.eq(field, value)));
         return this;
     }
 
     @Override
     public UpdateOperations<T> removeAll(final String field, final List<?> values) {
-        if (values == null || values.isEmpty()) {
-            throw new QueryException("Value cannot be null or empty.");
-        }
-
-        add(UpdateOperator.PULL_ALL, field, values, true);
+        add(UpdateOperators.pullAll(field, values));
         return this;
     }
 
@@ -177,27 +171,19 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
     @Override
     public UpdateOperations<T> set(final String field, final Object value) {
-        if (value == null) {
-            throw new QueryException("Value for field [" + field + "] cannot be null.");
-        }
-
-        add(UpdateOperator.SET, field, value, true);
+        add(UpdateOperators.set(field, value));
         return this;
     }
 
     @Override
     public UpdateOperations<T> setOnInsert(final String field, final Object value) {
-        if (value == null) {
-            throw new QueryException("Value cannot be null.");
-        }
-
-        add(UpdateOperator.SET_ON_INSERT, field, value, true);
+        add(UpdateOperators.setOnInsert(Map.of(field, value)));
         return this;
     }
 
     @Override
     public UpdateOperations<T> unset(final String field) {
-        add(UpdateOperator.UNSET, field, 1, false);
+        add(UpdateOperators.unset(field));
         return this;
     }
 
@@ -217,52 +203,12 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
         this.ops = ops;
     }
 
-    protected void add(final UpdateOperator op, final String f, final Object value, final boolean convert) {
-        if (value == null) {
-            throw new QueryException("Val cannot be null");
-        }
-
-        Object val = value;
-        PathTarget pathTarget = new PathTarget(mapper, clazz, f, validateNames);
-        MappedField mf = pathTarget.getTarget();
-
-        if (convert) {
-            if (UpdateOperator.PULL_ALL.equals(op) && value instanceof List) {
-                val = toMongoObjects(mf, (List<?>) value);
-            } else {
-                val = value;
-            }
-        }
-
-
-        if (UpdateOperator.ADD_TO_SET_EACH.equals(op)) {
-            val = new Document(UpdateOperator.EACH.val(), val);
-        }
-
-        addOperation(op, pathTarget.translatedPath(), val);
-    }
-
-    private void addOperation(final UpdateOperator op, final String fieldName, final Object val) {
-        final String opString = op.val();
-
-        if (!ops.containsKey(opString)) {
-            ops.put(opString, new Document());
-        }
-        ((Document) ops.get(opString)).put(fieldName, val);
-    }
-
     protected UpdateOperations<T> remove(final String fieldExpr, final boolean firstNotLast) {
-        add(UpdateOperator.POP, fieldExpr, (firstNotLast) ? -1 : 1, false);
+        PopOperator pop = UpdateOperators.pop(fieldExpr);
+        if (firstNotLast) {
+            pop.removeFirst();
+        }
+        add(pop);
         return this;
     }
-
-    protected List<Object> toMongoObjects(final MappedField mf, final List<?> values) {
-        final List<Object> list = new ArrayList<>(values.size());
-        for (final Object obj : values) {
-            list.add(obj);
-        }
-
-        return list;
-    }
-
 }

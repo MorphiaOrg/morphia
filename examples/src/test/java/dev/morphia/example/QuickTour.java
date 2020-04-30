@@ -13,6 +13,7 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.Query;
+import dev.morphia.query.experimental.updates.UpdateOperators;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 
@@ -66,8 +67,7 @@ public final class QuickTour {
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                                                         .filter(lte("salary", 30000));
-        final UpdateResult results = underPaidQuery.update()
-                                                   .inc("salary", 10000)
+        final UpdateResult results = underPaidQuery.update(UpdateOperators.inc("salary", 10000))
                                                    .execute();
 
         Assert.assertEquals(1, results.getModifiedCount());
