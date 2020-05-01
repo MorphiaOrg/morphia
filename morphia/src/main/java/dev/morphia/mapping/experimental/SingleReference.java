@@ -38,7 +38,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
             value = (T) id;
             this.id = mappedClass.getIdField().getFieldValue(value);
             resolve();
-            ;
         }
 
     }
