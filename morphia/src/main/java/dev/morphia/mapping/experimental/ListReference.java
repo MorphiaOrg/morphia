@@ -3,6 +3,7 @@ package dev.morphia.mapping.experimental;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +31,14 @@ public class ListReference<T> extends CollectionReference<List<T>> {
     List<?> getValues() {
         return values;
     }
+
+    @Override
+    protected void setValues(final List ids) {
+        values = new ArrayList<>();
+        values.addAll(ids);
+        resolve();
+    }
+
 
     @Override
     public List<T> get() {

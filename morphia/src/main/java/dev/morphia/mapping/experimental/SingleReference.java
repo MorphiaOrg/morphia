@@ -34,6 +34,13 @@ public class SingleReference<T> extends MorphiaReference<T> {
         super(datastore);
         this.mappedClass = mappedClass;
         this.id = id;
+        if (mappedClass.getType().isInstance(id)) {
+            value = (T) id;
+            this.id = mappedClass.getIdField().getFieldValue(value);
+            resolve();
+            ;
+        }
+
     }
 
     SingleReference(final T value) {

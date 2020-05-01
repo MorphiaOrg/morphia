@@ -5,10 +5,12 @@ import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.Morphia;
+import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -29,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static dev.morphia.aggregation.experimental.stages.Unwind.on;
 import static dev.morphia.mapping.lazy.LazyFeatureDependencies.assertProxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
@@ -98,58 +101,6 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Test
-    public void testNullReferences() {
-        Container container = new Container();
-        container.lazyMapRef = null;
-        container.singleRef = null;
-        container.lazySingleRef = null;
-        container.collectionRef = null;
-        container.lazyCollectionRef = null;
-        container.mapRef = null;
-        container.lazyMapRef = null;
-
-        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                                             .storeNulls(true)
-                                             .build();
-        Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
-
-        datastore.save(container);
-        allNull(container);
-
-        options = MapperOptions.builder(getMapper().getOptions())
-                               .storeNulls(true)
-                               .build();
-        datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
-        datastore.save(container);
-        allNull(container);
-    }
-
-    @Test
-    public void testFindByEntityReference() {
-        final Ref ref = new Ref("refId");
-        getDs().save(ref);
-
-        final Container container = new Container();
-        container.singleRef = ref;
-        getDs().save(container);
-
-        Assert.assertNotNull(getDs().find(Container.class)
-                                    .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
-                                    .next());
-    }
-
-    @Test
-    public void testReferenceQueryWithoutValidation() {
-        Ref ref = getDs().save(new Ref("no validation"));
-        getDs().save(new Container(singletonList(ref)));
-
-        final Query<Container> query = getDs().find(Container.class)
-                                              .disableValidation()
-                                              .filter(eq("singleRef", ref));
-        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).next());
-    }
-
-    @Test
     public void testFetchKeys() {
         List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
             new Complex(new ChildId("JD", 26), "Dorian"),
@@ -162,6 +113,59 @@ public class ReferenceTest extends ProxyTestBase {
         assertEquals(list.get(1).getId(), keys.next().getId());
         assertEquals(list.get(2).getId(), keys.next().getId());
         assertFalse(keys.hasNext());
+    }
+
+    @Test
+    public void testAggregationLookups() {
+        final Author author = new Author("Jane Austen");
+        getDs().save(author);
+
+        Book book = addBook(author);
+        Set<Book> set = addSetOfBooks(author);
+        List<Book> list = addListOfBooks(author);
+        //        Map<String, Book> map = addBookMap(author);
+
+        getDs().save(author);
+        Object document = getDs().aggregate(Author.class)
+                                 .lookup(Lookup.from(Book.class)
+                                               .as("set")
+                                               .foreignField("_id")
+                                               .localField("set"))
+                                 .lookup(Lookup.from(Book.class)
+                                               .as("list")
+                                               .foreignField("_id")
+                                               .localField("list"))
+                                 //  TODO how to fetch the values from a nested document for cross-referencing?
+                                 //                                   .lookup(Lookup.from(Book.class)
+                                 //                                                 .as("map")
+                                 //                                                 .foreignField("_id")
+                                 //                                                 .localField("map.$"))
+                                 .execute(Author.class)
+                                 .tryNext();
+
+        final Author loaded = (Author) document;
+        Book foundBook = getDs().aggregate(Book.class)
+                                .lookup(Lookup.from(Author.class)
+                                              .as("author")
+                                              .foreignField("_id")
+                                              .localField("author"))
+                                .unwind(on("author"))
+                                .execute(Book.class)
+                                .next();
+        Assert.assertTrue(foundBook.author.isResolved());
+        Assert.assertEquals(author, foundBook.author.get());
+
+        final Set<Book> set1 = loaded.getSet();
+        assertEquals(set.size(), set1.size());
+        for (final Book book1 : set) {
+            assertTrue("Looking for " + book1 + " in " + set1, set1.contains(book1));
+        }
+
+        Assert.assertEquals(list, loaded.getList());
+        for (final Book book1 : list) {
+            assertTrue("Looking for " + book1 + " in " + list, list.contains(book1));
+        }
+        //        validateMap(map, loaded);
     }
 
     @Test
@@ -220,14 +224,28 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Test
+    public void testFindByEntityReference() {
+        final Ref ref = new Ref("refId");
+        getDs().save(ref);
+
+        final Container container = new Container();
+        container.singleRef = ref;
+        getDs().save(container);
+
+        Assert.assertNotNull(getDs().find(Container.class)
+                                    .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
+                                    .next());
+    }
+
+    @Test
     public final void testMultiDimArrayPersistence() {
         MultiDimArrayOfReferences a = new MultiDimArrayOfReferences();
         final Ref ref1 = new Ref();
         final Ref ref2 = new Ref();
 
-        a.arrays = new Ref[][][] {
-            new Ref[][] {
-                new Ref[] { ref1, ref2 }
+        a.arrays = new Ref[][][]{
+            new Ref[][]{
+                new Ref[]{ref1, ref2}
             }
         };
         a.lists = List.of(List.of(List.of(ref1), List.of(ref2)));
@@ -236,6 +254,33 @@ public class ReferenceTest extends ProxyTestBase {
         assertEquals(a, getDs().find(MultiDimArrayOfReferences.class)
                                .filter(eq("_id", a.getId()))
                                .first());
+    }
+
+    @Test
+    public void testNullReferences() {
+        Container container = new Container();
+        container.lazyMapRef = null;
+        container.singleRef = null;
+        container.lazySingleRef = null;
+        container.collectionRef = null;
+        container.lazyCollectionRef = null;
+        container.mapRef = null;
+        container.lazyMapRef = null;
+
+        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
+                                             .storeNulls(true)
+                                             .build();
+        Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+
+        datastore.save(container);
+        allNull(container);
+
+        options = MapperOptions.builder(getMapper().getOptions())
+                               .storeNulls(true)
+                               .build();
+        datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+        datastore.save(container);
+        allNull(container);
     }
 
     @Test
@@ -258,6 +303,53 @@ public class ReferenceTest extends ProxyTestBase {
         Assert.assertEquals(1, parentList.size());
     }
 
+    @Test
+    public void testReferenceQueryWithoutValidation() {
+        Ref ref = getDs().save(new Ref("no validation"));
+        getDs().save(new Container(singletonList(ref)));
+
+        final Query<Container> query = getDs().find(Container.class)
+                                              .disableValidation()
+                                              .filter(eq("singleRef", ref));
+        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).next());
+    }
+
+    protected Book addBook(final Author author) {
+        final Book book = new Book("Pride and Prejudice");
+        book.setAuthor(author);
+        return getDs().save(book);
+    }
+
+    protected List<Book> addListOfBooks(final Author author) {
+        List<Book> list = new ArrayList<>();
+        list.add(new Book("Sense and Sensibility"));
+        list.add(new Book("Pride and Prejudice"));
+        list.add(new Book("Mansfield Park"));
+        list.add(new Book("Emma"));
+        list.add(new Book("Northanger Abbey"));
+        for (final Book book : list) {
+            book.setAuthor(author);
+            getDs().save(book);
+        }
+        author.setList(list);
+        return list;
+    }
+
+    protected Set<Book> addSetOfBooks(final Author author) {
+        Set<Book> set = new HashSet<>(5);
+        set.add(new Book("Sense and Sensibility"));
+        set.add(new Book("Pride and Prejudice"));
+        set.add(new Book("Mansfield Park"));
+        set.add(new Book("Emma"));
+        set.add(new Book("Northanger Abbey"));
+        for (final Book book : set) {
+            book.setAuthor(author);
+            getDs().save(book);
+        }
+        author.setSet(set);
+        return set;
+    }
+
     private void allNull(final Container container) {
         Assert.assertNull(container.lazyMapRef);
         Assert.assertNull(container.singleRef);
@@ -272,33 +364,341 @@ public class ReferenceTest extends ProxyTestBase {
         private final Ref[] refs = new Ref[2];
     }
 
-    public static class MultiDimArrayOfReferences extends TestEntity {
-        @Reference(idOnly = true)
-        private Ref[][][] arrays;
-        private List<List<List<Ref>>> lists;
+    @Entity
+    private static class Author {
+        @Id
+        private ObjectId id;
+
+        private String name;
+
+        @Reference
+        private List<Book> list;
+        @Reference
+        private Set<Book> set;
+
+        public Author() {
+        }
+
+        public Author(final String name) {
+            this.name = name;
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public List<Book> getList() {
+            return list;
+        }
+
+        public void setList(final List<Book> list) {
+            this.list = list;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(final String name) {
+            this.name = name;
+        }
+
+        public Set<Book> getSet() {
+            return set;
+        }
+
+        public void setSet(final Set<Book> set) {
+            this.set = set;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            return result;
+        }
 
         @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof MultiDimArrayOfReferences)) {
+            if (o == null || getClass() != o.getClass()) {
                 return false;
             }
 
-            final MultiDimArrayOfReferences that = (MultiDimArrayOfReferences) o;
+            final Author author = (Author) o;
 
-            if (!Arrays.deepEquals(arrays, that.arrays)) {
+            if (id != null ? !id.equals(author.id) : author.id != null) {
                 return false;
             }
-            return lists != null ? lists.equals(that.lists) : that.lists == null;
+            return name != null ? name.equals(author.name) : author.name == null;
+        }
+    }
+
+    @Entity
+    private static class Book {
+        @Id
+        private ObjectId id;
+        private String name;
+        private MorphiaReference<Author> author;
+
+        public Book() {
+        }
+
+        public Book(final String name) {
+            this.name = name;
+        }
+
+        public Author getAuthor() {
+            return author.get();
+        }
+
+        public void setAuthor(final Author author) {
+            this.author = MorphiaReference.wrap(author);
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
         }
 
         @Override
         public int hashCode() {
-            int result = Arrays.deepHashCode(arrays);
-            result = 31 * result + (lists != null ? lists.hashCode() : 0);
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
             return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final Book book = (Book) o;
+
+            if (id != null ? !id.equals(book.id) : book.id != null) {
+                return false;
+            }
+            return name != null ? name.equals(book.name) : book.name == null;
+        }
+
+        @Override
+        public String toString() {
+            return "Book{" +
+                   "name='" + name + "', " +
+                   "hash=" + hashCode() +
+                   '}';
+        }
+
+        public void setName(final String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity(value = "children", useDiscriminator = false)
+    static class Child {
+        @Id
+        private ObjectId id;
+
+    }
+
+    @Embedded
+    public static class ChildId {
+        private String name;
+        private int age;
+
+        ChildId() {
+        }
+
+        public ChildId(final String name, final int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getName() != null ? getName().hashCode() : 0;
+            result = 31 * result + getAge();
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ChildId)) {
+                return false;
+            }
+
+            final ChildId childId = (ChildId) o;
+
+            if (getAge() != childId.getAge()) {
+                return false;
+            }
+            return getName() != null ? getName().equals(childId.getName()) : childId.getName() == null;
+
+        }
+
+        int getAge() {
+            return age;
+        }
+    }
+
+    @Entity("complex")
+    public static class Complex {
+        @Id
+        private ChildId id;
+
+        private String value;
+
+        Complex() {
+        }
+
+        public Complex(final ChildId id, final String value) {
+            this.id = id;
+            this.value = value;
+        }
+
+        public ChildId getId() {
+            return id;
+        }
+
+        public void setId(final ChildId id) {
+            this.id = id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(final String value) {
+            this.value = value;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Complex)) {
+                return false;
+            }
+
+            final Complex complex = (Complex) o;
+
+            if (getId() != null ? !getId().equals(complex.getId()) : complex.getId() != null) {
+                return false;
+            }
+            return getValue() != null ? getValue().equals(complex.getValue()) : complex.getValue() == null;
+
+        }
+    }
+
+    @Entity
+    private static class ComplexParent {
+        @Id
+        private ObjectId id;
+
+        @Reference
+        private Complex complex;
+
+        @Reference
+        private List<Complex> list = new ArrayList<>();
+
+        @Reference(lazy = true)
+        private List<Complex> lazyList = new ArrayList<>();
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(final ObjectId id) {
+            this.id = id;
+        }
+
+        public List<Complex> getList() {
+            return list;
+        }
+
+        public void setList(final List<Complex> list) {
+            this.list = list;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getComplex() != null ? getComplex().hashCode() : 0);
+            result = 31 * result + (getList() != null ? getList().hashCode() : 0);
+            result = 31 * result + (getLazyList() != null ? getLazyList().hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ComplexParent)) {
+                return false;
+            }
+
+            final ComplexParent that = (ComplexParent) o;
+
+            if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
+                return false;
+            }
+            if (getComplex() != null ? !getComplex().equals(that.getComplex()) : that.getComplex() != null) {
+                return false;
+            }
+            if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null) {
+                return false;
+            }
+            return getLazyList() != null ? getLazyList().equals(that.getLazyList()) : that.getLazyList() == null;
+
+        }
+
+        Complex getComplex() {
+            return complex;
+        }
+
+        public void setComplex(final Complex complex) {
+            this.complex = complex;
+        }
+
+        List<Complex> getLazyList() {
+            return lazyList;
+        }
+
+        public void setLazyList(final List<Complex> lazyList) {
+            this.lazyList = lazyList;
         }
     }
 
@@ -343,33 +743,115 @@ public class ReferenceTest extends ProxyTestBase {
             }
         }
 
-        ObjectId getId() {
-            return id;
-        }
-
-        Ref getSingleRef() {
-            return singleRef;
-        }
-
-        Ref getLazySingleRef() {
-            return lazySingleRef;
-        }
-
         List<Ref> getCollectionRef() {
             return collectionRef;
+        }
+
+        ObjectId getId() {
+            return id;
         }
 
         List<Ref> getLazyCollectionRef() {
             return lazyCollectionRef;
         }
 
+        LinkedHashMap<Integer, Ref> getLazyMapRef() {
+            return lazyMapRef;
+        }
+
+        Ref getLazySingleRef() {
+            return lazySingleRef;
+        }
+
         LinkedHashMap<Integer, Ref> getMapRef() {
             return mapRef;
         }
 
-        LinkedHashMap<Integer, Ref> getLazyMapRef() {
-            return lazyMapRef;
+        Ref getSingleRef() {
+            return singleRef;
         }
+    }
+
+    @Entity("cs")
+    public static class MapOfSet {
+        @Id
+        private ObjectId id;
+
+        private Map<String, Set<String>> strings;
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (strings != null ? strings.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final MapOfSet map = (MapOfSet) o;
+
+            if (id != null ? !id.equals(map.id) : map.id != null) {
+                return false;
+            }
+            return strings != null ? strings.equals(map.strings) : map.strings == null;
+        }
+    }
+
+    public static class MultiDimArrayOfReferences extends TestEntity {
+        @Reference(idOnly = true)
+        private Ref[][][] arrays;
+        private List<List<List<Ref>>> lists;
+
+        @Override
+        public int hashCode() {
+            int result = Arrays.deepHashCode(arrays);
+            result = 31 * result + (lists != null ? lists.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof MultiDimArrayOfReferences)) {
+                return false;
+            }
+
+            final MultiDimArrayOfReferences that = (MultiDimArrayOfReferences) o;
+
+            if (!Arrays.deepEquals(arrays, that.arrays)) {
+                return false;
+            }
+            return lists != null ? lists.equals(that.lists) : that.lists == null;
+        }
+    }
+
+    @Entity("sets")
+    public static class Sets {
+
+        @Id
+        private ObjectId id;
+
+        @Reference
+        private Set<Ref> refs;
+    }
+
+    @Entity(value = "parents", useDiscriminator = false)
+    private static class Parent {
+
+        @Id
+        private ObjectId id;
+        @Reference(lazy = true)
+        private List<Child> children = new ArrayList<>();
+
     }
 
     @Entity
@@ -393,6 +875,11 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
+        public int hashCode() {
+            return getId() != null ? getId().hashCode() : 0;
+        }
+
+        @Override
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
@@ -407,256 +894,8 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public int hashCode() {
-            return getId() != null ? getId().hashCode() : 0;
-        }
-
-        @Override
         public String toString() {
             return String.format("Ref{id='%s'}", id);
-        }
-    }
-
-    @Entity("sets")
-    public static class Sets {
-
-        @Id
-        private ObjectId id;
-
-        @Reference
-        private Set<Ref> refs;
-    }
-
-    @Entity("cs")
-    public static class MapOfSet {
-        @Id
-        private ObjectId id;
-
-        private Map<String, Set<String>> strings;
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            final MapOfSet map = (MapOfSet) o;
-
-            if (id != null ? !id.equals(map.id) : map.id != null) {
-                return false;
-            }
-            return strings != null ? strings.equals(map.strings) : map.strings == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id != null ? id.hashCode() : 0;
-            result = 31 * result + (strings != null ? strings.hashCode() : 0);
-            return result;
-        }
-    }
-
-    @Entity(value = "children", useDiscriminator = false)
-    static class Child {
-        @Id
-        private ObjectId id;
-
-    }
-
-    @Entity(value = "parents", useDiscriminator = false)
-    private static class Parent {
-
-        @Id
-        private ObjectId id;
-        @Reference(lazy = true)
-        private List<Child> children = new ArrayList<>();
-
-    }
-
-    @Entity
-    private static class ComplexParent {
-        @Id
-        private ObjectId id;
-
-        @Reference
-        private Complex complex;
-
-        @Reference
-        private List<Complex> list = new ArrayList<>();
-
-        @Reference(lazy = true)
-        private List<Complex> lazyList = new ArrayList<>();
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(final ObjectId id) {
-            this.id = id;
-        }
-
-        Complex getComplex() {
-            return complex;
-        }
-
-        public void setComplex(final Complex complex) {
-            this.complex = complex;
-        }
-
-        public List<Complex> getList() {
-            return list;
-        }
-
-        public void setList(final List<Complex> list) {
-            this.list = list;
-        }
-
-        List<Complex> getLazyList() {
-            return lazyList;
-        }
-
-        public void setLazyList(final List<Complex> lazyList) {
-            this.lazyList = lazyList;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof ComplexParent)) {
-                return false;
-            }
-
-            final ComplexParent that = (ComplexParent) o;
-
-            if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
-                return false;
-            }
-            if (getComplex() != null ? !getComplex().equals(that.getComplex()) : that.getComplex() != null) {
-                return false;
-            }
-            if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null) {
-                return false;
-            }
-            return getLazyList() != null ? getLazyList().equals(that.getLazyList()) : that.getLazyList() == null;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getId() != null ? getId().hashCode() : 0;
-            result = 31 * result + (getComplex() != null ? getComplex().hashCode() : 0);
-            result = 31 * result + (getList() != null ? getList().hashCode() : 0);
-            result = 31 * result + (getLazyList() != null ? getLazyList().hashCode() : 0);
-            return result;
-        }
-    }
-
-    @Entity("complex")
-    public static class Complex {
-        @Id
-        private ChildId id;
-
-        private String value;
-
-        Complex() {
-        }
-
-        public Complex(final ChildId id, final String value) {
-            this.id = id;
-            this.value = value;
-        }
-
-        public ChildId getId() {
-            return id;
-        }
-
-        public void setId(final ChildId id) {
-            this.id = id;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(final String value) {
-            this.value = value;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Complex)) {
-                return false;
-            }
-
-            final Complex complex = (Complex) o;
-
-            if (getId() != null ? !getId().equals(complex.getId()) : complex.getId() != null) {
-                return false;
-            }
-            return getValue() != null ? getValue().equals(complex.getValue()) : complex.getValue() == null;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getId() != null ? getId().hashCode() : 0;
-            result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
-            return result;
-        }
-    }
-
-    @Embedded
-    public static class ChildId {
-        private String name;
-        private int age;
-
-        ChildId() {
-        }
-
-        public ChildId(final String name, final int age) {
-            this.name = name;
-            this.age = age;
-        }
-
-        int getAge() {
-            return age;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof ChildId)) {
-                return false;
-            }
-
-            final ChildId childId = (ChildId) o;
-
-            if (getAge() != childId.getAge()) {
-                return false;
-            }
-            return getName() != null ? getName().equals(childId.getName()) : childId.getName() == null;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getName() != null ? getName().hashCode() : 0;
-            result = 31 * result + getAge();
-            return result;
         }
     }
 }

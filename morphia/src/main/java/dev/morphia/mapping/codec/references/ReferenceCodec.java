@@ -187,25 +187,29 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         return type.getType();
     }
 
-    private Object fetch(final Object value) {
-        MorphiaReference reference;
-        final Class<?> type = getField().getType();
-        if (List.class.isAssignableFrom(type)) {
-            reference = readList((List) value);
-        } else if (Map.class.isAssignableFrom(type)) {
-            reference = readMap((Map<Object, Object>) value);
-        } else if (Set.class.isAssignableFrom(type)) {
-            reference = readSet((List) value);
-        } else if (type.isArray()) {
-            reference = readList((List) value);
-        } else if (value instanceof Document) {
-            reference = readDocument((Document) value);
+    private Object collectIdValues(final Object value) {
+        if (value instanceof Collection) {
+            List ids = new ArrayList(((Collection) value).size());
+            for (Object o : (Collection) value) {
+                ids.add(collectIdValues(o));
+            }
+            return ids;
+        } else if (value instanceof Map) {
+            final LinkedHashMap ids = new LinkedHashMap();
+            Map<Object, Object> map = (Map<Object, Object>) value;
+            for (final Map.Entry<Object, Object> o : map.entrySet()) {
+                ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
+            }
+            return ids;
+        } else if (value.getClass().isArray()) {
+            List ids = new ArrayList(((Object[]) value).length);
+            for (Object o : (Object[]) value) {
+                ids.add(collectIdValues(o));
+            }
+            return ids;
         } else {
-            reference = readSingle(value);
+            return encodeId(getDatastore().getMapper(), getDatastore(), value, getFieldMappedClass());
         }
-        reference.ignoreMissing(annotation.ignoreMissing());
-
-        return !annotation.lazy() ? reference.get() : createProxy(reference);
     }
 
     private <T> T createProxy(final MorphiaReference reference) {
@@ -234,29 +238,25 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         }
     }
 
-    private Object collectIdValues(final Object value) {
-        if (value instanceof Collection) {
-            List ids = new ArrayList(((Collection) value).size());
-            for (Object o : (Collection) value) {
-                ids.add(collectIdValues(o));
-            }
-            return ids;
-        } else if (value instanceof Map) {
-            final LinkedHashMap ids = new LinkedHashMap();
-            Map<Object, Object> map = (Map<Object, Object>) value;
-            for (final Map.Entry<Object, Object> o : map.entrySet()) {
-                ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
-            }
-            return ids;
-        } else if (value.getClass().isArray()) {
-            List ids = new ArrayList(((Object[]) value).length);
-            for (Object o : (Object[]) value) {
-                ids.add(collectIdValues(o));
-            }
-            return ids;
+    private Object fetch(final Object value) {
+        MorphiaReference reference;
+        final Class<?> type = getField().getType();
+        if (List.class.isAssignableFrom(type)) {
+            reference = readList((List) value);
+        } else if (Map.class.isAssignableFrom(type)) {
+            reference = readMap((Map<Object, Object>) value);
+        } else if (Set.class.isAssignableFrom(type)) {
+            reference = readSet((List) value);
+        } else if (type.isArray()) {
+            reference = readList((List) value);
+        } else if (value instanceof Document) {
+            reference = readDocument((Document) value);
         } else {
-            return encodeId(getDatastore().getMapper(), getDatastore(), value, getFieldMappedClass());
+            reference = readSingle(value);
         }
+        reference.ignoreMissing(annotation.ignoreMissing());
+
+        return !annotation.lazy() ? reference.get() : createProxy(reference);
     }
 
     MorphiaReference readDocument(final Document value) {
@@ -266,12 +266,8 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         return readSingle(id);
     }
 
-    MorphiaReference readSingle(final Object value) {
-        return new SingleReference(getDatastore(), getFieldMappedClass(), value);
-    }
-
-    MorphiaReference readSet(final List value) {
-        return new SetReference(getDatastore(), getFieldMappedClass(), value);
+    MorphiaReference readList(final List value) {
+        return new ListReference(getDatastore(), getFieldMappedClass(), value);
     }
 
     MorphiaReference readMap(final Map<Object, Object> value) {
@@ -284,8 +280,12 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         return new MapReference(getDatastore(), (Map<String, Object>) ids, getFieldMappedClass());
     }
 
-    MorphiaReference readList(final List value) {
-        return new ListReference(getDatastore(), getFieldMappedClass(), value);
+    MorphiaReference readSet(final List value) {
+        return new SetReference(getDatastore(), getFieldMappedClass(), value);
+    }
+
+    MorphiaReference readSingle(final Object value) {
+        return new SingleReference(getDatastore(), getFieldMappedClass(), value);
     }
 }
 

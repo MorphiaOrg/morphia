@@ -29,20 +29,28 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private Map<String, List<Object>> collections = new HashMap<>();
 
     /**
-     * @param datastore the datastore to use
-     * @param ids       the IDs of the entities
-     * @param valueType the MappedClass for the entity type
+     * @param datastore   the datastore to use
+     * @param ids         the IDs of the entities
+     * @param mappedClass the MappedClass for the entity type
      * @morphia.internal
      */
-    public MapReference(final Datastore datastore, final Map<String, Object> ids, final MappedClass valueType) {
+    public MapReference(final Datastore datastore, final Map<String, Object> ids, final MappedClass mappedClass) {
         super(datastore);
         if (ids != null) {
+            //            if (ids.entrySet().stream().allMatch(mappedClass.getType()::isInstance)) {
+            //                setValues(ids);
+            //            } else {
             for (final Entry<String, Object> entry : ids.entrySet()) {
-                CollectionReference.collate(valueType, collections, entry.getValue());
+                CollectionReference.collate(mappedClass, collections, entry.getValue());
             }
+            this.ids = ids;
+            //            }
         }
 
-        this.ids = ids;
+    }
+
+    private void setValues(final Map<String, Object> values) {
+        resolve();
     }
 
     MapReference(final Map<Object, T> values) {

@@ -36,13 +36,18 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         super(datastore);
         this.mappedClass = mappedClass;
         if (ids != null) {
-            for (final Object o : ids) {
-                collate(mappedClass, collections, o);
+            if (ids.stream().allMatch(mappedClass.getType()::isInstance)) {
+                setValues(ids);
+            } else {
+                for (final Object o : ids) {
+                    collate(mappedClass, collections, o);
+                }
+                this.ids = ids;
             }
         }
-
-        this.ids = ids;
     }
+
+    protected abstract void setValues(final List ids);
 
     protected CollectionReference() {
     }

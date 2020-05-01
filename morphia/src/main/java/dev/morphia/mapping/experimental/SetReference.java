@@ -35,9 +35,16 @@ public class SetReference<T> extends CollectionReference<Set<T>> {
     }
 
     @Override
+    protected void setValues(final List ids) {
+        values = new LinkedHashSet<>();
+        values.addAll(ids);
+        resolve();
+    }
+
+    @Override
     public Set<T> get() {
         if (values == null) {
-            values = new LinkedHashSet(find());
+            values = new LinkedHashSet<T>(find());
         }
         return values;
     }
