@@ -70,7 +70,16 @@ public class MorphiaReferenceTest extends TestBase {
         getDs().save(author);
 
         final Author loaded = getDs().find(Author.class).filter(eq("_id", author.getId())).first();
-        validateSet(set, loaded);
+        Assert.assertFalse(loaded.set.isResolved());
+        final Set<Book> set1 = loaded.getSet();
+
+        assertEquals(set.size(), set1.size());
+
+        for (final Book book : set) {
+            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
+        }
+
+        assertTrue(loaded.set.isResolved());
     }
 
     @Test
