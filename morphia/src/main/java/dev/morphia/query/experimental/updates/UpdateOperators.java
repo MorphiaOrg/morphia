@@ -50,7 +50,7 @@ public final class UpdateOperators {
      * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
      * exclusive or) operations.
      *
-     * @param field the field to decrement
+     * @param field the field to update
      * @return the update operator
      * @update.operator $bit
      * @see #or(String, int)
@@ -61,31 +61,14 @@ public final class UpdateOperators {
     }
 
     /**
-     * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
-     * exclusive or) operations.
+     * The $currentDate operator sets the value of a field to the current date, either as a Date or a timestamp. The default type is Date.
      *
-     * @param field the field to decrement
+     * @param field the field to set
      * @return the update operator
-     * @update.operator $bit
-     * @see #and(String, int)
-     * @see #xor(String, int)
+     * @update.operator $currentDate
      */
-    public static UpdateOperator or(final String field, final int value) {
-        return new BitOperator("or", field, value);
-    }
-
-    /**
-     * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
-     * exclusive or) operations.
-     *
-     * @param field the field to decrement
-     * @return the update operator
-     * @update.operator $bit
-     * @see #and(String, int)
-     * @see #or(String, int)
-     */
-    public static UpdateOperator xor(final String field, final int value) {
-        return new BitOperator("xor", field, value);
+    public static CurrentDateOperator currentDate(final String field) {
+        return new CurrentDateOperator(field);
     }
 
     /**
@@ -161,6 +144,20 @@ public final class UpdateOperators {
      */
     public static UpdateOperator min(final String field, final Number value) {
         return new UpdateOperator("$min", field, value);
+    }
+
+    /**
+     * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
+     * exclusive or) operations.
+     *
+     * @param field the field to update
+     * @return the update operator
+     * @update.operator $bit
+     * @see #and(String, int)
+     * @see #xor(String, int)
+     */
+    public static UpdateOperator or(final String field, final int value) {
+        return new BitOperator("or", field, value);
     }
 
     /**
@@ -272,6 +269,20 @@ public final class UpdateOperators {
      */
     public static UpdateOperator unset(final String field) {
         return new UnsetOperator(field);
+    }
+
+    /**
+     * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
+     * exclusive or) operations.
+     *
+     * @param field the field to update
+     * @return the update operator
+     * @update.operator $bit
+     * @see #and(String, int)
+     * @see #or(String, int)
+     */
+    public static UpdateOperator xor(final String field, final int value) {
+        return new BitOperator("xor", field, value);
     }
 
 }

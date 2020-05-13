@@ -29,17 +29,20 @@ import dev.morphia.query.TestQuery.Pic;
 import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.experimental.filters.Filters;
+import dev.morphia.query.experimental.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
+import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,6 +58,7 @@ import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.regex;
 import static dev.morphia.query.experimental.updates.UpdateOperators.addToSet;
 import static dev.morphia.query.experimental.updates.UpdateOperators.and;
+import static dev.morphia.query.experimental.updates.UpdateOperators.currentDate;
 import static dev.morphia.query.experimental.updates.UpdateOperators.dec;
 import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 import static dev.morphia.query.experimental.updates.UpdateOperators.max;
@@ -817,6 +821,30 @@ public class TestUpdateOps extends TestBase {
         Assert.assertEquals(16, first.val);
     }
 
+    @Test
+    public void testCurrentDate() {
+        getDs().save(new DumbColl("currentDate"));
+
+        getDs().find(DumbColl.class)
+               .update(currentDate("localDateTime"))
+               .execute();
+
+        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+                                         .find()
+                                         .first();
+        Assert.assertNotNull(document.getDate("localDateTime"));
+
+        getDs().find(DumbColl.class)
+               .update(currentDate("localDateTime")
+                           .type(TypeSpecification.TIMESTAMP))
+               .execute();
+
+        document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+                                .find()
+                                .first();
+        Assert.assertTrue(document.get("localDateTime") instanceof BsonTimestamp);
+    }
+
     private void assertInserted(final UpdateResult res) {
         assertNotNull(res.getUpsertedId());
         assertEquals(0, res.getModifiedCount());
@@ -948,6 +976,7 @@ public class TestUpdateOps extends TestBase {
     private static final class DumbColl {
         @Id
         private ObjectId id;
+        private LocalDateTime localDateTime;
         private String opaqueId;
         private List<DumbArrayElement> fromArray;
 
