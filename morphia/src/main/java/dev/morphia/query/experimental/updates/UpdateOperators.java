@@ -47,6 +47,48 @@ public final class UpdateOperators {
     }
 
     /**
+     * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
+     * exclusive or) operations.
+     *
+     * @param field the field to decrement
+     * @return the update operator
+     * @update.operator $bit
+     * @see #or(String, int)
+     * @see #xor(String, int)
+     */
+    public static UpdateOperator and(final String field, final int value) {
+        return new BitOperator("and", field, value);
+    }
+
+    /**
+     * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
+     * exclusive or) operations.
+     *
+     * @param field the field to decrement
+     * @return the update operator
+     * @update.operator $bit
+     * @see #and(String, int)
+     * @see #xor(String, int)
+     */
+    public static UpdateOperator or(final String field, final int value) {
+        return new BitOperator("or", field, value);
+    }
+
+    /**
+     * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
+     * exclusive or) operations.
+     *
+     * @param field the field to decrement
+     * @return the update operator
+     * @update.operator $bit
+     * @see #and(String, int)
+     * @see #or(String, int)
+     */
+    public static UpdateOperator xor(final String field, final int value) {
+        return new BitOperator("xor", field, value);
+    }
+
+    /**
      * Decrements the value of the field by one.
      *
      * @param field the field to decrement
@@ -231,4 +273,5 @@ public final class UpdateOperators {
     public static UpdateOperator unset(final String field) {
         return new UnsetOperator(field);
     }
+
 }

@@ -54,9 +54,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.regex;
 import static dev.morphia.query.experimental.updates.UpdateOperators.addToSet;
+import static dev.morphia.query.experimental.updates.UpdateOperators.and;
 import static dev.morphia.query.experimental.updates.UpdateOperators.dec;
 import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 import static dev.morphia.query.experimental.updates.UpdateOperators.max;
+import static dev.morphia.query.experimental.updates.UpdateOperators.or;
 import static dev.morphia.query.experimental.updates.UpdateOperators.pop;
 import static dev.morphia.query.experimental.updates.UpdateOperators.pull;
 import static dev.morphia.query.experimental.updates.UpdateOperators.pullAll;
@@ -64,6 +66,7 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.push;
 import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static dev.morphia.query.experimental.updates.UpdateOperators.setOnInsert;
 import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
+import static dev.morphia.query.experimental.updates.UpdateOperators.xor;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -761,6 +764,57 @@ public class TestUpdateOps extends TestBase {
         Query<Circle> query = getDs().find(Circle.class)
                                      .filter(eq("radius", 0));
         query.update(inc("r", 1D)).execute();
+    }
+
+    @Test
+    public void testAnd() {
+        ContainsInt containsInt = new ContainsInt();
+        containsInt.val = 24;
+
+        getDs().save(containsInt);
+
+        getDs().find(ContainsInt.class)
+               .update(and("val", 8))
+               .execute();
+
+        ContainsInt first = getDs().find(ContainsInt.class)
+                                   .first();
+
+        Assert.assertEquals(8, first.val);
+    }
+
+    @Test
+    public void testOr() {
+        ContainsInt containsInt = new ContainsInt();
+        containsInt.val = 16;
+
+        getDs().save(containsInt);
+
+        getDs().find(ContainsInt.class)
+               .update(or("val", 8))
+               .execute();
+
+        ContainsInt first = getDs().find(ContainsInt.class)
+                                   .first();
+
+        Assert.assertEquals(24, first.val);
+    }
+
+    @Test
+    public void testXor() {
+        ContainsInt containsInt = new ContainsInt();
+        containsInt.val = 24;
+
+        getDs().save(containsInt);
+
+        getDs().find(ContainsInt.class)
+               .update(xor("val", 8))
+               .execute();
+
+        ContainsInt first = getDs().find(ContainsInt.class)
+                                   .first();
+
+        Assert.assertEquals(16, first.val);
     }
 
     private void assertInserted(final UpdateResult res) {
