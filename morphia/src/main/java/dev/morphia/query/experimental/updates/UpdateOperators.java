@@ -52,6 +52,7 @@ public final class UpdateOperators {
      * exclusive or) operations.
      *
      * @param field the field to update
+     * @param value the value to use for the update
      * @return the update operator
      * @update.operator $bit
      * @see #or(String, int)
@@ -164,6 +165,7 @@ public final class UpdateOperators {
      * exclusive or) operations.
      *
      * @param field the field to update
+     * @param value the value to use for the update
      * @return the update operator
      * @update.operator $bit
      * @see #and(String, int)
@@ -298,6 +300,7 @@ public final class UpdateOperators {
      * exclusive or) operations.
      *
      * @param field the field to update
+     * @param value the value to use for the update
      * @return the update operator
      * @update.operator $bit
      * @see #and(String, int)

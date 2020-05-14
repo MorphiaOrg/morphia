@@ -30,7 +30,7 @@ import static java.util.Arrays.asList;
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
     private MappedClass mappedClass;
     private List ids;
-    private Map<String, List<Object>> collections = new HashMap<>();
+    private final Map<String, List<Object>> collections = new HashMap<>();
 
     CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
         super(datastore);
@@ -47,7 +47,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         }
     }
 
-    protected abstract void setValues(final List ids);
+    abstract void setValues(List ids);
 
     protected CollectionReference() {
     }

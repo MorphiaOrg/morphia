@@ -7,7 +7,7 @@ import org.bson.Document;
 class BitOperator extends UpdateOperator {
     private final String operation;
 
-    public BitOperator(final String operation, final String field, final int value) {
+    BitOperator(final String operation, final String field, final int value) {
         super("$bit", field, value);
         this.operation = operation;
     }

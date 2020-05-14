@@ -4,9 +4,19 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 import org.bson.Document;
 
+/**
+ * Defines the $currentDate operator
+ *
+ * @since 2.0
+ */
 public class CurrentDateOperator extends UpdateOperator {
     private TypeSpecification typeSpec = TypeSpecification.DATE;
 
+    /**
+     * Creates an operator for a field
+     *
+     * @param field the field to update
+     */
     protected CurrentDateOperator(final String field) {
         super("$currentDate", field, field);
     }
@@ -16,11 +26,20 @@ public class CurrentDateOperator extends UpdateOperator {
         return new OperationTarget(pathTarget, typeSpec.toTarget());
     }
 
-    public CurrentDateOperator type(final TypeSpecification typeSpec) {
-        this.typeSpec = typeSpec;
+    /**
+     * Sets the type of value to set when updating the field
+     *
+     * @param type the type to use
+     * @return this
+     */
+    public CurrentDateOperator type(final TypeSpecification type) {
+        this.typeSpec = type;
         return this;
     }
 
+    /**
+     * Type type options when setting the current date
+     */
     public enum TypeSpecification {
         DATE {
             @Override
