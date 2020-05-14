@@ -34,11 +34,11 @@ import static java.util.Arrays.asList;
  */
 public class PathTarget {
     private final List<String> segments;
-    private boolean validateNames;
+    private final boolean validateNames;
     private int position;
-    private Mapper mapper;
+    private final Mapper mapper;
     private MappedClass context;
-    private MappedClass root;
+    private final MappedClass root;
     private MappedField target;
     private boolean resolved;
 
@@ -136,7 +136,8 @@ public class PathTarget {
         while (hasNext()) {
             String segment = next();
 
-            if ("$".equals(segment) || segment.matches("[0-9]+")) {  // array operator
+            // array operator
+            if ("$".equals(segment) || (segment.startsWith("$[") && segment.endsWith("]")) || segment.matches("[0-9]+")) {
                 if (!hasNext()) {
                     break;
                 }

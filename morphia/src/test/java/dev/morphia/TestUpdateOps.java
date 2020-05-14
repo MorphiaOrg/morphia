@@ -20,6 +20,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Reference;
+import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -270,21 +271,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    public void testRename() {
-        getDs().save(new DumbColl("rename"));
-
-        getDs().find(DumbColl.class)
-               .update(rename("opaqueId", "anythingElse"))
-               .execute();
-
-        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
-                                         .find()
-                                         .first();
-        Assert.assertNull(document.getString("opaqueId"));
-        Assert.assertNotNull(document.getString("anythingElse"));
-    }
-
-    @Test
     public void testElemMatchUpdate() {
         // setUp
         Object id = getDs().save(new ContainsIntArray()).id;
@@ -513,6 +499,13 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+    public void testPlaceholderOperators() {
+        new PathTarget(getMapper(), DumbColl.class, "fromArray.$").translatedPath();
+        new PathTarget(getMapper(), DumbColl.class, "fromArray.$[]").translatedPath();
+        new PathTarget(getMapper(), DumbColl.class, "fromArray.$[element]").translatedPath();
+    }
+
+    @Test
     public void testPush() {
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
@@ -610,6 +603,21 @@ public class TestUpdateOps extends TestBase {
                            .caseInsensitive())
                .update(pullAll("fromArray", List.of(new DumbArrayElement("something"))))
                .execute();
+    }
+
+    @Test
+    public void testRename() {
+        getDs().save(new DumbColl("rename"));
+
+        getDs().find(DumbColl.class)
+               .update(rename("opaqueId", "anythingElse"))
+               .execute();
+
+        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+                                         .find()
+                                         .first();
+        Assert.assertNull(document.getString("opaqueId"));
+        Assert.assertNotNull(document.getString("anythingElse"));
     }
 
     @Test
