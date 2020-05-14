@@ -41,6 +41,7 @@ public final class UpdateOperators {
      * @param values the values to add
      * @return the update operator
      * @update.operator $addToSet
+     * @update.operator $each
      */
     public static AddToSetOperator addToSet(final String field, final List<?> values) {
         return new AddToSetOperator(field, values);
@@ -147,6 +148,18 @@ public final class UpdateOperators {
     }
 
     /**
+     * Multiplies the value of the field by the specified amount.
+     *
+     * @param field the field to multiply
+     * @param value the number to multiply by
+     * @return the update operator
+     * @update.operator $mul
+     */
+    public static UpdateOperator mul(final String field, final Number value) {
+        return new UpdateOperator("$mul", field, value);
+    }
+
+    /**
      * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
      * exclusive or) operations.
      *
@@ -215,13 +228,10 @@ public final class UpdateOperators {
      * @param field  the field to update
      * @param values the values to add
      * @return the update operator
+     * @update.operator $each
      * @update.operator $push
      */
     public static PushOperator push(final String field, final List<?> values) {
-        //        Document document = new Document(UpdateOperator.EACH.val(), values);
-        //        options.update(document);
-        //        addOperation(UpdateOperator.PUSH, new PathTarget(mapper, mapper.getMappedClass(type), field, validateNames), document);
-
         return new PushOperator(field, values);
     }
 

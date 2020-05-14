@@ -62,6 +62,7 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.currentDate
 import static dev.morphia.query.experimental.updates.UpdateOperators.dec;
 import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 import static dev.morphia.query.experimental.updates.UpdateOperators.max;
+import static dev.morphia.query.experimental.updates.UpdateOperators.mul;
 import static dev.morphia.query.experimental.updates.UpdateOperators.or;
 import static dev.morphia.query.experimental.updates.UpdateOperators.pop;
 import static dev.morphia.query.experimental.updates.UpdateOperators.pull;
@@ -224,6 +225,47 @@ public class TestUpdateOps extends TestBase {
 
         assertUpdated(query.update(addToSet("values", new HashSet<>(asList(10, 11)))).execute(), 1);
         assertThat(query.first().values, is(new Integer[]{1, 2, 3, 5, 4, 8, 9, 10, 11}));
+    }
+
+    @Test
+    public void testAnd() {
+        ContainsInt containsInt = new ContainsInt();
+        containsInt.val = 24;
+
+        getDs().save(containsInt);
+
+        getDs().find(ContainsInt.class)
+               .update(and("val", 8))
+               .execute();
+
+        ContainsInt first = getDs().find(ContainsInt.class)
+                                   .first();
+
+        Assert.assertEquals(8, first.val);
+    }
+
+    @Test
+    public void testCurrentDate() {
+        getDs().save(new DumbColl("currentDate"));
+
+        getDs().find(DumbColl.class)
+               .update(currentDate("localDateTime"))
+               .execute();
+
+        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+                                         .find()
+                                         .first();
+        Assert.assertNotNull(document.getDate("localDateTime"));
+
+        getDs().find(DumbColl.class)
+               .update(currentDate("localDateTime")
+                           .type(TypeSpecification.TIMESTAMP))
+               .execute();
+
+        document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+                                .find()
+                                .first();
+        Assert.assertTrue(document.get("localDateTime") instanceof BsonTimestamp);
     }
 
     @Test
@@ -403,6 +445,23 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
+    public void testMul() {
+        ContainsInt containsInt = new ContainsInt();
+        containsInt.val = 2;
+
+        getDs().save(containsInt);
+
+        getDs().find(ContainsInt.class)
+               .update(mul("val", 8))
+               .execute();
+
+        ContainsInt first = getDs().find(ContainsInt.class)
+                                   .first();
+
+        Assert.assertEquals(16, first.val);
+    }
+
+    @Test
     public void testMultiUpdates() {
         getMapper().map(ContainsPic.class);
         Query<ContainsPic> finder = getDs().find(ContainsPic.class);
@@ -418,6 +477,23 @@ public class TestUpdateOps extends TestBase {
         for (int i = 0; i < 3; i++) {
             assertEquals(i + 1, iterator.next().getSize());
         }
+    }
+
+    @Test
+    public void testOr() {
+        ContainsInt containsInt = new ContainsInt();
+        containsInt.val = 16;
+
+        getDs().save(containsInt);
+
+        getDs().find(ContainsInt.class)
+               .update(or("val", 8))
+               .execute();
+
+        ContainsInt first = getDs().find(ContainsInt.class)
+                                   .first();
+
+        Assert.assertEquals(24, first.val);
     }
 
     @Test
@@ -771,40 +847,6 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    public void testAnd() {
-        ContainsInt containsInt = new ContainsInt();
-        containsInt.val = 24;
-
-        getDs().save(containsInt);
-
-        getDs().find(ContainsInt.class)
-               .update(and("val", 8))
-               .execute();
-
-        ContainsInt first = getDs().find(ContainsInt.class)
-                                   .first();
-
-        Assert.assertEquals(8, first.val);
-    }
-
-    @Test
-    public void testOr() {
-        ContainsInt containsInt = new ContainsInt();
-        containsInt.val = 16;
-
-        getDs().save(containsInt);
-
-        getDs().find(ContainsInt.class)
-               .update(or("val", 8))
-               .execute();
-
-        ContainsInt first = getDs().find(ContainsInt.class)
-                                   .first();
-
-        Assert.assertEquals(24, first.val);
-    }
-
-    @Test
     public void testXor() {
         ContainsInt containsInt = new ContainsInt();
         containsInt.val = 24;
@@ -819,30 +861,6 @@ public class TestUpdateOps extends TestBase {
                                    .first();
 
         Assert.assertEquals(16, first.val);
-    }
-
-    @Test
-    public void testCurrentDate() {
-        getDs().save(new DumbColl("currentDate"));
-
-        getDs().find(DumbColl.class)
-               .update(currentDate("localDateTime"))
-               .execute();
-
-        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
-                                         .find()
-                                         .first();
-        Assert.assertNotNull(document.getDate("localDateTime"));
-
-        getDs().find(DumbColl.class)
-               .update(currentDate("localDateTime")
-                           .type(TypeSpecification.TIMESTAMP))
-               .execute();
-
-        document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
-                                .find()
-                                .first();
-        Assert.assertTrue(document.get("localDateTime") instanceof BsonTimestamp);
     }
 
     private void assertInserted(final UpdateResult res) {
