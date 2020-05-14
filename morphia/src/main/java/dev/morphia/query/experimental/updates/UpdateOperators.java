@@ -160,6 +160,18 @@ public final class UpdateOperators {
     }
 
     /**
+     * Renames a field.
+     *
+     * @param field the field to rename
+     * @param value the new name
+     * @return the update operator
+     * @update.operator $rename
+     */
+    public static UpdateOperator rename(final String field, final String value) {
+        return new UpdateOperator("$rename", field, value);
+    }
+
+    /**
      * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
      * exclusive or) operations.
      *

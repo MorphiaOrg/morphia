@@ -68,6 +68,7 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.pop;
 import static dev.morphia.query.experimental.updates.UpdateOperators.pull;
 import static dev.morphia.query.experimental.updates.UpdateOperators.pullAll;
 import static dev.morphia.query.experimental.updates.UpdateOperators.push;
+import static dev.morphia.query.experimental.updates.UpdateOperators.rename;
 import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static dev.morphia.query.experimental.updates.UpdateOperators.setOnInsert;
 import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
@@ -266,6 +267,21 @@ public class TestUpdateOps extends TestBase {
                                 .find()
                                 .first();
         Assert.assertTrue(document.get("localDateTime") instanceof BsonTimestamp);
+    }
+
+    @Test
+    public void testRename() {
+        getDs().save(new DumbColl("rename"));
+
+        getDs().find(DumbColl.class)
+               .update(rename("opaqueId", "anythingElse"))
+               .execute();
+
+        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+                                         .find()
+                                         .first();
+        Assert.assertNull(document.getString("opaqueId"));
+        Assert.assertNotNull(document.getString("anythingElse"));
     }
 
     @Test
