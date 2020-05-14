@@ -160,18 +160,6 @@ public final class UpdateOperators {
     }
 
     /**
-     * Renames a field.
-     *
-     * @param field the field to rename
-     * @param value the new name
-     * @return the update operator
-     * @update.operator $rename
-     */
-    public static UpdateOperator rename(final String field, final String value) {
-        return new UpdateOperator("$rename", field, value);
-    }
-
-    /**
      * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
      * exclusive or) operations.
      *
@@ -191,7 +179,7 @@ public final class UpdateOperators {
      *
      * @param field the field to update
      * @return the update operator
-     * @update.operator $pull
+     * @update.operator $pop
      */
     public static PopOperator pop(final String field) {
         return new PopOperator(field);
@@ -245,6 +233,18 @@ public final class UpdateOperators {
      */
     public static PushOperator push(final String field, final List<?> values) {
         return new PushOperator(field, values);
+    }
+
+    /**
+     * Renames a field.
+     *
+     * @param field the field to rename
+     * @param value the new name
+     * @return the update operator
+     * @update.operator $rename
+     */
+    public static UpdateOperator rename(final String field, final String value) {
+        return new UpdateOperator("$rename", field, value);
     }
 
     /**
