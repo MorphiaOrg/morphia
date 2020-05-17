@@ -13,8 +13,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.singletonList;
 import static dev.morphia.utils.ReflectionUtils.iterToList;
+import static java.util.Collections.singletonList;
 
 
 /**
@@ -134,14 +134,20 @@ public class UpdateOpsImpl<T> implements UpdateOperations<T> {
 
     @Override
     public UpdateOperations<T> dec(final String field, final Number value) {
-        if ((value instanceof Long) || (value instanceof Integer)) {
+        if (value instanceof Long) {
             return inc(field, (value.longValue() * -1));
         }
-        if ((value instanceof Double) || (value instanceof Float)) {
+        if (value instanceof Integer) {
+            return inc(field, (value.intValue() * -1));
+        }
+        if (value instanceof Double) {
             return inc(field, (value.doubleValue() * -1));
         }
+        if (value instanceof Float) {
+            return inc(field, (value.floatValue() * -1));
+        }
         throw new IllegalArgumentException(
-                "Currently only the following types are allowed: integer, long, double, float.");
+            "Currently only the following types are allowed: integer, long, double, float.");
     }
 
     @Override
