@@ -23,9 +23,11 @@ public interface AdvancedDatastore extends Datastore {
      * Returns the DBDecoderFactory used by this Datastore
      *
      * @return the decoder factory
-     * @see DBDecoderFactory
      * @morphia.internal
+     * @see DBDecoderFactory
+     * @deprecated unused in 2.0 and will be removed
      */
+    @Deprecated
     DBDecoderFactory getDecoderFact();
 
     /**
@@ -33,7 +35,9 @@ public interface AdvancedDatastore extends Datastore {
      *
      * @param fact the DBDecoderFactory to use
      * @morphia.internal
+     * @deprecated unused in 2.0 and will be removed
      */
+    @Deprecated
     void setDecoderFact(DBDecoderFactory fact);
 
     /**
