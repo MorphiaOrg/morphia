@@ -18,10 +18,6 @@ dev.morphia
 dev.morphia
 dev.morphia
 dev.morphia
-dev.morphia
-dev.morphia
-dev.morphia
-dev.morphia
 dev.morphia.aggregation
 dev.morphia.aggregation
 dev.morphia.aggregation
@@ -260,6 +256,10 @@ dev.morphia.query.validation
 dev.morphia.query
 dev.morphia.query
 dev.morphia.query
+dev.morphia
+dev.morphia
+dev.morphia
+dev.morphia
 dev.morphia
 dev.morphia
 relocated.morphia.org.apache.commons.collections
