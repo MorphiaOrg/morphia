@@ -11,6 +11,8 @@ import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 
+import java.util.List;
+
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with DBObject and low-level options. It implements matching
  * methods from the {@code Datastore} interface but with a specified kind (collection name), or raw types (DBObject).
@@ -399,8 +401,22 @@ public interface AdvancedDatastore extends Datastore {
      * @param entities the entities to insert
      * @param <T>      the type of the entities
      * @return the new keys of the inserted entities
+     * @deprecated use {@link #insert(List)}
      */
+    @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities);
+
+    /**
+     * Inserts entities in to the mapped collection.
+     *
+     * <i>The return type will change in 2.0</i>
+     *
+     * @param entities the entities to insert
+     * @param <T>      the type of the entities
+     * @return the new keys of the inserted entities
+     * @since 1.6
+     */
+    <T> Iterable<Key<T>> insert(List<T> entities);
 
     /**
      * Inserts entities in to the mapped collection.
@@ -409,7 +425,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param wc       the WriteConcern to use when inserting
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
-     * @deprecated use {@link #insert(Iterable, InsertOptions)}
+     * @deprecated use {@link #insert(List, InsertOptions)}
      */
     @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities, WriteConcern wc);
@@ -423,10 +439,24 @@ public interface AdvancedDatastore extends Datastore {
      * @param options  the options to apply to the insert operation
      * @param <T>      the type of the entity
      * @return the new keys of the inserted entities
-     * @morphia.inline
      * @since 1.3
+     * @deprecated use {@link #insert(List, InsertOptions)}
      */
+    @Deprecated
     <T> Iterable<Key<T>> insert(Iterable<T> entities, InsertOptions options);
+
+    /**
+     * Inserts entities in to the mapped collection.
+     *
+     * <i>The return type will change in 2.0</i>
+     *
+     * @param entities the entities to insert
+     * @param options  the options to apply to the insert operation
+     * @param <T>      the type of the entity
+     * @return the new keys of the inserted entities
+     * @since 1.6
+     */
+    <T> Iterable<Key<T>> insert(List<T> entities, InsertOptions options);
 
     /**
      * Inserts an entity in to the named collection.

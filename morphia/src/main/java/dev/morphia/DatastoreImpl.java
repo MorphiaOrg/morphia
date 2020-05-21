@@ -81,7 +81,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final MongoClient mongoClient;
     private final MongoDatabase database;
     private final IndexHelper indexHelper;
-    private DB db;
+    private final DB db;
     private Mapper mapper;
     private WriteConcern defConcern;
     private DBDecoderFactory decoderFactory;
@@ -717,12 +717,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         return queryByExample(getCollection(ex), ex);
     }
 
+    /**
+     * Inserts entities in to the database
+     *
+     * @param entities the entities to insert
+     * @param <T>      the type of the entities
+     * @return the keys of entities
+     */
     @Override
-    public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
-        Iterator<T> iterator = entities.iterator();
-        return !iterator.hasNext()
-               ? Collections.<Key<T>>emptyList()
-               : save(entities, getWriteConcern(iterator.next()));
+    public <T> Iterable<Key<T>> insert(final List<T> entities) {
+        return insert(entities, new InsertOptions()
+                                    .writeConcern(defConcern));
     }
 
     @Override
@@ -1088,7 +1093,15 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities, final InsertOptions options) {
         Iterator<T> iterator = entities.iterator();
         return !iterator.hasNext()
-               ? Collections.<Key<T>>emptyList()
+               ? Collections.emptyList()
+               : insert(getCollection(iterator.next()), entities, options);
+    }
+
+    @Override
+    public <T> List<Key<T>> insert(final List<T> entities, final InsertOptions options) {
+        Iterator<T> iterator = entities.iterator();
+        return !iterator.hasNext()
+               ? Collections.emptyList()
                : insert(getCollection(iterator.next()), entities, options);
     }
 
@@ -1182,6 +1195,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> Iterable<Key<T>> insert(final Iterable<T> entities) {
         return insert(entities, new InsertOptions()
                                     .writeConcern(defConcern));
+    }
+
+    @Override
+    public <T> Iterable<Key<T>> save(final Iterable<T> entities) {
+        Iterator<T> iterator = entities.iterator();
+        return !iterator.hasNext()
+               ? Collections.emptyList()
+               : save(entities, getWriteConcern(iterator.next()));
     }
 
     /**
@@ -1400,7 +1421,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper.toDBObject(ProxyHelper.unwrap(entity), involvedObjects);
     }
 
-    private <T> Iterable<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final InsertOptions options) {
+    private <T> List<Key<T>> insert(final DBCollection dbColl, final Iterable<T> entities, final InsertOptions options) {
         if (!entities.iterator().hasNext()) {
             return emptyList();
         }

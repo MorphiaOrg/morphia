@@ -50,6 +50,7 @@ public interface EntityInterceptor {
      * @param dbObj  the DBObject form of the entity
      * @param mapper the Mapper being used
      * @see PreSave
+     * @deprecated removed in 2.0
      */
     void preSave(Object ent, DBObject dbObj, Mapper mapper);
 }
