@@ -2,18 +2,18 @@ package dev.morphia.geo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.testutil.JSONMatcher;
+import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static dev.morphia.geo.GeoJson.lineString;
 import static dev.morphia.geo.GeoJson.multiPolygon;
 import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.geo.GeoJson.polygon;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test driving features for Issue 643 - add support for saving entities with GeoJSON.
@@ -208,93 +208,6 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         getDs().save(allTheThings);
-
-        // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedArea = getDs().getCollection(AllTheThings.class).findOne(new BasicDBObject("name", name),
-                                                                                new BasicDBObject("_id", 0)
-                                                                                    .append("className", 0));
-        assertThat(storedArea, is(notNullValue()));
-        assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
-                                                                + " name: '" + name + "',"
-                                                                + " everything: "
-                                                                + " {"
-                                                                + "  type: 'GeometryCollection', "
-                                                                + "  geometries: "
-                                                                + "  ["
-                                                                + "    {"
-                                                                + "     type: 'Point', "
-                                                                + "     coordinates: [7.0, 3.0]"
-                                                                + "    }, "
-                                                                + "    {"
-                                                                + "     type: 'LineString', "
-                                                                + "     coordinates: [ [ 2.0,  1.0],"
-                                                                + "                    [ 5.0,  3.0],"
-                                                                + "                    [13.0, 19.0] ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'Polygon', "
-                                                                + "     coordinates: "
-                                                                + "       [ [ [ 2.0, 1.1],"
-                                                                + "           [ 3.5, 2.3],"
-                                                                + "           [ 1.0, 3.7],"
-                                                                + "           [ 2.0, 1.1] "
-                                                                + "         ],"
-                                                                + "         [ [ 2.0, 1.5],"
-                                                                + "           [ 2.0, 1.9],"
-                                                                + "           [ 1.8, 1.9],"
-                                                                + "           [ 2.0, 1.5] "
-                                                                + "         ],"
-                                                                + "         [ [ 2.1, 2.2],"
-                                                                + "           [ 1.9, 2.4],"
-                                                                + "           [ 1.7, 2.4],"
-                                                                + "           [ 1.8, 2.1],"
-                                                                + "           [ 2.1, 2.2] "
-                                                                + "         ]"
-                                                                + "       ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'MultiPoint', "
-                                                                + "     coordinates: [ [ 2.0,  1.0],"
-                                                                + "                    [ 5.0,  3.0],"
-                                                                + "                    [13.0, 19.0] ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'MultiLineString', "
-                                                                + "     coordinates: "
-                                                                + "        [ [ [ 2.0,  1.0],"
-                                                                + "            [ 5.0,  3.0],"
-                                                                + "            [13.0, 19.0] "
-                                                                + "          ], "
-                                                                + "          [ [ 2.0, 1.5],"
-                                                                + "            [ 2.0, 1.9],"
-                                                                + "            [ 1.8, 1.9],"
-                                                                + "            [ 2.0, 1.5] "
-                                                                + "          ]"
-                                                                + "        ]"
-                                                                + "    },"
-                                                                + "    {"
-                                                                + "     type: 'MultiPolygon', "
-                                                                + "     coordinates: [ [ [ [ 2.0, 1.1],"
-                                                                + "                        [ 3.5, 2.3],"
-                                                                + "                        [ 1.0, 3.7],"
-                                                                + "                        [ 2.0, 1.1],"
-                                                                + "                      ]"
-                                                                + "                    ],"
-                                                                + "                    [ [ [ 3.0, 1.2],"
-                                                                + "                        [ 4.5, 2.5],"
-                                                                + "                        [ 1.9, 6.7],"
-                                                                + "                        [ 3.0, 1.2] "
-                                                                + "                      ],"
-                                                                + "                      [ [ 2.4, 3.5],"
-                                                                + "                        [ 2.8, 1.7],"
-                                                                + "                        [ 2.4, 3.5] "
-                                                                + "                      ],"
-                                                                + "                    ]"
-                                                                + "                  ]"
-                                                                + "    }"
-                                                                + "  ]"
-                                                                + " }"
-                                                                + "}"));
     }
 
     @Test
@@ -330,21 +243,6 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         getDs().save(stores);
-
-        // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedObject = getDs().getCollection(Stores.class).findOne(new BasicDBObject("name", name),
-                                                                            new BasicDBObject("_id", 0).append("className", 0));
-        assertThat(storedObject, is(notNullValue()));
-        assertThat(storedObject.toString(), JSONMatcher.jsonEqual("  {"
-                                                                  + " name: " + name + ","
-                                                                  + " locations:  "
-                                                                  + " {"
-                                                                  + "  type: 'MultiPoint', "
-                                                                  + "  coordinates: [ [ 2.0,  1.0],"
-                                                                  + "                 [ 5.0,  3.0],"
-                                                                  + "                 [13.0, 19.0] ]"
-                                                                  + " }"
-                                                                  + "}"));
     }
 
     @Test
@@ -420,43 +318,6 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         getDs().save(regions);
-
-        // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedRegions = getDs().getCollection(Regions.class).findOne(new BasicDBObject("name", name),
-                                                                              new BasicDBObject("_id", 0)
-                                                                                  .append("className", 0));
-        assertThat(storedRegions, is(notNullValue()));
-        assertThat(storedRegions.toString(), JSONMatcher.jsonEqual("  {"
-                                                                   + " name: '" + name + "',"
-                                                                   + " regions:  "
-                                                                   + " {"
-                                                                   + "  type: 'MultiPolygon', "
-                                                                   + "  coordinates: [ [ [ [ 2.0, 1.1],"
-                                                                   + "                     [ 3.5, 2.3],"
-                                                                   + "                     [ 1.0, 3.7],"
-                                                                   + "                     [ 2.0, 1.1],"
-                                                                   + "                   ]"
-                                                                   + "                 ],"
-                                                                   + "                 [ [ [ 2.0, 1.1],"
-                                                                   + "                     [ 3.5, 2.3],"
-                                                                   + "                     [ 1.0, 3.7],"
-                                                                   + "                     [ 2.0, 1.1] "
-                                                                   + "                   ],"
-                                                                   + "                   [ [ 2.0, 1.5],"
-                                                                   + "                     [ 2.0, 1.9],"
-                                                                   + "                     [ 1.8, 1.9],"
-                                                                   + "                     [ 2.0, 1.5] "
-                                                                   + "                   ],"
-                                                                   + "                   [ [ 2.1, 2.2],"
-                                                                   + "                     [ 1.9, 2.4],"
-                                                                   + "                     [ 1.7, 2.4],"
-                                                                   + "                     [ 1.8, 2.1],"
-                                                                   + "                     [ 2.1, 2.2] "
-                                                                   + "                   ]"
-                                                                   + "                 ]"
-                                                                   + "               ]"
-                                                                   + " }"
-                                                                   + "}"));
     }
 
     @Test
@@ -470,38 +331,6 @@ public class GeoEntitiesTest extends TestBase {
 
         // when
         getDs().save(area);
-
-        // then use the underlying driver to ensure it was persisted correctly to the database
-        DBObject storedArea = getDs().getCollection(Area.class).findOne(new BasicDBObject("name", polygonName),
-                                                                        new BasicDBObject("_id", 0)
-                                                                            .append("className", 0)
-                                                                            .append("area.className", 0));
-        assertThat(storedArea, is(notNullValue()));
-        assertThat(storedArea.toString(), JSONMatcher.jsonEqual("  {"
-                                                                + " name: " + polygonName + ","
-                                                                + " area:  "
-                                                                + " {"
-                                                                + "  type: 'Polygon', "
-                                                                + "  coordinates: "
-                                                                + "    [ [ [ 2.0, 1.1],"
-                                                                + "        [ 3.5, 2.3],"
-                                                                + "        [ 1.0, 3.7],"
-                                                                + "        [ 2.0, 1.1] "
-                                                                + "      ],"
-                                                                + "      [ [ 2.0, 1.5],"
-                                                                + "        [ 2.0, 1.9],"
-                                                                + "        [ 1.8, 1.9],"
-                                                                + "        [ 2.0, 1.5] "
-                                                                + "      ],"
-                                                                + "      [ [ 2.1, 2.2],"
-                                                                + "        [ 1.9, 2.4],"
-                                                                + "        [ 1.7, 2.4],"
-                                                                + "        [ 1.8, 2.1],"
-                                                                + "        [ 2.1, 2.2] "
-                                                                + "      ]"
-                                                                + "    ]"
-                                                                + " }"
-                                                                + "}"));
     }
 
     @Test
@@ -545,6 +374,52 @@ public class GeoEntitiesTest extends TestBase {
 
 
     @SuppressWarnings("UnusedDeclaration")
+    private static final class AllTheThings {
+        private GeometryCollection everything;
+        private String name;
+
+        private AllTheThings() {
+        }
+
+        private AllTheThings(final String name, final GeometryCollection everything) {
+            this.name = name;
+            this.everything = everything;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            AllTheThings that = (AllTheThings) o;
+
+            if (!everything.equals(that.everything)) {
+                return false;
+            }
+            return name.equals(that.name);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = everything.hashCode();
+            result = 31 * result + name.hashCode();
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "AllTheThings{"
+                   + "everything=" + everything
+                   + ", name='" + name + '\''
+                   + '}';
+        }
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
     private static final class Paths {
         private String name;
         private MultiLineString paths;
@@ -578,11 +453,7 @@ public class GeoEntitiesTest extends TestBase {
             if (!name.equals(paths1.name)) {
                 return false;
             }
-            if (!paths.equals(paths1.paths)) {
-                return false;
-            }
-
-            return true;
+            return paths.equals(paths1.paths);
         }
 
 
@@ -591,56 +462,6 @@ public class GeoEntitiesTest extends TestBase {
             return "Paths{"
                    + "name='" + name + '\''
                    + ", paths=" + paths
-                   + '}';
-        }
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    private static final class AllTheThings {
-        private GeometryCollection everything;
-        private String name;
-
-        private AllTheThings() {
-        }
-
-        private AllTheThings(final String name, final GeometryCollection everything) {
-            this.name = name;
-            this.everything = everything;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            AllTheThings that = (AllTheThings) o;
-
-            if (!everything.equals(that.everything)) {
-                return false;
-            }
-            if (!name.equals(that.name)) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = everything.hashCode();
-            result = 31 * result + name.hashCode();
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return "AllTheThings{"
-                   + "everything=" + everything
-                   + ", name='" + name + '\''
                    + '}';
         }
     }
