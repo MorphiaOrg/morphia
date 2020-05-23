@@ -8,7 +8,6 @@ notifications:
     on_failure: always
 
 jdk:
-  - openjdk8
   - openjdk11
 
 env:
