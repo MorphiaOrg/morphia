@@ -8,10 +8,9 @@ notifications:
     on_failure: always
 
 jdk:
+  - oraclejdk6
+  - openjdk8
   - openjdk11
-  - openjdk12
-  - openjdk13
-  - openjdk14
 
 env:
   - MONGODB=4.0.5 DRIVER=4.0.3
