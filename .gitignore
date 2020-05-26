@@ -69,3 +69,4 @@ fabric.properties
 .idea/httpRequests
 /mongodb-osx-x86_64-3.4.17/
 /morphia/Changes-*.md
+/config/revapi.json
