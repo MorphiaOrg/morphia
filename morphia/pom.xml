@@ -111,6 +111,31 @@
                     <packageName>dev.morphia.sofia</packageName>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-license</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/..</directory>
+                                    <includes>
+                                        <include>LICENSE.txt</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -250,9 +275,9 @@
                         <configuration>
                             <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                             <oldArtifacts>
-                                <artifact>${project.groupId}:core:1.5.7</artifact>
+                                <artifact>${project.groupId}:core:1.6.0-RC1</artifact>
                             </oldArtifacts>
-                            <oldVersion>1.5.7</oldVersion>
+                            <oldVersion>1.6.0-RC1</oldVersion>
                             <analysisConfigurationFiles>
                                 <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
                             </analysisConfigurationFiles>
@@ -264,49 +289,6 @@
                                         <minor>nonBreaking</minor>
                                         <patch>equivalent</patch>
                                     </versionIncreaseAllows>
-                                </revapi.semver.ignore>
-                            </analysisConfiguration>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>api-audit</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.revapi</groupId>
-                        <artifactId>revapi-maven-plugin</artifactId>
-                        <version>${revapi.maven.plugin.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.revapi</groupId>
-                                <artifactId>revapi-java</artifactId>
-                                <version>${revapi.java.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>revapi</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <phase>verify</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                            <oldArtifacts>
-                                <artifact>${project.groupId}:core:1.5.8</artifact>
-                            </oldArtifacts>
-                            <oldVersion>1.5.8</oldVersion>
-                            <analysisConfigurationFiles>
-                                <analysisConfigurationFile>../config/api-audit.json</analysisConfigurationFile>
-                            </analysisConfigurationFiles>
-                            <analysisConfiguration>
-                                <revapi.semver.ignore>
-                                    <enabled>false</enabled>
                                 </revapi.semver.ignore>
                             </analysisConfiguration>
                         </configuration>
