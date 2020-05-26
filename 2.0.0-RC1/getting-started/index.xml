@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Getting Started on Morphia</title>
+    <link>/2.0.0-RC1/getting-started/</link>
+    <description>Recent content in Getting Started on Morphia</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
+    
+	<atom:link href="/2.0.0-RC1/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Installation Guide</title>
+      <link>/2.0.0-RC1/getting-started/installation-guide/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/2.0.0-RC1/getting-started/installation-guide/</guid>
+      <description>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle. To use Morphia using either build tool, you will need to update your build configurations with the following information.
+ &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia-core&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.0.0-RC1&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia.morphia:morphia-core:2.0.0-RC1&#39; }    Morphia 2.0 requires Java 11 or greater. Morphia has been tested on mongodb servers as old as 3.</description>
+    </item>
+    
+    <item>
+      <title>Quick Tour</title>
+      <link>/2.0.0-RC1/getting-started/quick-tour/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/2.0.0-RC1/getting-started/quick-tour/</guid>
+      <description>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful. Morphia does its best to abstract much of that away but if something is confusing, please consult the Java driver documentation as well.
+The following code snippets come from the QuickTour.java example code that can be found with the Morphia source.
+Setting up Morphia The following example shows how to create the initial Morphia instance.</description>
+    </item>
+    
+  </channel>
+</rss>
