@@ -12,18 +12,18 @@
     <title>Migration Guide :: Morphia</title>
 
     
-    <link href="/1.6.0-RC1/css/nucleus.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/fontawesome-all.min.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/hybrid.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/featherlight.min.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/perfect-scrollbar.min.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/auto-complete.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/atom-one-dark-reasonable.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/theme.css?1590470022" rel="stylesheet">
-    <link href="/1.6.0-RC1/css/hugo-theme.css?1590470022" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/nucleus.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/fontawesome-all.min.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/hybrid.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/featherlight.min.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/perfect-scrollbar.min.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/auto-complete.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/atom-one-dark-reasonable.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/theme.css?1590471649" rel="stylesheet">
+    <link href="/1.6.0-RC1/css/hugo-theme.css?1590471649" rel="stylesheet">
     
 
-    <script src="/1.6.0-RC1/js/jquery-3.3.1.min.js?1590470022"></script>
+    <script src="/1.6.0-RC1/js/jquery-3.3.1.min.js?1590471649"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -480,7 +480,7 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#migrating-to-15">Migrating to 1.5</a></li>
+        <li><a href="#migrating-to-16">Migrating to 1.6</a></li>
       </ul>
     </li>
   </ul>
@@ -508,12 +508,10 @@
 
 
 
-<h3 id="migrating-to-15">Migrating to 1.5</h3>
+<h3 id="migrating-to-16">Migrating to 1.6</h3>
 <ul>
-<li>Indexing of <code>@Embedded</code> fields is being deprecated in favor of declaring all indexes at the top level <code>@Entity</code> level.  The new index
-definitions just need to use the dotted path names to recreate these indexes.  To turn off the warning in the logs about embedded
-indexing, simply pass <code>false</code> to <code>MapperOptions#setDisableEmbeddedIndexes</code>.</li>
-<li><code>Query#asList()</code> is deprecated.  Usages should be updated to use <code>find().toList()</code> instead.</li>
+<li>Since 1.6 is built on 4.0 of the driver which has moved to a minimum of Java 8, Morphia 1.6 also now requires a minimum
+of Java 8.</li>
 </ul>
 
 
@@ -811,19 +809,19 @@ indexing, simply pass <code>false</code> to <code>MapperOptions#setDisableEmbedd
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/1.6.0-RC1/js/clipboard.min.js?1590470022"></script>
-    <script src="/1.6.0-RC1/js/perfect-scrollbar.min.js?1590470022"></script>
-    <script src="/1.6.0-RC1/js/perfect-scrollbar.jquery.min.js?1590470022"></script>
-    <script src="/1.6.0-RC1/js/jquery.sticky.js?1590470022"></script>
-    <script src="/1.6.0-RC1/js/featherlight.min.js?1590470022"></script>
-    <script src="/1.6.0-RC1/js/highlight.pack.js?1590470022"></script>
+    <script src="/1.6.0-RC1/js/clipboard.min.js?1590471649"></script>
+    <script src="/1.6.0-RC1/js/perfect-scrollbar.min.js?1590471649"></script>
+    <script src="/1.6.0-RC1/js/perfect-scrollbar.jquery.min.js?1590471649"></script>
+    <script src="/1.6.0-RC1/js/jquery.sticky.js?1590471649"></script>
+    <script src="/1.6.0-RC1/js/featherlight.min.js?1590471649"></script>
+    <script src="/1.6.0-RC1/js/highlight.pack.js?1590471649"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/1.6.0-RC1/js/modernizr.custom-3.6.0.js?1590470022"></script>
-    <script src="/1.6.0-RC1/js/learn.js?1590470022"></script>
-    <script src="/1.6.0-RC1/js/hugo-learn.js?1590470022"></script>
+    <script src="/1.6.0-RC1/js/modernizr.custom-3.6.0.js?1590471649"></script>
+    <script src="/1.6.0-RC1/js/learn.js?1590471649"></script>
+    <script src="/1.6.0-RC1/js/hugo-learn.js?1590471649"></script>
 
-    <link href="/1.6.0-RC1/mermaid/mermaid.css?1590470022" rel="stylesheet" />
-    <script src="/1.6.0-RC1/mermaid/mermaid.js?1590470022"></script>
+    <link href="/1.6.0-RC1/mermaid/mermaid.css?1590471649" rel="stylesheet" />
+    <script src="/1.6.0-RC1/mermaid/mermaid.js?1590471649"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
