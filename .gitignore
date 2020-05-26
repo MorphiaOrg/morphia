@@ -15,6 +15,4 @@ target
 bin
 .gradle
 out/
-docs/landing/public
-docs/reference/public
-docs/reference/server
+config/revapi.json
