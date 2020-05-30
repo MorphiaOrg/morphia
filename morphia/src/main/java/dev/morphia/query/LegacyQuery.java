@@ -50,7 +50,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private Document baseQuery;
     @Deprecated
     private FindOptions options;
-    private CriteriaContainer compoundContainer;
+    private final CriteriaContainer compoundContainer;
 
     /**
      * Creates a Query for the given type and collection
@@ -491,34 +491,35 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return obj;
     }
 
-    private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
+    private <E> MongoCursor<E> prepareCursor(final FindOptions options, final MongoCollection<E> collection) {
         final Document query = this.toDocument();
 
-        FindOptions options = getOptions().copy().copy(findOptions);
+        FindOptions findOptions = getOptions().copy().copy(options);
         if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, options));
+            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
         }
 
-        if (options.getCursorType() != NonTailable && (options.getSort() != null)) {
+        if ((findOptions.getCursorType() != null && findOptions.getCursorType() != NonTailable)
+            && (findOptions.getSort() != null)) {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
-        ClientSession clientSession = datastore.findSession(options);
+        ClientSession clientSession = datastore.findSession(findOptions);
 
         FindIterable<E> iterable = clientSession != null
                                    ? collection.find(clientSession, query)
                                    : collection.find(query);
 
         Document oldProfile = null;
-        if (options.isLogQuery()) {
+        if (findOptions.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
-            return options
+            return findOptions
                        .apply(iterable, mapper, clazz)
                        .iterator();
         } finally {
-            if (options.isLogQuery()) {
+            if (findOptions.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
                                                        .append("slowms", oldProfile.get("slowms"))
                                                        .append("sampleRate", oldProfile.get("sampleRate")));

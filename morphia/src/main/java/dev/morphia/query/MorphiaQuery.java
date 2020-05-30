@@ -338,7 +338,8 @@ public class MorphiaQuery<T> implements Query<T> {
             LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
         }
 
-        if (findOptions.getCursorType() != NonTailable && (findOptions.getSort() != null)) {
+        if ((findOptions.getCursorType() != null && findOptions.getCursorType() != NonTailable)
+            && (findOptions.getSort() != null)) {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
