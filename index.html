@@ -37,13 +37,7 @@
             <div class="col-md-6">
                 <h2>Morphia</h2>
                 <p>
-                    The JVM Object Document Mapper for MongoDB
-                </p>
-                <p>
-                    <a id="latest" href="1.5"
-                       class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
-                    <a id="latest" href="https://github.com/MorphiaOrg/morphia/"
-                       class="btn btn-success btn-dark btn-mongo">Source Code</a>
+                    MongoDB Object Document Mapping for the JVM
                 </p>
             </div>
         </div>
@@ -54,253 +48,29 @@
   
   <div class="container" id="mainContent">
     <div class="row">
-      <div class="col-md-8">
-        <h2>Features</h2>
+      <div class="col-md-5">
+        <h1>Morphia</h1>
 
 <dl>
-    <dt>Java to Document Mapping</dt>
+    <dt>Bidirectional mapping to and from the database</dt>
     <dd>Transparently map your Java entities to MongoDB documents and back.</dd>
     <dt>Extensible Type Conversion</dt>
     <dd>Easily add support for custom types</dd>
-    <dt>Fluent Query and Update APIs</dt>
-    <dt>Aggregation Support</dt>
-    <dd>Use MongoDB's <a href="http://docs.mongodb.org/manual/aggregation/">aggregation framework</a> with your application's Java 
+    <dt>Robust Query and Update APIs</dt>
+    <dt>Full Aggregation Support</dt>
+    <dd>Use MongoDB's <a href="http://docs.mongodb.org/manual/aggregation/">aggregation framework</a> with your application's Java
         classes.</dd>
+    <dt>Annotation driven indexing</dt>
     <dt>Geospatial Queries</dt>
-    <dd></dd>
 </dl>
 
-
-        <h2 id="quickStart">Quick Start</h2>
-
 <p>
-  The recommended way to get started using Morphia in your project is with a dependency management system.
-  Select the version and dependency management system below and the snippet can be copied and pasted into your build.
-</p>
-<p>
-  Alternatively, head over to our documentation to learn more about getting started with Morphia.
+    <a id="latest" href="2.0.0-RC1/index.html"
+       class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
+    <a id="latest" href="https://github.com/MorphiaOrg/morphia/"
+       class="btn btn-success btn-dark btn-mongo">Source Code</a>
 </p>
 
-
-
-
-<div id="downloadWidget">
-  <div class="container">
-    <div class="row downloadForm">
-      <form>
-        <div class="col-xs-5 col-lg-4 col-lg-push-2 ">
-        <h5></h5>
-        </div>
-    <div class="col-xs-5 col-lg-4 col-lg-push-2 ">
-    
-    
-    
-      <select class="releasePicker">
-        
-        <option value="0">2.0.0-RC1</option>
-        
-        
-        <option value="1">1.6.0-RC1</option>
-        
-        
-        <option value="2">1.5.8</option>
-        
-        
-        <option value="3">1.4.1</option>
-        
-        
-        <option value="4">2.0.0-SNAPSHOT</option>
-        
-        
-      </select>
-    
-    </div>
-    <div class="col-lg-2 col-lg-push-2 ">
-    <input type="checkbox" checked class="distroPicker" data-toggle="toggle" data-on="Maven" data-off="Gradle" data-offstyle="success">
-    </div>
-  </form>
-  <div class="hidden-md hidden-sm hidden-xs col-lg-2 col-lg-pull-10 downloadLink">
-  <a href="https://oss.sonatype.org/content/repositories/releases/dev/morphia/morphia//"
-     id="downloadLink" class="btn btn-dark btn-download" target="_blank">Download</a>
-  </div>
-  </div>
-
-
-  <div class="row">
-  <div class="clipboard" title="copy">
-  <button class="btn btn-dark"><i class="fa fa-clipboard fa-2"></i></button>
-  </div>
-  
-  
-  
-  
-    
-    
-      
-      
-      
-      
-      <div id="maven-0" class="download ">
-      <pre><code>
-      &lt;dependencies&gt;
-          &lt;dependency&gt;
-              &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia-core&lt;/artifactId&gt;
-              &lt;version&gt;2.0.0-RC1&lt;/version&gt;
-          &lt;/dependency&gt;
-      &lt;/dependencies&gt;
-
-      </code></pre>
-      </div>
-      <div id="gradle-0" class="download hidden">
-      <pre><code>
-        dependencies {
-          compile 'dev.morphia.morphia:morphia-core:2.0.0-RC1'
-        }
-
-
-      </code></pre>
-      </div>
-      
-          
-          
-          
-      
-      
-      
-      
-      <div id="maven-1" class="download  hidden">
-      <pre><code>
-      &lt;dependencies&gt;
-          &lt;dependency&gt;
-              &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;core&lt;/artifactId&gt;
-              &lt;version&gt;1.6.0-RC1&lt;/version&gt;
-          &lt;/dependency&gt;
-      &lt;/dependencies&gt;
-
-      </code></pre>
-      </div>
-      <div id="gradle-1" class="download hidden">
-      <pre><code>
-        dependencies {
-          compile 'dev.morphia.morphia:core:1.6.0-RC1'
-        }
-
-
-      </code></pre>
-      </div>
-      
-          
-          
-          
-      
-      
-      
-      
-      <div id="maven-2" class="download  hidden">
-      <pre><code>
-      &lt;dependencies&gt;
-          &lt;dependency&gt;
-              &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;core&lt;/artifactId&gt;
-              &lt;version&gt;1.5.8&lt;/version&gt;
-          &lt;/dependency&gt;
-      &lt;/dependencies&gt;
-
-      </code></pre>
-      </div>
-      <div id="gradle-2" class="download hidden">
-      <pre><code>
-        dependencies {
-          compile 'dev.morphia.morphia:core:1.5.8'
-        }
-
-
-      </code></pre>
-      </div>
-      
-          
-          
-          
-      
-      
-      
-      
-      <div id="maven-3" class="download  hidden">
-      <pre><code>
-      &lt;dependencies&gt;
-          &lt;dependency&gt;
-              &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;core&lt;/artifactId&gt;
-              &lt;version&gt;1.4.1&lt;/version&gt;
-          &lt;/dependency&gt;
-      &lt;/dependencies&gt;
-
-      </code></pre>
-      </div>
-      <div id="gradle-3" class="download hidden">
-      <pre><code>
-        dependencies {
-          compile 'dev.morphia.morphia:core:1.4.1'
-        }
-
-
-      </code></pre>
-      </div>
-      
-          
-          
-          
-      
-      
-      
-      
-      <div id="maven-4" class="download  hidden">
-      <pre><code>
-      &lt;dependencies&gt;
-          &lt;dependency&gt;
-              &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-              &lt;artifactId&gt;morphia-core&lt;/artifactId&gt;
-              &lt;version&gt;2.0.0-SNAPSHOT&lt;/version&gt;
-          &lt;/dependency&gt;
-      &lt;/dependencies&gt;
-      &lt;repositories&gt;
-          &lt;repository&gt;
-              &lt;id&gt;sonatype-snapshots&lt;/id&gt;
-              &lt;name&gt;Sontatype Snapshots&lt;/name&gt;
-              &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
-              &lt;snapshots&gt;
-                  &lt;enabled&gt;true&lt;/enabled&gt;
-              &lt;/snapshots&gt;
-          &lt;/repository&gt;
-      &lt;/repositories&gt;
-
-      </code></pre>
-      </div>
-      <div id="gradle-4" class="download hidden">
-      <pre><code>
-        dependencies {
-            compile 'dev.morphia.morphia:morphia-core:2.0.0-SNAPSHOT'
-        }
-        repositories {
-          maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
-          }
-        }
-      </code></pre>
-      </div>
-      
-          
-          
-          
-      
-    </div>
-    </div>
-  </div>
-
-      </div>
-      <div class="col-md-4">
         
 <section id="releases">
   <h2>Releases</h2>
@@ -310,33 +80,55 @@
     
       <tr>
         <th class="current">2.0.0-RC1</th>
-        <td class="current"><a href="2.0.0-RC1" class="reference">Reference</a> &#124; <a href="2.0.0-RC1/javadoc">API</a></td>
+        <td class="current"><a href="2.0.0-RC1/index.html" class="reference">Reference</a> &#124; <a href="2.0.0-RC1/javadoc">API</a></td>
       </tr>
     
       <tr>
         <th class="current">1.6.0-RC1</th>
-        <td class="current"><a href="1.6.0-RC1" class="reference">Reference</a> &#124; <a href="1.6.0-RC1/javadoc">API</a></td>
+        <td class="current"><a href="1.6.0-RC1/index.html" class="reference">Reference</a> &#124; <a href="1.6.0-RC1/javadoc">API</a></td>
       </tr>
     
       <tr>
         <th class="current">1.5.8</th>
-        <td class="current"><a href="1.5.8" class="reference">Reference</a> &#124; <a href="1.5.8/javadoc">API</a></td>
+        <td class="current"><a href="1.5.8/index.html" class="reference">Reference</a> &#124; <a href="1.5.8/javadoc">API</a></td>
       </tr>
     
       <tr>
         <th class="current">1.4.1</th>
-        <td class="current"><a href="1.4.1" class="reference">Reference</a> &#124; <a href="1.4.1/javadoc">API</a></td>
+        <td class="current"><a href="1.4.1/index.html" class="reference">Reference</a> &#124; <a href="1.4.1/javadoc">API</a></td>
       </tr>
     
       <tr>
         <th class="development">2.0.0-SNAPSHOT</th>
-        <td class="development"><a href="2.0.0-SNAPSHOT" class="reference">Reference</a> &#124; <a href="2.0.0-SNAPSHOT/javadoc">API</a></td>
+        <td class="development"><a href="2.0.0-SNAPSHOT/index.html" class="reference">Reference</a> &#124; <a href="2.0.0-SNAPSHOT/javadoc">API</a></td>
       </tr>
     
   </tbody>
   </table>
 </section>
 
+
+
+
+      </div>
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-5">
+        <h1>Critter</h1>
+
+<dl>
+    <dt>Build time query generated helpers</dt>
+    <dd>Check your query definitions at build time</dd>
+    <dt>Curated query and update operators</dt>
+    <dd>Only operations that make sense for the field's type are exposed</dd>
+</dl>
+
+<p>
+    <a id="latest" href="critter/index.html"
+       class="btn btn-success btn-dark btn-mongo">Latest documentation</a>
+    <a id="latest" href="https://github.com/MorphiaOrg/critter/"
+       class="btn btn-success btn-dark btn-mongo">Source Code</a>
+</p>
 
      </div>
     </div>
