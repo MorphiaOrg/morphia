@@ -3,20 +3,20 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>%20%20%20%20%20%20/</loc>
+    <loc>/critter/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
   <url>
-    <loc>%20%20%20%20%20%20/issues-help/</loc>
+    <loc>/critter/issues-help/</loc>
   </url>
   
   <url>
-    <loc>%20%20%20%20%20%20/categories/</loc>
+    <loc>/critter/categories/</loc>
   </url>
   
   <url>
-    <loc>%20%20%20%20%20%20/tags/</loc>
+    <loc>/critter/tags/</loc>
   </url>
   
 </urlset>
