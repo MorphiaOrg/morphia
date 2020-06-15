@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.1.0.Final</version>
+            <version>5.3.5.Final</version>
             <scope>test</scope>
         </dependency>
 
