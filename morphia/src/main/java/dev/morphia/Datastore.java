@@ -542,7 +542,7 @@ public interface Datastore {
 
     /**
      * @return the default WriteConcern used by this Datastore
-     * @deprecated {@link MongoClient#setWriteConcern(WriteConcern)}
+     * @deprecated
      */
     @Deprecated
     WriteConcern getDefaultWriteConcern();
@@ -562,7 +562,9 @@ public interface Datastore {
      * @param entity the entity whose key is to be returned
      * @param <T>    the type of the entity
      * @return the Key
+     * @deprecated
      */
+    @Deprecated
     <T> Key<T> getKey(T entity);
 
     /**
