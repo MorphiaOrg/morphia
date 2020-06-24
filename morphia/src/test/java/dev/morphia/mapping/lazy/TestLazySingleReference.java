@@ -74,7 +74,6 @@ public class TestLazySingleReference extends ProxyTestBase {
 
         assertIsProxy(p);
         assertNotFetched(p);
-        Assert.assertEquals(id, getDs().getKey(p).getId());
         p.getFoo();
         // should be fetched now.
         assertFetched(p);
@@ -114,7 +113,6 @@ public class TestLazySingleReference extends ProxyTestBase {
         root.secondReference = second;
         reference.setFoo("bar");
 
-        final ObjectId id = getDs().save(reference).getId();
         getDs().save(second);
         getDs().save(root);
 

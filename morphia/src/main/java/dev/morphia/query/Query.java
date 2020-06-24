@@ -331,74 +331,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Sorts based on a metadata (defines return order). Example:
-     * {@code order(Meta.textScore())}  ({textScore : { $meta: "textScore" }})
-     *
-     * @param sort the sort order to apply
-     * @return this
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> order(final Meta sort) {
-        return legacyOperation();
-    }
-
-    /**
-     * Sorts based on a specified sort keys (defines return order).
-     *
-     * @param sorts the sort order to apply
-     * @return this
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> order(final Sort... sorts) {
-        return legacyOperation();
-    }
-
-    /**
-     * Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
-     * be inclusions or exclusions.  You can not include and exclude fields at the same time with the exception of the _id field.  The
-     * _id field is always included unless explicitly suppressed.
-     *
-     * @param field   the field to project
-     * @param include true to include the field in the results
-     * @return this
-     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
-     * @deprecated use {@link FindOptions#projection()}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> project(final String field, final boolean include) {
-        return legacyOperation();
-    }
-
-    /**
-     * Adds an sliced array field to a projection.
-     *
-     * @param field the field to project
-     * @param slice the options for projecting an array field
-     * @return this
-     * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
-     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
-     * @deprecated use {@link FindOptions#projection()}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> project(final String field, final ArraySlice slice) {
-        return legacyOperation();
-    }
-
-    /**
-     * Adds a metadata field to a projection.
-     *
-     * @param meta the metadata option for projecting
-     * @return this
-     * @mongodb.driver.manual reference/operator/projection/meta/ $meta
-     * @see <a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a>
-     * @deprecated use {@link FindOptions#projection()}
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> project(final Meta meta) {
-        return legacyOperation();
-    }
-
-    /**
      * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
      *
      * @return this
@@ -459,13 +391,4 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
         return legacyOperation();
     }
 
-    /**
-     * Limit the query using this javascript block; only one per query
-     *
-     * @param js the javascript block to apply
-     * @return this
-     * @deprecated use {@link dev.morphia.query.experimental.filters.Filters#where(String)} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    Query<T> where(String js);
 }

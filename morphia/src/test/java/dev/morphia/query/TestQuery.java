@@ -1240,14 +1240,6 @@ public class TestQuery extends TestBase {
                           .tryNext());
     }
 
-    @Test
-    public void testWhereStringQuery() {
-        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class)
-                             .where("return this.keywords != null;").iterator(new FindOptions().limit(1))
-                             .next());
-    }
-
     private <T> void assertListEquals(final List<T> list, final MongoCursor<T> cursor) {
         for (T t : list) {
             assertEquals(list.toString(), t, cursor.next());

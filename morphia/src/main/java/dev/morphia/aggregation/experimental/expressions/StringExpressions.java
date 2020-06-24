@@ -4,6 +4,8 @@ import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IndexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.RegexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.TrimExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.util.Arrays.asList;
 
@@ -14,6 +16,8 @@ import static java.util.Arrays.asList;
  * @since 2.0
  */
 public final class StringExpressions {
+    private static final Logger LOG = LoggerFactory.getLogger(StringExpressions.class);
+
     private StringExpressions() {
     }
 
@@ -170,7 +174,7 @@ public final class StringExpressions {
      * @param length the number of characters
      * @return the new expression
      * @aggregation.expression $substr
-     * @deprecated use {@link #substrBytes(Expression, int, int)} or {@link #substrCP(Expression, int, int)}
+     * @deprecated Deprecated since version 3.4: $substr is now an alias for {@link #substrBytes(Expression, int, int)}
      */
     @Deprecated
     public static Expression substr(final Expression input, final int start, final int length) {

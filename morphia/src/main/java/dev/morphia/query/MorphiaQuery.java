@@ -266,35 +266,9 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Query<T> where(final String js) {
-        filter(Filters.where(js));
-        return this;
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(clazz, validate, getCollectionName());
     }
-
-/*
-    private List<Filter> collect(final Criteria[] criteria) {
-        List<Filter> collected = new ArrayList<>();
-        for (final Criteria criterion : criteria) {
-            List<Filter> list;
-            if (criterion instanceof MorphiaQuery) {
-                list = ((MorphiaQuery) criterion).filters;
-            } else {
-                list = ((CriteriaFieldEnd) criterion).getFilters();
-            }
-            if (list.size() > 1) {
-                collected.add(Filters.and(list.toArray(new Filter[0])));
-            } else if (list.size() == 1) {
-                collected.add(list.get(0));
-            }
-        }
-        return collected;
-    }
-*/
 
     @Override
     public boolean equals(final Object o) {

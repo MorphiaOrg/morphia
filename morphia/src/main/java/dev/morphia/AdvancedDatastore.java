@@ -34,17 +34,6 @@ public interface AdvancedDatastore extends Datastore {
     AggregationPipeline createAggregation(String collection, Class<?> clazz);
 
     /**
-     * @param <T>        The type of the entity
-     * @param collection the collection to query
-     * @param type       the class of objects to be returned
-     * @return Query for the specified class type
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default <T> Query<T> createQuery(String collection, Class<T> type) {
-        return getQueryFactory().createQuery(this, collection, type);
-    }
-
-    /**
      * @param <T>  The type of the entity
      * @param type the class of objects to be returned
      * @param q    the query which will be passed to a {@link dev.morphia.query.QueryFactory}
