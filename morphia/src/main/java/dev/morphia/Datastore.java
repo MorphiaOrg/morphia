@@ -29,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.filters.Filters.in;
-
 /**
  * Datastore interface to get/delete/save objects
  */
@@ -281,86 +278,11 @@ public interface Datastore {
     ClientSession findSession(SessionConfigurable<?> configurable);
 
     /**
-     * Find the given entities (by id); shorthand for {@code find("_id in", ids)}
-     *
-     * @param clazz the class to use for mapping
-     * @param ids   the IDs to query
-     * @param <T>   the type to fetch
-     * @param <V>   the type of the ID
-     * @return the query to find the entities
-     * @morphia.inline
-     * @deprecated use {@link Query} instead.
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default <T, V> Query<T> get(Class<T> clazz, Iterable<V> ids) {
-        return find(clazz).filter(in("_id", ids));
-    }
-
-    /**
-     * Find the given entity (by collectionName/id); think of this as refresh
-     *
-     * @param entity The entity to search for
-     * @param <T>    the type to fetch
-     * @return the matched entity.  may be null.
-     * @morphia.inline
-     * @deprecated use {@link Query} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default <T> T get(T entity) {
-        return (T) find(entity.getClass()).filter(eq("_id", getMapper().getId(entity))).first();
-    }
-
-    /**
-     * Find the given entity (by collectionName/id);
-     *
-     * @param clazz the class to use for mapping
-     * @param key   the key search with
-     * @param <T>   the type to fetch
-     * @return the matched entity.  may be null.
-     * @deprecated use a {@link Query} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    <T> T getByKey(Class<T> clazz, Key<T> key);
-
-    /**
-     * Find the given entities (by id), verifying they are of the correct type; shorthand for {@code find("_id in", ids)}
-     *
-     * @param clazz the class to use for mapping
-     * @param keys  the keys to search with
-     * @param <T>   the type to fetch
-     * @return the matched entities.  may be null.
-     * @deprecated use a {@link Query} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys);
-
-    /**
-     * Find the given entities (by id); shorthand for {@code find("_id in", ids)}
-     *
-     * @param keys the keys to search with
-     * @param <T>  the type to fetch
-     * @return the matched entities.  may be null.
-     * @deprecated use a {@link Query} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    <T> List<T> getByKeys(Iterable<Key<T>> keys);
-
-    /**
      * @return the MongoDatabase used by this DataStore
      * @morphia.internal
      * @since 1.5
      */
     MongoDatabase getDatabase();
-
-    /**
-     * Creates a (type-safe) reference to the entity; if stored this will become a {@link com.mongodb.DBRef}
-     *
-     * @param entity the entity whose key is to be returned
-     * @param <T>    the type of the entity
-     * @return the Key
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    <T> Key<T> getKey(T entity);
 
     /**
      * @param options the options used when requesting logging

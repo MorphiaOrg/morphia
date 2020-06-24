@@ -307,31 +307,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         indexHelper.createIndex(mapper.getCollection(clazz), mapper.getMappedClass(clazz));
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public <T, V> Query<T> get(final Class<T> clazz, final Iterable<V> ids) {
-        return find(clazz).disableValidation().filter(in("_id", ids)).enableValidation();
-    }
-
-    @Override
-    @SuppressWarnings({"deprecated"})
-    public <T> T getByKey(final Class<T> clazz, final Key<T> key) {
-        final String collectionName = mapper.getMappedClass(clazz).getCollectionName();
-        final String keyCollection = mapper.updateCollection(key);
-        if (!collectionName.equals(keyCollection)) {
-            throw new RuntimeException("collection names don't match for key and class: " + collectionName + " != " + keyCollection);
-        }
-
-        Object id = key.getId();
-        if (id instanceof Document) {
-            ((Document) id).remove(mapper.getOptions().getDiscriminatorKey());
-        }
-        return find(clazz).filter(eq("_id", id))
-                          .first(new FindOptions().limit(1));
-    }
-
-    @Override
-    public <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
+    private <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
 
         final Map<String, List<Key>> kindMap = new HashMap<>();
         final List<T> entities = new ArrayList<>();
@@ -362,21 +338,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings("deprecated")
-    public <T> List<T> getByKeys(final Iterable<Key<T>> keys) {
-        return getByKeys(null, keys);
-    }
-
-    @Override
     public MongoDatabase getDatabase() {
         return database;
-    }
-
-    @Override
-    @Deprecated
-    // use mapper instead.
-    public <T> Key<T> getKey(final T entity) {
-        return mapper.getKey(entity);
     }
 
     @Override

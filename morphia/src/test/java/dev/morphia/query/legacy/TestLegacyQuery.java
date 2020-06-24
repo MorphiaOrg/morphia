@@ -30,7 +30,6 @@ import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.LegacyQueryFactory;
-import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.TestQuery.User;
@@ -233,16 +232,6 @@ public class TestLegacyQuery extends LegacyTestBase {
             fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
             // success!
-        }
-
-        Query<ContainsRenamedFields> query = getDs().find(ContainsRenamedFields.class);
-
-        if (query instanceof LegacyQuery) {
-            query
-                .project("_id", true)
-                .project("first_name", true);
-            Document fields = ((LegacyQuery) query).getFieldsObject();
-            assertNull(fields.get(getMapper().getOptions().getDiscriminatorKey()));
         }
     }
 
@@ -507,8 +496,8 @@ public class TestLegacyQuery extends LegacyTestBase {
         query.and(query.criteria("fieldF").equal("f"));
 
         final Document queryObject = query instanceof LegacyQuery
-                                     ? ((LegacyQuery) query).toDocument()
-                                     : ((MorphiaQuery) query).toDocument();
+                                     ? query.toDocument()
+                                     : query.toDocument();
 
         final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
@@ -1286,15 +1275,6 @@ public class TestLegacyQuery extends LegacyTestBase {
                                                               .filter("keyword", "Randy"))
                           .execute(new FindOptions().limit(1))
                           .tryNext());
-    }
-
-    @Test
-    public void testWhereStringQuery() {
-        getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class)
-                             .where("return this.keywords != null;")
-                             .execute(new FindOptions().limit(1))
-                             .next());
     }
 
     private <T> void assertListEquals(final List<Key<T>> list, final MongoCursor<?> cursor) {

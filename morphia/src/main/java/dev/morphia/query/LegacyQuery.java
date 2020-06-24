@@ -10,7 +10,6 @@ import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
-import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.experimental.updates.UpdateOperator;
@@ -298,51 +297,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Query<T> order(final Meta sort) {
-        getOptions().sort(sort.toDatabase());
-
-        return this;
-    }
-
-    @Override
-    public Query<T> order(final Sort... sorts) {
-        Document sortList = new Document();
-        for (Sort sort : sorts) {
-            String s = sort.getField();
-            if (validateName) {
-                s = new PathTarget(datastore.getMapper(), clazz, s).translatedPath();
-            }
-            sortList.put(s, sort.getOrder());
-        }
-        getOptions().sort(sortList);
-        return this;
-    }
-
-    @Override
-    public Query<T> project(final String field, final boolean include) {
-        Projection projection = getOptions().projection();
-        if (include) {
-            projection.include(field);
-        } else {
-            projection.exclude(field);
-        }
-
-        return this;
-    }
-
-    @Override
-    public Query<T> project(final String field, final ArraySlice slice) {
-        getOptions().projection().project(field, slice);
-        return this;
-    }
-
-    @Override
-    public Query<T> project(final Meta meta) {
-        getOptions().projection().project(meta);
-        return this;
-    }
-
-    @Override
     public Query<T> retrieveKnownFields() {
         getOptions().projection().knownFields();
         return this;
@@ -365,12 +319,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Deprecated(since = "2.0", forRemoval = true)
     public Update<T> update(final UpdateOperations<T> operations) {
         return new Update<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
-    }
-
-    @Override
-    public Query<T> where(final String js) {
-        add(new WhereCriteria(js));
-        return this;
     }
 
     /**

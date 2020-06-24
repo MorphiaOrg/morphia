@@ -63,11 +63,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
 
         assertIsProxy(p);
         assertNotFetched(p);
-        Assert.assertEquals(id, getDs().getKey(p).getId());
-        // still not fetched?
-        assertNotFetched(p);
         p.getFoo();
-        // should be fetched now.
         assertFetched(p);
 
     }
