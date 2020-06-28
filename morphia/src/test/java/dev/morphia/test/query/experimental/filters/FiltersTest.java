@@ -13,20 +13,36 @@ import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.query.experimental.filters.Filters.and;
 import static dev.morphia.query.experimental.filters.Filters.bitsAllClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAllSet;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnyClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAnySet;
 import static dev.morphia.query.experimental.filters.Filters.expr;
 import static dev.morphia.query.experimental.filters.Filters.gt;
+import static dev.morphia.query.experimental.filters.Filters.gte;
+import static dev.morphia.query.experimental.filters.Filters.in;
 import static dev.morphia.query.experimental.filters.Filters.lt;
+import static dev.morphia.query.experimental.filters.Filters.lte;
+import static dev.morphia.query.experimental.filters.Filters.nin;
 import static dev.morphia.query.experimental.filters.Filters.nor;
+import static dev.morphia.query.experimental.filters.Filters.or;
 import static dev.morphia.query.experimental.filters.Filters.size;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FiltersTest extends TestBase {
+
+    @Test
+    public void testAnd() {
+        getDs().find(Budget.class)
+               .filter(and(lt("budget", 10000), gt("budget", 12)))
+               .iterator();
+        getDs().find(Budget.class)
+               .filter(and(lte("budget", 10000), gte("budget", 12)))
+               .iterator();
+    }
 
     @Test
     public void testBitsAllClear() {
@@ -156,9 +172,30 @@ public class FiltersTest extends TestBase {
     }
 
     @Test
+    public void testIn() {
+        getDs().find(Budget.class)
+               .filter(in("budget", asList(123, 234)))
+               .iterator();
+    }
+
+    @Test
+    public void testNin() {
+        getDs().find(Budget.class)
+               .filter(nin("budget", asList(123, 234)))
+               .iterator();
+    }
+
+    @Test
     public void testNor() {
         getDs().find(Budget.class)
                .filter(nor(lt("budget", 10000), gt("budget", 12)))
+               .iterator();
+    }
+
+    @Test
+    public void testOr() {
+        getDs().find(Budget.class)
+               .filter(or(lt("budget", 10000), gt("budget", 12)))
                .iterator();
     }
 
