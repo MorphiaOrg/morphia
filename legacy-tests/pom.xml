@@ -13,6 +13,9 @@
 
     <artifactId>legacy-tests</artifactId>
 
+    <build>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
