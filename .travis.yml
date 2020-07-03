@@ -14,10 +14,10 @@ jdk:
   - openjdk14
 
 before_script:
-  - wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1604-${MONGODB}.tgz -O /tmp/mongodb.tgz
+  - wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-${MONGODB} -O /tmp/mongodb.tgz
   - tar -xvf /tmp/mongodb.tgz
   - mkdir /tmp/data
-  - ${PWD}/mongodb-*-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &
+  - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &
 
 script: mvn test
 

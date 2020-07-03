@@ -2,24 +2,25 @@
 
 set -e
 download() {
+
+  if [ -z "$MONGODB" ]
+  then
+    MONGODB=$(grep MONGODB travis-jobs.sh  | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+  fi
     
   BASE_VERSION=$(echo ${MONGODB} | cut -d\. -f1-2)
   FILE=/tmp/mongodb-${MONGODB}.tgz
 
-  if [ "$BASE_VERSION" != "4.2" ]
-  then
-    URL=http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
-  else
-    URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${LINUX}-${MONGODB}.tgz
-  fi
+  URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${LINUX}-${MONGODB}.tgz
   [ -e ${FILE} ] || wget ${URL} -O ${FILE}
   
   [ -e mongodb-linux-x86_64-${MONGODB} ] && sudo rm -rf mongodb-linux-*
-  tar -xvf ${FILE}
-  rm -rf /tmp/data
+  rm -rf /tmp/data  mongodb-linux-x86_64* mongodb-bin
+  mkdir -p mongodb-bin
+  tar -C mongodb-bin -xvf ${FILE} --strip-components=1
   mkdir -p /tmp/data
 
-  ${PWD}/mongodb-linux-x86_64-*/bin/mongod --quiet \
+  ${PWD}/mongodb-bin/bin/mongod --quiet \
     --replSet morphia \
     --dbpath /tmp/data \
     --bind_ip 127.0.0.1 \
@@ -27,23 +28,22 @@ download() {
 
   for i in $(seq 1 5)
   do
-    ${PWD}/mongodb-linux-x86_64-*/bin/mongo --quiet --eval "rs.initiate()" && break
+    ${PWD}/mongodb-bin/bin/mongo --quiet --eval "rs.initiate()" && break
     sleep 3
     echo "Reattempting replSet initiation"
   done
-
-  cd -
 }
 
-LINUX=ubuntu1604
-if [ "${MONGODB}" ]
+LINUX=${LINUX-ubuntu1804}
+if [ -z "${MATRIX}" ]
 then
   killall -9 mongod && sleep 3 || true
   download
   if [ -z "$DRIVER" ]
   then
-    mvn install
-    killall -9 mongod
+    echo "press enter to shut down the server"
+    read nothing
+    mongodb-bin/bin/mongo admin --quiet --eval "db.shutdownServer()"
   fi
 else
   killall -9 mongod || true

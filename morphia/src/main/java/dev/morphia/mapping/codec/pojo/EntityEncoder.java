@@ -110,7 +110,7 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
             } else {
                 try {
                     encoderContext.encodeWithChildContext(model.getCachedCodec(), writer, propertyValue);
-                } catch (CodecConfigurationException e) {
+                } catch (Exception e) {
                     throw new CodecConfigurationException(String.format("Failed to encode '%s'. Encoding '%s' errored with: %s",
                         morphiaCodec.getEntityModel().getName(), model.getMappedName(), e.getMessage()), e);
                 }
