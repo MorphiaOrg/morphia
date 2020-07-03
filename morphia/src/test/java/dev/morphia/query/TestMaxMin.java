@@ -43,6 +43,7 @@ public class TestMaxMin extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testMax() {
+        assumeServerIsAtMostVersion(4.0);
         final IndexedEntity a = new IndexedEntity("a");
         final IndexedEntity b = new IndexedEntity("b");
         final IndexedEntity c = new IndexedEntity("c");
@@ -68,6 +69,7 @@ public class TestMaxMin extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testMaxCompoundIndex() {
+        assumeServerIsAtMostVersion(4.0);
         final IndexedEntity a1 = new IndexedEntity("a");
         final IndexedEntity a2 = new IndexedEntity("a");
         final IndexedEntity b1 = new IndexedEntity("b");
@@ -102,6 +104,7 @@ public class TestMaxMin extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testMin() {
+        assumeServerIsAtMostVersion(4.0);
         final IndexedEntity a = new IndexedEntity("a");
         final IndexedEntity b = new IndexedEntity("b");
         final IndexedEntity c = new IndexedEntity("c");
@@ -123,6 +126,7 @@ public class TestMaxMin extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testMinCompoundIndex() {
+        assumeServerIsAtMostVersion(4.0);
         final IndexedEntity a1 = new IndexedEntity("a");
         final IndexedEntity a2 = new IndexedEntity("a");
         final IndexedEntity b1 = new IndexedEntity("b");

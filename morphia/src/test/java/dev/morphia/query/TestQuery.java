@@ -102,7 +102,7 @@ public class TestQuery extends TestBase {
         getMorphia().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<String>();
-        final List<Object> keys = Arrays.<Object>asList("key1", "key2");
+        final List<Object> keys = Arrays.asList("key1", "key2");
         value.key = keys;
         getDs().save(value);
 
@@ -127,7 +127,7 @@ public class TestQuery extends TestBase {
         getMorphia().map(KeyValue.class);
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
-        final List<Object> keys = Arrays.<Object>asList("key1", "key2");
+        final List<Object> keys = Arrays.asList("key1", "key2");
         value.key = keys;
         getDs().save(value);
 
@@ -305,7 +305,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCollations() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
 
         getMorphia().map(ContainsRenamedFields.class);
         getDs().save(asList(new ContainsRenamedFields("first", "last"),
@@ -698,9 +698,7 @@ public class TestQuery extends TestBase {
     public void testExplainPlan() {
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
         Map<String, Object> explainResult = getDs().find(Pic.class).explain();
-        assertEquals(explainResult.toString(), 4, serverIsAtMostVersion(2.7)
-                                                  ? explainResult.get("n")
-                                                  : ((Map) explainResult.get("executionStats")).get("nReturned"));
+        assertEquals(explainResult.toString(), 4, ((Map) explainResult.get("executionStats")).get("nReturned"));
     }
 
     @Test
@@ -1016,7 +1014,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleConstraintsOnOneField() {
-        checkMinServerVersion(3.0);
+        assumeMinServerVersion(3.0);
         getMorphia().map(ContainsPic.class);
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
@@ -2027,11 +2025,7 @@ public class TestQuery extends TestBase {
             if (id != null ? !id.equals(that.id) : that.id != null) {
                 return false;
             }
-            if (name != null ? !name.equals(that.name) : that.name != null) {
-                return false;
-            }
-
-            return true;
+            return name != null ? name.equals(that.name) : that.name == null;
         }
     }
 

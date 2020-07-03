@@ -1,7 +1,5 @@
 package dev.morphia.query;
 
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.geo.AllTheThings;
 import dev.morphia.geo.Area;
@@ -10,12 +8,11 @@ import dev.morphia.geo.MultiPolygon;
 import dev.morphia.geo.Polygon;
 import dev.morphia.geo.Regions;
 import dev.morphia.geo.Route;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 import static dev.morphia.geo.GeoJson.geometryCollection;
 import static dev.morphia.geo.GeoJson.lineString;
 import static dev.morphia.geo.GeoJson.multiPoint;
@@ -23,6 +20,9 @@ import static dev.morphia.geo.GeoJson.multiPolygon;
 import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.geo.GeoJson.polygon;
 import static dev.morphia.geo.PointBuilder.pointBuilder;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 
 public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
     private final Polygon uk = polygon(point(49.78, -10.5),
@@ -40,7 +40,7 @@ public class GeoWithinQueriesWithMultiPolygonTest extends TestBase {
     @Before
     public void setUp() {
         // Multi-polygon is server 2.6 and onwards
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         super.setUp();
     }
 

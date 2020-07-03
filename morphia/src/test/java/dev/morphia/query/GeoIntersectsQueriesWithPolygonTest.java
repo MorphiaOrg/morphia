@@ -1,31 +1,31 @@
 package dev.morphia.query;
 
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.geo.AllTheThings;
 import dev.morphia.geo.Area;
 import dev.morphia.geo.City;
 import dev.morphia.geo.Regions;
 import dev.morphia.geo.Route;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static dev.morphia.geo.GeoJson.geometryCollection;
 import static dev.morphia.geo.GeoJson.lineString;
 import static dev.morphia.geo.GeoJson.multiPoint;
 import static dev.morphia.geo.GeoJson.multiPolygon;
 import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.geo.GeoJson.polygon;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
     @Override
     @Before
     public void setUp() {
         // this whole test class is designed for "modern" geo queries
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
         super.setUp();
     }
 
@@ -95,7 +95,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
 
     @Test
     public void shouldFindGeometryCollectionsWhereTheGivenPointIntersectsWithOneOfTheEntities() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         // given
         AllTheThings sevilla = new AllTheThings("Spain", geometryCollection(
                                                                                multiPoint(point(37.40759155713022, -5.964911067858338),
@@ -151,7 +151,7 @@ public class GeoIntersectsQueriesWithPolygonTest extends TestBase {
 
     @Test
     public void shouldFindRegionsThatAPolygonCrosses() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         // given
         Regions sevilla = new Regions("Spain", multiPolygon(polygon(point(37.40759155713022, -5.964911067858338),
                                                                     point(37.40341208875179, -5.9643941558897495),

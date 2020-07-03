@@ -2,10 +2,6 @@ package dev.morphia.indexes;
 
 import com.mongodb.DBObject;
 import com.mongodb.MongoCommandException;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -15,6 +11,10 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class TestTextIndexing extends TestBase {
     @Override
     @Before
     public void setUp() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         super.setUp();
     }
 

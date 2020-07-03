@@ -16,14 +16,14 @@
 
 package dev.morphia.converters;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.query.FindOptions;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -31,7 +31,7 @@ import java.math.BigInteger;
 import static org.junit.Assert.assertEquals;
 
 public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal128> {
-    private BigDecimalConverter converter = new BigDecimalConverter();
+    private final BigDecimalConverter converter = new BigDecimalConverter();
 
     public BigDecimalConverterTest() {
         super(new BigDecimalConverter());
@@ -39,7 +39,7 @@ public class BigDecimalConverterTest extends ConverterTest<BigDecimal, Decimal12
 
     @Before
     public void serverCheck() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
     }
 
     @Test

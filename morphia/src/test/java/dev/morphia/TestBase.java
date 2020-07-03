@@ -94,7 +94,7 @@ public abstract class TestBase {
         getMongoClient().close();
     }
 
-    protected void checkMinServerVersion(final double version) {
+    protected void assumeMinServerVersion(final double version) {
         Assume.assumeTrue(serverIsAtLeastVersion(version));
     }
 
@@ -144,10 +144,10 @@ public abstract class TestBase {
      * @param version must be a major version, e.g. 1.8, 2,0, 2.2
      * @return true if server is at least specified version
      */
-    protected boolean serverIsAtMostVersion(final double version) {
+    protected void assumeServerIsAtMostVersion(final double version) {
         String serverVersion = (String) getMongoClient().getDatabase("admin").runCommand(new Document("serverStatus", 1))
                                                         .get("version");
-        return Double.parseDouble(serverVersion.substring(0, 3)) <= version;
+        Assume.assumeTrue(Double.parseDouble(serverVersion.substring(0, 3)) <= version);
     }
 
     private Document runIsMaster() {

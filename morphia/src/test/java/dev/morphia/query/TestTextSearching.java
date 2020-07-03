@@ -1,15 +1,15 @@
 package dev.morphia.query;
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.utils.IndexType;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class TestTextSearching extends TestBase {
     @Override
     @Before
     public void setUp() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         super.setUp();
     }
 

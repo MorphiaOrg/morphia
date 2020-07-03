@@ -16,12 +16,12 @@
 
 package dev.morphia.converters;
 
-import org.bson.types.ObjectId;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import org.bson.types.ObjectId;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Currency;
 import java.util.Locale;
@@ -38,7 +38,7 @@ public class CurrencyConverterTest extends ConverterTest<Currency, String> {
 
     @Before
     public void serverCheck() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
     }
 
     @Test

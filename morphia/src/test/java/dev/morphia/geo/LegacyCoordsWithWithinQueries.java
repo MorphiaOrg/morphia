@@ -1,9 +1,9 @@
 package dev.morphia.geo;
 
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Shape;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldNotReturnAnyPointsIfNothingInsideCircle() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords point = new PlaceWithLegacyCoords(new double[]{1, 1}, "place");
         getDs().save(point);
@@ -43,7 +43,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldNotReturnAnyValuesWhenTheQueryBoxDoesNotContainAnyPoints() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords point = new PlaceWithLegacyCoords(new double[]{1, 1}, "place");
         getDs().save(point);
@@ -62,7 +62,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldNotReturnAnyValuesWhenTheQueryPolygonDoesNotContainAnyPoints() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords point = new PlaceWithLegacyCoords(new double[]{7.3, 9.2}, "place");
         getDs().save(point);
@@ -84,7 +84,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldReturnAPointThatIsFullyWithinQueryPolygon() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords expectedPoint = new PlaceWithLegacyCoords(new double[]{1, 1}, "place");
         getDs().save(expectedPoint);
@@ -106,7 +106,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldReturnOnlyThePointsWithinTheGivenCircle() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords expectedPoint = new PlaceWithLegacyCoords(new double[]{1.1, 2.3}, "Near point");
         getDs().save(expectedPoint);
@@ -128,7 +128,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldReturnPointOnBoundaryOfQueryCircle() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords expectedPoint = new PlaceWithLegacyCoords(new double[]{1, 1}, "place");
         getDs().save(expectedPoint);
@@ -147,7 +147,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldReturnPointOnBoundaryOfQueryCircleWithSphericalGeometry() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords expectedPoint = new PlaceWithLegacyCoords(new double[]{1, 1}, "place");
         getDs().save(expectedPoint);
@@ -166,7 +166,7 @@ public class LegacyCoordsWithWithinQueries extends TestBase {
     @Test
     public void shouldReturnPointThatIsFullyInsideTheQueryBox() {
         // given
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
 
         final PlaceWithLegacyCoords expectedPoint = new PlaceWithLegacyCoords(new double[]{1, 1}, "place");
         getDs().save(expectedPoint);

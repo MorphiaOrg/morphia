@@ -16,16 +16,6 @@ package dev.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
-import com.mongodb.client.MongoCursor;
-import dev.morphia.query.Sort;
-import dev.morphia.query.internal.MorphiaCursor;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -33,16 +23,24 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.query.Sort;
 import dev.morphia.query.TestQuery.ContainsPic;
 import dev.morphia.query.TestQuery.Pic;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.UpdateResults;
 import dev.morphia.query.ValidationException;
+import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Translation;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +51,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static dev.morphia.query.PushOptions.options;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -66,7 +65,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static dev.morphia.query.PushOptions.options;
 
 /**
  * @author Scott Hernandez
@@ -131,7 +129,7 @@ public class TestUpdateOps extends TestBase {
     @Test
     @SuppressWarnings("deprecation")
     public void testAdd() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
 
         ContainsIntArray cIntArray = new ContainsIntArray();
         Datastore ds = getDs();
@@ -464,7 +462,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testMaxKeepsCurrentDocumentValueWhenThisIsLargerThanSuppliedValue() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         final ObjectId id = new ObjectId();
         final double originalValue = 2D;
 
@@ -490,7 +488,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testMinKeepsCurrentDocumentValueWhenThisIsSmallerThanSuppliedValue() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         final ObjectId id = new ObjectId();
         final double originalValue = 3D;
 
@@ -509,7 +507,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testMinUsesSuppliedValueWhenThisIsSmallerThanCurrentDocumentValue() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         final ObjectId id = new ObjectId();
         final double newLowerValue = 2D;
 
@@ -529,7 +527,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testPush() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
         assertThat(getDs().get(cIntArray).values, is((new ContainsIntArray()).values));
@@ -700,7 +698,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testSetOnInsertWhenInserting() {
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
         ObjectId id = new ObjectId();
 
         assertInserted(getDs().update(getDs().find(Circle.class).field("id").equal(id),
@@ -716,7 +714,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void testSetOnInsertWhenUpdating() {
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
         ObjectId id = new ObjectId();
 
         assertInserted(getDs().update(getDs().find(Circle.class).field("id").equal(id),
@@ -982,7 +980,7 @@ public class TestUpdateOps extends TestBase {
 
     @Test
     public void isolated() {
-        Assume.assumeTrue(serverIsAtMostVersion(3.6));
+        assumeServerIsAtMostVersion(3.6);
         UpdateOperations<Circle> updates = getDs().createUpdateOperations(Circle.class)
                                                   .inc("radius", 1D);
         assertFalse(updates.isIsolated());
@@ -1053,7 +1051,7 @@ public class TestUpdateOps extends TestBase {
         @Indexed
         private String uuid;
         @Embedded
-        private List<EntityLog> logs = new ArrayList<EntityLog>();
+        private final List<EntityLog> logs = new ArrayList<EntityLog>();
         private DBObject raw;
 
         @PreLoad
@@ -1162,7 +1160,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     private static final class DumbArrayElement {
-        private String whereId;
+        private final String whereId;
 
         private DumbArrayElement(final String whereId) {
             this.whereId = whereId;

@@ -23,16 +23,10 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.ValidationOptions;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
-import dev.morphia.query.BucketAutoOptions;
-import dev.morphia.query.BucketOptions;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
@@ -42,7 +36,13 @@ import dev.morphia.annotations.Validation;
 import dev.morphia.geo.City;
 import dev.morphia.geo.PlaceWithLegacyCoords;
 import dev.morphia.geo.Point;
+import dev.morphia.query.BucketAutoOptions;
+import dev.morphia.query.BucketOptions;
 import dev.morphia.query.Query;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,11 +54,6 @@ import java.util.List;
 import java.util.Set;
 
 import static com.mongodb.AggregationOptions.builder;
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 import static dev.morphia.aggregation.Accumulator.accumulator;
 import static dev.morphia.aggregation.Group.addToSet;
 import static dev.morphia.aggregation.Group.grouping;
@@ -71,12 +66,18 @@ import static dev.morphia.aggregation.Projection.projection;
 import static dev.morphia.aggregation.Projection.size;
 import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.query.Sort.ascending;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class AggregationTest extends TestBase {
 
     @Test
     public void testCollation() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
         Query query = getDs().find(User.class).field("name").equal("john doe");
@@ -96,7 +97,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testBypassDocumentValidation() {
-        checkMinServerVersion(3.2);
+        assumeMinServerVersion(3.2);
         getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
 
         MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
@@ -163,7 +164,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testDateToString() throws ParseException {
-        checkMinServerVersion(3.0);
+        assumeMinServerVersion(3.0);
         Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");
         getDs().save(new User("John Doe", joined));
         AggregationPipeline pipeline = getDs()
@@ -225,7 +226,7 @@ public class AggregationTest extends TestBase {
                 .aggregate(City.class);
 
         // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
         Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
         Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
         Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
@@ -256,7 +257,7 @@ public class AggregationTest extends TestBase {
                 .aggregate(PlaceWithLegacyCoords.class);
 
         // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
         Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
         Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
         Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
@@ -286,7 +287,7 @@ public class AggregationTest extends TestBase {
                 .aggregate(City.class);
 
         // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
+        assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
         Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
         Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
         Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
@@ -317,7 +318,7 @@ public class AggregationTest extends TestBase {
      */
     @Test
     public void testLookup() {
-        checkMinServerVersion(3.2);
+        assumeMinServerVersion(3.2);
         getDs().save(asList(new Order(1, "abc", 12, 2),
                 new Order(2, "jkl", 20, 1),
                 new Order(3)));
@@ -343,7 +344,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testOut() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
                 new Book("Divine Comedy", "Dante", 1),
                 new Book("Eclogues", "Dante", 2),
@@ -356,8 +357,12 @@ public class AggregationTest extends TestBase {
                 .group("author", grouping("books", push("title")))
                 .out(Author.class, options);
         Assert.assertEquals(2, getDs().getCollection(Author.class).count());
+
         Author author = aggregate.next();
-        Assert.assertEquals("Homer", author.name);
+        while (aggregate.hasNext() && !author.name.equals("Homer")) {
+            author = aggregate.next();
+        }
+        Assert.assertNotNull("Should have found Homer", author);
         Assert.assertEquals(asList("The Odyssey", "Iliad"), author.books);
 
         getDs().createAggregation(Book.class)
@@ -369,7 +374,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testOutNamedCollection() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
                 new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
                 new Book("Eclogues", "Dante", 2, "Italian", ""),
@@ -543,7 +548,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testSortByCount() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
                 new Book("Divine Comedy", "Dante", 1),
                 new Book("Eclogues", "Dante", 2),
@@ -565,7 +570,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testBucketWithoutOptions() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
                 new Book("Divine Comedy", "Dante", 1),
                 new Book("Eclogues", "Dante", 2),
@@ -610,7 +615,7 @@ public class AggregationTest extends TestBase {
 
     @Test(expected = RuntimeException.class)
     public void testBucketWithUnsortedBoundaries() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
                 new Book("Divine Comedy", "Dante", 1),
                 new Book("Eclogues", "Dante", 2),
@@ -629,7 +634,7 @@ public class AggregationTest extends TestBase {
 
     @Test(expected = RuntimeException.class)
     public void testBucketWithBoundariesWithSizeLessThanTwo() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
                 new Book("Divine Comedy", "Dante", 1),
                 new Book("Eclogues", "Dante", 2),
@@ -755,7 +760,7 @@ public class AggregationTest extends TestBase {
         DBObject summation = (DBObject) group.get("summation");
         DBObject sum = (DBObject) summation.get("$sum");
         List<?> add = (List<?>) sum.get("$add");
-        Assert.assertTrue(add.get(0) instanceof String);
+        assertTrue(add.get(0) instanceof String);
         Assert.assertEquals("$amountFromTBInDouble", add.get(0));
         pipeline.aggregate(User.class);
     }

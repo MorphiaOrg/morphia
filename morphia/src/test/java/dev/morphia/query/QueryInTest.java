@@ -2,16 +2,16 @@ package dev.morphia.query;
 
 
 import com.mongodb.MongoException;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class QueryInTest extends TestBase {
 
     @Test
     public void testInQuery() {
-        checkMinServerVersion(2.5);
+        assumeMinServerVersion(2.5);
         final HasRefs hr = new HasRefs();
         for (int x = 0; x < 10; x++) {
             final ReferencedEntity re = new ReferencedEntity("" + x);
@@ -96,7 +96,7 @@ public class QueryInTest extends TestBase {
 
     @Test
     public void testInQueryByKey() {
-        checkMinServerVersion(2.5);
+        assumeMinServerVersion(2.5);
         final HasRef hr = new HasRef();
         List<Key<ReferencedEntity>> refs = new ArrayList<Key<ReferencedEntity>>();
         for (int x = 0; x < 10; x++) {
@@ -138,7 +138,7 @@ public class QueryInTest extends TestBase {
     @Entity("data")
     private static final class Data {
         private ObjectId id;
-        private Set<ObjectId> otherIds;
+        private final Set<ObjectId> otherIds;
 
         private Data() {
             otherIds = new HashSet<ObjectId>();
@@ -148,7 +148,7 @@ public class QueryInTest extends TestBase {
     @Entity
     private static class HasRef implements Serializable {
         @Id
-        private ObjectId id = new ObjectId();
+        private final ObjectId id = new ObjectId();
         @Reference
         private Key<ReferencedEntity> ref;
     }
@@ -156,9 +156,9 @@ public class QueryInTest extends TestBase {
     @Entity
     private static class HasRefs implements Serializable {
         @Id
-        private ObjectId id = new ObjectId();
+        private final ObjectId id = new ObjectId();
         @Reference
-        private List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
+        private final List<ReferencedEntity> refs = new ArrayList<ReferencedEntity>();
     }
 
     @Entity

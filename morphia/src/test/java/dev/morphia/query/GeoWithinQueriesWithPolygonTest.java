@@ -1,8 +1,6 @@
 package dev.morphia.query;
 
 import com.mongodb.client.MongoCursor;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.TestBase;
 import dev.morphia.geo.AllTheThings;
 import dev.morphia.geo.Area;
@@ -11,13 +9,11 @@ import dev.morphia.geo.NamedCoordinateReferenceSystem;
 import dev.morphia.geo.Polygon;
 import dev.morphia.geo.Regions;
 import dev.morphia.geo.Route;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static dev.morphia.geo.GeoJson.geometryCollection;
 import static dev.morphia.geo.GeoJson.lineString;
 import static dev.morphia.geo.GeoJson.multiPoint;
@@ -25,13 +21,17 @@ import static dev.morphia.geo.GeoJson.multiPolygon;
 import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.geo.GeoJson.polygon;
 import static dev.morphia.geo.PointBuilder.pointBuilder;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 public class GeoWithinQueriesWithPolygonTest extends TestBase {
     @Before
     @Override
     public void setUp() {
         // this whole test class is designed for "modern" geo queries
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
         super.setUp();
     }
 
@@ -118,7 +118,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
     @Test
     public void shouldFindGeometryCollectionsWithinTheUK() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         // given
         Polygon uk = polygon(pointBuilder().latitude(49.78).longitude(-10.5).build(),
                              pointBuilder().latitude(49.78).longitude(1.78).build(),
@@ -175,7 +175,7 @@ public class GeoWithinQueriesWithPolygonTest extends TestBase {
 
     @Test
     public void shouldFindRegionsWithinTheUK() {
-        checkMinServerVersion(2.6);
+        assumeMinServerVersion(2.6);
         // given
         Polygon uk = polygon(pointBuilder().latitude(49.78).longitude(-10.5).build(),
                              pointBuilder().latitude(49.78).longitude(1.78).build(),

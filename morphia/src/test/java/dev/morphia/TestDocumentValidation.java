@@ -24,16 +24,16 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
-import org.bson.Document;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.annotations.Validation;
 import dev.morphia.entities.DocumentValidation;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.EnumSet;
@@ -48,7 +48,7 @@ import static org.junit.Assert.fail;
 public class TestDocumentValidation extends TestBase {
     @Before
     public void versionCheck() {
-        checkMinServerVersion(3.2);
+        assumeMinServerVersion(3.2);
     }
 
     @Test

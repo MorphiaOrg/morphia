@@ -19,14 +19,6 @@ package dev.morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
-import org.bson.BsonDocument;
-import org.bson.BsonInt32;
-import org.bson.BsonString;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -42,6 +34,14 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -108,7 +108,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void createIndex() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         String collectionName = getDs().getCollection(IndexedClass.class).getName();
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         Mapper mapper = getMorphia().getMapper();
@@ -167,7 +167,8 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void index() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
+        assumeServerIsAtMostVersion(4.0);
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
 
@@ -243,6 +244,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void oldIndexForm() {
+        assumeServerIsAtMostVersion(4.0);
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMorphia().getMapper().getMappedClass(IndexedClass.class);
 

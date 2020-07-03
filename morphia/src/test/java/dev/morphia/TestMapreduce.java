@@ -13,9 +13,6 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
-import org.bson.Document;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.aggregation.AggregationTest.Book;
 import dev.morphia.aggregation.AggregationTest.CountResult;
 import dev.morphia.annotations.Embedded;
@@ -27,6 +24,9 @@ import dev.morphia.query.Query;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Shape;
+import org.bson.Document;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -120,7 +120,7 @@ public class TestMapreduce extends TestBase {
 
     @Test
     public void testCollation() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
                             new Book("Divine Comedy", "Dante", 1),
                             new Book("Eclogues", "Dante", 2),
@@ -156,7 +156,7 @@ public class TestMapreduce extends TestBase {
 
     @Test
     public void testBypassDocumentValidation() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
                             new Book("Divine Comedy", "Dante", 1),
                             new Book("Eclogues", "Dante", 2),

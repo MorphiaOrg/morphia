@@ -18,10 +18,6 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.Id;
@@ -41,6 +37,10 @@ import dev.morphia.query.UpdateResults;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -349,7 +349,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testUpdateWithCollation() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
                             new FacebookUser(2, "john doe")));
@@ -489,7 +489,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testFindAndModifyWithOptions() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
                             new FacebookUser(2, "john doe")));
@@ -556,7 +556,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testDeleteWithCollation() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
                             new FacebookUser(2, "john doe")));
@@ -631,7 +631,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testFindAndDeleteWithCollation() {
-        checkMinServerVersion(3.4);
+        assumeMinServerVersion(3.4);
         getDs().getCollection(FacebookUser.class).drop();
         getDs().save(asList(new FacebookUser(1, "John Doe"),
                             new FacebookUser(2, "john doe")));
@@ -719,7 +719,7 @@ public class TestDatastore extends TestBase {
         private String username;
         private int loginCount;
         @Reference
-        private List<FacebookUser> friends = new ArrayList<FacebookUser>();
+        private final List<FacebookUser> friends = new ArrayList<FacebookUser>();
 
         public FacebookUser(final long id, final String name) {
             this();

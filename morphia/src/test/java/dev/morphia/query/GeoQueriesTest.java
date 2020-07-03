@@ -1,24 +1,24 @@
 package dev.morphia.query;
 
-import org.junit.Before;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.geo.City;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static dev.morphia.geo.GeoJson.point;
 import static dev.morphia.geo.PointBuilder.pointBuilder;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class GeoQueriesTest extends TestBase {
     @Override
     @Before
     public void setUp() {
         // this whole test class is designed for "modern" geo queries
-        checkMinServerVersion(2.4);
+        assumeMinServerVersion(2.4);
         super.setUp();
     }
 
