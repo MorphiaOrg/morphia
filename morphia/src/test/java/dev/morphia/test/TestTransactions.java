@@ -4,6 +4,8 @@ import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -15,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+@Tags(@Tag("transactions"))
 public class TestTransactions extends TestBase {
     @BeforeEach
     public void before() {

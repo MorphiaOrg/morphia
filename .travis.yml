@@ -3,7 +3,7 @@ language: java
 notifications:
   email:
     recipients:
-    - jlee@antwerkz.com
+      - jlee@antwerkz.com
     on_success: change
     on_failure: always
 
@@ -13,20 +13,40 @@ jdk:
   - openjdk13
   - openjdk14
 
-env:
-  - MONGODB=4.2.2 DRIVER=4.0.2
-  - MONGODB=4.2.2 DRIVER=3.12.0
-  - MONGODB=4.2.2 DRIVER=3.11.1
-  - MONGODB=4.2.2 DRIVER=3.10.1
-  - MONGODB=4.2.2 DRIVER=3.9.1
-  - MONGODB=4.2.2 DRIVER=3.8.2
-  - MONGODB=4.2.2 DRIVER=3.7.1
-  - MONGODB=4.2.2 DRIVER=3.6.4
-  - MONGODB=4.0.13 DRIVER=4.0.2
-  - MONGODB=3.6.15 DRIVER=4.0.2
-
-
-before_install:
-  - sh ./mongo-travis.sh
+before_script:
+  - wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-${MONGODB} -O /tmp/mongodb.tgz
+  - tar -xvf /tmp/mongodb.tgz
+  - mkdir /tmp/data
+  - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &
 
 script: mvn test
+
+env:
+  - MONGODB=4.2.8 DRIVER=4.0.4
+  - MONGODB=4.2.8 DRIVER=3.12.5
+  - MONGODB=4.2.8 DRIVER=3.11.2
+  - MONGODB=4.2.8 DRIVER=3.10.2
+  - MONGODB=4.2.8 DRIVER=3.9.1
+  - MONGODB=4.2.8 DRIVER=3.8.2
+  - MONGODB=4.2.8 DRIVER=3.7.1
+  - MONGODB=4.0.19 DRIVER=4.0.4
+  - MONGODB=4.0.19 DRIVER=3.12.5
+  - MONGODB=4.0.19 DRIVER=3.11.2
+  - MONGODB=4.0.19 DRIVER=3.10.2
+  - MONGODB=4.0.19 DRIVER=3.9.1
+  - MONGODB=4.0.19 DRIVER=3.8.2
+  - MONGODB=4.0.19 DRIVER=3.7.1
+  - MONGODB=3.6.18 DRIVER=4.0.4
+  - MONGODB=3.6.18 DRIVER=3.12.5
+  - MONGODB=3.6.18 DRIVER=3.11.2
+  - MONGODB=3.6.18 DRIVER=3.10.2
+  - MONGODB=3.6.18 DRIVER=3.9.1
+  - MONGODB=3.6.18 DRIVER=3.8.2
+  - MONGODB=3.6.18 DRIVER=3.7.1
+  - MONGODB=3.4.24 DRIVER=4.0.4
+  - MONGODB=3.4.24 DRIVER=3.12.5
+  - MONGODB=3.4.24 DRIVER=3.11.2
+  - MONGODB=3.4.24 DRIVER=3.10.2
+  - MONGODB=3.4.24 DRIVER=3.9.1
+  - MONGODB=3.4.24 DRIVER=3.8.2
+  - MONGODB=3.4.24 DRIVER=3.7.1
