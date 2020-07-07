@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/annotations/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/getting-started/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/getting-started/installation-guide/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/getting-started/quick-tour/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/</loc>
+    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/issues-help/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/aggregation/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/configuration/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/indexing/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/lifecyclemethods/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/querying/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/querying-old/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/references/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/schemavalidation/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/textsearch/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/transactions/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0-SNAPSHOT/guides/updating/</loc>
+  </url>
+  
+</urlset>
