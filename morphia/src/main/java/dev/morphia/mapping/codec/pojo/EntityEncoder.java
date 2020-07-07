@@ -9,7 +9,6 @@ import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.IdGenerator;
 import org.bson.codecs.ObjectIdGenerator;
-import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.types.ObjectId;
 
 import java.util.Collection;
@@ -108,12 +107,7 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
             if (propertyValue == null) {
                 writer.writeNull();
             } else {
-                try {
-                    encoderContext.encodeWithChildContext(model.getCachedCodec(), writer, propertyValue);
-                } catch (Exception e) {
-                    throw new CodecConfigurationException(String.format("Failed to encode '%s'. Encoding '%s' errored with: %s",
-                        morphiaCodec.getEntityModel().getName(), model.getMappedName(), e.getMessage()), e);
-                }
+                encoderContext.encodeWithChildContext(model.getCachedCodec(), writer, propertyValue);
             }
         }
     }
