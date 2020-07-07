@@ -114,6 +114,7 @@ public class TestLazySingleReference extends ProxyTestBase {
         reference.setFoo("bar");
 
         getDs().save(second);
+        getDs().save(reference);
         getDs().save(root);
 
         root = getDs().find(RootEntity.class)
