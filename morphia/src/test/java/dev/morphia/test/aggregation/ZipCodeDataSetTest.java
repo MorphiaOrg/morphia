@@ -15,14 +15,13 @@ import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zeroturnaround.exec.ProcessExecutor;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,27 +45,16 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ZipCodeDataSetTest extends TestBase {
-    public static final File MONGO_IMPORT;
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
 
     static {
         String property = System.getProperty("mongodb_server");
         String serverType = property != null ? property.replaceAll("-release", "") : "UNKNOWN";
         File path = new File(format("/mnt/jenkins/mongodb/%s/%s/bin/mongoimport", serverType, property));
-        if (path.exists()) {
-            MONGO_IMPORT = path;
-        } else {
-            MONGO_IMPORT = Arrays.stream(System.getenv("PATH").split(File.pathSeparator))
-                                 .map(p -> new File(p, "mongoimport"))
-                                 .filter(File::exists)
-                                 .findFirst()
-                                 .orElseGet(() -> new File("/notreally here"));
-        }
     }
 
     @Test
     public void averageCitySizeByState() {
-        assumeTrue(MONGO_IMPORT.exists());
         installSampleData();
 
         Aggregation pipeline = getDs().aggregate(City.class)
@@ -90,12 +78,9 @@ public class ZipCodeDataSetTest extends TestBase {
             }
             MongoCollection<Document> zips = getDatabase().getCollection("zips");
             if (zips.countDocuments() == 0) {
-                new ProcessExecutor().command(MONGO_IMPORT.getAbsolutePath(),
-                    "--db", getDatabase().getName(),
-                    "--collection", "zipcodes",
-                    "--file", file.getAbsolutePath())
-                                     .redirectError(System.err)
-                                     .execute();
+                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
+                Files.lines(file.toPath())
+                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,7 +90,6 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void populationsAbove10M() {
-        assumeTrue(MONGO_IMPORT.exists());
         installSampleData();
 
         Aggregation pipeline
@@ -120,7 +104,6 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void smallestAndLargestCities() {
-        assumeTrue(MONGO_IMPORT.exists());
         installSampleData();
         getMapper().mapPackage(getClass().getPackage().getName());
 
