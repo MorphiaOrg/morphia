@@ -33,7 +33,6 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.field
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Group.of;
 import static dev.morphia.query.experimental.filters.Filters.gte;
-import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -46,12 +45,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
-
-    static {
-        String property = System.getProperty("mongodb_server");
-        String serverType = property != null ? property.replaceAll("-release", "") : "UNKNOWN";
-        File path = new File(format("/mnt/jenkins/mongodb/%s/%s/bin/mongoimport", serverType, property));
-    }
 
     @Test
     public void averageCitySizeByState() {
