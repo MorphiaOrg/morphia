@@ -37,6 +37,7 @@ public final class City {
     @Property("state")
     private String state;
 
+
     @Override
     public String toString() {
         return format("City{id='%s', name='%s', location=%s, population=%s, state='%s'}", id, name, Arrays.toString(location),

@@ -16,7 +16,15 @@ import dev.morphia.query.DefaultQueryFactory;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +39,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @SuppressWarnings("WeakerAccess")
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
+    private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
+
     private final MongoClient mongoClient;
     private final MongoDatabase database;
     private final Datastore ds;
@@ -53,11 +63,6 @@ public abstract class TestBase {
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
         ds.setQueryFactory(new DefaultQueryFactory());
     }
-
-//    @AfterAll
-//    public void close() {
-//        getMongoClient().close();
-//    }
 
     public MongoDatabase getDatabase() {
         return database;
@@ -86,6 +91,7 @@ public abstract class TestBase {
     @BeforeEach
     public void setUp() {
         cleanup();
+        installSampleData();
     }
 
     @AfterEach
@@ -103,9 +109,11 @@ public abstract class TestBase {
 
     protected void cleanup() {
         MongoDatabase db = getDatabase();
-        if (db != null) {
-            db.drop();
-        }
+        db.listCollectionNames().forEach(s -> {
+            if (!s.equals("zipcodes")) {
+                db.getCollection(s).drop();
+            }
+        });
     }
 
     protected int count(final MongoCursor<?> cursor) {
@@ -222,5 +230,37 @@ public abstract class TestBase {
     private Document runIsMaster() {
         return mongoClient.getDatabase("admin")
                           .runCommand(new Document("ismaster", 1));
+    }
+
+    private void download(final URL url, final File file) throws IOException {
+        LOG.info("Downloading zip data set to " + file);
+        try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
+            byte[] read = new byte[49152];
+            int count;
+            while ((count = inputStream.read(read)) != -1) {
+                outputStream.write(read, 0, count);
+            }
+        }
+    }
+
+    private void installSampleData() {
+        File file = new File("zips.json");
+        try {
+            if (!file.exists()) {
+                file = new File("target/zips.json");
+                if (!file.exists()) {
+                    download(new URL("https://media.mongodb.org/zips.json"), file);
+                }
+            }
+            MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
+            if (zips.countDocuments() == 0) {
+                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
+                Files.lines(file.toPath())
+                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assumeTrue(file.exists(), "Failed to process media files");
     }
 }

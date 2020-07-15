@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import com.mongodb.TransactionOptions;
 import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 import java.util.List;
 
+import static com.mongodb.ClientSessionOptions.builder;
+import static com.mongodb.WriteConcern.MAJORITY;
 import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,7 +37,11 @@ public class TestTransactions extends TestBase {
         Rectangle rectangle = new Rectangle(1, 1);
         getDs().save(rectangle);
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(builder()
+                                    .defaultTransactionOptions(TransactionOptions.builder()
+                                                                                 .writeConcern(MAJORITY)
+                                                                                 .build())
+                                    .build(), (session) -> {
 
             assertNotNull(getDs().find(Rectangle.class).first());
             assertNotNull(session.find(Rectangle.class).first());

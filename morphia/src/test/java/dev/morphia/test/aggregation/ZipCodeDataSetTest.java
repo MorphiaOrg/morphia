@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation;
 
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
@@ -11,17 +10,10 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.State;
-import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +27,6 @@ import static dev.morphia.aggregation.experimental.stages.Group.of;
 import static dev.morphia.query.experimental.filters.Filters.gte;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
@@ -48,8 +39,6 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void averageCitySizeByState() {
-        installSampleData();
-
         Aggregation pipeline = getDs().aggregate(City.class)
                                       .group(of(id().field("state")
                                                     .field("city"))
@@ -60,31 +49,9 @@ public class ZipCodeDataSetTest extends TestBase {
         validate(pipeline.execute(Population.class), "MN", 5372);
     }
 
-    public void installSampleData() {
-        File file = new File("zips.json");
-        try {
-            if (!file.exists()) {
-                file = new File(System.getProperty("java.io.tmpdir"), "zips.json");
-                if (!file.exists()) {
-                    download(new URL("https://media.mongodb.org/zips.json"), file);
-                }
-            }
-            MongoCollection<Document> zips = getDatabase().getCollection("zips");
-            if (zips.countDocuments() == 0) {
-                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
-                Files.lines(file.toPath())
-                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assumeTrue(file.exists(), "Failed to process media files");
-    }
 
     @Test
     public void populationsAbove10M() {
-        installSampleData();
-
         Aggregation pipeline
             = getDs().aggregate(City.class)
                      .group(of(id("state"))
@@ -97,7 +64,6 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void smallestAndLargestCities() {
-        installSampleData();
         getMapper().mapPackage(getClass().getPackage().getName());
 
         Aggregation pipeline = getDs().aggregate(City.class)
@@ -142,17 +108,6 @@ public class ZipCodeDataSetTest extends TestBase {
 
             assertEquals("ZEONA", state.getSmallest().getName());
             assertEquals(8, state.getSmallest().getPopulation().longValue());
-        }
-    }
-
-    private void download(final URL url, final File file) throws IOException {
-        LOG.info("Downloading zip data set to " + file);
-        try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
-            byte[] read = new byte[49152];
-            int count;
-            while ((count = inputStream.read(read)) != -1) {
-                outputStream.write(read, 0, count);
-            }
         }
     }
 
