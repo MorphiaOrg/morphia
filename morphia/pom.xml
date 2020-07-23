@@ -274,10 +274,7 @@
                         </executions>
                         <configuration>
                             <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                            <oldArtifacts>
-                                <artifact>${project.groupId}:core:1.6.0-RC1</artifact>
-                            </oldArtifacts>
-                            <oldVersion>1.6.0-RC1</oldVersion>
+                            <oldVersion>2.0.0</oldVersion>
                             <analysisConfigurationFiles>
                                 <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
                             </analysisConfigurationFiles>
