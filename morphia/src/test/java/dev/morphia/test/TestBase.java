@@ -1,10 +1,8 @@
 package dev.morphia.test;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoClientSettings.Builder;
+import com.antwerkz.bottlerocket.clusters.MongoCluster;
+import com.antwerkz.bottlerocket.clusters.ReplicaSet;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -30,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import static dev.morphia.mapping.MapperOptions.DEFAULT;
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -40,28 +37,25 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
+    private static final MongoCluster cluster;
+    private static final MongoClient mongoClient;
 
-    private final MongoClient mongoClient;
     private final MongoDatabase database;
     private final Datastore ds;
 
     protected TestBase() {
-        Builder builder = MongoClientSettings.builder();
-
-        try {
-            builder.uuidRepresentation(DEFAULT.getUuidRepresentation());
-        } catch (Exception ignored) {
-            // not a 4.0 driver
-        }
-
-        MongoClientSettings clientSettings = builder
-                                                 .applyConnectionString(new ConnectionString("mongodb://localhost:27017"))
-                                                 .build();
-
-        this.mongoClient = MongoClients.create(clientSettings);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
         ds.setQueryFactory(new DefaultQueryFactory());
+    }
+
+    static {
+        cluster = ReplicaSet.builder()
+                            .size(1)
+                            .build();
+
+        cluster.start();
+        mongoClient = cluster.getClient();
     }
 
     public MongoDatabase getDatabase() {
@@ -227,11 +221,6 @@ public abstract class TestBase {
         }
     }
 
-    private Document runIsMaster() {
-        return mongoClient.getDatabase("admin")
-                          .runCommand(new Document("ismaster", 1));
-    }
-
     private void download(final URL url, final File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
         try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
@@ -254,6 +243,7 @@ public abstract class TestBase {
             }
             MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
             if (zips.countDocuments() == 0) {
+                LOG.info("Installing sample data");
                 MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
                 Files.lines(file.toPath())
                      .forEach(l -> zipcodes.insertOne(Document.parse(l)));
@@ -262,5 +252,10 @@ public abstract class TestBase {
             e.printStackTrace();
         }
         assumeTrue(file.exists(), "Failed to process media files");
+    }
+
+    private Document runIsMaster() {
+        return mongoClient.getDatabase("admin")
+                          .runCommand(new Document("ismaster", 1));
     }
 }
