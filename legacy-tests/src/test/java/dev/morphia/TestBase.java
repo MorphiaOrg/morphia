@@ -1,10 +1,12 @@
 package dev.morphia;
 
-import com.mongodb.ConnectionString;
+import com.antwerkz.bottlerocket.BottleRocket;
+import com.antwerkz.bottlerocket.clusters.MongoCluster;
+import com.antwerkz.bottlerocket.clusters.ReplicaSet;
+import com.github.zafarkhaja.semver.Version;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -12,49 +14,72 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
+import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
-    private final MongoClient mongoClient;
+    private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
+    private static final MapperOptions mapperOptions = MapperOptions.DEFAULT;
+    private static MongoClient mongoClient;
+
     private final MongoDatabase database;
     private final Datastore ds;
-    private final MapperOptions mapperOptions = MapperOptions.DEFAULT;
 
     protected TestBase() {
-        Builder builder = MongoClientSettings.builder();
-
-        try {
-            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
-        } catch(Exception ignored) {
-            // not a 4.0 driver
-        }
-
-        MongoClientSettings clientSettings = builder
-                               .applyConnectionString(new ConnectionString(getMongoURI()))
-                                                                .build();
-
-        this.mongoClient = MongoClients.create(clientSettings);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
         ds.setQueryFactory(new DefaultQueryFactory());
     }
 
-    protected static String getMongoURI() {
-        return System.getProperty("MONGO_URI", "mongodb://localhost:27017");
+    static void startMongo() {
+        Builder builder = MongoClientSettings.builder();
+
+        try {
+            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
+        } catch (Exception ignored) {
+            // not a 4.0 driver
+        }
+
+        String mongodb = System.getenv("MONGODB");
+        File mongodbRoot = new File("target/mongo");
+        int port = new Random().nextInt(20000) + 30000;
+        try {
+            FileUtils.deleteDirectory(mongodbRoot);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        final MongoCluster cluster = ReplicaSet.builder()
+                                               .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
+                                               .baseDir(mongodbRoot)
+                                               .port(port)
+                                               .size(1)
+                                               .build();
+
+        cluster.start();
+        mongoClient = cluster.getClient(builder);
     }
 
     public MongoDatabase getDatabase() {
@@ -65,12 +90,15 @@ public abstract class TestBase {
         return ds;
     }
 
-    public MongoClient getMongoClient() {
-        return mongoClient;
-    }
-
     public Mapper getMapper() {
         return getDs().getMapper();
+    }
+
+    public MongoClient getMongoClient() {
+        if (mongoClient == null) {
+            startMongo();
+        }
+        return mongoClient;
     }
 
     public boolean isReplicaSet() {
@@ -80,12 +108,12 @@ public abstract class TestBase {
     @Before
     public void setUp() {
         cleanup();
+        installSampleData();
     }
 
     @After
     public void tearDown() {
         cleanup();
-        getMongoClient().close();
     }
 
     protected void assertDocumentEquals(final Object expected, final Object actual) {
@@ -93,14 +121,16 @@ public abstract class TestBase {
     }
 
     protected void checkMinServerVersion(final double version) {
-        Assume.assumeTrue(serverIsAtLeastVersion(version));
+        assumeTrue(serverIsAtLeastVersion(version));
     }
 
     protected void cleanup() {
         MongoDatabase db = getDatabase();
-        if (db != null) {
-            db.drop();
-        }
+        db.listCollectionNames().forEach(s -> {
+            if (!s.equals("zipcodes") && !s.startsWith("system.")) {
+                db.getCollection(s).drop();
+            }
+        });
     }
 
     protected int count(final MongoCursor<?> cursor) {
@@ -125,14 +155,6 @@ public abstract class TestBase {
         return getDatabase().getCollection(getMappedClass(type).getCollectionName());
     }
 
-    /**
-     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
-     * @return true if server is at least specified version
-     */
-    protected boolean serverIsAtLeastVersion(final double version) {
-        return getServerVersion() >= version;
-    }
-
     protected List<Document> getIndexInfo(final Class<?> clazz) {
         return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
@@ -142,6 +164,22 @@ public abstract class TestBase {
         mapper.map(aClass);
 
         return mapper.getMappedClass(aClass);
+    }
+
+    protected double getServerVersion() {
+        String version = (String) getMongoClient()
+                                      .getDatabase("admin")
+                                      .runCommand(new Document("serverStatus", 1))
+                                      .get("version");
+        return Double.parseDouble(version.substring(0, 3));
+    }
+
+    /**
+     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
+     * @return true if server is at least specified version
+     */
+    protected boolean serverIsAtLeastVersion(final double version) {
+        return getServerVersion() >= version;
     }
 
     protected String toString(final Document document) {
@@ -206,20 +244,41 @@ public abstract class TestBase {
         }
     }
 
-    protected double getServerVersion() {
-        String version = (String) getMongoClient()
-                                      .getDatabase("admin")
-                                      .runCommand(new Document("serverStatus", 1))
-                                      .get("version");
-        return Double.parseDouble(version.substring(0, 3));
+    private void download(final URL url, final File file) throws IOException {
+        LOG.info("Downloading zip data set to " + file);
+        try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
+            byte[] read = new byte[49152];
+            int count;
+            while ((count = inputStream.read(read)) != -1) {
+                outputStream.write(read, 0, count);
+            }
+        }
+    }
+
+    private void installSampleData() {
+        File file = new File("zips.json");
+        try {
+            if (!file.exists()) {
+                file = new File("target/zips.json");
+                if (!file.exists()) {
+                    download(new URL("https://media.mongodb.org/zips.json"), file);
+                }
+            }
+            MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
+            if (zips.countDocuments() == 0) {
+                LOG.info("Installing sample data");
+                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
+                Files.lines(file.toPath())
+                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assumeTrue("Failed to process media files", file.exists());
     }
 
     private Document runIsMaster() {
         return mongoClient.getDatabase("admin")
                           .runCommand(new Document("ismaster", 1));
-    }
-
-    public Document obj(final String key, final Object value) {
-        return new Document(key, value);
     }
 }

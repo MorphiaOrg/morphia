@@ -4,14 +4,16 @@ import com.antwerkz.bottlerocket.BottleRocket;
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
 import com.github.zafarkhaja.semver.Version;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,8 +43,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    private static final MongoCluster cluster;
-    private static final MongoClient mongoClient;
+    private static final MapperOptions mapperOptions = MapperOptions.DEFAULT;
+    private static MongoClient mongoClient;
 
     private final MongoDatabase database;
     private final Datastore ds;
@@ -52,22 +55,32 @@ public abstract class TestBase {
         ds.setQueryFactory(new DefaultQueryFactory());
     }
 
-    static {
+    static void startMongo() {
+        Builder builder = MongoClientSettings.builder();
+
+        try {
+            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
+        } catch (Exception ignored) {
+            // not a 4.0 driver
+        }
+
         String mongodb = System.getenv("MONGODB");
         File mongodbRoot = new File("target/mongo");
+        int port = new Random().nextInt(20000) + 30000;
         try {
             FileUtils.deleteDirectory(mongodbRoot);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        cluster = ReplicaSet.builder()
-                            .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
-                            .baseDir(mongodbRoot)
-                            .size(1)
-                            .build();
+        final MongoCluster cluster = ReplicaSet.builder()
+                                               .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
+                                               .baseDir(mongodbRoot)
+                                               .port(port)
+                                               .size(1)
+                                               .build();
 
         cluster.start();
-        mongoClient = cluster.getClient();
+        mongoClient = cluster.getClient(builder);
     }
 
     public MongoDatabase getDatabase() {
@@ -83,15 +96,14 @@ public abstract class TestBase {
     }
 
     public MongoClient getMongoClient() {
+        if (mongoClient == null) {
+            startMongo();
+        }
         return mongoClient;
     }
 
     public boolean isReplicaSet() {
         return runIsMaster().get("setName") != null;
-    }
-
-    public Document obj(final String key, final Object value) {
-        return new Document(key, value);
     }
 
     @BeforeEach
@@ -140,19 +152,8 @@ public abstract class TestBase {
         return count;
     }
 
-    protected MongoCollection<Document> getDocumentCollection(final Class<?> type) {
-        return getDatabase().getCollection(getMappedClass(type).getCollectionName());
-    }
-
     protected List<Document> getIndexInfo(final Class<?> clazz) {
         return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
-    }
-
-    protected MappedClass getMappedClass(final Class<?> aClass) {
-        Mapper mapper = getMapper();
-        mapper.map(aClass);
-
-        return mapper.getMappedClass(aClass);
     }
 
     protected double getServerVersion() {

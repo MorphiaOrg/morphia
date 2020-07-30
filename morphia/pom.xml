@@ -72,7 +72,7 @@
                 </executions>
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
-                    <javadocUrl>https://morphia.dev/2.0.0-SNAPSHOT/javadoc/</javadocUrl>
+                    <javadocUrl>https://morphia.dev/2.1.0-SNAPSHOT/javadoc/</javadocUrl>
                 </configuration>
             </plugin>
             <plugin>
@@ -185,7 +185,7 @@
         <dependency>
             <groupId>com.antwerkz.bottlerocket</groupId>
             <artifactId>bottlerocket</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>${bottlerocket.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -276,7 +276,6 @@
                         </executions>
                         <configuration>
                             <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                            <oldVersion>2.0.0</oldVersion>
                             <analysisConfigurationFiles>
                                 <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
                             </analysisConfigurationFiles>
