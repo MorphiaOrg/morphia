@@ -42,6 +42,8 @@
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M3</surefire.version>
         <zt.exec.version>1.10</zt.exec.version>
+        <junit.version>4.12</junit.version>
+        <junit5.version>5.6.2</junit5.version>
     </properties>
 
     <build>
@@ -115,6 +117,7 @@
             </plugin>
         </plugins>
     </build>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -157,7 +160,8 @@
         <module>build-plugins</module>
         <module>util</module>
         <module>morphia</module>
-        <!--        <module>no-proxy-deps-tests</module>-->
+        <module>legacy-tests</module>
+<!--        <module>no-proxy-deps-tests</module>-->
         <module>examples</module>
     </modules>
 </project>

@@ -7,7 +7,7 @@ download() {
   then
     MONGODB=$(grep MONGODB travis-jobs.sh  | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
   fi
-    
+
   BASE_VERSION=$(echo ${MONGODB} | cut -d\. -f1-2)
   FILE=/tmp/mongodb-${MONGODB}.tgz
 
