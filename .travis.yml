@@ -13,12 +13,6 @@ jdk:
   - openjdk13
   - openjdk14
 
-before_script:
-  - wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-${MONGODB} -O /tmp/mongodb.tgz
-  - tar -xvf /tmp/mongodb.tgz
-  - mkdir /tmp/data
-  - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &
-
 script: mvn test
 
 env:
@@ -43,10 +37,3 @@ env:
   - MONGODB=3.6.18 DRIVER=3.9.1
   - MONGODB=3.6.18 DRIVER=3.8.2
   - MONGODB=3.6.18 DRIVER=3.7.1
-  - MONGODB=3.4.24 DRIVER=4.0.4
-  - MONGODB=3.4.24 DRIVER=3.12.5
-  - MONGODB=3.4.24 DRIVER=3.11.2
-  - MONGODB=3.4.24 DRIVER=3.10.2
-  - MONGODB=3.4.24 DRIVER=3.9.1
-  - MONGODB=3.4.24 DRIVER=3.8.2
-  - MONGODB=3.4.24 DRIVER=3.7.1
