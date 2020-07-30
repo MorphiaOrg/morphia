@@ -1,7 +1,9 @@
 package dev.morphia.test;
 
+import com.antwerkz.bottlerocket.BottleRocket;
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
+import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -11,6 +13,7 @@ import dev.morphia.Morphia;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.DefaultQueryFactory;
+import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +53,16 @@ public abstract class TestBase {
     }
 
     static {
+        String mongodb = System.getenv("MONGODB");
+        File mongodbRoot = new File("target/mongo");
+        try {
+            FileUtils.deleteDirectory(mongodbRoot);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
         cluster = ReplicaSet.builder()
+                            .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
+                            .baseDir(mongodbRoot)
                             .size(1)
                             .build();
 

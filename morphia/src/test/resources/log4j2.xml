@@ -6,10 +6,13 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="warn">
+        <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
         <logger name="dev.morphia" level="warn">
+            <AppenderRef ref="Console"/>
+        </logger>
+        <logger name="org.mongodb.driver" level="error">
             <AppenderRef ref="Console"/>
         </logger>
     </Loggers>
