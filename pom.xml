@@ -33,7 +33,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <awaitility.version>1.7.0</awaitility.version>
-        <bottlerocket.version>0.6</bottlerocket.version>
+        <bottlerocket.version>0.7</bottlerocket.version>
         <driver.version>4.0.2</driver.version>
         <json.assert.version>1.2.3</json.assert.version>
         <maven.version>3.6.2</maven.version>
