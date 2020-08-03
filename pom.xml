@@ -37,13 +37,13 @@
         <driver.version>4.0.2</driver.version>
         <json.assert.version>1.2.3</json.assert.version>
         <maven.version>3.6.2</maven.version>
-        <revapi.maven.plugin.version>0.11.3</revapi.maven.plugin.version>
+        <revapi.maven.plugin.version>0.11.4</revapi.maven.plugin.version>
         <revapi.java.version>0.20.1</revapi.java.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <slf4j.version>1.7.30</slf4j.version>
         <sofia.version>0.23</sofia.version>
-        <surefire.version>3.0.0-M3</surefire.version>
+        <surefire.version>3.0.0-M5</surefire.version>
         <zt.exec.version>1.10</zt.exec.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13</junit.version>
         <junit5.version>5.6.2</junit5.version>
     </properties>
 
@@ -88,6 +88,11 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.8.2</version>
             </plugin>
@@ -98,8 +103,13 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
                 <configuration>
                     <failOnError>false</failOnError>
                     <excludePackageNames>org.bson, *.internal, dev.morphia.sofia, dev.morphia.utils</excludePackageNames>
@@ -129,7 +139,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${junit.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
