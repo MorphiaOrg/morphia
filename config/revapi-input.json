@@ -5,22 +5,10 @@
       "justification": "Driver classes should be ignored"
     }
   ],
-  "java.annotation.removed": [
+  "java.method.visibilityReduced": [
     {
-      "class": "dev.morphia.geo.Point ",
-      "justification": "Necessary API fixes"
-    }
-  ],
-  "java.class.externalClassExposedInAPI": [
-    {
-      "class": "*",
-      "justification": "Necessary API fixes"
-    }
-  ],
-  "java.class.noLongerImplementsInterface": [
-    {
-      "class": "dev.morphia.query.FieldEndImpl",
-      "justification": "An internal implementation detail leak"
+      "class": "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
     }
   ],
   "java.class.nowFinal": [
@@ -29,40 +17,10 @@
       "justification": "Driver classes should be ignored"
     }
   ],
-  "java.class.superTypeTypeParametersChanged": [
-    {
-      "class": "dev.morphia.query.FieldEndImpl",
-      "justification": "An internal implementation detail leak"
-    }
-  ],
-  "java.generics.formalTypeParameterChanged": [
-    {
-      "class": "dev.morphia.query.FieldEndImpl",
-      "justification": "An internal implementation detail leak"
-    }
-  ],
-  "java.method.abstractMethodAdded": [
-    {
-      "classQualifiedName": "dev.morphia.geo.CoordinateReferenceSystem",
-      "justification": "These will be used as transition helpers in 2.0"
-    }
-  ],
   "java.method.addedToInterface": [
     {
       "class": "com.mongodb.*",
       "justification": "Driver classes should be ignored"
-    }
-  ],
-  "java.method.numberOfParametersChanged": [
-    {
-      "classQualifiedName": "dev.morphia.converters.LocalDateConverter",
-      "methodName": "<init>",
-      "justification": "These are largely used internally and should rarely be seen in user code"
-    },
-    {
-      "classQualifiedName": "dev.morphia.converters.LocalDateTimeConverter",
-      "methodName": "<init>",
-      "justification": "These are largely used internally and should rarely be seen in user code"
     }
   ],
   "java.method.parameterTypeChanged": [
@@ -73,40 +31,14 @@
   ],
   "java.method.removed": [
     {
-      "classQualifiedName": "dev.morphia.query.QueryResults",
-      "justification": "These methods were pushed down to Query"
-    },
-    {
-      "class": "com.mongodb..*",
-      "justification": "Driver classes should be ignored"
-    }
-  ],
-  "java.method.returnTypeChanged": [
-    {
-      "class" : "dev.morphia.query.QueryImpl",
-      "justification": "Necessary API fixes"
-    }
-  ],
-  "java.method.returnTypeChangedCovariantly": [
-    {
-      "class" : "dev.morphia.dao.BasicDAO",
-      "justification": "Necessary API fixes"
-    },
-    {
-      "class" : "dev.morphia.dao.DAO",
-      "justification": "Necessary API fixes"
-    }
-  ],
-  "java.method.returnTypeTypeParametersChanged": [
-    {
-      "class" : "dev.morphia.query.FieldEndImpl",
-      "justification": "An internal implementation detail leak"
-    }
-  ],
-  "java.method.visibilityReduced": [
-    {
       "class": "com.mongodb.*",
       "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.class.nonPublicPartOfAPI": [
+    {
+      "class": "morphia.bson.*",
+      "justification": "Internal classes"
     }
   ]
 }

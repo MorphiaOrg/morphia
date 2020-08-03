@@ -20,11 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @morphia.internal
+ */
 public final class PojoSpecializationHelper {
 
     @SuppressWarnings("unchecked")
     public static <V> TypeData<V> specializeTypeData(final TypeData<V> typeData, final List<TypeData<?>> typeParameters,
-                                              final TypeParameterMap typeParameterMap) {
+                                                     final TypeParameterMap typeParameterMap) {
         if (!typeParameterMap.hasTypeParameters() || typeParameters.isEmpty()) {
             return typeData;
         }
@@ -57,22 +60,22 @@ public final class PojoSpecializationHelper {
             return typeData;
         }
         return propertyToClassParamIndexMap.get(index).map(l -> {
-                    if (typeData.getTypeParameters().isEmpty()) {
-                        // Represents the whole typeData
-                        return specializedTypeParameters.get(l);
-                    } else {
-                        // Represents a single nested type parameter within this typeData
-                        TypeData.Builder<?> builder = TypeData.builder(typeData.getType());
-                        List<TypeData<?>> typeParameters = new ArrayList<>(typeData.getTypeParameters());
-                        typeParameters.set(index, specializedTypeParameters.get(l));
-                        builder.addTypeParameters(typeParameters);
-                        return builder.build();
-                    }
-                },
-                r -> {
-                    // Represents a child type parameter of this typeData
-                    return getTypeData(typeData, specializedTypeParameters, r.getPropertyToClassParamIndexMap());
-                });
+                if (typeData.getTypeParameters().isEmpty()) {
+                    // Represents the whole typeData
+                    return specializedTypeParameters.get(l);
+                } else {
+                    // Represents a single nested type parameter within this typeData
+                    TypeData.Builder<?> builder = TypeData.builder(typeData.getType());
+                    List<TypeData<?>> typeParameters = new ArrayList<>(typeData.getTypeParameters());
+                    typeParameters.set(index, specializedTypeParameters.get(l));
+                    builder.addTypeParameters(typeParameters);
+                    return builder.build();
+                }
+            },
+            r -> {
+                // Represents a child type parameter of this typeData
+                return getTypeData(typeData, specializedTypeParameters, r.getPropertyToClassParamIndexMap());
+            });
     }
 
     private PojoSpecializationHelper() {

@@ -22,6 +22,9 @@ import java.util.function.Function;
 
 import static org.bson.assertions.Assertions.notNull;
 
+/**
+ * @morphia.internal
+ */
 final class Either<L, R> {
 
     private final L left;

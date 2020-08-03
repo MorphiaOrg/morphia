@@ -3,6 +3,7 @@ package dev.morphia.test;
 import com.antwerkz.bottlerocket.BottleRocket;
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
+import com.antwerkz.bottlerocket.configuration.types.Verbosity;
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,7 +66,6 @@ public abstract class TestBase {
 
         String mongodb = System.getenv("MONGODB");
         File mongodbRoot = new File("target/mongo");
-        int port = new Random().nextInt(20000) + 30000;
         try {
             FileUtils.deleteDirectory(mongodbRoot);
         } catch (IOException e) {
@@ -75,10 +74,17 @@ public abstract class TestBase {
         final MongoCluster cluster = ReplicaSet.builder()
                                                .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
                                                .baseDir(mongodbRoot)
-                                               .port(port)
                                                .size(1)
                                                .build();
 
+        cluster.configure(c -> {
+            c.systemLog(s -> {
+                s.setTraceAllExceptions(true);
+                s.setVerbosity(Verbosity.FIVE);
+                return null;
+            });
+            return null;
+        });
         cluster.start();
         mongoClient = cluster.getClient(builder);
     }

@@ -37,6 +37,7 @@ import static org.bson.assertions.Assertions.notNull;
  * Holds type information about a type element
  *
  * @param <T> the underlying type being represented
+ * @morphia.internal
  */
 public final class TypeData<T> implements TypeWithTypeParameters<T> {
     private final Class<T> type;
@@ -204,25 +205,15 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
         return builder.toString();
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TypeData)) {
+    private static boolean isGetter(Method method) {
+        if (method.getParameterTypes().length > 0) {
             return false;
+        } else if (method.getName().startsWith("get") && method.getName().length() > "get".length()) {
+            return Character.isUpperCase(method.getName().charAt("get".length()));
+        } else {
+            return method.getName().startsWith("is") && method.getName().length() > "is".length() && Character.isUpperCase(
+                method.getName().charAt("is".length()));
         }
-
-        TypeData<?> that = (TypeData<?>) o;
-
-        if (!getType().equals(that.getType())) {
-            return false;
-        }
-        if (!getTypeParameters().equals(that.getTypeParameters())) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override
@@ -264,14 +255,20 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
         PRIMITIVE_CLASS_MAP = map;
     }
 
-    private static boolean isGetter(Method method) {
-        if (method.getParameterTypes().length > 0) {
-            return false;
-        } else if (method.getName().startsWith("get") && method.getName().length() > "get".length()) {
-            return Character.isUpperCase(method.getName().charAt("get".length()));
-        } else {
-            return method.getName().startsWith("is") && method.getName().length() > "is".length() ? Character.isUpperCase(
-                method.getName().charAt("is".length())) : false;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
         }
+        if (!(o instanceof TypeData)) {
+            return false;
+        }
+
+        TypeData<?> that = (TypeData<?>) o;
+
+        if (!getType().equals(that.getType())) {
+            return false;
+        }
+        return getTypeParameters().equals(that.getTypeParameters());
     }
 }

@@ -24,6 +24,8 @@ import static java.util.Collections.unmodifiableMap;
 
 /**
  * Maps the index of a class's generic parameter type index to a property's.
+ *
+ * @morphia.internal
  */
 public final class TypeParameterMap {
     private final Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap;
@@ -129,11 +131,7 @@ public final class TypeParameterMap {
 
         TypeParameterMap that = (TypeParameterMap) o;
 
-        if (!getPropertyToClassParamIndexMap().equals(that.getPropertyToClassParamIndexMap())) {
-            return false;
-        }
-
-        return true;
+        return getPropertyToClassParamIndexMap().equals(that.getPropertyToClassParamIndexMap());
     }
 
     @Override
