@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,16 +67,18 @@ public abstract class TestBase {
         }
 
         String mongodb = System.getenv("MONGODB");
-        File mongodbRoot = new File("target/mongo");
+        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH_mm_ss"));
+        File mongodbRoot = new File("target/mongo/" + format);
         try {
             FileUtils.deleteDirectory(mongodbRoot);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
         final MongoCluster cluster = ReplicaSet.builder()
-                                               .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
+                                               .version(version)
                                                .baseDir(mongodbRoot)
-                                               .size(1)
+                                               .size(version.lessThan(Version.forIntegers(4)) ? 3 : 1)
                                                .build();
 
         cluster.configure(c -> {

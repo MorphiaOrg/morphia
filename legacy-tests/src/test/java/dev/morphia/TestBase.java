@@ -71,11 +71,12 @@ public abstract class TestBase {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
         final MongoCluster cluster = ReplicaSet.builder()
                                                .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
                                                .baseDir(mongodbRoot)
                                                .port(port)
-                                               .size(1)
+                                               .size(version.lessThan(Version.forIntegers(4)) ? 3 : 1)
                                                .build();
 
         cluster.start();

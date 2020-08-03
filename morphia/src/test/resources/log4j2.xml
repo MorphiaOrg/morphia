@@ -12,7 +12,7 @@
         <logger name="dev.morphia" level="info">
             <AppenderRef ref="Console"/>
         </logger>
-        <logger name="Mongod.30000" level="debug">
+        <logger name="Mongod" level="error">
             <AppenderRef ref="Console"/>
         </logger>
         <logger name="org.mongodb.driver" level="error">
