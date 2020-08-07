@@ -10,6 +10,7 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.State;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
+
+    @BeforeEach
+    public void installData() {
+        installSampleData();
+    }
 
     @Test
     public void averageCitySizeByState() {

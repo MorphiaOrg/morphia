@@ -119,7 +119,6 @@ public abstract class TestBase {
     @BeforeEach
     public void setUp() {
         cleanup();
-        installSampleData();
     }
 
     @AfterEach
@@ -255,7 +254,7 @@ public abstract class TestBase {
         }
     }
 
-    private void installSampleData() {
+    protected void installSampleData() {
         File file = new File("zips.json");
         try {
             if (!file.exists()) {

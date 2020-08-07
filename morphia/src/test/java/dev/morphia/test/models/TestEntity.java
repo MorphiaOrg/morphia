@@ -23,7 +23,7 @@ import org.bson.types.ObjectId;
 @Entity
 public class TestEntity {
     @Id
-    private ObjectId id;
+    public ObjectId id;
 
     public ObjectId getId() {
         return id;
