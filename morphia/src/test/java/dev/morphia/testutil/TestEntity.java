@@ -15,8 +15,8 @@
 package dev.morphia.testutil;
 
 
-import org.bson.types.ObjectId;
 import dev.morphia.annotations.Id;
+import org.bson.types.ObjectId;
 
 import java.io.Serializable;
 
@@ -29,7 +29,7 @@ import java.io.Serializable;
 
 public class TestEntity implements Serializable {
     @Id
-    private ObjectId id = new ObjectId();
+    public ObjectId id = new ObjectId();
 
     public ObjectId getId() {
         return id;

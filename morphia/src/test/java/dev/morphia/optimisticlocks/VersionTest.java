@@ -1,9 +1,6 @@
 package dev.morphia.optimisticlocks;
 
 
-import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -15,10 +12,15 @@ import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateResults;
 import dev.morphia.testutil.TestEntity;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 
@@ -30,9 +32,9 @@ public class VersionTest extends TestBase {
 
     @Test(expected = ConcurrentModificationException.class)
     public void testConcurrentModDetection() throws Exception {
-        getMorphia().map(ALongPrimitive.class);
+        getMorphia().map(VersionedType.class);
 
-        final ALongPrimitive a = new ALongPrimitive();
+        final VersionedType a = new VersionedType();
         Assert.assertEquals(0, a.version);
         getDs().save(a);
 
@@ -87,8 +89,31 @@ public class VersionTest extends TestBase {
     }
 
     @Test
+    public void testMultiSaves() {
+        getMorphia().map(VersionedType.class);
+        List<VersionedType> initial = asList(new VersionedType(), new VersionedType());
+
+        getDs().save(initial);
+
+        Query<VersionedType> query = getDs().find(VersionedType.class);
+        getDs().save(query.asList());
+
+        List<VersionedType> loaded = query.asList();
+
+        for (int i = 0, loadedSize = loaded.size(); i < loadedSize; i++) {
+            final VersionedType type = loaded.get(i);
+            assertEquals(initial.get(i).id, type.id);
+            assertEquals(initial.get(i).version + 1, type.version);
+        }
+
+        Assert.assertThrows(ConcurrentModificationException.class, () -> {
+            getDs().save(initial);
+        });
+    }
+
+    @Test
     public void testVersions() throws Exception {
-        final ALongPrimitive a = new ALongPrimitive();
+        final VersionedType a = new VersionedType();
         Assert.assertEquals(0, a.version);
         getDs().save(a);
         Assert.assertTrue(a.version > 0);
@@ -103,32 +128,15 @@ public class VersionTest extends TestBase {
 
     @Test
     public void testVersionsWithFindAndModify() {
-        final ALongPrimitive initial = new ALongPrimitive();
+        final VersionedType initial = new VersionedType();
         Datastore ds = getDs();
         ds.save(initial);
 
-        Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
-                                     .field("id").equal(initial.getId());
-        UpdateOperations<ALongPrimitive> update = ds.createUpdateOperations(ALongPrimitive.class)
-                                                    .set("text", "some new value");
-        ALongPrimitive postUpdate = ds.findAndModify(query, update);
-
-        Assert.assertEquals(initial.version + 1, postUpdate.version);
-    }
-
-    @Test
-    public void testVersionsWithUpdate() {
-        final ALongPrimitive initial = new ALongPrimitive();
-        Datastore ds = getDs();
-        ds.save(initial);
-
-        Query<ALongPrimitive> query = ds.find(ALongPrimitive.class)
-                                     .field("id").equal(initial.getId());
-        UpdateOperations<ALongPrimitive> update = ds.createUpdateOperations(ALongPrimitive.class)
-                                                    .set("text", "some new value");
-        UpdateResults results = ds.update(query, update);
-        assertEquals(1, results.getUpdatedCount());
-        ALongPrimitive postUpdate = ds.get(ALongPrimitive.class, initial.getId());
+        Query<VersionedType> query = ds.find(VersionedType.class)
+                                       .field("id").equal(initial.getId());
+        UpdateOperations<VersionedType> update = ds.createUpdateOperations(VersionedType.class)
+                                                   .set("text", "some new value");
+        VersionedType postUpdate = ds.findAndModify(query, update);
 
         Assert.assertEquals(initial.version + 1, postUpdate.version);
     }
@@ -145,6 +153,23 @@ public class VersionTest extends TestBase {
 
         getDs().save(entity1);
         getDs().save(entity2);
+    }
+
+    @Test
+    public void testVersionsWithUpdate() {
+        final VersionedType initial = new VersionedType();
+        Datastore ds = getDs();
+        ds.save(initial);
+
+        Query<VersionedType> query = ds.find(VersionedType.class)
+                                       .field("id").equal(initial.getId());
+        UpdateOperations<VersionedType> update = ds.createUpdateOperations(VersionedType.class)
+                                                   .set("text", "some new value");
+        UpdateResults results = ds.update(query, update);
+        assertEquals(1, results.getUpdatedCount());
+        VersionedType postUpdate = ds.get(VersionedType.class, initial.getId());
+
+        Assert.assertEquals(initial.version + 1, postUpdate.version);
     }
 
     @Entity
@@ -164,28 +189,10 @@ public class VersionTest extends TestBase {
         }
     }
 
-    public static class ALongPrimitive extends TestEntity {
-
+    public static class VersionedType extends TestEntity {
         @Version
         private long version;
-
         private String text;
-
-        public long getVersion() {
-            return version;
-        }
-
-        public void setVersion(final long version) {
-            this.version = version;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(final String text) {
-            this.text = text;
-        }
     }
 
     public static class ALong extends TestEntity {
