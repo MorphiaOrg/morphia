@@ -16,7 +16,6 @@ import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
-import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -67,17 +64,10 @@ public abstract class TestBase {
         }
 
         String mongodb = System.getenv("MONGODB");
-        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH_mm_ss"));
-        File mongodbRoot = new File("target/mongo/" + format);
-        try {
-            FileUtils.deleteDirectory(mongodbRoot);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
         Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
         final MongoCluster cluster = ReplicaSet.builder()
                                                .version(version)
-                                               .baseDir(mongodbRoot)
+                                               .baseDir(new File("target/mongo/"))
                                                .size(version.lessThan(Version.forIntegers(4)) ? 3 : 1)
                                                .build();
 
@@ -138,6 +128,7 @@ public abstract class TestBase {
         MongoDatabase db = getDatabase();
         db.listCollectionNames().forEach(s -> {
             if (!s.equals("zipcodes")) {
+                LOG.debug("dropping collection " + s);
                 db.getCollection(s).drop();
             }
         });
