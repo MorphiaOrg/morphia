@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -337,16 +338,17 @@ public class Mapper {
      * @return the MappedClass for the object given
      */
     public MappedClass getMappedClass(final Class type) {
-        if (type == null) {
-            return null;
-        }
+        return getMappedClass(type, false);
+    }
 
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        MappedClass mc = mappedClasses.get(actual);
-        if (mc == null) {
-            mc = addMappedClass(actual);
-        }
-        return mc;
+    /**
+     * Maps a set of classes
+     *
+     * @param entityClasses the classes to map
+     * @return the MappedClass references
+     */
+    public List<MappedClass> map(final Class... entityClasses) {
+        return map(List.of(entityClasses), true);
     }
 
     /**
@@ -437,24 +439,11 @@ public class Mapper {
     /**
      * Maps a set of classes
      *
-     * @param entityClasses the classes to map
-     * @return the MappedClass references
-     */
-    public List<MappedClass> map(final Class... entityClasses) {
-        return map(List.of(entityClasses));
-    }
-
-    /**
-     * Maps a set of classes
-     *
      * @param classes the classes to map
      * @return the list of mapped classes
      */
     public List<MappedClass> map(final List<Class> classes) {
-        return classes.stream()
-                      .map(c -> getMappedClass(c))
-                      .filter(mc -> mc != null)
-                      .collect(Collectors.toList());
+        return map(classes, true);
     }
 
     /**
@@ -464,17 +453,55 @@ public class Mapper {
      */
     public synchronized void mapPackage(final String packageName) {
         try {
-            for (final Class clazz : getClasses(getClass().getClassLoader(), packageName,
-                getOptions().isMapSubPackages())) {
-                if (isMappable(clazz)) {
-                    map(clazz);
-                } else {
-                    Sofia.logFoundUnannotatedClass(clazz.getName());
-                }
-            }
+            map(getClasses(getClass().getClassLoader(), packageName, getOptions().isMapSubPackages()), false);
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
+    }
+
+    private List<Class> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
+        throws ClassNotFoundException {
+        final Set<Class> classes = new HashSet<>();
+
+        ClassGraph classGraph = new ClassGraph()
+                                    .addClassLoader(loader)
+                                    .enableAllInfo();
+        if (mapSubPackages) {
+            classGraph.whitelistPackages(packageName);
+            classGraph.whitelistPackages(packageName + ".*");
+        } else {
+            classGraph.whitelistPackagesNonRecursive(packageName);
+        }
+
+        try (ScanResult scanResult = classGraph.scan()) {
+            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
+                classes.add(Class.forName(classInfo.getName(), true, loader));
+            }
+        }
+        return new ArrayList<>(classes);
+    }
+
+    /**
+     * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     *
+     * @param type the type to process
+     * @return the MappedClass for the object given
+     */
+    private MappedClass getMappedClass(final Class type, boolean allowUnannotated) {
+        if (type == null) {
+            return null;
+        }
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        MappedClass mc = mappedClasses.get(actual);
+
+        if (mc == null) {
+            if (!isMappable(actual) && !allowUnannotated) {
+                return null;
+            }
+            mc = register(new MappedClass(createEntityModel(type), this));
+        }
+
+        return mc;
     }
 
     /**
@@ -541,22 +568,14 @@ public class Mapper {
         return key.getCollection();
     }
 
-    /**
-     * Creates a MappedClass and validates it.
-     *
-     * @param type the Class to map
-     * @return the MappedClass for the given Class
-     */
-    private MappedClass addMappedClass(final Class type) {
-        MappedClass mappedClass = mappedClasses.get(type);
-        if (mappedClass == null) {
-            EntityModel entityModel = createEntityModel(type);
-            mappedClass = addMappedClass(new MappedClass(entityModel, this));
-        }
-        return mappedClass;
+    private List<MappedClass> map(final List<Class> classes, boolean allowUnannotated) {
+        return classes.stream()
+                      .map(c -> getMappedClass(c, allowUnannotated))
+                      .filter(Objects::nonNull)
+                      .collect(Collectors.toList());
     }
 
-    private MappedClass addMappedClass(final MappedClass mc) {
+    private MappedClass register(final MappedClass mc) {
         mappedClasses.put(mc.getType(), mc);
         if (mc.getEntityAnnotation() != null) {
             mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
@@ -569,28 +588,6 @@ public class Mapper {
         }
 
         return mc;
-    }
-
-    private Set<Class<?>> getClasses(final ClassLoader loader, final String packageName, final boolean mapSubPackages)
-        throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
-
-        ClassGraph classGraph = new ClassGraph()
-                                    .addClassLoader(loader)
-                                    .enableAllInfo();
-        if (mapSubPackages) {
-            classGraph.whitelistPackages(packageName);
-            classGraph.whitelistPackages(packageName + ".*");
-        } else {
-            classGraph.whitelistPackagesNonRecursive(packageName);
-        }
-
-        try (ScanResult scanResult = classGraph.scan()) {
-            for (final ClassInfo classInfo : scanResult.getAllClasses()) {
-                classes.add(Class.forName(classInfo.getName(), true, loader));
-            }
-        }
-        return classes;
     }
 
     private <T> boolean hasAnnotation(final Class<T> clazz, final List<Class<? extends Annotation>> annotations) {
