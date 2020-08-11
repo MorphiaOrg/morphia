@@ -40,8 +40,10 @@ import dev.morphia.test.models.Book;
 import dev.morphia.test.models.CityPopulation;
 import dev.morphia.test.models.State;
 import dev.morphia.test.models.errors.BadConstructorBased;
+import dev.morphia.test.models.errors.ContainsDocument;
+import dev.morphia.test.models.errors.ContainsMapLike;
+import dev.morphia.test.models.errors.ContainsXKeyMap;
 import dev.morphia.test.models.errors.IdOnEmbedded;
-import dev.morphia.test.models.errors.MapLike;
 import dev.morphia.test.models.errors.MissingId;
 import dev.morphia.test.models.errors.OuterClass.NonStaticInnerClass;
 import org.bson.Document;
@@ -759,13 +761,6 @@ public class TestMapping extends TestBase {
     }
 
     @Entity
-    private static class ContainsDocument {
-        @Id
-        private ObjectId id;
-        private final Document document = new Document("field", "val");
-    }
-
-    @Entity
     private static class ContainsEmbeddedArray {
         @Id
         private final ObjectId id = new ObjectId();
@@ -840,13 +835,6 @@ public class TestMapping extends TestBase {
     }
 
     @Entity
-    private static class ContainsMapLike {
-        private final MapLike m = new MapLike();
-        @Id
-        private ObjectId id;
-    }
-
-    @Entity
     private static class ContainsMapWithEmbeddedInterface {
         private final Map<String, Foo> embeddedValues = new HashMap<>();
         @Id
@@ -879,13 +867,6 @@ public class TestMapping extends TestBase {
     private static class ContainsUuidId {
         @Id
         private final UUID id = UUID.randomUUID();
-    }
-
-    @Entity
-    private static class ContainsXKeyMap<T> {
-        private final Map<T, String> values = new HashMap<>();
-        @Id
-        private ObjectId id;
     }
 
     private static class Foo1 implements Foo {
