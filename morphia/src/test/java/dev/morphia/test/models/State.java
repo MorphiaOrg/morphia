@@ -21,16 +21,18 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import org.bson.types.ObjectId;
 
+import java.util.Objects;
+
 @Entity
 public class State {
     @Id
-    private ObjectId id;
+    public ObjectId id;
     @Property("state")
-    private String state;
+    public String state;
     @Property("biggestCity")
-    private CityPopulation biggest;
+    public CityPopulation biggest;
     @Property("smallestCity")
-    private CityPopulation smallest;
+    public CityPopulation smallest;
 
     public CityPopulation getBiggest() {
         return biggest;
@@ -42,6 +44,26 @@ public class State {
 
     public String getState() {
         return state;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, state, biggest, smallest);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof State)) {
+            return false;
+        }
+        final State state1 = (State) o;
+        return Objects.equals(id, state1.id) &&
+               Objects.equals(state, state1.state) &&
+               Objects.equals(biggest, state1.biggest) &&
+               Objects.equals(smallest, state1.smallest);
     }
 
     @Override

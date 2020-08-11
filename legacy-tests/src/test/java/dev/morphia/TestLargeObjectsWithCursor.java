@@ -1,9 +1,9 @@
 package dev.morphia;
 
 
-import dev.morphia.TestMapping.BaseEntity;
 import dev.morphia.annotations.Entity;
 import dev.morphia.query.Query;
+import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
     }
 
     @Entity
-    public static class E extends BaseEntity {
+    public static class E extends TestEntity {
         private final Integer index;
         private final byte[] largeContent;
 

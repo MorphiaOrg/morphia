@@ -27,7 +27,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -234,7 +233,7 @@ public abstract class TestBase {
         }
     }
 
-    private void download(final URL url, final File file) throws IOException {
+    protected void download(final URL url, final File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
         try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
             byte[] read = new byte[49152];
@@ -245,30 +244,12 @@ public abstract class TestBase {
         }
     }
 
-    protected void installSampleData() {
-        File file = new File("zips.json");
-        try {
-            if (!file.exists()) {
-                file = new File("target/zips.json");
-                if (!file.exists()) {
-                    download(new URL("https://media.mongodb.org/zips.json"), file);
-                }
-            }
-            MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
-            if (zips.countDocuments() == 0) {
-                LOG.info("Installing sample data");
-                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
-                Files.lines(file.toPath())
-                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assumeTrue(file.exists(), "Failed to process media files");
-    }
-
     private Document runIsMaster() {
         return mongoClient.getDatabase("admin")
                           .runCommand(new Document("ismaster", 1));
+    }
+
+    protected MongoCollection<Document> getDocumentCollection(final Class<?> type) {
+        return getDatabase().getCollection(getMapper().getMappedClass(type).getCollectionName());
     }
 }
