@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
@@ -10,11 +11,15 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.State;
+import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +33,7 @@ import static dev.morphia.aggregation.experimental.stages.Group.of;
 import static dev.morphia.query.experimental.filters.Filters.gte;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
@@ -40,7 +46,27 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @BeforeEach
     public void installData() {
-        installSampleData();
+        File file = new File("zips.json");
+        try {
+            if (!file.exists()) {
+                file = new File("target/zips.json");
+                if (!file.exists()) {
+                    download(new URL("https://media.mongodb.org/zips.json"), file);
+                }
+            }
+            MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
+            long count = zips.countDocuments();
+            if (count != 29353) {
+                LOG.info("Count is " + count + ".  (Re)installing sample data");
+                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
+                zipcodes.drop();
+                Files.lines(file.toPath())
+                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assumeTrue(file.exists(), "Failed to process media files");
     }
 
     @Test

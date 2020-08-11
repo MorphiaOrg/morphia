@@ -19,6 +19,8 @@ package dev.morphia.test.models;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
 
+import java.util.Objects;
+
 @Embedded
 public class CityPopulation {
     @Property("name")
@@ -26,12 +28,38 @@ public class CityPopulation {
     @Property("pop")
     private Long population;
 
+    public CityPopulation() {
+    }
+
+    public CityPopulation(final String name, final Long population) {
+        this.name = name;
+        this.population = population;
+    }
+
     public String getName() {
         return name;
     }
 
     public Long getPopulation() {
         return population;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, population);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CityPopulation)) {
+            return false;
+        }
+        final CityPopulation that = (CityPopulation) o;
+        return Objects.equals(name, that.name) &&
+               Objects.equals(population, that.population);
     }
 
     @Override

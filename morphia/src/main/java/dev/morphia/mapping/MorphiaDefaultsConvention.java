@@ -45,12 +45,10 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         if (entity != null) {
             modelBuilder.enableDiscriminator(entity.useDiscriminator());
             modelBuilder.discriminatorKey(applyDefaults(entity.discriminatorKey(), options.getDiscriminatorKey()));
-        } else if (embedded != null) {
-            modelBuilder.enableDiscriminator(embedded.useDiscriminator());
-            modelBuilder.discriminatorKey(applyDefaults(embedded.discriminatorKey(), options.getDiscriminatorKey()));
         } else {
-            modelBuilder.enableDiscriminator(true);
-            throw new UnsupportedOperationException("Types should either have @Entity or @Embedded.  Should 'never' get here.");
+            modelBuilder.enableDiscriminator(embedded == null || embedded.useDiscriminator());
+            modelBuilder.discriminatorKey(applyDefaults(embedded != null ? embedded.discriminatorKey() : Mapper.IGNORED_FIELDNAME,
+                options.getDiscriminatorKey()));
         }
 
         options.getDiscriminator().apply(modelBuilder);

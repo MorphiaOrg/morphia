@@ -74,8 +74,8 @@ public class Mapper {
     private final MapperOptions options;
     private final DiscriminatorLookup discriminatorLookup = new DiscriminatorLookup(Collections.emptyMap(), Collections.emptySet());
     private final MorphiaCodecProvider morphiaCodecProvider;
-    private Datastore datastore;
-    private CodecRegistry codecRegistry;
+    private final Datastore datastore;
+    private final CodecRegistry codecRegistry;
 
     /**
      * Creates a Mapper with the given options.
@@ -337,8 +337,7 @@ public class Mapper {
      * @return the MappedClass for the object given
      */
     public MappedClass getMappedClass(final Class type) {
-
-        if (type == null || !isMappable(type)) {
+        if (type == null) {
             return null;
         }
 
@@ -467,7 +466,11 @@ public class Mapper {
         try {
             for (final Class clazz : getClasses(getClass().getClassLoader(), packageName,
                 getOptions().isMapSubPackages())) {
-                map(clazz);
+                if (isMappable(clazz)) {
+                    map(clazz);
+                } else {
+                    Sofia.logFoundUnannotatedClass(clazz.getName());
+                }
             }
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
@@ -546,7 +549,7 @@ public class Mapper {
      */
     private MappedClass addMappedClass(final Class type) {
         MappedClass mappedClass = mappedClasses.get(type);
-        if (mappedClass == null && isMappable(type)) {
+        if (mappedClass == null) {
             EntityModel entityModel = createEntityModel(type);
             mappedClass = addMappedClass(new MappedClass(entityModel, this));
         }
