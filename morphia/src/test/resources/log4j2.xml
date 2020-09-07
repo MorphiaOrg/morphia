@@ -4,6 +4,11 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
+        <File name="mongo" fileName="target/mongo.log">
+            <PatternLayout>
+                <Pattern>%m</Pattern>
+            </PatternLayout>
+        </File>
     </Appenders>
     <Loggers>
         <Root level="debug">
@@ -12,8 +17,8 @@
         <logger name="dev.morphia" level="info">
             <AppenderRef ref="Console"/>
         </logger>
-        <logger name="Mongod" level="error">
-            <AppenderRef ref="Console"/>
+        <logger name="Mongod.30000" level="error">
+            <AppenderRef ref="mongo"/>
         </logger>
         <logger name="org.mongodb.driver" level="error">
             <AppenderRef ref="Console"/>

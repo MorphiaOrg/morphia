@@ -73,7 +73,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * Execute the query and get the results.
      *
      * @return a MorphiaCursor
-     * @see #iterator(FindOptions)
+     * @see #iterator()
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default MorphiaCursor<T> execute() {
@@ -272,6 +272,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * Execute the query and get the results.
      *
      * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
      * @since 2.0
      */
     @Override

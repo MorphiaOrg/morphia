@@ -58,7 +58,7 @@ public class VersionTest extends TestBase {
         VersionedType postUpdate = query.modify(set("text", "some new value"))
                                         .execute();
 
-        assertEquals(initial.version + 1, postUpdate.version);
+        assertEquals(initial.version, postUpdate.version);
     }
 
     @Test

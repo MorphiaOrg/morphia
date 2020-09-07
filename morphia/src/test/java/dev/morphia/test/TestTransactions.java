@@ -147,7 +147,7 @@ public class TestTransactions extends TestBase {
                                         .execute();
 
             assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(rectangle.getWidth() + 13, modified.getWidth(), 0.5);
+            assertEquals(rectangle.getWidth(), modified.getWidth(), 0.5);
             assertEquals(rectangle.getWidth() + 13, session.find(Rectangle.class)
                                                            .first().getWidth(), 0.5);
 
