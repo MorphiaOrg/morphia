@@ -45,6 +45,16 @@ Setting up Morphia The following example shows how to create the initial Morphia
     
     <item>
       <title></title>
+      <link>/2.1.0-SNAPSHOT/getting-started/migration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/2.1.0-SNAPSHOT/getting-started/migration/</guid>
+      <description>Migrating to 2.0 These are the major goals of the 2.0 release:
+ Modernization of the implementation Clean up and modernization of the API Attempt to make the API more self-consistent.  This release aims to make the API smaller, lighter, and more fluent. The pre-2.0 deprecations are being removed and new deprecations added to further improve the API and the developer experience. As such there are a few things to note when upgrading.</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>/2.1.0-SNAPSHOT/issues-help/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -160,6 +170,16 @@ The API is designed to work with Java 8&amp;rsquo;s lambda syntax for the most c
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/2.1.0-SNAPSHOT/guides/updating/</guid>
+      <description>Updates in 2.0, are issued off of a Query instance in contrast to the old approach of using Datastore#update() in previous versions. These update operations are executed on the server without pulling any documents in to your application. Update operations are defined using a set of functions as defined on UpdateOperators In our examples, we&amp;rsquo;ll be using the following model:
+@Entity(&amp;#34;hotels&amp;#34;) public class Hotel { @Id private ObjectId id; private String name; private int stars; @Embedded private Address address; List&amp;lt;Integer&amp;gt; roomNumbers = new ArrayList&amp;lt;Integer&amp;gt;(); // .</description>
+    </item>
+    
+    <item>
+      <title>Updating (Deprecated)</title>
+      <link>/2.1.0-SNAPSHOT/guides/updating-old/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/2.1.0-SNAPSHOT/guides/updating-old/</guid>
       <description>There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.
 Updating (on the server) The update method on Datastore is used to issue a command to the server to change existing documents. The effects of the update command are defined via UpdateOperations methods.
 The Field Expression The field expression, used by all update operations, can be either a single field name or any dot-notation form (for embedded elements).</description>

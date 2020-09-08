@@ -33,6 +33,10 @@
   </url>
   
   <url>
+    <loc>/2.1.0-SNAPSHOT/getting-started/migration/</loc>
+  </url>
+  
+  <url>
     <loc>/2.1.0-SNAPSHOT/issues-help/</loc>
   </url>
   
@@ -86,6 +90,10 @@
   
   <url>
     <loc>/2.1.0-SNAPSHOT/guides/updating/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.1.0-SNAPSHOT/guides/updating-old/</loc>
   </url>
   
 </urlset>
