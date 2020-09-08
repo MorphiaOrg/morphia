@@ -12,16 +12,6 @@
     
     
     <item>
-      <title>Migrating to 2.0</title>
-      <link>/2.1.0-SNAPSHOT/getting-started/migration/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/2.1.0-SNAPSHOT/getting-started/migration/</guid>
-      <description>Migrating to 2.0 These are the major goals of the 2.0 release:
- Modernization of the implementation Clean up and modernization of the API Attempt to make the API more self-consistent.  This release aims to make the API smaller, lighter, and more fluent. The pre-2.0 deprecations are being removed and new deprecations added to further improve the API and the developer experience. As such there are a few things to note when upgrading.</description>
-    </item>
-    
-    <item>
       <title>Quick Tour</title>
       <link>/2.1.0-SNAPSHOT/getting-started/quick-tour/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
