@@ -12,18 +12,18 @@
     <title>Updating :: Morphia</title>
 
     
-    <link href="/2.0.0/css/nucleus.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/fontawesome-all.min.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/hybrid.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/featherlight.min.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/perfect-scrollbar.min.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/auto-complete.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/atom-one-dark-reasonable.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/theme.css?1599529006" rel="stylesheet">
-    <link href="/2.0.0/css/hugo-theme.css?1599529006" rel="stylesheet">
+    <link href="/2.0.0/css/nucleus.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/fontawesome-all.min.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/hybrid.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/featherlight.min.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/perfect-scrollbar.min.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/auto-complete.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/atom-one-dark-reasonable.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/theme.css?1599530463" rel="stylesheet">
+    <link href="/2.0.0/css/hugo-theme.css?1599530463" rel="stylesheet">
     
 
-    <script src="/2.0.0/js/jquery-3.3.1.min.js?1599529006"></script>
+    <script src="/2.0.0/js/jquery-3.3.1.min.js?1599530463"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -137,9 +137,9 @@
  
   
     
-      <li data-nav-id="/2.0.0/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
-        <a href="/2.0.0/getting-started/installation-guide/">
-        Installation Guide
+      <li data-nav-id="/2.0.0/getting-started/migration/" title="Migrating to 2.0" class="dd-item ">
+        <a href="/2.0.0/getting-started/migration/">
+        Migrating to 2.0
         
         </a>
     </li>
@@ -428,6 +428,25 @@
 
             
           
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/2.0.0/guides/updating-old/" title="Updating (Deprecated)" class="dd-item ">
+        <a href="/2.0.0/guides/updating-old/">
+        Updating (Deprecated)
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
         
         </ul>
               
@@ -497,18 +516,15 @@
     <div class="wrapper">
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#updating-on-the-server">Updating (on the server)</a></li>
-    <li><a href="#the-field-expression">The Field Expression</a>
+    <li>
       <ul>
         <li><a href="#setunset">set()/unset()</a></li>
-        <li><a href="#incdec">inc()/dec()</a></li>
-        <li><a href="#pushaddtoset">push()/addToSet()</a></li>
-        <li><a href="#removefirstremovelastremoveall">removeFirst()/removeLast()/removeAll()</a></li>
-        <li><a href="#updatefirst">updateFirst()</a></li>
       </ul>
     </li>
-    <li><a href="#multiple-operations">Multiple Operations</a></li>
-    <li><a href="#createifmissing-overload-parameter">createIfMissing (overload parameter)</a></li>
+    <li><a href="#multiple-updates">Multiple Updates</a></li>
+    <li><a href="#upserts">Upserts</a></li>
+    <li><a href="#checking-results">Checking results</a></li>
+    <li><a href="#returning-the-updated-entity">Returning the updated entity</a></li>
   </ul>
 </nav>
     </div>
@@ -534,17 +550,12 @@
 
 
 
-<p>There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.</p>
-<h2 id="updating-on-the-server">Updating (on the server)</h2>
-<p>The update method on <a href="/2.0.0/javadoc/dev/morphia/Datastore
-">Datastore</a> is used to issue a command to the server to change
-existing documents.  The effects of the update command are defined via
-<a href="/2.0.0/javadoc/dev/morphia/query/UpdateOperations
-">UpdateOperations</a> methods.</p>
-<h2 id="the-field-expression">The Field Expression</h2>
-<p>The field expression, used by all update operations,  can be either a single field name or any dot-notation form (for embedded
-elements). The positional operator ($) can also be used in the in the field expression for array updates.  To illustrate, consider the
-entity here:</p>
+<p>Updates in 2.0, are issued off of a <code>Query</code> instance in contrast to the <a href="updates-old.md">old approach</a> of using <code>Datastore#update()</code> in
+previous versions.  These update operations are executed on the server without pulling any documents in to your application.  Update
+operations are defined using a set of functions as  defined on
+<a href="/2.0.0/javadoc/dev/morphia/query/experimental/updates/UpdateOperators
+">UpdateOperators</a>  In our examples, we&rsquo;ll be using the
+following model:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hotels&#34;</span><span style="color:#f92672">)</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hotel</span>
 <span style="color:#f92672">{</span>
@@ -559,7 +570,7 @@ entity here:</p>
 
    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> roomNumbers <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
 
-   <span style="color:#75715e">// ... optional getters and setters
+   <span style="color:#75715e">// ... getters and setters
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 
 <span style="color:#a6e22e">@Embedded</span>
@@ -570,163 +581,67 @@ entity here:</p>
    <span style="color:#66d9ef">private</span> String postalCode<span style="color:#f92672">;</span>
    <span style="color:#66d9ef">private</span> String country<span style="color:#f92672">;</span>
 
-   <span style="color:#75715e">// ... optional getters and setters
+   <span style="color:#75715e">// ... getters and setters
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div><h3 id="setunset">set()/unset()</h3>
 <p>To change the name of the hotel, one would use something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">UpdateOperations ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Fairmont Chateau Laurier&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-</code></pre></div><p>This also works for embedded documents.  To change the name of the city in the address, one would use something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">UpdateOperations ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;address.city&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Ottawa&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>UpdateOperations<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Fairmont Chateau Laurier&#34;</span><span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">();</span>
+</code></pre></div><p>The <code>execute()</code> can optionally take <a href="/2.0.0/javadoc/dev/morphia/UpdateOptions
+">UpdateOptions</a> if there are any options you might want
+to apply to your update statement.</p>
+<p>Embedded documents are updated the same way.  To change the name of the city in the address, one would use something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>UpdateOperations<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;address.city&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Ottawa&#34;</span><span style="color:#f92672">))</span>
+    execute<span style="color:#f92672">();</span>
 </code></pre></div><p>Values can also be removed from documents as shown below:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">UpdateOperations ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">unset</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>UpdateOperations<span style="color:#f92672">.</span><span style="color:#a6e22e">unset</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">))</span>
+    execute<span style="color:#f92672">();</span>
 </code></pre></div><p>After this update, the name of the hotel would be <code>null</code> when the entity is loaded.</p>
-<h3 id="incdec">inc()/dec()</h3>
-<p>To simply increment or decrement values in the database, updates like these would be used:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// increment &#39;stars&#39; by 4
-</span><span style="color:#75715e"></span>UpdateOperations ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-
-<span style="color:#75715e">// increment &#39;stars&#39; by 4
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 4<span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-
-<span style="color:#75715e">// decrement &#39;stars&#39; by 1
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">dec</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">);</span>  <span style="color:#75715e">// same as .inc(&#34;stars&#34;, -1)
-</span><span style="color:#75715e"></span>datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-
-<span style="color:#75715e">// decrement &#39;stars&#39; by 4
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> <span style="color:#f92672">-</span>4<span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-</code></pre></div><h3 id="pushaddtoset">push()/addToSet()</h3>
-<p><code>push()</code> is used to add a value to an array field:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">,</span> 11<span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-</code></pre></div><p>This will issue a <code>$push</code> operation adding <code>11</code> to the list.  This might result in duplicated values in this field.  If the values should
-be unique, use <code>addToSet()</code> instead:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">addToSet</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">,</span> 11<span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-</code></pre></div><p><code>push()</code> and <code>addToSet()</code> can take either single values or a <code>List</code> of values.  The <code>push()</code> methods can also optionally take a
-<a href="/2.0.0/javadoc/dev/morphia/query/PushOptions
-">PushOptions</a> instance allowing for tweaking how the values are added to the
-list.  See <a href="http://docs.mongodb.org/manual/reference/operator/update/push/#modifiers
-">the manual</a> for more information about the various modifiers
-available.</p>
-<h3 id="removefirstremovelastremoveall">removeFirst()/removeLast()/removeAll()</h3>
-<p>To remove values from a list, use <code>removeFirst()</code>, <code>removeLast()</code>, or <code>removeAll()</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//given roomNumbers = [ 1, 2, 3 ]
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">removeFirst</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>  <span style="color:#75715e">// [ 2, 3 ]
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">//given roomNumbers = [ 1, 2, 3 ]
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>  <span style="color:#75715e">// [ 1, 2 ]
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>  <span style="color:#75715e">// [ 1 ]
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>  <span style="color:#75715e">// []   empty array
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">//given roomNumbers = [ 1, 2, 3, 3 ]
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">removeAll</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">,</span> 3<span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>  <span style="color:#75715e">// [ 1, 2 ]
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">//given roomNumbers = [ 1, 2, 3, 3 ]
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">removeAll</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;roomNumbers&#34;</span><span style="color:#f92672">,</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>2<span style="color:#f92672">,</span> 3<span style="color:#f92672">));</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>  <span style="color:#75715e">// [ 1 ]
-</span></code></pre></div><h3 id="updatefirst">updateFirst()</h3>
-<p>In the default driver and shell this is the default behavior. In Morphia we feel like updating all the results of the query is a better default (see below).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">    {
-        <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Fairmont&#34;</span>, 
-        <span style="color:#a6e22e">stars</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>
-    },
-    {
-        <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Last Chance&#34;</span>, 
-        <span style="color:#a6e22e">stars</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span> 
-    }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ops <span style="color:#f92672">=</span> datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">).</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 50<span style="color:#f92672">);</span>
-
-<span style="color:#75715e">// morphia exposes a specific updateFirst to update only the first hotel matching the query
-</span><span style="color:#75715e"></span>datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">updateFirst</span><span style="color:#f92672">(</span>datastore
-        <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">.</span><span style="color:#a6e22e">order</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">),</span>
-        ops<span style="color:#f92672">);</span>  <span style="color:#75715e">// update only Last Chance
-</span><span style="color:#75715e"></span>datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">updateFirst</span><span style="color:#f92672">(</span>datastore
-        <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">.</span><span style="color:#a6e22e">order</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;-stars&#34;</span><span style="color:#f92672">),</span>
-        ops<span style="color:#f92672">);</span> <span style="color:#75715e">// update only Fairmont
-</span></code></pre></div><h2 id="multiple-operations">Multiple Operations</h2>
-<p>You can also perform multiple update operations within a single update.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//set city to Ottawa and increment stars by 1
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;city&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Ottawa&#34;</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">);</span>
-datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>updateQuery<span style="color:#f92672">,</span> ops<span style="color:#f92672">);</span>
-
-<span style="color:#75715e">//if you perform multiple operations in one command on the same property, results will vary
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 50<span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">);</span>  <span style="color:#75715e">//increments by 1
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<h2 id="multiple-updates">Multiple Updates</h2>
+<p>By default, an update operation will only update the first document matching the query.  This behavior can be modified via the optional
+<a href="/2.0.0/javadoc/dev/morphia/UpdateOptions
+">UpdateOptions</a> parameter on <code>execute()</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 50<span style="color:#f92672">);</span>  <span style="color:#75715e">//increments by 50
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">//you can&#39;t apply conflicting operations to the same property
-</span><span style="color:#75715e"></span>ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 50<span style="color:#f92672">);</span> <span style="color:#75715e">//causes error
-</span></code></pre></div><h2 id="createifmissing-overload-parameter">createIfMissing (overload parameter)</h2>
-<p>All of the update methods on <code>Datastore</code> are overloaded and accept a <code>createIfMissing</code> parameter</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ops <span style="color:#f92672">=</span> datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">createUpdateOperations</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">inc</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 50<span style="color:#f92672">);</span>
-
-<span style="color:#75715e">//update, if not found create it
-</span><span style="color:#75715e"></span>datastore
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">updateFirst</span><span style="color:#f92672">(</span>datastore
-        <span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
-        <span style="color:#f92672">.</span><span style="color:#a6e22e">field</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">greaterThan</span><span style="color:#f92672">(</span>100<span style="color:#f92672">),</span>
-    ops<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>  
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> UpdateOptions<span style="color:#f92672">()</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">multi</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>
+</code></pre></div><h2 id="upserts">Upserts</h2>
+<p>In some cases, updates are issued against a query that might not match any documents.  In these cases, it&rsquo;s often fine for those updates
+to simply pass with no effect.  In other cases, it&rsquo;s desirable to create an initial document matching the query parameters.  Examples of
+this might include user high scores, e.g.  In cases like this, we have the option to use an upsert:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>gt<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 100<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> UpdateOptions<span style="color:#f92672">()</span>
+                     <span style="color:#f92672">.</span><span style="color:#a6e22e">upsert</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>  
 
 <span style="color:#75715e">// creates { &#34;_id&#34; : ObjectId(&#34;4c60629d2f1200000000161d&#34;), &#34;stars&#34; : 50 }
-</span></code></pre></div>
+</span></code></pre></div><h2 id="checking-results">Checking results</h2>
+<p>In all this one thing we haven&rsquo;t really looked at is how to verify the results of an update.  The <code>execute()</code> method returns an instance of
+<code>com.mongodb.client.result.UpdateResult</code>.  Using this class, you can get specific numbers from the update operation as well as any
+generated ID as the result of an upsert.</p>
+<h2 id="returning-the-updated-entity">Returning the updated entity</h2>
+<p>There are times when a document needs to be updated and also fetched from the database.  In the server documentation, this is referred to
+as <a href="http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/
+"><code>findAndModify</code></a>.  In Morphia, this functionality is exposed
+through the <a href="/2.0.0/javadoc/dev/morphia/query/Query#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator...)
+">Query#modify()</a>
+method.  With this method, you can choose to return the updated entity in either the state before or after the update.  The default is
+to return the entity in the <em>after</em> state.  This can be changed by passing in a <code>ModifyOptions</code> reference to the operation:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">modify</span><span style="color:#f92672">(</span>UpdateOperations<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;address.city&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Ottawa&#34;</span><span style="color:#f92672">))</span>
+    execute<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ModifyOptions<span style="color:#f92672">()</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">returnDocument</span><span style="color:#f92672">(</span>ReturnDocument<span style="color:#f92672">.</span><span style="color:#a6e22e">BEFORE</span><span style="color:#f92672">));</span>
+</code></pre></div>
 
 <footer class=" footline" >
 	
@@ -1020,6 +935,25 @@ datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update<
             
         
                     
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
             
         
                     
@@ -1038,19 +972,19 @@ datastore<span style="color:#f92672">.</span><span style="color:#a6e22e">update<
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0/js/clipboard.min.js?1599529006"></script>
-    <script src="/2.0.0/js/perfect-scrollbar.min.js?1599529006"></script>
-    <script src="/2.0.0/js/perfect-scrollbar.jquery.min.js?1599529006"></script>
-    <script src="/2.0.0/js/jquery.sticky.js?1599529006"></script>
-    <script src="/2.0.0/js/featherlight.min.js?1599529006"></script>
-    <script src="/2.0.0/js/highlight.pack.js?1599529006"></script>
+    <script src="/2.0.0/js/clipboard.min.js?1599530463"></script>
+    <script src="/2.0.0/js/perfect-scrollbar.min.js?1599530463"></script>
+    <script src="/2.0.0/js/perfect-scrollbar.jquery.min.js?1599530463"></script>
+    <script src="/2.0.0/js/jquery.sticky.js?1599530463"></script>
+    <script src="/2.0.0/js/featherlight.min.js?1599530463"></script>
+    <script src="/2.0.0/js/highlight.pack.js?1599530463"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0/js/modernizr.custom-3.6.0.js?1599529006"></script>
-    <script src="/2.0.0/js/learn.js?1599529006"></script>
-    <script src="/2.0.0/js/hugo-learn.js?1599529006"></script>
+    <script src="/2.0.0/js/modernizr.custom-3.6.0.js?1599530463"></script>
+    <script src="/2.0.0/js/learn.js?1599530463"></script>
+    <script src="/2.0.0/js/hugo-learn.js?1599530463"></script>
 
-    <link href="/2.0.0/mermaid/mermaid.css?1599529006" rel="stylesheet" />
-    <script src="/2.0.0/mermaid/mermaid.js?1599529006"></script>
+    <link href="/2.0.0/mermaid/mermaid.css?1599530463" rel="stylesheet" />
+    <script src="/2.0.0/mermaid/mermaid.js?1599530463"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

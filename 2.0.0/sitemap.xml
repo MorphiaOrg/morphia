@@ -13,7 +13,7 @@
   </url>
   
   <url>
-    <loc>/2.0.0/getting-started/installation-guide/</loc>
+    <loc>/2.0.0/getting-started/migration/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
@@ -86,6 +86,10 @@
   
   <url>
     <loc>/2.0.0/guides/updating/</loc>
+  </url>
+  
+  <url>
+    <loc>/2.0.0/guides/updating-old/</loc>
   </url>
   
 </urlset>

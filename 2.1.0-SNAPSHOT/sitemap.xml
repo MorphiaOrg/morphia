@@ -13,7 +13,7 @@
   </url>
   
   <url>
-    <loc>/2.1.0-SNAPSHOT/getting-started/installation-guide/</loc>
+    <loc>/2.1.0-SNAPSHOT/getting-started/migration/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
   </url>
   
@@ -30,10 +30,6 @@
   <url>
     <loc>/2.1.0-SNAPSHOT/guides/</loc>
     <lastmod>2015-03-17T15:36:56+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2.1.0-SNAPSHOT/getting-started/migration/</loc>
   </url>
   
   <url>

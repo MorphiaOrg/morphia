@@ -12,13 +12,13 @@
     
     
     <item>
-      <title>Installation Guide</title>
-      <link>/2.0.0/getting-started/installation-guide/</link>
+      <title>Migrating to 2.0</title>
+      <link>/2.0.0/getting-started/migration/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/2.0.0/getting-started/installation-guide/</guid>
-      <description>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle. To use Morphia using either build tool, you will need to update your build configurations with the following information.
- &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;dev.morphia.morphia&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;morphia-core&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;2.0.0&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;/dependencies&amp;gt;    dependencies { compile &#39;dev.morphia.morphia:morphia-core:2.0.0&#39; }    Morphia 2.0 requires Java 11 or greater. Morphia has been tested on mongodb servers as old as 3.</description>
+      <guid>/2.0.0/getting-started/migration/</guid>
+      <description>Migrating to 2.0 These are the major goals of the 2.0 release:
+ Modernization of the implementation Clean up and modernization of the API Attempt to make the API more self-consistent.  This release aims to make the API smaller, lighter, and more fluent. The pre-2.0 deprecations are being removed and new deprecations added to further improve the API and the developer experience. As such there are a few things to note when upgrading.</description>
     </item>
     
     <item>

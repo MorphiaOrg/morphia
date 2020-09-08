@@ -12,18 +12,18 @@
     <title>Querying :: Morphia</title>
 
     
-    <link href="/2.0.0/css/nucleus.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/fontawesome-all.min.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/hybrid.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/featherlight.min.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/perfect-scrollbar.min.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/auto-complete.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/atom-one-dark-reasonable.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/theme.css?1599529005" rel="stylesheet">
-    <link href="/2.0.0/css/hugo-theme.css?1599529005" rel="stylesheet">
+    <link href="/2.0.0/css/nucleus.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/fontawesome-all.min.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/hybrid.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/featherlight.min.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/perfect-scrollbar.min.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/auto-complete.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/atom-one-dark-reasonable.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/theme.css?1599530462" rel="stylesheet">
+    <link href="/2.0.0/css/hugo-theme.css?1599530462" rel="stylesheet">
     
 
-    <script src="/2.0.0/js/jquery-3.3.1.min.js?1599529005"></script>
+    <script src="/2.0.0/js/jquery-3.3.1.min.js?1599530462"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -137,9 +137,9 @@
  
   
     
-      <li data-nav-id="/2.0.0/getting-started/installation-guide/" title="Installation Guide" class="dd-item ">
-        <a href="/2.0.0/getting-started/installation-guide/">
-        Installation Guide
+      <li data-nav-id="/2.0.0/getting-started/migration/" title="Migrating to 2.0" class="dd-item ">
+        <a href="/2.0.0/getting-started/migration/">
+        Migrating to 2.0
         
         </a>
     </li>
@@ -428,6 +428,25 @@
 
             
           
+            
+            
+
+
+ 
+  
+    
+      <li data-nav-id="/2.0.0/guides/updating-old/" title="Updating (Deprecated)" class="dd-item ">
+        <a href="/2.0.0/guides/updating-old/">
+        Updating (Deprecated)
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
         
         </ul>
               
@@ -511,6 +530,7 @@
         <li><a href="#tailable-cursors">Tailable Cursors</a></li>
       </ul>
     </li>
+    <li><a href="#deleting">Deleting</a></li>
   </ul>
 </nav>
     </div>
@@ -647,7 +667,17 @@ collection has its collection created correctly.  If the collection already exis
 version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the
 application.</li>
 </ol>
-
+<h2 id="deleting">Deleting</h2>
+<p>Queries are also used to delete documents from the database as well.  Using
+<a href="/2.0.0/javadoc/dev/morphia/query/Query#delete()
+"><code>Query#delete()</code></a>, we can delete documents matching the query.  The default operation
+will only delete the first matching document.  However, you can opt to delete all matches by passing in the appropriate options:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">datastore
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Hotel<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">(</span>gt<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stars&#34;</span><span style="color:#f92672">,</span> 100<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DeleteOptions<span style="color:#f92672">()</span>
+                     <span style="color:#f92672">.</span><span style="color:#a6e22e">multi</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>  
+</code></pre></div>
 
 <footer class=" footline" >
 	
@@ -944,6 +974,22 @@ application.</li>
             
         
                     
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
             
         
                     
@@ -962,19 +1008,19 @@ application.</li>
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/2.0.0/js/clipboard.min.js?1599529005"></script>
-    <script src="/2.0.0/js/perfect-scrollbar.min.js?1599529005"></script>
-    <script src="/2.0.0/js/perfect-scrollbar.jquery.min.js?1599529005"></script>
-    <script src="/2.0.0/js/jquery.sticky.js?1599529005"></script>
-    <script src="/2.0.0/js/featherlight.min.js?1599529005"></script>
-    <script src="/2.0.0/js/highlight.pack.js?1599529005"></script>
+    <script src="/2.0.0/js/clipboard.min.js?1599530462"></script>
+    <script src="/2.0.0/js/perfect-scrollbar.min.js?1599530462"></script>
+    <script src="/2.0.0/js/perfect-scrollbar.jquery.min.js?1599530462"></script>
+    <script src="/2.0.0/js/jquery.sticky.js?1599530462"></script>
+    <script src="/2.0.0/js/featherlight.min.js?1599530462"></script>
+    <script src="/2.0.0/js/highlight.pack.js?1599530462"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/2.0.0/js/modernizr.custom-3.6.0.js?1599529005"></script>
-    <script src="/2.0.0/js/learn.js?1599529005"></script>
-    <script src="/2.0.0/js/hugo-learn.js?1599529005"></script>
+    <script src="/2.0.0/js/modernizr.custom-3.6.0.js?1599530462"></script>
+    <script src="/2.0.0/js/learn.js?1599530462"></script>
+    <script src="/2.0.0/js/hugo-learn.js?1599530462"></script>
 
-    <link href="/2.0.0/mermaid/mermaid.css?1599529005" rel="stylesheet" />
-    <script src="/2.0.0/mermaid/mermaid.js?1599529005"></script>
+    <link href="/2.0.0/mermaid/mermaid.css?1599530462" rel="stylesheet" />
+    <script src="/2.0.0/mermaid/mermaid.js?1599530462"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
