@@ -23,5 +23,8 @@
         <logger name="org.mongodb.driver" level="error">
             <AppenderRef ref="Console"/>
         </logger>
+        <logger name="org.zeroturnaround" level="error">
+            <AppenderRef ref="Console"/>
+        </logger>
     </Loggers>
 </Configuration>

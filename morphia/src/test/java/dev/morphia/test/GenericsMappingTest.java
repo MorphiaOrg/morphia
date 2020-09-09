@@ -11,28 +11,54 @@
   and limitations under the License.
  */
 
-package dev.morphia.issue80;
+package dev.morphia.test;
 
 
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
+import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.MappedField;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.models.SpecializedEntity;
 import org.bson.types.ObjectId;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static dev.morphia.query.experimental.filters.Filters.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GenericsMappingTest extends TestBase {
 
     @Test
     public void testBoundGenerics() {
         getMapper().map(Element.class, AudioElement.class);
+    }
+
+    @Test
+    public void testGenericEntities() {
+        MappedClass mapping = getMapper().map(SpecializedEntity.class).get(0);
+
+        MappedField test = mapping.getMappedField("test");
+        assertEquals(UUID.class, test.getType());
+
+
+        SpecializedEntity beforeDB = new SpecializedEntity();
+        beforeDB.setId(UUID.randomUUID());
+        beforeDB.setTest(UUID.randomUUID());
+        getDs().save(beforeDB);
+
+        SpecializedEntity loaded = getDs().find(SpecializedEntity.class)
+                                          .filter(eq("_id", beforeDB.getId()))
+                                          .first();
+
+        assertEquals(beforeDB.getId(), loaded.getId());
+
+        assertEquals(beforeDB.getTest(), loaded.getTest());
     }
 
     @Test
@@ -47,18 +73,18 @@ public class GenericsMappingTest extends TestBase {
         ct.integerThing = hai;
 
         getDs().save(ct);
-        assertNotNull(ct.id);
+        Assertions.assertNotNull(ct.id);
         assertEquals(1, getDs().find(ContainsThings.class).count());
         final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
                                                .next();
-        assertNotNull(ctLoaded);
-        assertNotNull(ctLoaded.id);
-        assertNotNull(ctLoaded.stringThing);
-        assertNotNull(ctLoaded.integerThing);
+        Assertions.assertNotNull(ctLoaded);
+        Assertions.assertNotNull(ctLoaded.id);
+        Assertions.assertNotNull(ctLoaded.stringThing);
+        Assertions.assertNotNull(ctLoaded.integerThing);
     }
 
     @Test
-    public void boundedTypes() {
+    public void upperBounds() {
         getMapper().map(Status.class, EmailStatus.class);
 
         Status<EmailItem> status = new EmailStatus();
@@ -66,7 +92,7 @@ public class GenericsMappingTest extends TestBase {
 
         getDs().save(status);
 
-        assertNotNull(getDs().find(EmailStatus.class).first());
+        Assertions.assertNotNull(getDs().find(EmailStatus.class).first());
     }
 
     @Embedded
