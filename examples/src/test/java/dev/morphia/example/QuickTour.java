@@ -13,7 +13,6 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.Query;
-import dev.morphia.query.experimental.updates.UpdateOperators;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 
@@ -22,6 +21,7 @@ import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.gt;
 import static dev.morphia.query.experimental.filters.Filters.lte;
+import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 
 /**
  * This class is used in the Quick Tour documentation and is used to demonstrate various Morphia features.
@@ -67,7 +67,7 @@ public final class QuickTour {
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                                                         .filter(lte("salary", 30000));
-        final UpdateResult results = underPaidQuery.update(UpdateOperators.inc("salary", 10000))
+        final UpdateResult results = underPaidQuery.update(inc("salary", 10000))
                                                    .execute();
 
         Assert.assertEquals(1, results.getModifiedCount());

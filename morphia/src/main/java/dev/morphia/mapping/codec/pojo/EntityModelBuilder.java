@@ -27,10 +27,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.groupingBy;
 import static morphia.org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
-import static org.bson.assertions.Assertions.notNull;
 
 /**
  * Builder for EntityModels
@@ -43,13 +41,15 @@ import static org.bson.assertions.Assertions.notNull;
 public class EntityModelBuilder<T> {
     private final Datastore datastore;
     private final List<FieldModelBuilder<?>> fieldModels = new ArrayList<>();
-    private Class<T> type;
+    private final Class<T> type;
     private Map<Class<? extends Annotation>, List<Annotation>> annotationsMap;
-    private List<Annotation> annotations = emptyList();
     private boolean discriminatorEnabled;
     private String discriminator;
     private String discriminatorKey;
     private String idFieldName;
+    private final Set<Class<?>> classes = new LinkedHashSet<>();
+    private final Set<Class<?>> interfaces = new LinkedHashSet<>();
+    private final Set<Annotation> annotations = new LinkedHashSet<>();
 
     /**
      * Create a builder
@@ -73,20 +73,9 @@ public class EntityModelBuilder<T> {
     }
 
     /**
-     * Sets the annotations for the model
-     *
-     * @param annotations the annotations to use
-     * @return this
-     */
-    public EntityModelBuilder<T> annotations(final List<Annotation> annotations) {
-        this.annotations = notNull("annotations", annotations);
-        return this;
-    }
-
-    /**
      * @return the annotation on this model
      */
-    public List<Annotation> annotations() {
+    public Set<Annotation> annotations() {
         return annotations;
     }
 
@@ -97,7 +86,7 @@ public class EntityModelBuilder<T> {
      */
     public EntityModel<T> build() {
         annotationsMap = annotations.stream()
-                                    .collect(groupingBy(a -> (Class<? extends Annotation>) a.annotationType()));
+                                    .collect(groupingBy(a -> a.annotationType()));
 
         for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
             convention.apply(datastore, this);
@@ -245,19 +234,14 @@ public class EntityModelBuilder<T> {
 
     protected void configure() {
         TypeData<?> parentClassTypeData = null;
-        Set<Class<?>> classes = buildHierarchy(type);
+        buildHierarchy(type);
         Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
 
-        List<Annotation> annotations = new ArrayList<>();
         for (Class<?> klass : classes) {
-            List<String> genericTypeNames = processTypeNames(klass);
-
-            annotations.addAll(List.of(klass.getDeclaredAnnotations()));
-            processFields(klass, parentClassTypeData, genericTypeNames, propertyTypeParameterMap);
+            processFields(klass, parentClassTypeData, processTypeNames(klass), propertyTypeParameterMap);
 
             parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
         }
-        annotations(annotations);
     }
 
     protected String getCollectionName() {
@@ -271,17 +255,20 @@ public class EntityModelBuilder<T> {
         return datastore;
     }
 
-    private Set<Class<?>> buildHierarchy(final Class<?> type) {
-        Set<Class<?>> set = new LinkedHashSet<>();
+    private void buildHierarchy(final Class<?> type) {
         if (type != null && !type.isEnum() && !type.equals(Object.class)) {
-            set.addAll(buildHierarchy(type.getSuperclass()));
-            for (Class<?> anInterface : type.getInterfaces()) {
-                set.addAll(buildHierarchy(anInterface));
+            if (type.isInterface()) {
+                interfaces.add(type);
+            } else {
+                classes.add(type);
             }
-            set.add(type);
+            annotations.addAll(Set.of(type.getAnnotations()));
+            interfaces.addAll(Set.of(type.getInterfaces()));
+            for (Class<?> anInterface : type.getInterfaces()) {
+                buildHierarchy(anInterface);
+            }
+            buildHierarchy(type.getSuperclass());
         }
-
-        return set;
     }
 
     private <S> void cachePropertyTypeData(final FieldMetadata<?> metadata,
@@ -364,6 +351,20 @@ public class EntityModelBuilder<T> {
         }
         return genericTypeNames;
     }
+
+    /*
+        private List<String> processTypeNames(final Class<?> type) {
+        List<String> genericTypeNames = new ArrayList<>();
+        Type superclass = type.getGenericSuperclass();
+        if(superclass != null) {
+            genericTypeNames.add()
+        }
+        for (TypeVariable typeVariable : type.getTypeParameters()) {
+            genericTypeNames.add(typeVariable.getName());
+        }
+        return genericTypeNames;
+    }
+     */
 
     <F> FieldModelBuilder<F> createFieldModelBuilder(final FieldMetadata<F> fieldMetadata) {
         FieldModelBuilder<F> fieldModelBuilder = FieldModel.<F>builder()

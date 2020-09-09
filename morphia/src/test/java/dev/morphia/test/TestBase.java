@@ -78,6 +78,7 @@ public abstract class TestBase {
             });
             return null;
         });
+        cluster.clean();
         cluster.start();
         mongoClient = cluster.getClient(builder);
     }
