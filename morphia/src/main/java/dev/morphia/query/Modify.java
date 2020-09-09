@@ -2,7 +2,6 @@ package dev.morphia.query;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.Datastore;
 import dev.morphia.ModifyOptions;
 import dev.morphia.mapping.Mapper;
@@ -34,8 +33,7 @@ public class Modify<T> extends UpdateBase<T> {
      * @return the operation result
      */
     public T execute() {
-        return execute(new ModifyOptions()
-                           .returnDocument(ReturnDocument.AFTER));
+        return execute(new ModifyOptions());
     }
 
     /**
