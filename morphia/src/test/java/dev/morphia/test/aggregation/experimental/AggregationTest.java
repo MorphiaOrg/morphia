@@ -57,7 +57,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -209,7 +209,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testCollation() {
-        getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
+        getDs().save(asList(new User("john doe", LocalDate.now()), new User("John Doe", LocalDate.now())));
 
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
@@ -485,10 +485,10 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testNullGroupId() {
-        getDs().save(asList(new User("John", new Date()),
-            new User("Paul", new Date()),
-            new User("George", new Date()),
-            new User("Ringo", new Date())));
+        getDs().save(asList(new User("John", LocalDate.now()),
+            new User("Paul", LocalDate.now()),
+            new User("George", LocalDate.now()),
+            new User("Ringo", LocalDate.now())));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .group(Group.of()
@@ -732,10 +732,10 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testSample() {
-        getDs().save(asList(new User("John", new Date()),
-            new User("Paul", new Date()),
-            new User("George", new Date()),
-            new User("Ringo", new Date())));
+        getDs().save(asList(new User("John", LocalDate.now()),
+            new User("Paul", LocalDate.now()),
+            new User("George", LocalDate.now()),
+            new User("Ringo", LocalDate.now())));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .sample(3);

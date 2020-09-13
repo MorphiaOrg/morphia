@@ -27,7 +27,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
-import static java.util.stream.Collectors.groupingBy;
 import static morphia.org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
 
 /**
@@ -42,7 +41,7 @@ public class EntityModelBuilder<T> {
     private final Datastore datastore;
     private final List<FieldModelBuilder<?>> fieldModels = new ArrayList<>();
     private final Class<T> type;
-    private Map<Class<? extends Annotation>, List<Annotation>> annotationsMap;
+    private final Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<>();
     private boolean discriminatorEnabled;
     private String discriminator;
     private String discriminatorKey;
@@ -60,7 +59,16 @@ public class EntityModelBuilder<T> {
     public EntityModelBuilder(final Datastore datastore, final Class<T> type) {
         this.datastore = datastore;
         this.type = type;
-        configure();
+
+        TypeData<?> parentClassTypeData = null;
+        buildHierarchy(this.type);
+        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
+
+        for (Class<?> klass : classes) {
+            processFields(klass, parentClassTypeData, processTypeNames(klass), propertyTypeParameterMap);
+
+            parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
+        }
     }
 
     /**
@@ -85,8 +93,7 @@ public class EntityModelBuilder<T> {
      * @return the new instance
      */
     public EntityModel<T> build() {
-        annotationsMap = annotations.stream()
-                                    .collect(groupingBy(a -> a.annotationType()));
+        annotations.forEach(a -> annotationsMap.putIfAbsent(a.annotationType(), a));
 
         for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
             convention.apply(datastore, this);
@@ -174,11 +181,7 @@ public class EntityModelBuilder<T> {
      */
     @SuppressWarnings("unchecked")
     public <A extends Annotation> A getAnnotation(final Class<A> type) {
-        List<A> annotations = (List<A>) annotationsMap.get(type);
-        if (annotations != null && !annotations.isEmpty()) {
-            return annotations.get(annotations.size() - 1);
-        }
-        return null;
+        return (A) annotationsMap.get(type);
     }
 
     /**
@@ -228,20 +231,8 @@ public class EntityModelBuilder<T> {
         return discriminatorEnabled;
     }
 
-    protected Map<Class<? extends Annotation>, List<Annotation>> annotationsMap() {
+    protected Map<Class<? extends Annotation>, Annotation> annotationsMap() {
         return annotationsMap;
-    }
-
-    protected void configure() {
-        TypeData<?> parentClassTypeData = null;
-        buildHierarchy(type);
-        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
-
-        for (Class<?> klass : classes) {
-            processFields(klass, parentClassTypeData, processTypeNames(klass), propertyTypeParameterMap);
-
-            parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
-        }
     }
 
     protected String getCollectionName() {
@@ -264,10 +255,11 @@ public class EntityModelBuilder<T> {
             }
             annotations.addAll(Set.of(type.getAnnotations()));
             interfaces.addAll(Set.of(type.getInterfaces()));
+            buildHierarchy(type.getSuperclass());
+
             for (Class<?> anInterface : type.getInterfaces()) {
                 buildHierarchy(anInterface);
             }
-            buildHierarchy(type.getSuperclass());
         }
     }
 

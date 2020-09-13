@@ -15,11 +15,13 @@
 package dev.morphia.testmodel;
 
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.testutil.TestEntity;
 
 import static java.lang.String.format;
 
+@Entity("shapes")
 public class Rectangle extends TestEntity implements Shape {
     @Property("h")
     private double height;

@@ -6,7 +6,7 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
@@ -197,7 +197,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testStdDevSamp() {
         // we don't have a data set to test numbers so let's at least test we're creating the correct structures for the server
-        getDs().save(new User("", new Date()));
+        getDs().save(new User("", LocalDate.now()));
         getDs().aggregate(User.class)
                .sample(100)
                .group(Group.of()

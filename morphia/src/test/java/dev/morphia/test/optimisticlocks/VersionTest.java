@@ -223,7 +223,6 @@ public class VersionTest extends TestBase {
 
     }
 
-    @Entity
     private static class VersionedType extends TestEntity {
         @Version
         private long version;

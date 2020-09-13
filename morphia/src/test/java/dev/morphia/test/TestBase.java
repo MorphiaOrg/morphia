@@ -17,6 +17,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import java.util.Map.Entry;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -114,6 +116,13 @@ public abstract class TestBase {
     @AfterEach
     public void tearDown() {
         cleanup();
+    }
+
+    protected void assertCapped(Class<?> type, Integer max, Integer size) {
+        Document result = getOptions(type);
+        assertTrue(result.getBoolean("capped"));
+        assertEquals(max, result.get("max"));
+        assertEquals(size, result.get("size"));
     }
 
     protected void assertDocumentEquals(final Object expected, final Object actual) {
@@ -252,5 +261,18 @@ public abstract class TestBase {
 
     protected MongoCollection<Document> getDocumentCollection(final Class<?> type) {
         return getDatabase().getCollection(getMapper().getMappedClass(type).getCollectionName());
+    }
+
+    @NotNull
+    protected Document getOptions(Class<?> type) {
+        MongoCollection<?> collection = getMapper().getCollection(type);
+        Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
+                                                       .append("filter",
+                                                           new Document("name", collection.getNamespace().getCollectionName())));
+
+        Document cursor = (Document) result.get("cursor");
+        return (Document) cursor.getList("firstBatch", Document.class)
+                                .get(0)
+                                .get("options");
     }
 }

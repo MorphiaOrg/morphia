@@ -1182,10 +1182,14 @@ public class TestQuery extends TestBase {
     public void testTailableCursors() {
         getMapper().map(CappedPic.class);
         final Datastore ds = getDs();
+        final Query<CappedPic> query = ds.find(CappedPic.class);
+
+        getMapper().map(CappedPic.class);
         ds.ensureCaps();
 
-        final Query<CappedPic> query = ds.find(CappedPic.class);
         final List<CappedPic> found = new ArrayList<>();
+        assertCapped(CappedPic.class, 1000, 1024 * 1024);
+
         final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
         assertEquals(0, query.count());

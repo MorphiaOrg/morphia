@@ -32,13 +32,14 @@ import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.ValidationException;
+import dev.morphia.test.TestBase;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +52,10 @@ import static com.mongodb.client.model.CollationStrength.IDENTICAL;
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class IndexHelperTest extends TestBase {
     private final IndexHelper indexHelper = new IndexHelper(getMapper());
@@ -114,27 +115,32 @@ public class IndexHelperTest extends TestBase {
         List<String> names = new ArrayList<>(asList("latitude_1", "searchme", "indexName_1"));
         for (Document document : indexInfo) {
             String name = document.get("name").toString();
-            if (name.equals("latitude_1")) {
-                names.remove(name);
-                assertEquals(parse("{ 'latitude' : 1 }"), document.get("key"));
-            } else if (name.equals("searchme")) {
-                names.remove(name);
-                assertEquals(parse("{ 'text' : 10 }"), document.get("weights"));
-            } else if (name.equals("indexName_1")) {
-                names.remove(name);
-                assertEquals(parse("{'indexName': 1 }"), document.get("key"));
-            } else {
-                if (!"_id_".equals(document.get("name"))) {
-                    throw new MappingException("Found an index I wasn't expecting:  " + document);
-                }
+            switch (name) {
+                case "latitude_1":
+                    names.remove(name);
+                    assertEquals(parse("{ 'latitude' : 1 }"), document.get("key"));
+                    break;
+                case "searchme":
+                    names.remove(name);
+                    assertEquals(parse("{ 'text' : 10 }"), document.get("weights"));
+                    break;
+                case "indexName_1":
+                    names.remove(name);
+                    assertEquals(parse("{'indexName': 1 }"), document.get("key"));
+                    break;
+                default:
+                    if (!"_id_".equals(document.get("name"))) {
+                        throw new MappingException("Found an index I wasn't expecting:  " + document);
+                    }
+                    break;
             }
         }
-        Assert.assertTrue("Should be empty: " + names, names.isEmpty());
+        assertTrue(names.isEmpty(), "Should be empty: " + names);
 
         collection = getDatabase().getCollection(getMapper().getCollection(AbstractParent.class).getNamespace().getCollectionName());
         indexHelper.createIndex(collection, mapper.getMappedClass(AbstractParent.class));
         indexInfo = getIndexInfo(AbstractParent.class);
-        assertTrue("Shouldn't find any indexes: " + indexInfo, indexInfo.isEmpty());
+        assertTrue(indexInfo.isEmpty(), "Shouldn't find any indexes: " + indexInfo);
 
     }
 
@@ -143,11 +149,9 @@ public class IndexHelperTest extends TestBase {
         MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         assertEquals("indexName", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "indexName"));
-        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "nested.name"));
-        assertEquals("nest.name", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "nest.name"));
 
         try {
-            assertEquals("nest.whatsit", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "nest.whatsit"));
+            assertEquals("nest.whatsit", indexHelper.findField(mappedClass, new IndexOptionsBuilder(), "badpath"));
             fail("Should have failed on the bad index path");
         } catch (ValidationException e) {
             // alles ist gut
@@ -290,14 +294,29 @@ public class IndexHelperTest extends TestBase {
     }
 
     @Test
+    public void weightsOnNonTextIndex() {
+        Assertions.assertThrows(MappingException.class, () -> {
+            MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
+            MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
+
+            IndexBuilder index = new IndexBuilder()
+                                     .fields(new FieldBuilder()
+                                                 .value("name")
+                                                 .weight(10));
+
+            indexHelper.createIndex(indexes, mappedClass, index);
+        });
+    }
+
+    @Test
     public void wildcardTextIndex() {
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
         IndexBuilder index = new IndexBuilder()
-            .fields(new FieldBuilder()
-                        .value("$**")
-                        .type(IndexType.TEXT));
+                                 .fields(new FieldBuilder()
+                                             .value("$**")
+                                             .type(IndexType.TEXT));
 
         indexHelper.createIndex(indexes, mappedClass, index);
 
@@ -306,20 +325,7 @@ public class IndexHelperTest extends TestBase {
         for (Document document : wildcard) {
             found |= document.get("name").equals("$**_text");
         }
-        assertTrue("Should have found the wildcard index", found);
-    }
-
-    @Test(expected = MappingException.class)
-    public void weightsOnNonTextIndex() {
-        MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
-        MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
-
-        IndexBuilder index = new IndexBuilder()
-            .fields(new FieldBuilder()
-                        .value("name")
-                        .weight(10));
-
-        indexHelper.createIndex(indexes, mappedClass, index);
+        assertTrue(found, "Should have found the wildcard index: " + wildcard);
     }
 
     @Test
@@ -374,7 +380,7 @@ public class IndexHelperTest extends TestBase {
         List<Document> indexInfo = getIndexInfo(IndexedClass.class);
         for (Document document : indexInfo) {
             if (!document.get("name").equals("_id_")) {
-                Assert.assertEquals(expected, document.get("partialFilterExpression"));
+                assertEquals(expected, document.get("partialFilterExpression"));
             }
         }
     }

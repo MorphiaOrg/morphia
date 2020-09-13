@@ -11,7 +11,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.junit.jupiter.api.BeforeEach;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,7 +20,7 @@ public class ExpressionsTestBase extends TestBase {
     @BeforeEach
     public void seed() {
         getMapper().getCollection(User.class).drop();
-        getDs().save(new User("", new Date()));
+        getDs().save(new User("", LocalDate.now()));
     }
 
     @SuppressWarnings("unchecked")
