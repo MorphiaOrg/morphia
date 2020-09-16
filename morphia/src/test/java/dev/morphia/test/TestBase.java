@@ -66,11 +66,7 @@ public abstract class TestBase {
 
         String mongodb = System.getenv("MONGODB");
         Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final MongoCluster cluster = ReplicaSet.builder()
-                                               .version(version)
-                                               .baseDir(new File("target/mongo/"))
-                                               .size(version.lessThan(Version.forIntegers(4)) ? 3 : 1)
-                                               .build();
+        final MongoCluster cluster = new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
 
         cluster.configure(c -> {
             c.systemLog(s -> {
@@ -223,14 +219,14 @@ public abstract class TestBase {
                 }
             }
         } else {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s", path, expected, actual));
+            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
     private void assertSameNullity(final String path, final Object expected, final Object actual) {
         if (expected == null && actual != null
             || actual == null && expected != null) {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s", path, expected, actual));
+            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
@@ -239,7 +235,7 @@ public abstract class TestBase {
             return;
         }
         if (!expected.getClass().equals(actual.getClass())) {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s", path, expected, actual));
+            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 

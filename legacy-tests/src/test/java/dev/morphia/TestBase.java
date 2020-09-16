@@ -71,11 +71,7 @@ public abstract class TestBase {
             throw new RuntimeException(e.getMessage(), e);
         }
         Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final MongoCluster cluster = ReplicaSet.builder()
-                                               .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
-                                               .baseDir(mongodbRoot)
-                                               .size(version.lessThan(Version.forIntegers(4)) ? 3 : 1)
-                                               .build();
+        final MongoCluster cluster = new ReplicaSet(mongodbRoot, "morphia_test", version);
 
         cluster.start();
         mongoClient = cluster.getClient(builder);
