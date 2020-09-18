@@ -351,6 +351,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCommentsShowUpInLogs() {
+        checkMinServerVersion(4.2);
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
         getDatabase().runCommand(new Document("profile", 2));
