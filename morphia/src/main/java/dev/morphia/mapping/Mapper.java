@@ -487,7 +487,7 @@ public class Mapper {
      * @param type the type to process
      * @return the MappedClass for the object given
      */
-    private MappedClass getMappedClass(final Class type, boolean allowUnannotated) {
+    private MappedClass getMappedClass(final Class type, final boolean allowUnannotated) {
         if (type == null) {
             return null;
         }
@@ -568,7 +568,7 @@ public class Mapper {
         return key.getCollection();
     }
 
-    private List<MappedClass> map(final List<Class> classes, boolean allowUnannotated) {
+    private List<MappedClass> map(final List<Class> classes, final boolean allowUnannotated) {
         return classes.stream()
                       .map(c -> getMappedClass(c, allowUnannotated))
                       .filter(Objects::nonNull)

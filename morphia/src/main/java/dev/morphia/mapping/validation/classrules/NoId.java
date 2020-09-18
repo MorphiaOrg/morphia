@@ -9,6 +9,9 @@ import dev.morphia.sofia.Sofia;
 
 import java.util.Set;
 
+/**
+ * Validates that classes marked with @Entity have a field annotated with @Id.
+ */
 public class NoId implements ClassConstraint {
     @Override
     public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
