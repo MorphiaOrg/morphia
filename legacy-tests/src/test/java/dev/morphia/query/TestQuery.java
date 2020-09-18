@@ -367,7 +367,8 @@ public class TestQuery extends TestBase {
                              .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName());
         Document profileRecord = profileCollection.find(query).first();
 
-        assertEquals(profileRecord.toJson(), expectedComment, getCommentFromProfileRecord(profileRecord));
+        assertEquals(profileRecord.toJson(getMapper().getCodecRegistry().get(Document.class)), expectedComment,
+            getCommentFromProfileRecord(profileRecord));
     }
 
     @Test
