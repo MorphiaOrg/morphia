@@ -55,14 +55,14 @@ public class MappedClass {
      */
     private MappedField idField;
     private MappedClass superClass;
-    private List<MappedClass> interfaces = new ArrayList<>();
-    private List<MappedClass> subtypes = new ArrayList<>();
+    private final List<MappedClass> interfaces = new ArrayList<>();
+    private final List<MappedClass> subtypes = new ArrayList<>();
 
     /**
      * Creates a MappedClass instance
      *
      * @param entityModel the ClassModel
-     * @param mapper       the Mapper to use
+     * @param mapper      the Mapper to use
      */
     public MappedClass(final EntityModel entityModel, final Mapper mapper) {
         this.entityModel = entityModel;
@@ -170,21 +170,11 @@ public class MappedClass {
      *
      * @param clazz the type to search for
      * @param <T>   the annotation type
-     * @return the instance if it was found, if more than one was found, the last one added
+     * @return the instance if it was found or null
+     * @morphia.internal
      */
     public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
         return entityModel.getAnnotation(clazz);
-    }
-
-    /**
-     * Looks for an annotation in the annotations found on a class while mapping
-     *
-     * @param clazz the class to search for
-     * @param <T>   the type of annotation to find
-     * @return the instance if it was found, if more than one was found, the last one added
-     */
-    public <T extends Annotation> List<T> getAnnotations(final Class<T> clazz) {
-        return entityModel.getAnnotations(clazz);
     }
 
     /**

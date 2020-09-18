@@ -253,29 +253,32 @@ public class DatastoreImpl implements AdvancedDatastore {
     public void ensureCaps() {
         List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
         for (final MappedClass mc : mapper.getMappedClasses()) {
-            if (mc.getEntityAnnotation() != null && mc.getEntityAnnotation().cap().value() > 0) {
-                final CappedAt cap = mc.getEntityAnnotation().cap();
-                final String collName = mc.getCollectionName();
-                final CreateCollectionOptions dbCapOpts = new CreateCollectionOptions()
-                                                              .capped(true);
-                if (cap.value() > 0) {
-                    dbCapOpts.sizeInBytes(cap.value());
-                }
-                if (cap.count() > 0) {
-                    dbCapOpts.maxDocuments(cap.count());
-                }
-                final MongoDatabase database = getDatabase();
-                if (collectionNames.contains(collName)) {
-                    final Document dbResult = database.runCommand(new Document("collstats", collName));
-                    if (dbResult.getBoolean("capped")) {
-                        LOG.debug("MongoCollection already exists and is capped already; doing nothing. " + dbResult);
-                    } else {
-                        LOG.warn("MongoCollection already exists with same name(" + collName
-                                 + ") and is not capped; not creating capped version!");
+            if (mc.getEntityAnnotation() != null) {
+                CappedAt cappedAt = mc.getEntityAnnotation().cap();
+                if (cappedAt.value() > 0) {
+                    final CappedAt cap = mc.getEntityAnnotation().cap();
+                    final String collName = mc.getCollectionName();
+                    final CreateCollectionOptions dbCapOpts = new CreateCollectionOptions()
+                                                                  .capped(true);
+                    if (cap.value() > 0) {
+                        dbCapOpts.sizeInBytes(cap.value());
                     }
-                } else {
-                    getDatabase().createCollection(collName, dbCapOpts);
-                    LOG.debug("Created capped MongoCollection (" + collName + ") with opts " + dbCapOpts);
+                    if (cap.count() > 0) {
+                        dbCapOpts.maxDocuments(cap.count());
+                    }
+                    final MongoDatabase database = getDatabase();
+                    if (collectionNames.contains(collName)) {
+                        final Document dbResult = database.runCommand(new Document("collstats", collName));
+                        if (dbResult.getBoolean("capped")) {
+                            LOG.debug("MongoCollection already exists and is capped already; doing nothing. " + dbResult);
+                        } else {
+                            LOG.warn("MongoCollection already exists with same name(" + collName
+                                     + ") and is not capped; not creating capped version!");
+                        }
+                    } else {
+                        getDatabase().createCollection(collName, dbCapOpts);
+                        LOG.debug("Created capped MongoCollection (" + collName + ") with opts " + dbCapOpts);
+                    }
                 }
             }
         }

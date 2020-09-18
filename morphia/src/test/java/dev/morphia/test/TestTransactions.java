@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.mongodb.ClientSessionOptions.builder;
@@ -28,7 +28,7 @@ public class TestTransactions extends TestBase {
         assumeTrue(isReplicaSet());
         getDs().save(new Rectangle(1, 1));
         getDs().find(Rectangle.class).findAndDelete();
-        getDs().save(new User("", new Date()));
+        getDs().save(new User("", LocalDate.now()));
         getDs().find(User.class).findAndDelete();
     }
 
@@ -97,7 +97,7 @@ public class TestTransactions extends TestBase {
             Rectangle rectangle = new Rectangle(1, 1);
             session.save(rectangle);
 
-            session.save(new User("transactions", new Date()));
+            session.save(new User("transactions", LocalDate.now()));
 
             assertNull(getDs().find(Rectangle.class).first());
             assertNull(getDs().find(User.class).first());

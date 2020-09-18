@@ -25,8 +25,6 @@ import dev.morphia.mapping.MappedClass;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -41,8 +39,7 @@ public class TestIndexInheritance extends TestBase {
         final MappedClass mc = getMapper().getMappedClass(Circle.class);
         assertNotNull(mc);
 
-        List<Indexes> annotations = mc.getAnnotations(Indexes.class);
-        assertEquals(annotations.toString(), 2, annotations.size());
+        assertNotNull(mc.getAnnotation(Indexes.class));
 
         getDs().ensureIndexes();
 

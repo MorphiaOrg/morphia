@@ -41,7 +41,7 @@ public class TestEmbeddedArrayIndexes extends TestBase {
         final MappedClass mc = getMapper().getMappedClass(A.class);
         assertNotNull(mc);
 
-        assertEquals(1, mc.getAnnotations(Indexes.class).size());
+        assertNotNull(mc.getAnnotation(Indexes.class));
 
         getDs().ensureIndexes(A.class);
 

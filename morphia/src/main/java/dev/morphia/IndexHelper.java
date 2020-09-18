@@ -117,20 +117,18 @@ public final class IndexHelper {
     private List<Index> collectTopLevelIndexes(final MappedClass mc) {
         List<Index> list = new ArrayList<>();
         if (mc != null) {
-            final List<Indexes> annotations = mc.getAnnotations(Indexes.class);
-            if (annotations != null) {
-                for (final Indexes indexes : annotations) {
-                    for (final Index index : indexes.value()) {
-                        List<Field> fields = new ArrayList<>();
-                        for (Field field : index.fields()) {
-                            fields.add(new FieldBuilder()
-                                           .value(findField(mc, index.options(), field.value()))
-                                           .type(field.type())
-                                           .weight(field.weight()));
-                        }
-
-                        list.add(replaceFields(index, fields));
+            final Indexes indexes = mc.getAnnotation(Indexes.class);
+            if (indexes != null) {
+                for (final Index index : indexes.value()) {
+                    List<Field> fields = new ArrayList<>();
+                    for (Field field : index.fields()) {
+                        fields.add(new FieldBuilder()
+                                       .value(findField(mc, index.options(), field.value()))
+                                       .type(field.type())
+                                       .weight(field.weight()));
                     }
+
+                    list.add(replaceFields(index, fields));
                 }
             }
             list.addAll(collectTopLevelIndexes(mc.getSuperClass()));

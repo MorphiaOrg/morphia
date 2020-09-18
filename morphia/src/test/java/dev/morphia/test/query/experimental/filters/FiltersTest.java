@@ -8,7 +8,7 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
@@ -201,8 +201,8 @@ public class FiltersTest extends TestBase {
 
     @Test
     public void testSize() {
-        getDs().save(List.of(new User("John", new Date(), "puppies", "kittens", "heavy metal"),
-            new User("Janice", new Date(), "Chandler", "NYC")));
+        getDs().save(List.of(new User("John", LocalDate.now(), "puppies", "kittens", "heavy metal"),
+            new User("Janice", LocalDate.now(), "Chandler", "NYC")));
 
         User likes = getDs().find(User.class)
                             .filter(size("likes", 3)).iterator()

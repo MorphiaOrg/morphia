@@ -31,10 +31,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
@@ -65,19 +65,13 @@ public abstract class TestBase {
 
         String mongodb = System.getenv("MONGODB");
         File mongodbRoot = new File("target/mongo");
-        int port = new Random().nextInt(20000) + 30000;
         try {
             FileUtils.deleteDirectory(mongodbRoot);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
         Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final MongoCluster cluster = ReplicaSet.builder()
-                                               .version(mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION)
-                                               .baseDir(mongodbRoot)
-                                               .port(port)
-                                               .size(version.lessThan(Version.forIntegers(4)) ? 3 : 1)
-                                               .build();
+        final MongoCluster cluster = new ReplicaSet(mongodbRoot, "morphia_test", version);
 
         cluster.start();
         mongoClient = cluster.getClient(builder);
@@ -281,5 +275,27 @@ public abstract class TestBase {
     private Document runIsMaster() {
         return mongoClient.getDatabase("admin")
                           .runCommand(new Document("ismaster", 1));
+    }
+
+    protected void assertCapped(Class<?> type, Integer max, Integer size) {
+        Document result = getOptions(type);
+        assertTrue(result.getBoolean("capped"));
+        assertEquals(max, result.get("max"));
+        assertEquals(size, result.get("size"));
+    }
+
+    protected Document getOptions(Class<?> type) {
+        MongoCollection<?> collection = getMapper().getCollection(type);
+        Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
+                                                       .append("filter",
+                                                           new Document("name", collection.getNamespace().getCollectionName())));
+
+        Document cursor = (Document) result.get("cursor");
+        List<Document> firstBatch = cursor.getList("firstBatch", Document.class);
+        return firstBatch.size() > 0
+               ? (Document) firstBatch
+                                .get(0)
+                                .get("options")
+               : new Document();
     }
 }

@@ -44,7 +44,7 @@ public class EntityModel<T> {
         PostPersist.class,
         PostLoad.class);
 
-    private final Map<Class<? extends Annotation>, List<Annotation>> annotations;
+    private final Map<Class<? extends Annotation>, Annotation> annotations;
     private final Map<String, FieldModel<?>> fieldModelsByField;
     private final Map<Object, FieldModel<?>> fieldModelsByMappedName;
     private final Datastore datastore;
@@ -111,18 +111,17 @@ public class EntityModel<T> {
      * @param <A>   the annotation type
      * @return the annotation instance or null if not found
      */
-    public <A> A getAnnotation(final Class<? extends Annotation> clazz) {
-        final List<Annotation> found = annotations.get(clazz);
-        return found == null || found.isEmpty() ? null : (A) found.get(found.size() - 1);
+    public <A extends Annotation> A getAnnotation(final Class<A> clazz) {
+        return (A) annotations.get(clazz);
     }
 
     /**
-     * @param clazz the annotation class
      * @param <A>   the annotation type
-     * @return all annotation instance of the given type
+     * @param clazz the annotation class
+     * @return the annotation instance of the given type
      */
-    public <A> List<A> getAnnotations(final Class<? extends Annotation> clazz) {
-        return (List<A>) annotations.get(clazz);
+    public <A extends Annotation> A getAnnotations(final Class<A> clazz) {
+        return (A) annotations.get(clazz);
     }
 
     /**
@@ -130,7 +129,7 @@ public class EntityModel<T> {
      *
      * @return the list of annotations
      */
-    public Map<Class<? extends Annotation>, List<Annotation>> getAnnotations() {
+    public Map<Class<? extends Annotation>, Annotation> getAnnotations() {
         return annotations;
     }
 

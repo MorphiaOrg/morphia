@@ -36,9 +36,11 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.models.Author;
+import dev.morphia.test.models.BannedUser;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.CityPopulation;
 import dev.morphia.test.models.State;
+import dev.morphia.test.models.User;
 import dev.morphia.test.models.errors.BadConstructorBased;
 import dev.morphia.test.models.errors.ContainsDocument;
 import dev.morphia.test.models.errors.ContainsMapLike;
@@ -665,6 +667,14 @@ public class TestMapping extends TestBase {
         assertNotNull(loaded.id);
         assertNotNull(loaded.uuid);
         assertEquals(before, loaded.uuid);
+    }
+
+    @Test
+    public void childMapping() {
+        List<MappedClass> list = getMapper().map(User.class, BannedUser.class);
+
+        assertEquals("users", list.get(0).getCollectionName());
+        assertEquals("banned", list.get(1).getCollectionName());
     }
 
     private void validateField(final List<MappedField> fields, final String mapped, final String java) {

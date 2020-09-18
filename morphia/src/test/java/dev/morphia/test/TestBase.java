@@ -17,6 +17,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import java.util.Map.Entry;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -64,11 +66,7 @@ public abstract class TestBase {
 
         String mongodb = System.getenv("MONGODB");
         Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final MongoCluster cluster = ReplicaSet.builder()
-                                               .version(version)
-                                               .baseDir(new File("target/mongo/"))
-                                               .size(version.lessThan(Version.forIntegers(4)) ? 3 : 1)
-                                               .build();
+        final MongoCluster cluster = new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
 
         cluster.configure(c -> {
             c.systemLog(s -> {
@@ -114,6 +112,13 @@ public abstract class TestBase {
     @AfterEach
     public void tearDown() {
         cleanup();
+    }
+
+    protected void assertCapped(Class<?> type, Integer max, Integer size) {
+        Document result = getOptions(type);
+        assertTrue(result.getBoolean("capped"));
+        assertEquals(max, result.get("max"));
+        assertEquals(size, result.get("size"));
     }
 
     protected void assertDocumentEquals(final Object expected, final Object actual) {
@@ -176,6 +181,19 @@ public abstract class TestBase {
         return document.toJson(getMapper().getCodecRegistry().get(Document.class));
     }
 
+    @NotNull
+    protected Document getOptions(Class<?> type) {
+        MongoCollection<?> collection = getMapper().getCollection(type);
+        Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
+                                                       .append("filter",
+                                                           new Document("name", collection.getNamespace().getCollectionName())));
+
+        Document cursor = (Document) result.get("cursor");
+        return (Document) cursor.getList("firstBatch", Document.class)
+                                .get(0)
+                                .get("options");
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
         assertSameNullity(path, expected, actual);
@@ -214,23 +232,14 @@ public abstract class TestBase {
                 }
             }
         } else {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s", path, expected, actual));
+            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
     private void assertSameNullity(final String path, final Object expected, final Object actual) {
         if (expected == null && actual != null
             || actual == null && expected != null) {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s", path, expected, actual));
-        }
-    }
-
-    private void assertSameType(final String path, final Object expected, final Object actual) {
-        if (expected instanceof List && actual instanceof List) {
-            return;
-        }
-        if (!expected.getClass().equals(actual.getClass())) {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s", path, expected, actual));
+            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
@@ -252,5 +261,14 @@ public abstract class TestBase {
 
     protected MongoCollection<Document> getDocumentCollection(final Class<?> type) {
         return getDatabase().getCollection(getMapper().getMappedClass(type).getCollectionName());
+    }
+
+    private void assertSameType(final String path, final Object expected, final Object actual) {
+        if (expected instanceof List && actual instanceof List) {
+            return;
+        }
+        if (!expected.getClass().equals(actual.getClass())) {
+            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+        }
     }
 }

@@ -16,7 +16,8 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateFromParts;
@@ -130,8 +131,8 @@ public class DateExpressionTest extends ExpressionsTestBase {
     }
 
     @Test
-    public void testDateToString() throws ParseException {
-        Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");
+    public void testDateToString() {
+        LocalDate joined = LocalDate.parse("2016-05-01 UTC", DateTimeFormatter.ofPattern("yyyy-MM-dd z"));
         getMapper().getCollection(User.class).drop();
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()

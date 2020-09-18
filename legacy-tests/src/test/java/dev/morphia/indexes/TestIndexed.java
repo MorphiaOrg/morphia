@@ -28,7 +28,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.entities.IndexOnValue;
 import dev.morphia.entities.NamedIndexOnValue;
 import dev.morphia.entities.UniqueIndexOnValue;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
@@ -42,7 +41,7 @@ import java.util.List;
 import static dev.morphia.testutil.IndexMatcher.doesNotHaveIndexNamed;
 import static dev.morphia.testutil.IndexMatcher.hasIndexNamed;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Scott Hernandez
@@ -132,14 +131,14 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testIndexedRecursiveEntity() {
-        final MappedClass mc = getMapper().getMappedClass(CircularEmbeddedEntity.class);
+        getMapper().getMappedClass(CircularEmbeddedEntity.class);
         getDs().ensureIndexes();
         assertThat(getIndexInfo(CircularEmbeddedEntity.class), hasIndexNamed("a_1"));
     }
 
     @Test
     public void testIndexes() {
-        final MappedClass mc = getMapper().getMappedClass(Ad2.class);
+        getMapper().getMappedClass(Ad2.class);
 
         assertThat(getIndexInfo(Ad2.class), doesNotHaveIndexNamed("active_1_lastMod_-1"));
         getDs().ensureIndexes(Ad2.class);
@@ -179,7 +178,6 @@ public class TestIndexed extends TestBase {
     }
 
     @Entity
-    @SuppressWarnings("unused")
     private static class Place {
         @Id
         private long id;
@@ -189,7 +187,6 @@ public class TestIndexed extends TestBase {
     }
 
     @Entity
-    @SuppressWarnings("unused")
     private static class LegacyPlace {
         @Id
         private long id;
