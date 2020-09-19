@@ -24,7 +24,7 @@ public class User {
     private User() {
     }
 
-    public User(final String name, final LocalDate joined, final String... likes) {
+    public User(String name, LocalDate joined, String... likes) {
         this.name = name;
         this.joined = joined;
         this.likes = asList(likes);

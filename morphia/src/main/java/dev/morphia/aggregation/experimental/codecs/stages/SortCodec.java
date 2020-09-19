@@ -7,14 +7,14 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class SortCodec extends StageCodec<Sort> {
-    public SortCodec(final Mapper mapper) {
+    public SortCodec(Mapper mapper) {
         super(mapper);
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Sort value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Sort value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        for (final SortType sort : value.getSorts()) {
+        for (SortType sort : value.getSorts()) {
             writer.writeName(sort.getField());
             sort.getDirection().encode(writer);
         }

@@ -19,7 +19,7 @@ public class ExperimentalTaglet extends DocTaglet {
     }
 
     @Override
-    public String toString(final List<? extends DocTree> tags, final Element element) {
+    public String toString(List<? extends DocTree> tags, Element element) {
         if (tags.isEmpty()) {
             return null;
         }

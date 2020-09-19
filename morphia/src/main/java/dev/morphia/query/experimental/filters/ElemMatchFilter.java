@@ -7,19 +7,19 @@ import org.bson.codecs.EncoderContext;
 import java.util.List;
 
 class ElemMatchFilter extends Filter {
-    ElemMatchFilter(final String field, final List<Filter> query) {
+    ElemMatchFilter(String field, List<Filter> query) {
         super("$elemMatch", field, query);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(field(mapper));
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
         writer.writeStartDocument(getFilterName());
         List<Filter> filters = (List<Filter>) getValue();
-        for (final Filter filter : filters) {
+        for (Filter filter : filters) {
             filter.encode(mapper, writer, context);
         }
         if (isNot()) {

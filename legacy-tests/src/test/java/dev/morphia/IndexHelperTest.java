@@ -362,7 +362,7 @@ public class IndexHelperTest extends TestBase {
         findPartialIndex(Document.parse(text.options().partialFilter()));
     }
 
-    private void checkIndex(final Document document) {
+    private void checkIndex(Document document) {
         assertTrue((Boolean) document.get("background"));
         assertTrue((Boolean) document.get("unique"));
         assertTrue((Boolean) document.get("sparse"));
@@ -370,7 +370,7 @@ public class IndexHelperTest extends TestBase {
         assertEquals(new Document("name", 1).append("text", -1), document.get("key"));
     }
 
-    private void findPartialIndex(final Document expected) {
+    private void findPartialIndex(Document expected) {
         List<Document> indexInfo = getIndexInfo(IndexedClass.class);
         for (Document document : indexInfo) {
             if (!document.get("name").equals("_id_")) {

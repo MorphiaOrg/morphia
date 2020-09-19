@@ -56,7 +56,7 @@ public class EntityModelBuilder<T> {
      * @param datastore the datastore to use
      * @param type      the entity type
      */
-    public EntityModelBuilder(final Datastore datastore, final Class<T> type) {
+    public EntityModelBuilder(Datastore datastore, Class<T> type) {
         this.datastore = datastore;
         this.type = type;
 
@@ -76,7 +76,7 @@ public class EntityModelBuilder<T> {
      *
      * @param builder the field to add
      */
-    public void addModel(final FieldModelBuilder<?> builder) {
+    public void addModel(FieldModelBuilder<?> builder) {
         fieldModels.add(builder);
     }
 
@@ -113,7 +113,7 @@ public class EntityModelBuilder<T> {
      * @param discriminator the discriminator
      * @return this
      */
-    public EntityModelBuilder<T> discriminator(final String discriminator) {
+    public EntityModelBuilder<T> discriminator(String discriminator) {
         this.discriminator = discriminator;
         return this;
     }
@@ -131,7 +131,7 @@ public class EntityModelBuilder<T> {
      * @param key the key to use
      * @return this
      */
-    public EntityModelBuilder<T> discriminatorKey(final String key) {
+    public EntityModelBuilder<T> discriminatorKey(String key) {
         discriminatorKey = key;
         return this;
     }
@@ -149,7 +149,7 @@ public class EntityModelBuilder<T> {
      * @param enabled true to enable the use of a discriminator
      * @return this
      */
-    public EntityModelBuilder<T> enableDiscriminator(final boolean enabled) {
+    public EntityModelBuilder<T> enableDiscriminator(boolean enabled) {
         this.discriminatorEnabled = enabled;
         return this;
     }
@@ -161,7 +161,7 @@ public class EntityModelBuilder<T> {
      * @return the field
      * @throws NoSuchElementException if no value is present
      */
-    public FieldModelBuilder<?> fieldModelByFieldName(final String name) throws NoSuchElementException {
+    public FieldModelBuilder<?> fieldModelByFieldName(String name) throws NoSuchElementException {
         return fieldModels.stream().filter(f -> f.getField().getName().equals(name))
                           .findFirst()
                           .orElseThrow();
@@ -180,7 +180,7 @@ public class EntityModelBuilder<T> {
      * @return the annotation or null if it doesn't exist
      */
     @SuppressWarnings("unchecked")
-    public <A extends Annotation> A getAnnotation(final Class<A> type) {
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
         return (A) annotationsMap.get(type);
     }
 
@@ -197,7 +197,7 @@ public class EntityModelBuilder<T> {
      * @param type the annotation class
      * @return the annotation if it exists
      */
-    public boolean hasAnnotation(final Class<? extends Annotation> type) {
+    public boolean hasAnnotation(Class<? extends Annotation> type) {
         for (Annotation annotation : annotations) {
             if (type.equals(annotation.annotationType())) {
                 return true;
@@ -219,7 +219,7 @@ public class EntityModelBuilder<T> {
      * @param name the name
      * @return this
      */
-    public EntityModelBuilder<T> idFieldName(final String name) {
+    public EntityModelBuilder<T> idFieldName(String name) {
         this.idFieldName = name;
         return this;
     }
@@ -246,7 +246,7 @@ public class EntityModelBuilder<T> {
         return datastore;
     }
 
-    private void buildHierarchy(final Class<?> type) {
+    private void buildHierarchy(Class<?> type) {
         if (type != null && !type.isEnum() && !type.equals(Object.class)) {
             if (type.isInterface()) {
                 interfaces.add(type);
@@ -263,18 +263,18 @@ public class EntityModelBuilder<T> {
         }
     }
 
-    private <S> void cachePropertyTypeData(final FieldMetadata<?> metadata,
-                                           final Map<String, TypeParameterMap> propertyTypeParameterMap,
-                                           final TypeData<S> parentClassTypeData,
-                                           final List<String> genericTypeNames,
-                                           final Type genericType) {
+    private <S> void cachePropertyTypeData(FieldMetadata<?> metadata,
+                                           Map<String, TypeParameterMap> propertyTypeParameterMap,
+                                           TypeData<S> parentClassTypeData,
+                                           List<String> genericTypeNames,
+                                           Type genericType) {
         TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
         propertyTypeParameterMap.put(metadata.getName(), typeParameterMap);
         metadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private String getMappedFieldName(final FieldModelBuilder<?> fieldBuilder) {
+    private String getMappedFieldName(FieldModelBuilder<?> fieldBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
         if (fieldBuilder.hasAnnotation(Id.class)) {
             return "_id";
@@ -298,7 +298,7 @@ public class EntityModelBuilder<T> {
         return options.getFieldNaming().apply(fieldBuilder.getName());
     }
 
-    private TypeParameterMap getTypeParameterMap(final List<String> genericTypeNames, final Type propertyType) {
+    private TypeParameterMap getTypeParameterMap(List<String> genericTypeNames, Type propertyType) {
         int classParamIndex = genericTypeNames.indexOf(propertyType.toString());
         TypeParameterMap.Builder builder = TypeParameterMap.builder();
         if (classParamIndex != -1) {
@@ -317,9 +317,9 @@ public class EntityModelBuilder<T> {
         return builder.build();
     }
 
-    private void processFields(final Class<?> currentClass,
-                               final TypeData<?> parentClassTypeData,
-                               final List<String> genericTypeNames, final Map<String, TypeParameterMap> propertyTypeParameterMap) {
+    private void processFields(Class<?> currentClass,
+                               TypeData<?> parentClassTypeData,
+                               List<String> genericTypeNames, Map<String, TypeParameterMap> propertyTypeParameterMap) {
         for (Field field : currentClass.getDeclaredFields()) {
             final TypeData<?> typeData = TypeData.newInstance(field);
 
@@ -336,7 +336,7 @@ public class EntityModelBuilder<T> {
         }
     }
 
-    private List<String> processTypeNames(final Class<?> currentClass) {
+    private List<String> processTypeNames(Class<?> currentClass) {
         List<String> genericTypeNames = new ArrayList<>();
         for (TypeVariable<? extends Class<?>> classTypeVariable : currentClass.getTypeParameters()) {
             genericTypeNames.add(classTypeVariable.getName());
@@ -344,21 +344,7 @@ public class EntityModelBuilder<T> {
         return genericTypeNames;
     }
 
-    /*
-        private List<String> processTypeNames(final Class<?> type) {
-        List<String> genericTypeNames = new ArrayList<>();
-        Type superclass = type.getGenericSuperclass();
-        if(superclass != null) {
-            genericTypeNames.add()
-        }
-        for (TypeVariable typeVariable : type.getTypeParameters()) {
-            genericTypeNames.add(typeVariable.getName());
-        }
-        return genericTypeNames;
-    }
-     */
-
-    <F> FieldModelBuilder<F> createFieldModelBuilder(final FieldMetadata<F> fieldMetadata) {
+    <F> FieldModelBuilder<F> createFieldModelBuilder(FieldMetadata<F> fieldMetadata) {
         FieldModelBuilder<F> fieldModelBuilder = FieldModel.<F>builder()
                                                      .field(fieldMetadata.getField())
                                                      .fieldName(fieldMetadata.getName())

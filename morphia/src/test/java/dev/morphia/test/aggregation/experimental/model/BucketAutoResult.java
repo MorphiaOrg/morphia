@@ -14,7 +14,7 @@ public class BucketAutoResult {
         return count;
     }
 
-    public void setCount(final int count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
@@ -22,7 +22,7 @@ public class BucketAutoResult {
         return id;
     }
 
-    public void setId(final MinMax id) {
+    public void setId(MinMax id) {
         this.id = id;
     }
 
@@ -42,7 +42,7 @@ public class BucketAutoResult {
             return max;
         }
 
-        public void setMax(final int max) {
+        public void setMax(int max) {
             this.max = max;
         }
 
@@ -50,7 +50,7 @@ public class BucketAutoResult {
             return min;
         }
 
-        public void setMin(final int min) {
+        public void setMin(int min) {
             this.min = min;
         }
 

@@ -18,10 +18,10 @@ interface ReaderIterator extends Iterator<ReaderState> {
  * @morphia.internal
  */
 class DocumentIterator implements ReaderIterator {
-    private DocumentReader reader;
-    private Iterator<Entry<String, Object>> iterator;
+    private final DocumentReader reader;
+    private final Iterator<Entry<String, Object>> iterator;
 
-    DocumentIterator(final DocumentReader reader, final Iterator<Entry<String, Object>> iterator) {
+    DocumentIterator(DocumentReader reader, Iterator<Entry<String, Object>> iterator) {
         this.reader = reader;
         this.iterator = iterator;
     }
@@ -52,7 +52,7 @@ class DocumentIterator implements ReaderIterator {
     }
 
     @Override
-    public void forEachRemaining(final Consumer action) {
+    public void forEachRemaining(Consumer action) {
         throw new UnsupportedOperationException();
     }
 }
@@ -67,7 +67,7 @@ class ArrayIterator implements ReaderIterator {
         this.iterator = null;
     }
 
-    ArrayIterator(final DocumentReader reader, final Iterator<Object> iterator) {
+    ArrayIterator(DocumentReader reader, Iterator<Object> iterator) {
         this.reader = reader;
         this.iterator = iterator;
     }

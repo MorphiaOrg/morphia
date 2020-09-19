@@ -7,7 +7,7 @@ public class Child extends EmbeddedType {
     public Child() {
     }
 
-    public Child(final String childField) {
+    public Child(String childField) {
         this.childField = childField;
     }
 
@@ -17,7 +17,7 @@ public class Child extends EmbeddedType {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

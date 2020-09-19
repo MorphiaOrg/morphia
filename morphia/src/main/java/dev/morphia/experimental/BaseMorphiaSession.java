@@ -20,13 +20,13 @@ import org.bson.BsonTimestamp;
  * @morphia.experimental
  */
 public abstract class BaseMorphiaSession extends DatastoreImpl implements MorphiaSession {
-    private ClientSession session;
+    private final ClientSession session;
 
-    BaseMorphiaSession(final ClientSession session,
-                       final MongoClient mongoClient,
-                       final MongoDatabase database,
-                       final Mapper mapper,
-                       final QueryFactory queryFactory) {
+    BaseMorphiaSession(ClientSession session,
+                       MongoClient mongoClient,
+                       MongoDatabase database,
+                       Mapper mapper,
+                       QueryFactory queryFactory) {
         super(database, mongoClient, mapper, queryFactory);
         this.session = session;
     }
@@ -38,7 +38,7 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public void setPinnedServerAddress(final ServerAddress address) {
+    public void setPinnedServerAddress(ServerAddress address) {
         session.setPinnedServerAddress(address);
     }
 
@@ -63,7 +63,7 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public void startTransaction(final TransactionOptions transactionOptions) {
+    public void startTransaction(TransactionOptions transactionOptions) {
         session.startTransaction(transactionOptions);
     }
 
@@ -78,12 +78,12 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public <T> T withTransaction(final TransactionBody<T> transactionBody) {
+    public <T> T withTransaction(TransactionBody<T> transactionBody) {
         return session.withTransaction(transactionBody);
     }
 
     @Override
-    public <T> T withTransaction(final TransactionBody<T> transactionBody, final TransactionOptions options) {
+    public <T> T withTransaction(TransactionBody<T> transactionBody, TransactionOptions options) {
         return session.withTransaction(transactionBody, options);
     }
 
@@ -94,7 +94,7 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public void setRecoveryToken(final BsonDocument recoveryToken) {
+    public void setRecoveryToken(BsonDocument recoveryToken) {
         session.setRecoveryToken(recoveryToken);
     }
 
@@ -124,12 +124,12 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public void advanceOperationTime(final BsonTimestamp operationTime) {
+    public void advanceOperationTime(BsonTimestamp operationTime) {
         session.advanceOperationTime(operationTime);
     }
 
     @Override
-    public void advanceClusterTime(final BsonDocument clusterTime) {
+    public void advanceClusterTime(BsonDocument clusterTime) {
         session.advanceClusterTime(clusterTime);
     }
 

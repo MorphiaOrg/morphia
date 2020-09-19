@@ -23,7 +23,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     private ClientSession clientSession;
 
     @Override
-    public ModifyOptions clientSession(final ClientSession clientSession) {
+    public ModifyOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -34,49 +34,49 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     }
 
     @Override
-    public ModifyOptions projection(final Bson projection) {
+    public ModifyOptions projection(Bson projection) {
         super.projection(projection);
         return this;
     }
 
     @Override
-    public ModifyOptions sort(final Bson sort) {
+    public ModifyOptions sort(Bson sort) {
         super.sort(sort);
         return this;
     }
 
     @Override
-    public ModifyOptions upsert(final boolean upsert) {
+    public ModifyOptions upsert(boolean upsert) {
         super.upsert(upsert);
         return this;
     }
 
     @Override
-    public ModifyOptions returnDocument(final ReturnDocument returnDocument) {
+    public ModifyOptions returnDocument(ReturnDocument returnDocument) {
         super.returnDocument(returnDocument);
         return this;
     }
 
     @Override
-    public ModifyOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
+    public ModifyOptions maxTime(long maxTime, TimeUnit timeUnit) {
         super.maxTime(maxTime, timeUnit);
         return this;
     }
 
     @Override
-    public ModifyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+    public ModifyOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
         super.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
     @Override
-    public ModifyOptions collation(final Collation collation) {
+    public ModifyOptions collation(Collation collation) {
         super.collation(collation);
         return this;
     }
 
     @Override
-    public ModifyOptions arrayFilters(final List<? extends Bson> arrayFilters) {
+    public ModifyOptions arrayFilters(List<? extends Bson> arrayFilters) {
         super.arrayFilters(arrayFilters);
         return this;
     }
@@ -85,7 +85,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
      * @param writeConcern the write concern
      * @return this
      */
-    public ModifyOptions writeConcern(final WriteConcern writeConcern) {
+    public ModifyOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }

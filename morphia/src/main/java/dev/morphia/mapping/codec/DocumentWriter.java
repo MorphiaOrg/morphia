@@ -45,7 +45,7 @@ public class DocumentWriter implements BsonWriter {
      *
      * @param seed the seed Document
      */
-    public DocumentWriter(final Document seed) {
+    public DocumentWriter(Document seed) {
         state = new RootState(this, seed);
     }
 
@@ -57,7 +57,7 @@ public class DocumentWriter implements BsonWriter {
      * @param encoderContext the context
      * @return this
      */
-    public DocumentWriter encode(final CodecRegistry codecRegistry, final Object value, final EncoderContext encoderContext) {
+    public DocumentWriter encode(CodecRegistry codecRegistry, Object value, EncoderContext encoderContext) {
         ((Codec) codecRegistry.get(value.getClass()))
             .encode(this, value, encoderContext);
 
@@ -100,52 +100,52 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
-    public void writeBinaryData(final BsonBinary binary) {
+    public void writeBinaryData(BsonBinary binary) {
         state.value(binary);
     }
 
     @Override
-    public void writeBinaryData(final String name, final BsonBinary binary) {
+    public void writeBinaryData(String name, BsonBinary binary) {
         state.name(name).value(binary);
     }
 
     @Override
-    public void writeBoolean(final boolean value) {
+    public void writeBoolean(boolean value) {
         state.value(value);
     }
 
     @Override
-    public void writeBoolean(final String name, final boolean value) {
+    public void writeBoolean(String name, boolean value) {
         state.name(name).value(value);
     }
 
     @Override
-    public void writeDateTime(final long value) {
+    public void writeDateTime(long value) {
         state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
     }
 
     @Override
-    public void writeDateTime(final String name, final long value) {
+    public void writeDateTime(String name, long value) {
         state.name(name).value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
     }
 
     @Override
-    public void writeDBPointer(final BsonDbPointer value) {
+    public void writeDBPointer(BsonDbPointer value) {
         state.value(value);
     }
 
     @Override
-    public void writeDBPointer(final String name, final BsonDbPointer value) {
+    public void writeDBPointer(String name, BsonDbPointer value) {
         state.name(name).value(value);
     }
 
     @Override
-    public void writeDouble(final double value) {
+    public void writeDouble(double value) {
         state.value(value);
     }
 
     @Override
-    public void writeDouble(final String name, final double value) {
+    public void writeDouble(String name, double value) {
         state.name(name).value(value);
     }
 
@@ -162,64 +162,64 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
-    public void writeInt32(final int value) {
+    public void writeInt32(int value) {
         state.value(value);
     }
 
     @Override
-    public void writeInt32(final String name, final int value) {
+    public void writeInt32(String name, int value) {
         state.name(name).value(value);
     }
 
     @Override
-    public void writeInt64(final long value) {
+    public void writeInt64(long value) {
         state.value(value);
     }
 
     @Override
-    public void writeInt64(final String name, final long value) {
+    public void writeInt64(String name, long value) {
         state.name(name).value(value);
     }
 
     @Override
-    public void writeDecimal128(final Decimal128 value) {
+    public void writeDecimal128(Decimal128 value) {
         state.value(value);
     }
 
     @Override
-    public void writeDecimal128(final String name, final Decimal128 value) {
+    public void writeDecimal128(String name, Decimal128 value) {
         state.name(name).value(value);
     }
 
     @Override
-    public void writeJavaScript(final String code) {
+    public void writeJavaScript(String code) {
         state.value(code);
     }
 
     @Override
-    public void writeMaxKey(final String name) {
+    public void writeMaxKey(String name) {
         writeName(name);
         writeMaxKey();
     }
 
     @Override
-    public void writeJavaScript(final String name, final String code) {
+    public void writeJavaScript(String name, String code) {
         state.name(name).value(code);
     }
 
     @Override
-    public void writeMinKey(final String name) {
+    public void writeMinKey(String name) {
         writeName(name);
         writeMinKey();
     }
 
     @Override
-    public void writeJavaScriptWithScope(final String code) {
+    public void writeJavaScriptWithScope(String code) {
         state.value(code);
     }
 
     @Override
-    public void writeJavaScriptWithScope(final String name, final String code) {
+    public void writeJavaScriptWithScope(String name, String code) {
         state.name(name).value(code);
     }
 
@@ -234,7 +234,7 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
-    public void writeName(final String name) {
+    public void writeName(String name) {
         state.name(name);
     }
 
@@ -244,34 +244,34 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
-    public void writeNull(final String name) {
+    public void writeNull(String name) {
         writeName(name);
         state.value(null);
     }
 
     @Override
-    public void writeObjectId(final ObjectId objectId) {
+    public void writeObjectId(ObjectId objectId) {
         state.value(objectId);
     }
 
     @Override
-    public void writeStartArray(final String name) {
+    public void writeStartArray(String name) {
         writeName(name);
         writeStartArray();
     }
 
     @Override
-    public void writeObjectId(final String name, final ObjectId objectId) {
+    public void writeObjectId(String name, ObjectId objectId) {
         state.name(name).value(objectId);
     }
 
     @Override
-    public void writeRegularExpression(final BsonRegularExpression regularExpression) {
+    public void writeRegularExpression(BsonRegularExpression regularExpression) {
         state.value(regularExpression);
     }
 
     @Override
-    public void writeRegularExpression(final String name, final BsonRegularExpression regularExpression) {
+    public void writeRegularExpression(String name, BsonRegularExpression regularExpression) {
         state.name(name).value(regularExpression);
     }
 
@@ -288,50 +288,50 @@ public class DocumentWriter implements BsonWriter {
     }
 
     @Override
-    public void writeSymbol(final String name, final String value) {
+    public void writeSymbol(String name, String value) {
         writeName(name);
         writeSymbol(value);
     }
 
     @Override
-    public void writeStartDocument(final String name) {
+    public void writeStartDocument(String name) {
         state.name(name).document();
         docsLevel++;
     }
 
     @Override
-    public void writeString(final String value) {
+    public void writeString(String value) {
         state.value(value);
     }
 
     @Override
-    public void writeString(final String name, final String value) {
+    public void writeString(String name, String value) {
         state.name(name).value(value);
     }
 
     @Override
-    public void writeUndefined(final String name) {
+    public void writeUndefined(String name) {
         writeName(name);
         writeUndefined();
     }
 
     @Override
-    public void pipe(final BsonReader reader) {
+    public void pipe(BsonReader reader) {
         throw new UnsupportedOperationException("org.bson.io.TestingDocumentWriter.pipe has not yet been implemented.");
     }
 
     @Override
-    public void writeSymbol(final String value) {
+    public void writeSymbol(String value) {
         state.value(new BsonSymbol(value));
     }
 
     @Override
-    public void writeTimestamp(final BsonTimestamp value) {
+    public void writeTimestamp(BsonTimestamp value) {
         state.value(value);
     }
 
     @Override
-    public void writeTimestamp(final String name, final BsonTimestamp value) {
+    public void writeTimestamp(String name, BsonTimestamp value) {
         writeName(name);
         state.value(value);
     }
@@ -341,7 +341,7 @@ public class DocumentWriter implements BsonWriter {
         state.value(new BsonUndefined());
     }
 
-    WriteState state(final WriteState state) {
+    WriteState state(WriteState state) {
         final WriteState previous = this.state;
         this.state = state;
         return previous;

@@ -17,7 +17,7 @@ public class WhereCriteria extends AbstractCriteria {
      *
      * @param js the javascript
      */
-    public WhereCriteria(final String js) {
+    public WhereCriteria(String js) {
         this.js = js;
     }
 

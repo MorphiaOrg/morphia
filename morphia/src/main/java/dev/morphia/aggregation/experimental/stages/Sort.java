@@ -11,7 +11,7 @@ import java.util.List;
  * @aggregation.expression $sort
  */
 public class Sort extends Stage {
-    private List<SortType> sorts = new ArrayList<>();
+    private final List<SortType> sorts = new ArrayList<>();
 
     protected Sort() {
         super("$sort");
@@ -33,9 +33,9 @@ public class Sort extends Stage {
      * @param additional any additional fields to sort on
      * @return this
      */
-    public Sort ascending(final String field, final String... additional) {
+    public Sort ascending(String field, String... additional) {
         sorts.add(new SortType(field, Direction.ASCENDING));
-        for (final String another : additional) {
+        for (String another : additional) {
             sorts.add(new SortType(another, Direction.ASCENDING));
         }
         return this;
@@ -48,9 +48,9 @@ public class Sort extends Stage {
      * @param additional any additional fields to sort on
      * @return this
      */
-    public Sort descending(final String field, final String... additional) {
+    public Sort descending(String field, String... additional) {
         sorts.add(new SortType(field, Direction.DESCENDING));
-        for (final String another : additional) {
+        for (String another : additional) {
             sorts.add(new SortType(another, Direction.DESCENDING));
         }
         return this;
@@ -70,7 +70,7 @@ public class Sort extends Stage {
      * @param field the sort field
      * @return this
      */
-    public Sort meta(final String field) {
+    public Sort meta(String field) {
         sorts.add(new SortType(field, Direction.META));
         return this;
     }
@@ -81,19 +81,19 @@ public class Sort extends Stage {
     public enum Direction {
         ASCENDING {
             @Override
-            public void encode(final BsonWriter writer) {
+            public void encode(BsonWriter writer) {
                 writer.writeInt32(1);
             }
         },
         DESCENDING {
             @Override
-            public void encode(final BsonWriter writer) {
+            public void encode(BsonWriter writer) {
                 writer.writeInt32(-1);
             }
         },
         META {
             @Override
-            public void encode(final BsonWriter writer) {
+            public void encode(BsonWriter writer) {
                 writer.writeStartDocument();
                 writer.writeString("$meta", "textScore");
                 writer.writeEndDocument();
@@ -111,10 +111,10 @@ public class Sort extends Stage {
      * @morphia.internal
      */
     public class SortType {
-        private String field;
-        private Direction direction;
+        private final String field;
+        private final Direction direction;
 
-        protected SortType(final String field, final Direction direction) {
+        protected SortType(String field, Direction direction) {
             this.field = field;
             this.direction = direction;
         }

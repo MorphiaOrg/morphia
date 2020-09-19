@@ -32,7 +32,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
      * @param clazz      the original type being iterated
      * @param collection the mongodb collection
      */
-    public MorphiaKeyCursor(final MongoCursor<Document> cursor, final Mapper mapper, final Class<T> clazz, final String collection) {
+    public MorphiaKeyCursor(MongoCursor<Document> cursor, Mapper mapper, Class<T> clazz, String collection) {
         this.wrapped = cursor;
         if (wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");
@@ -86,7 +86,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         return wrapped.getServerAddress();
     }
 
-    private Key<T> convertItem(final Document document) {
+    private Key<T> convertItem(Document document) {
         Object id = document.get("_id");
         if (id instanceof Document) {
             id = mapper.fromDocument(clazz, (Document) id);

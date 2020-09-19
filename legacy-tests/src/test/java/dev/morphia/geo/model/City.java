@@ -20,7 +20,7 @@ public class City {
     public City() {
     }
 
-    public City(final String name, final Point location) {
+    public City(String name, Point location) {
         this.name = name;
         this.location = location;
     }
@@ -33,7 +33,7 @@ public class City {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

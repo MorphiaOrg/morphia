@@ -11,37 +11,37 @@ import java.util.List;
 public enum GeoJsonType implements GeometryFactory {
     POINT("Point", Point.class) {
         @Override
-        public Geometry createGeometry(final List coordinates) {
+        public Geometry createGeometry(List coordinates) {
             return new Point(coordinates);
         }
     },
     LINE_STRING("LineString", LineString.class) {
         @Override
-        public Geometry createGeometry(final List objects) {
+        public Geometry createGeometry(List objects) {
             return new LineString(objects);
         }
     },
     POLYGON("Polygon", Polygon.class) {
         @Override
-        public Geometry createGeometry(final List boundaries) {
+        public Geometry createGeometry(List boundaries) {
             return new Polygon(boundaries);
         }
     },
     MULTI_POINT("MultiPoint", MultiPoint.class) {
         @Override
-        public Geometry createGeometry(final List points) {
+        public Geometry createGeometry(List points) {
             return new MultiPoint(points);
         }
     },
     MULTI_LINE_STRING("MultiLineString", MultiLineString.class) {
         @Override
-        public Geometry createGeometry(final List lineStrings) {
+        public Geometry createGeometry(List lineStrings) {
             return new MultiLineString(lineStrings);
         }
     },
     MULTI_POLYGON("MultiPolygon", MultiPolygon.class) {
         @Override
-        public Geometry createGeometry(final List polygons) {
+        public Geometry createGeometry(List polygons) {
             return new MultiPolygon(polygons);
         }
     };
@@ -49,7 +49,7 @@ public enum GeoJsonType implements GeometryFactory {
     private final String type;
     private final Class<? extends Geometry> typeClass;
 
-    GeoJsonType(final String type, final Class<? extends Geometry> typeClass) {
+    GeoJsonType(String type, Class<? extends Geometry> typeClass) {
         this.type = type;
         this.typeClass = typeClass;
     }

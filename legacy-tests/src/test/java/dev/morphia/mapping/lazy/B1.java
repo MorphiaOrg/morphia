@@ -14,7 +14,7 @@ public class B1 implements InterfaceB {
     B1() {
     }
 
-    public B1(final String name) {
+    public B1(String name) {
         this.name = name;
     }
 
@@ -24,7 +24,7 @@ public class B1 implements InterfaceB {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

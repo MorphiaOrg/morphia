@@ -34,7 +34,7 @@ public class DocumentReader implements BsonReader {
      *
      * @param document the document to read from
      */
-    public DocumentReader(final Document document) {
+    public DocumentReader(Document document) {
         readerState = new InitialReaderState(this, new DocumentIterator(this, document.entrySet().iterator()));
     }
 
@@ -50,7 +50,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public BsonBinary readBinaryData() {
-        return (BsonBinary) stage().value();
+        return stage().value();
     }
 
     @Override
@@ -64,18 +64,18 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public BsonBinary readBinaryData(final String name) {
+    public BsonBinary readBinaryData(String name) {
         verifyName(name);
         return readBinaryData();
     }
 
     @Override
     public boolean readBoolean() {
-        return (boolean) stage().value();
+        return stage().value();
     }
 
     @Override
-    public boolean readBoolean(final String name) {
+    public boolean readBoolean(String name) {
         verifyName(name);
         return readBoolean();
     }
@@ -91,18 +91,18 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public long readDateTime(final String name) {
+    public long readDateTime(String name) {
         verifyName(name);
         return readDateTime();
     }
 
     @Override
     public double readDouble() {
-        return (double) stage().value();
+        return stage().value();
     }
 
     @Override
-    public double readDouble(final String name) {
+    public double readDouble(String name) {
         verifyName(name);
         return readDouble();
     }
@@ -119,33 +119,33 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public int readInt32() {
-        return (int) stage().value();
+        return stage().value();
     }
 
     @Override
-    public int readInt32(final String name) {
+    public int readInt32(String name) {
         verifyName(name);
         return readInt32();
     }
 
     @Override
     public long readInt64() {
-        return (long) stage().value();
+        return stage().value();
     }
 
     @Override
-    public long readInt64(final String name) {
+    public long readInt64(String name) {
         verifyName(name);
         return readInt64();
     }
 
     @Override
     public Decimal128 readDecimal128() {
-        return (Decimal128) stage().value();
+        return stage().value();
     }
 
     @Override
-    public Decimal128 readDecimal128(final String name) {
+    public Decimal128 readDecimal128(String name) {
         verifyName(name);
         return readDecimal128();
     }
@@ -156,7 +156,7 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public String readJavaScript(final String name) {
+    public String readJavaScript(String name) {
         verifyName(name);
         return readJavaScript();
     }
@@ -167,7 +167,7 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public String readJavaScriptWithScope(final String name) {
+    public String readJavaScriptWithScope(String name) {
         verifyName(name);
         return readJavaScriptWithScope();
     }
@@ -177,7 +177,7 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public void readMaxKey(final String name) {
+    public void readMaxKey(String name) {
         verifyName(name);
         readMaxKey();
     }
@@ -187,7 +187,7 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public void readMinKey(final String name) {
+    public void readMinKey(String name) {
         verifyName(name);
         readMinKey();
     }
@@ -198,7 +198,7 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public void readName(final String name) {
+    public void readName(String name) {
         verifyName(name);
     }
 
@@ -207,40 +207,40 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public void readNull(final String name) {
+    public void readNull(String name) {
         verifyName(name);
         readNull();
     }
 
     @Override
     public ObjectId readObjectId() {
-        return (ObjectId) stage().value();
+        return stage().value();
     }
 
     @Override
-    public ObjectId readObjectId(final String name) {
+    public ObjectId readObjectId(String name) {
         verifyName(name);
         return readObjectId();
     }
 
     @Override
     public BsonRegularExpression readRegularExpression() {
-        return (BsonRegularExpression) stage().value();
+        return stage().value();
     }
 
     @Override
-    public BsonRegularExpression readRegularExpression(final String name) {
+    public BsonRegularExpression readRegularExpression(String name) {
         verifyName(name);
         return readRegularExpression();
     }
 
     @Override
     public BsonDbPointer readDBPointer() {
-        return (BsonDbPointer) stage().value();
+        return stage().value();
     }
 
     @Override
-    public BsonDbPointer readDBPointer(final String name) {
+    public BsonDbPointer readDBPointer(String name) {
         verifyName(name);
         return readDBPointer();
     }
@@ -257,33 +257,33 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readString() {
-        return (String) stage().value();
+        return stage().value();
     }
 
     @Override
-    public String readString(final String name) {
+    public String readString(String name) {
         verifyName(name);
         return readString();
     }
 
     @Override
     public String readSymbol() {
-        return (String) stage().value();
+        return stage().value();
     }
 
     @Override
-    public String readSymbol(final String name) {
+    public String readSymbol(String name) {
         verifyName(name);
         return readSymbol();
     }
 
     @Override
     public BsonTimestamp readTimestamp() {
-        return (BsonTimestamp) stage().value();
+        return stage().value();
     }
 
     @Override
-    public BsonTimestamp readTimestamp(final String name) {
+    public BsonTimestamp readTimestamp(String name) {
         verifyName(name);
         return readTimestamp();
     }
@@ -293,7 +293,7 @@ public class DocumentReader implements BsonReader {
     }
 
     @Override
-    public void readUndefined(final String name) {
+    public void readUndefined(String name) {
         verifyName(name);
         readUndefined();
     }
@@ -316,7 +316,7 @@ public class DocumentReader implements BsonReader {
     public void close() {
     }
 
-    protected void verifyName(final String expectedName) {
+    protected void verifyName(String expectedName) {
         readBsonType();
         String actualName = readName();
         if (!actualName.equals(expectedName)) {
@@ -329,16 +329,16 @@ public class DocumentReader implements BsonReader {
         return this.readerState;
     }
 
-    ReaderState nextStage(final ReaderState nextReaderState) {
+    ReaderState nextStage(ReaderState nextReaderState) {
         readerState = nextReaderState;
         return readerState;
     }
 
-    void reset(final ReaderState bookmark) {
+    void reset(ReaderState bookmark) {
         readerState = bookmark;
     }
 
-    BsonType getBsonType(final Object o) {
+    BsonType getBsonType(Object o) {
         BsonType bsonType = TYPE_MAP.get(o.getClass());
         if (bsonType == null) {
             if (o instanceof List) {

@@ -14,7 +14,7 @@ public class StringDates {
         return id;
     }
 
-    public void setId(final ObjectId id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class StringDates {
         return string;
     }
 
-    public void setString(final String string) {
+    public void setString(String string) {
         this.string = string;
     }
 }

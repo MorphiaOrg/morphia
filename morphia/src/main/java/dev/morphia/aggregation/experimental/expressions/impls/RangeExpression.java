@@ -9,14 +9,14 @@ public class RangeExpression extends Expression {
     private final int end;
     private Integer step;
 
-    public RangeExpression(final int start, final int end) {
+    public RangeExpression(int start, int end) {
         super("$range");
         this.start = start;
         this.end = end;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartArray(getOperation());
         writer.writeInt32(start);
@@ -28,7 +28,7 @@ public class RangeExpression extends Expression {
         writer.writeEndDocument();
     }
 
-    public RangeExpression step(final Integer step) {
+    public RangeExpression step(Integer step) {
         this.step = step;
         return this;
     }

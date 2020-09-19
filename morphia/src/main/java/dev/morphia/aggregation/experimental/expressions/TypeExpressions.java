@@ -22,7 +22,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $convert
      */
-    public static Expression convert(final Expression input, final ConvertType to) {
+    public static Expression convert(Expression input, ConvertType to) {
         return new ConvertExpression(input, to);
     }
 
@@ -33,7 +33,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toBool
      */
-    public static Expression toBool(final Expression input) {
+    public static Expression toBool(Expression input) {
         return new Expression("$toBool", input);
     }
 
@@ -44,7 +44,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toDate
      */
-    public static Expression toDate(final Expression input) {
+    public static Expression toDate(Expression input) {
         return new Expression("$toDate", input);
     }
 
@@ -55,7 +55,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toDecimal
      */
-    public static Expression toDecimal(final Expression input) {
+    public static Expression toDecimal(Expression input) {
         return new Expression("$toDecimal", input);
     }
 
@@ -66,7 +66,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toDouble
      */
-    public static Expression toDouble(final Expression input) {
+    public static Expression toDouble(Expression input) {
         return new Expression("$toDouble", input);
     }
 
@@ -77,7 +77,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toInt
      */
-    public static Expression toInt(final Expression input) {
+    public static Expression toInt(Expression input) {
         return new Expression("$toInt", input);
     }
 
@@ -88,7 +88,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toLong
      */
-    public static Expression toLong(final Expression input) {
+    public static Expression toLong(Expression input) {
         return new Expression("$toLong", input);
     }
 
@@ -99,7 +99,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toObjectId
      */
-    public static Expression toObjectId(final Expression input) {
+    public static Expression toObjectId(Expression input) {
         return new Expression("$toObjectId", input);
     }
 
@@ -110,7 +110,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toString
      */
-    public static Expression toString(final Expression input) {
+    public static Expression toString(Expression input) {
         return StringExpressions.toString(input);
     }
 
@@ -121,7 +121,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $type
      */
-    public static Expression type(final Expression input) {
+    public static Expression type(Expression input) {
         return new Expression("$type", input);
     }
 }

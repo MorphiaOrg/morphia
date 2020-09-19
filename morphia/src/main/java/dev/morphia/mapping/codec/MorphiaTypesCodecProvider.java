@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unchecked")
 public class MorphiaTypesCodecProvider implements CodecProvider {
-    private Mapper mapper;
+    private final Mapper mapper;
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
 
     /**
@@ -23,7 +23,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
      *
      * @param mapper the mapper to use
      */
-    public MorphiaTypesCodecProvider(final Mapper mapper) {
+    public MorphiaTypesCodecProvider(Mapper mapper) {
         this.mapper = mapper;
 
         addCodec(new ClassCodec());
@@ -47,12 +47,12 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
             short.class, Short.class).forEach(c -> addCodec(new TypedArrayCodec(c, mapper)));
     }
 
-    protected <T> void addCodec(final Codec<T> codec) {
+    protected <T> void addCodec(Codec<T> codec) {
         codecs.put(codec.getEncoderClass(), codec);
     }
 
     @Override
-    public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
+    public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         final Codec<T> codec = (Codec<T>) codecs.get(clazz);
         if (codec != null) {
             return codec;

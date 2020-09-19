@@ -14,24 +14,24 @@ import org.bson.codecs.EncoderContext;
  * Defines a codec for Query instances
  */
 public class LegacyQueryCodec implements Codec<LegacyQuery> {
-    private Mapper mapper;
+    private final Mapper mapper;
 
     /**
      * Creates a codec
      *
      * @param mapper the mapper to use
      */
-    public LegacyQueryCodec(final Mapper mapper) {
+    public LegacyQueryCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 
     @Override
-    public LegacyQuery decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public LegacyQuery decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override
-    public void encode(final BsonWriter writer, final LegacyQuery value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, LegacyQuery value, EncoderContext encoderContext) {
         mapper.getCodecRegistry().get(Document.class).encode(writer, value.toDocument(), encoderContext);
     }
 

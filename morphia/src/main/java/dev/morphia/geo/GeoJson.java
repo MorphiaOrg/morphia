@@ -29,7 +29,7 @@ public final class GeoJson {
      * @see dev.morphia.geo.GeoJson#polygon(LineString, LineString...)
      * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
      */
-    public static Polygon polygon(final Point... points) {
+    public static Polygon polygon(Point... points) {
         LineString exteriorBoundary = lineString(points);
         ensurePolygonIsClosed(exteriorBoundary);
         return new Polygon(exteriorBoundary);
@@ -43,11 +43,11 @@ public final class GeoJson {
      * @mongodb.server.release 2.4
      * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
      */
-    public static LineString lineString(final Point... points) {
+    public static LineString lineString(Point... points) {
         return new LineString(points);
     }
 
-    private static void ensurePolygonIsClosed(final LineString points) {
+    private static void ensurePolygonIsClosed(LineString points) {
         int size = points.getCoordinates().size();
         if (size > 0 && !points.getCoordinates().get(0).equals(points.getCoordinates().get(size - 1))) {
             throw new IllegalArgumentException("A polygon requires the starting point to be the same as the end to ensure a closed "
@@ -67,9 +67,9 @@ public final class GeoJson {
      * @mongodb.server.release 2.4
      * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
      */
-    public static Polygon polygon(final LineString exteriorBoundary, final LineString... interiorBoundaries) {
+    public static Polygon polygon(LineString exteriorBoundary, LineString... interiorBoundaries) {
         ensurePolygonIsClosed(exteriorBoundary);
-        for (final LineString boundary : interiorBoundaries) {
+        for (LineString boundary : interiorBoundaries) {
             ensurePolygonIsClosed(boundary);
         }
         return new Polygon(exteriorBoundary, interiorBoundaries);
@@ -83,7 +83,7 @@ public final class GeoJson {
      * @mongodb.server.release 2.6
      * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
      */
-    public static MultiPoint multiPoint(final Point... points) {
+    public static MultiPoint multiPoint(Point... points) {
         return new MultiPoint(points);
     }
 
@@ -95,7 +95,7 @@ public final class GeoJson {
      * @mongodb.server.release 2.6
      * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
      */
-    public static MultiLineString multiLineString(final LineString... lines) {
+    public static MultiLineString multiLineString(LineString... lines) {
         return new MultiLineString(lines);
     }
 
@@ -107,7 +107,7 @@ public final class GeoJson {
      * @mongodb.server.release 2.6
      * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
      */
-    public static MultiPolygon multiPolygon(final Polygon... polygons) {
+    public static MultiPolygon multiPolygon(Polygon... polygons) {
         return new MultiPolygon(polygons);
     }
 
@@ -119,7 +119,7 @@ public final class GeoJson {
      * @mongodb.server.release 2.6
      * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
      */
-    public static GeometryCollection geometryCollection(final Geometry... geometries) {
+    public static GeometryCollection geometryCollection(Geometry... geometries) {
         return new GeometryCollection(geometries);
     }
 
@@ -128,9 +128,9 @@ public final class GeoJson {
      * @morphia.internal
      * @return the converted values
      */
-    public static List<Position> convertPoints(final List<Point> values) {
+    public static List<Position> convertPoints(List<Point> values) {
         final ArrayList<Position> positions = new ArrayList<Position>();
-        for (final Point point : values) {
+        for (Point point : values) {
             positions.add(new Position(point.getLongitude(), point.getLatitude()));
         }
 
@@ -142,9 +142,9 @@ public final class GeoJson {
      * @morphia.internal
      * @return the converted values
      */
-    public static List<List<Position>> convertLineStrings(final List<LineString> values) {
+    public static List<List<Position>> convertLineStrings(List<LineString> values) {
         final List<List<Position>> positions = new ArrayList<List<Position>>();
-        for (final LineString line : values) {
+        for (LineString line : values) {
             positions.add(convertPoints(line.getCoordinates()));
         }
 

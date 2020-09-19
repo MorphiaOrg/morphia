@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class CollectionStatsCodec extends StageCodec<CollectionStats> {
-    public CollectionStatsCodec(final Mapper mapper) {
+    public CollectionStatsCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class CollectionStatsCodec extends StageCodec<CollectionStats> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final CollectionStats value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, CollectionStats value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         if (value.getHistogram()) {
             writer.writeStartDocument("latencyStats");

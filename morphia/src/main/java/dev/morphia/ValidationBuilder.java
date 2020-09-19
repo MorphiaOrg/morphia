@@ -28,7 +28,7 @@ public class ValidationBuilder extends AnnotationBuilder<Validation> implements 
      * @param action Do not use.
      * @return Do not use.
      */
-    public ValidationBuilder action(final ValidationAction action) {
+    public ValidationBuilder action(ValidationAction action) {
         put("action", action);
         return this;
     }
@@ -42,7 +42,7 @@ public class ValidationBuilder extends AnnotationBuilder<Validation> implements 
      * @param level Do not use.
      * @return Do not use.
      */
-    public ValidationBuilder level(final ValidationLevel level) {
+    public ValidationBuilder level(ValidationLevel level) {
         put("level", level);
         return this;
     }
@@ -66,7 +66,7 @@ public class ValidationBuilder extends AnnotationBuilder<Validation> implements 
      * @param value Do not use.
      * @return Do not use.
      */
-    public ValidationBuilder value(final String value) {
+    public ValidationBuilder value(String value) {
         put("value", value);
         return this;
     }

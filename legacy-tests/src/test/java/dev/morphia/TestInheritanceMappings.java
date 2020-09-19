@@ -187,7 +187,7 @@ public class TestInheritanceMappings extends TestBase {
             return id;
         }
 
-        public void setId(final T id) {
+        public void setId(T id) {
             this.id = id;
         }
 
@@ -195,7 +195,7 @@ public class TestInheritanceMappings extends TestBase {
             return k;
         }
 
-        public void setK(final K k) {
+        public void setK(K k) {
             this.k = k;
         }
     }
@@ -213,7 +213,7 @@ public class TestInheritanceMappings extends TestBase {
             return id;
         }
 
-        public void setId(final T id) {
+        public void setId(T id) {
             this.id = id;
         }
     }
@@ -249,32 +249,32 @@ public class TestInheritanceMappings extends TestBase {
         }
 
         @Override
-        public boolean containsKey(final Object key) {
+        public boolean containsKey(Object key) {
             return realMap.containsKey(key);
         }
 
         @Override
-        public boolean containsValue(final Object value) {
+        public boolean containsValue(Object value) {
             return realMap.containsValue(value);
         }
 
         @Override
-        public String get(final Object key) {
+        public String get(Object key) {
             return realMap.get(key);
         }
 
         @Override
-        public String put(final String key, final String value) {
+        public String put(String key, String value) {
             return realMap.put(key, value);
         }
 
         @Override
-        public String remove(final Object key) {
+        public String remove(Object key) {
             return realMap.remove(key);
         }
 
         @Override
-        public void putAll(final Map<? extends String, ? extends String> m) {
+        public void putAll(Map<? extends String, ? extends String> m) {
             realMap.putAll(m);
         }
 

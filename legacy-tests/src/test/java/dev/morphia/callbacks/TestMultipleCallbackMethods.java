@@ -51,7 +51,7 @@ public class TestMultipleCallbackMethods extends TestBase {
             return foo;
         }
 
-        void setFoo(final int foo) {
+        void setFoo(int foo) {
             this.foo = foo;
         }
 

@@ -12,15 +12,15 @@ import static java.lang.String.format;
 class LogicalFilter extends Filter {
     private final List<Filter> filters;
 
-    LogicalFilter(final String name, final Filter... filters) {
+    LogicalFilter(String name, Filter... filters) {
         super(name);
         this.filters = Arrays.asList(filters);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartArray(getFilterName());
-        for (final Filter filter : filters) {
+        for (Filter filter : filters) {
             writer.writeStartDocument();
             filter.encode(mapper, writer, context);
             writer.writeEndDocument();
@@ -29,18 +29,18 @@ class LogicalFilter extends Filter {
     }
 
     @Override
-    public Filter entityType(final Class<?> type) {
+    public Filter entityType(Class<?> type) {
         super.entityType(type);
-        for (final Filter filter : filters) {
+        for (Filter filter : filters) {
             filter.entityType(type);
         }
         return this;
     }
 
     @Override
-    public Filter isValidating(final boolean validate) {
+    public Filter isValidating(boolean validate) {
         super.isValidating(validate);
-        for (final Filter filter : filters) {
+        for (Filter filter : filters) {
             filter.isValidating(validate);
         }
         return this;

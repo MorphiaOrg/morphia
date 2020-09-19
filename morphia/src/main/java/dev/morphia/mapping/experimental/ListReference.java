@@ -19,11 +19,11 @@ public class ListReference<T> extends CollectionReference<List<T>> {
      * @param mappedClass the MappedClass for the entity type
      * @morphia.internal
      */
-    public ListReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
+    public ListReference(Datastore datastore, MappedClass mappedClass, List ids) {
         super(datastore, mappedClass, ids);
     }
 
-    ListReference(final List<T> values) {
+    ListReference(List<T> values) {
         this.values = values;
     }
 
@@ -33,7 +33,7 @@ public class ListReference<T> extends CollectionReference<List<T>> {
     }
 
     @Override
-    protected void setValues(final List ids) {
+    protected void setValues(List ids) {
         values = new ArrayList<>();
         values.addAll(ids);
         resolve();

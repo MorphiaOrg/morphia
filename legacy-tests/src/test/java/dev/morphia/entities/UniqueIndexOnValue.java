@@ -22,15 +22,15 @@ public class UniqueIndexOnValue {
     public UniqueIndexOnValue() {
     }
 
-    public UniqueIndexOnValue(final String name) {
+    public UniqueIndexOnValue(String name) {
         this.name = name;
     }
 
-    public void setValue(final long value) {
+    public void setValue(long value) {
         this.value = value;
     }
 
-    public void setUnique(final long value) {
+    public void setUnique(long value) {
         this.unique = value;
     }
 }

@@ -19,14 +19,14 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     private Document options;
     private CoordinateReferenceSystem crs;
 
-    private Geo2dSphereCriteria(final Mapper mapper, final String field, final dev.morphia.query.FilterOperator operator,
-                                final Geometry geometry, final MappedClass mappedClass, final boolean validating) {
+    private Geo2dSphereCriteria(Mapper mapper, String field, dev.morphia.query.FilterOperator operator,
+                                Geometry geometry, MappedClass mappedClass, boolean validating) {
         super(mapper, field, operator, geometry, mappedClass, validating);
         this.geometry = geometry;
     }
 
-    static Geo2dSphereCriteria geo(final Mapper mapper, final String field, final dev.morphia.query.FilterOperator operator,
-                                   final Geometry value, final MappedClass mappedClass, final boolean validating) {
+    static Geo2dSphereCriteria geo(Mapper mapper, String field, dev.morphia.query.FilterOperator operator,
+                                   Geometry value, MappedClass mappedClass, boolean validating) {
         return new Geo2dSphereCriteria(mapper, field, operator, value, mappedClass, validating);
     }
 
@@ -57,16 +57,16 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         return new Document(getField(), query);
     }
 
-    Geo2dSphereCriteria addCoordinateReferenceSystem(final CoordinateReferenceSystem crs) {
+    Geo2dSphereCriteria addCoordinateReferenceSystem(CoordinateReferenceSystem crs) {
         this.crs = crs;
         return this;
     }
 
-    Geo2dSphereCriteria maxDistance(final Double maxDistance) {
+    Geo2dSphereCriteria maxDistance(Double maxDistance) {
         return manageOption("$maxDistance", maxDistance);
     }
 
-    private Geo2dSphereCriteria manageOption(final String key, final Object value) {
+    private Geo2dSphereCriteria manageOption(String key, Object value) {
         if (options == null) {
             options = new Document();
         }
@@ -79,7 +79,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         return this;
     }
 
-    Geo2dSphereCriteria minDistance(final Double minDistance) {
+    Geo2dSphereCriteria minDistance(Double minDistance) {
         return manageOption("$minDistance", minDistance);
     }
 }

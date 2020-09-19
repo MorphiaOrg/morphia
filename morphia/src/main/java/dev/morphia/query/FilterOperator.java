@@ -25,21 +25,21 @@ public enum FilterOperator {
 
     WITHIN_CIRCLE("$center") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             throw new UnsupportedOperationException(Sofia.filterMappingNotSupported(WITHIN_CIRCLE));
         }
     },
 
     WITHIN_CIRCLE_SPHERE("$centerSphere") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             throw new UnsupportedOperationException(Sofia.filterMappingNotSupported(WITHIN_CIRCLE_SPHERE));
         }
     },
 
     WITHIN_BOX("$box") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             if (!(value instanceof Point[])) {
                 throw new IllegalArgumentException(Sofia.illegalArgument(value.getClass().getCanonicalName(),
                     Point[].class.getCanonicalName()));
@@ -51,49 +51,49 @@ public enum FilterOperator {
 
     EQUAL("$eq", "=", "==") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.eq(prop, value);
         }
     },
 
     NOT_EQUAL("$ne", "!=", "<>") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.ne(prop, value);
         }
     },
 
     GREATER_THAN("$gt", ">") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.gt(prop, value);
         }
     },
 
     GREATER_THAN_OR_EQUAL("$gte", ">=") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.gte(prop, value);
         }
     },
 
     LESS_THAN("$lt", "<") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.lt(prop, value);
         }
     },
 
     LESS_THAN_OR_EQUAL("$lte", "<=") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.lte(prop, value);
         }
     },
 
     EXISTS("$exists", "exists") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             Filter exists = Filters.exists(prop);
             if (Boolean.FALSE.equals(value)) {
                 exists.not();
@@ -104,21 +104,21 @@ public enum FilterOperator {
 
     TYPE("$type", "type") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.type(prop, (Type) value);
         }
     },
 
     NOT("$not") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             throw new UnsupportedOperationException(Sofia.translationNotCurrentlySupported());
         }
     },
 
     MOD("$mod", "mod") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             long[] values = (long[]) value;
             return Filters.mod(prop, values[0], values[1]);
         }
@@ -126,35 +126,35 @@ public enum FilterOperator {
 
     SIZE("$size", "size") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.size(prop, (Integer) value);
         }
     },
 
     IN("$in", "in") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.in(prop, (Iterable<?>) value);
         }
     },
 
     NOT_IN("$nin", "nin") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.nin(prop, value);
         }
     },
 
     ALL("$all", "all") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.all(prop, value);
         }
     },
 
     ELEMENT_MATCH("$elemMatch", "elem", "elemMatch") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             throw new UnsupportedOperationException(Sofia.filterMappingNotSupported(ELEMENT_MATCH));
             //            return Filters.elemMatch(prop, (Query<?>) value);
         }
@@ -162,7 +162,7 @@ public enum FilterOperator {
 
     WHERE("$where") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.where(value.toString());
         }
     },
@@ -170,21 +170,21 @@ public enum FilterOperator {
     // GEO
     NEAR("$near", "near") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.near(prop, (Point) convertToGeometry(value));
         }
     },
 
     NEAR_SPHERE("$nearSphere") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.nearSphere(prop, (Point) convertToGeometry(value));
         }
     },
 
     GEO_NEAR("$geoNear", "geoNear") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             throw new UnsupportedOperationException("An aggregation operator called in a query context?");
         }
     },
@@ -192,7 +192,7 @@ public enum FilterOperator {
     GEO_WITHIN("$geoWithin", "geoWithin") {
         @Override
         @SuppressWarnings("removal")
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             if (value instanceof Shape) {
                 Shape shape = (Shape) value;
                 if (shape instanceof dev.morphia.query.Shape.Center) {
@@ -220,7 +220,7 @@ public enum FilterOperator {
 
     INTERSECTS("$geoIntersects", "geoIntersects") {
         @Override
-        public Filter apply(final String prop, final Object value) {
+        public Filter apply(String prop, Object value) {
             return Filters.geoIntersects(prop, convertToGeometry(value));
         }
     };
@@ -228,12 +228,12 @@ public enum FilterOperator {
     private final String value;
     private final List<String> filters;
 
-    FilterOperator(final String val, final String... filterValues) {
+    FilterOperator(String val, String... filterValues) {
         value = val;
         filters = Arrays.asList(filterValues);
     }
 
-    private static Geometry convertToGeometry(final Object value) {
+    private static Geometry convertToGeometry(Object value) {
         Geometry converted;
         if (value instanceof double[]) {
             final double[] coordinates = (double[]) value;
@@ -253,7 +253,7 @@ public enum FilterOperator {
      * @param operator the String to convert
      * @return the FilterOperator
      */
-    public static FilterOperator fromString(final String operator) {
+    public static FilterOperator fromString(String operator) {
         final String filter = operator.trim().toLowerCase();
         for (FilterOperator filterOperator : FilterOperator.values()) {
             if (filterOperator.matches(filter)) {
@@ -279,7 +279,7 @@ public enum FilterOperator {
      * @param filter the filter to check
      * @return true if the given filter matches the filters on this FilterOperator
      */
-    public boolean matches(final String filter) {
+    public boolean matches(String filter) {
         return filter != null && filters.contains(filter.trim().toLowerCase());
     }
 

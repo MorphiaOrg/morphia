@@ -64,7 +64,7 @@ public class MappedClass {
      * @param entityModel the ClassModel
      * @param mapper      the Mapper to use
      */
-    public MappedClass(final EntityModel entityModel, final Mapper mapper) {
+    public MappedClass(EntityModel entityModel, Mapper mapper) {
         this.entityModel = entityModel;
         type = entityModel.getType();
 
@@ -105,9 +105,9 @@ public class MappedClass {
      * @param clazz The Annotation to find.
      * @return the list of fields
      */
-    public List<MappedField> getFields(final Class<? extends Annotation> clazz) {
+    public List<MappedField> getFields(Class<? extends Annotation> clazz) {
         final List<MappedField> results = new ArrayList<>();
-        for (final MappedField mf : fields) {
+        for (MappedField mf : fields) {
             if (mf.hasAnnotation(clazz)) {
                 results.add(mf);
             }
@@ -150,8 +150,8 @@ public class MappedClass {
      * @param document the document to use
      * @param mapper   the Mapper to use
      */
-    public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
-                                     final Mapper mapper) {
+    public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
+                                     Mapper mapper) {
         entityModel.callLifecycleMethods(event, entity, document, mapper);
     }
 
@@ -161,7 +161,7 @@ public class MappedClass {
      * @param type the event type
      * @return true if this annotation has been found
      */
-    public boolean hasLifecycle(final Class<? extends Annotation> type) {
+    public boolean hasLifecycle(Class<? extends Annotation> type) {
         return entityModel.hasLifecycle(type);
     }
 
@@ -173,7 +173,7 @@ public class MappedClass {
      * @return the instance if it was found or null
      * @morphia.internal
      */
-    public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
+    public <T extends Annotation> T getAnnotation(Class<T> clazz) {
         return entityModel.getAnnotation(clazz);
     }
 
@@ -204,7 +204,7 @@ public class MappedClass {
      * @param storedName the name to search for
      * @return true if that mapped field name is found
      */
-    public MappedField getMappedField(final String storedName) {
+    public MappedField getMappedField(String storedName) {
         return fields.stream()
                      .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName)
                                             || mappedField.getJavaFieldName().equals(storedName))
@@ -218,8 +218,8 @@ public class MappedClass {
      * @param name the Java field name to search for
      * @return the MappedField for the named Java field
      */
-    public MappedField getMappedFieldByJavaField(final String name) {
-        for (final MappedField mf : fields) {
+    public MappedField getMappedFieldByJavaField(String name) {
+        for (MappedField mf : fields) {
             if (name.equals(mf.getJavaFieldName())) {
                 return mf;
             }
@@ -249,7 +249,7 @@ public class MappedClass {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -287,7 +287,7 @@ public class MappedClass {
      *
      * @param mapper the Mapper to use for validation
      */
-    public void validate(final Mapper mapper) {
+    public void validate(Mapper mapper) {
         MorphiaInstanceCreator factory = entityModel.getInstanceCreatorFactory()
                                                     .create();
         new MappingValidator(factory).validate(mapper, this);
@@ -303,7 +303,7 @@ public class MappedClass {
     /**
      * Discovers interesting (that we care about) things about the class.
      */
-    private void discover(final Mapper mapper) {
+    private void discover(Mapper mapper) {
         Class<?> superclass = type.getSuperclass();
         if (superclass != null && !superclass.equals(Object.class)) {
             superClass = mapper.getMappedClass(superclass);
@@ -325,7 +325,7 @@ public class MappedClass {
         update();
     }
 
-    private void addSubtype(final MappedClass mappedClass) {
+    private void addSubtype(MappedClass mappedClass) {
         subtypes.add(mappedClass);
     }
 

@@ -33,7 +33,7 @@ public final class FindAndModifyOptions extends ModifyOptions {
      * @return this
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    public FindAndModifyOptions returnNew(final boolean returnNew) {
+    public FindAndModifyOptions returnNew(boolean returnNew) {
         returnDocument(returnNew ? ReturnDocument.AFTER : ReturnDocument.BEFORE);
         return this;
     }

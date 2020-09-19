@@ -178,32 +178,32 @@ public class TestDocumentWriter extends TestBase {
 
     }
 
-    private void check(final DocumentWriter writer, final int docs, final int arrays) {
+    private void check(DocumentWriter writer, int docs, int arrays) {
         assertEquals(docs, writer.getDocsLevel());
         assertEquals(arrays, writer.getArraysLevel());
     }
 
-    private void endArray(final DocumentWriter writer) {
+    private void endArray(DocumentWriter writer) {
         writer.writeEndArray();
         assertEquals(--arrays, writer.getArraysLevel());
     }
 
-    private void endDoc(final DocumentWriter writer) {
+    private void endDoc(DocumentWriter writer) {
         writer.writeEndDocument();
         assertEquals(--docs, writer.getDocsLevel());
     }
 
-    private void startArray(final DocumentWriter writer) {
+    private void startArray(DocumentWriter writer) {
         writer.writeStartArray();
         assertEquals(++arrays, writer.getArraysLevel());
     }
 
-    private void startArray(final DocumentWriter writer, final String name) {
+    private void startArray(DocumentWriter writer, String name) {
         writer.writeStartArray(name);
         assertEquals(++arrays, writer.getArraysLevel());
     }
 
-    private void startDoc(final DocumentWriter writer) {
+    private void startDoc(DocumentWriter writer) {
         writer.writeStartDocument();
         assertEquals(++docs, writer.getDocsLevel());
     }

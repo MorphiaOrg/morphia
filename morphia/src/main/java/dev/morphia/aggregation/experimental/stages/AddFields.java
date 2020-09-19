@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 /**
  * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly added
@@ -14,7 +14,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression
  * @aggregation.expression $addFields
  */
 public class AddFields extends Stage {
-    private DocumentExpression document = Expressions.of();
+    private final DocumentExpression document = Expressions.of();
 
     protected AddFields() {
         super("$addFields");
@@ -36,7 +36,7 @@ public class AddFields extends Stage {
      * @param value the value expression
      * @return this
      */
-    public AddFields field(final String name, final Expression value) {
+    public AddFields field(String name, Expression value) {
         document.field(name, value);
         return this;
     }

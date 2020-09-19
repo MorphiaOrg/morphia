@@ -41,8 +41,8 @@ public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
      * @param codecRegistry the parent registry
      * @param propertyCodecProviders a list of providers
      */
-    public PropertyCodecRegistryImpl(final Codec<?> pojoCodec, final CodecRegistry codecRegistry,
-                                     final List<PropertyCodecProvider> propertyCodecProviders) {
+    public PropertyCodecRegistryImpl(Codec<?> pojoCodec, CodecRegistry codecRegistry,
+                                     List<PropertyCodecProvider> propertyCodecProviders) {
         List<PropertyCodecProvider> augmentedProviders = new ArrayList<PropertyCodecProvider>();
         if (propertyCodecProviders != null) {
             augmentedProviders.addAll(propertyCodecProviders);
@@ -55,7 +55,7 @@ public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
     }
 
     @Override
-    public <S> Codec<S> get(final TypeWithTypeParameters<S> type) {
+    public <S> Codec<S> get(TypeWithTypeParameters<S> type) {
         for (PropertyCodecProvider propertyCodecProvider : propertyCodecProviders) {
             Codec<S> codec = propertyCodecProvider.get(type, this);
             if (codec != null) {
@@ -69,14 +69,14 @@ public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
         private final CodecRegistry codecRegistry;
         private final Codec<?> codec;
 
-        FallbackPropertyCodecProvider(final Codec<?> codec, final CodecRegistry codecRegistry) {
+        FallbackPropertyCodecProvider(Codec<?> codec, CodecRegistry codecRegistry) {
             this.codec = codec;
             this.codecRegistry = codecRegistry;
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public <S> Codec<S> get(final TypeWithTypeParameters<S> type, final PropertyCodecRegistry propertyCodecRegistry) {
+        public <S> Codec<S> get(TypeWithTypeParameters<S> type, PropertyCodecRegistry propertyCodecRegistry) {
             Class<S> clazz = type.getType();
             if (clazz == codec.getEncoderClass()) {
                 return (Codec<S>) codec;

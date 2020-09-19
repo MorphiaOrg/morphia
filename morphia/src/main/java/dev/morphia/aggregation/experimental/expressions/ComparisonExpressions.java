@@ -23,7 +23,7 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $cmp
      */
-    public static Expression cmp(final Expression first, final Expression second) {
+    public static Expression cmp(Expression first, Expression second) {
         return new Expression("$cmp", List.of(first, second));
     }
 
@@ -38,7 +38,7 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $gt
      */
-    public static Expression gt(final Expression first, final Expression second) {
+    public static Expression gt(Expression first, Expression second) {
         return new Expression("$gt", List.of(first, second));
     }
 
@@ -53,7 +53,7 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $gte
      */
-    public static Expression gte(final Expression first, final Expression second) {
+    public static Expression gte(Expression first, Expression second) {
         return new Expression("$gte", List.of(first, second));
     }
 
@@ -68,7 +68,7 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $lte
      */
-    public static Expression lte(final Expression first, final Expression second) {
+    public static Expression lte(Expression first, Expression second) {
         return new Expression("$lte", List.of(first, second));
     }
 
@@ -80,7 +80,7 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $eq
      */
-    public static Expression eq(final Expression first, final Expression second) {
+    public static Expression eq(Expression first, Expression second) {
         return new Expression("$eq", List.of(first, second));
     }
 
@@ -92,7 +92,7 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $lt
      */
-    public static Expression lt(final Expression first, final Expression second) {
+    public static Expression lt(Expression first, Expression second) {
         return new Expression("$lt", List.of(first, second));
     }
 
@@ -104,7 +104,7 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $ne
      */
-    public static Expression ne(final Expression first, final Expression second) {
+    public static Expression ne(Expression first, Expression second) {
         return new Expression("$ne", List.of(first, second));
     }
 

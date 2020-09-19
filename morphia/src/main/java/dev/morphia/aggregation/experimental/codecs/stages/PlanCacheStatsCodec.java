@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class PlanCacheStatsCodec extends StageCodec<PlanCacheStats> {
-    public PlanCacheStatsCodec(final Mapper mapper) {
+    public PlanCacheStatsCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class PlanCacheStatsCodec extends StageCodec<PlanCacheStats> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final PlanCacheStats value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, PlanCacheStats value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeEndDocument();
     }

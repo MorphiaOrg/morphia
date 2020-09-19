@@ -19,15 +19,15 @@ class FieldCriteria extends AbstractCriteria {
     private final FilterOperator operator;
     private final Object value;
     private final boolean not;
-    private Mapper mapper;
+    private final Mapper mapper;
 
-    FieldCriteria(final Mapper mapper, final String field, final FilterOperator op, final Object value, final MappedClass mappedClass,
-                  final boolean validating) {
+    FieldCriteria(Mapper mapper, String field, FilterOperator op, Object value, MappedClass mappedClass,
+                  boolean validating) {
         this(mapper, field, op, value, false, mappedClass, validating);
     }
 
-    FieldCriteria(final Mapper mapper, final String fieldName, final FilterOperator op, final Object value,
-                  final boolean not, final MappedClass mappedClass, final boolean validating) {
+    FieldCriteria(Mapper mapper, String fieldName, FilterOperator op, Object value,
+                  boolean not, MappedClass mappedClass, boolean validating) {
         this.mapper = mapper;
         final PathTarget pathTarget = new PathTarget(mapper, mappedClass,
             fieldName, validating);

@@ -23,12 +23,12 @@ public class EmbeddedSubtype extends EmbeddedType {
         return flag;
     }
 
-    public void setFlag(final Boolean flag) {
+    public void setFlag(Boolean flag) {
         this.flag = flag;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

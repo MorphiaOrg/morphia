@@ -59,78 +59,78 @@ public class AggregationImpl<T> implements Aggregation<T> {
      * @param collection the source collection
      * @morphia.internal
      */
-    public AggregationImpl(final Datastore datastore, final MongoCollection<T> collection) {
+    public AggregationImpl(Datastore datastore, MongoCollection<T> collection) {
         this.datastore = datastore;
         this.collection = collection;
     }
 
     @Override
-    public Aggregation<T> addFields(final AddFields fields) {
+    public Aggregation<T> addFields(AddFields fields) {
         stages.add(fields);
         return this;
     }
 
     @Override
-    public Aggregation<T> autoBucket(final AutoBucket bucket) {
+    public Aggregation<T> autoBucket(AutoBucket bucket) {
         stages.add(bucket);
         return this;
     }
 
     @Override
-    public Aggregation<T> bucket(final Bucket bucket) {
+    public Aggregation<T> bucket(Bucket bucket) {
         stages.add(bucket);
         return this;
     }
 
     @Override
-    public Aggregation<T> collStats(final CollectionStats stats) {
+    public Aggregation<T> collStats(CollectionStats stats) {
         stages.add(stats);
         return this;
     }
 
     @Override
-    public Aggregation<T> count(final String name) {
+    public Aggregation<T> count(String name) {
         stages.add(new Count(name));
         return this;
     }
 
     @Override
-    public Aggregation<T> currentOp(final CurrentOp currentOp) {
+    public Aggregation<T> currentOp(CurrentOp currentOp) {
         stages.add(currentOp);
         return this;
     }
 
     @Override
-    public <R> MorphiaCursor<R> execute(final Class<R> resultType) {
+    public <R> MorphiaCursor<R> execute(Class<R> resultType) {
         return new MorphiaCursor<>(collection.aggregate(getDocuments(), resultType).iterator());
     }
 
     @Override
-    public <R> MorphiaCursor<R> execute(final Class<R> resultType, final AggregationOptions options) {
+    public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
         return new MorphiaCursor<>(options.apply(getDocuments(), collection, resultType)
                                           .iterator());
     }
 
     @Override
-    public Aggregation<T> facet(final Facet facet) {
+    public Aggregation<T> facet(Facet facet) {
         stages.add(facet);
         return this;
     }
 
     @Override
-    public Aggregation<T> geoNear(final GeoNear near) {
+    public Aggregation<T> geoNear(GeoNear near) {
         stages.add(near);
         return this;
     }
 
     @Override
-    public Aggregation<T> graphLookup(final GraphLookup lookup) {
+    public Aggregation<T> graphLookup(GraphLookup lookup) {
         stages.add(lookup);
         return this;
     }
 
     @Override
-    public Aggregation<T> group(final Group group) {
+    public Aggregation<T> group(Group group) {
         stages.add(group);
         return this;
     }
@@ -142,32 +142,32 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> limit(final long limit) {
+    public Aggregation<T> limit(long limit) {
         stages.add(Limit.of(limit));
         return this;
     }
 
     @Override
-    public Aggregation<T> lookup(final Lookup lookup) {
+    public Aggregation<T> lookup(Lookup lookup) {
         stages.add(lookup);
         return this;
     }
 
     @Override
-    public Aggregation<T> match(final Filter... filters) {
+    public Aggregation<T> match(Filter... filters) {
         stages.add(Match.on(filters));
         return this;
     }
 
     @Override
-    public <M> void merge(final Merge<M> merge) {
+    public <M> void merge(Merge<M> merge) {
         stages.add(merge);
         collection.aggregate(getDocuments())
                   .toCollection();
     }
 
     @Override
-    public <M> void merge(final Merge<M> merge, final AggregationOptions options) {
+    public <M> void merge(Merge<M> merge, AggregationOptions options) {
         stages.add(merge);
         Class<?> type = merge.getType() != null ? merge.getType() : Document.class;
         options.apply(getDocuments(), collection, type)
@@ -175,14 +175,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public <O> void out(final Out<O> out) {
+    public <O> void out(Out<O> out) {
         stages.add(out);
         collection.aggregate(getDocuments())
                   .toCollection();
     }
 
     @Override
-    public <O> void out(final Out<O> out, final AggregationOptions options) {
+    public <O> void out(Out<O> out, AggregationOptions options) {
         stages.add(out);
         Class<?> type = out.getType() != null ? out.getType() : Document.class;
         options.apply(getDocuments(), collection, type)
@@ -196,61 +196,61 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> project(final Projection projection) {
+    public Aggregation<T> project(Projection projection) {
         stages.add(projection);
         return this;
     }
 
     @Override
-    public Aggregation<T> redact(final Redact redact) {
+    public Aggregation<T> redact(Redact redact) {
         stages.add(redact);
         return this;
     }
 
     @Override
-    public Aggregation<T> replaceRoot(final ReplaceRoot root) {
+    public Aggregation<T> replaceRoot(ReplaceRoot root) {
         stages.add(root);
         return this;
     }
 
     @Override
-    public Aggregation<T> replaceWith(final ReplaceWith with) {
+    public Aggregation<T> replaceWith(ReplaceWith with) {
         stages.add(with);
         return this;
     }
 
     @Override
-    public Aggregation<T> sample(final long sample) {
+    public Aggregation<T> sample(long sample) {
         stages.add(Sample.of(sample));
         return this;
     }
 
     @Override
-    public Aggregation<T> skip(final long skip) {
+    public Aggregation<T> skip(long skip) {
         stages.add(Skip.of(skip));
         return this;
     }
 
     @Override
-    public Aggregation<T> sort(final Sort sort) {
+    public Aggregation<T> sort(Sort sort) {
         stages.add(sort);
         return this;
     }
 
     @Override
-    public Aggregation<T> sortByCount(final Expression sort) {
+    public Aggregation<T> sortByCount(Expression sort) {
         stages.add(SortByCount.on(sort));
         return this;
     }
 
     @Override
-    public Aggregation<T> unset(final Unset unset) {
+    public Aggregation<T> unset(Unset unset) {
         stages.add(unset);
         return this;
     }
 
     @Override
-    public Aggregation<T> unwind(final Unwind unwind) {
+    public Aggregation<T> unwind(Unwind unwind) {
         stages.add(unwind);
         return this;
     }

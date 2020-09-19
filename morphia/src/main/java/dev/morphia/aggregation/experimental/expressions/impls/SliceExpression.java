@@ -11,14 +11,14 @@ public class SliceExpression extends Expression {
     private final int size;
     private Integer position;
 
-    public SliceExpression(final Expression array, final int size) {
+    public SliceExpression(Expression array, int size) {
         super("$slice");
         this.array = array;
         this.size = size;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartArray(getOperation());
         writeUnnamedExpression(mapper, writer, array, encoderContext);
@@ -30,7 +30,7 @@ public class SliceExpression extends Expression {
         writer.writeEndDocument();
     }
 
-    public SliceExpression position(final Integer position) {
+    public SliceExpression position(Integer position) {
         this.position = position;
         return this;
     }

@@ -83,7 +83,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return the iterable instance for the query results
      * @morphia.internal
      */
-    public <T> FindIterable<T> apply(final FindIterable<T> iterable, final Mapper mapper, final Class<?> type) {
+    public <T> FindIterable<T> apply(FindIterable<T> iterable, Mapper mapper, Class<?> type) {
         if (projection != null) {
             iterable.projection(projection.map(mapper, type));
         }
@@ -110,7 +110,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
         if (sort != null) {
             Document mapped = new Document();
             MappedClass mappedClass = mapper.getMappedClass(type);
-            for (final Entry<String, Object> entry : sort.entrySet()) {
+            for (Entry<String, Object> entry : sort.entrySet()) {
                 Object value = entry.getValue();
                 boolean metaScore = value instanceof Document && ((Document) value).get("$meta") != null;
                 mapped.put(new PathTarget(mapper, mappedClass, entry.getKey(), !metaScore).translatedPath(), value);
@@ -126,7 +126,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param batchSize the size
      * @return this
      */
-    public FindOptions batchSize(final int batchSize) {
+    public FindOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
         return this;
     }
@@ -138,7 +138,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      * @since 2.0
      */
-    public FindOptions clientSession(final ClientSession clientSession) {
+    public FindOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -159,7 +159,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param collation the collation
      * @return this
      */
-    public FindOptions collation(final Collation collation) {
+    public FindOptions collation(Collation collation) {
         this.collation = collation;
         return this;
     }
@@ -170,7 +170,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param comment the comment
      * @return this
      */
-    public FindOptions comment(final String comment) {
+    public FindOptions comment(String comment) {
         this.comment = comment;
         return this;
     }
@@ -189,7 +189,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return the new copy
      * @morphia.internal
      */
-    public FindOptions copy(final FindOptions original) {
+    public FindOptions copy(FindOptions original) {
         this.batchSize = original.batchSize;
         this.limit = original.limit;
         this.maxTimeMS = original.maxTimeMS;
@@ -223,7 +223,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param cursorType the type
      * @return this
      */
-    public FindOptions cursorType(final CursorType cursorType) {
+    public FindOptions cursorType(CursorType cursorType) {
         this.cursorType = Assertions.notNull("cursorType", cursorType);
         return this;
     }
@@ -281,7 +281,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param timeUnit the time unit to apply
      * @return the max await time for the operation
      */
-    public long getMaxAwaitTime(final TimeUnit timeUnit) {
+    public long getMaxAwaitTime(TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         return timeUnit.convert(this.maxAwaitTimeMS, TimeUnit.MILLISECONDS);
     }
@@ -290,7 +290,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param timeUnit the time unit to apply
      * @return the max time for the operation
      */
-    public long getMaxTime(final TimeUnit timeUnit) {
+    public long getMaxTime(TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         return timeUnit.convert(this.maxTimeMS, TimeUnit.MILLISECONDS);
     }
@@ -328,13 +328,13 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     }
 
     @Override
-    public FindOptions readConcern(final ReadConcern readConcern) {
+    public FindOptions readConcern(ReadConcern readConcern) {
         this.readConcern = readConcern;
         return this;
     }
 
     @Override
-    public FindOptions readPreference(final ReadPreference readPreference) {
+    public FindOptions readPreference(ReadPreference readPreference) {
         this.readPreference = readPreference;
         return this;
     }
@@ -378,7 +378,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param hint the hint
      * @return this
      */
-    public FindOptions hint(final Document hint) {
+    public FindOptions hint(Document hint) {
         this.hint = hint;
         return this;
     }
@@ -389,7 +389,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param hint the hint
      * @return this
      */
-    public FindOptions hint(final String hint) {
+    public FindOptions hint(String hint) {
         hintString(hint);
         return this;
     }
@@ -408,7 +408,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions hint(final DBObject hint) {
+    public FindOptions hint(DBObject hint) {
         return hint(new Document(hint.toMap()));
     }
 
@@ -463,7 +463,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param limit the limit
      * @return this
      */
-    public FindOptions limit(final int limit) {
+    public FindOptions limit(int limit) {
         this.limit = limit;
         return this;
     }
@@ -486,7 +486,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param max the max
      * @return this
      */
-    public FindOptions max(final Document max) {
+    public FindOptions max(Document max) {
         this.max = max;
         return this;
     }
@@ -497,7 +497,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param hint the hint
      * @return this
      */
-    public FindOptions hintString(final String hint) {
+    public FindOptions hintString(String hint) {
         this.hintString = hint;
         return this;
     }
@@ -509,7 +509,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param timeUnit     the unit
      * @return this
      */
-    public FindOptions maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
+    public FindOptions maxAwaitTime(long maxAwaitTime, TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         Assertions.isTrueArgument("maxAwaitTime > = 0", maxAwaitTime >= 0L);
         this.maxAwaitTimeMS = TimeUnit.MILLISECONDS.convert(maxAwaitTime, timeUnit);
@@ -523,7 +523,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param timeUnit the unit
      * @return this
      */
-    public FindOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
+    public FindOptions maxTime(long maxTime, TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
         Assertions.isTrueArgument("maxTime > = 0", maxTime >= 0L);
         this.maxTimeMS = TimeUnit.MILLISECONDS.convert(maxTime, timeUnit);
@@ -536,7 +536,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param min the min
      * @return this
      */
-    public FindOptions min(final Document min) {
+    public FindOptions min(Document min) {
         this.min = min;
         return this;
     }
@@ -548,7 +548,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions max(final DBObject max) {
+    public FindOptions max(DBObject max) {
         return hint(new Document(max.toMap()));
     }
 
@@ -558,7 +558,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param noCursorTimeout true if the time should be disabled
      * @return this
      */
-    public FindOptions noCursorTimeout(final boolean noCursorTimeout) {
+    public FindOptions noCursorTimeout(boolean noCursorTimeout) {
         this.noCursorTimeout = noCursorTimeout;
         return this;
     }
@@ -569,7 +569,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param oplogReplay if oplog replay is enabled
      * @return this
      */
-    public FindOptions oplogReplay(final boolean oplogReplay) {
+    public FindOptions oplogReplay(boolean oplogReplay) {
         this.oplogReplay = oplogReplay;
         return this;
     }
@@ -580,7 +580,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param partial if partial results for sharded clusters is enabled
      * @return this
      */
-    public FindOptions partial(final boolean partial) {
+    public FindOptions partial(boolean partial) {
         this.partial = partial;
         return this;
     }
@@ -602,7 +602,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions min(final DBObject min) {
+    public FindOptions min(DBObject min) {
         return hint(new Document(min.toMap()));
     }
 
@@ -631,7 +631,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -707,7 +707,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param returnKey true if only the key should be returned
      * @return this
      */
-    public FindOptions returnKey(final boolean returnKey) {
+    public FindOptions returnKey(boolean returnKey) {
         this.returnKey = returnKey;
         return this;
     }
@@ -718,7 +718,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param showRecordId true if the record id should be returned
      * @return this
      */
-    public FindOptions showRecordId(final boolean showRecordId) {
+    public FindOptions showRecordId(boolean showRecordId) {
         this.showRecordId = showRecordId;
         return this;
     }
@@ -729,7 +729,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param skip the count
      * @return this
      */
-    public FindOptions skip(final int skip) {
+    public FindOptions skip(int skip) {
         this.skip = skip;
         return this;
     }
@@ -741,7 +741,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      * @since 2.0
      */
-    public FindOptions sort(final Meta meta) {
+    public FindOptions sort(Meta meta) {
         projection().project(meta);
         return sort(meta.toDatabase());
     }
@@ -752,7 +752,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param sort the sort document
      * @return this
      */
-    public FindOptions sort(final Document sort) {
+    public FindOptions sort(Document sort) {
         this.sort = sort;
         return this;
     }
@@ -763,9 +763,9 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @param sorts the sorts to apply
      * @return this
      */
-    public FindOptions sort(final Sort... sorts) {
+    public FindOptions sort(Sort... sorts) {
         this.sort = new Document();
-        for (final Sort sort : sorts) {
+        for (Sort sort : sorts) {
             this.sort.append(sort.getField(), sort.getOrder());
         }
         return this;

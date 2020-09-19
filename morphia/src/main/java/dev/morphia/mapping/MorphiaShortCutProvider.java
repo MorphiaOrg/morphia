@@ -10,22 +10,22 @@ import org.bson.codecs.configuration.CodecRegistry;
 import java.lang.annotation.Annotation;
 
 class MorphiaShortCutProvider implements CodecProvider {
-    private Mapper mapper;
-    private MorphiaCodecProvider codecProvider;
+    private final Mapper mapper;
+    private final MorphiaCodecProvider codecProvider;
 
-    MorphiaShortCutProvider(final Mapper mapper, final MorphiaCodecProvider codecProvider) {
+    MorphiaShortCutProvider(Mapper mapper, MorphiaCodecProvider codecProvider) {
         this.mapper = mapper;
         this.codecProvider = codecProvider;
     }
 
     @Override
-    public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
+    public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         return hasAnnotation(clazz, Entity.class) || hasAnnotation(clazz, Embedded.class) || mapper.isMapped(clazz)
                ? codecProvider.get(clazz, registry)
                : null;
     }
 
-    private <T> boolean hasAnnotation(final Class<T> clazz, final Class<? extends Annotation> ann) {
+    private <T> boolean hasAnnotation(Class<T> clazz, Class<? extends Annotation> ann) {
         return clazz.getAnnotation(ann) != null;
     }
 }

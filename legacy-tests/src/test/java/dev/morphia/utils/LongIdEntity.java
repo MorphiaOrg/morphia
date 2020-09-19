@@ -19,7 +19,7 @@ public abstract class LongIdEntity {
     @Transient
     private final Datastore ds;
 
-    protected LongIdEntity(final Datastore ds) {
+    protected LongIdEntity(Datastore ds) {
         this.ds = ds;
     }
 
@@ -37,7 +37,7 @@ public abstract class LongIdEntity {
         private final String className;
         private final Long value = 1L;
 
-        public StoredId(final String name) {
+        public StoredId(String name) {
             className = name;
         }
 

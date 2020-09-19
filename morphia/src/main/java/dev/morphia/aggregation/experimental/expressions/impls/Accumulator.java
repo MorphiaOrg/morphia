@@ -15,26 +15,26 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeU
  * @since 2.0
  */
 public class Accumulator extends Expression {
-    private List<Expression> expressions = new ArrayList<>();
+    private final List<Expression> expressions = new ArrayList<>();
 
     /**
      * @param operation
      * @param values
      * @morphia.internal
      */
-    public Accumulator(final String operation, final List<Expression> values) {
+    public Accumulator(String operation, List<Expression> values) {
         super(operation);
         expressions.addAll(values);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(getOperation());
         if (expressions.size() > 1) {
             writer.writeStartArray();
         }
-        for (final Expression expression : expressions) {
+        for (Expression expression : expressions) {
             writeUnnamedExpression(mapper, writer, expression, encoderContext);
         }
         if (expressions.size() > 1) {

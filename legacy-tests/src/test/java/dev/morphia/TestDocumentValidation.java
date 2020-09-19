@@ -255,7 +255,7 @@ public class TestDocumentValidation extends TestBase {
         }
     }
 
-    private MongoDatabase addValidation(final Document validator) {
+    private MongoDatabase addValidation(Document validator) {
         ValidationOptions options = new ValidationOptions()
                                         .validator(validator)
                                         .validationLevel(ValidationLevel.MODERATE)
@@ -266,8 +266,8 @@ public class TestDocumentValidation extends TestBase {
         return database;
     }
 
-    private void checkValidation(final Document validator, final MappedClass mappedClass, final ValidationLevel level,
-                                 final ValidationAction action) {
+    private void checkValidation(Document validator, MappedClass mappedClass, ValidationLevel level,
+                                 ValidationAction action) {
         updateValidation(mappedClass, level, action);
         Document expected = new Document("validator", validator)
                                 .append("validationLevel", level.getValue())
@@ -293,7 +293,7 @@ public class TestDocumentValidation extends TestBase {
         return (Document) getValidation().get("validator");
     }
 
-    private void updateValidation(final MappedClass mappedClass, final ValidationLevel level, final ValidationAction action) {
+    private void updateValidation(MappedClass mappedClass, ValidationLevel level, ValidationAction action) {
         ((DatastoreImpl) getDs()).enableValidation(mappedClass, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
                                                                                        .level(level)
                                                                                        .action(action));

@@ -20,7 +20,7 @@ public class Redact extends Stage {
      * @param expression the expression
      * @return the new field
      */
-    public static Redact on(final Expression expression) {
+    public static Redact on(Expression expression) {
         Redact redact = new Redact();
         redact.expression = expression;
         return redact;

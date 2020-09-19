@@ -1,9 +1,9 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.AggregationException;
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.Fields;
 import dev.morphia.sofia.Sofia;
 
@@ -14,14 +14,14 @@ import dev.morphia.sofia.Sofia;
  */
 public class Group extends Stage {
     private Fields<Group> fields;
-    private GroupId id;
+    private final GroupId id;
 
     protected Group() {
         super("$group");
         id = null;
     }
 
-    protected Group(final GroupId id) {
+    protected Group(GroupId id) {
         super("$group");
         this.id = id;
     }
@@ -41,7 +41,7 @@ public class Group extends Stage {
      * @param id the group ID
      * @return the new stage
      */
-    public static Group of(final GroupId id) {
+    public static Group of(GroupId id) {
         return new Group(id);
     }
 
@@ -51,7 +51,7 @@ public class Group extends Stage {
      * @param name the id name
      * @return the new groupID
      */
-    public static GroupId id(final String name) {
+    public static GroupId id(String name) {
         return new GroupId(Expressions.field(name));
     }
 
@@ -61,7 +61,7 @@ public class Group extends Stage {
      * @param name the id name
      * @return the new groupID
      */
-    public static GroupId id(final Expression name) {
+    public static GroupId id(Expression name) {
         return new GroupId(name);
     }
 
@@ -82,7 +82,7 @@ public class Group extends Stage {
      * @see #field(String, Expression)
      * @see Expressions#field(String)
      */
-    public Group field(final String name) {
+    public Group field(String name) {
         return field(name, Expressions.field(name));
     }
 
@@ -93,7 +93,7 @@ public class Group extends Stage {
      * @param expression the expression giving the value
      * @return this
      */
-    public Group field(final String name, final Expression expression) {
+    public Group field(String name, Expression expression) {
         if (fields == null) {
             fields = Fields.on(this);
         }
@@ -128,7 +128,7 @@ public class Group extends Stage {
             document = Expressions.of();
         }
 
-        protected GroupId(final Expression value) {
+        protected GroupId(Expression value) {
             if (value instanceof DocumentExpression) {
                 document = (DocumentExpression) value;
             } else {
@@ -144,7 +144,7 @@ public class Group extends Stage {
          * @see #field(String, Expression)
          * @see Expressions#field(String)
          */
-        public GroupId field(final String name) {
+        public GroupId field(String name) {
             return field(name, Expressions.field(name));
         }
 
@@ -155,7 +155,7 @@ public class Group extends Stage {
          * @param expression the expression giving the value
          * @return this
          */
-        public GroupId field(final String name, final Expression expression) {
+        public GroupId field(String name, Expression expression) {
             if (field != null) {
                 throw new AggregationException(Sofia.mixedModesNotAllowed("_id"));
             }

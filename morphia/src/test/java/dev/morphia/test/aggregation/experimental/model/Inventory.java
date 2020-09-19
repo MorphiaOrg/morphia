@@ -14,17 +14,17 @@ public class Inventory {
     public Inventory() {
     }
 
-    public Inventory(final int id) {
+    public Inventory(int id) {
         this.id = id;
     }
 
-    public Inventory(final int id, final String sku, final String description) {
+    public Inventory(int id, String sku, String description) {
         this.id = id;
         this.sku = sku;
         this.description = description;
     }
 
-    public Inventory(final int id, final String sku, final String description, final int instock) {
+    public Inventory(int id, String sku, String description, int instock) {
         this.id = id;
         this.sku = sku;
         this.description = description;
@@ -35,7 +35,7 @@ public class Inventory {
         return description;
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -43,7 +43,7 @@ public class Inventory {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -51,7 +51,7 @@ public class Inventory {
         return instock;
     }
 
-    public void setInstock(final int instock) {
+    public void setInstock(int instock) {
         this.instock = instock;
     }
 
@@ -59,7 +59,7 @@ public class Inventory {
         return sku;
     }
 
-    public void setSku(final String sku) {
+    public void setSku(String sku) {
         this.sku = sku;
     }
 
@@ -73,7 +73,7 @@ public class Inventory {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

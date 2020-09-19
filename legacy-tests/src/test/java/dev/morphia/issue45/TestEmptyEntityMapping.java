@@ -60,11 +60,11 @@ public class TestEmptyEntityMapping extends TestBase {
         private UserType userType;
         private final Set<Rights> rights = new HashSet<>();
 
-        public void setFullName(final String fullName) {
+        public void setFullName(String fullName) {
             this.fullName = fullName;
         }
 
-        public void setUserId(final String userId) {
+        public void setUserId(String userId) {
             this.userId = userId;
         }
     }

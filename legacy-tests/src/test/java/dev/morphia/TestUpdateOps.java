@@ -88,7 +88,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestUpdateOps extends TestBase {
-    public void createContainsPic(final int size) {
+    public void createContainsPic(int size) {
         final ContainsPic containsPic = new ContainsPic();
         containsPic.setSize(size);
         getDs().save(containsPic);
@@ -317,7 +317,7 @@ public class TestUpdateOps extends TestBase {
             new Rectangle(10, 10),
             new Rectangle(10, 10)};
 
-        for (final Rectangle rect : array) {
+        for (Rectangle rect : array) {
             getDs().save(rect);
         }
 
@@ -887,16 +887,16 @@ public class TestUpdateOps extends TestBase {
         Assert.assertEquals(16, first.val);
     }
 
-    private void assertInserted(final UpdateResult res) {
+    private void assertInserted(UpdateResult res) {
         assertNotNull(res.getUpsertedId());
         assertEquals(0, res.getModifiedCount());
     }
 
-    private void assertUpdated(final UpdateResult res, final long count) {
+    private void assertUpdated(UpdateResult res, long count) {
         assertEquals(count, res.getModifiedCount());
     }
 
-    private LogHolder createEntryLogs(final String value) {
+    private LogHolder createEntryLogs(String value) {
         LogHolder logs = new LogHolder();
         logs.raw = new Document("name", value);
         getDs().save(logs);
@@ -904,7 +904,7 @@ public class TestUpdateOps extends TestBase {
         return logs;
     }
 
-    private void doUpdates(final ContainsIntArray updated, final ContainsIntArray control, final Update update, final Integer[] target) {
+    private void doUpdates(ContainsIntArray updated, ContainsIntArray control, Update update, Integer[] target) {
         assertUpdated(update.execute(new UpdateOptions()), 1);
         assertThat((getDs().find(ContainsIntArray.class)
                            .filter(eq("_id", updated.id))
@@ -926,7 +926,7 @@ public class TestUpdateOps extends TestBase {
             is(new Integer[]{1, 2, 3}));
     }
 
-    private Integer[] get(final ContainsIntArray array) {
+    private Integer[] get(ContainsIntArray array) {
         return getDs().find(ContainsIntArray.class)
                       .filter(eq("_id", array.id))
                       .first()
@@ -934,7 +934,7 @@ public class TestUpdateOps extends TestBase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private void validateClassName(final LogHolder loaded) {
+    private void validateClassName(LogHolder loaded) {
         List<Document> logs = (List<Document>) loaded.raw.get("logs");
         for (Document o : logs) {
             Assert.assertNotNull(o.toString(), o.get(getMapper().getOptions().getDiscriminatorKey()));
@@ -946,7 +946,7 @@ public class TestUpdateOps extends TestBase {
         private String first;
         private String last;
 
-        private Child(final String first, final String last) {
+        private Child(String first, String last) {
             this.first = first;
             this.last = last;
         }
@@ -962,7 +962,7 @@ public class TestUpdateOps extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1009,7 +1009,7 @@ public class TestUpdateOps extends TestBase {
         public DumbArrayElement() {
         }
 
-        private DumbArrayElement(final String whereId) {
+        private DumbArrayElement(String whereId) {
             this.whereId = whereId;
         }
     }
@@ -1025,7 +1025,7 @@ public class TestUpdateOps extends TestBase {
         private DumbColl() {
         }
 
-        private DumbColl(final String opaqueId) {
+        private DumbColl(String opaqueId) {
             this.opaqueId = opaqueId;
         }
     }
@@ -1038,7 +1038,7 @@ public class TestUpdateOps extends TestBase {
         public Log() {
         }
 
-        public Log(final long value) {
+        public Log(long value) {
             this.value = "Log" + value;
             receivedTs = value;
         }
@@ -1051,7 +1051,7 @@ public class TestUpdateOps extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1087,7 +1087,7 @@ public class TestUpdateOps extends TestBase {
             return log;
         }
 
-        public void setLog(final Log log) {
+        public void setLog(Log log) {
             this.log = log;
         }
 
@@ -1095,7 +1095,7 @@ public class TestUpdateOps extends TestBase {
             return logs;
         }
 
-        public void setLogs(final List<Log> logs) {
+        public void setLogs(List<Log> logs) {
             this.logs = logs;
         }
 
@@ -1110,7 +1110,7 @@ public class TestUpdateOps extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1147,7 +1147,7 @@ public class TestUpdateOps extends TestBase {
         }
 
         @PreLoad
-        public void preload(final Document raw) {
+        public void preload(Document raw) {
             this.raw = raw;
         }
     }

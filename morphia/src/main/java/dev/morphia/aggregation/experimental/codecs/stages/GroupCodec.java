@@ -9,12 +9,12 @@ import org.bson.codecs.EncoderContext;
 
 public class GroupCodec extends StageCodec<Group> {
 
-    public GroupCodec(final Mapper mapper) {
+    public GroupCodec(Mapper mapper) {
         super(mapper);
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Group group, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Group group, EncoderContext encoderContext) {
         writer.writeStartDocument();
         GroupId id = group.getId();
         if (id != null) {

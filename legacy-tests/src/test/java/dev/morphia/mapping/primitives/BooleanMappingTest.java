@@ -53,14 +53,14 @@ public class BooleanMappingTest extends TestBase {
         Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
-    private void compare(final String property, final boolean[] expected, final boolean[] received) {
+    private void compare(String property, boolean[] expected, boolean[] received) {
         Assert.assertEquals(format("%s lengths should match", property), expected.length, received.length);
         for (int i = 0; i < expected.length; i++) {
             Assert.assertEquals(format("%s[%s] should match", property, i), expected[i], received[i]);
         }
     }
 
-    private void compare(final boolean[][] expected, final boolean[][] received) {
+    private void compare(boolean[][] expected, boolean[][] received) {
         Assert.assertEquals("nestedPrimitiveArray lengths should match", expected.length, received.length);
         for (int i = 0; i < expected.length; i++) {
             compare("nestedPrimitiveArray" + "[" + i + "]", expected[i], received[i]);

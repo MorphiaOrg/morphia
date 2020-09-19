@@ -191,7 +191,7 @@ public class LazyInEmbeddedTest extends TestBase {
         protected OtherEntity() {
         }
 
-        public OtherEntity(final SomeEnum someEnum) {
+        public OtherEntity(SomeEnum someEnum) {
             this.someEnum = someEnum;
 
         }

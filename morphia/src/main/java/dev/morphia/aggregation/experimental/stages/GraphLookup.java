@@ -24,7 +24,7 @@ public class GraphLookup extends Stage {
      *
      * @param from the target collection
      */
-    public GraphLookup(final String from) {
+    public GraphLookup(String from) {
         this();
         this.from = from;
     }
@@ -38,7 +38,7 @@ public class GraphLookup extends Stage {
      *
      * @param from the type to use for determining the target collection
      */
-    public GraphLookup(final Class from) {
+    public GraphLookup(Class from) {
         this();
         this.fromType = from;
     }
@@ -49,7 +49,7 @@ public class GraphLookup extends Stage {
      * @param from the target collection name
      * @return this
      */
-    public static GraphLookup from(final String from) {
+    public static GraphLookup from(String from) {
         return new GraphLookup(from);
     }
 
@@ -59,7 +59,7 @@ public class GraphLookup extends Stage {
      * @param from the target collection name
      * @return this
      */
-    public static GraphLookup from(final Class from) {
+    public static GraphLookup from(Class from) {
         return new GraphLookup(from);
     }
 
@@ -71,7 +71,7 @@ public class GraphLookup extends Stage {
      * @param as the name
      * @return this
      */
-    public GraphLookup as(final String as) {
+    public GraphLookup as(String as) {
         this.as = as;
         return this;
     }
@@ -83,7 +83,7 @@ public class GraphLookup extends Stage {
      * @param connectFromField the field name
      * @return this
      */
-    public GraphLookup connectFromField(final String connectFromField) {
+    public GraphLookup connectFromField(String connectFromField) {
         this.connectFromField = connectFromField;
         return this;
     }
@@ -94,7 +94,7 @@ public class GraphLookup extends Stage {
      * @param connectToField the field name
      * @return this
      */
-    public GraphLookup connectToField(final String connectToField) {
+    public GraphLookup connectToField(String connectToField) {
         this.connectToField = connectToField;
         return this;
     }
@@ -106,7 +106,7 @@ public class GraphLookup extends Stage {
      * @param depthField the field name
      * @return this
      */
-    public GraphLookup depthField(final String depthField) {
+    public GraphLookup depthField(String depthField) {
         this.depthField = depthField;
         return this;
     }
@@ -189,7 +189,7 @@ public class GraphLookup extends Stage {
      * @param maxDepth the max depth
      * @return this
      */
-    public GraphLookup maxDepth(final Integer maxDepth) {
+    public GraphLookup maxDepth(Integer maxDepth) {
         this.maxDepth = maxDepth;
         return this;
     }
@@ -200,7 +200,7 @@ public class GraphLookup extends Stage {
      * @param filters the filters to restrict the matching
      * @return this
      */
-    public GraphLookup restrict(final Filter... filters) {
+    public GraphLookup restrict(Filter... filters) {
         this.restriction = filters;
         return this;
     }
@@ -211,7 +211,7 @@ public class GraphLookup extends Stage {
      * @param startWith the expression defining the starting point
      * @return this
      */
-    public GraphLookup startWith(final Expression startWith) {
+    public GraphLookup startWith(Expression startWith) {
         this.startWith = startWith;
         return this;
     }

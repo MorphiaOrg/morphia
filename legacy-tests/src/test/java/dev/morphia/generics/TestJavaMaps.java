@@ -74,7 +74,7 @@ public class TestJavaMaps extends TestBase {
         Assert.assertEquals(expectedEntity.getLinkedHashMap(), storedEntity.getLinkedHashMap());
     }
 
-    private void empties(final Datastore datastore) {
+    private void empties(Datastore datastore) {
         datastore.find(Employee.class).delete(new DeleteOptions().multi(true));
         Employee employee = new Employee();
         HashMap<String, Byte> byteMap = new HashMap<String, Byte>();

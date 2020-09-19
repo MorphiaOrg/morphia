@@ -19,7 +19,7 @@ import java.util.Set;
 public class MultipleId implements ClassConstraint {
 
     @Override
-    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
 
         final List<MappedField> idFields = mc.getFields(Id.class);
 

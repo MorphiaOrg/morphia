@@ -22,7 +22,7 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
     private final Class<Collection<T>> encoderClass;
     private final Codec<T> codec;
 
-    protected CollectionCodec(final Class<Collection<T>> encoderClass, final Codec<T> codec) {
+    protected CollectionCodec(Class<Collection<T>> encoderClass, Codec<T> codec) {
         this.encoderClass = encoderClass;
         this.codec = codec;
     }
@@ -32,9 +32,9 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Collection<T> collection, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Collection<T> collection, EncoderContext encoderContext) {
         writer.writeStartArray();
-        for (final T value : collection) {
+        for (T value : collection) {
             if (value == null) {
                 writer.writeNull();
             } else {
@@ -45,7 +45,7 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
     }
 
     @Override
-    public Collection<T> decode(final BsonReader reader, final DecoderContext context) {
+    public Collection<T> decode(BsonReader reader, DecoderContext context) {
         Collection<T> collection = getInstance();
         reader.readStartArray();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -78,7 +78,7 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
 
         try {
             return encoderClass.getDeclaredConstructor().newInstance();
-        } catch (final Exception e) {
+        } catch (Exception e) {
             throw new CodecConfigurationException(e.getMessage(), e);
         }
     }

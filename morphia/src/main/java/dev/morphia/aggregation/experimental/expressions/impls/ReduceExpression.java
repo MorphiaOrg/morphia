@@ -10,7 +10,7 @@ public class ReduceExpression extends Expression {
     private final Expression initial;
     private final Expression in;
 
-    public ReduceExpression(final Expression input, final Expression initial, final Expression in) {
+    public ReduceExpression(Expression input, Expression initial, Expression in) {
         super("$reduce");
         this.input = input;
         this.initial = initial;
@@ -18,7 +18,7 @@ public class ReduceExpression extends Expression {
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         ExpressionCodec.writeNamedExpression(mapper, writer, "input", input, encoderContext);

@@ -4,9 +4,9 @@ package dev.morphia.aggregation.experimental.stages;
  * Base type for stages.
  */
 public abstract class Stage {
-    private String stageName;
+    private final String stageName;
 
-    protected Stage(final String stageName) {
+    protected Stage(String stageName) {
         this.stageName = stageName;
     }
 

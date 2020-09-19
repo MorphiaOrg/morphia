@@ -25,7 +25,7 @@ public class Article extends TestEntity {
         related = new HashMap<>();
     }
 
-    public Object getAttribute(final String name) {
+    public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
@@ -33,7 +33,7 @@ public class Article extends TestEntity {
         return attributes;
     }
 
-    public void setAttributes(final Map<String, Object> attributes) {
+    public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 
@@ -41,15 +41,15 @@ public class Article extends TestEntity {
         return related;
     }
 
-    public void setRelated(final Map<String, Article> related) {
+    public void setRelated(Map<String, Article> related) {
         this.related = related;
     }
 
-    public Article getRelated(final String name) {
+    public Article getRelated(String name) {
         return related.get(name);
     }
 
-    public Translation getTranslation(final String langCode) {
+    public Translation getTranslation(String langCode) {
         return translations.get(langCode);
     }
 
@@ -57,19 +57,19 @@ public class Article extends TestEntity {
         return translations;
     }
 
-    public void setTranslations(final Map<String, Translation> translations) {
+    public void setTranslations(Map<String, Translation> translations) {
         this.translations = translations;
     }
 
-    public void putRelated(final String name, final Article a) {
+    public void putRelated(String name, Article a) {
         related.put(name, a);
     }
 
-    public void setAttribute(final String name, final Object value) {
+    public void setAttribute(String name, Object value) {
         attributes.put(name, value);
     }
 
-    public void setTranslation(final String langCode, final Translation t) {
+    public void setTranslation(String langCode, Translation t) {
         translations.put(langCode, t);
     }
 }

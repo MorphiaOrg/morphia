@@ -11,7 +11,7 @@ public class PopOperator extends UpdateOperator {
      * @param field the field
      * @morphia.internal
      */
-    public PopOperator(final String field) {
+    public PopOperator(String field) {
         super("$pop", field, 1);
     }
 

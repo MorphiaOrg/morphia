@@ -67,16 +67,16 @@ import java.util.Map;
 public class AggregationCodecProvider implements CodecProvider {
 
     private Map<Class, StageCodec> codecs;
-    private Codec expressionCodec;
-    private Mapper mapper;
+    private final Codec expressionCodec;
+    private final Mapper mapper;
 
-    public AggregationCodecProvider(final Mapper mapper) {
+    public AggregationCodecProvider(Mapper mapper) {
         this.mapper = mapper;
         expressionCodec = new ExpressionCodec(this.mapper);
     }
 
     @Override
-    public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
+    public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         Codec<T> codec = getCodecs().get(clazz);
         if (codec == null) {
             if (Expression.class.isAssignableFrom(clazz)) {

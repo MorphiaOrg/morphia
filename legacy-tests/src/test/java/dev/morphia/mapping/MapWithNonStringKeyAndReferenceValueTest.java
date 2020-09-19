@@ -91,7 +91,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

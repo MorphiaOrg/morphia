@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
  * @aggregation.expression $unset
  */
 public class Unset extends Stage {
-    private List<Expression> fields = new ArrayList<>();
+    private final List<Expression> fields = new ArrayList<>();
 
     protected Unset() {
         super("$unset");
@@ -26,16 +26,16 @@ public class Unset extends Stage {
      * @param names the others
      * @return this
      */
-    public static Unset fields(final String name, final String... names) {
+    public static Unset fields(String name, String... names) {
         Unset unset = new Unset()
                           .add(name);
-        for (final String additional : names) {
+        for (String additional : names) {
             unset.add(additional);
         }
         return unset;
     }
 
-    private Unset add(final String name) {
+    private Unset add(String name) {
         String fieldName = name;
         if (fieldName.startsWith("$")) {
             fieldName = fieldName.substring(1);

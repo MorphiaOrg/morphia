@@ -21,7 +21,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      *
      * @param cursor the Iterator to use
      */
-    public MorphiaCursor(final MongoCursor<T> cursor) {
+    public MorphiaCursor(MongoCursor<T> cursor) {
         wrapped = cursor;
         if (wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");

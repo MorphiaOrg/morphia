@@ -16,7 +16,7 @@ import java.util.Map;
 public class BucketOptions {
 
     private Object defaultField;
-    private Map<String, Accumulator> accumulators = new HashMap<String, Accumulator>();
+    private final Map<String, Accumulator> accumulators = new HashMap<String, Accumulator>();
 
 
     /**
@@ -47,7 +47,7 @@ public class BucketOptions {
      * @param defaultField name of the field
      * @return this
      */
-    public BucketOptions defaultField(final Object defaultField) {
+    public BucketOptions defaultField(Object defaultField) {
         this.defaultField = defaultField;
         return this;
     }
@@ -58,7 +58,7 @@ public class BucketOptions {
      * @param fieldName name of the output field
      * @return this
      */
-    public OutputOperation output(final String fieldName) {
+    public OutputOperation output(String fieldName) {
 
         return new OutputOperation(fieldName);
     }
@@ -69,14 +69,14 @@ public class BucketOptions {
      */
     public class OutputOperation {
 
-        private String fieldName;
+        private final String fieldName;
 
         /**
          * Creates the output operation for given fieldname
          *
          * @param fieldName name of the output field
          */
-        public OutputOperation(final String fieldName) {
+        public OutputOperation(String fieldName) {
             this.fieldName = fieldName;
         }
 
@@ -89,7 +89,7 @@ public class BucketOptions {
          * @return an Accumulator
          * @aggregation.expression $addToSet
          */
-        public BucketOptions addToSet(final String field) {
+        public BucketOptions addToSet(String field) {
             accumulators.put(fieldName, new Accumulator("$addToSet", field));
             return BucketOptions.this;
         }
@@ -102,7 +102,7 @@ public class BucketOptions {
          * @return an Accumulator
          * @aggregation.expression $avg
          */
-        public BucketOptions average(final String field) {
+        public BucketOptions average(String field) {
 
             accumulators.put(fieldName, new Accumulator("$avg", field));
             return BucketOptions.this;
@@ -117,7 +117,7 @@ public class BucketOptions {
          * @return an Accumulator
          * @aggregation.expression $sum
          */
-        public BucketOptions sum(final Object field) {
+        public BucketOptions sum(Object field) {
             accumulators.put(fieldName, new Accumulator("$sum", field));
             return BucketOptions.this;
         }

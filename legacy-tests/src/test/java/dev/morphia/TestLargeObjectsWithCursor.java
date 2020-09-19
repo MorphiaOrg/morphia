@@ -48,7 +48,7 @@ public class TestLargeObjectsWithCursor extends TestBase {
             largeContent = null;
         }
 
-        public E(final int i) {
+        public E(int i) {
             index = i;
             largeContent = createLargeByteArray();
         }

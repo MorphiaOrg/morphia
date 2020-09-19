@@ -64,7 +64,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private QueryFactory queryFactory;
 
-    protected DatastoreImpl(final MongoClient mongoClient, final MapperOptions options, final String dbName) {
+    protected DatastoreImpl(MongoClient mongoClient, MapperOptions options, String dbName) {
         this.mongoClient = mongoClient;
         MongoDatabase database = mongoClient.getDatabase(dbName);
         this.mapper = new Mapper(this, database.getCodecRegistry(), options);
@@ -84,8 +84,8 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @morphia.internal
      * @since 2.0
      */
-    public DatastoreImpl(final MongoDatabase database, final MongoClient mongoClient, final Mapper mapper,
-                         final QueryFactory queryFactory) {
+    public DatastoreImpl(MongoDatabase database, MongoClient mongoClient, Mapper mapper,
+                         QueryFactory queryFactory) {
         this.database = database;
         this.mongoClient = mongoClient;
         this.mapper = mapper;
@@ -93,23 +93,23 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public dev.morphia.aggregation.AggregationPipeline createAggregation(final String collection, final Class<?> clazz) {
+    public dev.morphia.aggregation.AggregationPipeline createAggregation(String collection, Class<?> clazz) {
         return new dev.morphia.aggregation.AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
     }
 
     @Override
-    public <T> Query<T> find(final String collection) {
+    public <T> Query<T> find(String collection) {
         return getQueryFactory().createQuery(this, mapper.getClassFromCollection(collection));
     }
 
     @Override
-    public <T> void insert(final T entity) {
+    public <T> void insert(T entity) {
         insert(entity, new InsertOneOptions()
                            .writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
     @Override
-    public <T> void insert(final T entity, final InsertOneOptions options) {
+    public <T> void insert(T entity, InsertOneOptions options) {
         insert(mapper.getCollection(entity.getClass()), entity, options);
     }
 
@@ -118,7 +118,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @morphia.internal
      */
     @Override
-    public String getLoggedQuery(final FindOptions options) {
+    public String getLoggedQuery(FindOptions options) {
         if (options != null && options.isLogQuery()) {
             String json = "{}";
             Document first = getDatabase()
@@ -142,11 +142,11 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     @SuppressWarnings("removal")
-    public <T> Query<T> queryByExample(final String collection, final T ex) {
+    public <T> Query<T> queryByExample(String collection, T ex) {
         return queryByExample(ex);
     }
 
-    protected <T> void insert(final MongoCollection collection, final T entity, final InsertOneOptions options) {
+    protected <T> void insert(MongoCollection collection, T entity, InsertOneOptions options) {
         setInitialVersion(mapper.getMappedClass(entity.getClass()).getVersionField(), entity);
         MongoCollection mongoCollection = mapper.enforceWriteConcern(collection, entity.getClass());
         ClientSession clientSession = findSession(options);
@@ -157,7 +157,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> void setInitialVersion(final MappedField versionField, final T entity) {
+    private <T> void setInitialVersion(MappedField versionField, T entity) {
         if (versionField != null) {
             Object value = versionField.getFieldValue(entity);
             if (value != null && !value.equals(0)) {
@@ -169,14 +169,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public ClientSession findSession(final SessionConfigurable<?> configurable) {
+    public ClientSession findSession(SessionConfigurable<?> configurable) {
         return configurable.clientSession() != null
                ? configurable.clientSession()
                : getSession();
     }
 
     @Override
-    public <T> T withTransaction(final MorphiaTransaction<T> body) {
+    public <T> T withTransaction(MorphiaTransaction<T> body) {
         return doTransaction(startSession(), body);
     }
 
@@ -186,37 +186,37 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public MorphiaSession startSession(final ClientSessionOptions options) {
+    public MorphiaSession startSession(ClientSessionOptions options) {
         return new MorphiaSessionImpl(mongoClient.startSession(options), mongoClient, database, mapper, queryFactory);
     }
 
     @Override
-    public <T> T withTransaction(final ClientSessionOptions options, final MorphiaTransaction<T> transaction) {
+    public <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction) {
         return doTransaction(startSession(options), transaction);
     }
 
     @Override
-    public Aggregation<Document> aggregate(final String source) {
+    public Aggregation<Document> aggregate(String source) {
         return new AggregationImpl(this, getDatabase().getCollection(source));
     }
 
     @Override
-    public <T> Aggregation<T> aggregate(final Class<T> source) {
+    public <T> Aggregation<T> aggregate(Class<T> source) {
         return new AggregationImpl(this, mapper.getCollection(source));
     }
 
     @Override
-    public dev.morphia.aggregation.AggregationPipeline createAggregation(final Class source) {
+    public dev.morphia.aggregation.AggregationPipeline createAggregation(Class source) {
         return new dev.morphia.aggregation.AggregationPipelineImpl(this, mapper.getCollection(source), source);
     }
 
     @Override
-    public <T> Query<T> find(final Class<T> type) {
+    public <T> Query<T> find(Class<T> type) {
         return getQueryFactory().createQuery(this, type);
     }
 
     @Override
-    public <T> Query<T> find(final String collection, final Class<T> type) {
+    public <T> Query<T> find(String collection, Class<T> type) {
         return getQueryFactory().createQuery(this, collection, type);
     }
 
@@ -228,7 +228,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> DeleteResult delete(final T entity) {
+    public <T> DeleteResult delete(T entity) {
         return delete(entity, new DeleteOptions().writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
@@ -240,7 +240,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @return results of the delete
      */
     @Override
-    public <T> DeleteResult delete(final T entity, final DeleteOptions options) {
+    public <T> DeleteResult delete(T entity, DeleteOptions options) {
         if (entity instanceof Class<?>) {
             throw new MappingException("Did you mean to delete all documents? -- ds.createQuery(???.class).delete()");
         }
@@ -252,7 +252,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureCaps() {
         List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
-        for (final MappedClass mc : mapper.getMappedClasses()) {
+        for (MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null) {
                 CappedAt cappedAt = mc.getEntityAnnotation().cap();
                 if (cappedAt.value() > 0) {
@@ -286,7 +286,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public void enableDocumentValidation() {
-        for (final MappedClass mc : mapper.getMappedClasses()) {
+        for (MappedClass mc : mapper.getMappedClasses()) {
             enableValidation(mc, mc.getAnnotation(Validation.class));
         }
     }
@@ -297,7 +297,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             Sofia.logNoMappedClasses();
         }
         final IndexHelper indexHelper = new IndexHelper(mapper);
-        for (final MappedClass mc : mapper.getMappedClasses()) {
+        for (MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null) {
                 indexHelper.createIndex(mapper.getCollection(mc.getType()), mc);
             }
@@ -305,16 +305,16 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> void ensureIndexes(final Class<T> clazz) {
+    public <T> void ensureIndexes(Class<T> clazz) {
         final IndexHelper indexHelper = new IndexHelper(mapper);
         indexHelper.createIndex(mapper.getCollection(clazz), mapper.getMappedClass(clazz));
     }
 
-    private <T> List<T> getByKeys(final Class<T> clazz, final Iterable<Key<T>> keys) {
+    private <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
 
         final Map<String, List<Key>> kindMap = new HashMap<>();
         final List<T> entities = new ArrayList<>();
-        for (final Key<?> key : keys) {
+        for (Key<?> key : keys) {
             mapper.updateCollection(key);
 
             if (kindMap.containsKey(key.getCollection())) {
@@ -323,11 +323,11 @@ public class DatastoreImpl implements AdvancedDatastore {
                 kindMap.put(key.getCollection(), new ArrayList<>(singletonList((Key) key)));
             }
         }
-        for (final Map.Entry<String, List<Key>> entry : kindMap.entrySet()) {
+        for (Map.Entry<String, List<Key>> entry : kindMap.entrySet()) {
             final List<Key> kindKeys = entry.getValue();
 
             final List<Object> objIds = new ArrayList<>();
-            for (final Key key : kindKeys) {
+            for (Key key : kindKeys) {
                 objIds.add(key.getId());
             }
             final List kindResults = find(entry.getKey()).disableValidation()
@@ -351,17 +351,17 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public void setQueryFactory(final QueryFactory queryFactory) {
+    public void setQueryFactory(QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 
     @Override
-    public <T> T merge(final T entity) {
+    public <T> T merge(T entity) {
         return merge(entity, new InsertOneOptions());
     }
 
     @Override
-    public <T> T merge(final T entity, final InsertOneOptions options) {
+    public <T> T merge(T entity, InsertOneOptions options) {
         final Object id = mapper.getId(entity);
         if (id == null) {
             throw new MappingException("Could not get id for " + entity.getClass().getName());
@@ -386,19 +386,19 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Query<T> queryByExample(final T example) {
+    public <T> Query<T> queryByExample(T example) {
         return getQueryFactory().createQuery(this, (Class<T>) example.getClass(), mapper.toDocument(example));
     }
 
     @Override
-    public <T> void insert(final List<T> entities, final InsertManyOptions options) {
+    public <T> void insert(List<T> entities, InsertManyOptions options) {
         if (!entities.isEmpty()) {
             Class<?> type = entities.get(0).getClass();
             MappedClass mappedClass = mapper.getMappedClass(type);
             final MongoCollection collection = mapper.getCollection(type);
             MappedField versionField = mappedClass.getVersionField();
             if (versionField != null) {
-                for (final T entity : entities) {
+                for (T entity : entities) {
                     setInitialVersion(versionField, entity);
                 }
             }
@@ -413,12 +413,12 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> T save(final T entity) {
+    public <T> T save(T entity) {
         return save(entity, new InsertOneOptions());
     }
 
     @Override
-    public <T> T save(final T entity, final InsertOneOptions options) {
+    public <T> T save(T entity, InsertOneOptions options) {
         if (entity == null) {
             throw new UpdateException(Sofia.cannotPersistNullEntity());
         }
@@ -427,7 +427,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return entity;
     }
 
-    private <T> void save(final MongoCollection collection, final T entity, final InsertOneOptions options) {
+    private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
         if (entity == null) {
             throw new UpdateException(Sofia.cannotPersistNullEntity());
         }
@@ -439,14 +439,14 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> save(final List<T> entities, final InsertManyOptions options) {
+    public <T> List<T> save(List<T> entities, InsertManyOptions options) {
         if (entities.isEmpty()) {
             return List.of();
         }
 
         Map<MongoCollection, List<T>> grouped = new LinkedHashMap<>();
         List<T> list = new ArrayList<>();
-        for (final T entity : entities) {
+        for (T entity : entities) {
             MappedClass mappedClass = getMapper().getMappedClass(entity.getClass());
             if (getMapper().getId(entity) != null || mappedClass.getVersionField() != null) {
                 list.add(entity);
@@ -469,13 +469,13 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                 .bypassDocumentValidation(options.getBypassDocumentValidation())
                                                 .clientSession(findSession(options))
                                                 .writeConcern(options.writeConcern());
-        for (final T entity : list) {
+        for (T entity : list) {
             save(entity, insertOneOptions);
         }
         return entities;
     }
 
-    protected <T> void saveDocument(final T entity, final MongoCollection<T> collection, final InsertOneOptions options) {
+    protected <T> void saveDocument(T entity, MongoCollection<T> collection, InsertOneOptions options) {
         Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
         ClientSession clientSession = findSession(options);
 
@@ -501,7 +501,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> boolean tryVersionedUpdate(final T entity, final MongoCollection collection, final InsertOneOptions options) {
+    private <T> boolean tryVersionedUpdate(T entity, MongoCollection collection, InsertOneOptions options) {
         final MappedClass mc = mapper.getMappedClass(entity.getClass());
         if (mc.getVersionField() == null) {
             return false;
@@ -546,11 +546,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         return true;
     }
 
-    private <T> void updateVersion(final T entity, final MappedField field, final Long newVersion) {
+    private <T> void updateVersion(T entity, MappedField field, Long newVersion) {
         field.setFieldValue(entity, newVersion);
     }
 
-    void enableValidation(final MappedClass mc, final Validation validation) {
+    void enableValidation(MappedClass mc, Validation validation) {
         if (validation != null) {
             String collectionName = mc.getCollectionName();
             try {
@@ -573,14 +573,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> T doTransaction(final MorphiaSession morphiaSession, final MorphiaTransaction<T> body) {
+    private <T> T doTransaction(MorphiaSession morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
             return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
         }
     }
 
     @Override
-    public <T> void refresh(final T entity) {
+    public <T> void refresh(T entity) {
         getMapper().refresh(entity);
     }
 }

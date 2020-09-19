@@ -11,13 +11,13 @@ import org.bson.codecs.EncoderContext;
  */
 public class ArrayExpression extends Expression {
 
-    public ArrayExpression(final String operation, final Object value) {
+    public ArrayExpression(String operation, Object value) {
         super(operation, value);
     }
 
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         super.encode(mapper, writer, encoderContext);
     }
 

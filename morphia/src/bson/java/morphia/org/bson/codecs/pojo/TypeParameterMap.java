@@ -72,7 +72,7 @@ public final class TypeParameterMap {
          * @param classTypeParameterIndex the class's type parameter index that represents the whole field
          * @return this
          */
-        public Builder addIndex(final int classTypeParameterIndex) {
+        public Builder addIndex(int classTypeParameterIndex) {
             propertyToClassParamIndexMap.put(-1, Either.left(classTypeParameterIndex));
             return this;
         }
@@ -84,7 +84,7 @@ public final class TypeParameterMap {
          * @param classTypeParameterIndex the class's type parameter index
          * @return this
          */
-        public Builder addIndex(final int propertyTypeParameterIndex, final int classTypeParameterIndex) {
+        public Builder addIndex(int propertyTypeParameterIndex, int classTypeParameterIndex) {
             propertyToClassParamIndexMap.put(propertyTypeParameterIndex, Either.left(classTypeParameterIndex));
             return this;
         }
@@ -97,7 +97,7 @@ public final class TypeParameterMap {
          * @param typeParameterMap the sub class's type parameter map
          * @return this
          */
-        Builder addIndex(final int propertyTypeParameterIndex, final TypeParameterMap typeParameterMap) {
+        Builder addIndex(int propertyTypeParameterIndex, TypeParameterMap typeParameterMap) {
             propertyToClassParamIndexMap.put(propertyTypeParameterIndex, Either.right(typeParameterMap));
             return this;
         }
@@ -121,7 +121,7 @@ public final class TypeParameterMap {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -139,7 +139,7 @@ public final class TypeParameterMap {
         return getPropertyToClassParamIndexMap().hashCode();
     }
 
-    private TypeParameterMap(final Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap) {
+    private TypeParameterMap(Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap) {
         this.propertyToClassParamIndexMap = unmodifiableMap(propertyToClassParamIndexMap);
     }
 }

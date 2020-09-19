@@ -11,11 +11,11 @@ import java.util.StringJoiner;
 class ReaderState {
     private final String name;
     private final Object value;
-    private DocumentReader reader;
+    private final DocumentReader reader;
     private ReaderIterator iterator;
     private ReaderState nextReaderState;
 
-    ReaderState(final DocumentReader reader, final ReaderIterator iterator) {
+    ReaderState(DocumentReader reader, ReaderIterator iterator) {
         this.reader = reader;
         this.iterator = iterator;
         name = null;
@@ -29,7 +29,7 @@ class ReaderState {
         return iterator;
     }
 
-    protected void nextStage(final ReaderState next) {
+    protected void nextStage(ReaderState next) {
         nextReaderState = next;
     }
 
@@ -37,7 +37,7 @@ class ReaderState {
         return nextReaderState;
     }
 
-    private void processNextStages(final ReaderState endReaderState, final ReaderIterator iterator) {
+    private void processNextStages(ReaderState endReaderState, ReaderIterator iterator) {
         next(endReaderState);
         ReaderState current = this;
         while (iterator.hasNext()) {
@@ -46,14 +46,14 @@ class ReaderState {
         reader.nextStage(nextReaderState);
     }
 
-    ReaderState next(final ReaderState next) {
+    ReaderState next(ReaderState next) {
         ReaderState old = nextReaderState;
         nextReaderState = next;
         nextReaderState.nextReaderState = old;
         return next;
     }
 
-    ReaderState(final DocumentReader reader, final String name, final Object value) {
+    ReaderState(DocumentReader reader, String name, Object value) {
         this.reader = reader;
         this.name = name;
         this.value = value;
@@ -116,7 +116,7 @@ class ReaderState {
 
     static class InitialReaderState extends ReaderState {
 
-        InitialReaderState(final DocumentReader reader, final DocumentIterator documentIterator) {
+        InitialReaderState(DocumentReader reader, DocumentIterator documentIterator) {
             super(reader, documentIterator);
             DocumentStartReaderState startStage = new DocumentStartReaderState(reader, getIterator());
             startStage.nextStage(getNextReaderState());
@@ -136,7 +136,7 @@ class ReaderState {
 
     static class DocumentStartReaderState extends ReaderState {
 
-        DocumentStartReaderState(final DocumentReader reader, final ReaderIterator iterator) {
+        DocumentStartReaderState(DocumentReader reader, ReaderIterator iterator) {
             super(reader, iterator);
         }
 
@@ -152,7 +152,7 @@ class ReaderState {
     }
 
     static class ListValueReaderState extends ReaderState {
-        ListValueReaderState(final DocumentReader reader, final Object value) {
+        ListValueReaderState(DocumentReader reader, Object value) {
             super(reader, null, value);
         }
 
@@ -163,11 +163,11 @@ class ReaderState {
     }
 
     private static class EndReaderState extends ReaderState {
-        EndReaderState(final DocumentReader reader) {
+        EndReaderState(DocumentReader reader) {
             super(reader, ArrayIterator.empty());
         }
 
-        void end(final String message) {
+        void end(String message) {
             if (getIterator().hasNext()) {
                 throw new BsonInvalidOperationException(message);
             }
@@ -176,7 +176,7 @@ class ReaderState {
     }
 
     static class DocumentEndReaderState extends EndReaderState {
-        DocumentEndReaderState(final DocumentReader reader) {
+        DocumentEndReaderState(DocumentReader reader) {
             super(reader);
         }
 
@@ -193,7 +193,7 @@ class ReaderState {
     }
 
     static class ListEndReaderState extends EndReaderState {
-        ListEndReaderState(final DocumentReader reader) {
+        ListEndReaderState(DocumentReader reader) {
             super(reader);
         }
 

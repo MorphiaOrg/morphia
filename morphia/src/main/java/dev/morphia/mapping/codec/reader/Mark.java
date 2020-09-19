@@ -7,10 +7,10 @@ import org.bson.BsonReaderMark;
  * @see DocumentReader
  */
 public class Mark implements BsonReaderMark {
-    private DocumentReader reader;
+    private final DocumentReader reader;
     private final ReaderState readerState;
 
-    Mark(final DocumentReader reader, final ReaderState readerState) {
+    Mark(DocumentReader reader, ReaderState readerState) {
         this.reader = reader;
         this.readerState = readerState;
     }

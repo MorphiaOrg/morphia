@@ -18,7 +18,7 @@ public class EnumCodecProvider implements CodecProvider {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Codec<T> get(final Class<T> type, final CodecRegistry registry) {
+    public <T> Codec<T> get(Class<T> type, CodecRegistry registry) {
         if (type.isEnum()) {
             return new EnumCodec(type);
         }

@@ -8,7 +8,7 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
 
 public class UnwindCodec extends StageCodec<Unwind> {
-    public UnwindCodec(final Mapper mapper) {
+    public UnwindCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -18,7 +18,7 @@ public class UnwindCodec extends StageCodec<Unwind> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Unwind value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Unwind value, EncoderContext encoderContext) {
         if(!value.optionsPresent()) {
             value.getPath().encode(getMapper(), writer, encoderContext);
         } else {

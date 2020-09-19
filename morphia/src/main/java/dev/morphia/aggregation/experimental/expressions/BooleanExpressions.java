@@ -25,7 +25,7 @@ public final class BooleanExpressions {
      * @return the new expression
      * @aggregation.expression $and
      */
-    public static Expression and(final Expression first, final Expression... additional) {
+    public static Expression and(Expression first, Expression... additional) {
         return new Expression("$and", toList(first, additional));
     }
 
@@ -37,7 +37,7 @@ public final class BooleanExpressions {
      * @return the new expression
      * @aggregation.expression $or
      */
-    public static Expression or(final Expression first, final Expression... additional) {
+    public static Expression or(Expression first, Expression... additional) {
         return new Expression("$or", toList(first, additional));
     }
 
@@ -49,7 +49,7 @@ public final class BooleanExpressions {
      * @return the new expression
      * @aggregation.expression $not
      */
-    public static Expression not(final Expression value) {
+    public static Expression not(Expression value) {
         return new Expression("$not", List.of(value));
     }
 

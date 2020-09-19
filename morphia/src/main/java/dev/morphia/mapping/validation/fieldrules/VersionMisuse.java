@@ -18,19 +18,19 @@ import static java.lang.String.format;
  */
 public class VersionMisuse extends FieldConstraint {
 
-    private MorphiaInstanceCreator creator;
+    private final MorphiaInstanceCreator creator;
 
     /**
      * Creates a version validator.
      *
      * @param creator the ObjectFactory to use
      */
-    public VersionMisuse(final MorphiaInstanceCreator creator) {
+    public VersionMisuse(MorphiaInstanceCreator creator) {
         this.creator = creator;
     }
 
     @Override
-    protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
+    protected void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(Version.class) && !mc.isAbstract()) {
             final Class<?> type = mf.getField().getType();
             if (Long.class.equals(type) || long.class.equals(type)) {

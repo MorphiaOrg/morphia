@@ -56,7 +56,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      *
      * @param datastore the Datastore to use
      */
-    protected LegacyQuery(final Datastore datastore) {
+    protected LegacyQuery(Datastore datastore) {
         this.datastore = (DatastoreImpl) datastore;
         mapper = datastore.getMapper();
         clazz = null;
@@ -75,7 +75,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @param datastore the Datastore to use
      * @param clazz     the type to return
      */
-    protected LegacyQuery(final Datastore datastore, final String collectionName, final Class<T> clazz) {
+    protected LegacyQuery(Datastore datastore, String collectionName, Class<T> clazz) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();
@@ -92,20 +92,20 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public void add(final Criteria... criteria) {
-        for (final Criteria c : criteria) {
+    public void add(Criteria... criteria) {
+        for (Criteria c : criteria) {
             c.attach(this);
             compoundContainer.add(c);
         }
     }
 
     @Override
-    public CriteriaContainer and(final Criteria... criteria) {
+    public CriteriaContainer and(Criteria... criteria) {
         return compoundContainer.and(criteria);
     }
 
     @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String field) {
+    public FieldEnd<? extends CriteriaContainer> criteria(String field) {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
         add(container);
 
@@ -113,17 +113,17 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public CriteriaContainer or(final Criteria... criteria) {
+    public CriteriaContainer or(Criteria... criteria) {
         return compoundContainer.or(criteria);
     }
 
     @Override
-    public void remove(final Criteria criteria) {
+    public void remove(Criteria criteria) {
         compoundContainer.remove(criteria);
     }
 
     @Override
-    public void attach(final CriteriaContainer container) {
+    public void attach(CriteriaContainer container) {
         compoundContainer.attach(container);
     }
 
@@ -150,14 +150,14 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public long count(final CountOptions options) {
+    public long count(CountOptions options) {
         ClientSession session = datastore.findSession(options);
         return session == null ? getCollection().countDocuments(getQueryDocument(), options)
                                : getCollection().countDocuments(session, getQueryDocument(), options);
     }
 
     @Override
-    public DeleteResult delete(final DeleteOptions options) {
+    public DeleteResult delete(DeleteOptions options) {
         MongoCollection<T> collection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
         if (options.isMulti()) {
@@ -186,7 +186,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public T findAndDelete(final FindAndDeleteOptions options) {
+    public T findAndDelete(FindAndDeleteOptions options) {
         MongoCollection<T> mongoCollection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
         return session == null
@@ -202,12 +202,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      */
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
-    public MorphiaCursor<T> execute(final FindOptions options) {
+    public MorphiaCursor<T> execute(FindOptions options) {
         return iterator(options);
     }
 
     @Override
-    public Map<String, Object> explain(final FindOptions options) {
+    public Map<String, Object> explain(FindOptions options) {
         return new LinkedHashMap<>(datastore.getDatabase()
                                             .runCommand(new Document("explain",
                                                 new Document("find", getCollection().getNamespace().getCollectionName())
@@ -215,12 +215,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public FieldEnd<? extends Query<T>> field(final String name) {
+    public FieldEnd<? extends Query<T>> field(String name) {
         return new FieldEndImpl<>(mapper, name, this, mappedClass, this.isValidatingNames());
     }
 
     @Override
-    public Query<T> filter(final String condition, final Object value) {
+    public Query<T> filter(String condition, Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
             throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
@@ -235,7 +235,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Modify<T> modify(final UpdateOperator first, final UpdateOperator... updates) {
+    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
         return new Modify<>(datastore, mapper, getCollection(), this, clazz, first, updates);
     }
 
@@ -245,7 +245,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public T first(final FindOptions options) {
+    public T first(FindOptions options) {
         try (MongoCursor<T> it = iterator(options.copy().limit(1))) {
             return it.tryNext();
         }
@@ -266,7 +266,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MorphiaCursor<T> iterator(final FindOptions options) {
+    public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
 
@@ -276,7 +276,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MorphiaKeyCursor<T> keys(final FindOptions options) {
+    public MorphiaKeyCursor<T> keys(FindOptions options) {
         FindOptions returnKey = new FindOptions().copy(options)
                                                  .projection()
                                                  .include("_id");
@@ -287,12 +287,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Modify<T> modify(final UpdateOperations<T> operations) {
+    public Modify<T> modify(UpdateOperations<T> operations) {
         return new Modify<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl) operations);
     }
 
     @Override
-    public Update<T> update(final UpdateOperator first, final UpdateOperator... updates) {
+    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
         return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
     }
 
@@ -303,13 +303,13 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Query<T> search(final String search) {
+    public Query<T> search(String search) {
         this.criteria("$text").equal(new Document("$search", search));
         return this;
     }
 
     @Override
-    public Query<T> search(final String search, final String language) {
+    public Query<T> search(String search, String language) {
         this.criteria("$text").equal(new Document("$search", search)
                                          .append("$language", language));
         return this;
@@ -317,7 +317,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
-    public Update<T> update(final UpdateOperations<T> operations) {
+    public Update<T> update(UpdateOperations<T> operations) {
         return new Update<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
     }
 
@@ -339,7 +339,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
+            for (MappedClass subtype : subtypes) {
                 values.add(subtype.getEntityModel().getDiscriminator());
             }
             query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
@@ -380,7 +380,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -415,7 +415,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      *
      * @param query the Document containing the query
      */
-    public void setQueryObject(final Document query) {
+    public void setQueryObject(Document query) {
         baseQuery = new Document(query);
     }
 
@@ -439,7 +439,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return obj;
     }
 
-    private <E> MongoCursor<E> prepareCursor(final FindOptions options, final MongoCollection<E> collection) {
+    private <E> MongoCursor<E> prepareCursor(FindOptions options, MongoCollection<E> collection) {
         final Document query = this.toDocument();
 
         FindOptions findOptions = getOptions().copy().copy(options);
@@ -480,7 +480,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * Converts the textual operator (">", "<=", etc) into a FilterOperator. Forgiving about the syntax; != and <> are NOT_EQUAL, = and ==
      * are EQUAL.
      */
-    private FilterOperator translate(final String operator) {
+    private FilterOperator translate(String operator) {
         return FilterOperator.fromString(operator);
     }
 

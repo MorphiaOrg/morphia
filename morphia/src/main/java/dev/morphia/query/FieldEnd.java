@@ -230,7 +230,7 @@ public interface FieldEnd<T> {
      * @mongodb.server.release 2.4
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default T intersects(dev.morphia.geo.Geometry geometry, final dev.morphia.geo.CoordinateReferenceSystem crs) {
+    default T intersects(dev.morphia.geo.Geometry geometry, dev.morphia.geo.CoordinateReferenceSystem crs) {
         return intersects(geometry.convert(), crs.convert());
     }
 

@@ -47,7 +47,7 @@ public enum Type {
 
     private final int value;
 
-    Type(final int value) {
+    Type(int value) {
         this.value = value;
     }
 

@@ -25,12 +25,12 @@ public class Lookup extends Stage {
     private DocumentExpression variables;
     private List<Stage> pipeline;
 
-    protected Lookup(final Class<?> fromType) {
+    protected Lookup(Class<?> fromType) {
         super("$lookup");
         this.fromType = fromType;
     }
 
-    protected Lookup(final String from) {
+    protected Lookup(String from) {
         super("$lookup");
         this.from = from;
     }
@@ -41,7 +41,7 @@ public class Lookup extends Stage {
      * @param from the type to use for determining the target collection
      * @return the new stage
      */
-    public static Lookup from(final Class<?> from) {
+    public static Lookup from(Class<?> from) {
         return new Lookup(from);
     }
 
@@ -51,7 +51,7 @@ public class Lookup extends Stage {
      * @param from the target collection
      * @return the new stage
      */
-    public static Lookup from(final String from) {
+    public static Lookup from(String from) {
         return new Lookup(from);
     }
 
@@ -62,7 +62,7 @@ public class Lookup extends Stage {
      * @param as the name
      * @return this
      */
-    public Lookup as(final String as) {
+    public Lookup as(String as) {
         this.as = as;
         return this;
     }
@@ -73,7 +73,7 @@ public class Lookup extends Stage {
      * @param foreignField the field name
      * @return this
      */
-    public Lookup foreignField(final String foreignField) {
+    public Lookup foreignField(String foreignField) {
         this.foreignField = foreignField;
         return this;
     }
@@ -141,7 +141,7 @@ public class Lookup extends Stage {
      * @param expression the variable value expression
      * @return this
      */
-    public Lookup let(final String name, final Expression expression) {
+    public Lookup let(String name, Expression expression) {
         if (variables == null) {
             variables = Expressions.of();
         }
@@ -155,7 +155,7 @@ public class Lookup extends Stage {
      * @param localField the field name
      * @return this
      */
-    public Lookup localField(final String localField) {
+    public Lookup localField(String localField) {
         this.localField = localField;
         return this;
     }
@@ -169,7 +169,7 @@ public class Lookup extends Stage {
      * @param stages the stages of the embedded pipeline
      * @return this
      */
-    public Lookup pipeline(final Stage... stages) {
+    public Lookup pipeline(Stage... stages) {
         pipeline = asList(stages);
         return this;
     }

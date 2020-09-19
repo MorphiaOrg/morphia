@@ -11,12 +11,12 @@ import org.bson.codecs.EncoderContext;
 @SuppressWarnings("removal")
 class CenterCodec implements Codec<dev.morphia.query.Shape.Center> {
     @Override
-    public dev.morphia.query.Shape.Center decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public dev.morphia.query.Shape.Center decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override
-    public void encode(final BsonWriter writer, final dev.morphia.query.Shape.Center value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, dev.morphia.query.Shape.Center value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartArray(value.getGeometry());
 
@@ -27,7 +27,7 @@ class CenterCodec implements Codec<dev.morphia.query.Shape.Center> {
         writer.writeEndDocument();
     }
 
-    private void encodePosition(final BsonWriter writer, final Position value) {
+    private void encodePosition(BsonWriter writer, Position value) {
         writer.writeStartArray();
 
         for (double number : value.getValues()) {

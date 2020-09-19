@@ -25,7 +25,7 @@ import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Test driving features for Issue 643 - add support for saving entities with GeoJSON.
@@ -281,7 +281,7 @@ public class GeoEntitiesTest extends TestBase {
         private Paths() {
         }
 
-        private Paths(final String name, final MultiLineString paths) {
+        private Paths(String name, MultiLineString paths) {
             this.name = name;
             this.paths = paths;
         }
@@ -294,7 +294,7 @@ public class GeoEntitiesTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -330,13 +330,13 @@ public class GeoEntitiesTest extends TestBase {
         private AllTheThings() {
         }
 
-        private AllTheThings(final String name, final GeometryCollection everything) {
+        private AllTheThings(String name, GeometryCollection everything) {
             this.name = name;
             this.everything = everything;
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

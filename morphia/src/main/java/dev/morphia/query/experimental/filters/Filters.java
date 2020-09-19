@@ -30,10 +30,10 @@ public final class Filters {
      * @return the filter
      * @query.filter $eq
      */
-    public static Filter eq(final String field, final Object val) {
+    public static Filter eq(String field, Object val) {
         return new Filter("$eq", field, val) {
             @Override
-            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeName(field(mapper));
                 writeUnnamedValue(getValue(mapper), mapper, writer, context);
             }
@@ -47,10 +47,10 @@ public final class Filters {
      * @return the filter
      * @query.filter $exists
      */
-    public static Filter exists(final String field) {
+    public static Filter exists(String field) {
         return new Filter("$exists", field, null) {
             @Override
-            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeStartDocument(field(mapper));
                 writer.writeName(getFilterName());
                 writer.writeBoolean(!isNot());
@@ -67,7 +67,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $type
      */
-    public static Filter type(final String field, final Type val) {
+    public static Filter type(String field, Type val) {
         return new Filter("$type", field, val.toString().toLowerCase());
     }
 
@@ -78,10 +78,10 @@ public final class Filters {
      * @return the filter
      * @query.filter $expr
      */
-    public static Filter expr(final Expression expression) {
+    public static Filter expr(Expression expression) {
         return new Filter("$expr", null, expression) {
             @Override
-            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeName("$expr");
                 getValue().encode(mapper, writer, context);
             }
@@ -101,7 +101,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $jsonSchema
      */
-    public static Filter jsonSchema(final String field, final Object val) {
+    public static Filter jsonSchema(String field, Object val) {
         return new Filter("$jsonSchema", field, val);
     }
 
@@ -114,10 +114,10 @@ public final class Filters {
      * @return the filter
      * @query.filter $mod
      */
-    public static Filter mod(final String field, final long divisor, final long remainder) {
+    public static Filter mod(String field, long divisor, long remainder) {
         return new Filter("$mod", field, null) {
             @Override
-            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeStartDocument(field(mapper));
                 writer.writeName(getFilterName());
                 writer.writeStartArray();
@@ -136,7 +136,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $regex
      */
-    public static RegexFilter regex(final String field) {
+    public static RegexFilter regex(String field) {
         return new RegexFilter(field);
     }
 
@@ -147,7 +147,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $text
      */
-    public static TextSearchFilter text(final String textSearch) {
+    public static TextSearchFilter text(String textSearch) {
         return new TextSearchFilter(textSearch);
     }
 
@@ -158,10 +158,10 @@ public final class Filters {
      * @return the filter
      * @query.filter $where
      */
-    public static Filter where(final String val) {
+    public static Filter where(String val) {
         return new Filter("$where", null, val) {
             @Override
-            public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeName(getFilterName());
                 String value = getValue(mapper).toString().trim();
                 if (!value.startsWith("function()")) {
@@ -180,7 +180,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $geoIntersects
      */
-    public static Filter geoIntersects(final String field, final Geometry val) {
+    public static Filter geoIntersects(String field, Geometry val) {
         return new GeoIntersectsFilter(field, val);
     }
 
@@ -195,7 +195,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $near
      */
-    public static NearFilter near(final String field, final Point point) {
+    public static NearFilter near(String field, Point point) {
         return new NearFilter("$near", field, point);
     }
 
@@ -207,7 +207,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $geoWithin
      */
-    public static GeoWithinFilter geoWithin(final String field, final Polygon polygon) {
+    public static GeoWithinFilter geoWithin(String field, Polygon polygon) {
         return new GeoWithinFilter(field, polygon);
     }
 
@@ -219,7 +219,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $geoWithin
      */
-    public static GeoWithinFilter geoWithin(final String field, final MultiPolygon polygon) {
+    public static GeoWithinFilter geoWithin(String field, MultiPolygon polygon) {
         return new GeoWithinFilter(field, polygon);
     }
 
@@ -234,7 +234,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $nearSphere
      */
-    public static NearFilter nearSphere(final String field, final Point point) {
+    public static NearFilter nearSphere(String field, Point point) {
         return new NearFilter("$nearSphere", field, point);
     }
 
@@ -246,7 +246,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $all
      */
-    public static Filter all(final String field, final Object val) {
+    public static Filter all(String field, Object val) {
         return new Filter("$all", field, val);
     }
 
@@ -258,7 +258,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $elemMatch
      */
-    public static Filter elemMatch(final String field, final Filter... filters) {
+    public static Filter elemMatch(String field, Filter... filters) {
         return new ElemMatchFilter(field, asList(filters));
     }
 
@@ -270,7 +270,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $size
      */
-    public static Filter size(final String field, final int size) {
+    public static Filter size(String field, int size) {
         return new Filter("$size", field, size);
     }
 
@@ -282,7 +282,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $bitsAllClear
      */
-    public static Filter bitsAllClear(final String field, final int[] positions) {
+    public static Filter bitsAllClear(String field, int[] positions) {
         return new Filter("$bitsAllClear", field, positions);
     }
 
@@ -294,7 +294,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $bitsAllClear
      */
-    public static Filter bitsAllClear(final String field, final int bitMask) {
+    public static Filter bitsAllClear(String field, int bitMask) {
         return new Filter("$bitsAllClear", field, bitMask);
     }
 
@@ -306,7 +306,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $bitsAllSet
      */
-    public static Filter bitsAllSet(final String field, final int bitMask) {
+    public static Filter bitsAllSet(String field, int bitMask) {
         return new Filter("$bitsAllSet", field, bitMask);
     }
 
@@ -318,7 +318,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $bitsAllSet
      */
-    public static Filter bitsAllSet(final String field, final int[] positions) {
+    public static Filter bitsAllSet(String field, int[] positions) {
         return new Filter("$bitsAllSet", field, positions);
     }
 
@@ -330,7 +330,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $bitsAnyClear
      */
-    public static Filter bitsAnyClear(final String field, final Object val) {
+    public static Filter bitsAnyClear(String field, Object val) {
         return new Filter("$bitsAnyClear", field, val);
     }
 
@@ -342,7 +342,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $bitsAnySet
      */
-    public static Filter bitsAnySet(final String field, final Object val) {
+    public static Filter bitsAnySet(String field, Object val) {
         return new Filter("$bitsAnySet", field, val);
     }
 
@@ -354,7 +354,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $comment
      */
-    public static Filter comment(final String field, final Object val) {
+    public static Filter comment(String field, Object val) {
         return new Filter("$comment", field, val);
     }
 
@@ -367,7 +367,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $box
      */
-    public static Filter box(final String field, final Point bottomLeft, final Point upperRight) {
+    public static Filter box(String field, Point bottomLeft, Point upperRight) {
         return new Box(field, bottomLeft, upperRight);
     }
 
@@ -380,7 +380,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $center
      */
-    public static Filter center(final String field, final Point center, final double radius) {
+    public static Filter center(String field, Point center, double radius) {
         return new CenterFilter("$center", field, center, radius);
     }
 
@@ -399,7 +399,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $centerSphere
      */
-    public static Filter centerSphere(final String field, final Point center, final double radius) {
+    public static Filter centerSphere(String field, Point center, double radius) {
         return new CenterFilter("$centerSphere", field, center, radius);
     }
 
@@ -411,7 +411,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $geometry
      */
-    public static Filter geometry(final String field, final Object val) {
+    public static Filter geometry(String field, Object val) {
         return new Filter("$geometry", field, val);
     }
 
@@ -423,7 +423,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $maxDistance
      */
-    public static Filter maxDistance(final String field, final Object val) {
+    public static Filter maxDistance(String field, Object val) {
         return new Filter("$maxDistance", field, val);
     }
 
@@ -435,7 +435,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $minDistance
      */
-    public static Filter minDistance(final String field, final Object val) {
+    public static Filter minDistance(String field, Object val) {
         return new Filter("$minDistance", field, val);
     }
 
@@ -447,7 +447,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $polygon
      */
-    public static Filter polygon(final String field, final Point... points) {
+    public static Filter polygon(String field, Point... points) {
         return new PolygonFilter(field, points);
     }
 
@@ -460,7 +460,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $uniqueDocs
      */
-    public static Filter uniqueDocs(final String field, final Object val) {
+    public static Filter uniqueDocs(String field, Object val) {
         return new Filter("$uniqueDocs", field, val);
     }
 
@@ -472,7 +472,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $gt
      */
-    public static Filter gt(final String field, final Object val) {
+    public static Filter gt(String field, Object val) {
         return new Filter("$gt", field, val);
     }
 
@@ -484,7 +484,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $gte
      */
-    public static Filter gte(final String field, final Object val) {
+    public static Filter gte(String field, Object val) {
         return new Filter("$gte", field, val);
     }
 
@@ -496,7 +496,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $in
      */
-    public static Filter in(final String field, final Iterable<?> val) {
+    public static Filter in(String field, Iterable<?> val) {
         return new Filter("$in", field, val);
     }
 
@@ -508,7 +508,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $lt
      */
-    public static Filter lt(final String field, final Object val) {
+    public static Filter lt(String field, Object val) {
         return new Filter("$lt", field, val);
     }
 
@@ -520,7 +520,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $lte
      */
-    public static Filter lte(final String field, final Object val) {
+    public static Filter lte(String field, Object val) {
         return new Filter("$lte", field, val);
     }
 
@@ -533,7 +533,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $ne
      */
-    public static Filter ne(final String field, final Object val) {
+    public static Filter ne(String field, Object val) {
         return new Filter("$ne", field, val);
     }
 
@@ -550,7 +550,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $nin
      */
-    public static Filter nin(final String field, final Object val) {
+    public static Filter nin(String field, Object val) {
         return new Filter("$nin", field, val);
     }
 
@@ -561,7 +561,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $nor
      */
-    public static Filter nor(final Filter... filters) {
+    public static Filter nor(Filter... filters) {
         return new LogicalFilter("$nor", filters);
     }
 
@@ -572,7 +572,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $or
      */
-    public static Filter or(final Filter... filters) {
+    public static Filter or(Filter... filters) {
         return new LogicalFilter("$or", filters);
     }
 
@@ -583,7 +583,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $and
      */
-    public static Filter and(final Filter... filters) {
+    public static Filter and(Filter... filters) {
         return new LogicalFilter("$and", filters);
     }
 

@@ -123,11 +123,11 @@ public abstract class TestBase {
         assertEquals(size, result.get("size"));
     }
 
-    protected void assertDocumentEquals(final Object expected, final Object actual) {
+    protected void assertDocumentEquals(Object expected, Object actual) {
         assertDocumentEquals("", expected, actual);
     }
 
-    protected void checkMinServerVersion(final double version) {
+    protected void checkMinServerVersion(double version) {
         assumeTrue(serverIsAtLeastVersion(version));
     }
 
@@ -141,7 +141,7 @@ public abstract class TestBase {
         });
     }
 
-    protected int count(final MongoCursor<?> cursor) {
+    protected int count(MongoCursor<?> cursor) {
         int count = 0;
         while (cursor.hasNext()) {
             cursor.next();
@@ -150,7 +150,7 @@ public abstract class TestBase {
         return count;
     }
 
-    protected int count(final Iterator<?> iterator) {
+    protected int count(Iterator<?> iterator) {
         int count = 0;
         while (iterator.hasNext()) {
             count++;
@@ -159,7 +159,7 @@ public abstract class TestBase {
         return count;
     }
 
-    protected List<Document> getIndexInfo(final Class<?> clazz) {
+    protected List<Document> getIndexInfo(Class<?> clazz) {
         return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
 
@@ -175,11 +175,11 @@ public abstract class TestBase {
      * @param version must be a major version, e.g. 1.8, 2,0, 2.2
      * @return true if server is at least specified version
      */
-    protected boolean serverIsAtLeastVersion(final double version) {
+    protected boolean serverIsAtLeastVersion(double version) {
         return getServerVersion() >= version;
     }
 
-    protected String toString(final Document document) {
+    protected String toString(Document document) {
         return document.toJson(getMapper().getCodecRegistry().get(Document.class));
     }
 
@@ -197,7 +197,7 @@ public abstract class TestBase {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
+    private void assertDocumentEquals(String path, Object expected, Object actual) {
         assertSameNullity(path, expected, actual);
         if (expected == null) {
             return;
@@ -205,7 +205,7 @@ public abstract class TestBase {
         assertSameType(path, expected, actual);
 
         if (expected instanceof Document) {
-            for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
+            for (Entry<String, Object> entry : ((Document) expected).entrySet()) {
                 final String key = entry.getKey();
                 Object expectedValue = entry.getValue();
                 Object actualValue = ((Document) actual).get(key);
@@ -238,14 +238,14 @@ public abstract class TestBase {
         }
     }
 
-    private void assertSameNullity(final String path, final Object expected, final Object actual) {
+    private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
             || actual == null && expected != null) {
             assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
-    protected void download(final URL url, final File file) throws IOException {
+    protected void download(URL url, File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
         try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
             byte[] read = new byte[49152];
@@ -261,11 +261,11 @@ public abstract class TestBase {
                           .runCommand(new Document("ismaster", 1));
     }
 
-    protected MongoCollection<Document> getDocumentCollection(final Class<?> type) {
+    protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
         return getDatabase().getCollection(getMapper().getMappedClass(type).getCollectionName());
     }
 
-    private void assertSameType(final String path, final Object expected, final Object actual) {
+    private void assertSameType(String path, Object expected, Object actual) {
         if (expected instanceof List && actual instanceof List) {
             return;
         }

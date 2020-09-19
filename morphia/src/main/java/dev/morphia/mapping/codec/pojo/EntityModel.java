@@ -61,7 +61,7 @@ public class EntityModel<T> {
      *
      * @param builder the builder to pull values from
      */
-    EntityModel(final EntityModelBuilder<T> builder) {
+    EntityModel(EntityModelBuilder<T> builder) {
         type = builder.getType();
         discriminatorEnabled = builder.isDiscriminatorEnabled();
         discriminatorKey = builder.discriminatorKey();
@@ -73,7 +73,7 @@ public class EntityModel<T> {
         builder.fieldModels().forEach(modelBuilder -> {
             FieldModel<?> model = modelBuilder.build();
             fieldModelsByMappedName.put(model.getMappedName(), model);
-            for (final String name : modelBuilder.alternateNames()) {
+            for (String name : modelBuilder.alternateNames()) {
                 if (fieldModelsByMappedName.put(name, model) != null) {
                     throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
                 }
@@ -94,11 +94,11 @@ public class EntityModel<T> {
      * @param document the document used in persistence
      * @param mapper   the mapper to use
      */
-    public void callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final Document document,
-                                     final Mapper mapper) {
+    public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
+                                     Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods().get(event);
         if (methodPairs != null) {
-            for (final ClassMethodPair cm : methodPairs) {
+            for (ClassMethodPair cm : methodPairs) {
                 cm.invoke(document, entity);
             }
         }
@@ -111,7 +111,7 @@ public class EntityModel<T> {
      * @param <A>   the annotation type
      * @return the annotation instance or null if not found
      */
-    public <A extends Annotation> A getAnnotation(final Class<A> clazz) {
+    public <A extends Annotation> A getAnnotation(Class<A> clazz) {
         return (A) annotations.get(clazz);
     }
 
@@ -120,7 +120,7 @@ public class EntityModel<T> {
      * @param clazz the annotation class
      * @return the annotation instance of the given type
      */
-    public <A extends Annotation> A getAnnotations(final Class<A> clazz) {
+    public <A extends Annotation> A getAnnotations(Class<A> clazz) {
         return (A) annotations.get(clazz);
     }
 
@@ -158,7 +158,7 @@ public class EntityModel<T> {
      * @param name the property name
      * @return the named FieldModel or null if it does not exist
      */
-    public FieldModel<?> getFieldModelByName(final String name) {
+    public FieldModel<?> getFieldModelByName(String name) {
         return fieldModelsByMappedName.getOrDefault(name, fieldModelsByField.get(name));
     }
 
@@ -202,7 +202,7 @@ public class EntityModel<T> {
 
             final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
             if (entityLisAnn != null && entityLisAnn.value().length != 0) {
-                for (final Class<?> aClass : entityLisAnn.value()) {
+                for (Class<?> aClass : entityLisAnn.value()) {
                     mapEvent(aClass, true);
                 }
             }
@@ -230,7 +230,7 @@ public class EntityModel<T> {
      * @param type the lifecycle event type
      * @return true if that even has been configured
      */
-    public boolean hasLifecycle(final Class<? extends Annotation> type) {
+    public boolean hasLifecycle(Class<? extends Annotation> type) {
         return getLifecycleMethods().containsKey(type);
     }
 
@@ -241,7 +241,7 @@ public class EntityModel<T> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -273,9 +273,9 @@ public class EntityModel<T> {
         return discriminatorEnabled;
     }
 
-    private void callGlobalInterceptors(final Class<? extends Annotation> event, final Object entity, final Document document,
-                                        final Mapper mapper) {
-        for (final EntityInterceptor ei : mapper.getInterceptors()) {
+    private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, Document document,
+                                        Mapper mapper) {
+        for (EntityInterceptor ei : mapper.getInterceptors()) {
             Sofia.logCallingInterceptorMethod(event.getSimpleName(), ei);
 
             if (event.equals(PreLoad.class)) {
@@ -290,7 +290,7 @@ public class EntityModel<T> {
         }
     }
 
-    private List<Method> getDeclaredAndInheritedMethods(final Class<?> type) {
+    private List<Method> getDeclaredAndInheritedMethods(Class<?> type) {
         final List<Method> methods = new ArrayList<>();
         if ((type == null) || (type == Object.class)) {
             return methods;
@@ -299,7 +299,7 @@ public class EntityModel<T> {
         final Class<?> parent = type.getSuperclass();
         methods.addAll(getDeclaredAndInheritedMethods(parent));
 
-        for (final Method m : type.getDeclaredMethods()) {
+        for (Method m : type.getDeclaredMethods()) {
             if (!Modifier.isStatic(m.getModifiers())) {
                 methods.add(m);
             }
@@ -308,9 +308,9 @@ public class EntityModel<T> {
         return methods;
     }
 
-    private void mapEvent(final Class<?> type, final boolean entityListener) {
-        for (final Method method : getDeclaredAndInheritedMethods(type)) {
-            for (final Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
+    private void mapEvent(Class<?> type, boolean entityListener) {
+        for (Method method : getDeclaredAndInheritedMethods(type)) {
+            for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
                 if (method.isAnnotationPresent(annotationClass)) {
                     lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
                                     .add(new ClassMethodPair(datastore, method, entityListener ? type : null, annotationClass));

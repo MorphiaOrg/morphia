@@ -33,7 +33,7 @@ public class ParentType {
         return embedded;
     }
 
-    public void setEmbedded(final EmbeddedType embedded) {
+    public void setEmbedded(EmbeddedType embedded) {
         this.embedded = embedded;
     }
 
@@ -41,12 +41,12 @@ public class ParentType {
         return id;
     }
 
-    public void setId(final ObjectId id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

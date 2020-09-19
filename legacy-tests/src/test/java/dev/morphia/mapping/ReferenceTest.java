@@ -157,12 +157,12 @@ public class ReferenceTest extends ProxyTestBase {
 
         final Set<Book> set1 = loaded.getSet();
         assertEquals(set.size(), set1.size());
-        for (final Book book1 : set) {
+        for (Book book1 : set) {
             assertTrue("Looking for " + book1 + " in " + set1, set1.contains(book1));
         }
 
         Assert.assertEquals(list, loaded.getList());
-        for (final Book book1 : list) {
+        for (Book book1 : list) {
             assertTrue("Looking for " + book1 + " in " + list, list.contains(book1));
         }
         //        validateMap(map, loaded);
@@ -314,20 +314,20 @@ public class ReferenceTest extends ProxyTestBase {
         Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).next());
     }
 
-    protected Book addBook(final Author author) {
+    protected Book addBook(Author author) {
         final Book book = new Book("Pride and Prejudice");
         book.setAuthor(author);
         return getDs().save(book);
     }
 
-    protected List<Book> addListOfBooks(final Author author) {
+    protected List<Book> addListOfBooks(Author author) {
         List<Book> list = new ArrayList<>();
         list.add(new Book("Sense and Sensibility"));
         list.add(new Book("Pride and Prejudice"));
         list.add(new Book("Mansfield Park"));
         list.add(new Book("Emma"));
         list.add(new Book("Northanger Abbey"));
-        for (final Book book : list) {
+        for (Book book : list) {
             book.setAuthor(author);
             getDs().save(book);
         }
@@ -335,14 +335,14 @@ public class ReferenceTest extends ProxyTestBase {
         return list;
     }
 
-    protected Set<Book> addSetOfBooks(final Author author) {
+    protected Set<Book> addSetOfBooks(Author author) {
         Set<Book> set = new HashSet<>(5);
         set.add(new Book("Sense and Sensibility"));
         set.add(new Book("Pride and Prejudice"));
         set.add(new Book("Mansfield Park"));
         set.add(new Book("Emma"));
         set.add(new Book("Northanger Abbey"));
-        for (final Book book : set) {
+        for (Book book : set) {
             book.setAuthor(author);
             getDs().save(book);
         }
@@ -350,7 +350,7 @@ public class ReferenceTest extends ProxyTestBase {
         return set;
     }
 
-    private void allNull(final Container container) {
+    private void allNull(Container container) {
         Assert.assertNull(container.lazyMapRef);
         Assert.assertNull(container.singleRef);
         Assert.assertNull(container.lazySingleRef);
@@ -379,7 +379,7 @@ public class ReferenceTest extends ProxyTestBase {
         public Author() {
         }
 
-        public Author(final String name) {
+        public Author(String name) {
             this.name = name;
         }
 
@@ -387,7 +387,7 @@ public class ReferenceTest extends ProxyTestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -395,7 +395,7 @@ public class ReferenceTest extends ProxyTestBase {
             return list;
         }
 
-        public void setList(final List<Book> list) {
+        public void setList(List<Book> list) {
             this.list = list;
         }
 
@@ -403,7 +403,7 @@ public class ReferenceTest extends ProxyTestBase {
             return name;
         }
 
-        public void setName(final String name) {
+        public void setName(String name) {
             this.name = name;
         }
 
@@ -411,7 +411,7 @@ public class ReferenceTest extends ProxyTestBase {
             return set;
         }
 
-        public void setSet(final Set<Book> set) {
+        public void setSet(Set<Book> set) {
             this.set = set;
         }
 
@@ -423,7 +423,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -450,7 +450,7 @@ public class ReferenceTest extends ProxyTestBase {
         public Book() {
         }
 
-        public Book(final String name) {
+        public Book(String name) {
             this.name = name;
         }
 
@@ -458,7 +458,7 @@ public class ReferenceTest extends ProxyTestBase {
             return author.get();
         }
 
-        public void setAuthor(final Author author) {
+        public void setAuthor(Author author) {
             this.author = MorphiaReference.wrap(author);
         }
 
@@ -466,7 +466,7 @@ public class ReferenceTest extends ProxyTestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -482,7 +482,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -506,7 +506,7 @@ public class ReferenceTest extends ProxyTestBase {
                    '}';
         }
 
-        public void setName(final String name) {
+        public void setName(String name) {
             this.name = name;
         }
     }
@@ -526,7 +526,7 @@ public class ReferenceTest extends ProxyTestBase {
         ChildId() {
         }
 
-        public ChildId(final String name, final int age) {
+        public ChildId(String name, int age) {
             this.name = name;
             this.age = age;
         }
@@ -543,7 +543,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -575,7 +575,7 @@ public class ReferenceTest extends ProxyTestBase {
         Complex() {
         }
 
-        public Complex(final ChildId id, final String value) {
+        public Complex(ChildId id, String value) {
             this.id = id;
             this.value = value;
         }
@@ -584,7 +584,7 @@ public class ReferenceTest extends ProxyTestBase {
             return id;
         }
 
-        public void setId(final ChildId id) {
+        public void setId(ChildId id) {
             this.id = id;
         }
 
@@ -592,7 +592,7 @@ public class ReferenceTest extends ProxyTestBase {
             return value;
         }
 
-        public void setValue(final String value) {
+        public void setValue(String value) {
             this.value = value;
         }
 
@@ -604,7 +604,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -640,7 +640,7 @@ public class ReferenceTest extends ProxyTestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -648,7 +648,7 @@ public class ReferenceTest extends ProxyTestBase {
             return list;
         }
 
-        public void setList(final List<Complex> list) {
+        public void setList(List<Complex> list) {
             this.list = list;
         }
 
@@ -662,7 +662,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -689,7 +689,7 @@ public class ReferenceTest extends ProxyTestBase {
             return complex;
         }
 
-        public void setComplex(final Complex complex) {
+        public void setComplex(Complex complex) {
             this.complex = complex;
         }
 
@@ -697,7 +697,7 @@ public class ReferenceTest extends ProxyTestBase {
             return lazyList;
         }
 
-        public void setLazyList(final List<Complex> lazyList) {
+        public void setLazyList(List<Complex> lazyList) {
             this.lazyList = lazyList;
         }
     }
@@ -729,7 +729,7 @@ public class ReferenceTest extends ProxyTestBase {
         Container() {
         }
 
-        Container(final List<Ref> refs) {
+        Container(List<Ref> refs) {
             singleRef = refs.get(0);
             lazySingleRef = refs.get(0);
             collectionRef = refs;
@@ -787,7 +787,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -817,7 +817,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -862,7 +862,7 @@ public class ReferenceTest extends ProxyTestBase {
         public Ref() {
         }
 
-        Ref(final String id) {
+        Ref(String id) {
             this.id = id;
         }
 
@@ -870,7 +870,7 @@ public class ReferenceTest extends ProxyTestBase {
             return id;
         }
 
-        public void setId(final String id) {
+        public void setId(String id) {
             this.id = id;
         }
 
@@ -880,7 +880,7 @@ public class ReferenceTest extends ProxyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

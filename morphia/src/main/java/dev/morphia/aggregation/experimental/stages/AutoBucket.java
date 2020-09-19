@@ -1,9 +1,9 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.BucketGranularity;
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 /**
  * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries
@@ -40,7 +40,7 @@ public class AutoBucket extends Stage {
      * @param buckets the number of buckets
      * @return this
      */
-    public AutoBucket buckets(final Integer buckets) {
+    public AutoBucket buckets(Integer buckets) {
         this.buckets = buckets;
         return this;
     }
@@ -86,7 +86,7 @@ public class AutoBucket extends Stage {
      * @param granularity the granularity
      * @return this
      */
-    public AutoBucket granularity(final BucketGranularity granularity) {
+    public AutoBucket granularity(BucketGranularity granularity) {
         this.granularity = granularity;
         return this;
     }
@@ -97,7 +97,7 @@ public class AutoBucket extends Stage {
      * @param groupBy the expression to use
      * @return this
      */
-    public AutoBucket groupBy(final Expression groupBy) {
+    public AutoBucket groupBy(Expression groupBy) {
         this.groupBy = groupBy;
         return this;
     }
@@ -110,7 +110,7 @@ public class AutoBucket extends Stage {
      * @param value the value expression
      * @return this
      */
-    public AutoBucket outputField(final String name, final Expression value) {
+    public AutoBucket outputField(String name, Expression value) {
         if (output == null) {
             output = Expressions.of();
         }

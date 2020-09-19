@@ -17,7 +17,7 @@ public abstract class PropertyCodec<T> implements Codec<T> {
     private final Field field;
     private final TypeData typeData;
     private MappedClass mappedClass;
-    private Datastore datastore;
+    private final Datastore datastore;
 
     /**
      * Creates a codec
@@ -26,7 +26,7 @@ public abstract class PropertyCodec<T> implements Codec<T> {
      * @param field        the reference field
      * @param typeData     the field type data
      */
-    public PropertyCodec(final Datastore datastore, final Field field, final TypeData typeData) {
+    public PropertyCodec(Datastore datastore, Field field, TypeData typeData) {
         this.datastore = datastore;
         this.field = field;
         this.typeData = typeData;

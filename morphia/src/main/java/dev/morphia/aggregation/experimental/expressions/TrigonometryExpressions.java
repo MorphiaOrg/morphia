@@ -20,7 +20,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $sin
      */
-    public static Expression sin(final Expression value) {
+    public static Expression sin(Expression value) {
         return new Expression("$sin", value);
     }
 
@@ -31,7 +31,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $cos
      */
-    public static Expression cos(final Expression value) {
+    public static Expression cos(Expression value) {
         return new Expression("$cos", value);
     }
 
@@ -42,7 +42,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $tan
      */
-    public static Expression tan(final Expression value) {
+    public static Expression tan(Expression value) {
         return new Expression("$tan", value);
     }
 
@@ -53,7 +53,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $asin
      */
-    public static Expression asin(final Expression value) {
+    public static Expression asin(Expression value) {
         return new Expression("$asin", value);
     }
 
@@ -64,7 +64,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $acos
      */
-    public static Expression acos(final Expression value) {
+    public static Expression acos(Expression value) {
         return new Expression("$acos", value);
     }
 
@@ -75,7 +75,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $atan
      */
-    public static Expression atan(final Expression value) {
+    public static Expression atan(Expression value) {
         return new Expression("$atan", value);
     }
 
@@ -88,7 +88,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $atan2
      */
-    public static Expression atan2(final Expression yValue, final Expression xValue) {
+    public static Expression atan2(Expression yValue, Expression xValue) {
         return new Expression("$atan2", List.of(yValue, xValue));
     }
 
@@ -99,7 +99,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $asinh
      */
-    public static Expression asinh(final Expression value) {
+    public static Expression asinh(Expression value) {
         return new Expression("$asinh", value);
     }
 
@@ -110,7 +110,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $acosh
      */
-    public static Expression acosh(final Expression value) {
+    public static Expression acosh(Expression value) {
         return new Expression("$acosh", value);
     }
 
@@ -121,7 +121,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $atanh
      */
-    public static Expression atanh(final Expression value) {
+    public static Expression atanh(Expression value) {
         return new Expression("$atanh", value);
     }
 
@@ -132,7 +132,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $degreesToRadians
      */
-    public static Expression degreesToRadians(final Expression value) {
+    public static Expression degreesToRadians(Expression value) {
         return new Expression("$degreesToRadians", value);
     }
 
@@ -143,7 +143,7 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $radiansToDegrees
      */
-    public static Expression radiansToDegrees(final Expression value) {
+    public static Expression radiansToDegrees(Expression value) {
         return new Expression("$radiansToDegrees", value);
     }
 

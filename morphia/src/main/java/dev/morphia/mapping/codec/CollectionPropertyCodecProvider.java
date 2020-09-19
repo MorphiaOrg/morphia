@@ -10,7 +10,7 @@ import java.util.Collection;
 final class CollectionPropertyCodecProvider implements PropertyCodecProvider {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public <T> Codec<T> get(final TypeWithTypeParameters<T> type, final PropertyCodecRegistry registry) {
+    public <T> Codec<T> get(TypeWithTypeParameters<T> type, PropertyCodecRegistry registry) {
         if (Collection.class.isAssignableFrom(type.getType()) && type.getTypeParameters().size() == 1) {
             return new CollectionCodec(type.getType(), registry.get(type.getTypeParameters().get(0)));
         } else {

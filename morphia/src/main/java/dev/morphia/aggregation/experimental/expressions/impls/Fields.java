@@ -14,23 +14,23 @@ public class Fields<T> {
     private T owner;
     private final List<PipelineField> fields = new ArrayList<>();
 
-    protected Fields(final T owner) {
+    protected Fields(T owner) {
         this.owner = owner;
     }
 
     private Fields() {
     }
 
-    public static <T> Fields<T> on(final T owner) {
+    public static <T> Fields<T> on(T owner) {
         return new Fields<>(owner);
     }
 
-    public T add(final String name) {
+    public T add(String name) {
         fields.add(new PipelineField(name, field(name)));
         return owner;
     }
 
-    public T add(final String name, final Expression expression) {
+    public T add(String name, Expression expression) {
         fields.add(new PipelineField(name, expression));
         return owner;
     }
@@ -39,8 +39,8 @@ public class Fields<T> {
         return fields;
     }
 
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
-        for (final PipelineField field : fields) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+        for (PipelineField field : fields) {
             writeNamedExpression(mapper, writer, field.getName(), field.getValue(), encoderContext);
         }
     }

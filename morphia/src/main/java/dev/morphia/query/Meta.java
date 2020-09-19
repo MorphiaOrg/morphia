@@ -10,15 +10,15 @@ import org.bson.Document;
 public class Meta {
 
     private static final String META = "$meta";
-    private MetaDataKeyword metaDataKeyword;
-    private String field;
+    private final MetaDataKeyword metaDataKeyword;
+    private final String field;
 
     /**
      * Specify the meta
      *
      * @param metaDataKeyword - metadata keyword to create
      */
-    public Meta(final MetaDataKeyword metaDataKeyword) {
+    public Meta(MetaDataKeyword metaDataKeyword) {
         this.metaDataKeyword = metaDataKeyword;
         this.field = metaDataKeyword.getName();
     }
@@ -27,7 +27,7 @@ public class Meta {
      * @param metaDataKeyword - metadata keyword to create
      * @param field           - metadata object field name
      */
-    public Meta(final MetaDataKeyword metaDataKeyword, final String field) {
+    public Meta(MetaDataKeyword metaDataKeyword, String field) {
         this.metaDataKeyword = metaDataKeyword;
         this.field = field;
     }
@@ -45,7 +45,7 @@ public class Meta {
      * @param field - the field to project meta data
      * @return instance of 'textScore' Meta
      */
-    public static Meta textScore(final String field) {
+    public static Meta textScore(String field) {
         return new Meta(MetaDataKeyword.textScore, field);
     }
 

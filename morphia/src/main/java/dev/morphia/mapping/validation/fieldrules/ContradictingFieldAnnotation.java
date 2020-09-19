@@ -25,13 +25,13 @@ public class ContradictingFieldAnnotation extends FieldConstraint {
      * @param a1 the first annotation
      * @param a2 the second annotation
      */
-    public ContradictingFieldAnnotation(final Class<? extends Annotation> a1, final Class<? extends Annotation> a2) {
+    public ContradictingFieldAnnotation(Class<? extends Annotation> a1, Class<? extends Annotation> a2) {
         this.a1 = a1;
         this.a2 = a2;
     }
 
     @Override
-    protected final void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
+    protected final void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(a1) && mf.hasAnnotation(a2)) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                                            String.format("A field can be either annotated with @%s OR @%s, but not both.",

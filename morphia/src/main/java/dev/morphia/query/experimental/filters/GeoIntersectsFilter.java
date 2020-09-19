@@ -9,12 +9,12 @@ import org.bson.codecs.EncoderContext;
  * @morphia.internal
  */
 public class GeoIntersectsFilter extends Filter {
-    GeoIntersectsFilter(final String field, final Geometry val) {
+    GeoIntersectsFilter(String field, Geometry val) {
         super("$geoIntersects", field, val);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(field(mapper));
         if (isNot()) {
             writer.writeStartDocument("$not");

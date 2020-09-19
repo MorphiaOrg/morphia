@@ -12,7 +12,7 @@ import org.bson.codecs.EncoderContext;
  */
 public class ClassCodec implements Codec<Class> {
     @Override
-    public Class decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Class decode(BsonReader reader, DecoderContext decoderContext) {
         try {
             return Class.forName(reader.readString());
         } catch (ClassNotFoundException e) {
@@ -21,7 +21,7 @@ public class ClassCodec implements Codec<Class> {
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Class value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Class value, EncoderContext encoderContext) {
         writer.writeString(value.getName());
     }
 

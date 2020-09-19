@@ -17,7 +17,7 @@ public final class Assert {
      *
      * @param error the error message
      */
-    public static void raiseError(final String error) {
+    public static void raiseError(String error) {
         throw new QueryException(error);
     }
 
@@ -27,7 +27,7 @@ public final class Assert {
      * @param names   a comma separated String of parameter names
      * @param objects the proposed parameter values
      */
-    public static void parametersNotNull(final String names, final Object... objects) {
+    public static void parametersNotNull(String names, Object... objects) {
         String msgPrefix = "At least one of the parameters";
 
         if (objects != null) {
@@ -35,7 +35,7 @@ public final class Assert {
                 msgPrefix = "Parameter";
             }
 
-            for (final Object object : objects) {
+            for (Object object : objects) {
                 if (object == null) {
                     raiseError(String.format("%s '%s' is null.", msgPrefix, names));
                 }
@@ -49,7 +49,7 @@ public final class Assert {
      * @param name      the parameter name
      * @param reference the proposed parameter value
      */
-    public static void parameterNotNull(final String name, final Object reference) {
+    public static void parameterNotNull(String name, Object reference) {
         if (reference == null) {
             raiseError(format("Parameter '%s' is not expected to be null.", name));
         }
@@ -61,7 +61,7 @@ public final class Assert {
      * @param name the parameter name
      * @param obj  the proposed parameter value
      */
-    public static void parameterNotEmpty(final String name, final Iterable obj) {
+    public static void parameterNotEmpty(String name, Iterable obj) {
         if (!obj.iterator().hasNext()) {
             raiseError(format("Parameter '%s' from type '%s' is expected to NOT be empty", name, obj.getClass().getName()));
         }
@@ -73,7 +73,7 @@ public final class Assert {
      * @param name  the parameter name
      * @param value the proposed parameter value
      */
-    public static void parameterNotEmpty(final String name, final String value) {
+    public static void parameterNotEmpty(String name, String value) {
         if (value != null && value.isEmpty()) {
             raiseError(format("Parameter '%s' is expected to NOT be empty.", name));
         }

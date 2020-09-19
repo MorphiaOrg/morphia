@@ -10,18 +10,18 @@ public class TrimExpression extends Expression {
     private final Expression input;
     private Expression chars;
 
-    public TrimExpression(final String operator, final Expression input) {
+    public TrimExpression(String operator, Expression input) {
         super(operator);
         this.input = input;
     }
 
-    public TrimExpression chars(final Expression chars) {
+    public TrimExpression chars(Expression chars) {
         this.chars = chars;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         writeNamedExpression(mapper, writer, "input", input, encoderContext);

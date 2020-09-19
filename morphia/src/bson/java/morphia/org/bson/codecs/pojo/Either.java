@@ -30,20 +30,20 @@ final class Either<L, R> {
     private final L left;
     private final R right;
 
-    private Either(final L l, final R r) {
+    private Either(L l, R r) {
         left = l;
         right = r;
     }
 
-    public static <L, R> Either<L, R> left(final L value) {
+    public static <L, R> Either<L, R> left(L value) {
         return new Either<>(notNull("value", value), null);
     }
 
-    public static <L, R> Either<L, R> right(final R value) {
+    public static <L, R> Either<L, R> right(R value) {
         return new Either<>(null, notNull("value", value));
     }
 
-    public void apply(final Consumer<? super L> lFunc, final Consumer<? super R> rFunc) {
+    public void apply(Consumer<? super L> lFunc, Consumer<? super R> rFunc) {
         if (left != null) {
             lFunc.accept(left);
         }
@@ -58,7 +58,7 @@ final class Either<L, R> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -78,7 +78,7 @@ final class Either<L, R> {
                + '}';
     }
 
-    public <T> T map(final Function<? super L, ? extends T> lFunc, final Function<? super R, ? extends T> rFunc) {
+    public <T> T map(Function<? super L, ? extends T> lFunc, Function<? super R, ? extends T> rFunc) {
         return left != null ? lFunc.apply(left) : rFunc.apply(right);
     }
 }

@@ -19,7 +19,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(getOperation());
         writer.writeStartArray();
@@ -31,7 +31,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     }
 
     @Override
-    public IfNull field(final String name, final Expression expression) {
+    public IfNull field(String name, Expression expression) {
         if (replacement != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
         }
@@ -55,12 +55,12 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         return target;
     }
 
-    public IfNull replacement(final Expression replacement) {
+    public IfNull replacement(Expression replacement) {
         this.replacement = replacement;
         return this;
     }
 
-    public IfNull target(final Expression target) {
+    public IfNull target(Expression target) {
         this.target = target;
         return this;
     }

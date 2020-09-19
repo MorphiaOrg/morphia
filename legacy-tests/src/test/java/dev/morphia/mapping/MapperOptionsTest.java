@@ -184,7 +184,7 @@ public class MapperOptionsTest extends TestBase {
         Assert.assertEquals(getDs().getLoggedQuery(options), 1, list.size());
     }
 
-    private void shouldFindField(final Datastore datastore, final HasList hl, final List<String> expected) {
+    private void shouldFindField(Datastore datastore, HasList hl, List<String> expected) {
         datastore.save(hl);
         final Document document = getDocumentCollection(HasList.class).find().first();
         Assert.assertTrue("Should find the field", document.containsKey("names"));
@@ -194,13 +194,13 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private Datastore empties(final boolean storeEmpties) {
+    private Datastore empties(boolean storeEmpties) {
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         return Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
             builder.storeEmpties(storeEmpties).build());
     }
 
-    private void shouldFindField(final Datastore datastore, final HasMap hl, final Map<String, String> expected) {
+    private void shouldFindField(Datastore datastore, HasMap hl, Map<String, String> expected) {
         final Document document;
         datastore.save(hl);
         document = getDocumentCollection(HasMap.class).find().first();
@@ -211,9 +211,9 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private void shouldFindField(final Datastore datastore,
-                                 final HasCollectionValuedMap hm,
-                                 final Map<String, Collection<String>> expected) {
+    private void shouldFindField(Datastore datastore,
+                                 HasCollectionValuedMap hm,
+                                 Map<String, Collection<String>> expected) {
         final Document document;
         datastore.save(hm);
         document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
@@ -224,7 +224,7 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private void shouldFindField(final Datastore datastore, final HasComplexObjectValuedMap hm, final Map<String, ComplexObject> expected) {
+    private void shouldFindField(Datastore datastore, HasComplexObjectValuedMap hm, Map<String, ComplexObject> expected) {
         final Document document;
         datastore.save(hm);
         document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
@@ -235,7 +235,7 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(final Datastore datastore, final HasCollectionValuedMap hm) {
+    private void shouldNotFindField(Datastore datastore, HasCollectionValuedMap hm) {
         datastore.save(hm);
         Document document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("properties"), document.containsKey("properties"));
@@ -245,7 +245,7 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(final Datastore datastore, final HasMap hl) {
+    private void shouldNotFindField(Datastore datastore, HasMap hl) {
         datastore.save(hl);
         Document document = getDocumentCollection(HasMap.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("properties"), document.containsKey("properties"));
@@ -255,7 +255,7 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(final Datastore datastore, final HasComplexObjectValuedMap hm) {
+    private void shouldNotFindField(Datastore datastore, HasComplexObjectValuedMap hm) {
         datastore.save(hm);
         Document document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("properties"), document.containsKey("properties"));
@@ -265,7 +265,7 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(final Datastore datastore, final HasList hl) {
+    private void shouldNotFindField(Datastore datastore, HasList hl) {
         datastore.save(hl);
         Document document = getDocumentCollection(HasList.class).find().first();
         Assert.assertFalse("field should not exist, value = " + document.get("names"), document.containsKey("names"));
@@ -275,7 +275,7 @@ public class MapperOptionsTest extends TestBase {
         cleanup();
     }
 
-    private Datastore nulls(final boolean storeNulls) {
+    private Datastore nulls(boolean storeNulls) {
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         return Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
             builder.storeNulls(storeNulls).build());

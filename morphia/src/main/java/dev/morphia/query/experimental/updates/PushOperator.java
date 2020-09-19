@@ -26,7 +26,7 @@ public class PushOperator extends UpdateOperator {
      * @param values the values
      * @morphia.internal
      */
-    PushOperator(final String field, final List<?> values) {
+    PushOperator(String field, List<?> values) {
         super("$push", field, values);
     }
 
@@ -36,7 +36,7 @@ public class PushOperator extends UpdateOperator {
      * @param position the position in the array for the update
      * @return this
      */
-    public PushOperator position(final int position) {
+    public PushOperator position(int position) {
         if (position < 0) {
             throw new UpdateException("The position must be at least 0.");
         }
@@ -50,7 +50,7 @@ public class PushOperator extends UpdateOperator {
      * @param slice the slice value for the update
      * @return this
      */
-    public PushOperator slice(final int slice) {
+    public PushOperator slice(int slice) {
         this.slice = slice;
         return this;
     }
@@ -61,7 +61,7 @@ public class PushOperator extends UpdateOperator {
      * @param sort the sort value for the update
      * @return this
      */
-    public PushOperator sort(final int sort) {
+    public PushOperator sort(int sort) {
         if (sortDocument != null) {
             throw new IllegalStateException(Sofia.updateSortOptions("Sort", "sort document"));
         }
@@ -75,7 +75,7 @@ public class PushOperator extends UpdateOperator {
      * @param value the sort criteria to add
      * @return this
      */
-    public PushOperator sort(final Sort value) {
+    public PushOperator sort(Sort value) {
         if (sort != null) {
             throw new IllegalStateException(Sofia.updateSortOptions("Sort document", "sort"));
         }
@@ -87,7 +87,7 @@ public class PushOperator extends UpdateOperator {
     }
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         Document document = new Document("$each", value());
         if (position != null) {
             document.put("$position", position);

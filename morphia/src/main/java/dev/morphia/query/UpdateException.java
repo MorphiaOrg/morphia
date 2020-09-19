@@ -28,7 +28,7 @@ public class UpdateException extends RuntimeException {
      *
      * @param message the message to record
      */
-    public UpdateException(final String message) {
+    public UpdateException(String message) {
         super(message);
     }
 
@@ -38,7 +38,7 @@ public class UpdateException extends RuntimeException {
      * @param message the message to record
      * @param cause   the underlying cause
      */
-    public UpdateException(final String message, final Throwable cause) {
+    public UpdateException(String message, Throwable cause) {
         super(message, cause);
     }
 

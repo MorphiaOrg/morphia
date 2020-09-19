@@ -8,12 +8,12 @@ import org.bson.codecs.EncoderContext;
 
 public class LookupCodec extends StageCodec<Lookup> {
 
-    public LookupCodec(final Mapper mapper) {
+    public LookupCodec(Mapper mapper) {
         super(mapper);
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Lookup value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Lookup value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         if(value.getFrom() != null) {
             writeNamedValue(writer, "from", value.getFrom(), encoderContext);

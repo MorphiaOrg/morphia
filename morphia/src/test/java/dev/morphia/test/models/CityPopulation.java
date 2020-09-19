@@ -31,7 +31,7 @@ public class CityPopulation {
     public CityPopulation() {
     }
 
-    public CityPopulation(final String name, final Long population) {
+    public CityPopulation(String name, Long population) {
         this.name = name;
         this.population = population;
     }
@@ -50,7 +50,7 @@ public class CityPopulation {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

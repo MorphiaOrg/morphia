@@ -33,7 +33,7 @@ public class JSONMatcher extends TypeSafeMatcher<String> {
      *
      * @param expectedJson a String containing valid JSON that represents the expected value to compare against.
      */
-    public JSONMatcher(final String expectedJson) {
+    public JSONMatcher(String expectedJson) {
         this.expectedJson = expectedJson;
     }
 
@@ -43,16 +43,16 @@ public class JSONMatcher extends TypeSafeMatcher<String> {
      * @param expectedValue the expected JSON value as a String.  Things like quotation marks are optional on field names
      * @return a JSONMatcher that will can be used to compare this expected value with an actual value.
      */
-    public static Matcher<String> jsonEqual(final String expectedValue) {
+    public static Matcher<String> jsonEqual(String expectedValue) {
         return new JSONMatcher(expectedValue);
     }
 
     @Override
-    public void describeTo(final Description description) {
+    public void describeTo(Description description) {
         try {
             Object expectedJsonAsPrettyJson = JSONParser.parseJSON(expectedJson);
             description.appendValue(expectedJsonAsPrettyJson);
-        } catch (final JSONException e) {
+        } catch (JSONException e) {
             throw new RuntimeException(String.format("Error parsing expected JSON string %s. Got Exception %s",
                                                      expectedJson, e.toString()));
         }
@@ -67,10 +67,10 @@ public class JSONMatcher extends TypeSafeMatcher<String> {
      * @return true if the expected and actual values are equivalent JSON values
      */
     @Override
-    public boolean matchesSafely(final String item) {
+    public boolean matchesSafely(String item) {
         try {
             return JSONCompare.compareJSON(expectedJson, item, JSONCompareMode.STRICT).passed();
-        } catch (final JSONException e) {
+        } catch (JSONException e) {
             Assert.fail(String.format("JSON compare threw exception when trying to compare %n %s %n with %n %s%n Exception was: %n%s ",
                                       expectedJson, item, e));
             return false;
@@ -78,11 +78,11 @@ public class JSONMatcher extends TypeSafeMatcher<String> {
     }
 
     @Override
-    protected void describeMismatchSafely(final String item, final Description mismatchDescription) {
+    protected void describeMismatchSafely(String item, Description mismatchDescription) {
         try {
             Object itemAsPrettyJson = JSONParser.parseJSON(item);
             mismatchDescription.appendText("was ").appendValue(itemAsPrettyJson);
-        } catch (final JSONException e) {
+        } catch (JSONException e) {
             throw new RuntimeException(String.format("Error parsing expected JSON string %s. Got Exception %s",
                                                      item, e.toString()));
         }

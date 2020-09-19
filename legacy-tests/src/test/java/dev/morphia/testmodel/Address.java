@@ -38,7 +38,7 @@ public class Address implements Serializable {
         return postCode;
     }
 
-    public void setPostCode(final String postCode) {
+    public void setPostCode(String postCode) {
         this.postCode = postCode;
     }
 
@@ -46,7 +46,7 @@ public class Address implements Serializable {
         return street;
     }
 
-    public void setStreet(final String street) {
+    public void setStreet(String street) {
         this.street = street;
     }
 
@@ -54,7 +54,7 @@ public class Address implements Serializable {
         return secretWord;
     }
 
-    public void setSecretWord(final String secretWord) {
+    public void setSecretWord(String secretWord) {
         this.secretWord = secretWord;
     }
 }

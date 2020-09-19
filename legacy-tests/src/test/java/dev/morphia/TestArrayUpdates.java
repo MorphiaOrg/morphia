@@ -134,7 +134,7 @@ public class TestArrayUpdates extends TestBase {
         public Files() {
         }
 
-        public Files(final int pos, final String fileName, final String fileHash) {
+        public Files(int pos, String fileName, String fileHash) {
             this.position = pos;
             this.fileName = fileName;
             this.fileHash = fileHash;
@@ -156,7 +156,7 @@ public class TestArrayUpdates extends TestBase {
         public Grade() {
         }
 
-        public Grade(final int marks, final Map<String, String> data) {
+        public Grade(int marks, Map<String, String> data) {
             this.marks = marks;
             this.data = data;
         }
@@ -177,7 +177,7 @@ public class TestArrayUpdates extends TestBase {
         public Student() {
         }
 
-        public Student(final long id, final Grade... grades) {
+        public Student(long id, Grade... grades) {
             this.id = id;
             this.grades = asList(grades);
         }

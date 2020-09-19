@@ -18,12 +18,12 @@ public class NearFilter extends Filter {
     private Double minDistance;
     private CoordinateReferenceSystem crs;
 
-    NearFilter(final String filterName, final String field, final Point point) {
+    NearFilter(String filterName, String field, Point point) {
         super(filterName, field, point);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(field(mapper));
         if (isNot()) {
             writer.writeStartDocument("$not");
@@ -52,7 +52,7 @@ public class NearFilter extends Filter {
      * @param maxDistance the max
      * @return this
      */
-    public NearFilter maxDistance(final Double maxDistance) {
+    public NearFilter maxDistance(Double maxDistance) {
         this.maxDistance = maxDistance;
         return this;
     }
@@ -62,7 +62,7 @@ public class NearFilter extends Filter {
      * @param minDistance the min
      * @return this
      */
-    public NearFilter minDistance(final Double minDistance) {
+    public NearFilter minDistance(Double minDistance) {
         this.minDistance = minDistance;
         return this;
     }
@@ -72,7 +72,7 @@ public class NearFilter extends Filter {
      * @param crs the crs
      * @return this
      */
-    public NearFilter crs(final CoordinateReferenceSystem crs) {
+    public NearFilter crs(CoordinateReferenceSystem crs) {
         this.crs = crs;
         return this;
     }
@@ -81,7 +81,7 @@ public class NearFilter extends Filter {
      * @param opts the options to apply
      * @morphia.internal
      */
-    public void applyOpts(final Map opts) {
+    public void applyOpts(Map opts) {
         maxDistance = (Double) opts.get("$maxDistance");
         minDistance = (Double) opts.get("$minDistance");
     }

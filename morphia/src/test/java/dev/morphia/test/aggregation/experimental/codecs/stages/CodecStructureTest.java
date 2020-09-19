@@ -236,7 +236,7 @@ public class CodecStructureTest extends TestBase {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void evaluate(final Document expected, final Object value) {
+    private void evaluate(Document expected, Object value) {
         DocumentWriter writer = new DocumentWriter();
         ((Codec) getMapper().getCodecRegistry()
                             .get(value.getClass()))

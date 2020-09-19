@@ -28,7 +28,7 @@ public class QueryException extends RuntimeException {
      *
      * @param message the message to record
      */
-    public QueryException(final String message) {
+    public QueryException(String message) {
         super(message);
     }
 
@@ -38,7 +38,7 @@ public class QueryException extends RuntimeException {
      * @param message the message to record
      * @param cause   the underlying cause
      */
-    public QueryException(final String message, final Throwable cause) {
+    public QueryException(String message, Throwable cause) {
         super(message, cause);
     }
 

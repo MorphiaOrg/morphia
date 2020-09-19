@@ -80,7 +80,7 @@ public class TestPostPersist extends TestBase {
         private TestObject() {
         }
 
-        public TestObject(final String value) {
+        public TestObject(String value) {
             this.value = value;
         }
 

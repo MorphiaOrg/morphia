@@ -47,7 +47,7 @@ public class InsertOptions {
      * @param writeConcern the write concern
      * @return this
      */
-    public InsertOptions writeConcern(final WriteConcern writeConcern) {
+    public InsertOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -78,7 +78,7 @@ public class InsertOptions {
      * @return this
      * @mongodb.server.release 3.2
      */
-    public InsertOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+    public InsertOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
         this.bypassDocumentValidation = bypassDocumentValidation;
         return this;
     }
@@ -89,7 +89,7 @@ public class InsertOptions {
      * @param ordered true if documents should be inserted in order
      * @return this
      */
-    public InsertOptions ordered(final boolean ordered) {
+    public InsertOptions ordered(boolean ordered) {
         this.ordered = ordered;
         return this;
     }

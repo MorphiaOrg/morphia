@@ -13,8 +13,8 @@ public class BadConstructorBased {
     private final String name;
 
     @Constructor
-    public BadConstructorBased(@Name("_id") final ObjectId id,
-                               @Name("named") final String name) {
+    public BadConstructorBased(@Name("_id") ObjectId id,
+                               @Name("named") String name) {
         this.id = id;
         this.name = name;
     }

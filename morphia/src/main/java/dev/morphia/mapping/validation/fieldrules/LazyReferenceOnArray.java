@@ -17,7 +17,7 @@ import java.util.Set;
 public class LazyReferenceOnArray extends FieldConstraint {
 
     @Override
-    protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
+    protected void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
         final Reference ref = mf.getAnnotation(Reference.class);
         if (ref != null && ref.lazy()) {
             final Class type = mf.getType();

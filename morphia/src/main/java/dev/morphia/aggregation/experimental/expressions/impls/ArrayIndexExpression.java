@@ -21,14 +21,14 @@ public class ArrayIndexExpression extends Expression {
      * @param search
      * @morphia.internal
      */
-    public ArrayIndexExpression(final Expression array, final Expression search) {
+    public ArrayIndexExpression(Expression array, Expression search) {
         super("$indexOfArray");
         this.array = array;
         this.search = search;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartArray(getOperation());
         writeUnnamedExpression(mapper, writer, array, encoderContext);
@@ -46,7 +46,7 @@ public class ArrayIndexExpression extends Expression {
      * @param end the ending index
      * @return this
      */
-    public ArrayIndexExpression end(final Integer end) {
+    public ArrayIndexExpression end(Integer end) {
         this.end = end;
         return this;
     }
@@ -57,7 +57,7 @@ public class ArrayIndexExpression extends Expression {
      * @param start the starting index
      * @return this
      */
-    public ArrayIndexExpression start(final Integer start) {
+    public ArrayIndexExpression start(Integer start) {
         this.start = start;
         return this;
     }

@@ -35,7 +35,7 @@ public class PhoneNumber implements Serializable {
         type = Type.PHONE;
     }
 
-    public PhoneNumber(final int countryCode, final int localExtension, final Type type) {
+    public PhoneNumber(int countryCode, int localExtension, Type type) {
         this.countryCode = countryCode;
         this.localExtension = localExtension;
         this.type = type;
@@ -45,7 +45,7 @@ public class PhoneNumber implements Serializable {
         return countryCode;
     }
 
-    public void setCountryCode(final int countryCode) {
+    public void setCountryCode(int countryCode) {
         this.countryCode = countryCode;
     }
 
@@ -53,7 +53,7 @@ public class PhoneNumber implements Serializable {
         return localExtension;
     }
 
-    public void setLocalExtension(final int localExtension) {
+    public void setLocalExtension(int localExtension) {
         this.localExtension = localExtension;
     }
 
@@ -61,7 +61,7 @@ public class PhoneNumber implements Serializable {
         return type;
     }
 
-    public void setType(final Type type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -75,7 +75,7 @@ public class PhoneNumber implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }

@@ -45,7 +45,7 @@ public class ConcreteClassEmbeddedOverrideTest extends TestBase {
             return s;
         }
 
-        public void setS(final String s) {
+        public void setS(String s) {
             this.s = s;
         }
     }

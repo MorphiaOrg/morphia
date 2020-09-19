@@ -67,10 +67,10 @@ public class OptionsTest {
         scan(com.mongodb.client.model.UpdateOptions.class, UpdateOptions.class, true, List.of(WriteConcern.class));
     }
 
-    private void beanScan(final Class<?> driver, final Class<?> morphia, final List<String> filtered) {
+    private void beanScan(Class<?> driver, Class<?> morphia, List<String> filtered) {
         try {
             Method[] methods = driver.getDeclaredMethods();
-            for (final Method method : methods) {
+            for (Method method : methods) {
                 if (!filtered.contains(method.getName()) && method.getAnnotation(Deprecated.class) == null) {
                     morphia.getDeclaredMethod(method.getName(), convert(method.getParameterTypes()));
                 }
@@ -80,7 +80,7 @@ public class OptionsTest {
         }
     }
 
-    private void checkOverride(final Class<?> driverType, final Class<?> morphiaType, final Method method) throws NoSuchMethodException {
+    private void checkOverride(Class<?> driverType, Class<?> morphiaType, Method method) throws NoSuchMethodException {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
         Assert.assertTrue(method.toString(), !method.getReturnType().equals(driverType)
@@ -94,7 +94,7 @@ public class OptionsTest {
         }
     }
 
-    private Class<?>[] convert(final Class<?>[] types) {
+    private Class<?>[] convert(Class<?>[] types) {
         for (int i = 0; i < types.length; i++) {
             if (types[i].equals(Bson.class)) {
                 types[i] = Document.class;
@@ -103,16 +103,16 @@ public class OptionsTest {
         return types;
     }
 
-    private void scan(final Class<?> driverType, final Class<?> morphiaType, final boolean subclass, List<Class<?>> localFields) {
+    private void scan(Class<?> driverType, Class<?> morphiaType, boolean subclass, List<Class<?>> localFields) {
         try {
             Method[] methods = driverType.getDeclaredMethods();
             Assert.assertEquals("Options class should be a subclass", subclass, driverType.equals(morphiaType.getSuperclass()));
-            for (final Method method : methods) {
+            for (Method method : methods) {
                 if (method.getAnnotation(Deprecated.class) == null && !method.getName().equals("builder")) {
                     checkOverride(driverType, morphiaType, method);
                 }
             }
-            for (final Class<?> localField : localFields) {
+            for (Class<?> localField : localFields) {
                 String name = localField.getSimpleName()
                                         .replaceAll("^get", "");
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);

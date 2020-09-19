@@ -50,7 +50,7 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHandler {
     private final Reference annotation;
-    private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
+    private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
 
     /**
      * Creates a codec
@@ -59,7 +59,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
      * @param field     the reference field
      * @param typeData  the field type data
      */
-    public ReferenceCodec(final Datastore datastore, final Field field, final TypeData typeData) {
+    public ReferenceCodec(Datastore datastore, Field field, TypeData typeData) {
         super(datastore, field, typeData);
         annotation = field.getAnnotation(Reference.class);
     }
@@ -72,12 +72,12 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
      * @param decoderContext the decoder context
      * @return the decoded value
      */
-    public static Object processId(final Object decode, final Mapper mapper, final DecoderContext decoderContext) {
+    public static Object processId(Object decode, Mapper mapper, DecoderContext decoderContext) {
         Object processed = decode;
         if (processed instanceof Iterable) {
             Iterable iterable = (Iterable) processed;
             List ids = new ArrayList();
-            for (final Object o : iterable) {
+            for (Object o : iterable) {
                 ids.add(processId(o, mapper, decoderContext));
             }
             processed = ids;
@@ -115,7 +115,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
      * @return the encoded value
      * @morphia.internal
      */
-    public static Object encodeId(final Mapper mapper, final Datastore datastore, final Object value, final MappedClass fieldMappedClass) {
+    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, MappedClass fieldMappedClass) {
         Object idValue;
         MongoCollection<?> collection = null;
         if (value instanceof Key) {
@@ -143,7 +143,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     }
 
     @Override
-    public Object decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Object decode(BsonReader reader, DecoderContext decoderContext) {
         Object decode = getDatastore().getMapper().getCodecRegistry()
                                       .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
                                       .decode(reader, decoderContext);
@@ -152,7 +152,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     }
 
     @Override
-    public Object encode(final Object value) {
+    public Object encode(Object value) {
         try {
             DocumentWriter writer = new DocumentWriter();
             writer.writeStartDocument();
@@ -166,7 +166,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Object instance, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Object instance, EncoderContext encoderContext) {
         Object idValue = collectIdValues(instance);
 
         if (idValue != null) {
@@ -187,7 +187,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         return type.getType();
     }
 
-    private Object collectIdValues(final Object value) {
+    private Object collectIdValues(Object value) {
         if (value instanceof Collection) {
             List ids = new ArrayList(((Collection) value).size());
             for (Object o : (Collection) value) {
@@ -197,7 +197,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         } else if (value instanceof Map) {
             final LinkedHashMap ids = new LinkedHashMap();
             Map<Object, Object> map = (Map<Object, Object>) value;
-            for (final Map.Entry<Object, Object> o : map.entrySet()) {
+            for (Map.Entry<Object, Object> o : map.entrySet()) {
                 ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
             }
             return ids;
@@ -212,7 +212,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         }
     }
 
-    private <T> T createProxy(final MorphiaReference reference) {
+    private <T> T createProxy(MorphiaReference reference) {
         ReferenceProxy referenceProxy = new ReferenceProxy(reference);
         try {
             Class<?> type = getField().getType();
@@ -238,7 +238,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         }
     }
 
-    private Object fetch(final Object value) {
+    private Object fetch(Object value) {
         MorphiaReference reference;
         final Class<?> type = getField().getType();
         if (List.class.isAssignableFrom(type)) {
@@ -259,32 +259,32 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         return !annotation.lazy() ? reference.get() : createProxy(reference);
     }
 
-    MorphiaReference readDocument(final Document value) {
+    MorphiaReference readDocument(Document value) {
         Mapper mapper = getDatastore().getMapper();
         final Object id = mapper.getCodecRegistry().get(Object.class)
                                 .decode(new DocumentReader(value), DecoderContext.builder().build());
         return readSingle(id);
     }
 
-    MorphiaReference readList(final List value) {
+    MorphiaReference readList(List value) {
         return new ListReference(getDatastore(), getFieldMappedClass(), value);
     }
 
-    MorphiaReference readMap(final Map<Object, Object> value) {
+    MorphiaReference readMap(Map<Object, Object> value) {
         final Object ids = new LinkedHashMap<>();
         Class keyType = ((TypeData) getTypeData().getTypeParameters().get(0)).getType();
-        for (final Entry entry : value.entrySet()) {
+        for (Entry entry : value.entrySet()) {
             ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
         }
 
         return new MapReference(getDatastore(), (Map<String, Object>) ids, getFieldMappedClass());
     }
 
-    MorphiaReference readSet(final List value) {
+    MorphiaReference readSet(List value) {
         return new SetReference(getDatastore(), getFieldMappedClass(), value);
     }
 
-    MorphiaReference readSingle(final Object value) {
+    MorphiaReference readSingle(Object value) {
         return new SingleReference(getDatastore(), getFieldMappedClass(), value);
     }
 }

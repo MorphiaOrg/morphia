@@ -21,7 +21,7 @@ public final class Area {
     Area() {
     }
 
-    public Area(final String name, final Polygon area) {
+    public Area(String name, Polygon area) {
         this.name = name;
         this.area = area;
     }
@@ -34,7 +34,7 @@ public final class Area {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

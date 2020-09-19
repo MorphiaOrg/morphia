@@ -28,11 +28,11 @@ public class MultiPoint implements Geometry {
         this.coordinates = new ArrayList<Point>();
     }
 
-    MultiPoint(final Point... points) {
+    MultiPoint(Point... points) {
         this.coordinates = Arrays.asList(points);
     }
 
-    MultiPoint(final List<Point> coordinates) {
+    MultiPoint(List<Point> coordinates) {
         this.coordinates = coordinates;
     }
 
@@ -48,7 +48,7 @@ public class MultiPoint implements Geometry {
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -58,11 +58,7 @@ public class MultiPoint implements Geometry {
 
         MultiPoint that = (MultiPoint) o;
 
-        if (!coordinates.equals(that.coordinates)) {
-            return false;
-        }
-
-        return true;
+        return coordinates.equals(that.coordinates);
     }
 
     @Override
@@ -78,7 +74,7 @@ public class MultiPoint implements Geometry {
     }
 
     @Override
-    public com.mongodb.client.model.geojson.MultiPoint convert(final CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.MultiPoint convert(CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.MultiPoint(crs != null ? crs.convert() : null,
             GeoJson.convertPoints(coordinates));
     }

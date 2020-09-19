@@ -25,12 +25,12 @@ public class Unwind extends Stage {
      * @param name the array field
      * @return this
      */
-    public static Unwind on(final String name) {
+    public static Unwind on(String name) {
         return new Unwind()
                    .path(name);
     }
 
-    private Unwind path(final String path) {
+    private Unwind path(String path) {
         this.path = field(path);
         return this;
     }
@@ -65,7 +65,7 @@ public class Unwind extends Stage {
      * @param name the new name
      * @return this
      */
-    public Unwind includeArrayIndex(final String name) {
+    public Unwind includeArrayIndex(String name) {
         this.includeArrayIndex = name;
         return this;
     }
@@ -88,7 +88,7 @@ public class Unwind extends Stage {
      * @param preserveNullAndEmptyArrays true to preserve
      * @return this
      */
-    public Unwind preserveNullAndEmptyArrays(final Boolean preserveNullAndEmptyArrays) {
+    public Unwind preserveNullAndEmptyArrays(Boolean preserveNullAndEmptyArrays) {
         this.preserveNullAndEmptyArrays = preserveNullAndEmptyArrays;
         return this;
     }

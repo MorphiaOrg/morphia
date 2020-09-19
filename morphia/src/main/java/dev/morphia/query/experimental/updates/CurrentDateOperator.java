@@ -17,12 +17,12 @@ public class CurrentDateOperator extends UpdateOperator {
      *
      * @param field the field to update
      */
-    protected CurrentDateOperator(final String field) {
+    protected CurrentDateOperator(String field) {
         super("$currentDate", field, field);
     }
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, typeSpec.toTarget());
     }
 
@@ -32,7 +32,7 @@ public class CurrentDateOperator extends UpdateOperator {
      * @param type the type to use
      * @return this
      */
-    public CurrentDateOperator type(final TypeSpecification type) {
+    public CurrentDateOperator type(TypeSpecification type) {
         this.typeSpec = type;
         return this;
     }

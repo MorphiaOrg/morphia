@@ -93,16 +93,16 @@ public class TestIndexes extends TestBase {
         assertHashed(getIndexInfo(TestWithHashedIndex.class));
     }
 
-    private void assertBackground(final List<Document> indexInfo) {
-        for (final Document document : indexInfo) {
+    private void assertBackground(List<Document> indexInfo) {
+        for (Document document : indexInfo) {
             if (!document.getString("name").equals("_id_")) {
                 Assert.assertTrue(document.getBoolean("background"));
             }
         }
     }
 
-    private void assertHashed(final List<Document> indexInfo) {
-        for (final Document document : indexInfo) {
+    private void assertHashed(List<Document> indexInfo) {
+        for (Document document : indexInfo) {
             if (!document.getString("name").equals("_id_")) {
                 assertEquals(((Document) document.get("key")).get("hashedValue"), "hashed");
             }

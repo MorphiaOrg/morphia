@@ -12,22 +12,22 @@ import org.bson.codecs.EncoderContext;
 @SuppressWarnings("removal")
 class ShapeCodec implements Codec<dev.morphia.query.Shape> {
     @Override
-    public dev.morphia.query.Shape decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public dev.morphia.query.Shape decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override
-    public void encode(final BsonWriter writer, final dev.morphia.query.Shape value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, dev.morphia.query.Shape value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartArray(value.getGeometry());
-        for (final Point point : value.getPoints()) {
+        for (Point point : value.getPoints()) {
             encodePosition(writer, point.getCoordinates());
         }
         writer.writeEndArray();
         writer.writeEndDocument();
     }
 
-    private void encodePosition(final BsonWriter writer, final Position value) {
+    private void encodePosition(BsonWriter writer, Position value) {
         writer.writeStartArray();
 
         for (double number : value.getValues()) {

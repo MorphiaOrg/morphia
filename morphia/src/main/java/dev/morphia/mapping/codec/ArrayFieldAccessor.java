@@ -13,8 +13,8 @@ import static java.lang.String.format;
  */
 public class ArrayFieldAccessor extends FieldAccessor {
 
-    private TypeData typeData;
-    private Class<?> componentType;
+    private final TypeData typeData;
+    private final Class<?> componentType;
 
     /**
      * Creates the accessor
@@ -22,14 +22,14 @@ public class ArrayFieldAccessor extends FieldAccessor {
      * @param typeData the type data
      * @param field    the field
      */
-    public ArrayFieldAccessor(final TypeData typeData, final Field field) {
+    public ArrayFieldAccessor(TypeData typeData, Field field) {
         super(field);
         this.typeData = typeData;
         componentType = field.getType().getComponentType();
     }
 
     @Override
-    public void set(final Object instance, final Object value) {
+    public void set(Object instance, Object value) {
         Object newValue = value;
         if (value.getClass().getComponentType() != componentType) {
             newValue = value instanceof List ? convert((List) value) : convert((Object[]) value);
@@ -37,7 +37,7 @@ public class ArrayFieldAccessor extends FieldAccessor {
         super.set(instance, newValue);
     }
 
-    private Object convert(final Object[] value) {
+    private Object convert(Object[] value) {
         final Object newArray = Array.newInstance(componentType, value.length);
         for (int i = 0; i < value.length; i++) {
             Object convert = convert(value[i], componentType);
@@ -46,7 +46,7 @@ public class ArrayFieldAccessor extends FieldAccessor {
         return newArray;
     }
 
-    private Object convert(final List value) {
+    private Object convert(List value) {
         final Object newArray = Array.newInstance(componentType, value.size());
         for (int i = 0; i < value.size(); i++) {
             Object converted = convert(value.get(i), componentType);
@@ -60,7 +60,7 @@ public class ArrayFieldAccessor extends FieldAccessor {
     }
 
 
-    private Object convert(final Object o, final Class type) {
+    private Object convert(Object o, Class type) {
         if (o instanceof List) {
             List list = (List) o;
             final Object newArray = Array.newInstance(type.getComponentType(), list.size());

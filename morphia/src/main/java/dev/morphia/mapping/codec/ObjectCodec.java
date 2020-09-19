@@ -18,20 +18,20 @@ import org.bson.codecs.configuration.CodecConfigurationException;
  */
 public class ObjectCodec implements Codec<Object> {
 
-    private Mapper mapper;
-    private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
+    private final Mapper mapper;
+    private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
 
     /**
      * Creates a codec
      *
      * @param mapper the mapper to use
      */
-    public ObjectCodec(final Mapper mapper) {
+    public ObjectCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 
     @Override
-    public Object decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Object decode(BsonReader reader, DecoderContext decoderContext) {
         BsonType bsonType = reader.getCurrentBsonType();
         Class<?> clazz;
         if (bsonType == BsonType.DOCUMENT) {
@@ -61,7 +61,7 @@ public class ObjectCodec implements Codec<Object> {
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Object value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
         final Codec codec = mapper.getCodecRegistry().get(value.getClass());
         codec.encode(writer, value, encoderContext);
     }

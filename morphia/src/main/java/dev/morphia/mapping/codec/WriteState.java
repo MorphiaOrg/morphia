@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.StringJoiner;
 
 class ArrayState extends ValueState {
-    private List<Object> list = new ArrayList<>();
+    private final List<Object> list = new ArrayList<>();
 
-    ArrayState(final DocumentWriter writer) {
+    ArrayState(DocumentWriter writer) {
         super(writer);
     }
 
     @Override
-    protected String stateToString(final String s) {
+    protected String stateToString(String s) {
         return previous().stateToString(list.toString())
                + (!s.equals("") ? ", " + s : "");
     }
@@ -26,13 +26,13 @@ class ArrayState extends ValueState {
     }
 
     @Override
-    protected void apply(final Object value) {
+    protected void apply(Object value) {
         list.add(value);
         getWriter().state(this);
     }
 
     @Override
-    WriteState value(final Object value) {
+    WriteState value(Object value) {
         list.add(value);
         return this;
     }
@@ -41,17 +41,17 @@ class ArrayState extends ValueState {
 class DocumentState extends WriteState {
     private final Document document;
 
-    DocumentState(final DocumentWriter writer) {
+    DocumentState(DocumentWriter writer) {
         super(writer);
         document = new Document();
     }
 
-    DocumentState(final DocumentWriter writer, final Document seed) {
+    DocumentState(DocumentWriter writer, Document seed) {
         super(writer);
         document = seed != null ? seed : new Document();
     }
 
-    public DocumentState applyValue(final String name, final Object value) {
+    public DocumentState applyValue(String name, Object value) {
         if (value instanceof Document && document.get(name) instanceof Document) {
             Document extant = (Document) document.get(name);
             extant.putAll((Document) value);
@@ -63,7 +63,7 @@ class DocumentState extends WriteState {
     }
 
     @Override
-    protected String stateToString(final String s) {
+    protected String stateToString(String s) {
         StringJoiner joiner = new StringJoiner(", ", "{ ", " }");
         document.entrySet().stream()
                 .map(e -> e.getKey() + ": " + e.getValue())
@@ -88,7 +88,7 @@ class DocumentState extends WriteState {
     }
 
     @Override
-    NameState name(final String name) {
+    NameState name(String name) {
         return new NameState(getWriter(), name);
     }
 
@@ -98,15 +98,15 @@ class DocumentState extends WriteState {
 }
 
 class NameState extends WriteState {
-    private String name;
+    private final String name;
 
-    NameState(final DocumentWriter writer, final String name) {
+    NameState(DocumentWriter writer, String name) {
         super(writer);
         this.name = name;
     }
 
     @Override
-    public String stateToString(final String downstream) {
+    public String stateToString(String downstream) {
         return previous().stateToString(name + ": "
                                         + (!downstream.equals("") ? downstream : "<pending>"));
     }
@@ -132,11 +132,11 @@ class NameState extends WriteState {
     }
 
     @Override
-    WriteState value(final Object value) {
+    WriteState value(Object value) {
         return previous().applyValue(name, value);
     }
 
-    void apply(final Object value) {
+    void apply(Object value) {
         previous().applyValue(name, value);
     }
 }
@@ -145,18 +145,18 @@ class RootState extends WriteState {
 
     private final Document document;
 
-    RootState(final DocumentWriter writer) {
+    RootState(DocumentWriter writer) {
         super(writer);
         document = null;
     }
 
-    RootState(final DocumentWriter writer, final Document seed) {
+    RootState(DocumentWriter writer, Document seed) {
         super(writer);
         document = seed;
     }
 
     @Override
-    protected String stateToString(final String s) {
+    protected String stateToString(String s) {
         return s;
     }
 
@@ -176,13 +176,13 @@ class RootState extends WriteState {
     }
 
     @Override
-    NameState name(final String name) {
+    NameState name(String name) {
         return new NameState(getWriter(), name);
     }
 }
 
 class ValueState extends WriteState {
-    ValueState(final DocumentWriter writer) {
+    ValueState(DocumentWriter writer) {
         super(writer);
     }
 
@@ -196,7 +196,7 @@ abstract class WriteState {
     private final DocumentWriter writer;
     private final WriteState previous;
 
-    WriteState(final DocumentWriter writer) {
+    WriteState(DocumentWriter writer) {
         this.writer = writer;
         this.previous = writer.state(this);
     }
@@ -206,13 +206,13 @@ abstract class WriteState {
         return stateToString("");
     }
 
-    void apply(final Object value) {
+    void apply(Object value) {
         throw new UnsupportedOperationException();
     }
 
     protected abstract String state();
 
-    protected String stateToString(final String s) {
+    protected String stateToString(String s) {
         return s;
     }
 
@@ -232,7 +232,7 @@ abstract class WriteState {
         return writer;
     }
 
-    WriteState name(final String name) {
+    WriteState name(String name) {
         return new NameState(getWriter(), name);
     }
 
@@ -240,7 +240,7 @@ abstract class WriteState {
         return (P) previous;
     }
 
-    WriteState value(final Object value) {
+    WriteState value(Object value) {
         throw new IllegalStateException(Sofia.notInValidState("value", state()));
     }
 }

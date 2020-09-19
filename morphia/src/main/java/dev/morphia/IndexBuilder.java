@@ -26,7 +26,7 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     IndexBuilder() {
     }
 
-    IndexBuilder(final Index original) {
+    IndexBuilder(Index original) {
         super(original);
     }
 
@@ -45,12 +45,12 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
         return get("options");
     }
 
-    IndexBuilder fields(final List<Field> fields) {
+    IndexBuilder fields(List<Field> fields) {
         put("fields", fields.toArray(new Field[0]));
         return this;
     }
 
-    IndexBuilder fields(final Field... fields) {
+    IndexBuilder fields(Field... fields) {
         put("fields", fields);
         return this;
     }
@@ -58,7 +58,7 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     /**
      * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
      */
-    IndexBuilder options(final IndexOptions options) {
+    IndexBuilder options(IndexOptions options) {
         put("options", options);
         return this;
     }
@@ -66,7 +66,7 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     /**
      * Create the index in the background
      */
-    IndexBuilder background(final boolean background) {
+    IndexBuilder background(boolean background) {
         put("background", background);
         return this;
     }
@@ -74,7 +74,7 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     /**
      * The name of the index to create; default is to let the mongodb create a name (in the form of key1_1/-1_key2_1/-1...)
      */
-    IndexBuilder name(final String name) {
+    IndexBuilder name(String name) {
         put("name", name);
         return this;
     }
@@ -82,7 +82,7 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     /**
      * Create the index with the sparse option
      */
-    IndexBuilder sparse(final boolean sparse) {
+    IndexBuilder sparse(boolean sparse) {
         put("sparse", sparse);
         return this;
     }
@@ -90,7 +90,7 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     /**
      * Creates the index as a unique value index; inserting duplicates values in this field will cause errors
      */
-    IndexBuilder unique(final boolean unique) {
+    IndexBuilder unique(boolean unique) {
         put("unique", unique);
         return this;
     }
@@ -98,7 +98,7 @@ class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     /**
      * List of fields (prepended with "-" for desc; defaults to asc).
      */
-    IndexBuilder value(final String value) {
+    IndexBuilder value(String value) {
         put("value", value);
         return this;
     }

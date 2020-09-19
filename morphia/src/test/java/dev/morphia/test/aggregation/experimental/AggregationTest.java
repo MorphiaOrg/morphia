@@ -781,7 +781,7 @@ public class AggregationTest extends TestBase {
         getDatabase().getCollection("books")
                      .insertMany(documents);
 
-        for (final Document document : documents) {
+        for (Document document : documents) {
             document.remove("copies");
         }
 
@@ -794,12 +794,12 @@ public class AggregationTest extends TestBase {
 
     }
 
-    private void compare(final int id, final List<Document> expected, final List<Document> actual) {
+    private void compare(int id, List<Document> expected, List<Document> actual) {
         assertEquals(find(id, expected), find(id, actual));
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    private Document find(final int id, final List<Document> documents) {
+    private Document find(int id, List<Document> documents) {
         return documents.stream().filter(d -> d.getInteger("_id").equals(id)).findFirst().get();
     }
 
@@ -824,7 +824,7 @@ public class AggregationTest extends TestBase {
         public ProjectedAuthor() {
         }
 
-        public ProjectedAuthor(final String last, final String first) {
+        public ProjectedAuthor(String last, String first) {
             this.last = last;
             this.first = first;
         }
@@ -835,7 +835,7 @@ public class AggregationTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -858,7 +858,7 @@ public class AggregationTest extends TestBase {
         ProjectedBook() {
         }
 
-        public ProjectedBook(final Integer id, final String title, final String last, final String first) {
+        public ProjectedBook(Integer id, String title, String last, String first) {
             this.id = id;
             this.title = title;
             author = new ProjectedAuthor(last, first);
@@ -870,7 +870,7 @@ public class AggregationTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

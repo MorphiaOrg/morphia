@@ -24,7 +24,7 @@ public class Out<O> extends Stage {
      * @param <O>  the output type used to lookup the collection name
      * @return the new stage
      */
-    public static <O> Out<O> to(final Class<O> type) {
+    public static <O> Out<O> to(Class<O> type) {
         return new Out<O>()
                    .type(type);
     }
@@ -35,7 +35,7 @@ public class Out<O> extends Stage {
      * @param collection the target collection
      * @return the new stage
      */
-    public static Out<Document> to(final String collection) {
+    public static Out<Document> to(String collection) {
         return new Out<Document>()
                    .collection(collection);
     }
@@ -56,12 +56,12 @@ public class Out<O> extends Stage {
         return type;
     }
 
-    private Out<O> collection(final String collection) {
+    private Out<O> collection(String collection) {
         this.collection = collection;
         return this;
     }
 
-    private Out<O> type(final Class<O> type) {
+    private Out<O> type(Class<O> type) {
         this.type = type;
         return this;
     }

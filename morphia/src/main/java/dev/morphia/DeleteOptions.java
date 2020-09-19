@@ -45,14 +45,14 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @morphia.internal
      * @since 2.0
      */
-    public DeleteOptions(final DeleteOptions that) {
+    public DeleteOptions(DeleteOptions that) {
         this.multi = that.multi;
         this.writeConcern = that.writeConcern;
         this.clientSession = that.clientSession;
     }
 
     @Override
-    public DeleteOptions clientSession(final ClientSession clientSession) {
+    public DeleteOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -63,7 +63,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     }
 
     @Override
-    public DeleteOptions collation(final Collation collation) {
+    public DeleteOptions collation(Collation collation) {
         super.collation(collation);
         return this;
     }
@@ -79,7 +79,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @param multi true if this delete should affect multiple documents
      * @return this
      */
-    public DeleteOptions multi(final boolean multi) {
+    public DeleteOptions multi(boolean multi) {
         this.multi = multi;
         return this;
     }
@@ -99,7 +99,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @param writeConcern the write concern
      * @return this
      */
-    public DeleteOptions writeConcern(final WriteConcern writeConcern) {
+    public DeleteOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }

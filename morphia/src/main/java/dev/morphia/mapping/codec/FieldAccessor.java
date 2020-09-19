@@ -16,7 +16,7 @@ public class FieldAccessor implements PropertyAccessor {
      *
      * @param field the field itself
      */
-    public FieldAccessor(final Field field) {
+    public FieldAccessor(Field field) {
         this.field = field;
     }
 
@@ -25,7 +25,7 @@ public class FieldAccessor implements PropertyAccessor {
     }
 
     @Override
-    public Object get(final Object instance) {
+    public Object get(Object instance) {
         try {
             return field.get(instance);
         } catch (IllegalAccessException e) {
@@ -34,7 +34,7 @@ public class FieldAccessor implements PropertyAccessor {
     }
 
     @Override
-    public void set(final Object instance, final Object value) {
+    public void set(Object instance, Object value) {
         try {
             field.set(instance, value);
         } catch (IllegalArgumentException e) {

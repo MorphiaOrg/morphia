@@ -13,14 +13,14 @@ import java.util.Map;
  */
 @SuppressWarnings("unchecked")
 public class PrimitiveCodecRegistry implements CodecRegistry {
-    private Map<Class, Codec> primitiveCodecs = new HashMap<>();
+    private final Map<Class, Codec> primitiveCodecs = new HashMap<>();
 
     /**
      * Creates the provider
      *
      * @param codecRegistry the registry
      */
-    public PrimitiveCodecRegistry(final CodecRegistry codecRegistry) {
+    public PrimitiveCodecRegistry(CodecRegistry codecRegistry) {
         primitiveCodecs.put(byte.class, codecRegistry.get(Byte.class));
         primitiveCodecs.put(char.class, codecRegistry.get(Character.class));
         primitiveCodecs.put(short.class, codecRegistry.get(Short.class));
@@ -32,12 +32,12 @@ public class PrimitiveCodecRegistry implements CodecRegistry {
     }
 
     @Override
-    public <T> Codec<T> get(final Class<T> clazz) {
+    public <T> Codec<T> get(Class<T> clazz) {
         return primitiveCodecs.get(clazz);
     }
 
     @Override
-    public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
+    public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         return primitiveCodecs.get(clazz);
     }
 }

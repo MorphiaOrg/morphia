@@ -10,7 +10,7 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
 
 public class GraphLookupCodec extends StageCodec<GraphLookup> {
-    public GraphLookupCodec(final Mapper mapper) {
+    public GraphLookupCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -21,7 +21,7 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected void encodeStage(final BsonWriter writer, final GraphLookup value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, GraphLookup value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         if(value.getFrom() != null) {
             writeNamedValue(writer, "from", value.getFrom(), encoderContext);
@@ -38,7 +38,7 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
         Filter[] restriction = value.getRestriction();
         if (restriction != null) {
             writer.writeStartDocument("restrictSearchWithMatch");
-            for (final Filter filter : restriction) {
+            for (Filter filter : restriction) {
                 filter.encode(getMapper(), writer, encoderContext);
             }
             writer.writeEndDocument();

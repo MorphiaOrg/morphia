@@ -89,7 +89,7 @@ public class TestSerializedFormat extends TestBase {
         Assert.assertEquals(parse, document);
     }
 
-    private void verifyCoverage(final Document document) {
+    private void verifyCoverage(Document document) {
         for (MappedField field : getMapper().getMappedClass(ReferenceType.class).getFields()) {
             String name = field.getMappedFieldName();
             boolean found = document.containsKey(name);
@@ -157,7 +157,7 @@ public class TestSerializedFormat extends TestBase {
         verifyCoverage(document);
     }
 
-    private String readFully(final String name) {
+    private String readFully(String name) {
         return new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(name)))
                    .lines()
                    .collect(java.util.stream.Collectors.joining("\n"));
@@ -199,7 +199,7 @@ class ReferenceType {
     protected ReferenceType() {
     }
 
-    protected ReferenceType(final int id, final String string) {
+    protected ReferenceType(int id, String string) {
         this.id = id;
         this.string = string;
     }
@@ -208,7 +208,7 @@ class ReferenceType {
         return referenceType;
     }
 
-    public void setReferenceType(final ReferenceType referenceType) {
+    public void setReferenceType(ReferenceType referenceType) {
         this.referenceType = referenceType;
     }
 
@@ -216,7 +216,7 @@ class ReferenceType {
         return embeddedType;
     }
 
-    public void setEmbeddedType(final EmbeddedReferenceType embeddedType) {
+    public void setEmbeddedType(EmbeddedReferenceType embeddedType) {
         this.embeddedType = embeddedType;
     }
 
@@ -224,7 +224,7 @@ class ReferenceType {
         return embeddedArray;
     }
 
-    public void setEmbeddedArray(final EmbeddedReferenceType[] embeddedArray) {
+    public void setEmbeddedArray(EmbeddedReferenceType[] embeddedArray) {
         this.embeddedArray = embeddedArray;
     }
 
@@ -232,7 +232,7 @@ class ReferenceType {
         return embeddedList;
     }
 
-    public void setEmbeddedList(final List<EmbeddedReferenceType> embeddedList) {
+    public void setEmbeddedList(List<EmbeddedReferenceType> embeddedList) {
         this.embeddedList = embeddedList;
     }
 
@@ -240,7 +240,7 @@ class ReferenceType {
         return embeddedSet;
     }
 
-    public void setEmbeddedSet(final Set<EmbeddedReferenceType> embeddedSet) {
+    public void setEmbeddedSet(Set<EmbeddedReferenceType> embeddedSet) {
         this.embeddedSet = embeddedSet;
     }
 
@@ -248,7 +248,7 @@ class ReferenceType {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -256,7 +256,7 @@ class ReferenceType {
         return idOnly;
     }
 
-    public void setIdOnly(final ReferenceType idOnly) {
+    public void setIdOnly(ReferenceType idOnly) {
         this.idOnly = idOnly;
     }
 
@@ -264,7 +264,7 @@ class ReferenceType {
         return map;
     }
 
-    public void setMap(final Map<String, EmbeddedReferenceType> map) {
+    public void setMap(Map<String, EmbeddedReferenceType> map) {
         this.map = map;
     }
 
@@ -272,7 +272,7 @@ class ReferenceType {
         return mapOfList;
     }
 
-    public void setMapOfList(final Map<String, List<EmbeddedReferenceType>> mapOfList) {
+    public void setMapOfList(Map<String, List<EmbeddedReferenceType>> mapOfList) {
         this.mapOfList = mapOfList;
     }
 
@@ -280,7 +280,7 @@ class ReferenceType {
         return mapOfSet;
     }
 
-    public void setMapOfSet(final Map<String, Set<EmbeddedReferenceType>> mapOfSet) {
+    public void setMapOfSet(Map<String, Set<EmbeddedReferenceType>> mapOfSet) {
         this.mapOfSet = mapOfSet;
     }
 
@@ -288,7 +288,7 @@ class ReferenceType {
         return mixedTypeArray;
     }
 
-    public void setMixedTypeArray(final ReferenceType[] mixedTypeArray) {
+    public void setMixedTypeArray(ReferenceType[] mixedTypeArray) {
         this.mixedTypeArray = mixedTypeArray;
     }
 
@@ -296,7 +296,7 @@ class ReferenceType {
         return mixedTypeList;
     }
 
-    public void setMixedTypeList(final List<? extends ReferenceType> mixedTypeList) {
+    public void setMixedTypeList(List<? extends ReferenceType> mixedTypeList) {
         this.mixedTypeList = mixedTypeList;
     }
 
@@ -304,7 +304,7 @@ class ReferenceType {
         return mixedTypeMap;
     }
 
-    public void setMixedTypeMap(final Map<String, ? super ReferenceType> mixedTypeMap) {
+    public void setMixedTypeMap(Map<String, ? super ReferenceType> mixedTypeMap) {
         this.mixedTypeMap = mixedTypeMap;
     }
 
@@ -313,7 +313,7 @@ class ReferenceType {
     }
 
     public void setMixedTypeMapOfList(
-        final Map<String, List<? extends ReferenceType>> mixedTypeMapOfList) {
+        Map<String, List<? extends ReferenceType>> mixedTypeMapOfList) {
         this.mixedTypeMapOfList = mixedTypeMapOfList;
     }
 
@@ -321,7 +321,7 @@ class ReferenceType {
         return mixedTypeSet;
     }
 
-    public void setMixedTypeSet(final Set<? extends ReferenceType> mixedTypeSet) {
+    public void setMixedTypeSet(Set<? extends ReferenceType> mixedTypeSet) {
         this.mixedTypeSet = mixedTypeSet;
     }
 
@@ -329,7 +329,7 @@ class ReferenceType {
         return referenceArray;
     }
 
-    public void setReferenceArray(final ReferenceType[] referenceArray) {
+    public void setReferenceArray(ReferenceType[] referenceArray) {
         this.referenceArray = referenceArray;
     }
 
@@ -337,7 +337,7 @@ class ReferenceType {
         return referenceList;
     }
 
-    public void setReferenceList(final List<ReferenceType> referenceList) {
+    public void setReferenceList(List<ReferenceType> referenceList) {
         this.referenceList = referenceList;
     }
 
@@ -345,7 +345,7 @@ class ReferenceType {
         return referenceMap;
     }
 
-    public void setReferenceMap(final Map<String, ReferenceType> referenceMap) {
+    public void setReferenceMap(Map<String, ReferenceType> referenceMap) {
         this.referenceMap = referenceMap;
     }
 
@@ -353,7 +353,7 @@ class ReferenceType {
         return referenceMapOfList;
     }
 
-    public void setReferenceMapOfList(final Map<String, List<ReferenceType>> referenceMapOfList) {
+    public void setReferenceMapOfList(Map<String, List<ReferenceType>> referenceMapOfList) {
         this.referenceMapOfList = referenceMapOfList;
     }
 
@@ -361,7 +361,7 @@ class ReferenceType {
         return referenceSet;
     }
 
-    public void setReferenceSet(final Set<ReferenceType> referenceSet) {
+    public void setReferenceSet(Set<ReferenceType> referenceSet) {
         this.referenceSet = referenceSet;
     }
 
@@ -369,7 +369,7 @@ class ReferenceType {
         return selfReference;
     }
 
-    public void setSelfReference(final ReferenceType selfReference) {
+    public void setSelfReference(ReferenceType selfReference) {
         this.selfReference = selfReference;
     }
 
@@ -377,7 +377,7 @@ class ReferenceType {
         return string;
     }
 
-    public void setString(final String string) {
+    public void setString(String string) {
         this.string = string;
     }
 
@@ -387,7 +387,7 @@ class ReferenceType {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -451,7 +451,7 @@ class ClassNameReferenceType extends ReferenceType {
     ClassNameReferenceType() {
     }
 
-    ClassNameReferenceType(final int id, final String string) {
+    ClassNameReferenceType(int id, String string) {
         super(id, string);
     }
 }
@@ -462,7 +462,7 @@ class EmbeddedReferenceType {
     private Integer number;
     private String text;
 
-    EmbeddedReferenceType(final int number, final String text) {
+    EmbeddedReferenceType(int number, String text) {
         this.number = number;
         this.text = text;
     }
@@ -471,7 +471,7 @@ class EmbeddedReferenceType {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

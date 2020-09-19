@@ -41,7 +41,7 @@ public class Projection extends Stage {
      * @param name the field name
      * @return this
      */
-    public Projection exclude(final String name) {
+    public Projection exclude(String name) {
         return exclude(name, value(false));
     }
 
@@ -52,7 +52,7 @@ public class Projection extends Stage {
      * @param value the value expression
      * @return this
      */
-    public Projection include(final String name, final Expression value) {
+    public Projection include(String name, Expression value) {
         if (includes == null) {
             includes = Fields.on(this);
         }
@@ -87,11 +87,11 @@ public class Projection extends Stage {
      * @param name the field name
      * @return this
      */
-    public Projection include(final String name) {
+    public Projection include(String name) {
         return include(name, value(true));
     }
 
-    private Projection exclude(final String name, final Expression value) {
+    private Projection exclude(String name, Expression value) {
         if (excludes == null) {
             excludes = Fields.on(this);
         }

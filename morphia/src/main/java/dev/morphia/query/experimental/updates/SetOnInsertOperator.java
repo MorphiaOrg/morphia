@@ -11,22 +11,22 @@ import java.util.Map;
  * @since 2.0
  */
 public class SetOnInsertOperator extends UpdateOperator {
-    private Map<String, Object> insertValues;
+    private final Map<String, Object> insertValues;
 
     /**
      * @param values the values
      * @morphia.internal
      */
-    public SetOnInsertOperator(final Map<String, Object> values) {
+    public SetOnInsertOperator(Map<String, Object> values) {
         super("$setOnInsert", "unused", "unused");
         insertValues = values;
     }
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(null, null) {
             @Override
-            public Object encode(final Mapper mapper) {
+            public Object encode(Mapper mapper) {
                 return insertValues;
             }
         };

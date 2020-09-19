@@ -83,7 +83,7 @@ public class TestModOperator extends TestBase {
         public Inventory() {
         }
 
-        public Inventory(final String name, final Integer quantity) {
+        public Inventory(String name, Integer quantity) {
             this.name = name;
             this.quantity = quantity;
         }

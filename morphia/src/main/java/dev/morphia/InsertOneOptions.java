@@ -42,14 +42,14 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
      * @morphia.internal
      * @since 2.0
      */
-    public InsertOneOptions(final InsertOneOptions that) {
+    public InsertOneOptions(InsertOneOptions that) {
         this.options = that.options;
         this.writeConcern = that.writeConcern;
         this.clientSession = that.clientSession;
     }
 
     @Override
-    public InsertOneOptions clientSession(final ClientSession clientSession) {
+    public InsertOneOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -65,7 +65,7 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
      * @param writeConcern the write concern
      * @return this
      */
-    public InsertOneOptions writeConcern(final WriteConcern writeConcern) {
+    public InsertOneOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -95,7 +95,7 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
      * @return this
      * @mongodb.server.release 3.2
      */
-    public InsertOneOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+    public InsertOneOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
         options.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }

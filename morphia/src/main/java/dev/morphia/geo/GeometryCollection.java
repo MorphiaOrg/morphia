@@ -32,11 +32,11 @@ public class GeometryCollection {
         geometries = new ArrayList<>();
     }
 
-    GeometryCollection(final List<Geometry> geometries) {
+    GeometryCollection(List<Geometry> geometries) {
         this.geometries = geometries;
     }
 
-    GeometryCollection(final Geometry... geometries) {
+    GeometryCollection(Geometry... geometries) {
         this.geometries = Arrays.asList(geometries);
     }
 
@@ -48,7 +48,7 @@ public class GeometryCollection {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -61,11 +61,7 @@ public class GeometryCollection {
         if (!geometries.equals(that.geometries)) {
             return false;
         }
-        if (!type.equals(that.type)) {
-            return false;
-        }
-
-        return true;
+        return type.equals(that.type);
     }
 
     @Override

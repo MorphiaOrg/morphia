@@ -18,7 +18,7 @@ public enum CoordinateReferenceSystemType {
 
     private final String typeName;
 
-    CoordinateReferenceSystemType(final String typeName) {
+    CoordinateReferenceSystemType(String typeName) {
         this.typeName = typeName;
     }
 

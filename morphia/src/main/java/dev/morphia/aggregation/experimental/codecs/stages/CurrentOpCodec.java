@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class CurrentOpCodec extends StageCodec<CurrentOp> {
-    public CurrentOpCodec(final Mapper mapper) {
+    public CurrentOpCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class CurrentOpCodec extends StageCodec<CurrentOp> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final CurrentOp value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, CurrentOp value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writeBoolean(writer, "allUsers", value.isAllUsers(), encoderContext);
         writeBoolean(writer, "idleConnections", value.isIdleConnections(), encoderContext);
@@ -26,7 +26,7 @@ public class CurrentOpCodec extends StageCodec<CurrentOp> {
         writer.writeEndDocument();
     }
 
-    private void writeBoolean(final BsonWriter writer, String name, boolean value, EncoderContext context) {
+    private void writeBoolean(BsonWriter writer, String name, boolean value, EncoderContext context) {
         if(value) {
             writeNamedValue(writer, name, value, context);
         }

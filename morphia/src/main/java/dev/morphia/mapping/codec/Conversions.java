@@ -26,7 +26,7 @@ import static java.lang.Boolean.FALSE;
 public final class Conversions {
     private static final Logger LOG = LoggerFactory.getLogger(Conversions.class);
 
-    private static Map<Class<?>, Map<Class<?>, Function<?, ?>>> conversions = new HashMap<>();
+    private static final Map<Class<?>, Map<Class<?>, Function<?, ?>>> conversions = new HashMap<>();
 
     static {
         registerStringConversions();
@@ -97,7 +97,7 @@ public final class Conversions {
      * @param <S>      the source type
      * @param <T>      the target type.
      */
-    public static <S, T> void register(final Class<S> source, final Class<T> target, final Function<S, T> function) {
+    public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function) {
         register(source, target, function, null);
     }
 
@@ -116,8 +116,8 @@ public final class Conversions {
      * @param <S>      the source type
      * @param <T>      the target type.
      */
-    public static <S, T> void register(final Class<S> source, final Class<T> target, final Function<S, T> function,
-                                       final String warning) {
+    public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function,
+                                       String warning) {
         final Function<S, T> conversion = warning == null
                                           ? function
                                           : s -> {
@@ -139,7 +139,7 @@ public final class Conversions {
      * @return the potentially converted value
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> T convert(final Object value, final Class<T> target) {
+    public static <T> T convert(Object value, Class<T> target) {
         if (value == null) {
             return (T) convertNull(target);
         }
@@ -164,7 +164,7 @@ public final class Conversions {
         return (T) function.apply(value);
     }
 
-    private static Object convertNull(final Class<?> toType) {
+    private static Object convertNull(Class<?> toType) {
         if (isNumber(toType)) {
             return 0;
         } else if (isBoolean(toType)) {
@@ -173,11 +173,11 @@ public final class Conversions {
         return null;
     }
 
-    private static boolean isNumber(final Class<?> type) {
+    private static boolean isNumber(Class<?> type) {
         return type.isPrimitive() && !type.equals(boolean.class);
     }
 
-    private static boolean isBoolean(final Class<?> type) {
+    private static boolean isBoolean(Class<?> type) {
         return type.equals(boolean.class);
     }
 }

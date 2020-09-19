@@ -51,7 +51,7 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
      *
      * @param name the name
      */
-    private NamedCoordinateReferenceSystem(final String name) {
+    private NamedCoordinateReferenceSystem(String name) {
         this.name = name;
 
     }
@@ -76,7 +76,7 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

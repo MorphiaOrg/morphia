@@ -12,20 +12,20 @@ import java.util.Collection;
  * @since 2.0
  */
 public class AddToSetOperator extends UpdateOperator {
-    private boolean each;
+    private final boolean each;
 
     /**
      * @param field  the field
      * @param values the values
      * @morphia.internal
      */
-    public AddToSetOperator(final String field, final Object values) {
+    public AddToSetOperator(String field, Object values) {
         super("$addToSet", field, values);
         each = values instanceof Collection;
     }
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         if (each) {
             return new OperationTarget(pathTarget, new Document("$each", value()));
         } else {

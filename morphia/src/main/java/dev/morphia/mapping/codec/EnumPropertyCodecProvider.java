@@ -27,13 +27,13 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 final class EnumPropertyCodecProvider implements PropertyCodecProvider {
     private final CodecRegistry codecRegistry;
 
-    EnumPropertyCodecProvider(final CodecRegistry codecRegistry) {
+    EnumPropertyCodecProvider(CodecRegistry codecRegistry) {
         this.codecRegistry = codecRegistry;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public <T> Codec<T> get(final TypeWithTypeParameters<T> type, final PropertyCodecRegistry propertyCodecRegistry) {
+    public <T> Codec<T> get(TypeWithTypeParameters<T> type, PropertyCodecRegistry propertyCodecRegistry) {
         Class<T> clazz = type.getType();
         if (Enum.class.isAssignableFrom(clazz)) {
             try {

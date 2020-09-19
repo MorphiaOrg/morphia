@@ -48,12 +48,12 @@ import static java.util.Arrays.asList;
 @SuppressWarnings("unchecked")
 public class MappedField {
     private final Map<Class<? extends Annotation>, Annotation> annotations;
-    private MappedClass declaringClass;
-    private FieldModel fieldModel;
+    private final MappedClass declaringClass;
+    private final FieldModel fieldModel;
 
     private List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
 
-    MappedField(final MappedClass declaringClass, final FieldModel f) {
+    MappedField(MappedClass declaringClass, FieldModel f) {
         this.declaringClass = declaringClass;
         fieldModel = f;
 
@@ -80,7 +80,7 @@ public class MappedField {
      * @param ann the annotation to search for
      * @return true if the annotation was found
      */
-    public boolean hasAnnotation(final Class ann) {
+    public boolean hasAnnotation(Class ann) {
         return annotations.containsKey(ann);
     }
 
@@ -102,7 +102,7 @@ public class MappedField {
      * @param document the Document get the value from
      * @return the value from first mapping of this field
      */
-    public Object getDocumentValue(final Document document) {
+    public Object getDocumentValue(Document document) {
         return document.get(getFirstFieldName(document));
     }
 
@@ -127,7 +127,7 @@ public class MappedField {
      * @param instance the instance to use
      * @return the value stored in the java field
      */
-    public Object getFieldValue(final Object instance) {
+    public Object getFieldValue(Object instance) {
         try {
             Object target = instance;
             if (target instanceof MorphiaProxy) {
@@ -230,7 +230,7 @@ public class MappedField {
      * @return the annotation instance if it exists on this field
      */
     @SuppressWarnings("unchecked")
-    public <T extends Annotation> T getAnnotation(final Class<T> clazz) {
+    public <T extends Annotation> T getAnnotation(Class<T> clazz) {
         return (T) annotations.get(clazz);
     }
 
@@ -247,7 +247,7 @@ public class MappedField {
      * @param instance the instance to update
      * @param value    the value to set
      */
-    public void setFieldValue(final Object instance, final Object value) {
+    public void setFieldValue(Object instance, Object value) {
         try {
             final Field field = fieldModel.getField();
             field.set(instance, Conversions.convert(value, field.getType()));
@@ -289,7 +289,7 @@ public class MappedField {
         }
     }
 
-    private <K, V> Map<K, V> map(final K key, final V value) {
+    private <K, V> Map<K, V> map(K key, V value) {
         final HashMap<K, V> map = new HashMap<>();
         map.put(key, value);
         return map;
@@ -299,7 +299,7 @@ public class MappedField {
         loadNames = inferLoadNames();
     }
 
-    private String getFirstFieldName(final Document document) {
+    private String getFirstFieldName(Document document) {
         List<String> names = List.of(getMappedFieldName());
         names.addAll(getLoadNames());
         List<String> list = names.stream()

@@ -16,7 +16,7 @@ import java.util.Map;
 public class BucketAutoOptions {
 
     private Granularity granularity;
-    private Map<String, Accumulator> accumulators = new HashMap<String, Accumulator>();
+    private final Map<String, Accumulator> accumulators = new HashMap<String, Accumulator>();
 
 
     /**
@@ -47,7 +47,7 @@ public class BucketAutoOptions {
      * @param granularity granularity {@link Granularity}
      * @return this
      */
-    public BucketAutoOptions granularity(final Granularity granularity) {
+    public BucketAutoOptions granularity(Granularity granularity) {
         this.granularity = granularity;
         return this;
     }
@@ -58,7 +58,7 @@ public class BucketAutoOptions {
      * @param fieldName name of the output field
      * @return this
      */
-    public OutputOperation output(final String fieldName) {
+    public OutputOperation output(String fieldName) {
 
         return new OutputOperation(fieldName);
     }
@@ -69,14 +69,14 @@ public class BucketAutoOptions {
      */
     public class OutputOperation {
 
-        private String fieldName;
+        private final String fieldName;
 
         /**
          * Creates the output operation for given fieldname
          *
          * @param fieldName name of the output field
          */
-        public OutputOperation(final String fieldName) {
+        public OutputOperation(String fieldName) {
             this.fieldName = fieldName;
         }
 
@@ -88,7 +88,7 @@ public class BucketAutoOptions {
          * @return an Accumulator
          * @aggregation.expression $addToSet
          */
-        public BucketAutoOptions addToSet(final String field) {
+        public BucketAutoOptions addToSet(String field) {
             accumulators.put(fieldName, new Accumulator("$addToSet", field));
             return BucketAutoOptions.this;
         }
@@ -101,7 +101,7 @@ public class BucketAutoOptions {
          * @return an Accumulator
          * @aggregation.expression $avg
          */
-        public BucketAutoOptions average(final String field) {
+        public BucketAutoOptions average(String field) {
 
             accumulators.put(fieldName, new Accumulator("$avg", field));
             return BucketAutoOptions.this;
@@ -116,7 +116,7 @@ public class BucketAutoOptions {
          * @return an Accumulator
          * @aggregation.expression $sum
          */
-        public BucketAutoOptions sum(final Object field) {
+        public BucketAutoOptions sum(Object field) {
             accumulators.put(fieldName, new Accumulator("$sum", field));
             return BucketAutoOptions.this;
         }
@@ -152,9 +152,9 @@ public class BucketAutoOptions {
         E192("E192"),
         POWERSOF2("POWERSOF2");
 
-        private String granularity;
+        private final String granularity;
 
-        Granularity(final String granularity) {
+        Granularity(String granularity) {
 
             this.granularity = granularity;
         }

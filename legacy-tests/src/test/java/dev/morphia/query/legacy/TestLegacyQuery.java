@@ -480,7 +480,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         check(new LegacyQueryFactory().createQuery(getDs(), User.class).disableValidation());
     }
 
-    private void check(final Query<User> query) {
+    private void check(Query<User> query) {
         query
             .field("version").equal("latest")
             .and(
@@ -741,7 +741,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         assertEquals(1, fbUser1.getId());
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (final FacebookUser user : users) {
+        for (FacebookUser user : users) {
             fbUserKeys.add(getMapper().getKey(user));
         }
 
@@ -759,7 +759,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         final Keys k1Loaded = datastore.find(Keys.class)
                                        .filter("_id", k1.getId())
                                        .first();
-        for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
+        for (Key<FacebookUser> key : k1Loaded.getUsers()) {
             assertNotNull(key.getId());
         }
 
@@ -1244,7 +1244,7 @@ public class TestLegacyQuery extends LegacyTestBase {
 
     }
 
-    private Query<Pic> getQuery(final QueryFactory queryFactory) {
+    private Query<Pic> getQuery(QueryFactory queryFactory) {
         return queryFactory.createQuery(getDs(), Pic.class);
     }
 
@@ -1277,13 +1277,13 @@ public class TestLegacyQuery extends LegacyTestBase {
                           .tryNext());
     }
 
-    private <T> void assertListEquals(final List<Key<T>> list, final MongoCursor<?> cursor) {
+    private <T> void assertListEquals(List<Key<T>> list, MongoCursor<?> cursor) {
         for (Key<T> tKey : list) {
             assertEquals(list.toString(), tKey, cursor.next());
         }
     }
 
-    private int[] copy(final int[] array, final int start, final int count) {
+    private int[] copy(int[] array, int start, int count) {
         return copyOfRange(array, start, start + count);
     }
 
@@ -1292,7 +1292,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         profileCollection.drop();
     }
 
-    private String getCommentFromProfileRecord(final Document profileRecord) {
+    private String getCommentFromProfileRecord(Document profileRecord) {
         if (profileRecord.containsKey("command")) {
             Document commandDocument = ((Document) profileRecord.get("command"));
             if (commandDocument.containsKey("comment")) {
@@ -1352,7 +1352,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -1360,7 +1360,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return lazyObjectIdPic;
         }
 
-        public void setLazyObjectIdPic(final PicWithObjectId lazyObjectIdPic) {
+        public void setLazyObjectIdPic(PicWithObjectId lazyObjectIdPic) {
             this.lazyObjectIdPic = lazyObjectIdPic;
         }
 
@@ -1368,7 +1368,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return lazyPic;
         }
 
-        public void setLazyPic(final Pic lazyPic) {
+        public void setLazyPic(Pic lazyPic) {
             this.lazyPic = lazyPic;
         }
 
@@ -1376,7 +1376,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return name;
         }
 
-        public void setName(final String name) {
+        public void setName(String name) {
             this.name = name;
         }
 
@@ -1384,7 +1384,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return pic;
         }
 
-        public void setPic(final Pic pic) {
+        public void setPic(Pic pic) {
             this.pic = pic;
         }
 
@@ -1392,7 +1392,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return size;
         }
 
-        public void setSize(final int size) {
+        public void setSize(int size) {
             this.size = size;
         }
 
@@ -1418,7 +1418,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         public ContainsRenamedFields() {
         }
 
-        ContainsRenamedFields(final String firstName, final String lastName) {
+        ContainsRenamedFields(String firstName, String lastName) {
             this.firstName = firstName;
             this.lastName = lastName;
         }
@@ -1444,7 +1444,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         protected HasIntId() {
         }
 
-        HasIntId(final int id) {
+        HasIntId(int id) {
             this.id = id;
         }
     }
@@ -1467,7 +1467,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         IntVector() {
         }
 
-        IntVector(final int... scalars) {
+        IntVector(int... scalars) {
             this.scalars = scalars;
         }
     }
@@ -1496,16 +1496,16 @@ public class TestLegacyQuery extends LegacyTestBase {
         protected Keyword() {
         }
 
-        Keyword(final String k) {
+        Keyword(String k) {
             this.keyword = k;
         }
 
-        Keyword(final String k, final Integer score) {
+        Keyword(String k, Integer score) {
             this.keyword = k;
             this.score = score;
         }
 
-        Keyword(final Integer score) {
+        Keyword(Integer score) {
             this.score = score;
         }
 
@@ -1517,7 +1517,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1545,7 +1545,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         public Photo() {
         }
 
-        Photo(final List<String> keywords) {
+        Photo(List<String> keywords) {
             this.keywords = keywords;
         }
     }
@@ -1559,14 +1559,14 @@ public class TestLegacyQuery extends LegacyTestBase {
         PhotoWithKeywords() {
         }
 
-        PhotoWithKeywords(final String... words) {
+        PhotoWithKeywords(String... words) {
             keywords = new ArrayList<>(words.length);
-            for (final String word : words) {
+            for (String word : words) {
                 keywords.add(new Keyword(word));
             }
         }
 
-        PhotoWithKeywords(final Keyword... keyword) {
+        PhotoWithKeywords(Keyword... keyword) {
             keywords.addAll(asList(keyword));
         }
     }
@@ -1582,7 +1582,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         public Pic() {
         }
 
-        Pic(final String name) {
+        Pic(String name) {
             this.name = name;
         }
 
@@ -1590,7 +1590,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -1598,7 +1598,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return name;
         }
 
-        public void setName(final String name) {
+        public void setName(String name) {
             this.name = name;
         }
 
@@ -1611,7 +1611,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1639,7 +1639,7 @@ public class TestLegacyQuery extends LegacyTestBase {
             return prePersist;
         }
 
-        public void setPrePersist(final boolean prePersist) {
+        public void setPrePersist(boolean prePersist) {
             this.prePersist = prePersist;
         }
     }
@@ -1653,7 +1653,7 @@ public class TestLegacyQuery extends LegacyTestBase {
 
     private static class RectangleComparator implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o2.getHeight(), o1.getHeight());
         }
@@ -1661,7 +1661,7 @@ public class TestLegacyQuery extends LegacyTestBase {
 
     private static class RectangleComparator1 implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o2.getHeight(), o1.getHeight());
             return compare != 0 ? compare : Double.compare(o2.getWidth(), o1.getWidth());
         }
@@ -1669,7 +1669,7 @@ public class TestLegacyQuery extends LegacyTestBase {
 
     private static class RectangleComparator2 implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
         }
@@ -1677,7 +1677,7 @@ public class TestLegacyQuery extends LegacyTestBase {
 
     private static class RectangleComparator3 implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
         }
@@ -1692,7 +1692,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         ReferenceKey() {
         }
 
-        ReferenceKey(final String name) {
+        ReferenceKey(String name) {
             this.name = name;
         }
 
@@ -1704,7 +1704,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

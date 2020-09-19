@@ -17,13 +17,13 @@ public class DateToParts extends Expression {
 
     private Boolean iso8601;
 
-    public DateToParts(final Expression date) {
+    public DateToParts(Expression date) {
         super("$dateToParts");
         this.date = date;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(getOperation());
 
@@ -43,7 +43,7 @@ public class DateToParts extends Expression {
      * @param iso8601 true to use ISO 8601
      * @return this
      */
-    public DateToParts iso8601(final boolean iso8601) {
+    public DateToParts iso8601(boolean iso8601) {
         this.iso8601 = iso8601;
         return this;
     }
@@ -54,7 +54,7 @@ public class DateToParts extends Expression {
      * @param timezone the expression
      * @return this
      */
-    public DateToParts timezone(final Expression timezone) {
+    public DateToParts timezone(Expression timezone) {
         this.timeZone = timezone;
         return this;
     }

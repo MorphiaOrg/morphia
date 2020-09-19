@@ -38,7 +38,7 @@ public final class GeoNear {
     private final Double distanceMultiplier;
     private final String includeLocations;
 
-    private GeoNear(final GeoNearBuilder builder) {
+    private GeoNear(GeoNearBuilder builder) {
         nearLegacy = builder.nearLegacy;
         nearGeoJson = builder.nearGeoJson;
         distanceField = builder.distanceField;
@@ -57,7 +57,7 @@ public final class GeoNear {
      * @param distanceField the field to process
      * @return the GeoNearBuilder
      */
-    public static GeoNearBuilder builder(final String distanceField) {
+    public static GeoNearBuilder builder(String distanceField) {
         return new GeoNearBuilder(distanceField);
     }
 
@@ -131,16 +131,6 @@ public final class GeoNear {
         return copy;
     }
 
-/*
-    Object getNearAsDocument(final PointCodec pointCodec) {
-        if (nearGeoJson != null) {
-            return pointCodec.encode(nearGeoJson, null);
-        } else {
-            return getNear();
-        }
-    }
-*/
-
     /**
      * Limits the results to the documents that match the query.
      *
@@ -187,7 +177,7 @@ public final class GeoNear {
          *                      notation.
          * @see <a href="http://docs.mongodb.org/master/reference/glossary/#term-dot-notation">dot notation</a>
          */
-        public GeoNearBuilder(final String distanceField) {
+        public GeoNearBuilder(String distanceField) {
             this.distanceField = distanceField;
         }
 
@@ -205,7 +195,7 @@ public final class GeoNear {
          * @param distanceMultiplier the distance multiplier used in this stage
          * @return this
          */
-        public GeoNearBuilder setDistanceMultiplier(final Double distanceMultiplier) {
+        public GeoNearBuilder setDistanceMultiplier(Double distanceMultiplier) {
             this.distanceMultiplier = distanceMultiplier;
             return this;
         }
@@ -218,7 +208,7 @@ public final class GeoNear {
          * @return this
          * @see <a href="http://docs.mongodb.org/master/reference/glossary/#term-dot-notation">dot notation</a>
          */
-        public GeoNearBuilder setIncludeLocations(final String includeLocations) {
+        public GeoNearBuilder setIncludeLocations(String includeLocations) {
             this.includeLocations = includeLocations;
             return this;
         }
@@ -230,7 +220,7 @@ public final class GeoNear {
          * @return this
          * @see #setMaxDocuments(Long).
          */
-        public GeoNearBuilder setLimit(final Long limit) {
+        public GeoNearBuilder setLimit(Long limit) {
             this.limit = limit;
             return this;
         }
@@ -243,7 +233,7 @@ public final class GeoNear {
          * @param maxDistance the maximum
          * @return this
          */
-        public GeoNearBuilder setMaxDistance(final Double maxDistance) {
+        public GeoNearBuilder setMaxDistance(Double maxDistance) {
             this.maxDistance = maxDistance;
             return this;
         }
@@ -256,7 +246,7 @@ public final class GeoNear {
          * @param num the maximum
          * @return this
          */
-        public GeoNearBuilder setMaxDocuments(final Long num) {
+        public GeoNearBuilder setMaxDocuments(Long num) {
             this.maxDocuments = num;
             return this;
         }
@@ -268,7 +258,7 @@ public final class GeoNear {
          * @param longitude the longitude
          * @return this
          */
-        public GeoNearBuilder setNear(final double latitude, final double longitude) {
+        public GeoNearBuilder setNear(double latitude, double longitude) {
             this.nearLegacy = new double[]{longitude, latitude};
             return this;
         }
@@ -281,7 +271,7 @@ public final class GeoNear {
          * @deprecated use the driver-provided types instead
          */
         @Deprecated(since = "2.0", forRemoval = true)
-        public GeoNearBuilder setNear(final Point point) {
+        public GeoNearBuilder setNear(Point point) {
             return setNear(point.convert());
         }
 
@@ -291,7 +281,7 @@ public final class GeoNear {
          * @param point a GeoJSON single point location.
          * @return this
          */
-        public GeoNearBuilder setNear(final com.mongodb.client.model.geojson.Point point) {
+        public GeoNearBuilder setNear(com.mongodb.client.model.geojson.Point point) {
             this.nearGeoJson = point;
             return this;
         }
@@ -303,7 +293,7 @@ public final class GeoNear {
          * @return this
          * @mongodb.driver.manual tutorial/query-documents/ read operation query syntax
          */
-        public GeoNearBuilder setQuery(final Query query) {
+        public GeoNearBuilder setQuery(Query query) {
             this.query = query;
             return this;
         }
@@ -314,7 +304,7 @@ public final class GeoNear {
          * @param spherical true if spherical geometry should be used
          * @return this
          */
-        public GeoNearBuilder setSpherical(final Boolean spherical) {
+        public GeoNearBuilder setSpherical(Boolean spherical) {
             this.spherical = spherical;
             return this;
         }

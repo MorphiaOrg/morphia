@@ -37,9 +37,9 @@ public class MapperOptions {
     private final NamingStrategy fieldNaming;
     private final UuidRepresentation uuidRepresentation;
     private ClassLoader classLoader;
-    private QueryFactory queryFactory;
+    private final QueryFactory queryFactory;
 
-    private MapperOptions(final Builder builder) {
+    private MapperOptions(Builder builder) {
         ignoreFinals = builder.ignoreFinals;
         storeNulls = builder.storeNulls;
         storeEmpties = builder.storeEmpties;
@@ -79,7 +79,7 @@ public class MapperOptions {
      * @param original an existing set of options to use as a starting point
      * @return a builder to set mapping options
      */
-    public static Builder builder(final MapperOptions original) {
+    public static Builder builder(MapperOptions original) {
         Builder builder = new Builder();
         builder.ignoreFinals = original.isIgnoreFinals();
         builder.storeNulls = original.isStoreNulls();
@@ -213,7 +213,7 @@ public class MapperOptions {
         private ClassLoader classLoader;
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName();
-        private List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
+        private final List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
         private NamingStrategy collectionNaming = NamingStrategy.camelCase();
         private NamingStrategy fieldNaming = NamingStrategy.identity();
         private UuidRepresentation uuidRepresentation = STANDARD;
@@ -229,7 +229,7 @@ public class MapperOptions {
          * @return this
          * @since 2.0
          */
-        public Builder addConvention(final MorphiaConvention convention) {
+        public Builder addConvention(MorphiaConvention convention) {
             conventions.add(convention);
 
             return this;
@@ -246,7 +246,7 @@ public class MapperOptions {
          * @param cacheClassLookups if true class lookups are cached
          * @return this
          */
-        public Builder cacheClassLookups(final boolean cacheClassLookups) {
+        public Builder cacheClassLookups(boolean cacheClassLookups) {
             this.cacheClassLookups = cacheClassLookups;
             return this;
         }
@@ -255,7 +255,7 @@ public class MapperOptions {
          * @param classLoader the ClassLoader to use
          * @return this
          */
-        public Builder classLoader(final ClassLoader classLoader) {
+        public Builder classLoader(ClassLoader classLoader) {
             this.classLoader = classLoader;
             return this;
         }
@@ -266,7 +266,7 @@ public class MapperOptions {
          * @param strategy the strategy to use
          * @return this
          */
-        public Builder collectionNaming(final NamingStrategy strategy) {
+        public Builder collectionNaming(NamingStrategy strategy) {
             this.collectionNaming = strategy;
             return this;
         }
@@ -275,7 +275,7 @@ public class MapperOptions {
          * @param disableEmbeddedIndexes if true scanning @Embedded fields for indexing is disabled
          * @return this
          */
-        public Builder disableEmbeddedIndexes(final boolean disableEmbeddedIndexes) {
+        public Builder disableEmbeddedIndexes(boolean disableEmbeddedIndexes) {
             LOG.warn("this option is no longer used");
             return this;
         }
@@ -286,7 +286,7 @@ public class MapperOptions {
          * @param function the function to use
          * @return this
          */
-        public Builder discriminator(final DiscriminatorFunction function) {
+        public Builder discriminator(DiscriminatorFunction function) {
             this.discriminator = function;
             return this;
         }
@@ -297,7 +297,7 @@ public class MapperOptions {
          * @param key the key to use, e.g., "_t".  the default/legacy value is "className"
          * @return this
          */
-        public Builder discriminatorKey(final String key) {
+        public Builder discriminatorKey(String key) {
             this.discriminatorKey = key;
             return this;
         }
@@ -309,7 +309,7 @@ public class MapperOptions {
          * @return this
          * @see Property
          */
-        public Builder fieldNaming(final NamingStrategy strategy) {
+        public Builder fieldNaming(NamingStrategy strategy) {
             this.fieldNaming = strategy;
             return this;
         }
@@ -318,7 +318,7 @@ public class MapperOptions {
          * @param ignoreFinals if true final fields are ignored
          * @return this
          */
-        public Builder ignoreFinals(final boolean ignoreFinals) {
+        public Builder ignoreFinals(boolean ignoreFinals) {
             this.ignoreFinals = ignoreFinals;
             return this;
         }
@@ -327,7 +327,7 @@ public class MapperOptions {
          * @param mapSubPackages if true subpackages are mapped when given a particular package
          * @return this
          */
-        public Builder mapSubPackages(final boolean mapSubPackages) {
+        public Builder mapSubPackages(boolean mapSubPackages) {
             this.mapSubPackages = mapSubPackages;
             return this;
         }
@@ -336,7 +336,7 @@ public class MapperOptions {
          * @param creator the object factory to use when creating instances
          * @return this
          */
-        public Builder objectFactory(final MorphiaInstanceCreator creator) {
+        public Builder objectFactory(MorphiaInstanceCreator creator) {
             this.creator = creator;
             return this;
         }
@@ -345,7 +345,7 @@ public class MapperOptions {
          * @param queryFactory the query factory to use when creating queries
          * @return this
          */
-        public Builder queryFactory(final QueryFactory queryFactory) {
+        public Builder queryFactory(QueryFactory queryFactory) {
             this.queryFactory = queryFactory;
             return this;
         }
@@ -354,7 +354,7 @@ public class MapperOptions {
          * @param storeEmpties if true empty maps and collection types are stored in the database
          * @return this
          */
-        public Builder storeEmpties(final boolean storeEmpties) {
+        public Builder storeEmpties(boolean storeEmpties) {
             this.storeEmpties = storeEmpties;
             return this;
         }
@@ -363,7 +363,7 @@ public class MapperOptions {
          * @param storeNulls if true null values are stored in the database
          * @return this
          */
-        public Builder storeNulls(final boolean storeNulls) {
+        public Builder storeNulls(boolean storeNulls) {
             this.storeNulls = storeNulls;
             return this;
         }
@@ -374,7 +374,7 @@ public class MapperOptions {
          * @deprecated use {@link #collectionNaming(NamingStrategy)} instead
          */
         @Deprecated(since = "2.0", forRemoval = true)
-        public Builder useLowerCaseCollectionNames(final boolean useLowerCaseCollectionNames) {
+        public Builder useLowerCaseCollectionNames(boolean useLowerCaseCollectionNames) {
             if (useLowerCaseCollectionNames) {
                 collectionNaming(NamingStrategy.lowerCase());
             }
@@ -387,7 +387,7 @@ public class MapperOptions {
          * @param uuidRepresentation the representation
          * @return this
          */
-        public Builder uuidRepresentation(final UuidRepresentation uuidRepresentation) {
+        public Builder uuidRepresentation(UuidRepresentation uuidRepresentation) {
             this.uuidRepresentation = uuidRepresentation;
             return this;
         }

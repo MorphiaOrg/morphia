@@ -7,13 +7,13 @@ import org.bson.Document;
 class BitOperator extends UpdateOperator {
     private final String operation;
 
-    BitOperator(final String operation, final String field, final int value) {
+    BitOperator(String operation, String field, int value) {
         super("$bit", field, value);
         this.operation = operation;
     }
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, new Document(operation, value()));
     }
 

@@ -17,7 +17,7 @@ public class Expression {
     private final String operation;
     private final Object value;
 
-    protected Expression(final String operation) {
+    protected Expression(String operation) {
         this.operation = operation;
         this.value = null;
     }
@@ -27,7 +27,7 @@ public class Expression {
      * @param value
      * @morphia.internal
      */
-    public Expression(final String operation, final Object value) {
+    public Expression(String operation, Object value) {
         this.operation = operation;
         this.value = value;
     }
@@ -39,7 +39,7 @@ public class Expression {
      * @morphia.internal
      */
     @SuppressWarnings("rawtypes")
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(operation);
         Codec codec = mapper.getCodecRegistry().get(value.getClass());

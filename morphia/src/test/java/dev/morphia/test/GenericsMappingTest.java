@@ -104,7 +104,7 @@ public class GenericsMappingTest extends TestBase {
             return thing;
         }
 
-        public void setThing(final T thing) {
+        public void setThing(T thing) {
             this.thing = thing;
         }
     }
@@ -152,7 +152,7 @@ public class GenericsMappingTest extends TestBase {
         public EmailItem() {
         }
 
-        public EmailItem(final String to) {
+        public EmailItem(String to) {
             this.to = to;
         }
     }

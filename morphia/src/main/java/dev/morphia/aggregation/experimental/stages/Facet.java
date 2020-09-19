@@ -20,7 +20,7 @@ import static java.util.Arrays.asList;
  * @aggregation.expression $facet
  */
 public class Facet extends Stage {
-    private LinkedHashMap<String, List<Stage>> fields = new LinkedHashMap<>();
+    private final LinkedHashMap<String, List<Stage>> fields = new LinkedHashMap<>();
 
     protected Facet() {
         super("$facet");
@@ -41,7 +41,7 @@ public class Facet extends Stage {
      * @param stages the pipeline defining the field
      * @return this
      */
-    public Facet field(final String name, final Stage... stages) {
+    public Facet field(String name, Stage... stages) {
         fields.put(name, asList(stages));
         return this;
     }

@@ -41,7 +41,7 @@ public class SortByIdTest extends TestBase {
         private ObjectId id;
         private String name;
 
-        A(final String name) {
+        A(String name) {
             this.name = name;
         }
 

@@ -18,7 +18,7 @@ public class FieldEnumString {
      *
      * @param fields the fields to use
      */
-    public FieldEnumString(final MappedField... fields) {
+    public FieldEnumString(MappedField... fields) {
         this(Arrays.asList(fields));
     }
 
@@ -27,9 +27,9 @@ public class FieldEnumString {
      *
      * @param fields the fields to use
      */
-    public FieldEnumString(final List<MappedField> fields) {
+    public FieldEnumString(List<MappedField> fields) {
         final StringBuilder sb = new StringBuilder(128);
-        for (final MappedField mappedField : fields) {
+        for (MappedField mappedField : fields) {
             if (sb.length() > 0) {
                 sb.append(", ");
             }

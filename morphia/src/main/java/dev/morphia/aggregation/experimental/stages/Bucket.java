@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class Bucket extends Stage {
      * @param boundaries the boundaries
      * @return this
      */
-    public Bucket boundaries(final Expression... boundaries) {
+    public Bucket boundaries(Expression... boundaries) {
         this.boundaries = asList(boundaries);
         return this;
     }
@@ -62,7 +62,7 @@ public class Bucket extends Stage {
      * @param defaultValue the default value
      * @return this
      */
-    public Bucket defaultValue(final Object defaultValue) {
+    public Bucket defaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
@@ -108,7 +108,7 @@ public class Bucket extends Stage {
      * @param groupBy the grouping expression
      * @return this
      */
-    public Bucket groupBy(final Expression groupBy) {
+    public Bucket groupBy(Expression groupBy) {
         this.groupBy = groupBy;
         return this;
     }
@@ -121,7 +121,7 @@ public class Bucket extends Stage {
      * @param value the value expression
      * @return this
      */
-    public Bucket outputField(final String name, final Expression value) {
+    public Bucket outputField(String name, Expression value) {
         if (output == null) {
             output = Expressions.of();
         }

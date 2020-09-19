@@ -18,16 +18,16 @@ public class SetEntityOperator extends UpdateOperator {
      * @param value the value
      * @morphia.internal
      */
-    public SetEntityOperator(final Object value) {
+    public SetEntityOperator(Object value) {
         super("$set", "", value);
     }
 
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(null, value()) {
             @Override
-            public Object encode(final Mapper mapper) {
+            public Object encode(Mapper mapper) {
                 MappedClass mappedClass = mapper.getMappedClass(getValue().getClass());
                 if (mappedClass.getVersionField() == null) {
                     return super.encode(mapper);

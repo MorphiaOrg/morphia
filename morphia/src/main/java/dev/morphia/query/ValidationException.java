@@ -28,7 +28,7 @@ public class ValidationException extends RuntimeException {
      *
      * @param message the message to record
      */
-    public ValidationException(final String message) {
+    public ValidationException(String message) {
         super(message);
     }
 
@@ -38,7 +38,7 @@ public class ValidationException extends RuntimeException {
      * @param message the message to record
      * @param cause   the underlying cause
      */
-    public ValidationException(final String message, final Throwable cause) {
+    public ValidationException(String message, Throwable cause) {
         super(message, cause);
     }
 

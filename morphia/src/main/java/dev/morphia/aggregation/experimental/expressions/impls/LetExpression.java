@@ -8,15 +8,15 @@ import org.bson.codecs.EncoderContext;
 
 public class LetExpression extends Expression {
     private final Expression in;
-    private DocumentExpression variables = Expressions.of();
+    private final DocumentExpression variables = Expressions.of();
 
-    public LetExpression(final Expression in) {
+    public LetExpression(Expression in) {
         super("$let");
         this.in = in;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         writer.writeName("vars");
@@ -33,7 +33,7 @@ public class LetExpression extends Expression {
      * @param expression the value expression
      * @return this
      */
-    public LetExpression variable(final String name, final Expression expression) {
+    public LetExpression variable(String name, Expression expression) {
         variables.field(name, expression);
         return this;
     }

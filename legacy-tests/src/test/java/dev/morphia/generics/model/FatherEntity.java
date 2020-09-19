@@ -19,7 +19,7 @@ public abstract class FatherEntity<T extends EmbeddedType> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -42,7 +42,7 @@ public abstract class FatherEntity<T extends EmbeddedType> {
         return result;
     }
 
-    public void setEmbeddedList(final List<? extends EmbeddedType> embeddedList) {
+    public void setEmbeddedList(List<? extends EmbeddedType> embeddedList) {
         this.embeddedList = embeddedList;
     }
 }

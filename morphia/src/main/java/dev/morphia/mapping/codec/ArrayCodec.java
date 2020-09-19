@@ -19,17 +19,17 @@ import java.util.UUID;
 class ArrayCodec implements Codec<Object> {
 
     private final Class type;
-    private Mapper mapper;
+    private final Mapper mapper;
     private BsonTypeCodecMap bsonTypeCodecMap;
 
-    <T> ArrayCodec(final Mapper mapper, final Class type) {
+    <T> ArrayCodec(Mapper mapper, Class type) {
         this.mapper = mapper;
         this.type = type;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void encode(final BsonWriter writer, final Object value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
         writer.writeStartArray();
         int length = Array.getLength(value);
         for (int i = 0; i < length; i++) {
@@ -46,7 +46,7 @@ class ArrayCodec implements Codec<Object> {
     }
 
     @Override
-    public Object[] decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Object[] decode(BsonReader reader, DecoderContext decoderContext) {
         List<Object> list = new ArrayList<>();
         if (reader.getCurrentBsonType() == BsonType.ARRAY) {
             reader.readStartArray();
@@ -63,7 +63,7 @@ class ArrayCodec implements Codec<Object> {
         return list.toArray();
     }
 
-    private Object readValue(final BsonReader reader, final DecoderContext decoderContext) {
+    private Object readValue(BsonReader reader, DecoderContext decoderContext) {
         BsonType bsonType = reader.getCurrentBsonType();
         if (bsonType == BsonType.NULL) {
             reader.readNull();

@@ -18,12 +18,12 @@ import java.util.List;
 public class Point implements Geometry {
     private final List<Double> coordinates = new ArrayList<Double>();
 
-    Point(final double latitude, final double longitude) {
+    Point(double latitude, double longitude) {
         coordinates.add(longitude);
         coordinates.add(latitude);
     }
 
-    Point(final List<Double> coordinates) {
+    Point(List<Double> coordinates) {
         this.coordinates.addAll(coordinates);
     }
 
@@ -57,7 +57,7 @@ public class Point implements Geometry {
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -99,7 +99,7 @@ public class Point implements Geometry {
      * @return this Point converted to a driver Point
      */
     @Override
-    public com.mongodb.client.model.geojson.Point convert(final CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.Point convert(CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.Point(crs != null ? crs.convert() : null, new Position(getLongitude(), getLatitude()));
     }
 }

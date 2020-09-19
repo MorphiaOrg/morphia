@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class SortByCountCodec extends StageCodec<SortByCount> {
-    public SortByCountCodec(final Mapper mapper) {
+    public SortByCountCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class SortByCountCodec extends StageCodec<SortByCount> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final SortByCount value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, SortByCount value, EncoderContext encoderContext) {
         value.getExpression().encode(getMapper(), writer, encoderContext);
     }
 }

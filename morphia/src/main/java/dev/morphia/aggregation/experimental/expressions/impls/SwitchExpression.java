@@ -34,7 +34,7 @@ public class SwitchExpression extends Expression {
      * @param then           the expression to evaluate if the case is true
      * @return this
      */
-    public SwitchExpression branch(final Expression caseExpression, final Expression then) {
+    public SwitchExpression branch(Expression caseExpression, Expression then) {
         branches.add(new Pair(caseExpression, then));
         return this;
     }
@@ -45,17 +45,17 @@ public class SwitchExpression extends Expression {
      * @param caseExpression the default case
      * @return this
      */
-    public SwitchExpression defaultCase(final Expression caseExpression) {
+    public SwitchExpression defaultCase(Expression caseExpression) {
         this.defaultCase = caseExpression;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         writer.writeStartArray("branches");
-        for (final Pair branch : branches) {
+        for (Pair branch : branches) {
             writer.writeStartDocument();
             writer.writeName("case");
             branch.caseExpression.encode(mapper, writer, encoderContext);
@@ -73,7 +73,7 @@ public class SwitchExpression extends Expression {
         private final Expression caseExpression;
         private final Expression then;
 
-        public Pair(final Expression caseExpression, final Expression then) {
+        public Pair(Expression caseExpression, Expression then) {
             this.caseExpression = caseExpression;
             this.then = then;
         }

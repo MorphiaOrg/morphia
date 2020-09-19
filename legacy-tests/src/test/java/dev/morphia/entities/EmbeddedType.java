@@ -26,7 +26,7 @@ public class EmbeddedType {
     public EmbeddedType() {
     }
 
-    public EmbeddedType(final Long number, final String text) {
+    public EmbeddedType(Long number, String text) {
         this.number = number;
         this.text = text;
     }
@@ -35,7 +35,7 @@ public class EmbeddedType {
         return number;
     }
 
-    public void setNumber(final Long number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -43,12 +43,12 @@ public class EmbeddedType {
         return text;
     }
 
-    public void setText(final String text) {
+    public void setText(String text) {
         this.text = text;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

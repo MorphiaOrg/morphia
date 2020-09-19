@@ -6,12 +6,12 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class SampleCodec extends StageCodec<Sample> {
-    public SampleCodec(final Mapper mapper) {
+    public SampleCodec(Mapper mapper) {
         super(mapper);
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Sample value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Sample value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeInt64("size", value.getSize());
         writer.writeEndDocument();

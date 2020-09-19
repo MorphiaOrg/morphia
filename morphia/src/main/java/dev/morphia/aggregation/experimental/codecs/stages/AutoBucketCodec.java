@@ -9,7 +9,7 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
 
 public class AutoBucketCodec extends StageCodec<AutoBucket> {
-    public AutoBucketCodec(final Mapper mapper) {
+    public AutoBucketCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -19,7 +19,7 @@ public class AutoBucketCodec extends StageCodec<AutoBucket> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final AutoBucket value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, AutoBucket value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writeNamedExpression(getMapper(), writer, "groupBy", value.getGroupBy(), encoderContext);
         writeNamedValue(writer, "buckets", value.getBuckets(), encoderContext);

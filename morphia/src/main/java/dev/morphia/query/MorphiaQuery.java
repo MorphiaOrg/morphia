@@ -50,7 +50,7 @@ public class MorphiaQuery<T> implements Query<T> {
     private final Document seedQuery;
     private boolean validate = true;
 
-    protected MorphiaQuery(final Datastore datastore) {
+    protected MorphiaQuery(Datastore datastore) {
         this.datastore = datastore;
         mapper = this.datastore.getMapper();
         clazz = null;
@@ -59,7 +59,7 @@ public class MorphiaQuery<T> implements Query<T> {
         collectionName = null;
     }
 
-    protected MorphiaQuery(final Datastore datastore, final String collectionName, final Class<T> clazz) {
+    protected MorphiaQuery(Datastore datastore, String collectionName, Class<T> clazz) {
         this.clazz = clazz;
         this.datastore = datastore;
         mapper = this.datastore.getMapper();
@@ -76,7 +76,7 @@ public class MorphiaQuery<T> implements Query<T> {
         }
     }
 
-    protected MorphiaQuery(final Datastore datastore, final Class<T> clazz, final Document query) {
+    protected MorphiaQuery(Datastore datastore, Class<T> clazz, Document query) {
         this.clazz = clazz;
         this.datastore = datastore;
         this.seedQuery = query;
@@ -95,7 +95,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public long count(final CountOptions options) {
+    public long count(CountOptions options) {
         ClientSession session = datastore.findSession(options);
         Document query = getQueryDocument();
         return session == null ? getCollection().countDocuments(query, options)
@@ -103,7 +103,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public DeleteResult delete(final DeleteOptions options) {
+    public DeleteResult delete(DeleteOptions options) {
         MongoCollection<T> collection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
         if (options.isMulti()) {
@@ -130,7 +130,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Map<String, Object> explain(final FindOptions options) {
+    public Map<String, Object> explain(FindOptions options) {
         return new LinkedHashMap<>(datastore.getDatabase()
                                             .runCommand(new Document("explain",
                                                 new Document("find", getCollection().getNamespace().getCollectionName())
@@ -139,13 +139,13 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     @SuppressWarnings({"removal", "unchecked"})
-    public FieldEnd<? extends Query<T>> field(final String name) {
+    public FieldEnd<? extends Query<T>> field(String name) {
         return new MorphiaQueryFieldEnd(name);
     }
 
     @Override
     @SuppressWarnings({"removal"})
-    public Query<T> filter(final String condition, final Object value) {
+    public Query<T> filter(String condition, Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
             throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
@@ -157,8 +157,8 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Query<T> filter(final Filter... additional) {
-        for (final Filter filter : additional) {
+    public Query<T> filter(Filter... additional) {
+        for (Filter filter : additional) {
             filters.add(filter
                             .entityType(getEntityClass())
                             .isValidating(validate && getEntityClass() != null));
@@ -167,7 +167,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public T findAndDelete(final FindAndDeleteOptions options) {
+    public T findAndDelete(FindAndDeleteOptions options) {
         MongoCollection<T> mongoCollection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
         return session == null
@@ -181,7 +181,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public T first(final FindOptions options) {
+    public T first(FindOptions options) {
         try (MongoCursor<T> it = iterator(options.copy().limit(1))) {
             return it.tryNext();
         }
@@ -198,7 +198,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public MorphiaCursor<T> iterator(final FindOptions options) {
+    public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
 
@@ -208,7 +208,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public MorphiaKeyCursor<T> keys(final FindOptions options) {
+    public MorphiaKeyCursor<T> keys(FindOptions options) {
         FindOptions includeId = new FindOptions().copy(options)
                                                  .projection()
                                                  .include("_id");
@@ -219,17 +219,17 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Modify<T> modify(final UpdateOperator first, final UpdateOperator... updates) {
+    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
         return new Modify<>(datastore, mapper, getCollection(), this, getEntityClass(), first, updates);
     }
 
     @Override
-    public Query<T> search(final String searchText) {
+    public Query<T> search(String searchText) {
         return filter(text(searchText));
     }
 
     @Override
-    public Query<T> search(final String searchText, final String language) {
+    public Query<T> search(String searchText, String language) {
         return filter(text(searchText).language(language));
     }
 
@@ -251,7 +251,7 @@ public class MorphiaQuery<T> implements Query<T> {
             List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (final MappedClass subtype : subtypes) {
+            for (MappedClass subtype : subtypes) {
                 values.add(subtype.getEntityModel().getDiscriminator());
             }
             query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
@@ -261,7 +261,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Update<T> update(final UpdateOperator first, final UpdateOperator... updates) {
+    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
         return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
     }
 
@@ -271,7 +271,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -305,7 +305,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private <E> MongoCursor<E> prepareCursor(final FindOptions findOptions, final MongoCollection<E> collection) {
+    private <E> MongoCursor<E> prepareCursor(FindOptions findOptions, MongoCollection<E> collection) {
         final Document query = toDocument();
 
         if (LOG.isTraceEnabled()) {
@@ -360,14 +360,14 @@ public class MorphiaQuery<T> implements Query<T> {
     private class MorphiaQueryFieldEnd extends FieldEndImpl {
         private final String name;
 
-        private MorphiaQueryFieldEnd(final String name) {
+        private MorphiaQueryFieldEnd(String name) {
             super(mapper, name, MorphiaQuery.this, mapper.getMappedClass(getEntityClass()), validate);
             this.name = name;
         }
 
         @Override
         @SuppressWarnings("removal")
-        public CriteriaContainer within(final Shape shape) {
+        public CriteriaContainer within(Shape shape) {
             Filter converted;
             if (shape instanceof dev.morphia.query.Shape.Center) {
                 final dev.morphia.query.Shape.Center center = (dev.morphia.query.Shape.Center) shape;
@@ -389,7 +389,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
         @Override
         @SuppressWarnings("removal")
-        protected MorphiaQuery<T> addCriteria(final FilterOperator op, final Object val, final boolean not) {
+        protected MorphiaQuery<T> addCriteria(FilterOperator op, Object val, boolean not) {
             Filter converted = op.apply(name, val);
             if (not) {
                 converted.not();
@@ -400,7 +400,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
         @Override
         @SuppressWarnings("removal")
-        protected CriteriaContainer addGeoCriteria(final FilterOperator op, final Object val, final Map opts) {
+        protected CriteriaContainer addGeoCriteria(FilterOperator op, Object val, Map opts) {
             NearFilter apply = (NearFilter) op.apply(name, val);
             apply.applyOpts(opts);
             filter(apply);

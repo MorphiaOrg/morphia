@@ -44,13 +44,13 @@ public final class ObjectExpressions {
          * @return this
          */
         @SuppressWarnings("unchecked")
-        public MergeObjects add(final Expression expression) {
+        public MergeObjects add(Expression expression) {
             ((List<Expression>) getValue()).add(expression);
             return this;
         }
 
         @Override
-        public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+        public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
             super.encode(mapper, writer, encoderContext);
         }
     }

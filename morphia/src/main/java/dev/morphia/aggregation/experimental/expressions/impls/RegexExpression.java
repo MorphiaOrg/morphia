@@ -13,13 +13,13 @@ public class RegexExpression extends Expression {
     private String regex;
     private String options;
 
-    public RegexExpression(final String operation, final Expression input) {
+    public RegexExpression(String operation, Expression input) {
         super(operation);
         this.input = input;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         ExpressionCodec.writeNamedExpression(mapper, writer, "input", input, encoderContext);
@@ -35,7 +35,7 @@ public class RegexExpression extends Expression {
      * @param options the options
      * @return this
      */
-    public RegexExpression options(final String options) {
+    public RegexExpression options(String options) {
         this.options = options;
         return this;
     }
@@ -46,7 +46,7 @@ public class RegexExpression extends Expression {
      * @param pattern the regular expression
      * @return this
      */
-    public RegexExpression pattern(final String pattern) {
+    public RegexExpression pattern(String pattern) {
         this.regex = pattern;
         return this;
     }
@@ -57,7 +57,7 @@ public class RegexExpression extends Expression {
      * @param pattern the regular expression
      * @return this
      */
-    public RegexExpression pattern(final Pattern pattern) {
+    public RegexExpression pattern(Pattern pattern) {
         this.regex = pattern.pattern();
         return this;
     }

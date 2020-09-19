@@ -16,8 +16,8 @@ class Geo2dCriteria extends FieldCriteria {
 
     private final Map<String, Object> opts;
 
-    Geo2dCriteria(final Mapper mapper, final String field, final FilterOperator op, final Object value,
-                  final Map<String, Object> opts, final MappedClass mappedClass, final boolean validating) {
+    Geo2dCriteria(Mapper mapper, String field, FilterOperator op, Object value,
+                  Map<String, Object> opts, MappedClass mappedClass, boolean validating) {
         super(mapper, field, op, value, mappedClass, validating);
         this.opts = opts;
     }
@@ -44,7 +44,7 @@ class Geo2dCriteria extends FieldCriteria {
 
         //add options...
         if (opts != null) {
-            for (final Map.Entry<String, Object> e : opts.entrySet()) {
+            for (Map.Entry<String, Object> e : opts.entrySet()) {
                 query.append(e.getKey(), e.getValue());
             }
         }

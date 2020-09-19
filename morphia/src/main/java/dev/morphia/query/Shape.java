@@ -14,7 +14,7 @@ public class Shape {
     private final String geometry;
     private final Point[] points;
 
-    Shape(final String geometry, final Point... points) {
+    Shape(String geometry, Point... points) {
         this.geometry = geometry;
         this.points = points;
     }
@@ -29,7 +29,7 @@ public class Shape {
      * @mongodb.driver.manual reference/operator/query/box/ $box
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      */
-    public static Shape box(final Point bottomLeft, final Point upperRight) {
+    public static Shape box(Point bottomLeft, Point upperRight) {
         return new Shape("$box", bottomLeft, upperRight);
     }
 
@@ -42,7 +42,7 @@ public class Shape {
      * @mongodb.driver.manual reference/operator/query/center/ $center
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      */
-    public static Shape center(final Point center, final double radius) {
+    public static Shape center(Point center, double radius) {
         return new Center("$center", center, radius);
     }
 
@@ -54,7 +54,7 @@ public class Shape {
      * @return the box
      * @mongodb.driver.manual reference/operator/query/centerSphere/ $centerSphere
      */
-    public static Shape centerSphere(final Point center, final double radius) {
+    public static Shape centerSphere(Point center, double radius) {
         return new Center("$centerSphere", center, radius);
     }
 
@@ -66,7 +66,7 @@ public class Shape {
      * @mongodb.driver.manual reference/operator/query/polygon/ $polygon
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      */
-    public static Shape polygon(final Point... points) {
+    public static Shape polygon(Point... points) {
         return new Shape("$polygon", points);
     }
 
@@ -84,7 +84,7 @@ public class Shape {
         return copy(points);
     }
 
-    private Point[] copy(final Point[] array) {
+    private Point[] copy(Point[] array) {
         Point[] copy = new Point[array.length];
         System.arraycopy(array, 0, copy, 0, array.length);
         return copy;
@@ -97,7 +97,7 @@ public class Shape {
         private final Point center;
         private final double radius;
 
-        Center(final String geometry, final Point center, final double radius) {
+        Center(String geometry, Point center, double radius) {
             super(geometry);
             this.center = center;
             this.radius = radius;

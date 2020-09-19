@@ -38,7 +38,7 @@ public class NameValuePairTest extends TestBase {
         public NameValuePair() {
         }
 
-        NameValuePair(final T1 name, final T2 value) {
+        NameValuePair(T1 name, T2 value) {
             this.name = name;
             this.value = value;
         }
@@ -53,7 +53,7 @@ public class NameValuePairTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }

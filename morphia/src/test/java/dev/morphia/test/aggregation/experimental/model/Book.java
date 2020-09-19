@@ -21,7 +21,7 @@ public final class Book {
     private Book() {
     }
 
-    public Book(final String title, final String author, final Integer copies, final String... tags) {
+    public Book(String title, String author, Integer copies, String... tags) {
         this.title = title;
         this.author = author;
         this.copies = copies;

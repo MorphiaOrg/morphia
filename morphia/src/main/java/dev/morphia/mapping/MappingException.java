@@ -22,7 +22,7 @@ public class MappingException extends RuntimeException {
      *
      * @param message the message to record
      */
-    public MappingException(final String message) {
+    public MappingException(String message) {
         super(message);
     }
 
@@ -32,7 +32,7 @@ public class MappingException extends RuntimeException {
      * @param message the message to record
      * @param cause   the
      */
-    public MappingException(final String message, final Throwable cause) {
+    public MappingException(String message, Throwable cause) {
         super(message, cause);
     }
 }

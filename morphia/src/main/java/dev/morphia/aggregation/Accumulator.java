@@ -34,7 +34,7 @@ public class Accumulator implements AggregationElement {
      * @param operation the accumulator operation
      * @param field     the field to use
      */
-    public Accumulator(final String operation, final String field) {
+    public Accumulator(String operation, String field) {
         this(operation, (Object) ("$" + field));
     }
 
@@ -44,7 +44,7 @@ public class Accumulator implements AggregationElement {
      * @param operation the accumulator operation
      * @param field     the field to use
      */
-    public Accumulator(final String operation, final Object field) {
+    public Accumulator(String operation, Object field) {
         this.operation = operation;
         this.value = field;
     }
@@ -56,7 +56,7 @@ public class Accumulator implements AggregationElement {
      * @param field     the field to use
      * @return an Accumulator
      */
-    public static Accumulator accumulator(final String operation, final String field) {
+    public static Accumulator accumulator(String operation, String field) {
         return new Accumulator(operation, field);
     }
 
@@ -67,7 +67,7 @@ public class Accumulator implements AggregationElement {
      * @param field     the field to use
      * @return an Accumulator
      */
-    public static Accumulator accumulator(final String operation, final Object field) {
+    public static Accumulator accumulator(String operation, Object field) {
         return new Accumulator(operation, field);
     }
 

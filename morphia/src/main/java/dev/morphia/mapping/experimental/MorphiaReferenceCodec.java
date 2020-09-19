@@ -28,7 +28,7 @@ import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
 public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> implements PropertyHandler {
 
     private final Mapper mapper;
-    private BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
+    private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
 
     /**
      * Creates a codec
@@ -37,13 +37,13 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
      * @param field     the reference field
      * @param typeData  the field type data
      */
-    public MorphiaReferenceCodec(final Datastore datastore, final Field field, final TypeData typeData) {
+    public MorphiaReferenceCodec(Datastore datastore, Field field, TypeData typeData) {
         super(datastore, field, (TypeData) typeData.getTypeParameters().get(0));
         mapper = datastore.getMapper();
     }
 
     @Override
-    public MorphiaReference decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public MorphiaReference decode(BsonReader reader, DecoderContext decoderContext) {
         Mapper mapper = getDatastore().getMapper();
         Object value = mapper.getCodecRegistry()
                              .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
@@ -61,7 +61,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
     }
 
     @Override
-    public Object encode(final Object value) {
+    public Object encode(Object value) {
         MorphiaReference<Object> wrap;
         if (value instanceof MorphiaReference) {
             wrap = (MorphiaReference<Object>) value;
@@ -77,7 +77,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
     }
 
     @Override
-    public void encode(final BsonWriter writer, final MorphiaReference value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, MorphiaReference value, EncoderContext encoderContext) {
         Object ids = value.getId(mapper, getDatastore(), getFieldMappedClass());
         Codec codec = mapper.getCodecRegistry().get(ids.getClass());
         codec.encode(writer, ids, encoderContext);

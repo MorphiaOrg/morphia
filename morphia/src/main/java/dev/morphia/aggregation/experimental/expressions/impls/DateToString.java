@@ -16,17 +16,17 @@ public class DateToString extends Expression {
         super("$dateToString");
     }
 
-    public DateToString date(final String date) {
+    public DateToString date(String date) {
         return date(Expressions.value(date));
     }
 
-    public DateToString date(final Expression date) {
+    public DateToString date(Expression date) {
         this.date = date;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         ExpressionCodec.writeNamedExpression(mapper, writer, "date", date, encoderContext);
@@ -38,29 +38,29 @@ public class DateToString extends Expression {
         writer.writeEndDocument();
     }
 
-    public DateToString format(final String format) {
+    public DateToString format(String format) {
         return format(Expressions.value(format));
     }
 
-    public DateToString format(final Expression format) {
+    public DateToString format(Expression format) {
         this.format = format;
         return this;
     }
 
-    public DateToString onNull(final String onNull) {
+    public DateToString onNull(String onNull) {
         return onNull(Expressions.value(onNull));
     }
 
-    public DateToString onNull(final Expression onNull) {
+    public DateToString onNull(Expression onNull) {
         this.onNull = onNull;
         return this;
     }
 
-    public DateToString timeZone(final String timeZone) {
+    public DateToString timeZone(String timeZone) {
         return timeZone(Expressions.value(timeZone));
     }
 
-    public DateToString timeZone(final Expression timeZone) {
+    public DateToString timeZone(Expression timeZone) {
         this.timeZone = timeZone;
         return this;
     }

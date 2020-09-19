@@ -16,7 +16,7 @@ import org.bson.conversions.Bson;
  * @since 2.0
  */
 public class UpdateDocument implements Bson {
-    private Object entity;
+    private final Object entity;
 
     /**
      * Creates an UpdateDocument for the entity
@@ -24,12 +24,12 @@ public class UpdateDocument implements Bson {
      * @param entity the entity to update
      * @param <T>    the entity type
      */
-    public <T> UpdateDocument(final T entity) {
+    public <T> UpdateDocument(T entity) {
         this.entity = entity;
     }
 
     @Override
-    public <TDocument> BsonDocument toBsonDocument(final Class<TDocument> tDocumentClass, final CodecRegistry codecRegistry) {
+    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> tDocumentClass, CodecRegistry codecRegistry) {
         DocumentWriter writer = new DocumentWriter();
 
         MorphiaCodec codec = (MorphiaCodec) codecRegistry.get(entity.getClass());

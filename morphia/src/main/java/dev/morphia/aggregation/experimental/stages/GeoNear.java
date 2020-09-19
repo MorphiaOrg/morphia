@@ -20,7 +20,7 @@ public class GeoNear extends Stage {
     private Number minDistance;
     private String key;
 
-    protected GeoNear(final Point point) {
+    protected GeoNear(Point point) {
         this();
         this.point = point;
     }
@@ -29,7 +29,7 @@ public class GeoNear extends Stage {
         super("$geoNear");
     }
 
-    protected GeoNear(final double[] coordinates) {
+    protected GeoNear(double[] coordinates) {
         this();
         this.coordinates = coordinates;
     }
@@ -40,7 +40,7 @@ public class GeoNear extends Stage {
      * @param point the center point
      * @return the new stage
      */
-    public static GeoNear to(final Point point) {
+    public static GeoNear to(Point point) {
         return new GeoNear(point);
     }
 
@@ -50,7 +50,7 @@ public class GeoNear extends Stage {
      * @param coordinates the center point coordinates
      * @return the new stage
      */
-    public static GeoNear to(final double[] coordinates) {
+    public static GeoNear to(double[] coordinates) {
         return new GeoNear(coordinates);
     }
 
@@ -60,7 +60,7 @@ public class GeoNear extends Stage {
      * @param distanceField the field name
      * @return this
      */
-    public GeoNear distanceField(final String distanceField) {
+    public GeoNear distanceField(String distanceField) {
         this.distanceField = distanceField;
         return this;
     }
@@ -72,7 +72,7 @@ public class GeoNear extends Stage {
      * @param distanceMultiplier the multiplier
      * @return this
      */
-    public GeoNear distanceMultiplier(final Number distanceMultiplier) {
+    public GeoNear distanceMultiplier(Number distanceMultiplier) {
         this.distanceMultiplier = distanceMultiplier;
         return this;
     }
@@ -164,7 +164,7 @@ public class GeoNear extends Stage {
      * @param includeLocs include the field if true
      * @return this
      */
-    public GeoNear includeLocs(final String includeLocs) {
+    public GeoNear includeLocs(String includeLocs) {
         this.includeLocs = includeLocs;
         return this;
     }
@@ -175,7 +175,7 @@ public class GeoNear extends Stage {
      * @param key the indexed field
      * @return this
      */
-    public GeoNear key(final String key) {
+    public GeoNear key(String key) {
         this.key = key;
         return this;
     }
@@ -189,7 +189,7 @@ public class GeoNear extends Stage {
      * @param maxDistance the max distance
      * @return this
      */
-    public GeoNear maxDistance(final Number maxDistance) {
+    public GeoNear maxDistance(Number maxDistance) {
         this.maxDistance = maxDistance;
         return this;
     }
@@ -203,7 +203,7 @@ public class GeoNear extends Stage {
      * @param minDistance the min distance
      * @return this
      */
-    public GeoNear minDistance(final Number minDistance) {
+    public GeoNear minDistance(Number minDistance) {
         this.minDistance = minDistance;
         return this;
     }
@@ -216,7 +216,7 @@ public class GeoNear extends Stage {
      * @param filters the filters to apply
      * @return this
      */
-    public GeoNear query(final Filter... filters) {
+    public GeoNear query(Filter... filters) {
         this.filters = filters;
         return this;
     }
@@ -230,7 +230,7 @@ public class GeoNear extends Stage {
      * @param spherical true if spherical
      * @return this
      */
-    public GeoNear spherical(final Boolean spherical) {
+    public GeoNear spherical(Boolean spherical) {
         this.spherical = spherical;
         return this;
     }

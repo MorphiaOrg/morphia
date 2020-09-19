@@ -40,17 +40,17 @@ class FieldBuilder extends AnnotationBuilder<Field> implements Field {
         return get("weight");
     }
 
-    FieldBuilder type(final IndexType type) {
+    FieldBuilder type(IndexType type) {
         put("type", type);
         return this;
     }
 
-    FieldBuilder value(final String value) {
+    FieldBuilder value(String value) {
         put("value", value);
         return this;
     }
 
-    FieldBuilder weight(final int weight) {
+    FieldBuilder weight(int weight) {
         put("weight", weight);
         return this;
     }

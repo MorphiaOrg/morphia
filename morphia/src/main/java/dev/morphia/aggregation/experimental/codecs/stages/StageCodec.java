@@ -13,7 +13,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 public abstract class StageCodec<T extends Stage> implements Codec<T> {
     private final Mapper mapper;
 
-    protected StageCodec(final Mapper mapper) {
+    protected StageCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 
@@ -26,21 +26,21 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
     }
 
     @Override
-    public final T decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public final T decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override
-    public final void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
+    public final void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(value.getStageName());
         encodeStage(writer, value, encoderContext);
         writer.writeEndDocument();
     }
 
-    protected abstract void encodeStage(final BsonWriter writer, final T value, final EncoderContext encoderContext);
+    protected abstract void encodeStage(BsonWriter writer, T value, EncoderContext encoderContext);
 
-    protected void writeNamedValue(final BsonWriter writer, final String name, final Object value, final EncoderContext encoderContext) {
+    protected void writeNamedValue(BsonWriter writer, String name, Object value, EncoderContext encoderContext) {
         if (value != null) {
             writer.writeName(name);
             Codec codec = getCodecRegistry().get(value.getClass());

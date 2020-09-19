@@ -16,12 +16,12 @@ public class RegexFilter extends Filter {
     private String regex;
     private String options;
 
-    RegexFilter(final String field) {
+    RegexFilter(String field) {
         super("$regex", field, null);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(field(mapper));
         if (isNot()) {
             writer.writeStartDocument("$not");
@@ -40,7 +40,7 @@ public class RegexFilter extends Filter {
      * @param options the options
      * @return this
      */
-    public RegexFilter options(final String options) {
+    public RegexFilter options(String options) {
         this.options = options;
         return this;
     }
@@ -51,7 +51,7 @@ public class RegexFilter extends Filter {
      * @param pattern the regular expression
      * @return this
      */
-    public RegexFilter pattern(final String pattern) {
+    public RegexFilter pattern(String pattern) {
         this.regex = pattern;
         return this;
     }
@@ -62,7 +62,7 @@ public class RegexFilter extends Filter {
      * @param pattern the regular expression
      * @return this
      */
-    public RegexFilter pattern(final Pattern pattern) {
+    public RegexFilter pattern(Pattern pattern) {
         this.regex = pattern.pattern();
         return this;
     }
@@ -114,7 +114,7 @@ public class RegexFilter extends Filter {
         return this;
     }
 
-    private void add(final String option) {
+    private void add(String option) {
         if (options == null) {
             options = "";
         }

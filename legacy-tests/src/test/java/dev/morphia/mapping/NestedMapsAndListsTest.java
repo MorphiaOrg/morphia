@@ -148,7 +148,7 @@ public class NestedMapsAndListsTest extends TestBase {
         Assert.assertNotNull("lame", mapOfMap.mom.get("root").get("peer"));
     }
 
-    private Map<String, Person> map(final String nick, final Person person) {
+    private Map<String, Person> map(String nick, Person person) {
         final HashMap<String, Person> map = new HashMap<>();
         map.put(nick, person);
         return map;
@@ -174,7 +174,7 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -205,7 +205,7 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -238,7 +238,7 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -270,7 +270,7 @@ public class NestedMapsAndListsTest extends TestBase {
         private final List<Map<String, Person>> list = new ArrayList<>();
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -308,7 +308,7 @@ public class NestedMapsAndListsTest extends TestBase {
         Person() {
         }
 
-        Person(final String name) {
+        Person(String name) {
             this.name = name;
         }
 
@@ -318,7 +318,7 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

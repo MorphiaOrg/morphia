@@ -6,12 +6,12 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class LimitCodec extends StageCodec<Limit> {
-    public LimitCodec(final Mapper mapper) {
+    public LimitCodec(Mapper mapper) {
         super(mapper);
     }
 
     @Override
-    public void encodeStage(final BsonWriter writer, final Limit value, final EncoderContext encoderContext) {
+    public void encodeStage(BsonWriter writer, Limit value, EncoderContext encoderContext) {
         writer.writeInt64(value.getLimit());
     }
 

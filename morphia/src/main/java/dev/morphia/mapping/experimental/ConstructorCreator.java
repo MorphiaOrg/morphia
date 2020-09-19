@@ -23,14 +23,14 @@ import java.util.function.BiFunction;
 @SuppressWarnings("unchecked")
 public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
     private final Object[] parameters;
-    private Constructor<T> constructor;
-    private EntityModel model;
-    private Map<String, BiFunction<Object[], Object, Void>> positions = new LinkedHashMap<>();
+    private final Constructor<T> constructor;
+    private final EntityModel model;
+    private final Map<String, BiFunction<Object[], Object, Void>> positions = new LinkedHashMap<>();
 
     /**
      * @param model the model
      */
-    public ConstructorCreator(final EntityModel model) {
+    public ConstructorCreator(EntityModel model) {
         this.model = model;
         constructor = getFullConstructor(model);
         if (constructor == null) {
@@ -64,7 +64,7 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
      * @return the constructor taking all fields if it exists
      * @morphia.internal
      */
-    public static <T> Constructor<T> getFullConstructor(final EntityModel<T> model) {
+    public static <T> Constructor<T> getFullConstructor(EntityModel<T> model) {
         for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
             if (constructor.getParameterCount() == model.getFieldModels().size()
                 && constructor.getAnnotation(dev.morphia.annotations.experimental.Constructor.class) != null) {
@@ -79,13 +79,13 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
      * @return the name
      * @morphia.internal
      */
-    public static String getParameterName(final Parameter parameter) {
+    public static String getParameterName(Parameter parameter) {
         Name name = parameter.getAnnotation(Name.class);
         return name != null ? name.value() : parameter.getName();
     }
 
     @Override
-    public <S> void set(final S value, final FieldModel<S> model) {
+    public <S> void set(S value, FieldModel<S> model) {
         positions.get(model.getName()).apply(parameters, value);
     }
 

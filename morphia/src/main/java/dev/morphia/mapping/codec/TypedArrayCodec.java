@@ -15,17 +15,17 @@ import java.util.List;
 import static java.lang.String.format;
 
 class TypedArrayCodec implements Codec {
-    private Class type;
+    private final Class type;
     private Codec codec;
-    private Mapper mapper;
+    private final Mapper mapper;
 
-    TypedArrayCodec(final Class type, final Mapper mapper) {
+    TypedArrayCodec(Class type, Mapper mapper) {
         this.type = type;
         this.mapper = mapper;
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Object value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
         writer.writeStartArray();
         int length = Array.getLength(value);
         for (int i = 0; i < length; i++) {
@@ -47,7 +47,7 @@ class TypedArrayCodec implements Codec {
     }
 
     @Override
-    public Object decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Object decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartArray();
 
         List list = new ArrayList<>();

@@ -78,7 +78,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
             return r;
         }
 
-        public void setR(final ReferencedEntity r) {
+        public void setR(ReferencedEntity r) {
             this.r = r;
         }
 
@@ -86,7 +86,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
             return secondReference;
         }
 
-        public void setSecondReference(final ReferencedEntity secondReference) {
+        public void setSecondReference(ReferencedEntity secondReference) {
             this.secondReference = secondReference;
         }
     }
@@ -101,7 +101,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
             return foo;
         }
 
-        public void setFoo(final String string) {
+        public void setFoo(String string) {
             foo = string;
         }
 
@@ -109,7 +109,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
             return parent;
         }
 
-        public void setParent(final RootEntity parent) {
+        public void setParent(RootEntity parent) {
             this.parent = parent;
         }
     }

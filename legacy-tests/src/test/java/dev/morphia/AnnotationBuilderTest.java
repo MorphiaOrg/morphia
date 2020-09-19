@@ -42,7 +42,7 @@ public class AnnotationBuilderTest {
         compareFields(Validation.class, ValidationBuilder.class);
     }
 
-    private <T extends Annotation> void compareFields(final Class<T> annotationType, final Class<? extends AnnotationBuilder<T>> builder)
+    private <T extends Annotation> void compareFields(Class<T> annotationType, Class<? extends AnnotationBuilder<T>> builder)
         throws NoSuchMethodException {
 
         for (Method method : annotationType.getDeclaredMethods()) {

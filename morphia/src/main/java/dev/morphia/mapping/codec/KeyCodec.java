@@ -22,14 +22,14 @@ import java.util.List;
 @Deprecated(since = "2.0", forRemoval = true)
 public class KeyCodec implements Codec<Key> {
 
-    private Mapper mapper;
+    private final Mapper mapper;
 
-    KeyCodec(final Mapper mapper) {
+    KeyCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Key value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Key value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         String collection = value.getCollection();
         if (collection == null) {
@@ -48,7 +48,7 @@ public class KeyCodec implements Codec<Key> {
     }
 
     @Override
-    public Key decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Key decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
 
         final String ref = reader.readString("$ref");

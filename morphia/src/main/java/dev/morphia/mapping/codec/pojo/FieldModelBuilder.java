@@ -42,7 +42,7 @@ public final class FieldModelBuilder<T> {
     private Field field;
     private String name;
     private String mappedName;
-    private List<String> alternateNames = new ArrayList<>();
+    private final List<String> alternateNames = new ArrayList<>();
     private TypeData<T> typeData;
     private Codec<T> codec;
     private List<Annotation> annotations = emptyList();
@@ -66,7 +66,7 @@ public final class FieldModelBuilder<T> {
      * @param accessor the accessor
      * @return this
      */
-    public FieldModelBuilder<T> accessor(final PropertyAccessor<T> accessor) {
+    public FieldModelBuilder<T> accessor(PropertyAccessor<T> accessor) {
         this.accessor = accessor;
         return this;
     }
@@ -76,7 +76,7 @@ public final class FieldModelBuilder<T> {
      *
      * @param name the new name
      */
-    public void alternateName(final String name) {
+    public void alternateName(String name) {
         alternateNames.add(name);
     }
 
@@ -94,7 +94,7 @@ public final class FieldModelBuilder<T> {
      * @param annotations the annotations
      * @return this
      */
-    public FieldModelBuilder<T> annotations(final List<Annotation> annotations) {
+    public FieldModelBuilder<T> annotations(List<Annotation> annotations) {
         this.annotations = unmodifiableList(notNull("annotations", annotations));
         return this;
     }
@@ -115,7 +115,7 @@ public final class FieldModelBuilder<T> {
      * @param codec the custom codec for the field
      * @return this
      */
-    public FieldModelBuilder<T> codec(final Codec<T> codec) {
+    public FieldModelBuilder<T> codec(Codec<T> codec) {
         this.codec = codec;
         return this;
     }
@@ -126,7 +126,7 @@ public final class FieldModelBuilder<T> {
      * @param discriminatorEnabled true if the discriminator should be used
      * @return this
      */
-    public FieldModelBuilder<T> discriminatorEnabled(final Boolean discriminatorEnabled) {
+    public FieldModelBuilder<T> discriminatorEnabled(Boolean discriminatorEnabled) {
         this.discriminatorEnabled = discriminatorEnabled;
         return this;
     }
@@ -137,7 +137,7 @@ public final class FieldModelBuilder<T> {
      * @param field the field
      * @return this
      */
-    public FieldModelBuilder<T> field(final Field field) {
+    public FieldModelBuilder<T> field(Field field) {
         this.field = notNull("field", field);
         return this;
     }
@@ -148,7 +148,7 @@ public final class FieldModelBuilder<T> {
      * @param fieldName the name
      * @return this
      */
-    public FieldModelBuilder<T> fieldName(final String fieldName) {
+    public FieldModelBuilder<T> fieldName(String fieldName) {
         this.name = notNull("fieldName", fieldName);
         return this;
     }
@@ -160,7 +160,7 @@ public final class FieldModelBuilder<T> {
      * @param <A>  the annotation type
      * @return the annotation instance or null if this annotation is on the field
      */
-    public <A extends Annotation> A getAnnotation(final Class<A> type) {
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
         for (Annotation annotation : annotations) {
             if (type.equals(annotation.annotationType())) {
                 return type.cast(annotation);
@@ -212,7 +212,7 @@ public final class FieldModelBuilder<T> {
      * @param type the annotation class
      * @return true if the annotation is used on this field
      */
-    public boolean hasAnnotation(final Class<? extends Annotation> type) {
+    public boolean hasAnnotation(Class<? extends Annotation> type) {
         for (Annotation annotation : annotations) {
             if (type.equals(annotation.annotationType())) {
                 return true;
@@ -227,7 +227,7 @@ public final class FieldModelBuilder<T> {
      * @param mappedName the name
      * @return this
      */
-    public FieldModelBuilder<T> mappedName(final String mappedName) {
+    public FieldModelBuilder<T> mappedName(String mappedName) {
         this.mappedName = mappedName;
         return this;
     }
@@ -245,7 +245,7 @@ public final class FieldModelBuilder<T> {
      * @param propertySerialization checks if a property should be serialized
      * @return this
      */
-    public FieldModelBuilder<T> serialization(final PropertySerialization<T> propertySerialization) {
+    public FieldModelBuilder<T> serialization(PropertySerialization<T> propertySerialization) {
         this.serialization = notNull("propertySerialization", propertySerialization);
         return this;
     }
@@ -266,7 +266,7 @@ public final class FieldModelBuilder<T> {
      * @param typeData the type data
      * @return this
      */
-    public FieldModelBuilder<T> typeData(final TypeData<T> typeData) {
+    public FieldModelBuilder<T> typeData(TypeData<T> typeData) {
         this.typeData = notNull("typeData", typeData);
         return this;
     }

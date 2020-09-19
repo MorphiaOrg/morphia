@@ -6,9 +6,9 @@ package dev.morphia.aggregation.experimental.stages;
  * @aggregation.expression $sample
  */
 public class Sample extends Stage {
-    private long size;
+    private final long size;
 
-    protected Sample(final long size) {
+    protected Sample(long size) {
         super("$sample");
         this.size = size;
     }
@@ -19,7 +19,7 @@ public class Sample extends Stage {
      * @param size the sample size
      * @return the new stage
      */
-    public static Sample of(final long size) {
+    public static Sample of(long size) {
         return new Sample(size);
     }
 

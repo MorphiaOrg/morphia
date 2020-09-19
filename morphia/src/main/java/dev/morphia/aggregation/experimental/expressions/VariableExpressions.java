@@ -20,7 +20,7 @@ public final class VariableExpressions {
      * @return the new expression
      * @aggregation.expression $let
      */
-    public static LetExpression let(final Expression in) {
+    public static LetExpression let(Expression in) {
         return new LetExpression(in);
     }
 }

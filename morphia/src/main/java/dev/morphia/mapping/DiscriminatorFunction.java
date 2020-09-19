@@ -17,7 +17,7 @@ public abstract class DiscriminatorFunction {
     public static DiscriminatorFunction className() {
         return new DiscriminatorFunction() {
             @Override
-            public String compute(final EntityModelBuilder<?> builder) {
+            public String compute(EntityModelBuilder<?> builder) {
                 return builder.getType().getName();
             }
         };
@@ -31,7 +31,7 @@ public abstract class DiscriminatorFunction {
     public static DiscriminatorFunction lowerClassName() {
         return new DiscriminatorFunction() {
             @Override
-            public String compute(final EntityModelBuilder<?> builder) {
+            public String compute(EntityModelBuilder<?> builder) {
                 return builder.getType().getName().toLowerCase();
             }
         };
@@ -45,7 +45,7 @@ public abstract class DiscriminatorFunction {
     public static DiscriminatorFunction lowerSimpleName() {
         return new DiscriminatorFunction() {
             @Override
-            public String compute(final EntityModelBuilder<?> builder) {
+            public String compute(EntityModelBuilder<?> builder) {
                 return builder.getType().getSimpleName().toLowerCase();
             }
         };
@@ -59,7 +59,7 @@ public abstract class DiscriminatorFunction {
     public static DiscriminatorFunction simpleName() {
         return new DiscriminatorFunction() {
             @Override
-            public String compute(final EntityModelBuilder<?> builder) {
+            public String compute(EntityModelBuilder<?> builder) {
                 return builder.getType().getSimpleName();
             }
         };
@@ -70,7 +70,7 @@ public abstract class DiscriminatorFunction {
      *
      * @param builder the builder to evaluate
      */
-    public final void apply(final EntityModelBuilder<?> builder) {
+    public final void apply(EntityModelBuilder<?> builder) {
         String discriminator = Mapper.IGNORED_FIELDNAME;
         Entity entity = builder.getAnnotation(Entity.class);
         if (entity != null) {

@@ -28,7 +28,7 @@ public class Circle extends TestEntity implements Shape {
     public Circle() {
     }
 
-    public Circle(final double radius) {
+    public Circle(double radius) {
         this.radius = radius;
     }
 

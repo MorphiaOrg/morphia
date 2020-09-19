@@ -119,11 +119,11 @@ public class CollectionOfValuesTest extends TestBase {
         compare(entity.twoDimArray[1], loaded.twoDimArray[1]);
     }
 
-    private void compare(final byte[] left, final byte[] right) {
+    private void compare(byte[] left, byte[] right) {
         Assert.assertArrayEquals(left, right);
     }
 
-    private void compare(final int[] left, final int[] right) {
+    private void compare(int[] left, int[] right) {
         Assert.assertArrayEquals(left, right);
     }
 
@@ -138,7 +138,7 @@ public class CollectionOfValuesTest extends TestBase {
             return data;
         }
 
-        public void setData(final List<?> data) {
+        public void setData(List<?> data) {
             this.data = new BasicDBList();
             this.data.addAll(data);
         }
@@ -155,7 +155,7 @@ public class CollectionOfValuesTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

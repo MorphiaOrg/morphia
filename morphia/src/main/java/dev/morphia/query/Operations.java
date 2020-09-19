@@ -19,11 +19,11 @@ import java.util.StringJoiner;
  * @morphia.internal
  */
 class Operations {
-    private Map<String, List<OperationTarget>> ops = new HashMap<>();
-    private Mapper mapper;
-    private MappedClass mappedClass;
+    private final Map<String, List<OperationTarget>> ops = new HashMap<>();
+    private final Mapper mapper;
+    private final MappedClass mappedClass;
 
-    Operations(final Mapper mapper, final MappedClass mappedClass) {
+    Operations(Mapper mapper, MappedClass mappedClass) {
         this.mapper = mapper;
         this.mappedClass = mappedClass;
     }
@@ -35,7 +35,7 @@ class Operations {
                    .toString();
     }
 
-    public void replaceEntity(final Object entity) {
+    public void replaceEntity(Object entity) {
         if (entity == null) {
             throw new UpdateException(Sofia.nullUpdateEntity());
         }
@@ -66,7 +66,7 @@ class Operations {
      * @param operator the operator
      * @param value    the value
      */
-    void add(final String operator, final OperationTarget value) {
+    void add(String operator, OperationTarget value) {
         ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
     }
 
@@ -78,7 +78,7 @@ class Operations {
         versionUpdate();
 
         Document document = new Document();
-        for (final Entry<String, List<OperationTarget>> entry : ops.entrySet()) {
+        for (Entry<String, List<OperationTarget>> entry : ops.entrySet()) {
             Document targets = new Document();
             for (OperationTarget operationTarget : entry.getValue()) {
                 Object encode = operationTarget.encode(mapper);

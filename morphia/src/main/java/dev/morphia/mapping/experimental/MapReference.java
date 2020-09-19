@@ -26,7 +26,7 @@ import static dev.morphia.query.experimental.filters.Filters.in;
 public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private Map<String, Object> ids;
     private Map<Object, T> values;
-    private Map<String, List<Object>> collections = new HashMap<>();
+    private final Map<String, List<Object>> collections = new HashMap<>();
 
     /**
      * @param datastore   the datastore to use
@@ -34,13 +34,13 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * @param mappedClass the MappedClass for the entity type
      * @morphia.internal
      */
-    public MapReference(final Datastore datastore, final Map<String, Object> ids, final MappedClass mappedClass) {
+    public MapReference(Datastore datastore, Map<String, Object> ids, MappedClass mappedClass) {
         super(datastore);
         if (ids != null) {
             //            if (ids.entrySet().stream().allMatch(mappedClass.getType()::isInstance)) {
             //                setValues(ids);
             //            } else {
-            for (final Entry<String, Object> entry : ids.entrySet()) {
+            for (Entry<String, Object> entry : ids.entrySet()) {
                 CollectionReference.collate(mappedClass, collections, entry.getValue());
             }
             this.ids = ids;
@@ -49,11 +49,11 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
 
     }
 
-    private void setValues(final Map<String, Object> values) {
+    private void setValues(Map<String, Object> values) {
         resolve();
     }
 
-    MapReference(final Map<Object, T> values) {
+    MapReference(Map<Object, T> values) {
         this.values = values;
     }
 
@@ -66,8 +66,8 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * @param document    the Document to decode
      * @return the entities
      */
-    public static MapReference decode(final Datastore datastore, final Mapper mapper, final MappedField mappedField,
-                                      final Document document) {
+    public static MapReference decode(Datastore datastore, Mapper mapper, MappedField mappedField,
+                                      Document document) {
         final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
 
         final Map<String, Object> ids = (Map<String, Object>) mappedField.getDocumentValue(document);
@@ -104,10 +104,10 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * {@inheritDoc}
      */
     @Override
-    public Object encode(final Mapper mapper, final Object value, final MappedField field) {
+    public Object encode(Mapper mapper, Object value, MappedField field) {
         if (isResolved()) {
             Map<String, Object> ids = new LinkedHashMap<>();
-            for (final Entry<Object, T> entry : get().entrySet()) {
+            for (Entry<Object, T> entry : get().entrySet()) {
                 ids.put(entry.getKey().toString(), wrapId(mapper, field, entry.getValue()));
             }
             return ids;
@@ -117,7 +117,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     }
 
     @Override
-    public Map<String, Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass field) {
+    public Map<String, Object> getId(Mapper mapper, Datastore datastore, MappedClass field) {
         if (ids == null) {
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
@@ -128,14 +128,14 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     }
 
     private void mergeReads() {
-        for (final Entry<String, List<Object>> entry : collections.entrySet()) {
+        for (Entry<String, List<Object>> entry : collections.entrySet()) {
             readFromSingleCollection(entry.getKey(), entry.getValue());
         }
         resolve();
     }
 
     @SuppressWarnings("unchecked")
-    private void readFromSingleCollection(final String collection, final List<Object> collectionIds) {
+    private void readFromSingleCollection(String collection, List<Object> collectionIds) {
 
         try (MongoCursor<T> cursor = (MongoCursor<T>) getDatastore().find(collection)
                                                                     .filter(in("_id", collectionIds)).iterator()) {
@@ -145,7 +145,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
                 idMap.put(getDatastore().getMapper().getId(entity), entity);
             }
 
-            for (final Entry<String, Object> entry : ids.entrySet()) {
+            for (Entry<String, Object> entry : ids.entrySet()) {
                 final Object id = entry.getValue();
                 final T value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
                 if (value != null) {

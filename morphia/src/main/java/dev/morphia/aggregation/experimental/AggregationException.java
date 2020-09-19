@@ -9,7 +9,7 @@ public class AggregationException extends RuntimeException {
      *
      * @param message the message
      */
-    public AggregationException(final String message) {
+    public AggregationException(String message) {
         super(message);
     }
 
@@ -19,7 +19,7 @@ public class AggregationException extends RuntimeException {
      * @param message the message
      * @param cause the cause
      */
-    public AggregationException(final String message, final Exception cause) {
+    public AggregationException(String message, Exception cause) {
         super(message, cause);
     }
 }

@@ -10,19 +10,19 @@ public class MapExpression extends Expression {
     private final Expression in;
     private String as;
 
-    public MapExpression(final Expression input, final Expression in) {
+    public MapExpression(Expression input, Expression in) {
         super("$map");
         this.input = input;
         this.in = in;
     }
 
-    public MapExpression as(final String as) {
+    public MapExpression as(String as) {
         this.as = as;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         ExpressionCodec.writeNamedExpression(mapper, writer, "input", input, encoderContext);

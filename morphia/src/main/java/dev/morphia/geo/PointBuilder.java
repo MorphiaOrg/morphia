@@ -39,7 +39,7 @@ public class PointBuilder {
      * @param latitude the latitude of the point
      * @return this PointBuilder
      */
-    public PointBuilder latitude(final double latitude) {
+    public PointBuilder latitude(double latitude) {
         this.latitude = latitude;
         return this;
     }
@@ -50,7 +50,7 @@ public class PointBuilder {
      * @param longitude the longitude of the point
      * @return this PointBuilder
      */
-    public PointBuilder longitude(final double longitude) {
+    public PointBuilder longitude(double longitude) {
         this.longitude = longitude;
         return this;
     }

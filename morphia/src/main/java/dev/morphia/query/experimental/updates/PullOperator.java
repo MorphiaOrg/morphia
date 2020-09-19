@@ -18,15 +18,15 @@ public class PullOperator extends UpdateOperator {
      * @param filter the filter to apply
      * @morphia.internal
      */
-    public PullOperator(final String field, final Filter filter) {
+    public PullOperator(String field, Filter filter) {
         super("$pull", field, filter);
     }
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, value()) {
             @Override
-            public Object encode(final Mapper mapper) {
+            public Object encode(Mapper mapper) {
                 DocumentWriter writer = new DocumentWriter();
                 writer.writeStartDocument();
                 ((Filter) getValue()).encode(mapper, writer, EncoderContext.builder().build());

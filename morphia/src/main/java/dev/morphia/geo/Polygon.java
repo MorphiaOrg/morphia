@@ -36,12 +36,12 @@ public class Polygon implements Geometry {
         interiorBoundaries = new ArrayList<LineString>();
     }
 
-    Polygon(final LineString exteriorBoundary, final LineString... interiorBoundaries) {
+    Polygon(LineString exteriorBoundary, LineString... interiorBoundaries) {
         this.exteriorBoundary = exteriorBoundary;
         this.interiorBoundaries = Arrays.asList(interiorBoundaries);
     }
 
-    Polygon(final List<LineString> boundaries) {
+    Polygon(List<LineString> boundaries) {
         exteriorBoundary = boundaries.get(0);
         if (boundaries.size() > 1) {
             interiorBoundaries = boundaries.subList(1, boundaries.size());
@@ -86,7 +86,7 @@ public class Polygon implements Geometry {
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -99,11 +99,7 @@ public class Polygon implements Geometry {
         if (!exteriorBoundary.equals(polygon.exteriorBoundary)) {
             return false;
         }
-        if (!interiorBoundaries.equals(polygon.interiorBoundaries)) {
-            return false;
-        }
-
-        return true;
+        return interiorBoundaries.equals(polygon.interiorBoundaries);
     }
 
     @Override
@@ -121,7 +117,7 @@ public class Polygon implements Geometry {
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public com.mongodb.client.model.geojson.Polygon convert(final CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.Polygon convert(CoordinateReferenceSystem crs) {
         final List<List<Position>> lists = GeoJson.convertLineStrings(interiorBoundaries);
         final List[] holeArray = lists.toArray(new List[0]);
         return new com.mongodb.client.model.geojson.Polygon(crs != null ? crs.convert() : null,

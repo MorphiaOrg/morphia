@@ -12,20 +12,20 @@ import java.lang.reflect.Constructor;
  */
 public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
     private E instance;
-    private Constructor<E> noArgsConstructor;
+    private final Constructor<E> noArgsConstructor;
 
     /**
      * Creates the creator
      *
      * @param noArgsConstructor the constructor
      */
-    public NoArgCreator(final Constructor<E> noArgsConstructor) {
+    public NoArgCreator(Constructor<E> noArgsConstructor) {
         this.noArgsConstructor = noArgsConstructor;
         this.noArgsConstructor.setAccessible(true);
     }
 
     @Override
-    public <S> void set(final S value, final FieldModel<S> model) {
+    public <S> void set(S value, FieldModel<S> model) {
         model.getAccessor().set(instance(), value);
     }
 

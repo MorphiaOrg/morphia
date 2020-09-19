@@ -115,7 +115,7 @@ public class TestEmbeddedValidation extends TestBase {
 
     }
 
-    private Map<String, Object> mapOf(final String key, final Object value) {
+    private Map<String, Object> mapOf(String key, Object value) {
         HashMap<String, Object> map = new HashMap<>();
         map.put(key, value);
         return map;
@@ -132,7 +132,7 @@ public class TestEmbeddedValidation extends TestBase {
             return data;
         }
 
-        public void setData(final List<Map<String, Object>> data) {
+        public void setData(List<Map<String, Object>> data) {
             this.data = new ArrayList<>();
             this.data.addAll(data);
         }
@@ -149,7 +149,7 @@ public class TestEmbeddedValidation extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

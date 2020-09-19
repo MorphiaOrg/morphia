@@ -38,7 +38,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
     private ClientSession clientSession;
 
     @Override
-    public CountOptions clientSession(final ClientSession clientSession) {
+    public CountOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -54,7 +54,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
      * @param hint the hint
      * @return this
      */
-    public CountOptions hint(final String hint) {
+    public CountOptions hint(String hint) {
         super.hint(new Document(hint, 1));
         return this;
     }
@@ -65,48 +65,48 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
      * @param hint the hint
      * @return this
      */
-    public CountOptions hint(final Document hint) {
+    public CountOptions hint(Document hint) {
         super.hint(hint);
         return this;
     }
 
     @Override
-    public CountOptions hint(final Bson hint) {
+    public CountOptions hint(Bson hint) {
         super.hint(hint);
         return this;
     }
 
     @Override
-    public CountOptions limit(final int limit) {
+    public CountOptions limit(int limit) {
         super.limit(limit);
         return this;
     }
 
     @Override
-    public CountOptions hintString(final String hint) {
+    public CountOptions hintString(String hint) {
         super.hintString(hint);
         return this;
     }
 
     @Override
-    public CountOptions skip(final int skip) {
+    public CountOptions skip(int skip) {
         super.skip(skip);
         return this;
     }
 
     @Override
-    public long getMaxTime(final TimeUnit timeUnit) {
+    public long getMaxTime(TimeUnit timeUnit) {
         return super.getMaxTime(timeUnit);
     }
 
     @Override
-    public CountOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
+    public CountOptions maxTime(long maxTime, TimeUnit timeUnit) {
         super.maxTime(maxTime, timeUnit);
         return this;
     }
 
     @Override
-    public CountOptions collation(final Collation collation) {
+    public CountOptions collation(Collation collation) {
         super.collation(collation);
         return this;
     }
@@ -128,7 +128,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
      * @return this
      * @mongodb.server.release 3.2
      */
-    public CountOptions readConcern(final ReadConcern readConcern) {
+    public CountOptions readConcern(ReadConcern readConcern) {
         this.readConcern = readConcern;
         return this;
     }
@@ -148,7 +148,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
      * @param readPreference the readPreference
      * @return this
      */
-    public CountOptions readPreference(final ReadPreference readPreference) {
+    public CountOptions readPreference(ReadPreference readPreference) {
         this.readPreference = readPreference;
         return this;
     }

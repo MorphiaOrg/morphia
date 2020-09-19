@@ -9,7 +9,7 @@ import java.util.List;
 
 abstract class MorphiaPropertyCodecProvider implements PropertyCodecProvider {
 
-    protected TypeWithTypeParameters<?> getType(final List<? extends TypeWithTypeParameters<?>> typeParameters, final int position) {
+    protected TypeWithTypeParameters<?> getType(List<? extends TypeWithTypeParameters<?>> typeParameters, int position) {
         return typeParameters.size() > position
                ? typeParameters.get(position)
                : TypeData.builder(Object.class).build();

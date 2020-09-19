@@ -8,12 +8,12 @@ import org.bson.Document;
  */
 public class LegacyQueryFactory extends AbstractQueryFactory {
     @Override
-    public <T> Query<T> createQuery(final Datastore datastore, final String collection, final Class<T> type) {
+    public <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type) {
         return new LegacyQuery<>(datastore, collection, type);
     }
 
     @Override
-    public <T> Query<T> createQuery(final Datastore datastore, final Class<T> type, final Document seed) {
+    public <T> Query<T> createQuery(Datastore datastore, Class<T> type, Document seed) {
 
         final LegacyQuery<T> query = new LegacyQuery<>(datastore, null, type);
 
@@ -25,7 +25,7 @@ public class LegacyQueryFactory extends AbstractQueryFactory {
     }
 
     @Override
-    public <T> Query<T> createQuery(final Datastore datastore) {
+    public <T> Query<T> createQuery(Datastore datastore) {
         return new LegacyQuery<>(datastore);
     }
 }

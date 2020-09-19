@@ -28,8 +28,8 @@ public class QueryFactoryTest extends TestBase {
 
         final QueryFactory queryFactory = new DefaultQueryFactory() {
             @Override
-            public <T> Query<T> createQuery(final Datastore datastore, final Class<T> type,
-                                            final Document query) {
+            public <T> Query<T> createQuery(Datastore datastore, Class<T> type,
+                                            Document query) {
 
                 counter.incrementAndGet();
                 return super.createQuery(datastore, type, query);

@@ -26,11 +26,11 @@ public class MultiPolygon implements Geometry {
         coordinates = new ArrayList<Polygon>();
     }
 
-    MultiPolygon(final Polygon... polygons) {
+    MultiPolygon(Polygon... polygons) {
         coordinates = Arrays.asList(polygons);
     }
 
-    MultiPolygon(final List<Polygon> polygons) {
+    MultiPolygon(List<Polygon> polygons) {
         coordinates = polygons;
     }
 
@@ -46,7 +46,7 @@ public class MultiPolygon implements Geometry {
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -56,11 +56,7 @@ public class MultiPolygon implements Geometry {
 
         MultiPolygon that = (MultiPolygon) o;
 
-        if (!coordinates.equals(that.coordinates)) {
-            return false;
-        }
-
-        return true;
+        return coordinates.equals(that.coordinates);
     }
 
     @Override
@@ -76,9 +72,9 @@ public class MultiPolygon implements Geometry {
     }
 
     @Override
-    public com.mongodb.client.model.geojson.MultiPolygon convert(final CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.MultiPolygon convert(CoordinateReferenceSystem crs) {
         List<PolygonCoordinates> coords = new ArrayList<PolygonCoordinates>();
-        for (final Polygon list : coordinates) {
+        for (Polygon list : coordinates) {
             coords.add(list.convert(crs).getCoordinates());
         }
         return new com.mongodb.client.model.geojson.MultiPolygon(crs != null ? crs.convert() : null, coords);

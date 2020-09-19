@@ -51,9 +51,9 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @param discriminatorLookup    the discriminator to type lookup
      */
     @SuppressWarnings("unchecked")
-    public MorphiaCodec(final Datastore datastore, final MappedClass mappedClass,
-                        final List<PropertyCodecProvider> propertyCodecProviders,
-                        final DiscriminatorLookup discriminatorLookup, final CodecRegistry registry) {
+    public MorphiaCodec(Datastore datastore, MappedClass mappedClass,
+                        List<PropertyCodecProvider> propertyCodecProviders,
+                        DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
         this.mappedClass = mappedClass;
         this.mapper = datastore.getMapper();
         this.discriminatorLookup = discriminatorLookup;
@@ -66,7 +66,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     }
 
     @Override
-    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public T decode(BsonReader reader, DecoderContext decoderContext) {
         return getDecoder().decode(reader, decoderContext);
     }
 
@@ -92,7 +92,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     }
 
     @Override
-    public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         encoder.encode(writer, value, encoderContext);
     }
 
@@ -102,7 +102,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     }
 
     @Override
-    public T generateIdIfAbsentFromDocument(final T entity) {
+    public T generateIdIfAbsentFromDocument(T entity) {
         if (!documentHasId(entity)) {
             idField.setFieldValue(entity, convert(new ObjectId(), idField.getType()));
         }
@@ -110,13 +110,13 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     }
 
     @Override
-    public boolean documentHasId(final T entity) {
+    public boolean documentHasId(T entity) {
         return mappedClass.getIdField().getFieldValue(entity) != null;
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public BsonValue getDocumentId(final T document) {
+    public BsonValue getDocumentId(T document) {
         throw new UnsupportedOperationException("is this even necessary?");
 /*
         final Object id = mappedClass.getIdField().getFieldValue(document);

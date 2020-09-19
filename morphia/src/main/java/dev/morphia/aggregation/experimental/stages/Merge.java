@@ -27,7 +27,7 @@ public class Merge<M> extends Stage {
     private List<Stage> whenMatchedPipeline;
     private WhenNotMatched whenNotMatched;
 
-    protected Merge(final Class<M> type) {
+    protected Merge(Class<M> type) {
         this();
         this.type = type;
     }
@@ -36,12 +36,12 @@ public class Merge<M> extends Stage {
         super("$merge");
     }
 
-    protected Merge(final String collection) {
+    protected Merge(String collection) {
         this();
         this.collection = collection;
     }
 
-    protected Merge(final String database, final String collection) {
+    protected Merge(String database, String collection) {
         this();
         this.database = database;
         this.collection = collection;
@@ -54,7 +54,7 @@ public class Merge<M> extends Stage {
      * @param <M>  the entity type
      * @return the new stage
      */
-    public static <M> Merge<M> into(final Class<M> type) {
+    public static <M> Merge<M> into(Class<M> type) {
         return new Merge<>(type);
     }
 
@@ -64,7 +64,7 @@ public class Merge<M> extends Stage {
      * @param collection the target collection
      * @return the new stage
      */
-    public static Merge<?> into(final String collection) {
+    public static Merge<?> into(String collection) {
         return new Merge<>(collection);
     }
 
@@ -75,7 +75,7 @@ public class Merge<M> extends Stage {
      * @param collection the target collection
      * @return the new stage
      */
-    public static Merge<?> into(final String database, final String collection) {
+    public static Merge<?> into(String database, String collection) {
         return new Merge<>(database, collection);
     }
 
@@ -150,7 +150,7 @@ public class Merge<M> extends Stage {
      * @param value    the value expression
      * @return this
      */
-    public Merge<M> let(final String variable, final Expression value) {
+    public Merge<M> let(String variable, Expression value) {
         if (variables == null) {
             variables = new LinkedHashMap<>();
         }
@@ -166,7 +166,7 @@ public class Merge<M> extends Stage {
      * @param fields the other fields
      * @return this
      */
-    public Merge<M> on(final String field, final String... fields) {
+    public Merge<M> on(String field, String... fields) {
         List<String> list = new ArrayList<>();
         list.add(field);
         list.addAll(asList(fields));
@@ -181,7 +181,7 @@ public class Merge<M> extends Stage {
      * @param whenMatched the behavior
      * @return this
      */
-    public Merge<M> whenMatched(final WhenMatched whenMatched) {
+    public Merge<M> whenMatched(WhenMatched whenMatched) {
         this.whenMatched = whenMatched;
         return this;
     }
@@ -192,7 +192,7 @@ public class Merge<M> extends Stage {
      * @param pipeline the pipeline
      * @return this
      */
-    public Merge<M> whenMatched(final List<Stage> pipeline) {
+    public Merge<M> whenMatched(List<Stage> pipeline) {
         this.whenMatchedPipeline = pipeline;
         return this;
     }
@@ -203,7 +203,7 @@ public class Merge<M> extends Stage {
      * @param whenNotMatched the behavior
      * @return this
      */
-    public Merge<M> whenNotMatched(final WhenNotMatched whenNotMatched) {
+    public Merge<M> whenNotMatched(WhenNotMatched whenNotMatched) {
         this.whenNotMatched = whenNotMatched;
         return this;
     }

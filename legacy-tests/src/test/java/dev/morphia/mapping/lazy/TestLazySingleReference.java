@@ -161,12 +161,12 @@ public class TestLazySingleReference extends ProxyTestBase {
             return foo;
         }
 
-        public void setFoo(final String string) {
+        public void setFoo(String string) {
             foo = string;
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

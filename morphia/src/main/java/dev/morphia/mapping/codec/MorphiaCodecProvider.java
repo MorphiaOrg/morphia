@@ -33,7 +33,7 @@ public class MorphiaCodecProvider implements CodecProvider {
      * @param mapper    the mapper to use
      * @param datastore the datastore to use
      */
-    public MorphiaCodecProvider(final Mapper mapper, final Datastore datastore) {
+    public MorphiaCodecProvider(Mapper mapper, Datastore datastore) {
         this.datastore = datastore;
         this.mapper = mapper;
 
@@ -43,7 +43,7 @@ public class MorphiaCodecProvider implements CodecProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> MorphiaCodec<T> get(final Class<T> type, final CodecRegistry registry) {
+    public <T> MorphiaCodec<T> get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && mapper.isMappable(type)) {
             codec = new MorphiaCodec<T>(datastore, mapper.getMappedClass(type), propertyCodecProviders,
@@ -63,14 +63,14 @@ public class MorphiaCodecProvider implements CodecProvider {
      * @return the new codec
      */
     @SuppressWarnings("unchecked")
-    public <T> Codec<T> getRefreshCodec(final T entity, final CodecRegistry registry) {
+    public <T> Codec<T> getRefreshCodec(T entity, CodecRegistry registry) {
         MappedClass mappedClass = mapper.getMappedClass(entity.getClass());
         return new MorphiaCodec<T>(datastore, mappedClass, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
             @Override
             protected EntityDecoder<T> getDecoder() {
                 return new EntityDecoder<>(this) {
                     @Override
-                    protected MorphiaInstanceCreator<T> getInstanceCreator(final EntityModel<T> classModel) {
+                    protected MorphiaInstanceCreator<T> getInstanceCreator(EntityModel<T> classModel) {
                         return new MorphiaInstanceCreator<>() {
                             @Override
                             public T getInstance() {
@@ -78,7 +78,7 @@ public class MorphiaCodecProvider implements CodecProvider {
                             }
 
                             @Override
-                            public <S> void set(final S value, final FieldModel<S> model) {
+                            public <S> void set(S value, FieldModel<S> model) {
                                 model.getAccessor().set(getInstance(), value);
                             }
                         };

@@ -15,7 +15,7 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class MorphiaCollectionPropertyCodecProvider extends MorphiaPropertyCodecProvider {
     @Override
-    public <T> Codec<T> get(final TypeWithTypeParameters<T> type, final PropertyCodecRegistry registry) {
+    public <T> Codec<T> get(TypeWithTypeParameters<T> type, PropertyCodecRegistry registry) {
         if (Collection.class.isAssignableFrom(type.getType())) {
             final List<? extends TypeWithTypeParameters<?>> typeParameters = type.getTypeParameters();
             TypeWithTypeParameters<?> valueType = getType(typeParameters, 0);

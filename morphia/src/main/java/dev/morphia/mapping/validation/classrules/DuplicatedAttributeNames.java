@@ -18,10 +18,10 @@ import java.util.Set;
 public class DuplicatedAttributeNames implements ClassConstraint {
 
     @Override
-    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
         final Set<String> foundNames = new HashSet<String>();
-        for (final MappedField mappedField : mc.getFields()) {
-            for (final String name : mappedField.getLoadNames()) {
+        for (MappedField mappedField : mc.getFields()) {
+            for (String name : mappedField.getLoadNames()) {
                 if (!foundNames.add(name)) {
                     ve.add(new ConstraintViolation(Level.FATAL, mc, mappedField, getClass(),
                                                    "Mapping to MongoDB field name '" + name

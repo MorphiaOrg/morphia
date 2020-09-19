@@ -29,7 +29,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $addToSet
      */
-    public static AddToSetOperator addToSet(final String field, final Object value) {
+    public static AddToSetOperator addToSet(String field, Object value) {
         return new AddToSetOperator(field, value);
     }
 
@@ -43,7 +43,7 @@ public final class UpdateOperators {
      * @update.operator $addToSet
      * @update.operator $each
      */
-    public static AddToSetOperator addToSet(final String field, final List<?> values) {
+    public static AddToSetOperator addToSet(String field, List<?> values) {
         return new AddToSetOperator(field, values);
     }
 
@@ -58,7 +58,7 @@ public final class UpdateOperators {
      * @see #or(String, int)
      * @see #xor(String, int)
      */
-    public static UpdateOperator and(final String field, final int value) {
+    public static UpdateOperator and(String field, int value) {
         return new BitOperator("and", field, value);
     }
 
@@ -69,7 +69,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $currentDate
      */
-    public static CurrentDateOperator currentDate(final String field) {
+    public static CurrentDateOperator currentDate(String field) {
         return new CurrentDateOperator(field);
     }
 
@@ -80,7 +80,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $dec
      */
-    public static UpdateOperator dec(final String field) {
+    public static UpdateOperator dec(String field) {
         return inc(field, -1);
     }
 
@@ -92,7 +92,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $dec
      */
-    public static UpdateOperator dec(final String field, final Number value) {
+    public static UpdateOperator dec(String field, Number value) {
         if ((value instanceof Long) || (value instanceof Integer)) {
             return inc(field, (value.longValue() * -1));
         } else if ((value instanceof Double) || (value instanceof Float)) {
@@ -108,7 +108,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $inc
      */
-    public static UpdateOperator inc(final String field) {
+    public static UpdateOperator inc(String field) {
         return inc(field, 1);
     }
 
@@ -120,7 +120,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $inc
      */
-    public static UpdateOperator inc(final String field, final Number value) {
+    public static UpdateOperator inc(String field, Number value) {
         return new UpdateOperator("$inc", field, value);
     }
 
@@ -132,7 +132,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $max
      */
-    public static UpdateOperator max(final String field, final Number value) {
+    public static UpdateOperator max(String field, Number value) {
         return new UpdateOperator("$max", field, value);
     }
 
@@ -144,7 +144,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $min
      */
-    public static UpdateOperator min(final String field, final Number value) {
+    public static UpdateOperator min(String field, Number value) {
         return new UpdateOperator("$min", field, value);
     }
 
@@ -156,7 +156,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $mul
      */
-    public static UpdateOperator mul(final String field, final Number value) {
+    public static UpdateOperator mul(String field, Number value) {
         return new UpdateOperator("$mul", field, value);
     }
 
@@ -171,7 +171,7 @@ public final class UpdateOperators {
      * @see #and(String, int)
      * @see #xor(String, int)
      */
-    public static UpdateOperator or(final String field, final int value) {
+    public static UpdateOperator or(String field, int value) {
         return new BitOperator("or", field, value);
     }
 
@@ -183,7 +183,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $pop
      */
-    public static PopOperator pop(final String field) {
+    public static PopOperator pop(String field) {
         return new PopOperator(field);
     }
 
@@ -195,7 +195,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $pull
      */
-    public static UpdateOperator pull(final String field, final Filter filter) {
+    public static UpdateOperator pull(String field, Filter filter) {
         return new PullOperator(field, filter);
     }
 
@@ -208,7 +208,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $pullAll
      */
-    public static UpdateOperator pullAll(final String field, final List<?> values) {
+    public static UpdateOperator pullAll(String field, List<?> values) {
         return new UpdateOperator("$pullAll", field, values);
     }
 
@@ -220,7 +220,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $push
      */
-    public static PushOperator push(final String field, final Object value) {
+    public static PushOperator push(String field, Object value) {
         return new PushOperator(field, singletonList(value));
     }
 
@@ -233,7 +233,7 @@ public final class UpdateOperators {
      * @update.operator $each
      * @update.operator $push
      */
-    public static PushOperator push(final String field, final List<?> values) {
+    public static PushOperator push(String field, List<?> values) {
         return new PushOperator(field, values);
     }
 
@@ -245,7 +245,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $rename
      */
-    public static UpdateOperator rename(final String field, final String value) {
+    public static UpdateOperator rename(String field, String value) {
         return new UpdateOperator("$rename", field, value);
     }
 
@@ -257,7 +257,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $set
      */
-    public static UpdateOperator set(final String field, final Object value) {
+    public static UpdateOperator set(String field, Object value) {
         return new UpdateOperator("$set", field, value);
     }
 
@@ -268,7 +268,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $set
      */
-    public static UpdateOperator set(final Object value) {
+    public static UpdateOperator set(Object value) {
         return new SetEntityOperator(value);
     }
 
@@ -280,7 +280,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $setOnInsert
      */
-    public static UpdateOperator setOnInsert(final Map<String, Object> values) {
+    public static UpdateOperator setOnInsert(Map<String, Object> values) {
         return new SetOnInsertOperator(values);
     }
 
@@ -291,7 +291,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $unset
      */
-    public static UpdateOperator unset(final String field) {
+    public static UpdateOperator unset(String field) {
         return new UnsetOperator(field);
     }
 
@@ -306,7 +306,7 @@ public final class UpdateOperators {
      * @see #and(String, int)
      * @see #or(String, int)
      */
-    public static UpdateOperator xor(final String field, final int value) {
+    public static UpdateOperator xor(String field, int value) {
         return new BitOperator("xor", field, value);
     }
 

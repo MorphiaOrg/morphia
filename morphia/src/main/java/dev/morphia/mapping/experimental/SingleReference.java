@@ -30,7 +30,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param id          the ID value
      * @morphia.internal
      */
-    public SingleReference(final Datastore datastore, final MappedClass mappedClass, final Object id) {
+    public SingleReference(Datastore datastore, MappedClass mappedClass, Object id) {
         super(datastore);
         this.mappedClass = mappedClass;
         this.id = id;
@@ -42,7 +42,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
 
     }
 
-    SingleReference(final T value) {
+    SingleReference(T value) {
         this.value = value;
     }
 
@@ -56,17 +56,17 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param document    the Document to decode
      * @return the entity
      */
-    public static MorphiaReference<?> decode(final Datastore datastore,
-                                             final Mapper mapper,
-                                             final MappedField mappedField,
-                                             final Class paramType, final Document document) {
+    public static MorphiaReference<?> decode(Datastore datastore,
+                                             Mapper mapper,
+                                             MappedField mappedField,
+                                             Class paramType, Document document) {
         final MappedClass mappedClass = mapper.getMappedClass(paramType);
         Object id = document.get(mappedField.getMappedFieldName());
 
         return new SingleReference(datastore, mappedClass, id);
     }
 
-    MappedClass getMappedClass(final Mapper mapper) {
+    MappedClass getMappedClass(Mapper mapper) {
         if (mappedClass == null) {
             mappedClass = mapper.getMappedClass(get().getClass());
         }
@@ -114,7 +114,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    Object getId(final Mapper mapper, final Datastore datastore, final MappedClass fieldClass) {
+    Object getId(Mapper mapper, Datastore datastore, MappedClass fieldClass) {
         if (id == null) {
             MappedClass mappedClass = getMappedClass(mapper);
             id = mappedClass.getIdField().getFieldValue(get());
@@ -126,7 +126,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    public Object encode(final Mapper mapper, final Object value, final MappedField optionalExtraInfo) {
+    public Object encode(Mapper mapper, Object value, MappedField optionalExtraInfo) {
         if (isResolved()) {
             return wrapId(mapper, optionalExtraInfo, get());
         } else {

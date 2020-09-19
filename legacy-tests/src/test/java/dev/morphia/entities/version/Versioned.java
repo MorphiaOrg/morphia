@@ -18,7 +18,7 @@ public class Versioned {
         return count;
     }
 
-    public void setCount(final int count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
@@ -30,7 +30,7 @@ public class Versioned {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

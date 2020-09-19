@@ -12,7 +12,7 @@ public class BannedUser extends User {
         super("", now());
     }
 
-    public BannedUser(final String name, final LocalDate joined, final String... likes) {
+    public BannedUser(String name, LocalDate joined, String... likes) {
         super(name, joined, likes);
     }
 }

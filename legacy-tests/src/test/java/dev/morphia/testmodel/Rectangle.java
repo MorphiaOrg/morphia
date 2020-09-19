@@ -31,7 +31,7 @@ public class Rectangle extends TestEntity implements Shape {
     public Rectangle() {
     }
 
-    public Rectangle(final double height, final double width) {
+    public Rectangle(double height, double width) {
         this.height = height;
         this.width = width;
     }
@@ -45,7 +45,7 @@ public class Rectangle extends TestEntity implements Shape {
         return height;
     }
 
-    public void setHeight(final double height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
@@ -53,12 +53,12 @@ public class Rectangle extends TestEntity implements Shape {
         return width;
     }
 
-    public void setWidth(final double width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

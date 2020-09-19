@@ -7,7 +7,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class GeoNearCodec extends StageCodec<GeoNear> {
-    public GeoNearCodec(final Mapper mapper) {
+    public GeoNearCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -17,7 +17,7 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final GeoNear value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, GeoNear value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writeNamedValue(writer, "near", value.getPoint(), encoderContext);
         writeNamedValue(writer, "near", value.getCoordinates(), encoderContext);
@@ -29,7 +29,7 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
         Filter[] filters = value.getFilters();
         if (filters != null) {
             writer.writeStartDocument("query");
-            for (final Filter filter : filters) {
+            for (Filter filter : filters) {
                 filter.encode(getMapper(), writer, encoderContext);
             }
             writer.writeEndDocument();

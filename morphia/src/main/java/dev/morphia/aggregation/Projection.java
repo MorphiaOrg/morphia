@@ -20,24 +20,24 @@ public final class  Projection {
     private List<Object> arguments;
     private boolean suppressed = false;
 
-    private Projection(final String field, final String source) {
+    private Projection(String field, String source) {
         this.target = field;
         this.source = "$" + source;
     }
 
-    private Projection(final String field, final Projection projection, final Projection... subsequent) {
+    private Projection(String field, Projection projection, Projection... subsequent) {
         this(field);
         this.projections = new ArrayList<Projection>();
         projections.add(projection);
         projections.addAll(Arrays.asList(subsequent));
     }
 
-    private Projection(final String field) {
+    private Projection(String field) {
         this.target = field;
         source = null;
     }
 
-    private Projection(final String expression, final Object... args) {
+    private Projection(String expression, Object... args) {
         this(expression);
         this.arguments = Arrays.asList(args);
     }
@@ -48,7 +48,7 @@ public final class  Projection {
      * @param field the field
      * @return the projection
      */
-    public static  Projection projection(final String field) {
+    public static  Projection projection(String field) {
         return new Projection(field);
     }
 
@@ -59,7 +59,7 @@ public final class  Projection {
      * @param projectedField the new field name
      * @return the projection
      */
-    public static  Projection projection(final String field, final String projectedField) {
+    public static  Projection projection(String field, String projectedField) {
         return new Projection(field, projectedField);
     }
 
@@ -71,7 +71,7 @@ public final class  Projection {
      * @param subsequent the other projections to apply
      * @return the projection
      */
-    public static  Projection projection(final String field, final Projection projection, final Projection... subsequent) {
+    public static  Projection projection(String field, Projection projection, Projection... subsequent) {
         return new Projection(field, projection, subsequent);
     }
 
@@ -82,7 +82,7 @@ public final class  Projection {
      * @param args     the projection arguments
      * @return the projection
      */
-    public static  Projection expression(final String operator, final Object... args) {
+    public static  Projection expression(String operator, Object... args) {
         return new Projection(operator, args);
     }
 
@@ -92,7 +92,7 @@ public final class  Projection {
      * @param args the projection arguments
      * @return the projection
      */
-    public static  Projection list(final Object... args) {
+    public static  Projection list(Object... args) {
         return new Projection(null, args);
     }
 
@@ -103,7 +103,7 @@ public final class  Projection {
      * @return the projection
      * @aggregation.expression $add
      */
-    public static  Projection add(final Object... args) {
+    public static  Projection add(Object... args) {
         return expression("$add", args);
     }
 
@@ -115,7 +115,7 @@ public final class  Projection {
      * @return the projection
      * @aggregation.expression $subtract
      */
-    public static  Projection subtract(final Object arg1, final Object arg2) {
+    public static  Projection subtract(Object arg1, Object arg2) {
         return expression("$subtract", arg1, arg2);
     }
 
@@ -126,7 +126,7 @@ public final class  Projection {
      * @return the projection
      * @aggregation.expression $multiply
      */
-    public static  Projection multiply(final Object... args) {
+    public static  Projection multiply(Object... args) {
         return expression("$multiply", args);
     }
 
@@ -138,7 +138,7 @@ public final class  Projection {
      * @return the projection
      * @aggregation.expression $divide
      */
-    public static  Projection divide(final Object arg1, final Object arg2) {
+    public static  Projection divide(Object arg1, Object arg2) {
         return expression("$divide", arg1, arg2);
     }
 
@@ -149,7 +149,7 @@ public final class  Projection {
      * @return the projection
      * @aggregation.expression $size
      */
-    public static Projection size(final Object expression) {
+    public static Projection size(Object expression) {
         return expression("$size", expression);
     }
 
@@ -161,7 +161,7 @@ public final class  Projection {
      * @return the projection
      * @aggregation.expression $mod
      */
-    public static  Projection mod(final Object arg1, final Object arg2) {
+    public static  Projection mod(Object arg1, Object arg2) {
         return expression("$mod", arg1, arg2);
     }
 

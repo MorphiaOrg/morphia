@@ -24,7 +24,7 @@ public class ExpressionsTestBase extends TestBase {
     }
 
     @SuppressWarnings("unchecked")
-    protected void assertAndCheckDocShape(final String expectedString, final Expression value, final Object expectedValue) {
+    protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
         Document expected = Document.parse(expectedString);
         DocumentWriter writer = new DocumentWriter();
         ((Codec) getMapper().getCodecRegistry()

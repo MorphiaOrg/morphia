@@ -9,7 +9,7 @@ public class ReferenceException extends RuntimeException {
      *
      * @param msg the message to log
      */
-    public ReferenceException(final String msg) {
+    public ReferenceException(String msg) {
         super(msg);
     }
 }

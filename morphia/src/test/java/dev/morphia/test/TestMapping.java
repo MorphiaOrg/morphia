@@ -677,7 +677,7 @@ public class TestMapping extends TestBase {
         assertEquals("banned", list.get(1).getCollectionName());
     }
 
-    private void validateField(final List<MappedField> fields, final String mapped, final String java) {
+    private void validateField(List<MappedField> fields, String mapped, String java) {
         assertNotNull(fields.stream().filter(f -> f.getMappedFieldName().equals(mapped)
                                                   && f.getJavaFieldName().equals(java)),
             mapped);
@@ -701,7 +701,7 @@ public class TestMapping extends TestBase {
             return id.toString();
         }
 
-        public void setId(final String id) {
+        public void setId(String id) {
             this.id = new ObjectId(id);
         }
     }
@@ -714,9 +714,9 @@ public class TestMapping extends TestBase {
         private final MorphiaReference<ContainsFinalField> reference;
 
         @Constructor
-        public ConstructorBased(@Name("id") final ObjectId id,
-                                @Name("name") final String name,
-                                @Name("reference") final MorphiaReference<ContainsFinalField> reference) {
+        public ConstructorBased(@Name("id") ObjectId id,
+                                @Name("name") String name,
+                                @Name("reference") MorphiaReference<ContainsFinalField> reference) {
             this.id = id;
             this.name = name;
             this.reference = reference;
@@ -731,7 +731,7 @@ public class TestMapping extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -802,7 +802,7 @@ public class TestMapping extends TestBase {
             name = "foo";
         }
 
-        ContainsFinalField(final String name) {
+        ContainsFinalField(String name) {
             this.name = name;
         }
     }
@@ -897,7 +897,7 @@ public class TestMapping extends TestBase {
             id = -1;
         }
 
-        HasFinalFieldId(final long id) {
+        HasFinalFieldId(long id) {
             this.id = id;
         }
     }
@@ -908,7 +908,7 @@ public class TestMapping extends TestBase {
         private final ObjectId id = new ObjectId();
         private String name;
 
-        Normal(final String name) {
+        Normal(String name) {
             this.name = name;
         }
 

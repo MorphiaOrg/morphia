@@ -105,7 +105,7 @@ public class TestIdField extends TestBase {
         private KeyAsId() {
         }
 
-        KeyAsId(final Key<Rectangle> key) {
+        KeyAsId(Key<Rectangle> key) {
             id = key;
         }
     }
@@ -126,7 +126,7 @@ public class TestIdField extends TestBase {
         public EmbeddedId() {
         }
 
-        public EmbeddedId(final MyId myId, final String data) {
+        public EmbeddedId(MyId myId, String data) {
             id = myId;
             this.data = data;
         }
@@ -140,7 +140,7 @@ public class TestIdField extends TestBase {
         public MyId() {
         }
 
-        public MyId(final String myIdPart1, final String myIdPart2) {
+        public MyId(String myIdPart1, String myIdPart2) {
             this.myIdPart1 = myIdPart1;
             this.myIdPart2 = myIdPart2;
         }
@@ -153,7 +153,7 @@ public class TestIdField extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

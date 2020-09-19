@@ -18,21 +18,21 @@ import java.util.Map;
 @SuppressWarnings("removal")
 public class MorphiaPropertySerialization implements PropertySerialization {
     private final List<Annotation> annotations;
-    private MapperOptions options;
-    private int modifiers;
+    private final MapperOptions options;
+    private final int modifiers;
 
     /**
      * @param options the options to apply
      * @param field   the field in question
      */
-    public MorphiaPropertySerialization(final MapperOptions options, final FieldModelBuilder<?> field) {
+    public MorphiaPropertySerialization(MapperOptions options, FieldModelBuilder<?> field) {
         this.options = options;
         annotations = field.getAnnotations();
         modifiers = field.getField().getModifiers();
     }
 
     @Override
-    public boolean shouldSerialize(final Object value) {
+    public boolean shouldSerialize(Object value) {
         if (!options.isStoreNulls() && value == null) {
             return false;
         }
@@ -48,7 +48,7 @@ public class MorphiaPropertySerialization implements PropertySerialization {
         return !hasAnnotation(LoadOnly.class) && !hasAnnotation(NotSaved.class);
     }
 
-    private boolean hasAnnotation(final Class<? extends Annotation> annotationClass) {
+    private boolean hasAnnotation(Class<? extends Annotation> annotationClass) {
         return annotations.stream().anyMatch(a -> a.annotationType().equals(annotationClass));
     }
 }

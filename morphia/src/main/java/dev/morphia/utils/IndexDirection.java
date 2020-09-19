@@ -12,7 +12,7 @@ public enum IndexDirection {
 
     private final Object direction;
 
-    IndexDirection(final Object o) {
+    IndexDirection(Object o) {
         direction = o;
     }
 

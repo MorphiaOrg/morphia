@@ -12,12 +12,12 @@ public class UnsetOperator extends UpdateOperator {
      * @param field the field
      * @morphia.internal
      */
-    public UnsetOperator(final String field) {
+    public UnsetOperator(String field) {
         super("$unset", field, "unused");
     }
 
     @Override
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, null);
     }
 }

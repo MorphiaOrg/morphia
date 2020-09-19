@@ -29,7 +29,7 @@ public class EntityWithListsAndArrays {
         return id;
     }
 
-    public void setId(final ObjectId id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -37,7 +37,7 @@ public class EntityWithListsAndArrays {
         return arrayListOfIntegers;
     }
 
-    public void setArrayListOfIntegers(final ArrayList<Integer> arrayListOfIntegers) {
+    public void setArrayListOfIntegers(ArrayList<Integer> arrayListOfIntegers) {
         this.arrayListOfIntegers = arrayListOfIntegers;
     }
 
@@ -45,7 +45,7 @@ public class EntityWithListsAndArrays {
         return arrayListOfStrings;
     }
 
-    public void setArrayListOfStrings(final ArrayList<String> arrayListOfStrings) {
+    public void setArrayListOfStrings(ArrayList<String> arrayListOfStrings) {
         this.arrayListOfStrings = arrayListOfStrings;
     }
 
@@ -53,7 +53,7 @@ public class EntityWithListsAndArrays {
         return arrayOfInts;
     }
 
-    public void setArrayOfInts(final int[] arrayOfInts) {
+    public void setArrayOfInts(int[] arrayOfInts) {
         this.arrayOfInts = arrayOfInts;
     }
 
@@ -61,7 +61,7 @@ public class EntityWithListsAndArrays {
         return arrayOfStrings;
     }
 
-    public void setArrayOfStrings(final String[] arrayOfStrings) {
+    public void setArrayOfStrings(String[] arrayOfStrings) {
         this.arrayOfStrings = arrayOfStrings;
     }
 
@@ -69,7 +69,7 @@ public class EntityWithListsAndArrays {
         return listOfIntegers;
     }
 
-    public void setListOfIntegers(final List<Integer> listOfIntegers) {
+    public void setListOfIntegers(List<Integer> listOfIntegers) {
         this.listOfIntegers = listOfIntegers;
     }
 
@@ -77,7 +77,7 @@ public class EntityWithListsAndArrays {
         return listOfStrings;
     }
 
-    public void setListOfStrings(final List<String> listOfStrings) {
+    public void setListOfStrings(List<String> listOfStrings) {
         this.listOfStrings = listOfStrings;
     }
 
@@ -85,7 +85,7 @@ public class EntityWithListsAndArrays {
         return notAnArrayOrList;
     }
 
-    public void setNotAnArrayOrList(final String notAnArrayOrList) {
+    public void setNotAnArrayOrList(String notAnArrayOrList) {
         this.notAnArrayOrList = notAnArrayOrList;
     }
 
@@ -93,7 +93,7 @@ public class EntityWithListsAndArrays {
         return setOfIntegers;
     }
 
-    public void setSetOfIntegers(final Set<Integer> setOfIntegers) {
+    public void setSetOfIntegers(Set<Integer> setOfIntegers) {
         this.setOfIntegers = setOfIntegers;
     }
 
@@ -101,12 +101,12 @@ public class EntityWithListsAndArrays {
         return listEmbeddedType;
     }
 
-    public void setListEmbeddedType(final List<EmbeddedType> listEmbeddedType) {
+    public void setListEmbeddedType(List<EmbeddedType> listEmbeddedType) {
         this.listEmbeddedType = listEmbeddedType;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

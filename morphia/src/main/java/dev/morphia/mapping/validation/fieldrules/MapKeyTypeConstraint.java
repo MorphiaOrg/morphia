@@ -23,7 +23,7 @@ public class MapKeyTypeConstraint extends FieldConstraint {
     private static final String SUPPORTED = "(Map<String/Enum/Long/ObjectId/..., ?>)";
 
     @Override
-    protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
+    protected void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
         if (mf.isMap()) {
             Class aClass = null;
             List typeParameters = mf.getFieldModel().getTypeData().getTypeParameters();
@@ -44,7 +44,7 @@ public class MapKeyTypeConstraint extends FieldConstraint {
         }
     }
 
-    private boolean isPrimitiveLike(final Class type) {
+    private boolean isPrimitiveLike(Class type) {
         return type != null && (type == String.class || type == char.class
                                 || type == Character.class || type == short.class || type == Short.class
                                 || type == Integer.class || type == int.class || type == Long.class || type == long.class

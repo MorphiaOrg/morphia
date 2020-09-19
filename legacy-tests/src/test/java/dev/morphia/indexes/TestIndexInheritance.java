@@ -69,7 +69,7 @@ public class TestIndexInheritance extends TestBase {
             return description;
         }
 
-        void setDescription(final String description) {
+        void setDescription(String description) {
             this.description = description;
         }
 
@@ -77,7 +77,7 @@ public class TestIndexInheritance extends TestBase {
             return foo;
         }
 
-        public void setFoo(final String foo) {
+        public void setFoo(String foo) {
             this.foo = foo;
         }
 
@@ -85,7 +85,7 @@ public class TestIndexInheritance extends TestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
     }

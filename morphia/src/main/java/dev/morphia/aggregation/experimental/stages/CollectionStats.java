@@ -29,7 +29,7 @@ public class CollectionStats extends Stage {
      * @param count true to include the count
      * @return this
      */
-    public CollectionStats count(final boolean count) {
+    public CollectionStats count(boolean count) {
         this.count = count;
         return this;
     }
@@ -64,7 +64,7 @@ public class CollectionStats extends Stage {
      * @param histogram whether to add the histogram
      * @return this
      */
-    public CollectionStats histogram(final boolean histogram) {
+    public CollectionStats histogram(boolean histogram) {
         this.histogram = histogram;
         return this;
     }
@@ -82,7 +82,7 @@ public class CollectionStats extends Stage {
      * @param scale the scale
      * @return this
      */
-    public CollectionStats scale(final Integer scale) {
+    public CollectionStats scale(Integer scale) {
         this.scale = scale;
         return this;
     }

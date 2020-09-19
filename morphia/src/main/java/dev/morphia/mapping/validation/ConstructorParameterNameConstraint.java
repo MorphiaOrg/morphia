@@ -16,11 +16,11 @@ import java.util.Set;
  */
 public class ConstructorParameterNameConstraint implements ClassConstraint {
     @Override
-    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
         EntityModel<?> model = mc.getEntityModel();
         Constructor<?> fullConstructor = ConstructorCreator.getFullConstructor(model);
         if (fullConstructor != null) {
-            for (final Parameter parameter : fullConstructor.getParameters()) {
+            for (Parameter parameter : fullConstructor.getParameters()) {
                 String name = ConstructorCreator.getParameterName(parameter);
                 if (model.getFieldModelByName(name) == null) {
                     throw new ConstraintViolationException(

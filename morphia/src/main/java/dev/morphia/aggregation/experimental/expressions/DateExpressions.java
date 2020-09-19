@@ -29,7 +29,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $toDate
      */
-    public static DateExpression toDate(final Expression value) {
+    public static DateExpression toDate(Expression value) {
         return new DateExpression("$toDate", value);
     }
 
@@ -40,7 +40,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $dayOfMonth
      */
-    public static DateExpression dayOfMonth(final Expression value) {
+    public static DateExpression dayOfMonth(Expression value) {
         return new DateExpression("$dayOfMonth", value);
     }
 
@@ -51,7 +51,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $dayOfYear
      */
-    public static DateExpression dayOfYear(final Expression value) {
+    public static DateExpression dayOfYear(Expression value) {
         return new DateExpression("$dayOfYear", value);
     }
 
@@ -62,7 +62,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $dayOfWeek
      */
-    public static DateExpression dayOfWeek(final Expression value) {
+    public static DateExpression dayOfWeek(Expression value) {
         return new DateExpression("$dayOfWeek", value);
     }
 
@@ -73,7 +73,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $month
      */
-    public static DateExpression month(final Expression value) {
+    public static DateExpression month(Expression value) {
         return new DateExpression("$month", value);
     }
 
@@ -84,7 +84,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $hour
      */
-    public static DateExpression hour(final Expression value) {
+    public static DateExpression hour(Expression value) {
         return new DateExpression("$hour", value);
     }
 
@@ -95,7 +95,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $minute
      */
-    public static DateExpression minute(final Expression value) {
+    public static DateExpression minute(Expression value) {
         return new DateExpression("$minute", value);
     }
 
@@ -106,7 +106,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $second
      */
-    public static DateExpression second(final Expression value) {
+    public static DateExpression second(Expression value) {
         return new DateExpression("$second", value);
     }
 
@@ -118,7 +118,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $week
      */
-    public static DateExpression week(final Expression value) {
+    public static DateExpression week(Expression value) {
         return new DateExpression("$week", value);
     }
 
@@ -129,7 +129,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $millisecond
      */
-    public static DateExpression milliseconds(final Expression value) {
+    public static DateExpression milliseconds(Expression value) {
         return new DateExpression("$millisecond", value);
     }
 
@@ -140,7 +140,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $year
      */
-    public static DateExpression year(final Expression value) {
+    public static DateExpression year(Expression value) {
         return new DateExpression("$year", value);
     }
 
@@ -181,7 +181,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $isoDayOfWeek
      */
-    public static IsoDates isoDayOfWeek(final Expression value) {
+    public static IsoDates isoDayOfWeek(Expression value) {
         return new IsoDates("$isoDayOfWeek", value);
     }
 
@@ -193,7 +193,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $isoWeek
      */
-    public static IsoDates isoWeek(final Expression value) {
+    public static IsoDates isoWeek(Expression value) {
         return new IsoDates("$isoWeek", value);
     }
 
@@ -206,7 +206,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $isoWeekYear
      */
-    public static IsoDates isoWeekYear(final Expression value) {
+    public static IsoDates isoWeekYear(Expression value) {
         return new IsoDates("$isoWeekYear", value);
     }
 
@@ -217,7 +217,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $dateToParts
      */
-    public static DateToParts dateToParts(final Expression date) {
+    public static DateToParts dateToParts(Expression date) {
         return new DateToParts(date);
     }
 
@@ -227,12 +227,12 @@ public final class DateExpressions {
      * @mongodb.driver.manual reference/operator/aggregation/#date-expression-operators Date Expressions
      */
     public static class DateExpression extends Expression {
-        protected DateExpression(final String operation, final Expression value) {
+        protected DateExpression(String operation, Expression value) {
             super(operation, value);
         }
 
         @Override
-        public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+        public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
             writer.writeStartDocument();
             writer.writeName(getOperation());
             ExpressionCodec.writeUnnamedExpression(mapper, writer, (Expression) getValue(), encoderContext);

@@ -14,7 +14,7 @@ public class CurrentStatus {
     private CurrentStatus() {
     }
 
-    public CurrentStatus(final String msg) {
+    public CurrentStatus(String msg) {
         message = msg;
     }
 }

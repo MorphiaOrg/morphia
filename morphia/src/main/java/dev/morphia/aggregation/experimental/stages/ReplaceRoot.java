@@ -1,9 +1,9 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import dev.morphia.aggregation.experimental.AggregationException;
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.sofia.Sofia;
 
 /**
@@ -16,7 +16,7 @@ public class ReplaceRoot extends Stage {
     private Expression value;
     private DocumentExpression document;
 
-    protected ReplaceRoot(final Expression expression) {
+    protected ReplaceRoot(Expression expression) {
         this();
         this.value = expression;
     }
@@ -41,7 +41,7 @@ public class ReplaceRoot extends Stage {
      * @param expression the document expression
      * @return the new stage
      */
-    public static ReplaceRoot with(final Expression expression) {
+    public static ReplaceRoot with(Expression expression) {
         return new ReplaceRoot(expression);
     }
 
@@ -52,7 +52,7 @@ public class ReplaceRoot extends Stage {
      * @param expression the value expression
      * @return this
      */
-    public ReplaceRoot field(final String name, final Expression expression) {
+    public ReplaceRoot field(String name, Expression expression) {
         if (value != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(getStageName()));
         }

@@ -19,7 +19,7 @@ import java.util.Set;
 public class MultipleVersions implements ClassConstraint {
 
     @Override
-    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
         final List<MappedField> versionFields = mc.getFields(Version.class);
         if (versionFields.size() > 1) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(),

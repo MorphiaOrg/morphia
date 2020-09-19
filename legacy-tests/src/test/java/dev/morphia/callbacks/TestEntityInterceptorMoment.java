@@ -38,7 +38,7 @@ public class TestEntityInterceptorMoment extends TestBase {
 
     public static class Interceptor implements EntityInterceptor {
         @Override
-        public void prePersist(final Object ent, final Document document, final Mapper mapper) {
+        public void prePersist(Object ent, Document document, Mapper mapper) {
             Assert.assertTrue(((E) ent).called);
         }
     }

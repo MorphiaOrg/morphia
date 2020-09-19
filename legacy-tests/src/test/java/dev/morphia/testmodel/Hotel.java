@@ -50,7 +50,7 @@ public class Hotel extends TestEntity {
         return address;
     }
 
-    public void setAddress(final Address address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
@@ -58,7 +58,7 @@ public class Hotel extends TestEntity {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -66,7 +66,7 @@ public class Hotel extends TestEntity {
         return phoneNumbers;
     }
 
-    public void setPhoneNumbers(final List<PhoneNumber> phoneNumbers) {
+    public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
     }
 
@@ -74,7 +74,7 @@ public class Hotel extends TestEntity {
         return stars;
     }
 
-    public void setStars(final int stars) {
+    public void setStars(int stars) {
         this.stars = stars;
     }
 
@@ -82,7 +82,7 @@ public class Hotel extends TestEntity {
         return startDate;
     }
 
-    public void setStartDate(final Date startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
@@ -90,7 +90,7 @@ public class Hotel extends TestEntity {
         return tags;
     }
 
-    public void setTags(final Set<String> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 
@@ -98,7 +98,7 @@ public class Hotel extends TestEntity {
         return temp;
     }
 
-    public void setTemp(final String temp) {
+    public void setTemp(String temp) {
         this.temp = temp;
     }
 
@@ -106,7 +106,7 @@ public class Hotel extends TestEntity {
         return type;
     }
 
-    public void setType(final Type type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -114,7 +114,7 @@ public class Hotel extends TestEntity {
         return takesCreditCards;
     }
 
-    public void setTakesCreditCards(final boolean takesCreditCards) {
+    public void setTakesCreditCards(boolean takesCreditCards) {
         this.takesCreditCards = takesCreditCards;
     }
 

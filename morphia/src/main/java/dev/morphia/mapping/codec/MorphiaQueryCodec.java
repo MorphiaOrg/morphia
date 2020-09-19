@@ -14,24 +14,24 @@ import org.bson.codecs.EncoderContext;
  * Defines a codec for Query instances
  */
 public class MorphiaQueryCodec implements Codec<MorphiaQuery> {
-    private Mapper mapper;
+    private final Mapper mapper;
 
     /**
      * Creates a codec
      *
      * @param mapper the mapper to use
      */
-    public MorphiaQueryCodec(final Mapper mapper) {
+    public MorphiaQueryCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 
     @Override
-    public MorphiaQuery<?> decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public MorphiaQuery<?> decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override
-    public void encode(final BsonWriter writer, final MorphiaQuery value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, MorphiaQuery value, EncoderContext encoderContext) {
         mapper.getCodecRegistry().get(Document.class).encode(writer, value.toDocument(), encoderContext);
     }
 

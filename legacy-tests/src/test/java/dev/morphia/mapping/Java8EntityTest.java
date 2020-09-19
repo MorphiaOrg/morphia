@@ -94,7 +94,7 @@ public class Java8EntityTest extends TestBase {
         Assert.assertEquals(9L, getDs().find(Java8Entity.class).filter(ne("localDateTime", localDateTime.plus(6, DAYS))).count());
     }
 
-    private void compare(final Datastore datastore, final Java8Entity entity, final String field, final Object value) {
+    private void compare(Datastore datastore, Java8Entity entity, String field, Object value) {
         Query<Java8Entity> query = datastore.find(Java8Entity.class)
                                             .filter(eq(field, value));
         FindOptions options = new FindOptions().logQuery()
@@ -104,8 +104,8 @@ public class Java8EntityTest extends TestBase {
         Assert.assertEquals(getDs().getLoggedQuery(options), entity, actual);
     }
 
-    private Java8Entity createEntity(final Datastore ds, final Instant instant, final LocalDate localDate,
-                                     final LocalDateTime localDateTime, final LocalTime localTime) {
+    private Java8Entity createEntity(Datastore ds, Instant instant, LocalDate localDate,
+                                     LocalDateTime localDateTime, LocalTime localTime) {
         Java8Entity entity = new Java8Entity();
         entity.setInstant(instant);
         entity.setLocalDate(localDate);
@@ -131,7 +131,7 @@ public class Java8EntityTest extends TestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -139,7 +139,7 @@ public class Java8EntityTest extends TestBase {
             return instant;
         }
 
-        public void setInstant(final Instant instant) {
+        public void setInstant(Instant instant) {
             this.instant = instant;
         }
 
@@ -147,7 +147,7 @@ public class Java8EntityTest extends TestBase {
             return localDate;
         }
 
-        public void setLocalDate(final LocalDate localDate) {
+        public void setLocalDate(LocalDate localDate) {
             this.localDate = localDate;
         }
 
@@ -155,7 +155,7 @@ public class Java8EntityTest extends TestBase {
             return localDateTime;
         }
 
-        public void setLocalDateTime(final LocalDateTime localDateTime) {
+        public void setLocalDateTime(LocalDateTime localDateTime) {
             this.localDateTime = localDateTime;
         }
 
@@ -163,7 +163,7 @@ public class Java8EntityTest extends TestBase {
             return localTime;
         }
 
-        public void setLocalTime(final LocalTime localTime) {
+        public void setLocalTime(LocalTime localTime) {
             this.localTime = localTime;
         }
 
@@ -178,7 +178,7 @@ public class Java8EntityTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

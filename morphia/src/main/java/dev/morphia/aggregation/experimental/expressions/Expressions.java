@@ -27,7 +27,7 @@ public final class Expressions {
      * @param name the field name
      * @return the new expression
      */
-    public static Expression field(final String name) {
+    public static Expression field(String name) {
         return new ValueExpression(name.startsWith("$") ? name : "$" + name);
     }
 
@@ -38,7 +38,7 @@ public final class Expressions {
      * @param value the value
      * @return the new expression
      */
-    public static Expression value(final Object value) {
+    public static Expression value(Object value) {
         return new ValueExpression(value);
     }
 
@@ -49,7 +49,7 @@ public final class Expressions {
      * @return the new expression
      * @aggregation.expression $literal
      */
-    public static Expression literal(final Object value) {
+    public static Expression literal(Object value) {
         return new LiteralExpression(value);
     }
 
@@ -78,7 +78,7 @@ public final class Expressions {
      * @return
      * @morphia.internal
      */
-    static List<Expression> toList(final Expression first, final Expression[] additional) {
+    static List<Expression> toList(Expression first, Expression[] additional) {
         List<Expression> expressions = new ArrayList<>(asList(first));
         expressions.addAll(asList(additional));
         return expressions;

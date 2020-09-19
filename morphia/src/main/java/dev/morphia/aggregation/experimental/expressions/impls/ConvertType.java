@@ -13,7 +13,7 @@ public enum ConvertType {
     private final String name;
     private final int identifier;
 
-    ConvertType(final String name, final int identifier) {
+    ConvertType(String name, int identifier) {
         this.name = name;
         this.identifier = identifier;
     }

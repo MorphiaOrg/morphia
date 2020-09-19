@@ -14,16 +14,16 @@ import org.bson.codecs.EncoderContext;
  * @see dev.morphia.aggregation.experimental.expressions.DateExpressions#isoWeekYear(Expression)
  */
 public class IsoDates extends Expression {
-    private Expression date;
+    private final Expression date;
     private Expression timezone;
 
-    public IsoDates(final String operation, final Expression date) {
+    public IsoDates(String operation, Expression date) {
         super(operation);
         this.date = date;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(getOperation());
 
@@ -41,7 +41,7 @@ public class IsoDates extends Expression {
      * @param timezone the expression
      * @return this
      */
-    public IsoDates timezone(final Expression timezone) {
+    public IsoDates timezone(Expression timezone) {
         this.timezone = timezone;
         return this;
     }

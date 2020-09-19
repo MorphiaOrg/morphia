@@ -20,7 +20,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     private ClientSession clientSession;
 
     @Override
-    public FindAndDeleteOptions clientSession(final ClientSession clientSession) {
+    public FindAndDeleteOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -31,25 +31,25 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     }
 
     @Override
-    public FindAndDeleteOptions projection(final Bson projection) {
+    public FindAndDeleteOptions projection(Bson projection) {
         super.projection(projection);
         return this;
     }
 
     @Override
-    public FindAndDeleteOptions sort(final Bson sort) {
+    public FindAndDeleteOptions sort(Bson sort) {
         super.sort(sort);
         return this;
     }
 
     @Override
-    public FindAndDeleteOptions maxTime(final long maxTime, final TimeUnit timeUnit) {
+    public FindAndDeleteOptions maxTime(long maxTime, TimeUnit timeUnit) {
         super.maxTime(maxTime, timeUnit);
         return this;
     }
 
     @Override
-    public FindAndDeleteOptions collation(final Collation collation) {
+    public FindAndDeleteOptions collation(Collation collation) {
         super.collation(collation);
         return this;
     }
@@ -58,7 +58,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
      * @param sort the sort to apply
      * @return this
      */
-    public FindAndDeleteOptions sort(final Document sort) {
+    public FindAndDeleteOptions sort(Document sort) {
         super.sort(sort);
         return this;
     }
@@ -76,7 +76,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
      * @param writeConcern the write concern
      * @return this
      */
-    public FindAndDeleteOptions writeConcern(final WriteConcern writeConcern) {
+    public FindAndDeleteOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }

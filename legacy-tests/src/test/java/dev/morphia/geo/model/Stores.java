@@ -15,7 +15,7 @@ public final class Stores {
     Stores() {
     }
 
-    public Stores(final String name, final MultiPoint locations) {
+    public Stores(String name, MultiPoint locations) {
         this.name = name;
         this.locations = locations;
     }
@@ -28,7 +28,7 @@ public final class Stores {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

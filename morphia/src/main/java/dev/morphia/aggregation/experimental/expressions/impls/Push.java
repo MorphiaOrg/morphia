@@ -15,7 +15,7 @@ public class Push extends Expression implements FieldHolder<Push> {
         super("$push");
     }
 
-    public Push single(final Expression source) {
+    public Push single(Expression source) {
         if(document != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
         }
@@ -24,7 +24,7 @@ public class Push extends Expression implements FieldHolder<Push> {
     }
 
     @Override
-    public Push field(final String name, final Expression expression) {
+    public Push field(String name, Expression expression) {
         if(field != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
         }
@@ -37,7 +37,7 @@ public class Push extends Expression implements FieldHolder<Push> {
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(getOperation());
         if (field != null) {

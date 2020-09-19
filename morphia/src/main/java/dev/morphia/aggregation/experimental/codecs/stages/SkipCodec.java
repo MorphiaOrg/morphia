@@ -6,12 +6,12 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class SkipCodec extends StageCodec<Skip> {
-    public SkipCodec(final Mapper mapper) {
+    public SkipCodec(Mapper mapper) {
         super(mapper);
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Skip value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Skip value, EncoderContext encoderContext) {
         writer.writeInt64(value.getSize());
     }
 

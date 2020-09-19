@@ -26,11 +26,11 @@ public abstract class UpdateBase<T> {
     private final List<UpdateOperator> updates = new ArrayList<>();
     private final Datastore datastore;
 
-    UpdateBase(final Datastore datastore,
-               final Mapper mapper,
-               final MongoCollection<T> collection,
-               final Query<T> query,
-               final Class<T> type) {
+    UpdateBase(Datastore datastore,
+               Mapper mapper,
+               MongoCollection<T> collection,
+               Query<T> query,
+               Class<T> type) {
         this.datastore = datastore;
         this.mapper = mapper;
         this.collection = collection;
@@ -38,13 +38,13 @@ public abstract class UpdateBase<T> {
         this.type = type;
     }
 
-    UpdateBase(final Datastore datastore,
-               final Mapper mapper,
-               final MongoCollection<T> collection,
-               final Query<T> query,
-               final Class<T> type,
-               final UpdateOperator first,
-               final UpdateOperator[] updates) {
+    UpdateBase(Datastore datastore,
+               Mapper mapper,
+               MongoCollection<T> collection,
+               Query<T> query,
+               Class<T> type,
+               UpdateOperator first,
+               UpdateOperator[] updates) {
         this.datastore = datastore;
         this.mapper = mapper;
         this.type = type;
@@ -54,12 +54,12 @@ public abstract class UpdateBase<T> {
         this.collection = collection;
     }
 
-    UpdateBase(final Datastore datastore,
-               final Mapper mapper,
-               final MongoCollection<T> collection,
-               final Query<T> query,
-               final Class<T> type,
-               final List<UpdateOperator> updates) {
+    UpdateBase(Datastore datastore,
+               Mapper mapper,
+               MongoCollection<T> collection,
+               Query<T> query,
+               Class<T> type,
+               List<UpdateOperator> updates) {
         this(datastore, mapper, collection, query, type);
         this.updates.addAll(updates);
     }
@@ -71,14 +71,14 @@ public abstract class UpdateBase<T> {
         final MappedClass mc = mapper.getMappedClass(type);
         final Operations operations = new Operations(mapper, mc);
 
-        for (final UpdateOperator update : updates) {
+        for (UpdateOperator update : updates) {
             PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(type), update.field(), true);
             operations.add(update.operator(), update.toTarget(pathTarget));
         }
         return operations.toDocument();
     }
 
-    protected void add(final UpdateOperator operator) {
+    protected void add(UpdateOperator operator) {
         updates.add(operator);
     }
 

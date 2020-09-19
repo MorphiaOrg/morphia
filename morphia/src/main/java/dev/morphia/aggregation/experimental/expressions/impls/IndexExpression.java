@@ -26,14 +26,14 @@ public class IndexExpression extends Expression {
      * @param string    the string to search
      * @param substring the target string
      */
-    public IndexExpression(final String operation, final Expression string, final Expression substring) {
+    public IndexExpression(String operation, Expression string, Expression substring) {
         super(operation);
         this.string = string;
         this.substring = substring;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartArray(getOperation());
         writeUnnamedExpression(mapper, writer, string, encoderContext);
@@ -50,7 +50,7 @@ public class IndexExpression extends Expression {
      * @param end the end
      * @return this
      */
-    public IndexExpression end(final int end) {
+    public IndexExpression end(int end) {
         this.end = end;
         return this;
     }
@@ -61,7 +61,7 @@ public class IndexExpression extends Expression {
      * @param start the start
      * @return this
      */
-    public IndexExpression start(final int start) {
+    public IndexExpression start(int start) {
         this.start = start;
         return this;
     }

@@ -18,11 +18,11 @@ import org.bson.codecs.EncoderContext;
 public class GeoWithinFilter extends Filter {
     private CoordinateReferenceSystem crs;
 
-    GeoWithinFilter(final String field, final Polygon value) {
+    GeoWithinFilter(String field, Polygon value) {
         super("$geoWithin", field, value);
     }
 
-    GeoWithinFilter(final String field, final MultiPolygon value) {
+    GeoWithinFilter(String field, MultiPolygon value) {
         super("$geoWithin", field, value);
     }
 
@@ -30,13 +30,13 @@ public class GeoWithinFilter extends Filter {
      * @param crs the CoordinateReferenceSystem to use
      * @return this
      */
-    public GeoWithinFilter crs(final CoordinateReferenceSystem crs) {
+    public GeoWithinFilter crs(CoordinateReferenceSystem crs) {
         this.crs = crs;
         return this;
     }
 
     @Override
-    public final void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public final void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(field(mapper));
         writer.writeStartDocument(getFilterName());
         writer.writeName("$geometry");

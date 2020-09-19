@@ -8,9 +8,9 @@ import dev.morphia.aggregation.experimental.expressions.impls.Expression;
  * @aggregation.expression $sortByCount
  */
 public class SortByCount extends Stage {
-    private Expression expression;
+    private final Expression expression;
 
-    protected SortByCount(final Expression expression) {
+    protected SortByCount(Expression expression) {
         super("$sortByCount");
         this.expression = expression;
     }
@@ -21,7 +21,7 @@ public class SortByCount extends Stage {
      * @param expression the expression
      * @return this
      */
-    public static SortByCount on(final Expression expression) {
+    public static SortByCount on(Expression expression) {
         return new SortByCount(expression);
     }
 

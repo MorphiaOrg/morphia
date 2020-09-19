@@ -21,17 +21,17 @@ public class EnumCodec<T extends Enum<T>> implements Codec<T> {
      *
      * @param type the type
      */
-    public EnumCodec(final Class<T> type) {
+    public EnumCodec(Class<T> type) {
         this.type = type;
     }
 
     @Override
-    public void encode(final BsonWriter writer, final T value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         writer.writeString(value.name());
     }
 
     @Override
-    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public T decode(BsonReader reader, DecoderContext decoderContext) {
         return Enum.valueOf(type, reader.readString());
     }
 

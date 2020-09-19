@@ -27,7 +27,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $add
      */
-    public static MathExpression add(final Expression first, final Expression... additional) {
+    public static MathExpression add(Expression first, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(first);
         expressions.addAll(asList(additional));
@@ -42,7 +42,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $divide
      */
-    public static Expression divide(final Expression numerator, final Expression divisor) {
+    public static Expression divide(Expression numerator, Expression divisor) {
         return new MathExpression("$divide", List.of(numerator, divisor));
     }
 
@@ -54,7 +54,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $multiply
      */
-    public static Expression multiply(final Expression first, final Expression... additional) {
+    public static Expression multiply(Expression first, Expression... additional) {
         List<Expression> expressions = new ArrayList<>(asList(first));
         expressions.addAll(asList(additional));
         return new MathExpression("$multiply", expressions);
@@ -67,7 +67,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $abs
      */
-    public static Expression abs(final Expression value) {
+    public static Expression abs(Expression value) {
         return new MathExpression("$abs", value);
     }
 
@@ -78,7 +78,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $ceil
      */
-    public static Expression ceil(final Expression value) {
+    public static Expression ceil(Expression value) {
         return new MathExpression("$ceil", value);
     }
 
@@ -89,7 +89,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $exp
      */
-    public static Expression exp(final Expression value) {
+    public static Expression exp(Expression value) {
         return new MathExpression("$exp", value);
     }
 
@@ -100,7 +100,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $floor
      */
-    public static Expression floor(final Expression value) {
+    public static Expression floor(Expression value) {
         return new MathExpression("$floor", value);
     }
 
@@ -111,7 +111,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $ln
      */
-    public static Expression ln(final Expression value) {
+    public static Expression ln(Expression value) {
         return new MathExpression("$ln", value);
     }
 
@@ -123,7 +123,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $log
      */
-    public static Expression log(final Expression number, final Expression base) {
+    public static Expression log(Expression number, Expression base) {
         return new MathExpression("$log", List.of(number, base));
     }
 
@@ -134,7 +134,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $log10
      */
-    public static Expression log10(final Expression value) {
+    public static Expression log10(Expression value) {
         return new MathExpression("$log10", value);
     }
 
@@ -146,7 +146,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $mod
      */
-    public static Expression mod(final Expression dividend, final Expression divisor) {
+    public static Expression mod(Expression dividend, Expression divisor) {
         return new MathExpression("$mod", List.of(dividend, divisor));
     }
 
@@ -158,7 +158,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $pow
      */
-    public static Expression pow(final Expression number, final Expression exponent) {
+    public static Expression pow(Expression number, Expression exponent) {
         return new MathExpression("$pow", List.of(number, exponent));
     }
 
@@ -170,7 +170,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $round
      */
-    public static Expression round(final Expression number, final Expression place) {
+    public static Expression round(Expression number, Expression place) {
         return new MathExpression("$round", asList(number, place));
     }
 
@@ -181,7 +181,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $sqrt
      */
-    public static Expression sqrt(final Expression value) {
+    public static Expression sqrt(Expression value) {
         return new MathExpression("$sqrt", value);
     }
 
@@ -196,7 +196,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $subtract
      */
-    public static Expression subtract(final Expression minuend, final Expression subtrahend) {
+    public static Expression subtract(Expression minuend, Expression subtrahend) {
         return new MathExpression("$subtract", List.of(minuend, subtrahend));
     }
 
@@ -210,7 +210,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $trunc
      */
-    public static Expression trunc(final Expression number, final Expression place) {
+    public static Expression trunc(Expression number, Expression place) {
         ArrayList<Expression> params = new ArrayList<>();
         params.add(number);
         if (place != null) {

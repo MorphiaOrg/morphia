@@ -7,7 +7,7 @@ import dev.morphia.Datastore;
  */
 public abstract class AbstractQueryFactory implements QueryFactory {
     @Override
-    public <T> Query<T> createQuery(final Datastore datastore, final Class<T> type) {
+    public <T> Query<T> createQuery(Datastore datastore, Class<T> type) {
         return createQuery(datastore, type, null);
     }
 }

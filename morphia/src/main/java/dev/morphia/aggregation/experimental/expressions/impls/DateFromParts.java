@@ -31,7 +31,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts day(final int value) {
+    public DateFromParts day(int value) {
         return day(Expressions.value(value));
     }
 
@@ -43,7 +43,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts day(final Expression value) {
+    public DateFromParts day(Expression value) {
         this.day = value;
         return this;
     }
@@ -54,7 +54,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts hour(final int value) {
+    public DateFromParts hour(int value) {
         return hour(Expressions.value(value));
     }
 
@@ -66,7 +66,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts hour(final Expression value) {
+    public DateFromParts hour(Expression value) {
         this.hour = value;
         return this;
     }
@@ -77,7 +77,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts isoDayOfWeek(final int value) {
+    public DateFromParts isoDayOfWeek(int value) {
         return isoDayOfWeek(Expressions.value(value));
     }
 
@@ -87,7 +87,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts isoDayOfWeek(final Expression value) {
+    public DateFromParts isoDayOfWeek(Expression value) {
         this.isoDayOfWeek = value;
         return this;
     }
@@ -98,7 +98,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts isoWeek(final int value) {
+    public DateFromParts isoWeek(int value) {
         return isoWeek(Expressions.value(value));
     }
 
@@ -110,7 +110,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts isoWeek(final Expression value) {
+    public DateFromParts isoWeek(Expression value) {
         this.isoWeek = value;
         return this;
     }
@@ -121,7 +121,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts isoWeekYear(final int value) {
+    public DateFromParts isoWeekYear(int value) {
         return isoWeekYear(Expressions.value(value));
     }
 
@@ -133,7 +133,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts isoWeekYear(final Expression value) {
+    public DateFromParts isoWeekYear(Expression value) {
         this.isoWeekYear = value;
         return this;
     }
@@ -144,7 +144,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts millisecond(final int value) {
+    public DateFromParts millisecond(int value) {
         return millisecond(Expressions.value(value));
     }
 
@@ -156,7 +156,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts millisecond(final Expression value) {
+    public DateFromParts millisecond(Expression value) {
         this.millisecond = value;
         return this;
     }
@@ -167,7 +167,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts minute(final int value) {
+    public DateFromParts minute(int value) {
         return minute(Expressions.value(value));
     }
 
@@ -179,7 +179,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts minute(final Expression value) {
+    public DateFromParts minute(Expression value) {
         this.minute = value;
         return this;
     }
@@ -190,7 +190,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts month(final int value) {
+    public DateFromParts month(int value) {
         return month(Expressions.value(value));
     }
 
@@ -202,7 +202,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts month(final Expression value) {
+    public DateFromParts month(Expression value) {
         this.month = value;
         return this;
     }
@@ -213,7 +213,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts second(final int value) {
+    public DateFromParts second(int value) {
         return second(Expressions.value(value));
     }
 
@@ -225,7 +225,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts second(final Expression value) {
+    public DateFromParts second(Expression value) {
         this.second = value;
         return this;
     }
@@ -245,7 +245,7 @@ public class DateFromParts extends Expression {
      * <p>
      * Optional
      */
-    public DateFromParts timezone(final Expression value) {
+    public DateFromParts timezone(Expression value) {
         this.timezone = value;
         return this;
     }
@@ -265,7 +265,7 @@ public class DateFromParts extends Expression {
      * <p>
      * Optional
      */
-    public DateFromParts timezone(final String value) {
+    public DateFromParts timezone(String value) {
         return timezone(Expressions.value(value));
     }
 
@@ -277,7 +277,7 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts year(final int value) {
+    public DateFromParts year(int value) {
         return year(Expressions.value(value));
     }
 
@@ -289,13 +289,13 @@ public class DateFromParts extends Expression {
      * @param value the value to use
      * @return this
      */
-    public DateFromParts year(final Expression value) {
+    public DateFromParts year(Expression value) {
         this.year = value;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(getOperation());
         writer.writeStartDocument();

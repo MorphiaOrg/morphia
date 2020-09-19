@@ -187,7 +187,7 @@ public class DocumentReaderTest extends TestBase {
                                        .first();
     }
 
-    private void readDocument(final int count) {
+    private void readDocument(int count) {
         step(r -> {
             r.readStartDocument();
         });
@@ -202,11 +202,11 @@ public class DocumentReaderTest extends TestBase {
         });
     }
 
-    private void setup(final Document document) {
+    private void setup(Document document) {
         reader = new DocumentReader(document);
     }
 
-    private void step(final Consumer<BsonReader> function) {
+    private void step(Consumer<BsonReader> function) {
         function.accept(reader);
     }
 
@@ -218,7 +218,7 @@ public class DocumentReaderTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             return this == o || o instanceof Child;
         }
     }
@@ -237,7 +237,7 @@ public class DocumentReaderTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

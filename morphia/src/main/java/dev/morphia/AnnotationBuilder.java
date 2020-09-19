@@ -34,7 +34,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
         }
     }
 
-    AnnotationBuilder(final T original) {
+    AnnotationBuilder(T original) {
         try {
             for (Method method : annotationType().getDeclaredMethods()) {
                 values.put(method.getName(), method.invoke(original));
@@ -45,17 +45,17 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     }
 
     @SuppressWarnings("unchecked")
-    <V> V get(final String key) {
+    <V> V get(String key) {
         return (V) values.get(key);
     }
 
-    void put(final String key, final Object value) {
+    void put(String key, Object value) {
         if (value != null) {
             values.put(key, value);
         }
     }
 
-    void putAll(final Map<String, Object> map) {
+    void putAll(Map<String, Object> map) {
         values.putAll(map);
     }
 
@@ -68,7 +68,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     public abstract Class<T> annotationType();
 
     @SuppressWarnings("unchecked")
-    static <A extends Annotation> Map<String, Object> toMap(final A annotation) {
+    static <A extends Annotation> Map<String, Object> toMap(A annotation) {
         final Map<String, Object> map = new HashMap<String, Object>();
         try {
             Class<A> annotationType = (Class<A>) annotation.annotationType();
@@ -85,7 +85,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
         return map;
     }
 
-    private static Object unwrapAnnotation(final Object o) {
+    private static Object unwrapAnnotation(Object o) {
         if (o instanceof Annotation) {
             return toMap((Annotation) o);
         } else {
@@ -94,7 +94,7 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

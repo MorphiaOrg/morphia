@@ -61,14 +61,14 @@ public abstract class DocTaglet implements Taglet {
 
     protected abstract String getHeader();
 
-    protected String genLink(final String text) {
+    protected String genLink(String text) {
         String relativePath = text;
         String display = text;
 
         int firstSpace = text.indexOf(' ');
         if (firstSpace != -1) {
             relativePath = text.substring(0, firstSpace);
-            display = text.substring(firstSpace, text.length()).trim();
+            display = text.substring(firstSpace).trim();
         }
 
         return String.format("<a href='%s%s'>%s</a>", getBaseDocURI(), relativePath, display);

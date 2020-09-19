@@ -54,11 +54,11 @@ public final class IndexHelper {
 
     private final Mapper mapper;
 
-    IndexHelper(final Mapper mapper) {
+    IndexHelper(Mapper mapper) {
         this.mapper = mapper;
     }
 
-    private void calculateWeights(final Index index, final com.mongodb.client.model.IndexOptions indexOptions) {
+    private void calculateWeights(Index index, com.mongodb.client.model.IndexOptions indexOptions) {
         Document weights = new Document();
         for (Field field : index.fields()) {
             if (field.weight() != -1) {
@@ -73,7 +73,7 @@ public final class IndexHelper {
         }
     }
 
-    Index convert(final Text text, final String nameToStore) {
+    Index convert(Text text, String nameToStore) {
         return new IndexBuilder()
                    .options(text.options())
                    .fields(Collections.singletonList(new FieldBuilder()
@@ -82,7 +82,7 @@ public final class IndexHelper {
                                                                 .weight(text.value())));
     }
 
-    Index convert(final Indexed indexed, final String nameToStore) {
+    Index convert(Indexed indexed, String nameToStore) {
         List<Field> fields = Collections.singletonList(new FieldBuilder()
                                                                   .value(nameToStore)
                                                                   .type(fromValue(indexed.value().toIndexValue())));
@@ -91,9 +91,9 @@ public final class IndexHelper {
                    .fields(fields);
     }
 
-    private List<Index> collectFieldIndexes(final MappedClass mc) {
+    private List<Index> collectFieldIndexes(MappedClass mc) {
         List<Index> list = new ArrayList<>();
-        for (final MappedField mf : mc.getFields()) {
+        for (MappedField mf : mc.getFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
                 list.add(convert(mf.getAnnotation(Indexed.class), mf.getMappedFieldName()));
             } else if (mf.hasAnnotation(Text.class)) {
@@ -103,7 +103,7 @@ public final class IndexHelper {
         return list;
     }
 
-    private List<Index> collectIndexes(final MappedClass mc, final List<MappedClass> parentMCs) {
+    private List<Index> collectIndexes(MappedClass mc, List<MappedClass> parentMCs) {
         if (parentMCs.contains(mc) || mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
             return emptyList();
         }
@@ -114,12 +114,12 @@ public final class IndexHelper {
         return indexes;
     }
 
-    private List<Index> collectTopLevelIndexes(final MappedClass mc) {
+    private List<Index> collectTopLevelIndexes(MappedClass mc) {
         List<Index> list = new ArrayList<>();
         if (mc != null) {
             final Indexes indexes = mc.getAnnotation(Indexes.class);
             if (indexes != null) {
-                for (final Index index : indexes.value()) {
+                for (Index index : indexes.value()) {
                     List<Field> fields = new ArrayList<>();
                     for (Field field : index.fields()) {
                         fields.add(new FieldBuilder()
@@ -137,12 +137,12 @@ public final class IndexHelper {
         return list;
     }
 
-    private Index replaceFields(final Index original, final List<Field> list) {
+    private Index replaceFields(Index original, List<Field> list) {
         return new IndexBuilder(original)
                    .fields(list);
     }
 
-    Document calculateKeys(final MappedClass mc, final Index index) {
+    Document calculateKeys(MappedClass mc, Index index) {
         Document keys = new Document();
         for (Field field : index.fields()) {
             String path;
@@ -160,7 +160,7 @@ public final class IndexHelper {
         return keys;
     }
 
-    com.mongodb.client.model.IndexOptions convert(final IndexOptions options) {
+    com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
                                                                  .background(options.background())
                                                                  .sparse(options.sparse())
@@ -188,7 +188,7 @@ public final class IndexHelper {
         return indexOptions;
     }
 
-    com.mongodb.client.model.Collation convert(final Collation collation) {
+    com.mongodb.client.model.Collation convert(Collation collation) {
         return com.mongodb.client.model.Collation.builder()
                                                  .locale(collation.locale())
                                                  .backwards(collation.backwards())
@@ -202,7 +202,7 @@ public final class IndexHelper {
                                                  .build();
     }
 
-    String findField(final MappedClass mc, final IndexOptions options, final String path) {
+    String findField(MappedClass mc, IndexOptions options, String path) {
         if (path.equals("$**")) {
             return path;
         }
@@ -210,7 +210,7 @@ public final class IndexHelper {
         return new PathTarget(mapper, mc, path, !options.disableValidation()).translatedPath();
     }
 
-    void createIndex(final MongoCollection collection, final MappedClass mc) {
+    void createIndex(MongoCollection collection, MappedClass mc) {
         if (!mc.isInterface() && !mc.isAbstract()) {
             for (Index index : collectIndexes(mc, Collections.emptyList())) {
                 createIndex(collection, mc, index);
@@ -218,7 +218,7 @@ public final class IndexHelper {
         }
     }
 
-    void createIndex(final MongoCollection collection, final MappedClass mc, final Index index) {
+    void createIndex(MongoCollection collection, MappedClass mc, Index index) {
         Document keys = calculateKeys(mc, index);
         com.mongodb.client.model.IndexOptions indexOptions = convert(index.options());
         calculateWeights(index, indexOptions);

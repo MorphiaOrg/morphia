@@ -73,47 +73,47 @@ class CollationBuilder extends AnnotationBuilder<Collation> implements Collation
         return get("strength");
     }
 
-    CollationBuilder backwards(final boolean backwards) {
+    CollationBuilder backwards(boolean backwards) {
         put("backwards", backwards);
         return this;
     }
 
-    CollationBuilder caseLevel(final boolean caseLevel) {
+    CollationBuilder caseLevel(boolean caseLevel) {
         put("caseLevel", caseLevel);
         return this;
     }
 
-    CollationBuilder locale(final String locale) {
+    CollationBuilder locale(String locale) {
         put("locale", locale);
         return this;
     }
 
-    CollationBuilder normalization(final boolean normalization) {
+    CollationBuilder normalization(boolean normalization) {
         put("normalization", normalization);
         return this;
     }
 
-    CollationBuilder numericOrdering(final boolean numericOrdering) {
+    CollationBuilder numericOrdering(boolean numericOrdering) {
         put("numericOrdering", numericOrdering);
         return this;
     }
 
-    CollationBuilder alternate(final CollationAlternate alternate) {
+    CollationBuilder alternate(CollationAlternate alternate) {
         put("alternate", alternate);
         return this;
     }
 
-    CollationBuilder caseFirst(final CollationCaseFirst caseFirst) {
+    CollationBuilder caseFirst(CollationCaseFirst caseFirst) {
         put("caseFirst", caseFirst);
         return this;
     }
 
-    CollationBuilder maxVariable(final CollationMaxVariable maxVariable) {
+    CollationBuilder maxVariable(CollationMaxVariable maxVariable) {
         put("maxVariable", maxVariable);
         return this;
     }
 
-    CollationBuilder strength(final CollationStrength strength) {
+    CollationBuilder strength(CollationStrength strength) {
         put("strength", strength);
         return this;
     }

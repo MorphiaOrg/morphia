@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class CountCodec extends StageCodec<Count> {
-    public CountCodec(final Mapper mapper) {
+    public CountCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class CountCodec extends StageCodec<Count> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Count value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Count value, EncoderContext encoderContext) {
         writer.writeString(value.getName());
     }
 }

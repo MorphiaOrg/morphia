@@ -24,8 +24,8 @@ public class ConstraintViolation {
      * @param validator the constraint failed
      * @param message   the message for the failure
      */
-    public ConstraintViolation(final Level level, final MappedClass clazz, final MappedField field,
-                               final Class<? extends ClassConstraint> validator, final String message) {
+    public ConstraintViolation(Level level, MappedClass clazz, MappedField field,
+                               Class<? extends ClassConstraint> validator, String message) {
         this(level, clazz, validator, message);
         this.field = field;
     }
@@ -38,8 +38,8 @@ public class ConstraintViolation {
      * @param validator the constraint failed
      * @param message   the message for the failure
      */
-    public ConstraintViolation(final Level level, final MappedClass clazz, final Class<? extends ClassConstraint> validator,
-                               final String message) {
+    public ConstraintViolation(Level level, MappedClass clazz, Class<? extends ClassConstraint> validator,
+                               String message) {
         this.level = level;
         this.clazz = clazz;
         this.message = message;

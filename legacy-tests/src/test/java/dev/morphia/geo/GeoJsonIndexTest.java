@@ -25,7 +25,7 @@ public class GeoJsonIndexTest extends TestBase {
         private Point location;
         private String name;
 
-        private Place(final Point location, final String name) {
+        private Place(Point location, String name) {
             this.location = location;
             this.name = name;
         }

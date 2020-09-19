@@ -27,7 +27,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $sum
      */
-    public static Expression sum(final Expression first, final Expression... additional) {
+    public static Expression sum(Expression first, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(first);
         expressions.addAll(asList(additional));
@@ -41,7 +41,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $addToSet
      */
-    public static Expression addToSet(final Expression value) {
+    public static Expression addToSet(Expression value) {
         return new Expression("$addToSet", value);
     }
 
@@ -53,7 +53,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $avg
      */
-    public static Expression avg(final Expression value, final Expression... additional) {
+    public static Expression avg(Expression value, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(value);
         expressions.addAll(asList(additional));
@@ -67,7 +67,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $first
      */
-    public static Expression first(final Expression value) {
+    public static Expression first(Expression value) {
         return new Expression("$first", value);
     }
 
@@ -78,7 +78,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $last
      */
-    public static Expression last(final Expression value) {
+    public static Expression last(Expression value) {
         return new Expression("$last", value);
     }
 
@@ -89,7 +89,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $max
      */
-    public static Expression max(final Expression value) {
+    public static Expression max(Expression value) {
         return new Expression("$max", value);
     }
 
@@ -100,7 +100,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $min
      */
-    public static Expression min(final Expression value) {
+    public static Expression min(Expression value) {
         return new Expression("$min", value);
     }
 
@@ -111,7 +111,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $push
      */
-    public static Expression push(final Expression value) {
+    public static Expression push(Expression value) {
         return new Expression("$push", value);
     }
 
@@ -136,7 +136,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $stdDevPop
      */
-    public static Expression stdDevPop(final Expression value, final Expression... additional) {
+    public static Expression stdDevPop(Expression value, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(value);
         expressions.addAll(asList(additional));
@@ -151,7 +151,7 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $stdDevSamp
      */
-    public static Expression stdDevSamp(final Expression value, final Expression... additional) {
+    public static Expression stdDevSamp(Expression value, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(value);
         expressions.addAll(asList(additional));

@@ -24,11 +24,11 @@ import static dev.morphia.query.CriteriaJoin.AND;
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
     private final Mapper mapper;
     private final MappedClass mappedClass;
-    private CriteriaJoin joinMethod;
-    private List<Criteria> children = new ArrayList<>();
+    private final CriteriaJoin joinMethod;
+    private final List<Criteria> children = new ArrayList<>();
     private LegacyQuery<?> query;
 
-    protected CriteriaContainerImpl(final Mapper mapper, final LegacyQuery<?> query, final CriteriaJoin joinMethod) {
+    protected CriteriaContainerImpl(Mapper mapper, LegacyQuery<?> query, CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
         this.mapper = mapper;
         this.query = query;
@@ -51,8 +51,8 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     @Override
-    public void add(final Criteria... criteria) {
-        for (final Criteria c : criteria) {
+    public void add(Criteria... criteria) {
+        for (Criteria c : criteria) {
             c.attach(this);
             children.add(c);
         }
@@ -73,16 +73,16 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         Set<String> names = new HashSet<>();
         boolean duplicates = false;
 
-        for (final Criteria child : children) {
+        for (Criteria child : children) {
             final Document childObject = child.toDocument();
-            for (final String s : childObject.keySet()) {
+            for (String s : childObject.keySet()) {
                 duplicates |= !names.add(s);
             }
             and.add(childObject);
         }
 
         if (!duplicates) {
-            for (final Object o : and) {
+            for (Object o : and) {
                 document.putAll((Map) o);
             }
         } else {
@@ -96,7 +96,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         Document document = new Document();
         final List<Document> or = new ArrayList<>();
 
-        for (final Criteria child : children) {
+        for (Criteria child : children) {
             or.add(child.toDocument());
         }
 
@@ -111,12 +111,12 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     @Override
-    public CriteriaContainer and(final Criteria... criteria) {
+    public CriteriaContainer and(Criteria... criteria) {
         return collect(AND, criteria);
     }
 
     @Override
-    public FieldEnd<? extends CriteriaContainer> criteria(final String name) {
+    public FieldEnd<? extends CriteriaContainer> criteria(String name) {
         return new FieldEndImpl<>(mapper, name, this, mappedClass, query.isValidatingNames());
     }
 
@@ -132,7 +132,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
      *
      * @param query the query
      */
-    public void setQuery(final LegacyQuery<?> query) {
+    public void setQuery(LegacyQuery<?> query) {
         this.query = query;
     }
 
@@ -142,19 +142,19 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     @Override
-    public CriteriaContainer or(final Criteria... criteria) {
+    public CriteriaContainer or(Criteria... criteria) {
         return collect(CriteriaJoin.OR, criteria);
     }
 
     @Override
-    public void remove(final Criteria criteria) {
+    public void remove(Criteria criteria) {
         children.remove(criteria);
     }
 
-    private CriteriaContainer collect(final CriteriaJoin cj, final Criteria... criteria) {
+    private CriteriaContainer collect(CriteriaJoin cj, Criteria... criteria) {
         final CriteriaContainerImpl parent = new CriteriaContainerImpl(mapper, query, cj);
 
-        for (final Criteria c : criteria) {
+        for (Criteria c : criteria) {
             parent.add(c);
         }
 

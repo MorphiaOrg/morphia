@@ -11,7 +11,7 @@ public class MetaExpression extends Expression {
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeString(getOperation(), "textScore");
         writer.writeEndDocument();

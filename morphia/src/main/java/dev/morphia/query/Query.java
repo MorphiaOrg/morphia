@@ -27,7 +27,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the container
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default CriteriaContainer and(final Criteria... criteria) {
+    default CriteriaContainer and(Criteria... criteria) {
         return legacyOperation();
     }
 
@@ -38,7 +38,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the FieldEnd to define the criteria
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default FieldEnd<? extends CriteriaContainer> criteria(final String field) {
+    default FieldEnd<? extends CriteriaContainer> criteria(String field) {
         return legacyOperation();
     }
 
@@ -157,7 +157,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the FieldEnd to define the criteria
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default FieldEnd<? extends Query<T>> field(final String name) {
+    default FieldEnd<? extends Query<T>> field(String name) {
         return legacyOperation();
     }
 
@@ -192,7 +192,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @deprecated use {@link #filter(Filter...)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default Query<T> filter(final String condition, final Object value) {
+    default Query<T> filter(String condition, Object value) {
         return legacyOperation();
     }
 
@@ -313,7 +313,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the container
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default CriteriaContainer or(final Criteria... criteria) {
+    default CriteriaContainer or(Criteria... criteria) {
         return legacyOperation();
     }
 
@@ -327,7 +327,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @deprecated
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default Modify<T> modify(final UpdateOperations<T> operations) {
+    default Modify<T> modify(UpdateOperations<T> operations) {
         return legacyOperation();
     }
 
@@ -388,7 +388,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @deprecated
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default Update<T> update(final UpdateOperations<T> operations) {
+    default Update<T> update(UpdateOperations<T> operations) {
         return legacyOperation();
     }
 

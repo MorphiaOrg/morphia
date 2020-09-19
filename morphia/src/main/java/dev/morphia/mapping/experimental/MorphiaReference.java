@@ -27,11 +27,11 @@ public abstract class MorphiaReference<T> {
     MorphiaReference() {
     }
 
-    MorphiaReference(final Datastore datastore) {
+    MorphiaReference(Datastore datastore) {
         this.datastore = datastore;
     }
 
-    static Object wrapId(final Mapper mapper, final MappedField field, final Object entity) {
+    static Object wrapId(Mapper mapper, MappedField field, Object entity) {
         Object id = mapper.getId(entity);
         mapper.getMappedClass(entity.getClass());
         Object encoded = id;
@@ -50,7 +50,7 @@ public abstract class MorphiaReference<T> {
      * @return the MorphiaReference wrapper
      */
     @SuppressWarnings("unchecked")
-    public static <V> MorphiaReference<V> wrap(final V value) {
+    public static <V> MorphiaReference<V> wrap(V value) {
         if (value instanceof List) {
             return (MorphiaReference<V>) new ListReference<>((List<V>) value);
         } else if (value instanceof Set) {
@@ -75,7 +75,7 @@ public abstract class MorphiaReference<T> {
      * @param ignoreMissing ignore any missing referenced documents
      * @return this
      */
-    public MorphiaReference ignoreMissing(final boolean ignoreMissing) {
+    public MorphiaReference ignoreMissing(boolean ignoreMissing) {
         this.ignoreMissing = ignoreMissing;
         return this;
     }
@@ -127,7 +127,7 @@ public abstract class MorphiaReference<T> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

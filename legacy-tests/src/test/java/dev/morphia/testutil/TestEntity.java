@@ -29,7 +29,7 @@ public class TestEntity {
         return id;
     }
 
-    public void setId(final ObjectId id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 }

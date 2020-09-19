@@ -34,7 +34,7 @@ public class CurrentOp extends Stage {
      * @param allUsers include allUsers if true
      * @return this
      */
-    public CurrentOp allUsers(final boolean allUsers) {
+    public CurrentOp allUsers(boolean allUsers) {
         this.allUsers = allUsers;
         return this;
     }
@@ -46,7 +46,7 @@ public class CurrentOp extends Stage {
      * @param idleConnections include idle connections if true
      * @return this
      */
-    public CurrentOp idleConnections(final boolean idleConnections) {
+    public CurrentOp idleConnections(boolean idleConnections) {
         this.idleConnections = idleConnections;
         return this;
     }
@@ -57,7 +57,7 @@ public class CurrentOp extends Stage {
      * @param idleCursors include idle cursors if true
      * @return this
      */
-    public CurrentOp idleCursors(final boolean idleCursors) {
+    public CurrentOp idleCursors(boolean idleCursors) {
         this.idleCursors = idleCursors;
         return this;
     }
@@ -68,7 +68,7 @@ public class CurrentOp extends Stage {
      * @param idleSessions true to include idle sessions
      * @return this
      */
-    public CurrentOp idleSessions(final boolean idleSessions) {
+    public CurrentOp idleSessions(boolean idleSessions) {
         this.idleSessions = idleSessions;
         return this;
     }
@@ -118,7 +118,7 @@ public class CurrentOp extends Stage {
      * @param localOps true to include only local ops
      * @return this
      */
-    public CurrentOp localOps(final boolean localOps) {
+    public CurrentOp localOps(boolean localOps) {
         this.localOps = localOps;
         return this;
     }

@@ -154,7 +154,7 @@ public class TestMapper extends TestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -162,7 +162,7 @@ public class TestMapper extends TestBase {
             return type;
         }
 
-        public void setType(final String type) {
+        public void setType(String type) {
             this.type = type;
         }
 
@@ -176,7 +176,7 @@ public class TestMapper extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
             }
@@ -224,7 +224,7 @@ public class TestMapper extends TestBase {
             return id;
         }
 
-        public void setId(final CustomId id) {
+        public void setId(CustomId id) {
             this.id = id;
         }
 
@@ -232,7 +232,7 @@ public class TestMapper extends TestBase {
             return text;
         }
 
-        public void setText(final String text) {
+        public void setText(String text) {
             this.text = text;
         }
     }

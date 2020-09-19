@@ -143,7 +143,7 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
-    private void validate(final MorphiaCursor<Population> cursor, final String state, final long value) {
+    private void validate(MorphiaCursor<Population> cursor, String state, long value) {
         boolean found = false;
         try (cursor) {
             while (cursor.hasNext()) {

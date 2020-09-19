@@ -40,7 +40,7 @@ public final class DiscriminatorLookup {
      * @param entityModels the models to map
      * @param packages     the packages to search
      */
-    public DiscriminatorLookup(final Map<Class<?>, EntityModel<?>> entityModels, final Set<String> packages) {
+    public DiscriminatorLookup(Map<Class<?>, EntityModel<?>> entityModels, Set<String> packages) {
         for (EntityModel<?> entityModel : entityModels.values()) {
             if (entityModel.getDiscriminator() != null) {
                 discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
@@ -54,7 +54,7 @@ public final class DiscriminatorLookup {
      *
      * @param entityModel the model
      */
-    public void addModel(final EntityModel<?> entityModel) {
+    public void addModel(EntityModel<?> entityModel) {
         if (entityModel.getDiscriminator() != null) {
             discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
         }
@@ -66,7 +66,7 @@ public final class DiscriminatorLookup {
      * @param discriminator the value to search witih
      * @return the mapped class
      */
-    public Class<?> lookup(final String discriminator) {
+    public Class<?> lookup(String discriminator) {
         if (discriminatorClassMap.containsKey(discriminator)) {
             return discriminatorClassMap.get(discriminator);
         }
@@ -84,17 +84,17 @@ public final class DiscriminatorLookup {
         return clazz;
     }
 
-    private Class<?> getClassForName(final String discriminator) {
+    private Class<?> getClassForName(String discriminator) {
         Class<?> clazz = null;
         try {
             clazz = Class.forName(discriminator);
-        } catch (final ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             // Ignore
         }
         return clazz;
     }
 
-    private Class<?> searchPackages(final String discriminator) {
+    private Class<?> searchPackages(String discriminator) {
         Class<?> clazz = null;
         for (String packageName : packages) {
             clazz = getClassForName(packageName + "." + discriminator);

@@ -17,7 +17,7 @@ public class ZipExpression extends Expression {
      * @param inputs
      * @morphia.internal
      */
-    public ZipExpression(final List<Expression> inputs) {
+    public ZipExpression(List<Expression> inputs) {
         super("$zip");
         this.inputs = inputs;
     }
@@ -33,13 +33,13 @@ public class ZipExpression extends Expression {
      * @param defaults the defaults
      * @return this
      */
-    public ZipExpression defaults(final Expression defaults) {
+    public ZipExpression defaults(Expression defaults) {
         this.defaults = defaults;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         writeNamedValue(mapper, writer, "inputs", inputs, encoderContext);
@@ -56,7 +56,7 @@ public class ZipExpression extends Expression {
      * @param useLongestLength true to use the longest length
      * @return this
      */
-    public ZipExpression useLongestLength(final Boolean useLongestLength) {
+    public ZipExpression useLongestLength(Boolean useLongestLength) {
         this.useLongestLength = useLongestLength;
         return this;
     }

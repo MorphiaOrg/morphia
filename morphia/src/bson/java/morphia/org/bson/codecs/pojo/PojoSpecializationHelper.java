@@ -26,8 +26,8 @@ import java.util.Map;
 public final class PojoSpecializationHelper {
 
     @SuppressWarnings("unchecked")
-    public static <V> TypeData<V> specializeTypeData(final TypeData<V> typeData, final List<TypeData<?>> typeParameters,
-                                                     final TypeParameterMap typeParameterMap) {
+    public static <V> TypeData<V> specializeTypeData(TypeData<V> typeData, List<TypeData<?>> typeParameters,
+                                                     TypeParameterMap typeParameterMap) {
         if (!typeParameterMap.hasTypeParameters() || typeParameters.isEmpty()) {
             return typeData;
         }
@@ -44,8 +44,8 @@ public final class PojoSpecializationHelper {
         }
     }
 
-    private static <V> TypeData<V> getTypeData(final TypeData<V> typeData, final List<TypeData<?>> specializedTypeParameters,
-                                               final Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap) {
+    private static <V> TypeData<V> getTypeData(TypeData<V> typeData, List<TypeData<?>> specializedTypeParameters,
+                                               Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap) {
         List<TypeData<?>> subTypeParameters = new ArrayList<>(typeData.getTypeParameters());
         for (int i = 0; i < typeData.getTypeParameters().size(); i++) {
             subTypeParameters.set(i, getTypeData(subTypeParameters.get(i), specializedTypeParameters, propertyToClassParamIndexMap, i));
@@ -53,9 +53,9 @@ public final class PojoSpecializationHelper {
         return TypeData.builder(typeData.getType()).addTypeParameters(subTypeParameters).build();
     }
 
-    private static TypeData<?> getTypeData(final TypeData<?> typeData, final List<TypeData<?>> specializedTypeParameters,
-                                           final Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap,
-                                           final int index) {
+    private static TypeData<?> getTypeData(TypeData<?> typeData, List<TypeData<?>> specializedTypeParameters,
+                                           Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap,
+                                           int index) {
         if (!propertyToClassParamIndexMap.containsKey(index)) {
             return typeData;
         }

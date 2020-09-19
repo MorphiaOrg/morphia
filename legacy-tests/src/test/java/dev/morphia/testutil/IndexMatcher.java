@@ -18,7 +18,7 @@ public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
     private final String indexName;
     private final boolean indexShouldBePresent;
 
-    private IndexMatcher(final String indexName, final boolean indexShouldBePresent) {
+    private IndexMatcher(String indexName, boolean indexShouldBePresent) {
         this.indexName = indexName;
         this.indexShouldBePresent = indexShouldBePresent;
     }
@@ -29,7 +29,7 @@ public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
      * @param indexName the expected name of the index
      * @return a Matcher that will match if a list of Documents contains an index with the given name
      */
-    public static Matcher<? super List<Document>> hasIndexNamed(final String indexName) {
+    public static Matcher<? super List<Document>> hasIndexNamed(String indexName) {
         return new IndexMatcher(indexName, true);
     }
 
@@ -40,19 +40,19 @@ public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
      * @param indexName the expected name of the index
      * @return a Matcher that will fail if a list of Documents contains an index with the given name
      */
-    public static Matcher<? super List<Document>> doesNotHaveIndexNamed(final String indexName) {
+    public static Matcher<? super List<Document>> doesNotHaveIndexNamed(String indexName) {
         return new IndexMatcher(indexName, false);
     }
 
     @Override
-    public void describeTo(final Description description) {
+    public void describeTo(Description description) {
         description.appendValue(indexName);
     }
 
     @Override
-    protected boolean matchesSafely(final List<Document> indexes) {
+    protected boolean matchesSafely(List<Document> indexes) {
         boolean indexFound = false;
-        for (final Document document : indexes) {
+        for (Document document : indexes) {
             if (document.get("name").equals(indexName)) {
                 indexFound = true;
             }
@@ -62,7 +62,7 @@ public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
     }
 
     @Override
-    protected void describeMismatchSafely(final List<Document> indexes, final Description mismatchDescription) {
+    protected void describeMismatchSafely(List<Document> indexes, Description mismatchDescription) {
         fail(format("Expected %s to find index with name '%s' in %s",
                     indexShouldBePresent ? "" : "not",
                     indexName, indexes));

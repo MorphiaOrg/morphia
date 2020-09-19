@@ -621,7 +621,7 @@ public class AggregationTest extends TestBase {
         }
     }
 
-    private Document getDocument(final Document document, final String... path) {
+    private Document getDocument(Document document, String... path) {
         Document current = document;
         for (String step : path) {
             Object next = current.get(step);
@@ -658,7 +658,7 @@ public class AggregationTest extends TestBase {
         private Book() {
         }
 
-        public Book(final String title, final String author, final Integer copies, final String... tags) {
+        public Book(String title, String author, Integer copies, String... tags) {
             this.title = title;
             this.author = author;
             this.copies = copies;
@@ -678,7 +678,7 @@ public class AggregationTest extends TestBase {
             return authors;
         }
 
-        public void setAuthors(final Set<String> authors) {
+        public void setAuthors(Set<String> authors) {
             this.authors = authors;
         }
     }
@@ -694,7 +694,7 @@ public class AggregationTest extends TestBase {
             return count;
         }
 
-        public void setCount(final int count) {
+        public void setCount(int count) {
             this.count = count;
         }
 
@@ -702,7 +702,7 @@ public class AggregationTest extends TestBase {
             return id;
         }
 
-        public void setId(final MinMax id) {
+        public void setId(MinMax id) {
             this.id = id;
         }
 
@@ -723,7 +723,7 @@ public class AggregationTest extends TestBase {
                 return max;
             }
 
-            public void setMax(final int max) {
+            public void setMax(int max) {
                 this.max = max;
             }
 
@@ -731,7 +731,7 @@ public class AggregationTest extends TestBase {
                 return min;
             }
 
-            public void setMin(final int min) {
+            public void setMin(int min) {
                 this.min = min;
             }
 
@@ -755,7 +755,7 @@ public class AggregationTest extends TestBase {
             return count;
         }
 
-        public void setCount(final int count) {
+        public void setCount(int count) {
             this.count = count;
         }
 
@@ -763,7 +763,7 @@ public class AggregationTest extends TestBase {
             return id;
         }
 
-        public void setId(final Integer id) {
+        public void setId(Integer id) {
             this.id = id;
         }
 
@@ -805,17 +805,17 @@ public class AggregationTest extends TestBase {
         public Inventory() {
         }
 
-        Inventory(final int id) {
+        Inventory(int id) {
             this.id = id;
         }
 
-        Inventory(final int id, final String sku, final String description) {
+        Inventory(int id, String sku, String description) {
             this.id = id;
             this.sku = sku;
             this.description = description;
         }
 
-        Inventory(final int id, final String sku, final String description, final int instock) {
+        Inventory(int id, String sku, String description, int instock) {
             this.id = id;
             this.sku = sku;
             this.description = description;
@@ -826,7 +826,7 @@ public class AggregationTest extends TestBase {
             return description;
         }
 
-        public void setDescription(final String description) {
+        public void setDescription(String description) {
             this.description = description;
         }
 
@@ -834,7 +834,7 @@ public class AggregationTest extends TestBase {
             return id;
         }
 
-        public void setId(final int id) {
+        public void setId(int id) {
             this.id = id;
         }
 
@@ -842,7 +842,7 @@ public class AggregationTest extends TestBase {
             return instock;
         }
 
-        public void setInstock(final int instock) {
+        public void setInstock(int instock) {
             this.instock = instock;
         }
 
@@ -850,7 +850,7 @@ public class AggregationTest extends TestBase {
             return sku;
         }
 
-        public void setSku(final String sku) {
+        public void setSku(String sku) {
             this.sku = sku;
         }
 
@@ -864,7 +864,7 @@ public class AggregationTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -910,11 +910,11 @@ public class AggregationTest extends TestBase {
         private Order() {
         }
 
-        Order(final int id) {
+        Order(int id) {
             this.id = id;
         }
 
-        Order(final int id, final String item, final int price, final int quantity) {
+        Order(int id, String item, int price, int quantity) {
             this.id = id;
             this.item = item;
             this.price = price;
@@ -925,7 +925,7 @@ public class AggregationTest extends TestBase {
             return id;
         }
 
-        public void setId(final int id) {
+        public void setId(int id) {
             this.id = id;
         }
 
@@ -933,7 +933,7 @@ public class AggregationTest extends TestBase {
             return item;
         }
 
-        public void setItem(final String item) {
+        public void setItem(String item) {
             this.item = item;
         }
 
@@ -941,7 +941,7 @@ public class AggregationTest extends TestBase {
             return price;
         }
 
-        public void setPrice(final int price) {
+        public void setPrice(int price) {
             this.price = price;
         }
 
@@ -949,7 +949,7 @@ public class AggregationTest extends TestBase {
             return quantity;
         }
 
-        public void setQuantity(final int quantity) {
+        public void setQuantity(int quantity) {
             this.quantity = quantity;
         }
 
@@ -963,7 +963,7 @@ public class AggregationTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -998,7 +998,7 @@ public class AggregationTest extends TestBase {
             return count;
         }
 
-        public void setCount(final int count) {
+        public void setCount(int count) {
             this.count = count;
         }
 
@@ -1006,7 +1006,7 @@ public class AggregationTest extends TestBase {
             return id;
         }
 
-        public void setId(final String id) {
+        public void setId(String id) {
             this.id = id;
         }
 

@@ -21,11 +21,11 @@ public class SetReference<T> extends CollectionReference<Set<T>> {
      * @param ids         the IDs
      * @morphia.internal
      */
-    public SetReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
+    public SetReference(Datastore datastore, MappedClass mappedClass, List ids) {
         super(datastore, mappedClass, ids);
     }
 
-    SetReference(final Set<T> values) {
+    SetReference(Set<T> values) {
         this.values = values;
     }
 
@@ -35,7 +35,7 @@ public class SetReference<T> extends CollectionReference<Set<T>> {
     }
 
     @Override
-    protected void setValues(final List ids) {
+    protected void setValues(List ids) {
         values = new LinkedHashSet<>();
         values.addAll(ids);
         resolve();

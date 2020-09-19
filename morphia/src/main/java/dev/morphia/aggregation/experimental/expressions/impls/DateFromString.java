@@ -18,7 +18,7 @@ public class DateFromString extends Expression {
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
 
@@ -32,47 +32,47 @@ public class DateFromString extends Expression {
         writer.writeEndDocument();
     }
 
-    public DateFromString dateString(final String dateString) {
+    public DateFromString dateString(String dateString) {
         return dateString(Expressions.value(dateString));
     }
 
-    public DateFromString format(final Expression format) {
+    public DateFromString format(Expression format) {
         this.format = format;
         return this;
     }
 
-    public DateFromString format(final String format) {
+    public DateFromString format(String format) {
         return format(Expressions.value(format));
     }
 
-    public DateFromString dateString(final Expression dateString) {
+    public DateFromString dateString(Expression dateString) {
         this.dateString = dateString;
         return this;
     }
 
-    public DateFromString onError(final String onError) {
+    public DateFromString onError(String onError) {
         return onError(Expressions.value(onError));
     }
 
-    public DateFromString onError(final Expression onError) {
+    public DateFromString onError(Expression onError) {
         this.onError = onError;
         return this;
     }
 
-    public DateFromString onNull(final String onNull) {
+    public DateFromString onNull(String onNull) {
         return onNull(Expressions.value(onNull));
     }
 
-    public DateFromString onNull(final Expression onNull) {
+    public DateFromString onNull(Expression onNull) {
         this.onNull = onNull;
         return this;
     }
 
-    public DateFromString timeZone(final String timeZone) {
+    public DateFromString timeZone(String timeZone) {
         return timeZone(Expressions.value(timeZone));
     }
 
-    public DateFromString timeZone(final Expression timeZone) {
+    public DateFromString timeZone(Expression timeZone) {
         this.timeZone = timeZone;
         return this;
     }

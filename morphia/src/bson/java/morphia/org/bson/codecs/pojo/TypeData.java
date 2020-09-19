@@ -50,7 +50,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
      * @param <T> the type
      * @return the builder
      */
-    public static <T> Builder<T> builder(final Class<T> type) {
+    public static <T> Builder<T> builder(Class<T> type) {
         return new Builder<T>(notNull("type", type));
     }
 
@@ -60,7 +60,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
      * @param method the method to analyze
      * @return the new TypeData information
      */
-    public static TypeData<?> newInstance(final Method method) {
+    public static TypeData<?> newInstance(Method method) {
         if (isGetter(method)) {
             return newInstance(method.getGenericReturnType(), method.getReturnType());
         } else {
@@ -74,7 +74,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
      * @param field the field to analyze
      * @return the new TypeData information
      */
-    public static TypeData<?> newInstance(final Field field) {
+    public static TypeData<?> newInstance(Field field) {
         return newInstance(field.getGenericType(), field.getType());
     }
 
@@ -86,7 +86,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
      * @param <T> the type of the new TypeData instance
      * @return the new TypeData information
      */
-    public static <T> TypeData<T> newInstance(final Type genericType, final Class<T> clazz) {
+    public static <T> TypeData<T> newInstance(Type genericType, Class<T> clazz) {
         TypeData.Builder<T> builder = TypeData.builder(clazz);
         if (genericType instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) genericType;
@@ -98,7 +98,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static <T> void getNestedTypeData(final TypeData.Builder<T> builder, final Type type) {
+    private static <T> void getNestedTypeData(TypeData.Builder<T> builder, Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) type;
             TypeData.Builder paramBuilder = TypeData.builder((Class) pType.getRawType());
@@ -140,7 +140,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
         private final Class<T> type;
         private final List<TypeData<?>> typeParameters = new ArrayList<TypeData<?>>();
 
-        private Builder(final Class<T> type) {
+        private Builder(Class<T> type) {
             this.type = type;
         }
 
@@ -151,7 +151,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
          * @param <S> the type of the type parameter
          * @return this
          */
-        public <S> Builder<T> addTypeParameter(final TypeData<S> typeParameter) {
+        public <S> Builder<T> addTypeParameter(TypeData<S> typeParameter) {
             typeParameters.add(notNull("typeParameter", typeParameter));
             return this;
         }
@@ -162,7 +162,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
          * @param typeParameters the type parameters
          * @return this
          */
-        public Builder<T> addTypeParameters(final List<TypeData<?>> typeParameters) {
+        public Builder<T> addTypeParameters(List<TypeData<?>> typeParameters) {
             notNull("typeParameters", typeParameters);
             for (TypeData<?> typeParameter : typeParameters) {
                 addTypeParameter(typeParameter);
@@ -188,7 +188,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
                 + "}";
     }
 
-    private static String nestedTypeParameters(final List<TypeData<?>> typeParameters) {
+    private static String nestedTypeParameters(List<TypeData<?>> typeParameters) {
         StringBuilder builder = new StringBuilder();
         int count = 0;
         int last = typeParameters.size();
@@ -223,17 +223,17 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
         return result;
     }
 
-    private TypeData(final Class<T> type, final List<TypeData<?>> typeParameters) {
+    private TypeData(Class<T> type, List<TypeData<?>> typeParameters) {
         this.type = boxType(type);
         this.typeParameters = typeParameters;
     }
 
-    boolean isAssignableFrom(final Class<?> cls) {
+    boolean isAssignableFrom(Class<?> cls) {
         return type.isAssignableFrom(boxType(cls));
     }
 
     @SuppressWarnings("unchecked")
-    private <S> Class<S> boxType(final Class<S> clazz) {
+    private <S> Class<S> boxType(Class<S> clazz) {
         if (clazz.isPrimitive()) {
             return (Class<S>) PRIMITIVE_CLASS_MAP.get(clazz);
         } else {
@@ -256,7 +256,7 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

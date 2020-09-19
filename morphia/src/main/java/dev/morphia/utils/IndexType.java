@@ -13,7 +13,7 @@ public enum IndexType {
 
     private final Object type;
 
-    IndexType(final Object o) {
+    IndexType(Object o) {
         type = o;
     }
 
@@ -24,7 +24,7 @@ public enum IndexType {
      * @return the enum instance
      * @since 1.3
      */
-    public static IndexType fromValue(final Object value) {
+    public static IndexType fromValue(Object value) {
         for (IndexType indexType : values()) {
             if (indexType.type.equals(value)) {
                 return indexType;

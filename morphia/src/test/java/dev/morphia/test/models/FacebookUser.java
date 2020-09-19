@@ -16,7 +16,7 @@ public class FacebookUser {
     public int loginCount;
     public String username;
 
-    public FacebookUser(final long id, final String name) {
+    public FacebookUser(long id, String name) {
         this();
         this.id = id;
         username = name;

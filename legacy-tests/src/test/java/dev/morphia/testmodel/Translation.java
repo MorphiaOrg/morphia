@@ -14,7 +14,7 @@ public class Translation implements Serializable {
     public Translation() {
     }
 
-    public Translation(final String title, final String body) {
+    public Translation(String title, String body) {
         this.title = title;
         this.body = body;
     }
@@ -23,7 +23,7 @@ public class Translation implements Serializable {
         return body;
     }
 
-    public void setBody(final String body) {
+    public void setBody(String body) {
         this.body = body;
     }
 
@@ -31,7 +31,7 @@ public class Translation implements Serializable {
         return title;
     }
 
-    public void setTitle(final String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 

@@ -37,7 +37,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      * @param collection the collection in which the entity lives
      * @param id         the value of the entity's ID
      */
-    public Key(final Class<? extends T> type, final String collection, final Object id) {
+    public Key(Class<? extends T> type, String collection, Object id) {
         this.type = MorphiaProxy.class.isAssignableFrom(type) ? (Class<? extends T>) type.getSuperclass() : type;
         this.collection = collection;
         this.id = id;
@@ -49,14 +49,14 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      * @param type       the type of the entity
      * @param collection the collection in which the entity lives
      */
-    public Key(final Class<? extends T> type, final String collection) {
+    public Key(Class<? extends T> type, String collection) {
         this.type = type;
         this.collection = collection;
     }
 
     /** */
     @SuppressWarnings("unchecked")
-    private static int compareNullable(final Comparable o1, final Comparable o2) {
+    private static int compareNullable(Comparable o1, Comparable o2) {
         if (o1 == null && o2 == null) {
             return 0;
         }
@@ -70,7 +70,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
     }
 
     @Override
-    public int compareTo(final Key<T> other) {
+    public int compareTo(Key<T> other) {
         checkState(this);
         checkState(other);
 
@@ -115,7 +115,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      *
      * @param collection the collection to use
      */
-    public void setCollection(final String collection) {
+    public void setCollection(String collection) {
         this.collection = collection.intern();
     }
 
@@ -138,7 +138,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      *
      * @param clazz the type to use
      */
-    public void setType(final Class<? extends T> clazz) {
+    public void setType(Class<? extends T> clazz) {
         type = clazz;
     }
 
@@ -149,7 +149,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         return obj instanceof Key<?> && compareTo((Key<T>) obj) == 0;
 
     }
@@ -172,7 +172,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
         return bld.toString();
     }
 
-    private void checkState(final Key k) {
+    private void checkState(Key k) {
         if (k.type == null && k.collection == null) {
             throw new IllegalStateException("Collection must be specified (or a class).");
         }

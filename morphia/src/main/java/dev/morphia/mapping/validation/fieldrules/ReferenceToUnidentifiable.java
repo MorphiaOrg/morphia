@@ -21,7 +21,7 @@ import java.util.Set;
 public class ReferenceToUnidentifiable extends FieldConstraint {
 
     @Override
-    protected void check(final Mapper mapper, final MappedClass mc, final MappedField mf, final Set<ConstraintViolation> ve) {
+    protected void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(Reference.class)) {
             final Class realType = /*(mf.isScalarValue()) ? mf.getType() : */mf.getNormalizedType();
 

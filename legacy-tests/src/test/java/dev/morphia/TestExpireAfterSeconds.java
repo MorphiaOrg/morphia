@@ -30,7 +30,7 @@ public class TestExpireAfterSeconds extends TestBase {
         Assert.assertNotNull(indexes);
         Assert.assertEquals(2, indexes.size());
         Document index = null;
-        for (final Document candidateIndex : indexes) {
+        for (Document candidateIndex : indexes) {
             if (candidateIndex.containsKey("expireAfterSeconds")) {
                 index = candidateIndex;
             }
@@ -52,7 +52,7 @@ public class TestExpireAfterSeconds extends TestBase {
         Assert.assertNotNull(indexes);
         Assert.assertEquals(2, indexes.size());
         Document index = null;
-        for (final Document candidateIndex : indexes) {
+        for (Document candidateIndex : indexes) {
             if (candidateIndex.containsKey("expireAfterSeconds")) {
                 index = candidateIndex;
             }

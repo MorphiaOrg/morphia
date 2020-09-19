@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class RedactCodec extends StageCodec<Redact> {
-    public RedactCodec(final Mapper mapper) {
+    public RedactCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class RedactCodec extends StageCodec<Redact> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Redact value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Redact value, EncoderContext encoderContext) {
        value.getExpression().encode(getMapper(), writer, encoderContext);
     }
 }

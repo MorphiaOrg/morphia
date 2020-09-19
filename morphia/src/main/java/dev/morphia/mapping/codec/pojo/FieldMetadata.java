@@ -39,7 +39,7 @@ public final class FieldMetadata<T> {
     private final List<Annotation> annotations = new ArrayList<>();
     private TypeParameterMap typeParameterMap;
     private List<TypeData<?>> typeParameters;
-    private Field field;
+    private final Field field;
 
     /**
      * Createss an instance for the field
@@ -49,10 +49,10 @@ public final class FieldMetadata<T> {
      * @param typeParameterMap    the type parameter map
      * @param parentClassTypeData the parent class type data
      */
-    public FieldMetadata(final Field field,
-                         final TypeData<T> typeData,
-                         final TypeParameterMap typeParameterMap,
-                         final TypeData<?> parentClassTypeData) {
+    public FieldMetadata(Field field,
+                         TypeData<T> typeData,
+                         TypeParameterMap typeParameterMap,
+                         TypeData<?> parentClassTypeData) {
         this.field = field;
         this.name = field.getName();
         this.typeData = typeData;
@@ -69,7 +69,7 @@ public final class FieldMetadata<T> {
      * @param annotation the annotation
      * @return this
      */
-    public FieldMetadata<T> addAnnotation(final Annotation annotation) {
+    public FieldMetadata<T> addAnnotation(Annotation annotation) {
         annotations.add(annotation);
         return this;
     }
@@ -124,7 +124,7 @@ public final class FieldMetadata<T> {
      * @param <S>              the parent's type
      * @return this
      */
-    public <S> FieldMetadata<T> typeParameterInfo(final TypeParameterMap typeParameterMap, final TypeData<S> parentTypeData) {
+    public <S> FieldMetadata<T> typeParameterInfo(TypeParameterMap typeParameterMap, TypeData<S> parentTypeData) {
         if (typeParameterMap != null && parentTypeData != null) {
             this.typeParameterMap = typeParameterMap;
             this.typeParameters = parentTypeData.getTypeParameters();

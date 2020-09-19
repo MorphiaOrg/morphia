@@ -1,13 +1,11 @@
 package dev.morphia.mapping.validation;
 
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
 import dev.morphia.mapping.validation.classrules.EmbeddedAndId;
@@ -23,6 +21,8 @@ import dev.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
 import dev.morphia.mapping.validation.fieldrules.MapKeyTypeConstraint;
 import dev.morphia.mapping.validation.fieldrules.ReferenceToUnidentifiable;
 import dev.morphia.mapping.validation.fieldrules.VersionMisuse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +38,14 @@ import static java.util.Collections.sort;
 public class MappingValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);
-    private MorphiaInstanceCreator creator;
+    private final MorphiaInstanceCreator creator;
 
     /**
      * Creates a mapping validator
      *
      * @param objectFactory the object factory to be used when creating throw away instances to use in validation
      */
-    public MappingValidator(final MorphiaInstanceCreator objectFactory) {
+    public MappingValidator(MorphiaInstanceCreator objectFactory) {
         creator = objectFactory;
     }
 
@@ -55,11 +55,11 @@ public class MappingValidator {
      * @param mappedClass the MappedClass to validate
      * @param mapper the Mapper to use for validation
      */
-    public void validate(final Mapper mapper, final MappedClass mappedClass) {
+    public void validate(Mapper mapper, MappedClass mappedClass) {
         final Set<ConstraintViolation> ve = new TreeSet<>((o1, o2) -> o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1);
 
         final List<ClassConstraint> rules = getConstraints();
-        for (final ClassConstraint v : rules) {
+        for (ClassConstraint v : rules) {
             v.check(mapper, mappedClass, ve);
         }
 
@@ -72,12 +72,12 @@ public class MappingValidator {
 
             // sort by class to make it more readable
             final List<LogLine> l = new ArrayList<>();
-            for (final ConstraintViolation v : ve) {
+            for (ConstraintViolation v : ve) {
                 l.add(new LogLine(v));
             }
             sort(l);
 
-            for (final LogLine line : l) {
+            for (LogLine line : l) {
                 line.log(LOG);
             }
         }
@@ -118,12 +118,12 @@ public class MappingValidator {
     static class LogLine implements Comparable<LogLine> {
         private final ConstraintViolation v;
 
-        LogLine(final ConstraintViolation v) {
+        LogLine(ConstraintViolation v) {
             this.v = v;
         }
 
         @Override
-        public int compareTo(final LogLine o) {
+        public int compareTo(LogLine o) {
             return v.getPrefix().compareTo(o.v.getPrefix());
         }
 
@@ -133,7 +133,7 @@ public class MappingValidator {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -147,7 +147,7 @@ public class MappingValidator {
 
         }
 
-        void log(final Logger logger) {
+        void log(Logger logger) {
             switch (v.getLevel()) {
                 case SEVERE:
                     logger.error(v.render());

@@ -137,7 +137,7 @@ public class EnumMappingTest extends TestBase {
 
         private final String text;
 
-        WebTemplateType(final String text) {
+        WebTemplateType(String text) {
             this.text = text;
         }
 
@@ -171,7 +171,7 @@ public class EnumMappingTest extends TestBase {
         @Id
         private ObjectId id;
 
-        public void add(final WebTemplateType type, final WebTemplate template) {
+        public void add(WebTemplateType type, WebTemplate template) {
             map.put(type, template);
         }
 
@@ -184,7 +184,7 @@ public class EnumMappingTest extends TestBase {
         @Id
         private ObjectId id;
 
-        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
+        public void add(WebTemplateType type, List<WebTemplate> templates) {
             mapWithArrayList.put(type, templates);
         }
     }
@@ -195,7 +195,7 @@ public class EnumMappingTest extends TestBase {
         @Id
         private ObjectId id;
 
-        public void add(final WebTemplateType type, final List<WebTemplate> templates) {
+        public void add(WebTemplateType type, List<WebTemplate> templates) {
             mapWithList.put(type, templates);
         }
     }
@@ -209,7 +209,7 @@ public class EnumMappingTest extends TestBase {
         public WebTemplate() {
         }
 
-        public WebTemplate(final String content) {
+        public WebTemplate(String content) {
             this.content = content;
         }
 
@@ -222,7 +222,7 @@ public class EnumMappingTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

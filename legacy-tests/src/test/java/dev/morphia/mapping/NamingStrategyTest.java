@@ -10,7 +10,7 @@ public class NamingStrategyTest extends TestBase {
         compare("TestValue", "test_value", "testValue", "test-value");
     }
 
-    private void compare(final String input, final String snake, final String camel, final String kebab) {
+    private void compare(String input, String snake, String camel, String kebab) {
         Assert.assertEquals("Should be unchanged", input, NamingStrategy.identity().apply(input));
         Assert.assertEquals("Should be in snake case", snake, NamingStrategy.snakeCase().apply(input));
         Assert.assertEquals("Should be in camel case", camel, NamingStrategy.camelCase().apply(input));

@@ -15,12 +15,12 @@ import java.net.URI;
  */
 public class URICodec implements Codec<URI> {
     @Override
-    public URI decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public URI decode(BsonReader reader, DecoderContext decoderContext) {
         return URI.create(reader.readString());
     }
 
     @Override
-    public void encode(final BsonWriter writer, final URI value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, URI value, EncoderContext encoderContext) {
         try {
             writer.writeString(value.toURL().toExternalForm());
         } catch (MalformedURLException e) {

@@ -133,7 +133,7 @@ public class EmbeddedMappingTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -160,13 +160,13 @@ public class EmbeddedMappingTest extends TestBase {
         private Delta() {
         }
 
-        public Delta(final Map<String, Object> before, final Map<String, Object> after) {
+        public Delta(Map<String, Object> before, Map<String, Object> after) {
             this.before = before;
             this.after = after;
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -197,12 +197,12 @@ public class EmbeddedMappingTest extends TestBase {
         public NestedImpl() {
         }
 
-        public NestedImpl(final String field) {
+        public NestedImpl(String field) {
             this.field = field;
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -237,7 +237,7 @@ public class EmbeddedMappingTest extends TestBase {
         private Nested nested;
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

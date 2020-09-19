@@ -18,7 +18,7 @@ public abstract class NamingStrategy {
     public static NamingStrategy identity() {
         return new NamingStrategy() {
             @Override
-            public String apply(final String value) {
+            public String apply(String value) {
                 return value;
             }
         };
@@ -32,7 +32,7 @@ public abstract class NamingStrategy {
     public static NamingStrategy lowerCase() {
         return new NamingStrategy() {
             @Override
-            public String apply(final String value) {
+            public String apply(String value) {
                 return value.toLowerCase();
             }
         };
@@ -47,7 +47,7 @@ public abstract class NamingStrategy {
     public static NamingStrategy snakeCase() {
         return new NamingStrategy() {
             @Override
-            public String apply(final String value) {
+            public String apply(String value) {
                 List<String> groups = groupByCapitals(value);
 
                 StringJoiner joiner = new StringJoiner("_");
@@ -68,7 +68,7 @@ public abstract class NamingStrategy {
     public static NamingStrategy camelCase() {
         return new NamingStrategy() {
             @Override
-            public String apply(final String value) {
+            public String apply(String value) {
                 List<String> groups = groupByCapitals(value);
 
                 StringJoiner joiner = new StringJoiner("");
@@ -90,7 +90,7 @@ public abstract class NamingStrategy {
     public static NamingStrategy kebabCase() {
         return new NamingStrategy() {
             @Override
-            public String apply(final String value) {
+            public String apply(String value) {
                 List<String> groups = groupByCapitals(value);
 
                 StringJoiner joiner = new StringJoiner("-");
@@ -111,7 +111,7 @@ public abstract class NamingStrategy {
      */
     public abstract String apply(String value);
 
-    private static List<String> groupByCapitals(final String value) {
+    private static List<String> groupByCapitals(String value) {
         List<String> groups = new ArrayList<>();
         StringBuilder builder = null;
         int index = 0;

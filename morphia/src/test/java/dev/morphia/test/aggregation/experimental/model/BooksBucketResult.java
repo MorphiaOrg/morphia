@@ -9,7 +9,7 @@ public class BooksBucketResult extends BucketAutoResult {
         return authors;
     }
 
-    public void setAuthors(final Set<String> authors) {
+    public void setAuthors(Set<String> authors) {
         this.authors = authors;
     }
 }

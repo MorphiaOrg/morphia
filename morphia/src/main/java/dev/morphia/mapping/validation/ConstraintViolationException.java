@@ -17,7 +17,7 @@ public class ConstraintViolationException extends MappingException {
      *
      * @param ve the violations
      */
-    public ConstraintViolationException(final Collection<ConstraintViolation> ve) {
+    public ConstraintViolationException(Collection<ConstraintViolation> ve) {
         super(createString(ve.toArray(new ConstraintViolation[ve.size()])));
     }
 
@@ -26,14 +26,14 @@ public class ConstraintViolationException extends MappingException {
      *
      * @param ve the violations
      */
-    public ConstraintViolationException(final ConstraintViolation... ve) {
+    public ConstraintViolationException(ConstraintViolation... ve) {
         super(createString(ve));
     }
 
-    private static String createString(final ConstraintViolation[] ve) {
+    private static String createString(ConstraintViolation[] ve) {
         final StringBuilder sb = new StringBuilder(128);
         sb.append("Number of violations: " + ve.length + " \n");
-        for (final ConstraintViolation validationError : ve) {
+        for (ConstraintViolation validationError : ve) {
             sb.append(validationError.render());
         }
         return sb.toString();

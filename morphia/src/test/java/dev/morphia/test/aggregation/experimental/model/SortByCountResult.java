@@ -13,7 +13,7 @@ public class SortByCountResult {
         return count;
     }
 
-    public void setCount(final int count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
@@ -21,7 +21,7 @@ public class SortByCountResult {
         return id;
     }
 
-    public void setId(final String id) {
+    public void setId(String id) {
         this.id = id;
     }
 

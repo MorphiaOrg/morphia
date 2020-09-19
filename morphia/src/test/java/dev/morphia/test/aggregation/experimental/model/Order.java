@@ -17,11 +17,11 @@ public class Order {
     private Order() {
     }
 
-    public Order(final int id) {
+    public Order(int id) {
         this.id = id;
     }
 
-    public Order(final int id, final String item, final int price, final int quantity) {
+    public Order(int id, String item, int price, int quantity) {
         this.id = id;
         this.item = item;
         this.price = price;
@@ -32,7 +32,7 @@ public class Order {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -40,7 +40,7 @@ public class Order {
         return inventoryDocs;
     }
 
-    public void setInventoryDocs(final List<Inventory> inventoryDocs) {
+    public void setInventoryDocs(List<Inventory> inventoryDocs) {
         this.inventoryDocs = inventoryDocs;
     }
 
@@ -48,7 +48,7 @@ public class Order {
         return item;
     }
 
-    public void setItem(final String item) {
+    public void setItem(String item) {
         this.item = item;
     }
 
@@ -56,7 +56,7 @@ public class Order {
         return price;
     }
 
-    public void setPrice(final int price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -64,7 +64,7 @@ public class Order {
         return quantity;
     }
 
-    public void setQuantity(final int quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -78,7 +78,7 @@ public class Order {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

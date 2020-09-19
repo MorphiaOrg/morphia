@@ -49,7 +49,7 @@ public class PathTarget {
      * @param root   root
      * @param path   path
      */
-    public PathTarget(final Mapper mapper, final MappedClass root, final String path) {
+    public PathTarget(Mapper mapper, MappedClass root, String path) {
         this(mapper, root, path, true);
     }
 
@@ -61,7 +61,7 @@ public class PathTarget {
      * @param path          path
      * @param validateNames true if names should be validated
      */
-    public PathTarget(final Mapper mapper, final MappedClass root, final String path, final boolean validateNames) {
+    public PathTarget(Mapper mapper, MappedClass root, String path, boolean validateNames) {
         segments = asList(path.split("\\."));
         this.root = root;
         this.mapper = mapper;
@@ -77,7 +77,7 @@ public class PathTarget {
      * @param path   the path
      * @param <T>    the root type
      */
-    public <T> PathTarget(final Mapper mapper, final Class<T> type, final String path) {
+    public <T> PathTarget(Mapper mapper, Class<T> type, String path) {
         this(mapper, mapper.getMappedClass(type), path, true);
     }
 
@@ -90,7 +90,7 @@ public class PathTarget {
      * @param validateNames true if names should be validated
      * @param <T>           the root type
      */
-    public <T> PathTarget(final Mapper mapper, final Class<T> type, final String path, final boolean validateNames) {
+    public <T> PathTarget(Mapper mapper, Class<T> type, String path, boolean validateNames) {
         this(mapper, mapper.getMappedClass(type), path, validateNames);
     }
 
@@ -168,11 +168,11 @@ public class PathTarget {
         throw new ValidationException(Sofia.invalidPathTarget(translatedPath(), root.getType().getName()));
     }
 
-    private void translate(final String nameToStore) {
+    private void translate(String nameToStore) {
         segments.set(position - 1, nameToStore);
     }
 
-    private MappedField resolveField(final String segment) {
+    private MappedField resolveField(String segment) {
         if (context != null) {
             MappedField mf = context.getMappedField(segment);
             if (mf == null) {

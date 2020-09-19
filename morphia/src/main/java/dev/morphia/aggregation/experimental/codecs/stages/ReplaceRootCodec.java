@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class ReplaceRootCodec extends StageCodec<ReplaceRoot> {
-    public ReplaceRootCodec(final Mapper mapper) {
+    public ReplaceRootCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class ReplaceRootCodec extends StageCodec<ReplaceRoot> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final ReplaceRoot replace, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, ReplaceRoot replace, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName("newRoot");
         if(replace.getValue() != null) {

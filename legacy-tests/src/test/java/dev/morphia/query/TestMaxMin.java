@@ -181,7 +181,7 @@ public class TestMaxMin extends TestBase {
         private ObjectId id;
         private String testField;
 
-        private IndexedEntity(final String testField) {
+        private IndexedEntity(String testField) {
             this.testField = testField;
         }
 

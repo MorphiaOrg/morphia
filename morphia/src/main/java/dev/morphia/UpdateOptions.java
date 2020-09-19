@@ -40,7 +40,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     private ClientSession clientSession;
 
     @Override
-    public UpdateOptions clientSession(final ClientSession clientSession) {
+    public UpdateOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -63,31 +63,31 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * @param multi true for multiple updates
      * @return this
      */
-    public UpdateOptions multi(final boolean multi) {
+    public UpdateOptions multi(boolean multi) {
         this.multi = multi;
         return this;
     }
 
     @Override
-    public UpdateOptions upsert(final boolean upsert) {
+    public UpdateOptions upsert(boolean upsert) {
         super.upsert(upsert);
         return this;
     }
 
     @Override
-    public UpdateOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+    public UpdateOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
         super.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
     @Override
-    public UpdateOptions collation(final Collation collation) {
+    public UpdateOptions collation(Collation collation) {
         super.collation(collation);
         return this;
     }
 
     @Override
-    public UpdateOptions arrayFilters(final List<? extends Bson> arrayFilters) {
+    public UpdateOptions arrayFilters(List<? extends Bson> arrayFilters) {
         super.arrayFilters(arrayFilters);
         return this;
     }
@@ -107,7 +107,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * @param writeConcern the write concern
      * @return this
      */
-    public UpdateOptions writeConcern(final WriteConcern writeConcern) {
+    public UpdateOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }

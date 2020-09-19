@@ -33,7 +33,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     private Document hint;
 
     @Override
-    public <C> MongoCollection<C> prepare(final MongoCollection<C> collection) {
+    public <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
         MongoCollection<C> updated = collection;
         if (writeConcern() != null) {
             updated = updated.withWriteConcern(writeConcern());
@@ -61,7 +61,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param allowDiskUse true to enable
      * @return this
      */
-    public AggregationOptions allowDiskUse(final boolean allowDiskUse) {
+    public AggregationOptions allowDiskUse(boolean allowDiskUse) {
         this.allowDiskUse = allowDiskUse;
         return this;
     }
@@ -77,8 +77,8 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @return the updated collection
      * @morphia.internal
      */
-    public <S, T> AggregateIterable<S> apply(final List<Document> documents, final MongoCollection<T> collection,
-                                             final Class<S> resultType) {
+    public <S, T> AggregateIterable<S> apply(List<Document> documents, MongoCollection<T> collection,
+                                             Class<S> resultType) {
         MongoCollection<T> bound = collection;
         if (readConcern != null) {
             bound = bound.withReadConcern(readConcern);
@@ -109,7 +109,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param unit the target unit type
      * @return the configuration value
      */
-    public long getMaxTime(final TimeUnit unit) {
+    public long getMaxTime(TimeUnit unit) {
         return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
     }
 
@@ -126,7 +126,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param batchSize the size
      * @return this
      */
-    public AggregationOptions batchSize(final int batchSize) {
+    public AggregationOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
         return this;
     }
@@ -148,7 +148,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @mongodb.server.release 3.6
      * @since 3.6
      */
-    public AggregationOptions hint(final String hint) {
+    public AggregationOptions hint(String hint) {
         this.hint = new Document("hint", hint);
         return this;
     }
@@ -169,13 +169,13 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param bypassDocumentValidation true to enable the bypass
      * @return this
      */
-    public AggregationOptions bypassDocumentValidation(final boolean bypassDocumentValidation) {
+    public AggregationOptions bypassDocumentValidation(boolean bypassDocumentValidation) {
         this.bypassDocumentValidation = bypassDocumentValidation;
         return this;
     }
 
     @Override
-    public AggregationOptions clientSession(final ClientSession clientSession) {
+    public AggregationOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -200,7 +200,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param collation the collation to use
      * @return this
      */
-    public AggregationOptions collation(final Collation collation) {
+    public AggregationOptions collation(Collation collation) {
         this.collation = collation;
         return this;
     }
@@ -268,7 +268,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param maxTimeMS the max time in milliseconds
      * @return this
      */
-    public AggregationOptions maxTimeMS(final long maxTimeMS) {
+    public AggregationOptions maxTimeMS(long maxTimeMS) {
         this.maxTimeMS = maxTimeMS;
         return this;
     }
@@ -286,7 +286,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param readConcern the read concern to use
      * @return this
      */
-    public AggregationOptions readConcern(final ReadConcern readConcern) {
+    public AggregationOptions readConcern(ReadConcern readConcern) {
         this.readConcern = readConcern;
         return this;
     }
@@ -304,7 +304,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param readPreference the read preference
      * @return this
      */
-    public AggregationOptions readPreference(final ReadPreference readPreference) {
+    public AggregationOptions readPreference(ReadPreference readPreference) {
         this.readPreference = readPreference;
         return this;
     }
@@ -322,7 +322,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param writeConcern the write concern
      * @return this
      */
-    public AggregationOptions writeConcern(final WriteConcern writeConcern) {
+    public AggregationOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }

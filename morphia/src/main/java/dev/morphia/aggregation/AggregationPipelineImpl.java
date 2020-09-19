@@ -45,7 +45,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @param collection the database collection on which to operate
      * @param source     the source type to aggregate
      */
-    public AggregationPipelineImpl(final Datastore datastore, final MongoCollection collection, final Class source) {
+    public AggregationPipelineImpl(Datastore datastore, MongoCollection collection, Class source) {
         this.datastore = datastore;
         this.collection = collection;
         mapper = datastore.getMapper();
@@ -61,25 +61,25 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public <U> Iterator<U> aggregate(final Class<U> target) {
+    public <U> Iterator<U> aggregate(Class<U> target) {
         return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
     }
 
     @Override
-    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options) {
         return aggregate(target, options, collection.getReadPreference());
     }
 
     @Override
-    public <U> Iterator<U> aggregate(final Class<U> target, final AggregationOptions options,
-                                     final ReadPreference readPreference) {
+    public <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options,
+                                     ReadPreference readPreference) {
         return aggregate(mapper.getCollection(target).getNamespace().getCollectionName(), target, options, readPreference);
     }
 
     @Override
-    public <U> Iterator<U> aggregate(final String collectionName, final Class<U> target,
-                                     final AggregationOptions options,
-                                     final ReadPreference readPreference) {
+    public <U> Iterator<U> aggregate(String collectionName, Class<U> target,
+                                     AggregationOptions options,
+                                     ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
 
 
@@ -88,17 +88,17 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline geoNear(final GeoNear geoNear) {
+    public AggregationPipeline geoNear(GeoNear geoNear) {
         throw new UnsupportedOperationException(Sofia.legacyOperation());
     }
 
     @Override
-    public AggregationPipeline group(final Group... groupings) {
+    public AggregationPipeline group(Group... groupings) {
         return group((String) null, groupings);
     }
 
     @Override
-    public AggregationPipeline group(final String id, final Group... groupings) {
+    public AggregationPipeline group(String id, Group... groupings) {
         Document group = new Document();
         group.put("_id", id != null ? "$" + id : null);
         for (Group grouping : groupings) {
@@ -110,7 +110,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline group(final List<Group> id, final Group... groupings) {
+    public AggregationPipeline group(List<Group> id, Group... groupings) {
         if (id != null) {
             Document idGroup = new Document();
             for (Group group : id) {
@@ -127,14 +127,14 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline limit(final int count) {
+    public AggregationPipeline limit(int count) {
         stages.add(new Document("$limit", count));
         return this;
     }
 
     @Override
-    public AggregationPipeline lookup(final String from, final String localField,
-                                      final String foreignField, final String as) {
+    public AggregationPipeline lookup(String from, String localField,
+                                      String foreignField, String as) {
         stages.add(new Document("$lookup", new Document("from", from)
                                                .append("localField", localField)
                                                .append("foreignField", foreignField)
@@ -143,41 +143,41 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline match(final Query query) {
+    public AggregationPipeline match(Query query) {
         stages.add(new Document("$match", query.disableValidation().toDocument()));
         return this;
     }
 
     @Override
-    public AggregationPipeline sample(final int sampleSize) {
+    public AggregationPipeline sample(int sampleSize) {
         stages.add(new Document("$sample", new Document("size", sampleSize)));
         return this;
     }
 
     @Override
-    public <U> Iterator<U> out(final Class<U> target) {
+    public <U> Iterator<U> out(Class<U> target) {
         return out(mapper.getCollection(target).getNamespace().getCollectionName(), target);
     }
 
     @Override
-    public <U> Iterator<U> out(final Class<U> target, final AggregationOptions options) {
+    public <U> Iterator<U> out(Class<U> target, AggregationOptions options) {
         return out(mapper.getCollection(target).getNamespace().getCollectionName(), target, options);
     }
 
     @Override
-    public <U> Iterator<U> out(final String collectionName, final Class<U> target) {
+    public <U> Iterator<U> out(String collectionName, Class<U> target) {
         return out(collectionName, target, AggregationOptions.builder().build());
     }
 
     @Override
-    public <U> Iterator<U> out(final String collectionName, final Class<U> target,
-                               final AggregationOptions options) {
+    public <U> Iterator<U> out(String collectionName, Class<U> target,
+                               AggregationOptions options) {
         stages.add(new Document("$out", collectionName));
         return aggregate(target, options);
     }
 
     @Override
-    public AggregationPipeline project(final Projection... projections) {
+    public AggregationPipeline project(Projection... projections) {
         firstStage = stages.isEmpty();
         Document document = new Document();
         for (Projection projection : projections) {
@@ -188,13 +188,13 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline skip(final int count) {
+    public AggregationPipeline skip(int count) {
         stages.add(new Document("$skip", count));
         return this;
     }
 
     @Override
-    public AggregationPipeline sort(final Sort... sorts) {
+    public AggregationPipeline sort(Sort... sorts) {
         Document sortList = new Document();
         for (Sort sort : sorts) {
             sortList.put(sort.getField(), sort.getOrder());
@@ -205,13 +205,13 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline unwind(final String field) {
+    public AggregationPipeline unwind(String field) {
         stages.add(new Document("$unwind", "$" + field));
         return this;
     }
 
     @Override
-    public AggregationPipeline unwind(final String field, final UnwindOptions options) {
+    public AggregationPipeline unwind(String field, UnwindOptions options) {
         Document unwindOptions = new Document("path", "$" + field)
                                      .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
         String includeArrayIndex = options.getIncludeArrayIndex();
@@ -223,18 +223,18 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline sortByCount(final String field) {
+    public AggregationPipeline sortByCount(String field) {
         stages.add(new Document("$sortByCount", "$" + field));
         return this;
     }
 
     @Override
-    public AggregationPipeline bucket(final String field, final List<?> boundaries) {
+    public AggregationPipeline bucket(String field, List<?> boundaries) {
         return bucket(field, boundaries, new BucketOptions());
     }
 
     @Override
-    public AggregationPipeline bucket(final String field, final List<?> boundaries, final BucketOptions options) {
+    public AggregationPipeline bucket(String field, List<?> boundaries, BucketOptions options) {
         if (boundaries == null || boundaries.size() < 2) {
             throw new RuntimeException("Boundaries list should be present and has at least 2 elements");
         }
@@ -246,12 +246,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline bucketAuto(final String field, final int bucketCount) {
+    public AggregationPipeline bucketAuto(String field, int bucketCount) {
         return bucketAuto(field, bucketCount, new BucketAutoOptions());
     }
 
     @Override
-    public AggregationPipeline bucketAuto(final String field, final int bucketCount, final BucketAutoOptions options) {
+    public AggregationPipeline bucketAuto(String field, int bucketCount, BucketAutoOptions options) {
 
         if (bucketCount < 1) {
             throw new RuntimeException("bucket count should be more than 0");
@@ -269,7 +269,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @param projection the project to apply
      * @return the Document
      */
-    private Document toDocument(final Projection projection) {
+    private Document toDocument(Projection projection) {
         String target;
         if (firstStage) {
             MappedField field = mapper.getMappedClass(source).getMappedField(projection.getTarget());
@@ -311,7 +311,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         }
     }
 
-    private Document toDocument(final Group group) {
+    private Document toDocument(Group group) {
         Document document = new Document();
 
         if (group.getAccumulator() != null) {
@@ -331,13 +331,13 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         return document;
     }
 
-    private void putIfNull(final Document document, final String name, final Object value) {
+    private void putIfNull(Document document, String name, Object value) {
         if (value != null) {
             document.put(name, value);
         }
     }
 
-    private List<Object> toExpressionArgs(final List<Object> args) {
+    private List<Object> toExpressionArgs(List<Object> args) {
         List<Object> result = new ArrayList<>();
         for (Object arg : args) {
             if (arg instanceof Projection) {

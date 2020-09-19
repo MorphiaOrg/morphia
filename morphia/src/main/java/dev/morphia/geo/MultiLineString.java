@@ -29,11 +29,11 @@ public class MultiLineString implements Geometry {
         this.coordinates = new ArrayList<LineString>();
     }
 
-    MultiLineString(final LineString... lineStrings) {
+    MultiLineString(LineString... lineStrings) {
         coordinates = Arrays.asList(lineStrings);
     }
 
-    MultiLineString(final List<LineString> coordinates) {
+    MultiLineString(List<LineString> coordinates) {
         this.coordinates = coordinates;
     }
 
@@ -49,7 +49,7 @@ public class MultiLineString implements Geometry {
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -59,11 +59,7 @@ public class MultiLineString implements Geometry {
 
         MultiLineString that = (MultiLineString) o;
 
-        if (!coordinates.equals(that.coordinates)) {
-            return false;
-        }
-
-        return true;
+        return coordinates.equals(that.coordinates);
     }
 
     @Override
@@ -79,7 +75,7 @@ public class MultiLineString implements Geometry {
     }
 
     @Override
-    public com.mongodb.client.model.geojson.MultiLineString convert(final CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.MultiLineString convert(CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.MultiLineString(crs != null ? crs.convert() : null,
             GeoJson.convertLineStrings(coordinates));
     }

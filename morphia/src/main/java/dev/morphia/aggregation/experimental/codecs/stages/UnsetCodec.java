@@ -10,7 +10,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.List;
 
 public class UnsetCodec extends StageCodec<Unset> {
-    public UnsetCodec(final Mapper mapper) {
+    public UnsetCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -20,7 +20,7 @@ public class UnsetCodec extends StageCodec<Unset> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Unset value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Unset value, EncoderContext encoderContext) {
         List<Expression> fields = value.getFields();
         if (fields.size() == 1) {
             fields.get(0).encode(getMapper(), writer, encoderContext);

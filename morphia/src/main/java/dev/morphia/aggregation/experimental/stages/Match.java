@@ -8,9 +8,9 @@ import dev.morphia.query.experimental.filters.Filter;
  * @aggregation.expression $match
  */
 public class Match extends Stage {
-    private Filter[] filters;
+    private final Filter[] filters;
 
-    protected Match(final Filter... filters) {
+    protected Match(Filter... filters) {
         super("$match");
         this.filters = filters;
     }
@@ -21,7 +21,7 @@ public class Match extends Stage {
      * @param filters the filters to apply
      * @return this
      */
-    public static Match on(final Filter... filters) {
+    public static Match on(Filter... filters) {
         return new Match(filters);
     }
 

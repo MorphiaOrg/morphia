@@ -10,14 +10,14 @@ import dev.morphia.sofia.Sofia;
  * @morphia.internal
  */
 public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> {
-    private EntityModel<T> model;
+    private final EntityModel<T> model;
 
     /**
      * Creates a factory for this type
      *
      * @param model the type's model
      */
-    public InstanceCreatorFactoryImpl(final EntityModel<T> model) {
+    public InstanceCreatorFactoryImpl(EntityModel<T> model) {
         this.model = model;
     }
 

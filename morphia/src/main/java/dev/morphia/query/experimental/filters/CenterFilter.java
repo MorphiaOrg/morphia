@@ -8,7 +8,7 @@ import org.bson.codecs.EncoderContext;
 class CenterFilter extends Filter {
     private final double radius;
 
-    protected CenterFilter(final String filterName, final String field, final Point value, final double radius) {
+    protected CenterFilter(String filterName, String field, Point value, double radius) {
         super(filterName, field, value);
         this.radius = radius;
     }
@@ -19,14 +19,14 @@ class CenterFilter extends Filter {
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(field(mapper));
         writer.writeStartDocument("$geoWithin");
 
         writer.writeStartArray(getFilterName());
         Point center = getValue();
         writer.writeStartArray();
-        for (final Double value : center.getPosition().getValues()) {
+        for (Double value : center.getPosition().getValues()) {
             writer.writeDouble(value);
         }
         writer.writeEndArray();

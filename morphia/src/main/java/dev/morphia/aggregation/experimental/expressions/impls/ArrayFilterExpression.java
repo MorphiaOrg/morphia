@@ -10,19 +10,19 @@ public class ArrayFilterExpression extends Expression {
     private final Expression conditional;
     private String as;
 
-    public ArrayFilterExpression(final Expression array, final Expression conditional) {
+    public ArrayFilterExpression(Expression array, Expression conditional) {
         super("$filter");
         this.array = array;
         this.conditional = conditional;
     }
 
-    public ArrayFilterExpression as(final String as) {
+    public ArrayFilterExpression as(String as) {
         this.as = as;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         ExpressionCodec.writeNamedExpression(mapper, writer, "input", array, encoderContext);

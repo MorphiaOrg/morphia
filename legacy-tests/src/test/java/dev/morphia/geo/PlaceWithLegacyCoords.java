@@ -16,7 +16,7 @@ public class PlaceWithLegacyCoords {
     private double[] location = new double[2];
     private String name;
 
-    public PlaceWithLegacyCoords(final double[] location, final String name) {
+    public PlaceWithLegacyCoords(double[] location, String name) {
         this.location = location;
         this.name = name;
     }
@@ -33,7 +33,7 @@ public class PlaceWithLegacyCoords {
 
     // equals(), hashCode() and toString() all needed for testing
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

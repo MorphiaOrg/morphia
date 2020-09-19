@@ -21,7 +21,7 @@ public final class Route {
     Route() {
     }
 
-    public Route(final String name, final LineString route) {
+    public Route(String name, LineString route) {
         this.name = name;
         this.route = route;
     }
@@ -34,7 +34,7 @@ public final class Route {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

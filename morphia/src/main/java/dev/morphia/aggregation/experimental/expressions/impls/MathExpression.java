@@ -23,7 +23,7 @@ public class MathExpression extends Expression {
      * @param operands
      * @morphia.internal
      */
-    public MathExpression(final String operation, final List<Expression> operands) {
+    public MathExpression(String operation, List<Expression> operands) {
         super(operation);
         this.operands = operands;
     }
@@ -33,19 +33,19 @@ public class MathExpression extends Expression {
      * @param operand
      * @morphia.internal
      */
-    public MathExpression(final String operation, final Expression operand) {
+    public MathExpression(String operation, Expression operand) {
         super(operation);
         this.operands = asList(operand);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeName(getOperation());
         if (operands.size() > 1) {
             writer.writeStartArray();
         }
-        for (final Expression operand : operands) {
+        for (Expression operand : operands) {
             if (operand != null) {
                 ExpressionCodec.writeUnnamedExpression(mapper, writer, operand, encoderContext);
             } else {

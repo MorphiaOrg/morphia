@@ -359,7 +359,7 @@ public class TestDatastore extends TestBase {
     }
 
 
-    private void testFirstDatastore(final Datastore ds1) {
+    private void testFirstDatastore(Datastore ds1) {
         final FacebookUser user = ds1.find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                                      .next();
         Assert.assertNotNull(user);
@@ -375,7 +375,7 @@ public class TestDatastore extends TestBase {
                              .tryNext());
     }
 
-    private void testSecondDatastore(final Datastore ds2) {
+    private void testSecondDatastore(Datastore ds2) {
         Assert.assertNull(ds2.find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                              .tryNext());
         Assert.assertNull(ds2.find(FacebookUser.class).filter(eq("id", 3)).iterator(new FindOptions().limit(1))
@@ -410,7 +410,7 @@ public class TestDatastore extends TestBase {
         @Reference
         private final List<FacebookUser> friends = new ArrayList<>();
 
-        public FacebookUser(final long id, final String name) {
+        public FacebookUser(long id, String name) {
             this();
             this.id = id;
             username = name;
@@ -435,7 +435,7 @@ public class TestDatastore extends TestBase {
         private Keys() {
         }
 
-        public Keys(final Key<Rectangle> rectKey, final List<Key<FacebookUser>> users) {
+        public Keys(Key<Rectangle> rectKey, List<Key<FacebookUser>> users) {
             rect = rectKey;
             this.users = users;
         }
@@ -459,13 +459,13 @@ public class TestDatastore extends TestBase {
         private static boolean foundDatastore;
 
         @PrePersist
-        void prePersist(final Datastore datastore) {
+        void prePersist(Datastore datastore) {
             foundDatastore = datastore != null;
             prePersist = true;
         }
 
         @PrePersist
-        void prePersist(final LifecycleTestObj obj) {
+        void prePersist(LifecycleTestObj obj) {
             if (obj == null) {
                 throw new RuntimeException();
             }
@@ -497,7 +497,7 @@ public class TestDatastore extends TestBase {
         private boolean preLoadWithParam;
 
         @PrePersist
-        public Document prePersistWithParamAndReturn(final Document document) {
+        public Document prePersistWithParamAndReturn(Document document) {
             if (prePersistWithParamAndReturn) {
                 throw new RuntimeException("already called");
             }
@@ -506,7 +506,7 @@ public class TestDatastore extends TestBase {
         }
 
         @PrePersist
-        protected void prePersistWithParam(final Document document) {
+        protected void prePersistWithParam(Document document) {
             if (prePersistWithParam) {
                 throw new RuntimeException("already called");
             }
@@ -532,7 +532,7 @@ public class TestDatastore extends TestBase {
         }
 
         @PostLoad
-        void postLoadWithParam(final Document document) {
+        void postLoadWithParam(Document document) {
             if (postLoadWithParam) {
                 throw new RuntimeException("already called");
             }
@@ -540,7 +540,7 @@ public class TestDatastore extends TestBase {
         }
 
         @PostPersist
-        void postPersistWithParam(final Document document) {
+        void postPersistWithParam(Document document) {
             postPersistWithParam = true;
             if (!document.containsKey("_id")) {
                 throw new RuntimeException("missing " + "_id");
@@ -557,12 +557,12 @@ public class TestDatastore extends TestBase {
         }
 
         @PreLoad
-        void preLoadWithParam(final Document document) {
+        void preLoadWithParam(Document document) {
             document.put("preLoadWithParam", true);
         }
 
         @PreLoad
-        Document preLoadWithParamAndReturn(final Document document) {
+        Document preLoadWithParamAndReturn(Document document) {
             final Document retObj = new Document();
             retObj.putAll(document);
             retObj.put("preLoadWithParamAndReturn", true);

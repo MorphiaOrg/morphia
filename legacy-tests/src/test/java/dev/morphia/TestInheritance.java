@@ -43,7 +43,7 @@ public class TestInheritance extends TestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -51,7 +51,7 @@ public class TestInheritance extends TestBase {
             return name;
         }
 
-        public void setName(final String name) {
+        public void setName(String name) {
             this.name = name;
         }
     }

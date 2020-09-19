@@ -53,7 +53,7 @@ public class UpdateOperatorTaglet extends ManualTaglet {
         return buf.toString();
     }
 
-    protected String genLink(final String text) {
+    protected String genLink(String text) {
         return String.format("<a href='%s%s'>Update Operator:  %s</a>", getBaseDocURI(), text.replace("$", ""), text);
     }
 

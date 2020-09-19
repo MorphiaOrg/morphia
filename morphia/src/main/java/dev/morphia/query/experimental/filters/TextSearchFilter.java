@@ -15,7 +15,7 @@ public class TextSearchFilter extends Filter {
     private Boolean caseSensitive;
     private Boolean diacriticSensitive;
 
-    protected TextSearchFilter(final String searchText) {
+    protected TextSearchFilter(String searchText) {
         super("$text");
         this.searchText = searchText;
     }
@@ -26,7 +26,7 @@ public class TextSearchFilter extends Filter {
      * @param caseSensitive the case sensitivity
      * @return this
      */
-    public TextSearchFilter caseSensitive(final Boolean caseSensitive) {
+    public TextSearchFilter caseSensitive(Boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
         return this;
     }
@@ -37,13 +37,13 @@ public class TextSearchFilter extends Filter {
      * @param diacriticSensitive the diacritic sensitivity
      * @return this
      */
-    public TextSearchFilter diacriticSensitive(final Boolean diacriticSensitive) {
+    public TextSearchFilter diacriticSensitive(Boolean diacriticSensitive) {
         this.diacriticSensitive = diacriticSensitive;
         return this;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(getFilterName());
         writeNamedValue("$search", searchText, mapper, writer, context);
         if (language != null) {
@@ -64,7 +64,7 @@ public class TextSearchFilter extends Filter {
      * @param language the language
      * @return this
      */
-    public TextSearchFilter language(final String language) {
+    public TextSearchFilter language(String language) {
         this.language = language;
         return this;
     }

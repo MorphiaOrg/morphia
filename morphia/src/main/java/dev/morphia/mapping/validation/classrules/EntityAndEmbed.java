@@ -20,7 +20,7 @@ import static java.lang.String.format;
 public class EntityAndEmbed implements ClassConstraint {
 
     @Override
-    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
 
         if (mc.getEntityAnnotation() != null && mc.getEmbeddedAnnotation() != null) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(), format("Cannot have both @%s and @%s annotation at class level.",

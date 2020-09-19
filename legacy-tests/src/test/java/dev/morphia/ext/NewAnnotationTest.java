@@ -75,22 +75,22 @@ public class NewAnnotationTest extends TestBase {
 
     private static class ToLowercaseHelper implements EntityInterceptor {
         @Override
-        public void postLoad(final Object ent, final Document document, final Mapper mapper) {
+        public void postLoad(Object ent, Document document, Mapper mapper) {
         }
 
         @Override
-        public void postPersist(final Object ent, final Document document, final Mapper mapper) {
+        public void postPersist(Object ent, Document document, Mapper mapper) {
         }
 
         @Override
-        public void preLoad(final Object ent, final Document document, final Mapper mapper) {
+        public void preLoad(Object ent, Document document, Mapper mapper) {
         }
 
         @Override
-        public void prePersist(final Object ent, final Document document, final Mapper mapper) {
+        public void prePersist(Object ent, Document document, Mapper mapper) {
             final MappedClass mc = mapper.getMappedClass(ent.getClass());
             final List<MappedField> toLowercase = mc.getFields(Lowercase.class);
-            for (final MappedField mf : toLowercase) {
+            for (MappedField mf : toLowercase) {
                 try {
                     final Object fieldValue = mf.getFieldValue(ent);
                     document.put(mf.getMappedFieldName() + "_lowercase", fieldValue.toString().toLowerCase());

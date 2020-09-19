@@ -25,12 +25,12 @@ import static dev.morphia.mapping.codec.Conversions.convert;
 public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
     private final MorphiaCodec<T> morphiaCodec;
 
-    protected EntityDecoder(final MorphiaCodec<T> morphiaCodec) {
+    protected EntityDecoder(MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
     }
 
     @Override
-    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public T decode(BsonReader reader, DecoderContext decoderContext) {
         T entity;
         if (morphiaCodec.getMappedClass().hasLifecycle(PreLoad.class)
             || morphiaCodec.getMappedClass().hasLifecycle(PostLoad.class)
@@ -53,8 +53,8 @@ public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
     }
 
     @SuppressWarnings("unchecked")
-    protected <S> void decodeModel(final BsonReader reader, final DecoderContext decoderContext,
-                                   final MorphiaInstanceCreator<T> instanceCreator, final FieldModel<S> model) {
+    protected <S> void decodeModel(BsonReader reader, DecoderContext decoderContext,
+                                   MorphiaInstanceCreator<T> instanceCreator, FieldModel<S> model) {
 
         if (model != null) {
             final BsonReaderMark mark = reader.getMark();
@@ -69,15 +69,15 @@ public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
             } catch (BsonInvalidOperationException e) {
                 mark.reset();
                 final Object value = morphiaCodec.getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
-                instanceCreator.set((S) convert(value, model.getTypeData().getType()), model);
+                instanceCreator.set(convert(value, model.getTypeData().getType()), model);
             }
         } else {
             reader.skipValue();
         }
     }
 
-    protected void decodeProperties(final BsonReader reader, final DecoderContext decoderContext,
-                                    final MorphiaInstanceCreator<T> instanceCreator) {
+    protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
+                                    MorphiaInstanceCreator<T> instanceCreator) {
         reader.readStartDocument();
         EntityModel<T> classModel = morphiaCodec.getEntityModel();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -92,9 +92,9 @@ public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
     }
 
     @SuppressWarnings("unchecked")
-    protected Codec<T> getCodecFromDocument(final BsonReader reader, final boolean useDiscriminator, final String discriminatorKey,
-                                            final CodecRegistry registry, final DiscriminatorLookup discriminatorLookup,
-                                            final Codec<T> defaultCodec) {
+    protected Codec<T> getCodecFromDocument(BsonReader reader, boolean useDiscriminator, String discriminatorKey,
+                                            CodecRegistry registry, DiscriminatorLookup discriminatorLookup,
+                                            Codec<T> defaultCodec) {
         Codec<T> codec = null;
         if (useDiscriminator) {
             BsonReaderMark mark = reader.getMark();
@@ -117,11 +117,11 @@ public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
         return codec != null ? codec : defaultCodec;
     }
 
-    protected MorphiaInstanceCreator<T> getInstanceCreator(final EntityModel<T> classModel) {
+    protected MorphiaInstanceCreator<T> getInstanceCreator(EntityModel<T> classModel) {
         return classModel.getInstanceCreator();
     }
 
-    private T decodeWithLifecycle(final BsonReader reader, final DecoderContext decoderContext) {
+    private T decodeWithLifecycle(BsonReader reader, DecoderContext decoderContext) {
         final T entity;
         final MorphiaInstanceCreator<T> instanceCreator = getInstanceCreator(morphiaCodec.getEntityModel());
         entity = instanceCreator.getInstance();

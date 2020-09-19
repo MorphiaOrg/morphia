@@ -78,7 +78,7 @@ public class CompoundIdTest extends TestBase {
         CompoundId() {
         }
 
-        CompoundId(final String n) {
+        CompoundId(String n) {
             name = n;
         }
 
@@ -90,7 +90,7 @@ public class CompoundIdTest extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals(Object obj) {
             if (!(obj instanceof CompoundId)) {
                 return false;
             }
@@ -109,7 +109,7 @@ public class CompoundIdTest extends TestBase {
         private CompoundIdEntity sibling;
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -147,14 +147,14 @@ public class CompoundIdTest extends TestBase {
         public ConfigKey() {
         }
 
-        public ConfigKey(final String env, final String key, final String subenv) {
+        public ConfigKey(String env, String key, String subenv) {
             this.env = env;
             this.key = key;
             this.subenv = subenv;
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -196,7 +196,7 @@ public class CompoundIdTest extends TestBase {
         public ConfigEntry() {
         }
 
-        public ConfigEntry(final ConfigKey key) {
+        public ConfigEntry(ConfigKey key) {
             this.key = key;
         }
 
@@ -204,7 +204,7 @@ public class CompoundIdTest extends TestBase {
             return key;
         }
 
-        public void setKey(final ConfigKey key) {
+        public void setKey(ConfigKey key) {
             this.key = key;
         }
 
@@ -212,7 +212,7 @@ public class CompoundIdTest extends TestBase {
             return lastModifiedMillis;
         }
 
-        public void setLastModifiedMillis(final long lastModifiedMillis) {
+        public void setLastModifiedMillis(long lastModifiedMillis) {
             this.lastModifiedMillis = lastModifiedMillis;
         }
 
@@ -220,7 +220,7 @@ public class CompoundIdTest extends TestBase {
             return lastModifiedUser;
         }
 
-        public void setLastModifiedUser(final String lastModifiedUser) {
+        public void setLastModifiedUser(String lastModifiedUser) {
             this.lastModifiedUser = lastModifiedUser;
         }
 
@@ -228,7 +228,7 @@ public class CompoundIdTest extends TestBase {
             return value;
         }
 
-        public void setValue(final String value) {
+        public void setValue(String value) {
             this.value = value;
         }
 
@@ -236,7 +236,7 @@ public class CompoundIdTest extends TestBase {
             return version;
         }
 
-        public void setVersion(final long version) {
+        public void setVersion(long version) {
             this.version = version;
         }
     }

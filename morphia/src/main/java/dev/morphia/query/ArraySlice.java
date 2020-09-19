@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
  */
 public class ArraySlice {
-    private Integer limit;
+    private final Integer limit;
     private Integer skip;
 
     /**
@@ -33,7 +33,7 @@ public class ArraySlice {
      *
      * @param limit the number of array elements to return
      */
-    public ArraySlice(final int limit) {
+    public ArraySlice(int limit) {
         this.limit = limit;
     }
 
@@ -43,7 +43,7 @@ public class ArraySlice {
      * @param skip the number of array elements to skip
      * @param limit the number of array elements to return
      */
-    public ArraySlice(final int skip, final int limit) {
+    public ArraySlice(int skip, int limit) {
         this.skip = skip;
         this.limit = limit;
     }

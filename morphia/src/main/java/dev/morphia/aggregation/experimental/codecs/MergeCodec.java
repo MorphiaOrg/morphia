@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class MergeCodec extends StageCodec<Merge> {
-    public MergeCodec(final Mapper mapper) {
+    public MergeCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -24,7 +24,7 @@ public class MergeCodec extends StageCodec<Merge> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final Merge value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Merge value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         String collection;
         String database = null;
@@ -50,7 +50,7 @@ public class MergeCodec extends StageCodec<Merge> {
                 writer.writeString("on", on.get(0));
             } else {
                 writer.writeStartArray("on");
-                for (final String name : on) {
+                for (String name : on) {
                     writer.writeString(name);
                 }
                 writer.writeEndArray();
@@ -59,7 +59,7 @@ public class MergeCodec extends StageCodec<Merge> {
         Map<String, Expression> variables = value.getVariables();
         if(variables != null) {
             writer.writeStartDocument("let");
-            for (final Entry<String, Expression> entry : variables.entrySet()) {
+            for (Entry<String, Expression> entry : variables.entrySet()) {
                 writer.writeName(entry.getKey());
                 entry.getValue().encode(getMapper(), writer, encoderContext);
             }
@@ -76,7 +76,7 @@ public class MergeCodec extends StageCodec<Merge> {
         writer.writeEndDocument();
     }
 
-    private void writeEnum(final BsonWriter writer, final String name, final Enum value, final EncoderContext encoderContext) {
+    private void writeEnum(BsonWriter writer, String name, Enum value, EncoderContext encoderContext) {
         if (value != null) {
             writer.writeString(name, value.name().toLowerCase());
         }

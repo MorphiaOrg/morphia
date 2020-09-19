@@ -12,13 +12,13 @@ import static java.util.Arrays.asList;
 public class ArrayLiteral extends ArrayExpression {
     private final List<Expression> values;
 
-    public ArrayLiteral(final Expression... values) {
+    public ArrayLiteral(Expression... values) {
         super(null, null);
         this.values = asList(values);
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         Codec codec = mapper.getCodecRegistry().get(values.getClass());
         encoderContext.encodeWithChildContext(codec, writer, values);
     }

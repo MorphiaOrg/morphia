@@ -7,7 +7,7 @@ public class Another extends EmbeddedType {
     public Another() {
     }
 
-    public Another(final String anotherField) {
+    public Another(String anotherField) {
         this.anotherField = anotherField;
     }
 
@@ -17,7 +17,7 @@ public class Another extends EmbeddedType {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

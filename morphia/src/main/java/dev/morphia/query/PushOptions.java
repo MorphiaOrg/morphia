@@ -45,7 +45,7 @@ public class PushOptions {
      * @param position the position in the array for the update
      * @return this
      */
-    public PushOptions position(final int position) {
+    public PushOptions position(int position) {
         if (position < 0) {
             throw new UpdateException("The position must be at least 0.");
         }
@@ -58,7 +58,7 @@ public class PushOptions {
      * @param slice the slice value for the update
      * @return this
      */
-    public PushOptions slice(final int slice) {
+    public PushOptions slice(int slice) {
         this.slice = slice;
         return this;
     }
@@ -68,7 +68,7 @@ public class PushOptions {
      * @param sort the sort value for the update
      * @return this
      */
-    public PushOptions sort(final int sort) {
+    public PushOptions sort(int sort) {
         this.sort = sort;
         return this;
     }
@@ -80,7 +80,7 @@ public class PushOptions {
      * @param direction the direction of the sort
      * @return this
      */
-    public PushOptions sort(final String field, final int direction) {
+    public PushOptions sort(String field, int direction) {
         if (sort != null) {
             throw new IllegalStateException("sortDocument can not be set if sort already is");
         }
@@ -91,7 +91,7 @@ public class PushOptions {
         return this;
     }
 
-    void update(final PushOperator push) {
+    void update(PushOperator push) {
         if (position != null) {
             push.position(position);
         }
@@ -108,7 +108,7 @@ public class PushOptions {
 
     }
 
-    void update(final Document document) {
+    void update(Document document) {
         if (position != null) {
             document.put("$position", position);
         }

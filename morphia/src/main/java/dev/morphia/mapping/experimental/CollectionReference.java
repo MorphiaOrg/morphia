@@ -32,14 +32,14 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     private List ids;
     private final Map<String, List<Object>> collections = new HashMap<>();
 
-    CollectionReference(final Datastore datastore, final MappedClass mappedClass, final List ids) {
+    CollectionReference(Datastore datastore, MappedClass mappedClass, List ids) {
         super(datastore);
         this.mappedClass = mappedClass;
         if (ids != null) {
             if (ids.stream().allMatch(mappedClass.getType()::isInstance)) {
                 setValues(ids);
             } else {
-                for (final Object o : ids) {
+                for (Object o : ids) {
                     collate(mappedClass, collections, o);
                 }
                 this.ids = ids;
@@ -52,8 +52,8 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     protected CollectionReference() {
     }
 
-    static void collate(final MappedClass valueType, final Map<String, List<Object>> collections,
-                        final Object o) {
+    static void collate(MappedClass valueType, Map<String, List<Object>> collections,
+                        Object o) {
         final String collectionName;
         final Object id;
         if (o instanceof DBRef) {
@@ -68,7 +68,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         register(collections, collectionName).add(id);
     }
 
-    static List register(final Map<String, List<Object>> collections, final String name) {
+    static List register(Map<String, List<Object>> collections, String name) {
         return collections.computeIfAbsent(name, k -> new ArrayList<>());
     }
 
@@ -90,10 +90,10 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     @Override
-    public Object encode(final Mapper mapper, final Object value, final MappedField field) {
+    public Object encode(Mapper mapper, Object value, MappedField field) {
         if (isResolved()) {
             List ids = new ArrayList();
-            for (final Object entity : get()) {
+            for (Object entity : get()) {
                 ids.add(wrapId(mapper, field, entity));
             }
             return ids;
@@ -103,7 +103,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     @Override
-    final List<Object> getId(final Mapper mapper, final Datastore datastore, final MappedClass mappedClass) {
+    final List<Object> getId(Mapper mapper, Datastore datastore, MappedClass mappedClass) {
         if (ids == null) {
             ids = getValues().stream()
                              .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, mappedClass))
@@ -112,7 +112,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return ids;
     }
 
-    private List<Object> extractIds(final List<Object> list) {
+    private List<Object> extractIds(List<Object> list) {
         List<Object> ids = new ArrayList<>();
         list.forEach(i -> {
             if (i instanceof List) {
@@ -124,7 +124,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return ids;
     }
 
-    private List<Object> mapIds(final List list, final Map<Object, Object> idMap) {
+    private List<Object> mapIds(List list, Map<Object, Object> idMap) {
         final List<Object> values = new ArrayList<>(asList(new Object[list.size()]));
         for (int i = 0; i < list.size(); i++) {
             final Object id = list.get(i);
@@ -145,7 +145,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
     final List find() {
         HashMap<Object, Object> idMap = new HashMap<>();
-        for (final Entry<String, List<Object>> entry : collections.entrySet()) {
+        for (Entry<String, List<Object>> entry : collections.entrySet()) {
             idMap.putAll(query(entry.getKey(), extractIds(entry.getValue())));
         }
         List values = mapIds(ids, idMap).stream()
@@ -157,7 +157,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
     abstract Collection<?> getValues();
 
-    Map<Object, Object> query(final String collection, final List<Object> collectionIds) {
+    Map<Object, Object> query(String collection, List<Object> collectionIds) {
 
         final Map<Object, Object> idMap = new HashMap<>();
         try (MongoCursor<?> cursor = getDatastore().find(collection)

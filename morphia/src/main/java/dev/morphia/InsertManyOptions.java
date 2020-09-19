@@ -42,7 +42,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @morphia.internal
      * @since 2.0
      */
-    public InsertManyOptions(final InsertManyOptions that) {
+    public InsertManyOptions(InsertManyOptions that) {
         this.options = that.options;
         this.writeConcern = that.writeConcern;
         this.clientSession = that.clientSession;
@@ -55,7 +55,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @return this
      * @mongodb.server.release 3.2
      */
-    public InsertManyOptions bypassDocumentValidation(final Boolean bypassDocumentValidation) {
+    public InsertManyOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
         options.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
@@ -66,7 +66,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @param clientSession the client session
      * @return this
      */
-    public InsertManyOptions clientSession(final ClientSession clientSession) {
+    public InsertManyOptions clientSession(ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
@@ -119,13 +119,13 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @param ordered true if documents should be inserted in order
      * @return this
      */
-    public InsertManyOptions ordered(final boolean ordered) {
+    public InsertManyOptions ordered(boolean ordered) {
         options.ordered(ordered);
         return this;
     }
 
     @Override
-    public InsertManyOptions writeConcern(final WriteConcern writeConcern) {
+    public InsertManyOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }

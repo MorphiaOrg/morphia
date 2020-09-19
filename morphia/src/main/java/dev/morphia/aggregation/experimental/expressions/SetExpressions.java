@@ -22,7 +22,7 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $allElementsTrue
      */
-    public static Expression allElementsTrue(final Expression first, final Expression... additional) {
+    public static Expression allElementsTrue(Expression first, Expression... additional) {
         return new Expression("$allElementsTrue", Expressions.toList(first, additional));
     }
 
@@ -34,7 +34,7 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $anyElementTrue
      */
-    public static Expression anyElementTrue(final Expression first, final Expression... additional) {
+    public static Expression anyElementTrue(Expression first, Expression... additional) {
         return new Expression("$anyElementTrue", Expressions.toList(first, additional));
     }
 
@@ -47,7 +47,7 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setDifference
      */
-    public static Expression setDifference(final Expression first, final Expression second) {
+    public static Expression setDifference(Expression first, Expression second) {
         return new Expression("$setDifference", List.of(first, second));
     }
 
@@ -59,7 +59,7 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setEquals
      */
-    public static Expression setEquals(final Expression first, final Expression... additional) {
+    public static Expression setEquals(Expression first, Expression... additional) {
         return new Expression("$setEquals", Expressions.toList(first, additional));
     }
 
@@ -71,7 +71,7 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setIntersection
      */
-    public static Expression setIntersection(final Expression first, final Expression... additional) {
+    public static Expression setIntersection(Expression first, Expression... additional) {
         return new Expression("$setIntersection", Expressions.toList(first, additional));
     }
 
@@ -84,7 +84,7 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setIsSubset
      */
-    public static Expression setIsSubset(final Expression first, final Expression second) {
+    public static Expression setIsSubset(Expression first, Expression second) {
         return new Expression("$setIsSubset", List.of(first, second));
     }
 
@@ -96,7 +96,7 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setUnion
      */
-    public static Expression setUnion(final Expression first, final Expression... additional) {
+    public static Expression setUnion(Expression first, Expression... additional) {
         return new Expression("$setUnion", Expressions.toList(first, additional));
     }
 

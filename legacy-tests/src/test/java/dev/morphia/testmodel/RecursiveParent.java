@@ -29,7 +29,7 @@ public class RecursiveParent extends TestEntity {
         return child;
     }
 
-    public void setChild(final RecursiveChild child) {
+    public void setChild(RecursiveChild child) {
         this.child = child;
     }
 }

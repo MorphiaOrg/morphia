@@ -47,9 +47,9 @@ public final class FieldModel<T> {
     private volatile Codec<T> cachedCodec;
     private Class<?> normalizedType;
 
-    FieldModel(final Field field, final String name, final String mappedName, final TypeData<T> typeData,
-               final List<Annotation> annotations, final Codec<T> codec, final PropertyAccessor<T> accessor,
-               final PropertySerialization<T> serialization) {
+    FieldModel(Field field, String name, String mappedName, TypeData<T> typeData,
+               List<Annotation> annotations, Codec<T> codec, PropertyAccessor<T> accessor,
+               PropertySerialization<T> serialization) {
         this.field = Objects.requireNonNull(field, Sofia.notNull("field"));
         this.name = Objects.requireNonNull(name, Sofia.notNull("name"));
         this.mappedName = Objects.requireNonNull(mappedName, Sofia.notNull("name"));
@@ -80,7 +80,7 @@ public final class FieldModel<T> {
      * @return the unwrapped type
      * @morphia.internal
      */
-    public static Class<?> normalize(final TypeData<?> toNormalize) {
+    public static Class<?> normalize(TypeData<?> toNormalize) {
         Class<?> type;
         TypeData<?> typeData = toNormalize;
         while (!typeData.getTypeParameters().isEmpty()) {
@@ -108,7 +108,7 @@ public final class FieldModel<T> {
      * @param <A>  the class type
      * @return the annotation instance or null
      */
-    public <A extends Annotation> A getAnnotation(final Class<A> type) {
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
         for (Annotation annotation : annotations) {
             if (type.equals(annotation.annotationType())) {
                 return type.cast(annotation);
@@ -186,7 +186,7 @@ public final class FieldModel<T> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -222,11 +222,11 @@ public final class FieldModel<T> {
      * @param value the value to check
      * @return true if the given value should be serialized
      */
-    public boolean shouldSerialize(final T value) {
+    public boolean shouldSerialize(T value) {
         return serialization.shouldSerialize(value);
     }
 
-    void cachedCodec(final Codec<T> codec) {
+    void cachedCodec(Codec<T> codec) {
         this.cachedCodec = codec;
     }
 

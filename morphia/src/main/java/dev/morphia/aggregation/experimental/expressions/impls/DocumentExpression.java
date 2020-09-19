@@ -5,27 +5,27 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class DocumentExpression extends Expression implements FieldHolder<DocumentExpression> {
-    private Fields<DocumentExpression> fields = Fields.on(this);
+    private final Fields<DocumentExpression> fields = Fields.on(this);
 
     public DocumentExpression() {
         super(null);
     }
 
-    public void encode(final String name, final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(String name, Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument(name);
         fields.encode(mapper, writer, encoderContext);
         writer.writeEndDocument();
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         fields.encode(mapper, writer, encoderContext);
         writer.writeEndDocument();
     }
 
     @Override
-    public DocumentExpression field(final String name, final Expression expression) {
+    public DocumentExpression field(String name, Expression expression) {
         return fields.add(name, expression);
     }
 }

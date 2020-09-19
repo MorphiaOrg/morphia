@@ -161,7 +161,7 @@ public class MapImplTest extends TestBase {
         Goo() {
         }
 
-        Goo(final String n) {
+        Goo(String n) {
             name = n;
         }
     }

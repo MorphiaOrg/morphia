@@ -23,7 +23,7 @@ public final class Book {
     public Book() {
     }
 
-    public Book(final String title, final Author author, final Integer copies, final String... tags) {
+    public Book(String title, Author author, Integer copies, String... tags) {
         this.title = title;
         this.author = author;
         this.copies = copies;

@@ -73,7 +73,7 @@ public class TestReferenceCollection extends ProxyTestBase {
             return foo;
         }
 
-        public void setFoo(final String string) {
+        public void setFoo(String string) {
             foo = string;
         }
 

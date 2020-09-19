@@ -29,11 +29,11 @@ public class LineString implements Geometry {
         coordinates = new ArrayList<Point>();
     }
 
-    LineString(final Point... points) {
+    LineString(Point... points) {
         this.coordinates = Arrays.asList(points);
     }
 
-    LineString(final List<Point> points) {
+    LineString(List<Point> points) {
         coordinates = points;
     }
 
@@ -49,7 +49,7 @@ public class LineString implements Geometry {
 
     /* equals, hashCode and toString. Useful primarily for testing and debugging. Don't forget to re-create when changing this class */
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -59,11 +59,7 @@ public class LineString implements Geometry {
 
         LineString that = (LineString) o;
 
-        if (!coordinates.equals(that.coordinates)) {
-            return false;
-        }
-
-        return true;
+        return coordinates.equals(that.coordinates);
     }
 
     @Override
@@ -79,7 +75,7 @@ public class LineString implements Geometry {
     }
 
     @Override
-    public com.mongodb.client.model.geojson.LineString convert(final CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.LineString convert(CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.LineString(crs != null ? crs.convert() : null, GeoJson.convertPoints(coordinates));
     }
 }

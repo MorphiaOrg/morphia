@@ -8,16 +8,16 @@ import org.bson.codecs.EncoderContext;
 
 public class MatchCodec extends StageCodec<Match> {
 
-    public MatchCodec(final Mapper mapper) {
+    public MatchCodec(Mapper mapper) {
         super(mapper);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected void encodeStage(final BsonWriter writer, final Match value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, Match value, EncoderContext encoderContext) {
         Filter[] filters = value.getFilters();
         writer.writeStartDocument();
-        for (final Filter filter : filters) {
+        for (Filter filter : filters) {
             filter.encode(getMapper(), writer, encoderContext);
         }
         writer.writeEndDocument();

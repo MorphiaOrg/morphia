@@ -35,7 +35,7 @@ public class DocumentValidation {
     public DocumentValidation() {
     }
 
-    public DocumentValidation(final String string, final int number, final Date date) {
+    public DocumentValidation(String string, int number, Date date) {
         this.string = string;
         this.number = number;
         this.date = date;
@@ -45,7 +45,7 @@ public class DocumentValidation {
         return id;
     }
 
-    public void setId(final ObjectId id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -53,7 +53,7 @@ public class DocumentValidation {
         return string;
     }
 
-    public void setString(final String string) {
+    public void setString(String string) {
         this.string = string;
     }
 
@@ -61,7 +61,7 @@ public class DocumentValidation {
         return number;
     }
 
-    public void setNumber(final int number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
@@ -69,12 +69,12 @@ public class DocumentValidation {
         return date;
     }
 
-    public void setDate(final Date date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 @SuppressWarnings("unchecked")
 class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
     @Override
-    public <T> Codec<T> get(final TypeWithTypeParameters<T> type, final PropertyCodecRegistry registry) {
+    public <T> Codec<T> get(TypeWithTypeParameters<T> type, PropertyCodecRegistry registry) {
         if (Map.class.isAssignableFrom(type.getType())) {
             final List<? extends TypeWithTypeParameters<?>> typeParameters = type.getTypeParameters();
             TypeWithTypeParameters<?> keyType = getType(typeParameters, 0);
@@ -46,21 +46,21 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
 
     private static class MapCodec<K, V> implements Codec<Map<K, V>> {
         private final Class<Map<K, V>> encoderClass;
-        private Class<K> keyType;
+        private final Class<K> keyType;
         private final Codec<V> codec;
 
-        MapCodec(final Class<Map<K, V>> encoderClass, final Class<K> keyType, final Codec<V> codec) {
+        MapCodec(Class<Map<K, V>> encoderClass, Class<K> keyType, Codec<V> codec) {
             this.encoderClass = encoderClass;
             this.keyType = keyType;
             this.codec = codec;
         }
 
         @Override
-        public void encode(final BsonWriter writer, final Map<K, V> map, final EncoderContext encoderContext) {
+        public void encode(BsonWriter writer, Map<K, V> map, EncoderContext encoderContext) {
             writer.writeStartDocument();
-            for (final Entry<K, V> entry : map.entrySet()) {
+            for (Entry<K, V> entry : map.entrySet()) {
                 final K key = entry.getKey();
-                writer.writeName((String) Conversions.convert(key, String.class));
+                writer.writeName(Conversions.convert(key, String.class));
                 if (entry.getValue() == null) {
                     writer.writeNull();
                 } else {
@@ -71,11 +71,11 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
         }
 
         @Override
-        public Map<K, V> decode(final BsonReader reader, final DecoderContext context) {
+        public Map<K, V> decode(BsonReader reader, DecoderContext context) {
             reader.readStartDocument();
             Map<K, V> map = getInstance();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                final K key = (K) Conversions.convert(reader.readName(), keyType);
+                final K key = Conversions.convert(reader.readName(), keyType);
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     map.put(key, null);
                     reader.readNull();
@@ -100,7 +100,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
                 final Constructor<Map<K, V>> constructor = encoderClass.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 return constructor.newInstance();
-            } catch (final Exception e) {
+            } catch (Exception e) {
                 throw new CodecConfigurationException(e.getMessage(), e);
             }
         }

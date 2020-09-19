@@ -32,7 +32,7 @@ public final class ArrayExpressions {
      * @param expressions the expressions
      * @return the new expression
      */
-    public static ArrayExpression array(final Expression... expressions) {
+    public static ArrayExpression array(Expression... expressions) {
         return new ArrayLiteral(expressions);
     }
 
@@ -44,7 +44,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $arrayElemAt
      */
-    public static Expression elementAt(final Expression array, final Expression index) {
+    public static Expression elementAt(Expression array, Expression index) {
         return new Expression("$arrayElemAt", List.of(array, index));
     }
 
@@ -55,7 +55,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $size
      */
-    public static Expression size(final Expression array) {
+    public static Expression size(Expression array) {
         return new Expression("$size", array);
     }
 
@@ -66,7 +66,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $arrayToObject
      */
-    public static Expression arrayToObject(final Expression array) {
+    public static Expression arrayToObject(Expression array) {
         return new Expression("$arrayToObject", array);
     }
 
@@ -78,7 +78,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $concatArrays
      */
-    public static Expression concatArrays(final Expression array, final Expression additional) {
+    public static Expression concatArrays(Expression array, Expression additional) {
         return new Expression("$concatArrays", asList(array, additional));
     }
 
@@ -90,7 +90,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $filter
      */
-    public static ArrayFilterExpression filter(final Expression array, final Expression conditional) {
+    public static ArrayFilterExpression filter(Expression array, Expression conditional) {
         return new ArrayFilterExpression(array, conditional);
     }
 
@@ -102,7 +102,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $in
      */
-    public static Expression in(final Expression search, final Expression array) {
+    public static Expression in(Expression search, Expression array) {
         return new Expression("$in", List.of(search, array));
     }
 
@@ -115,7 +115,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $indexOfArray
      */
-    public static Expression indexOfArray(final Expression array, final Expression search) {
+    public static Expression indexOfArray(Expression array, Expression search) {
         return new ArrayIndexExpression(array, search);
     }
 
@@ -126,7 +126,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $isArray
      */
-    public static Expression isArray(final Expression array) {
+    public static Expression isArray(Expression array) {
         return new Expression("$isArray", List.of(array));
     }
 
@@ -138,7 +138,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $map
      */
-    public static MapExpression map(final Expression input, final Expression in) {
+    public static MapExpression map(Expression input, Expression in) {
         return new MapExpression(input, in);
     }
 
@@ -149,7 +149,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $objectToArray
      */
-    public static Expression objectToArray(final Expression array) {
+    public static Expression objectToArray(Expression array) {
         return new Expression("$objectToArray", array);
     }
 
@@ -161,7 +161,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $range
      */
-    public static RangeExpression range(final int start, final int end) {
+    public static RangeExpression range(int start, int end) {
         return new RangeExpression(start, end);
     }
 
@@ -174,7 +174,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $reduce
      */
-    public static Expression reduce(final Expression input, final Expression initial, final Expression in) {
+    public static Expression reduce(Expression input, Expression initial, Expression in) {
         return new ReduceExpression(input, initial, in);
     }
 
@@ -185,7 +185,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $reverseArray
      */
-    public static Expression reverseArray(final Expression array) {
+    public static Expression reverseArray(Expression array) {
         return new Expression("$reverseArray", array);
     }
 
@@ -197,7 +197,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $slice
      */
-    public static Expression slice(final Expression array, final int size) {
+    public static Expression slice(Expression array, int size) {
         return new SliceExpression(array, size);
     }
 
@@ -208,7 +208,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $zip
      */
-    public static ZipExpression zip(final Expression... arrays) {
+    public static ZipExpression zip(Expression... arrays) {
         return new ZipExpression(asList(arrays));
     }
 

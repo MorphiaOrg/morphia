@@ -62,7 +62,7 @@ public class TestLazyWithMissingReferences extends TestBase {
             return target;
         }
 
-        public void setTarget(final Target target) {
+        public void setTarget(Target target) {
             this.target = target;
         }
 
@@ -70,7 +70,7 @@ public class TestLazyWithMissingReferences extends TestBase {
             return lazy;
         }
 
-        public void setLazy(final Target lazy) {
+        public void setLazy(Target lazy) {
             this.lazy = lazy;
         }
 
@@ -78,7 +78,7 @@ public class TestLazyWithMissingReferences extends TestBase {
             return ignoreMissing;
         }
 
-        public void setIgnoreMissing(final Target ignoreMissing) {
+        public void setIgnoreMissing(Target ignoreMissing) {
             this.ignoreMissing = ignoreMissing;
         }
     }
@@ -93,7 +93,7 @@ public class TestLazyWithMissingReferences extends TestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -101,7 +101,7 @@ public class TestLazyWithMissingReferences extends TestBase {
             return foo;
         }
 
-        public void setFoo(final String foo) {
+        public void setFoo(String foo) {
             this.foo = foo;
         }
     }

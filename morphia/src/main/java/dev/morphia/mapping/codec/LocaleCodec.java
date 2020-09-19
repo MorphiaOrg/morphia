@@ -18,12 +18,12 @@ public class LocaleCodec implements Codec<Locale> {
     }
 
     @Override
-    public Locale decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public Locale decode(BsonReader reader, DecoderContext decoderContext) {
         return parseLocale(reader.readString());
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Locale value, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Locale value, EncoderContext encoderContext) {
         if (value == null) {
             writer.writeNull();
         } else {
@@ -31,7 +31,7 @@ public class LocaleCodec implements Codec<Locale> {
         }
     }
 
-    Locale parseLocale(final String localeString) {
+    Locale parseLocale(String localeString) {
         if ((localeString != null) && (!localeString.isEmpty())) {
             final int index = localeString.indexOf("_");
             final int index2 = localeString.indexOf("_", index + 1);

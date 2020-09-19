@@ -28,11 +28,11 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
      * @param type      the type to update
      * @param mapper    the Mapper to use
      */
-    public UpdateOpsImpl(final Datastore datastore, final Class<T> type, final Mapper mapper) {
+    public UpdateOpsImpl(Datastore datastore, Class<T> type, Mapper mapper) {
         super(datastore, mapper, null, null, type);
     }
 
-    static <T> List<T> iterToList(final Iterable<T> it) {
+    static <T> List<T> iterToList(Iterable<T> it) {
         if (it instanceof List) {
             return (List<T>) it;
         }
@@ -41,7 +41,7 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
         }
 
         final List<T> ar = new ArrayList<>();
-        for (final T o : it) {
+        for (T o : it) {
             ar.add(o);
         }
 
@@ -49,29 +49,29 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
     }
 
     @Override
-    public UpdateOperations<T> addToSet(final String field, final Object value) {
+    public UpdateOperations<T> addToSet(String field, Object value) {
         add(UpdateOperators.addToSet(field, value));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> addToSet(final String field, final List<?> values) {
+    public UpdateOperations<T> addToSet(String field, List<?> values) {
         add(UpdateOperators.addToSet(field, values));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> addToSet(final String field, final Iterable<?> values) {
+    public UpdateOperations<T> addToSet(String field, Iterable<?> values) {
         return addToSet(field, iterToList(values));
     }
 
     @Override
-    public UpdateOperations<T> dec(final String field) {
+    public UpdateOperations<T> dec(String field) {
         return inc(field, -1);
     }
 
     @Override
-    public UpdateOperations<T> dec(final String field, final Number value) {
+    public UpdateOperations<T> dec(String field, Number value) {
         if ((value instanceof Long) || (value instanceof Integer)) {
             return inc(field, (value.longValue() * -1));
         }
@@ -95,36 +95,36 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
     }
 
     @Override
-    public UpdateOperations<T> inc(final String field) {
+    public UpdateOperations<T> inc(String field) {
         return inc(field, 1);
     }
 
     @Override
-    public UpdateOperations<T> inc(final String field, final Number value) {
+    public UpdateOperations<T> inc(String field, Number value) {
         add(UpdateOperators.inc(field, value));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> max(final String field, final Number value) {
+    public UpdateOperations<T> max(String field, Number value) {
         add(UpdateOperators.max(field, value));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> min(final String field, final Number value) {
+    public UpdateOperations<T> min(String field, Number value) {
         add(UpdateOperators.min(field, value));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> push(final String field, final Object value) {
+    public UpdateOperations<T> push(String field, Object value) {
         add(UpdateOperators.push(field, value));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> push(final String field, final Object value, final PushOptions options) {
+    public UpdateOperations<T> push(String field, Object value, PushOptions options) {
         PushOperator push = UpdateOperators.push(field, value);
         options.update(push);
 
@@ -133,13 +133,13 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
     }
 
     @Override
-    public UpdateOperations<T> push(final String field, final List<?> values) {
+    public UpdateOperations<T> push(String field, List<?> values) {
         add(UpdateOperators.push(field, values));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> push(final String field, final List<?> values, final PushOptions options) {
+    public UpdateOperations<T> push(String field, List<?> values, PushOptions options) {
         PushOperator push = UpdateOperators.push(field, values);
         options.update(push);
 
@@ -148,41 +148,41 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
     }
 
     @Override
-    public UpdateOperations<T> removeAll(final String field, final Object value) {
+    public UpdateOperations<T> removeAll(String field, Object value) {
         add(UpdateOperators.pull(field, Filters.eq(field, value)));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> removeAll(final String field, final List<?> values) {
+    public UpdateOperations<T> removeAll(String field, List<?> values) {
         add(UpdateOperators.pullAll(field, values));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> removeFirst(final String field) {
+    public UpdateOperations<T> removeFirst(String field) {
         return remove(field, true);
     }
 
     @Override
-    public UpdateOperations<T> removeLast(final String field) {
+    public UpdateOperations<T> removeLast(String field) {
         return remove(field, false);
     }
 
     @Override
-    public UpdateOperations<T> set(final String field, final Object value) {
+    public UpdateOperations<T> set(String field, Object value) {
         add(UpdateOperators.set(field, value));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> setOnInsert(final String field, final Object value) {
+    public UpdateOperations<T> setOnInsert(String field, Object value) {
         add(UpdateOperators.setOnInsert(Map.of(field, value)));
         return this;
     }
 
     @Override
-    public UpdateOperations<T> unset(final String field) {
+    public UpdateOperations<T> unset(String field) {
         add(UpdateOperators.unset(field));
         return this;
     }
@@ -199,11 +199,11 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
      *
      * @param ops the operations
      */
-    public void setOps(final Document ops) {
+    public void setOps(Document ops) {
         this.ops = ops;
     }
 
-    protected UpdateOperations<T> remove(final String fieldExpr, final boolean firstNotLast) {
+    protected UpdateOperations<T> remove(String fieldExpr, boolean firstNotLast) {
         PopOperator pop = UpdateOperators.pop(fieldExpr);
         if (firstNotLast) {
             pop.removeFirst();

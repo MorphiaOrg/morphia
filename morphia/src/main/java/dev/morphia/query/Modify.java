@@ -16,14 +16,14 @@ import org.bson.Document;
 public class Modify<T> extends UpdateBase<T> {
 
     @SuppressWarnings("rawtypes")
-    Modify(final Datastore datastore, final Mapper mapper, final MongoCollection<T> collection, final Query<T> query, final Class<T> type,
-           final UpdateOpsImpl operations) {
+    Modify(Datastore datastore, Mapper mapper, MongoCollection<T> collection, Query<T> query, Class<T> type,
+           UpdateOpsImpl operations) {
         super(datastore, mapper, collection, query, type, operations.getUpdates());
 
     }
 
-    Modify(final Datastore datastore, final Mapper mapper, final MongoCollection<T> collection, final Query<T> query, final Class<T> type,
-           final UpdateOperator first, final UpdateOperator[] updates) {
+    Modify(Datastore datastore, Mapper mapper, MongoCollection<T> collection, Query<T> query, Class<T> type,
+           UpdateOperator first, UpdateOperator[] updates) {
         super(datastore, mapper, collection, query, type, first, updates);
     }
 
@@ -42,7 +42,7 @@ public class Modify<T> extends UpdateBase<T> {
      * @param options the options to apply
      * @return the operation result
      */
-    public T execute(final ModifyOptions options) {
+    public T execute(ModifyOptions options) {
         ClientSession session = getDatastore().findSession(options);
         Document update = toDocument();
 

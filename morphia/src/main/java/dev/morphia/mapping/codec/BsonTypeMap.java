@@ -58,12 +58,12 @@ public class BsonTypeMap {
      * @param type the BSON type
      * @return the Class that is mapped to the BSON type
      */
-    public BsonType get(final Class<?> type) {
+    public BsonType get(Class<?> type) {
         return map.get(type);
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

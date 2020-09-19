@@ -40,7 +40,7 @@ public class ShapeShifter extends TestEntity {
         return availableShapes;
     }
 
-    public void setAvailableShapes(final Set<Shape> availableShapes) {
+    public void setAvailableShapes(Set<Shape> availableShapes) {
         this.availableShapes = availableShapes;
     }
 
@@ -48,7 +48,7 @@ public class ShapeShifter extends TestEntity {
         return mainShape;
     }
 
-    public void setMainShape(final Shape mainShape) {
+    public void setMainShape(Shape mainShape) {
         this.mainShape = mainShape;
     }
 
@@ -56,7 +56,7 @@ public class ShapeShifter extends TestEntity {
         return referencedShape;
     }
 
-    public void setReferencedShape(final Shape referencedShape) {
+    public void setReferencedShape(Shape referencedShape) {
         this.referencedShape = referencedShape;
     }
 }

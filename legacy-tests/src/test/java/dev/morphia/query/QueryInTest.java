@@ -147,7 +147,7 @@ public class QueryInTest extends TestBase {
         ReferencedEntity() {
         }
 
-        ReferencedEntity(final String s) {
+        ReferencedEntity(String s) {
             foo = s;
         }
     }

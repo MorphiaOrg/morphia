@@ -22,7 +22,7 @@ public class Sort {
      * @param field the field
      * @param order the order
      */
-    protected Sort(final String field, final int order) {
+    protected Sort(String field, int order) {
         this.field = field;
         this.order = order;
     }
@@ -33,7 +33,7 @@ public class Sort {
      * @param field the field
      * @return the Sort instance
      */
-    public static Sort ascending(final String field) {
+    public static Sort ascending(String field) {
         return new Sort(field, 1);
     }
 
@@ -43,7 +43,7 @@ public class Sort {
      * @param field the field
      * @return the Sort instance
      */
-    public static Sort descending(final String field) {
+    public static Sort descending(String field) {
         return new Sort(field, -1);
     }
 

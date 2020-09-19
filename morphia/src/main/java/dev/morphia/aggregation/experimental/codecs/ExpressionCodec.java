@@ -13,7 +13,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 public class ExpressionCodec<T extends Expression> implements Codec<T> {
     private final Mapper mapper;
 
-    public ExpressionCodec(final Mapper mapper) {
+    public ExpressionCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 
@@ -25,8 +25,8 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void writeNamedExpression(final Mapper mapper, final BsonWriter writer, final String name, final Expression expression,
-                                            final EncoderContext encoderContext) {
+    public static void writeNamedExpression(Mapper mapper, BsonWriter writer, String name, Expression expression,
+                                            EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
             expression.encode(mapper, writer, encoderContext);
@@ -41,8 +41,8 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void writeNamedValue(final Mapper mapper, final BsonWriter writer, final String name, final Object value,
-                                       final EncoderContext encoderContext) {
+    public static void writeNamedValue(Mapper mapper, BsonWriter writer, String name, Object value,
+                                       EncoderContext encoderContext) {
         if (value != null) {
             writer.writeName(name);
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
@@ -57,8 +57,8 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void writeUnnamedValue(final Mapper mapper, final BsonWriter writer, final Object value,
-                                         final EncoderContext encoderContext) {
+    public static void writeUnnamedValue(Mapper mapper, BsonWriter writer, Object value,
+                                         EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
@@ -72,20 +72,20 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void writeUnnamedExpression(final Mapper mapper, final BsonWriter writer, final Expression expression,
-                                              final EncoderContext encoderContext) {
+    public static void writeUnnamedExpression(Mapper mapper, BsonWriter writer, Expression expression,
+                                              EncoderContext encoderContext) {
         if (expression != null) {
             expression.encode(mapper, writer, encoderContext);
         }
     }
 
     @Override
-    public final T decode(final BsonReader reader, final DecoderContext decoderContext) {
+    public final T decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());
     }
 
     @Override
-    public void encode(final BsonWriter writer, final T expression, final EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, T expression, EncoderContext encoderContext) {
         if (expression != null) {
             expression.encode(mapper, writer, encoderContext);
         } else {

@@ -8,10 +8,10 @@ import org.bson.codecs.EncoderContext;
  * @morphia.internal
  */
 public class PipelineField {
-    private String name;
-    private Expression value;
+    private final String name;
+    private final Expression value;
 
-    public PipelineField(final String name, final Expression value) {
+    public PipelineField(String name, Expression value) {
         this.name = name;
         this.value = value;
     }
@@ -24,7 +24,7 @@ public class PipelineField {
         return value;
     }
 
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeName(name);
         value.encode(mapper, writer, encoderContext);
     }

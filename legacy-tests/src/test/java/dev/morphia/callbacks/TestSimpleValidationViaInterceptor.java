@@ -79,10 +79,10 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
 
     public static class NonNullValidation implements EntityInterceptor {
         @Override
-        public void prePersist(final Object ent, final Document document, final Mapper mapper) {
+        public void prePersist(Object ent, Document document, Mapper mapper) {
             final MappedClass mc = mapper.getMappedClass(ent.getClass());
             final List<MappedField> fieldsToTest = mc.getFields(NonNull.class);
-            for (final MappedField mf : fieldsToTest) {
+            for (MappedField mf : fieldsToTest) {
                 if (mf.getFieldValue(ent) == null) {
                     throw new NonNullValidationException(mf);
                 }
@@ -91,7 +91,7 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
 
         static class NonNullValidationException extends RuntimeException {
 
-            NonNullValidationException(final MappedField mf) {
+            NonNullValidationException(MappedField mf) {
                 super("NonNull field is null " + mf.getFullName());
             }
 

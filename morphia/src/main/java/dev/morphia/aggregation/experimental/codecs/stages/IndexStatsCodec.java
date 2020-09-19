@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class IndexStatsCodec extends StageCodec<IndexStats> {
-    public IndexStatsCodec(final Mapper mapper) {
+    public IndexStatsCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class IndexStatsCodec extends StageCodec<IndexStats> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final IndexStats value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, IndexStats value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeEndDocument();
     }

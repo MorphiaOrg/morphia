@@ -4,13 +4,13 @@ package dev.morphia.aggregation.experimental.stages;
  * @morphia.internal
  */
 public class Count extends Stage {
-    private String name;
+    private final String name;
 
     /**
      * @param name the field name
      * @morphia.internal
      */
-    public Count(final String name) {
+    public Count(String name) {
         super("$count");
         this.name = name;
     }

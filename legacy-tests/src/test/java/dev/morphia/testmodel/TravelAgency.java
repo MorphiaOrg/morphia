@@ -40,7 +40,7 @@ public class TravelAgency extends TestEntity {
         return hotels;
     }
 
-    public void setHotels(final List<Hotel> hotels) {
+    public void setHotels(List<Hotel> hotels) {
         this.hotels = hotels;
     }
 
@@ -48,7 +48,7 @@ public class TravelAgency extends TestEntity {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

@@ -11,14 +11,14 @@ public class ConvertExpression extends Expression {
     private Expression onError;
     private Expression onNull;
 
-    public ConvertExpression(final Expression input, final ConvertType to) {
+    public ConvertExpression(Expression input, ConvertType to) {
         super("$convert");
         this.input = input;
         this.to = to;
     }
 
     @Override
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext encoderContext) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         ExpressionCodec.writeNamedExpression(mapper, writer, "input", input, encoderContext);
@@ -35,7 +35,7 @@ public class ConvertExpression extends Expression {
      * @param onError the value
      * @return this
      */
-    public ConvertExpression onError(final Expression onError) {
+    public ConvertExpression onError(Expression onError) {
         this.onError = onError;
         return this;
     }
@@ -46,7 +46,7 @@ public class ConvertExpression extends Expression {
      * @param onNull the value
      * @return this
      */
-    public ConvertExpression onNull(final Expression onNull) {
+    public ConvertExpression onNull(Expression onNull) {
         this.onNull = onNull;
         return this;
     }

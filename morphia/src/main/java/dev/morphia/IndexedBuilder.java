@@ -36,12 +36,12 @@ class IndexedBuilder extends AnnotationBuilder<Indexed> implements Indexed {
         return get("value");
     }
 
-    IndexedBuilder options(final IndexOptions options) {
+    IndexedBuilder options(IndexOptions options) {
         put("options", options);
         return this;
     }
 
-    IndexedBuilder value(final IndexDirection value) {
+    IndexedBuilder value(IndexDirection value) {
         put("value", value);
         return this;
     }

@@ -35,12 +35,12 @@ class TextBuilder extends AnnotationBuilder<Text> implements Text {
         return get("value");
     }
 
-    TextBuilder options(final IndexOptions options) {
+    TextBuilder options(IndexOptions options) {
         put("options", options);
         return this;
     }
 
-    TextBuilder value(final int value) {
+    TextBuilder value(int value) {
         put("value", value);
         return this;
     }

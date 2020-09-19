@@ -21,7 +21,7 @@ public final class AllTheThings {
     AllTheThings() {
     }
 
-    public AllTheThings(final String name, final GeometryCollection everything) {
+    public AllTheThings(String name, GeometryCollection everything) {
         this.name = name;
         this.everything = everything;
     }
@@ -34,7 +34,7 @@ public final class AllTheThings {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

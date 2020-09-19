@@ -19,7 +19,7 @@ public final class Regions {
     Regions() {
     }
 
-    public Regions(final String name, final MultiPolygon regions) {
+    public Regions(String name, MultiPolygon regions) {
         this.name = name;
         this.regions = regions;
     }
@@ -32,7 +32,7 @@ public final class Regions {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

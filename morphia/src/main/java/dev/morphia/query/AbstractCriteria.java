@@ -9,7 +9,7 @@ public abstract class AbstractCriteria implements Criteria {
     private CriteriaContainer attachedTo;
 
     @Override
-    public void attach(final CriteriaContainer container) {
+    public void attach(CriteriaContainer container) {
         if (attachedTo != null) {
             attachedTo.remove(this);
         }

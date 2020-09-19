@@ -18,7 +18,7 @@ public class UpdateOperator {
     private final String field;
     private Object value;
 
-    protected UpdateOperator(final String operator, final String field, final Object value) {
+    protected UpdateOperator(String operator, String field, Object value) {
         if (field == null) {
             throw new UpdateException(Sofia.fieldCannotBeNull());
         }
@@ -30,7 +30,7 @@ public class UpdateOperator {
         this.value = value;
     }
 
-    protected UpdateOperator(final String operator, final String field, final List<?> values) {
+    protected UpdateOperator(String operator, String field, List<?> values) {
         if (field == null) {
             throw new UpdateException(Sofia.fieldCannotBeNull());
         }
@@ -65,7 +65,7 @@ public class UpdateOperator {
      * @return the OperationTarget
      * @morphia.internal
      */
-    public OperationTarget toTarget(final PathTarget pathTarget) {
+    public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, value());
     }
 
@@ -77,7 +77,7 @@ public class UpdateOperator {
         return value;
     }
 
-    protected <T extends UpdateOperator> T value(final Object value) {
+    protected <T extends UpdateOperator> T value(Object value) {
         this.value = value;
         return (T) this;
     }

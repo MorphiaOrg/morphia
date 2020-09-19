@@ -30,7 +30,7 @@ public final class QuickTour {
     private QuickTour() {
     }
 
-    public static void main(final String[] args) {
+    public static void main(String[] args) {
         final Datastore datastore = Morphia.createDatastore(MongoClients.create(), "morphia_example");
 
         // tell morphia where to find your classes
@@ -95,7 +95,7 @@ class Employee {
     Employee() {
     }
 
-    Employee(final String name, final Double salary) {
+    Employee(String name, Double salary) {
         this.name = name;
         this.salary = salary;
     }
@@ -104,7 +104,7 @@ class Employee {
         return directReports;
     }
 
-    public void setDirectReports(final List<Employee> directReports) {
+    public void setDirectReports(List<Employee> directReports) {
         this.directReports = directReports;
     }
 
@@ -116,7 +116,7 @@ class Employee {
         return manager;
     }
 
-    public void setManager(final Employee manager) {
+    public void setManager(Employee manager) {
         this.manager = manager;
     }
 
@@ -124,7 +124,7 @@ class Employee {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -132,7 +132,7 @@ class Employee {
         return salary;
     }
 
-    public void setSalary(final Double salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
     }
 }

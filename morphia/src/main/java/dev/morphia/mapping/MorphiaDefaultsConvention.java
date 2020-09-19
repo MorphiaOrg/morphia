@@ -30,14 +30,14 @@ import static java.lang.reflect.Modifier.isStatic;
 @SuppressWarnings("unchecked")
 public class MorphiaDefaultsConvention implements MorphiaConvention {
 
-    private static boolean isTransient(final FieldModelBuilder<?> field) {
+    private static boolean isTransient(FieldModelBuilder<?> field) {
         return field.hasAnnotation(Transient.class)
                || field.hasAnnotation(java.beans.Transient.class)
                || Modifier.isTransient(field.getField().getModifiers());
     }
 
     @Override
-    public void apply(final Datastore datastore, final EntityModelBuilder<?> modelBuilder) {
+    public void apply(Datastore datastore, EntityModelBuilder<?> modelBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
 
         final Entity entity = modelBuilder.getAnnotation(Entity.class);
@@ -67,7 +67,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
     }
 
     @SuppressWarnings("rawtypes")
-    void processFields(final EntityModelBuilder<?> modelBuilder, final Datastore datastore, final MapperOptions options) {
+    void processFields(EntityModelBuilder<?> modelBuilder, Datastore datastore, MapperOptions options) {
         Iterator<FieldModelBuilder<?>> iterator = modelBuilder.fieldModels().iterator();
         while (iterator.hasNext()) {
             final FieldModelBuilder<?> builder = iterator.next();
@@ -84,7 +84,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
 
                 AlsoLoad alsoLoad = builder.getAnnotation(AlsoLoad.class);
                 if (alsoLoad != null) {
-                    for (final String name : alsoLoad.value()) {
+                    for (String name : alsoLoad.value()) {
                         builder.alternateName(name);
                     }
                 }
@@ -94,10 +94,10 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         }
     }
 
-    private void buildField(final Datastore datastore,
-                            final MapperOptions options,
-                            final FieldModelBuilder<?> builder,
-                            final Field field) {
+    private void buildField(Datastore datastore,
+                            MapperOptions options,
+                            FieldModelBuilder<?> builder,
+                            Field field) {
 
         builder
             .serialization(new MorphiaPropertySerialization(options, builder))
@@ -109,13 +109,13 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         }
     }
 
-    private PropertyAccessor<?> getAccessor(final Field field, final FieldModelBuilder<?> property) {
+    private PropertyAccessor<?> getAccessor(Field field, FieldModelBuilder<?> property) {
         return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
                ? new ArrayFieldAccessor(property.getTypeData(), field)
                : new FieldAccessor(field);
     }
 
-    private void configureCodec(final Datastore datastore, final FieldModelBuilder<?> builder, final Field field) {
+    private void configureCodec(Datastore datastore, FieldModelBuilder<?> builder, Field field) {
         Handler handler = getHandler(builder);
         if (handler != null) {
             try {
@@ -128,7 +128,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         }
     }
 
-    private boolean isNotConcrete(final TypeData<?> typeData) {
+    private boolean isNotConcrete(TypeData<?> typeData) {
         Class<?> type;
         if (!typeData.getTypeParameters().isEmpty()) {
             type = typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1).getType();
@@ -139,7 +139,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         return isNotConcrete(type);
     }
 
-    private Handler getHandler(final FieldModelBuilder<?> builder) {
+    private Handler getHandler(FieldModelBuilder<?> builder) {
         Handler handler = builder.getTypeData().getType().getAnnotation(Handler.class);
 
         if (handler == null) {
@@ -156,7 +156,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         return handler;
     }
 
-    private boolean isNotConcrete(final Class type) {
+    private boolean isNotConcrete(Class type) {
         Class componentType = type;
         if (type.isArray()) {
             componentType = type.getComponentType();
@@ -164,7 +164,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         return componentType.isInterface() || isAbstract(componentType.getModifiers());
     }
 
-    String applyDefaults(final String configured, final String defaultValue) {
+    String applyDefaults(String configured, String defaultValue) {
         if (!configured.equals(Mapper.IGNORED_FIELDNAME)) {
             return configured;
         } else {

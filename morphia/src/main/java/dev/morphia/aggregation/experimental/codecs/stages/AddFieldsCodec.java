@@ -6,7 +6,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class AddFieldsCodec extends StageCodec<AddFields> {
-    public AddFieldsCodec(final Mapper mapper) {
+    public AddFieldsCodec(Mapper mapper) {
         super(mapper);
     }
 
@@ -16,7 +16,7 @@ public class AddFieldsCodec extends StageCodec<AddFields> {
     }
 
     @Override
-    protected void encodeStage(final BsonWriter writer, final AddFields value, final EncoderContext encoderContext) {
+    protected void encodeStage(BsonWriter writer, AddFields value, EncoderContext encoderContext) {
         value.getDocument().encode(getMapper(), writer, encoderContext);
     }
 }

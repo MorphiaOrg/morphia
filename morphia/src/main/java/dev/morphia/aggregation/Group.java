@@ -19,7 +19,7 @@ public final class Group {
     private Accumulator accumulator;
     private String sourceField;
 
-    private Group(final String name, final Accumulator accumulator) {
+    private Group(String name, Accumulator accumulator) {
         this.name = name;
         this.accumulator = accumulator;
     }
@@ -30,7 +30,7 @@ public final class Group {
      * @param name        the name of the group
      * @param sourceField the source field
      */
-    private Group(final String name, final String sourceField) {
+    private Group(String name, String sourceField) {
         this.name = name;
         this.sourceField = "$" + sourceField;
     }
@@ -41,12 +41,12 @@ public final class Group {
      * @param name        the name of the group
      * @param projections the fields to create
      */
-    private Group(final String name, final Projection... projections) {
+    private Group(String name, Projection... projections) {
         this.name = name;
         this.projections = asList(projections);
     }
 
-    private Group(final String name, final Group nested) {
+    private Group(String name, Group nested) {
         this.name = name;
         this.nested = nested;
     }
@@ -57,7 +57,7 @@ public final class Group {
      * @param fields the Groups to group
      * @return the Group
      */
-    public static List<Group> id(final Group... fields) {
+    public static List<Group> id(Group... fields) {
         return asList(fields);
     }
 
@@ -67,7 +67,7 @@ public final class Group {
      * @param name the field name
      * @return the Group
      */
-    public static Group grouping(final String name) {
+    public static Group grouping(String name) {
         return grouping(name, name);
     }
 
@@ -78,7 +78,7 @@ public final class Group {
      * @param sourceField the field name
      * @return the Group
      */
-    public static Group grouping(final String name, final String sourceField) {
+    public static Group grouping(String name, String sourceField) {
         return new Group(name, sourceField);
     }
 
@@ -89,7 +89,7 @@ public final class Group {
      * @param projections the fields to create
      * @return the Group
      */
-    public static Group grouping(final String name, final Projection... projections) {
+    public static Group grouping(String name, Projection... projections) {
         return new Group(name, projections);
     }
 
@@ -100,7 +100,7 @@ public final class Group {
      * @param group the fields to create
      * @return the Group
      */
-    public static Group grouping(final String name, final Group group) {
+    public static Group grouping(String name, Group group) {
         return new Group(name, group);
     }
 
@@ -111,7 +111,7 @@ public final class Group {
      * @param accumulator the Accumulator to apply to the field
      * @return the Group
      */
-    public static Group grouping(final String name, final Accumulator accumulator) {
+    public static Group grouping(String name, Accumulator accumulator) {
         return new Group(name, accumulator);
     }
 
@@ -123,7 +123,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $addToSet
      */
-    public static Accumulator addToSet(final String field) {
+    public static Accumulator addToSet(String field) {
         return new Accumulator("$addToSet", field);
     }
 
@@ -135,7 +135,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $avg
      */
-    public static Accumulator average(final String field) {
+    public static Accumulator average(String field) {
         return new Accumulator("$avg", field);
     }
 
@@ -148,7 +148,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $first
      */
-    public static Accumulator first(final String field) {
+    public static Accumulator first(String field) {
         return new Accumulator("$first", field);
     }
 
@@ -160,7 +160,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $last
      */
-    public static Accumulator last(final String field) {
+    public static Accumulator last(String field) {
         return new Accumulator("$last", field);
     }
 
@@ -173,7 +173,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $max
      */
-    public static Accumulator max(final String field) {
+    public static Accumulator max(String field) {
         return new Accumulator("$max", field);
     }
 
@@ -185,7 +185,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $min
      */
-    public static Accumulator min(final String field) {
+    public static Accumulator min(String field) {
         return new Accumulator("$min", field);
     }
 
@@ -197,7 +197,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $push
      */
-    public static Accumulator push(final String field) {
+    public static Accumulator push(String field) {
         return new Accumulator("$push", field);
     }
 
@@ -210,7 +210,7 @@ public final class Group {
      * @return an Accumulator
      * @aggregation.expression $sum
      */
-    public static Accumulator sum(final String field) {
+    public static Accumulator sum(String field) {
         return new Accumulator("$sum", field);
     }
 

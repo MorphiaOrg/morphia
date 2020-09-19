@@ -41,7 +41,7 @@ public class MappedFieldTest extends TestBase {
         assertEquals("arrayOfInt", field.getMappedFieldName());
     }
 
-    private MappedField getMappedField(final String name) {
+    private MappedField getMappedField(String name) {
         return mappedClass.getMappedField(name);
     }
 
@@ -108,7 +108,7 @@ public class MappedFieldTest extends TestBase {
                                .listOfListOfString);
     }
 
-    private List<String> dbList(final String... values) {
+    private List<String> dbList(String... values) {
         return new ArrayList<>(Arrays.asList(values));
     }
 

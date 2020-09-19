@@ -61,7 +61,7 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         public Plan() {
         }
 
-        public Plan(final String name) {
+        public Plan(String name) {
             this.name = name;
         }
     }
@@ -75,7 +75,7 @@ public class QueryHasAnyOfForReferencedList extends TestBase {
         @Reference("plan")
         private Plan plan;
 
-        public Org(final String name, final Plan plan) {
+        public Org(String name, Plan plan) {
             this.name = name;
             this.plan = plan;
         }

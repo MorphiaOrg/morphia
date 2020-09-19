@@ -16,15 +16,15 @@ import java.util.StringJoiner;
  * @morphia.internal
  */
 public class OperationTarget {
-    private PathTarget target;
-    private Object value;
+    private final PathTarget target;
+    private final Object value;
 
     /**
      * @param target the target
      * @param value the value
      * @morphia.internal
      */
-    public OperationTarget(final PathTarget target, final Object value) {
+    public OperationTarget(PathTarget target, Object value) {
         this.target = target;
         this.value = value;
     }
@@ -49,7 +49,7 @@ public class OperationTarget {
      * @return the encoded form
      * @morphia.internal
      */
-    public Object encode(final Mapper mapper) {
+    public Object encode(Mapper mapper) {
         if (target == null) {
             return value;
         }
