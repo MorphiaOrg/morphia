@@ -102,6 +102,7 @@ public class VersionTest extends TestBase {
     @Test
     public void testMultiSaves() {
         getMapper().map(List.of(VersionedType.class));
+        clear(VersionedType.class);
         List<VersionedType> initial = List.of(new VersionedType(), new VersionedType());
 
         getDs().save(initial);
@@ -125,6 +126,7 @@ public class VersionTest extends TestBase {
 
     @Test
     public void testUpdate() {
+        clear(VersionedType.class);
         Datastore ds = getDs();
         List<VersionedType> initial = List.of(new VersionedType(), new VersionedType());
         ds.save(initial);

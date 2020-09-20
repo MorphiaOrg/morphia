@@ -125,7 +125,7 @@ public class AggregationTest extends TestBase {
             parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
             parse("{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }"));
 
-        getDatabase().getCollection("scores").insertMany(list);
+        insert("scores", list);
 
         List<Document> result = getDs().aggregate(Score.class)
                                        .addFields(AddFields.of()
@@ -158,7 +158,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893, 'price' : NumberDecimal('159.00')}"),
             parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42') }"));
 
-        getDatabase().getCollection("artwork").insertMany(list);
+        insert("artwork", list);
 
         List<Document> results = getDs().aggregate(Artwork.class)
                                         .autoBucket(AutoBucket.of()
@@ -188,7 +188,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893}"),
             parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42') }"));
 
-        getDatabase().getCollection("artwork").insertMany(list);
+        insert("artwork", list);
 
         List<Document> results = getDs().aggregate(Artwork.class)
                                         .bucket(Bucket.of()
@@ -239,15 +239,13 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testCount() {
-        List<Document> list = List.of(
+        insert("scores", List.of(
             parse("{ '_id' : 1, 'subject' : 'History', 'score' : 88 }"),
             parse("{ '_id' : 2, 'subject' : 'History', 'score' : 92 }"),
             parse("{ '_id' : 3, 'subject' : 'History', 'score' : 97 }"),
             parse("{ '_id' : 4, 'subject' : 'History', 'score' : 71 }"),
             parse("{ '_id' : 5, 'subject' : 'History', 'score' : 79 }"),
-            parse("{ '_id' : 6, 'subject' : 'History', 'score' : 83 }"));
-
-        getDatabase().getCollection("scores").insertMany(list);
+            parse("{ '_id' : 6, 'subject' : 'History', 'score' : 83 }")));
 
         Document scores = getDs().aggregate(Score.class)
                                  .match(gt("score", 80))
@@ -276,7 +274,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42'),"
                   + " 'tags': [ 'abstract', 'painting' ] }"));
 
-        getDatabase().getCollection("artwork").insertMany(list);
+        insert("artwork", list);
 
         Document result = getDs().aggregate(Artwork.class)
                                  .facet(Facet.of()
@@ -337,7 +335,7 @@ public class AggregationTest extends TestBase {
             parse("{ '_id' : 5, 'name' : 'Asya', 'reportsTo' : 'Ron' }"),
             parse("{ '_id' : 6, 'name' : 'Dan', 'reportsTo' : 'Andrew' }"));
 
-        getDatabase().getCollection("employees").insertMany(list);
+        insert("employees", list);
 
         List<Document> actual = getDs().aggregate(Employee.class)
                                        .graphLookup(GraphLookup.from("employees")
@@ -383,11 +381,10 @@ public class AggregationTest extends TestBase {
             new Book("The Odyssey", "Homer", 10),
             new Book("Iliad", "Homer", 10)));
 
-        List<Book> aggregate = getDs().aggregate(Book.class)
-                                      .limit(2)
-                                      .execute(Book.class)
-                                      .toList();
-        assertEquals(2, aggregate.size());
+        assertEquals(2, getDs().aggregate(Book.class)
+                               .limit(2)
+                               .execute(Document.class)
+                               .toList().size());
     }
 
     @Test
@@ -421,12 +418,12 @@ public class AggregationTest extends TestBase {
 /*
     @Test
     public void testLookupWithPipeline() {
-        getDatabase().getCollection("orders").insertMany(List.of(
+        insert("orders", List.of(
             parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
             parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
             parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
 
-        getDatabase().getCollection("warehouses").insertMany(List.of(
+        insert("warehouses", List.of(
             parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
             parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
             parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
@@ -485,6 +482,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testNullGroupId() {
+        getMapper().getCollection(User.class).drop();
         getDs().save(asList(new User("John", LocalDate.now()),
             new User("Paul", LocalDate.now()),
             new User("George", LocalDate.now()),
@@ -499,6 +497,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testOut() {
+        clear(Book.class, Author.class);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),
@@ -532,7 +531,7 @@ public class AggregationTest extends TestBase {
             parse("{ '_id' : 5, 'item' : 'jkl', 'price' : NumberDecimal('15'), 'quantity' : 15, 'type': 'electronics' }"));
 
         MongoCollection<Document> orders = getDatabase().getCollection("orders");
-        orders.insertMany(list);
+        insert("orders", list);
 
         assertNotNull(orders.createIndex(new Document("item", 1)));
         assertNotNull(orders.createIndex(new Document("item", 1)
@@ -561,10 +560,10 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testProjection() {
-        var doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5,\n"
-                        + "  lastModified: '2016-07-28'}");
 
-        getDatabase().getCollection("books").insertOne(doc);
+        insert("books", List.of(
+            parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5,\n"
+                  + "  lastModified: '2016-07-28'}")));
         Aggregation<Book> pipeline = getDs().aggregate(Book.class)
                                             .project(Projection.of()
                                                                .include("title")
@@ -586,8 +585,8 @@ public class AggregationTest extends TestBase {
                                              .exclude("lastModified"));
         final MorphiaCursor<Document> docAgg = pipeline.execute(Document.class);
 
-        doc = parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}");
-        assertEquals(doc, docAgg.next());
+        assertEquals(parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}"),
+            docAgg.next());
     }
 
     @Test
@@ -625,7 +624,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}"),
             parse("{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}"));
 
-        getDatabase().getCollection("authors").insertMany(documents);
+        insert("authors", documents);
 
         List<Document> actual = getDs().aggregate(Author.class)
                                        .match(exists("name"),
@@ -682,7 +681,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}"),
             parse("{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}"));
 
-        getDatabase().getCollection("authors").insertMany(documents);
+        insert("authors", documents);
 
         List<Document> actual = getDs().aggregate(Author.class)
                                        .match(exists("name"),
@@ -749,7 +748,7 @@ public class AggregationTest extends TestBase {
             parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
             parse("{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }"));
 
-        getDatabase().getCollection("scores").insertMany(list);
+        insert("scores", list);
 
         List<Document> result = getDs().aggregate(Score.class)
                                        .set(AddFields.of()
@@ -778,8 +777,7 @@ public class AggregationTest extends TestBase {
                   + "[ {warehouse: 'A', qty: 5 }, {warehouse: 'B', qty: 15 } ] }"),
             parse("{'_id': 2, title: 'Bees Babble', isbn: '999999999333', author: {last:'Bumble', first: 'Bee' }, copies: [ "
                   + "{warehouse: 'A', qty: 2 }, {warehouse: 'B', qty: 5 } ] }"));
-        getDatabase().getCollection("books")
-                     .insertMany(documents);
+        insert("books", documents);
 
         for (Document document : documents) {
             document.remove("copies");

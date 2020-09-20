@@ -33,13 +33,12 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testAccumulator() {
         checkMinServerVersion(4.4);
-        getDatabase().getCollection("books")
-                     .insertMany(of(
-                         parse("{ '_id' : 8751, 'title' : 'The Banquet', 'author' : 'Dante', 'copies' : 2 }"),
-                         parse("{ '_id' : 8752, 'title' : 'Divine Comedy', 'author' : 'Dante', 'copies' : 1 }"),
-                         parse("{ '_id' : 8645, 'title' : 'Eclogues', 'author' : 'Dante', 'copies' : 2 }"),
-                         parse("{ '_id' : 7000, 'title' : 'The Odyssey', 'author' : 'Homer', 'copies' : 10 }"),
-                         parse("{ '_id' : 7020, 'title' : 'Iliad', 'author' : 'Homer', 'copies' : 10 }")));
+        insert("books", of(
+            parse("{ '_id' : 8751, 'title' : 'The Banquet', 'author' : 'Dante', 'copies' : 2 }"),
+            parse("{ '_id' : 8752, 'title' : 'Divine Comedy', 'author' : 'Dante', 'copies' : 1 }"),
+            parse("{ '_id' : 8645, 'title' : 'Eclogues', 'author' : 'Dante', 'copies' : 2 }"),
+            parse("{ '_id' : 7000, 'title' : 'The Odyssey', 'author' : 'Homer', 'copies' : 10 }"),
+            parse("{ '_id' : 7020, 'title' : 'Iliad', 'author' : 'Homer', 'copies' : 10 }")));
         List<Document> group = getDs().aggregate("books")
                                       .group(of(id(field("author")))
                                                  .field("avgCopies",
@@ -218,7 +217,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testStdDevPop() {
-        getDatabase().getCollection("users").insertMany(of(
+        insert("users", of(
             parse(" { '_id' : 1, 'name' : 'dave123', 'quiz' : 1, 'score' : 85 }"),
             parse("{ '_id' : 2, 'name' : 'dave2', 'quiz' : 1, 'score' : 90 }"),
             parse("{ '_id' : 3, 'name' : 'ahn', 'quiz' : 1, 'score' : 71 }"),
@@ -272,7 +271,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     }
 
     private void largerDataSet() {
-        getDatabase().getCollection("sales").insertMany(of(
+        insert("sales", of(
             parse("{ '_id' : 1, 'item' : 'abc', 'price' : 10, 'quantity' : 2, 'date' : ISODate('2014-01-01T08:00:00Z') }"),
             parse("{ '_id' : 2, 'item' : 'jkl', 'price' : 20, 'quantity' : 1, 'date' : ISODate('2014-02-03T09:00:00Z') }"),
             parse("{ '_id' : 3, 'item' : 'xyz', 'price' : 5, 'quantity' : 5, 'date' : ISODate('2014-02-03T09:05:00Z') }"),
@@ -283,7 +282,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     }
 
     private void regularDataSet() {
-        getDatabase().getCollection("sales").insertMany(of(
+        insert("sales", of(
             parse("{ '_id' : 1, 'item' : 'abc', 'price' : 10, 'quantity' : 2, 'date' : ISODate('2014-01-01T08:00:00Z') }"),
             parse("{ '_id' : 2, 'item' : 'jkl', 'price' : 20, 'quantity' : 1, 'date' : ISODate('2014-02-03T09:00:00Z') }"),
             parse("{ '_id' : 3, 'item' : 'xyz', 'price' : 5, 'quantity' : 5, 'date' : ISODate('2014-02-03T09:05:00Z') }"),

@@ -141,7 +141,7 @@ public class FiltersTest extends TestBase {
 
     @Test
     public void testExpr() {
-        getDatabase().getCollection("budget").insertMany(asList(
+        insert("budget", asList(
             Document.parse("{ '_id' : 1, 'category' : 'food', 'budget': 400, 'spent': 450 }"),
             Document.parse("{ '_id' : 2, 'category' : 'drinks', 'budget': 100, 'spent': 150 }"),
             Document.parse("{ '_id' : 3, 'category' : 'clothes', 'budget': 100, 'spent': 50 }"),

@@ -12,13 +12,12 @@ import static dev.morphia.aggregation.experimental.expressions.DataSizeExpressio
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static java.util.List.of;
 import static org.bson.Document.parse;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class DataSizeExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testBinarySize() {
         checkMinServerVersion(4.4);
-        getDatabase().getCollection("images").insertMany(of(
+        insert("images", of(
             parse("{ _id: 1, name: 'cat.jpg', binary: new BinData(0, 'OEJTfmD8twzaj/LPKLIVkA==')}"),
             parse("{ _id: 2, name: 'big_ben.jpg', binary: new BinData(0, 'aGVsZmRqYWZqYmxhaGJsYXJnYWZkYXJlcTU1NDE1Z2FmZCBmZGFmZGE=')}"),
             parse("{ _id: 3, name: 'tea_set.jpg', binary: new BinData(0, 'MyIRAFVEd2aImaq7zN3u/w==')}"),
@@ -46,7 +45,7 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testBsonSize() {
         checkMinServerVersion(4.4);
-        getDatabase().getCollection("employees").insertMany(of(
+        insert("employees", of(
             parse("{ '_id': 1, 'name': 'Alice', 'email': 'alice@company.com', 'position': 'Software Developer', 'current_task': "
                   + "{ 'project_id': 1, 'project_name': 'Aggregation Improvements', 'project_duration': 5, 'hours': 20 } }"),
             parse("{ '_id': 2, 'name': 'Bob', 'email': 'bob@company.com', 'position': 'Sales', 'current_task': { 'project_id': 2, "
@@ -70,6 +69,5 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'name' : 'Dianne', 'object_size' : 196   }"));
 
         assertListEquals(expected, list);
-        fail("I should see this fail on travis");
     }
 }

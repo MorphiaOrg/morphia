@@ -47,9 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DateExpressionTest extends ExpressionsTestBase {
     @Test
     public void testDateAggregation() {
-        getDatabase().getCollection("sales").insertOne(
-            parse("{\"_id\" : 1,\"item\" : \"abc\",\"price\" : 10,\"quantity\" : 2,\"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")"
-                  + "\n}"));
+        insert("sales", List.of(
+            parse("{\"_id\" : 1,\"item\" : \"abc\",\"price\" : 10,\"quantity\" : 2,\"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")\n}")));
         Aggregation<Sales> pipeline = getDs()
                                           .aggregate(Sales.class)
                                           .project(of()
@@ -157,8 +156,7 @@ public class DateExpressionTest extends ExpressionsTestBase {
             parse("{ _id: 4, date: '2017-02-09', timezone: 'Europe/London', message: 'Step 2: Started'}"),
             parse("{ _id: 5, date: '2017-02-09T03:35:02.055', timezone: '+0530', message: 'Step 2: In Progress'}"));
 
-        getDatabase().getCollection("logmessages", Document.class)
-                     .insertMany(list);
+        insert("logmessages", list);
 
         List<Document> result = getDs().aggregate(LogMessage.class)
                                        .project(of().include("date", dateFromString()
@@ -214,12 +212,11 @@ public class DateExpressionTest extends ExpressionsTestBase {
     @Test
     public void testToDate() {
         checkMinServerVersion(4.0);
-        getDatabase().getCollection("orders")
-                     .insertMany(List.of(
-                         parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
-                         parse("{ _id: 2, item: 'pie', qty: 10,  order_date: '2018-03-12'}"),
-                         parse("{ _id: 3, item: 'ice cream', qty: 2, price: '4.99', order_date: '2018-03-05' }"),
-                         parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
+        insert("orders", List.of(
+            parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
+            parse("{ _id: 2, item: 'pie', qty: 10,  order_date: '2018-03-12'}"),
+            parse("{ _id: 3, item: 'ice cream', qty: 2, price: '4.99', order_date: '2018-03-05' }"),
+            parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
 
         List<Document> result = getDs().aggregate(Order.class)
                                           .addFields(AddFields.of()

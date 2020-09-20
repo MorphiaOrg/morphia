@@ -19,7 +19,7 @@ public class ConditionalExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testSwitchExpression() {
-        getDatabase().getCollection("grades").insertMany(List.of(
+        insert("grades", List.of(
             parse("{ '_id' : 1, 'name' : 'Susan Wilkes', 'scores' : [ 87, 86, 78 ] }"),
             parse("{ '_id' : 2, 'name' : 'Bob Hanna', 'scores' : [ 71, 64, 81 ] }"),
             parse("{ '_id' : 3, 'name' : 'James Torrelio', 'scores' : [ 91, 84, 97 ] }")));

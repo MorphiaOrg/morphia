@@ -38,7 +38,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testArrayToObject() {
-        getDatabase().getCollection("inventory").insertMany(List.of(
+        insert("inventory", List.of(
             parse("{'_id' : 1, 'item' : 'ABC1', dimensions: [{'k': 'l', 'v': 25} , {'k': 'w', 'v': 10}, {'k': 'uom', 'v': 'cm'}]}"),
             parse("{'_id' : 2, 'item' : 'ABC2', dimensions: [['l', 50], ['w', 25], ['uom', 'cm']]}"),
             parse("{'_id' : 3, 'item' : 'ABC3', dimensions: [['l', 25], ['l', 'cm'], ['l', 50]]}")));
@@ -99,7 +99,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testMap() {
-        getDatabase().getCollection("grades").insertMany(
+        insert("grades",
             List.of(
                 parse("{ _id: 1, quizzes: [ 5, 6, 7 ] }"),
                 parse("{ _id: 2, quizzes: [ ] }"),
@@ -170,7 +170,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testSize() {
-        getDatabase().getCollection("inventory").insertMany(List.of(
+        insert("inventory", List.of(
             parse("{ '_id' : 1, 'item' : 'ABC1', 'description' : 'product 1', colors: [ 'blue', 'black', 'red' ] }"),
             parse("{ '_id' : 2, 'item' : 'ABC2', 'description' : 'product 2', colors: [ 'purple' ] }"),
             parse("{ '_id' : 3, 'item' : 'XYZ1', 'description' : 'product 3', colors: [ ] }"),
@@ -197,7 +197,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testSlice() {
-        getDatabase().getCollection("users").insertMany(List.of(
+        insert("users", List.of(
             parse("{ '_id' : 1, 'name' : 'dave123', favorites: [ 'chocolate', 'cake', 'butter', 'apples' ] }"),
             parse("{ '_id' : 2, 'name' : 'li', favorites: [ 'apples', 'pudding', 'pie' ] }"),
             parse("{ '_id' : 3, 'name' : 'ahn', favorites: [ 'pears', 'pecans', 'chocolate', 'cherries' ] }"),
@@ -219,7 +219,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testZip() {
-        getDatabase().getCollection("matrices").insertMany(List.of(
+        insert("matrices", List.of(
             parse("{ matrix: [[1, 2], [2, 3], [3, 4]] }"),
             parse("{ matrix: [[8, 7], [7, 6], [5, 4]] }")));
 

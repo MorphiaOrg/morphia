@@ -132,9 +132,13 @@ public abstract class TestBase {
 
     protected void cleanup() {
         MongoDatabase db = getDatabase();
+        if (true) {
+            throw new RuntimeException("************************************************************");
+        }
         db.listCollectionNames().forEach(s -> {
+
             if (!s.equals("zipcodes")) {
-                LOG.debug("dropping collection " + s);
+                LOG.info("dropping collection " + s);
                 db.getCollection(s).drop();
             }
         });
@@ -168,6 +172,18 @@ public abstract class TestBase {
                                       .runCommand(new Document("serverStatus", 1))
                                       .get("version");
         return Double.parseDouble(version.substring(0, 3));
+    }
+
+    protected void clear(Class<?>... types) {
+        for (Class<?> type : types) {
+            getMapper().getCollection(type).deleteMany(new Document());
+        }
+    }
+
+    protected void insert(String collectionName, List<Document> list) {
+        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
+        collection.deleteMany(new Document());
+        collection.insertMany(list);
     }
 
     /**

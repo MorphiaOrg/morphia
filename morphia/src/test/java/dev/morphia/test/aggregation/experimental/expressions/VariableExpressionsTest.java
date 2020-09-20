@@ -17,7 +17,7 @@ import static org.bson.Document.parse;
 public class VariableExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testLet() {
-        getDatabase().getCollection("sales").insertMany(List.of(
+        insert("sales", List.of(
             parse("{ _id: 1, price: 10, tax: 0.50, applyDiscount: true }"),
             parse("{ _id: 2, price: 10, tax: 0.25, applyDiscount: false }")));
 

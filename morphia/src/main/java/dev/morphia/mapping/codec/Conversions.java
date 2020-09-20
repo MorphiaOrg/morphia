@@ -76,7 +76,7 @@ public final class Conversions {
         register(String.class, Boolean.class, Boolean::parseBoolean);
         register(String.class, Byte.class, Byte::parseByte);
         register(String.class, Double.class, Double::parseDouble);
-        register(String.class, Integer.class, Integer::parseInt);
+        register(String.class, Integer.class, Integer::valueOf);
         register(String.class, Long.class, Long::parseLong);
         register(String.class, Float.class, Float::parseFloat);
         register(String.class, Short.class, Short::parseShort);

@@ -62,6 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
@@ -447,6 +448,7 @@ public class TestMapping extends TestBase {
     @SuppressWarnings("unchecked")
     public void testGenericKeyedMap() {
         final ContainsXKeyMap<Integer> map = new ContainsXKeyMap<>();
+        clear(ContainsXKeyMap.class);
         map.values.put(1, "I'm 1");
         map.values.put(2, "I'm 2");
 
@@ -455,9 +457,16 @@ public class TestMapping extends TestBase {
         final ContainsXKeyMap<Integer> mapLoaded = getDs().find(ContainsXKeyMap.class).filter(eq("_id", map.id)).first();
 
         assertNotNull(mapLoaded);
-        assertEquals(2, mapLoaded.values.size());
-        assertNotNull(mapLoaded.values.get(1));
-        assertNotNull(mapLoaded.values.get(2));
+
+        System.out.println("************* testGenericKeyedMap.mapLoaded = " + mapLoaded);
+
+        Map values = mapLoaded.values;
+        System.out.println("************* values = " + values);
+        System.out.println("************* values.keySet() = " + values.keySet());
+        values.keySet().forEach(k -> System.out.println("************* k = " + k.getClass()));
+        assertEquals(2, values.size());
+        assertNotNull(values.get(1));
+        assertNotNull(values.get(2));
     }
 
     @Test
@@ -519,6 +528,7 @@ public class TestMapping extends TestBase {
     @Test
     public void testObjectIdKeyedMap() {
         getMapper().map(ContainsObjectIdKeyMap.class);
+        clear(ContainsObjectIdKeyMap.class);
         final ContainsObjectIdKeyMap map = new ContainsObjectIdKeyMap();
         final ObjectId o1 = new ObjectId("111111111111111111111111");
         final ObjectId o2 = new ObjectId("222222222222222222222222");
@@ -533,6 +543,8 @@ public class TestMapping extends TestBase {
         assertEquals(2, mapLoaded.values.size());
         assertNotNull(mapLoaded.values.get(o1));
         assertNotNull(mapLoaded.values.get(o2));
+
+        System.out.println("mapLoaded = " + mapLoaded);
 
         assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111")));
         assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111").not()).count());
@@ -856,6 +868,14 @@ public class TestMapping extends TestBase {
         private final Map<ObjectId, String> values = new HashMap<>();
         @Id
         private ObjectId id;
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", ContainsObjectIdKeyMap.class.getSimpleName() + "[", "]")
+                       .add("id=" + id)
+                       .add("values=" + values)
+                       .toString();
+        }
     }
 
     @Entity
