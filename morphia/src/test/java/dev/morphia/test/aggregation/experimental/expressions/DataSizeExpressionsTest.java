@@ -12,6 +12,7 @@ import static dev.morphia.aggregation.experimental.expressions.DataSizeExpressio
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static java.util.List.of;
 import static org.bson.Document.parse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DataSizeExpressionsTest extends ExpressionsTestBase {
     @Test
@@ -69,5 +70,6 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'name' : 'Dianne', 'object_size' : 196   }"));
 
         assertListEquals(expected, list);
+        fail("I should see this fail on travis");
     }
 }
