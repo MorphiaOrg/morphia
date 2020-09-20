@@ -1,9 +1,11 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
 public class ConvertExpression extends Expression {
     private final Expression input;
@@ -21,10 +23,10 @@ public class ConvertExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
-        ExpressionCodec.writeNamedExpression(mapper, writer, "input", input, encoderContext);
-        ExpressionCodec.writeNamedValue(mapper, writer, "to", to.getName(), encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "onError", onError, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
+        writeNamedExpression(mapper, writer, "input", input, encoderContext);
+        writeNamedValue(mapper, writer, "to", to.getName(), encoderContext);
+        writeNamedExpression(mapper, writer, "onError", onError, encoderContext);
+        writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

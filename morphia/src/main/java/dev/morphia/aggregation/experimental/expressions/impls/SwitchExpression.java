@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
 
 /**
  * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression

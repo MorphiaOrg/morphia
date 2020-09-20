@@ -7,7 +7,7 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeUnnamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
 
 public class IfNull extends Expression implements FieldHolder<IfNull> {
     private Expression target;

@@ -1,6 +1,6 @@
 package dev.morphia.query.experimental.filters;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
+import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
@@ -26,8 +26,8 @@ public class RegexFilter extends Filter {
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
-        ExpressionCodec.writeNamedValue(mapper, writer, "$regex", new BsonRegularExpression(regex), context);
-        ExpressionCodec.writeNamedValue(mapper, writer, "$options", options, context);
+        ExpressionHelper.writeNamedValue(mapper, writer, "$regex", new BsonRegularExpression(regex), context);
+        ExpressionHelper.writeNamedValue(mapper, writer, "$options", options, context);
         if (isNot()) {
             writer.writeEndDocument();
         }

@@ -17,68 +17,6 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
         this.mapper = mapper;
     }
 
-    /**
-     * @param mapper
-     * @param writer
-     * @param name
-     * @param expression
-     * @param encoderContext
-     * @morphia.internal
-     */
-    public static void writeNamedExpression(Mapper mapper, BsonWriter writer, String name, Expression expression,
-                                            EncoderContext encoderContext) {
-        if (expression != null) {
-            writer.writeName(name);
-            expression.encode(mapper, writer, encoderContext);
-        }
-    }
-
-    /**
-     * @param mapper
-     * @param writer
-     * @param name
-     * @param value
-     * @param encoderContext
-     * @morphia.internal
-     */
-    public static void writeNamedValue(Mapper mapper, BsonWriter writer, String name, Object value,
-                                       EncoderContext encoderContext) {
-        if (value != null) {
-            writer.writeName(name);
-            Codec codec = mapper.getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
-        }
-    }
-
-    /**
-     * @param mapper
-     * @param writer
-     * @param value
-     * @param encoderContext
-     * @morphia.internal
-     */
-    public static void writeUnnamedValue(Mapper mapper, BsonWriter writer, Object value,
-                                         EncoderContext encoderContext) {
-        if (value != null) {
-            Codec codec = mapper.getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
-        }
-    }
-
-    /**
-     * @param mapper
-     * @param writer
-     * @param expression
-     * @param encoderContext
-     * @morphia.internal
-     */
-    public static void writeUnnamedExpression(Mapper mapper, BsonWriter writer, Expression expression,
-                                              EncoderContext encoderContext) {
-        if (expression != null) {
-            expression.encode(mapper, writer, encoderContext);
-        }
-    }
-
     @Override
     public final T decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());

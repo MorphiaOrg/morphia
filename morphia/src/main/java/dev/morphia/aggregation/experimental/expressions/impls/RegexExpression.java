@@ -1,12 +1,14 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import java.util.regex.Pattern;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
 public class RegexExpression extends Expression {
     private final Expression input;
@@ -22,9 +24,9 @@ public class RegexExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
-        ExpressionCodec.writeNamedExpression(mapper, writer, "input", input, encoderContext);
-        ExpressionCodec.writeNamedValue(mapper, writer, "regex", new BsonRegularExpression(regex), encoderContext);
-        ExpressionCodec.writeNamedValue(mapper, writer, "options", options, encoderContext);
+        writeNamedExpression(mapper, writer, "input", input, encoderContext);
+        writeNamedValue(mapper, writer, "regex", new BsonRegularExpression(regex), encoderContext);
+        writeNamedValue(mapper, writer, "options", options, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

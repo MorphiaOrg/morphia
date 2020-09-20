@@ -1,9 +1,11 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
 public class ArrayFilterExpression extends Expression {
     private final Expression array;
@@ -25,9 +27,9 @@ public class ArrayFilterExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
-        ExpressionCodec.writeNamedExpression(mapper, writer, "input", array, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "cond", conditional, encoderContext);
-        ExpressionCodec.writeNamedValue(mapper, writer, "as", as, encoderContext);
+        writeNamedExpression(mapper, writer, "input", array, encoderContext);
+        writeNamedExpression(mapper, writer, "cond", conditional, encoderContext);
+        writeNamedValue(mapper, writer, "as", as, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

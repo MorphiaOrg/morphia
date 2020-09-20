@@ -1,10 +1,11 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
 
 public class DateToString extends Expression {
     private Expression format;
@@ -29,10 +30,10 @@ public class DateToString extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
-        ExpressionCodec.writeNamedExpression(mapper, writer, "date", date, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "format", format, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "timezone", timeZone, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
+        writeNamedExpression(mapper, writer, "date", date, encoderContext);
+        writeNamedExpression(mapper, writer, "format", format, encoderContext);
+        writeNamedExpression(mapper, writer, "timezone", timeZone, encoderContext);
+        writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
 
         writer.writeEndDocument();
         writer.writeEndDocument();

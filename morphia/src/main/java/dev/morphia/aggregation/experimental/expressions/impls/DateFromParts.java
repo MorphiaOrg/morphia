@@ -1,10 +1,11 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
 
 public class DateFromParts extends Expression {
     private Expression year;
@@ -300,19 +301,19 @@ public class DateFromParts extends Expression {
         writer.writeName(getOperation());
         writer.writeStartDocument();
 
-        ExpressionCodec.writeNamedExpression(mapper, writer, "year", year, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "month", month, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "day", day, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "hour", hour, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "minute", minute, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "second", second, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "millisecond", millisecond, encoderContext);
+        writeNamedExpression(mapper, writer, "year", year, encoderContext);
+        writeNamedExpression(mapper, writer, "month", month, encoderContext);
+        writeNamedExpression(mapper, writer, "day", day, encoderContext);
+        writeNamedExpression(mapper, writer, "hour", hour, encoderContext);
+        writeNamedExpression(mapper, writer, "minute", minute, encoderContext);
+        writeNamedExpression(mapper, writer, "second", second, encoderContext);
+        writeNamedExpression(mapper, writer, "millisecond", millisecond, encoderContext);
 
-        ExpressionCodec.writeNamedExpression(mapper, writer, "isoWeekYear", isoWeekYear, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "isoWeek", isoWeek, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
+        writeNamedExpression(mapper, writer, "isoWeekYear", isoWeekYear, encoderContext);
+        writeNamedExpression(mapper, writer, "isoWeek", isoWeek, encoderContext);
+        writeNamedExpression(mapper, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
 
-        ExpressionCodec.writeNamedExpression(mapper, writer, "timezone", timezone, encoderContext);
+        writeNamedExpression(mapper, writer, "timezone", timezone, encoderContext);
 
         writer.writeEndDocument();
         writer.writeEndDocument();

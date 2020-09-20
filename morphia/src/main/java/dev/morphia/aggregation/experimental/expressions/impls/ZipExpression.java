@@ -6,7 +6,7 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedValue;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
 public class ZipExpression extends Expression {
     private final List<Expression> inputs;

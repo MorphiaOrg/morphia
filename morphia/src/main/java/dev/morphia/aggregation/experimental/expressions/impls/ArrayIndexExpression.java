@@ -4,11 +4,11 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeUnnamedExpression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeUnnamedValue;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedValue;
 
 /**
- * @since 2.o
+ * @since 2.0
  */
 public class ArrayIndexExpression extends Expression {
     private final Expression array;

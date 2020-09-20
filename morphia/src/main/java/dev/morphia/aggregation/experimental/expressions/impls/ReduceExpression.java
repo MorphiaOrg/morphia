@@ -1,9 +1,10 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
 
 public class ReduceExpression extends Expression {
     private final Expression input;
@@ -21,9 +22,9 @@ public class ReduceExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
-        ExpressionCodec.writeNamedExpression(mapper, writer, "input", input, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "initialValue", initial, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "in", in, encoderContext);
+        writeNamedExpression(mapper, writer, "input", input, encoderContext);
+        writeNamedExpression(mapper, writer, "initialValue", initial, encoderContext);
+        writeNamedExpression(mapper, writer, "in", in, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Accumulator;
+import dev.morphia.aggregation.experimental.expressions.impls.AccumulatorExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.Push;
 
@@ -20,18 +21,22 @@ public final class AccumulatorExpressions {
     }
 
     /**
-     * Calculates and returns the sum of numeric values. $sum ignores non-numeric values.
+     * Returns an array of unique expression values for each group. Order of the array elements is undefined.
      *
-     * @param first      the first expression to sum
-     * @param additional any subsequent expressions to include in the sum
+     * @param value              the value
+     * @param initFunction
+     * @param accumulateFunction
+     * @param accumulateArgs
+     * @param mergeFunction
      * @return the new expression
-     * @aggregation.expression $sum
+     * @aggregation.expression $accumulator
+     * @since 2.1
      */
-    public static Expression sum(Expression first, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(first);
-        expressions.addAll(asList(additional));
-        return new Accumulator("$sum", expressions);
+    public static AccumulatorExpression accumulator(String initFunction,
+                                                    String accumulateFunction,
+                                                    List<Expression> accumulateArgs,
+                                                    String mergeFunction) {
+        return new AccumulatorExpression(initFunction, accumulateFunction, accumulateArgs, mergeFunction);
     }
 
     /**
@@ -156,6 +161,21 @@ public final class AccumulatorExpressions {
         expressions.add(value);
         expressions.addAll(asList(additional));
         return new Accumulator("$stdDevSamp", expressions);
+    }
+
+    /**
+     * Calculates and returns the sum of numeric values. $sum ignores non-numeric values.
+     *
+     * @param first      the first expression to sum
+     * @param additional any subsequent expressions to include in the sum
+     * @return the new expression
+     * @aggregation.expression $sum
+     */
+    public static Expression sum(Expression first, Expression... additional) {
+        List<Expression> expressions = new ArrayList<>();
+        expressions.add(first);
+        expressions.addAll(asList(additional));
+        return new Accumulator("$sum", expressions);
     }
 }
 

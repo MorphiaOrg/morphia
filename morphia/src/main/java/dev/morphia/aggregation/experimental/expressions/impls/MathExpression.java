@@ -1,12 +1,12 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
 import static java.util.Arrays.asList;
 
 /**
@@ -47,7 +47,7 @@ public class MathExpression extends Expression {
         }
         for (Expression operand : operands) {
             if (operand != null) {
-                ExpressionCodec.writeUnnamedExpression(mapper, writer, operand, encoderContext);
+                writeUnnamedExpression(mapper, writer, operand, encoderContext);
             } else {
                 writer.writeNull();
             }

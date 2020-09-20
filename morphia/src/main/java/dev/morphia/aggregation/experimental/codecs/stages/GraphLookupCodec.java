@@ -7,7 +7,7 @@ import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionCodec.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
 
 public class GraphLookupCodec extends StageCodec<GraphLookup> {
     public GraphLookupCodec(Mapper mapper) {

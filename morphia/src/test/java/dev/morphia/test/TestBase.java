@@ -128,7 +128,7 @@ public abstract class TestBase {
     }
 
     protected void checkMinServerVersion(double version) {
-        assumeTrue(serverIsAtLeastVersion(version));
+        assumeTrue(serverIsAtLeastVersion(version), "Server should be at least " + version + " but found " + getServerVersion());
     }
 
     protected void cleanup() {

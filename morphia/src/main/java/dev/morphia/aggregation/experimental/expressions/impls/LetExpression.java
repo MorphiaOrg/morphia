@@ -1,10 +1,11 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
 
 public class LetExpression extends Expression {
     private final Expression in;
@@ -21,7 +22,7 @@ public class LetExpression extends Expression {
         writer.writeStartDocument(getOperation());
         writer.writeName("vars");
         variables.encode(mapper, writer, encoderContext);
-        ExpressionCodec.writeNamedExpression(mapper, writer, "in", in, encoderContext);
+        writeNamedExpression(mapper, writer, "in", in, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionCodec;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromString;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToParts;
@@ -10,6 +9,8 @@ import dev.morphia.aggregation.experimental.expressions.impls.IsoDates;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
 
 /**
  * Defines helper methods for the date expressions
@@ -235,7 +236,7 @@ public final class DateExpressions {
         public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
             writer.writeStartDocument();
             writer.writeName(getOperation());
-            ExpressionCodec.writeUnnamedExpression(mapper, writer, (Expression) getValue(), encoderContext);
+            writeUnnamedExpression(mapper, writer, (Expression) getValue(), encoderContext);
             writer.writeEndDocument();
         }
     }
