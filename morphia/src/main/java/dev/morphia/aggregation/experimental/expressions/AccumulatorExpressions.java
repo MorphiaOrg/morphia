@@ -23,11 +23,11 @@ public final class AccumulatorExpressions {
     /**
      * Returns an array of unique expression values for each group. Order of the array elements is undefined.
      *
-     * @param value              the value
-     * @param initFunction
-     * @param accumulateFunction
-     * @param accumulateArgs
-     * @param mergeFunction
+     * @param initFunction       used to initialize the state. The init function receives its arguments from the initArgs expression.
+     * @param accumulateFunction used to accumulate documents. The accumulate function receives its arguments from the current
+     *                           state and accumulateArgs array expression.
+     * @param accumulateArgs     Arguments passed to the accumulate function.
+     * @param mergeFunction      used to merge two internal states.
      * @return the new expression
      * @aggregation.expression $accumulator
      * @since 2.1

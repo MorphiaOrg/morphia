@@ -32,17 +32,6 @@ public final class Expressions {
     }
 
     /**
-     * Returns a value without parsing. Note that this is different from {@link #literal(Object)} in that the given value will dropped
-     * directly in to the pipeline for use/evaluation in whatever context the value is used.
-     *
-     * @param value the value
-     * @return the new expression
-     */
-    public static Expression value(Object value) {
-        return new ValueExpression(value);
-    }
-
-    /**
      * Returns a value without parsing. Use for values that the aggregation pipeline may interpret as an expression.
      *
      * @param value the value
@@ -82,5 +71,16 @@ public final class Expressions {
         List<Expression> expressions = new ArrayList<>(asList(first));
         expressions.addAll(asList(additional));
         return expressions;
+    }
+
+    /**
+     * Returns a value without parsing. Note that this is different from {@link #literal(Object)} in that the given value will dropped
+     * directly in to the pipeline for use/evaluation in whatever context the value is used.
+     *
+     * @param value the value
+     * @return the new expression
+     */
+    public static Expression value(Object value) {
+        return new ValueExpression(value);
     }
 }

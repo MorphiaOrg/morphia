@@ -9,7 +9,9 @@ import java.util.List;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
-
+/**
+ * @since 2.1
+ */
 public class AccumulatorExpression extends Expression {
     private final String initFunction;
     private final String accumulateFunction;
@@ -46,11 +48,23 @@ public class AccumulatorExpression extends Expression {
         });
     }
 
+    /**
+     * Optional. Function used to update the result of the accumulation.
+     *
+     * @param finalizeFunction the function body
+     * @return this
+     */
     public AccumulatorExpression finalizeFunction(String finalizeFunction) {
         this.finalizeFunction = finalizeFunction;
         return this;
     }
 
+    /**
+     * Optional. Arguments passed to the init function.
+     *
+     * @param initArgs the arguments
+     * @return this
+     */
     public AccumulatorExpression initArgs(List<Expression> initArgs) {
         this.initArgs = initArgs;
         return this;

@@ -12,8 +12,11 @@ import org.bson.codecs.EncoderContext;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class ExpressionsTestBase extends TestBase {
@@ -41,5 +44,10 @@ public class ExpressionsTestBase extends TestBase {
                                .execute(Document.class)
                                .next();
         assertEquals(expectedValue, test.get("test"));
+    }
+
+    protected void assertListEquals(List<Document> expected, List<Document> actual) {
+        assertEquals(expected.size(), actual.size());
+        expected.forEach(d -> assertTrue(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
     }
 }

@@ -28,8 +28,6 @@ import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Group.of;
 import static java.util.List.of;
 import static org.bson.Document.parse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     @Test
@@ -72,8 +70,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 'Homer', 'avgCopies' : 10.0 }"),
             parse("{ '_id' : 'Dante', 'avgCopies' : 1.6666666666666667 }"));
 
-        assertEquals(list.size(), group.size());
-        list.forEach(d -> assertTrue(group.contains(d)));
+        assertListEquals(list, group);
     }
 
     @Test
