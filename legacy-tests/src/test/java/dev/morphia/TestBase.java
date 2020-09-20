@@ -130,6 +130,12 @@ public abstract class TestBase {
         });
     }
 
+    protected void insert(String collectionName, List<Document> list) {
+        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
+        collection.deleteMany(new Document());
+        collection.insertMany(list);
+    }
+
     protected int count(MongoCursor<?> cursor) {
         int count = 0;
         while (cursor.hasNext()) {
