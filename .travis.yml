@@ -14,7 +14,7 @@ jdk:
   - openjdk14
   - openjdk15
 
-script: bin/travis-build.sh
+script: sh bin/travis-build.sh
 
 env:
   - MONGODB=4.4.1 DRIVER=4.1.0
