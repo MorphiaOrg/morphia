@@ -12,7 +12,6 @@ release.sh
 entityscanner-plug/dependency-reduced-pom.xml
 codereview.rc
 target
-bin
 .gradle
 out/
 docs/landing/public
