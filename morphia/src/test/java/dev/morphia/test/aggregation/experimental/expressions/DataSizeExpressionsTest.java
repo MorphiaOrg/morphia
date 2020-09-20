@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.SystemVariables;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.DataSizeExpressions.binarySize;
+import static dev.morphia.aggregation.experimental.expressions.DataSizeExpressions.bsonSize;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static java.util.List.of;
 import static org.bson.Document.parse;
@@ -14,6 +16,7 @@ import static org.bson.Document.parse;
 public class DataSizeExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testBinarySize() {
+        checkMinServerVersion(4.4);
         getDatabase().getCollection("images").insertMany(of(
             parse("{ _id: 1, name: 'cat.jpg', binary: new BinData(0, 'OEJTfmD8twzaj/LPKLIVkA==')}"),
             parse("{ _id: 2, name: 'big_ben.jpg', binary: new BinData(0, 'aGVsZmRqYWZqYmxhaGJsYXJnYWZkYXJlcTU1NDE1Z2FmZCBmZGFmZGE=')}"),
@@ -37,5 +40,34 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 5, 'name' : 'empty.jpg', 'imageSize' : 0 }"));
 
         assertListEquals(expected, documents);
+    }
+
+    @Test
+    public void testBsonSize() {
+        checkMinServerVersion(4.4);
+        getDatabase().getCollection("employees").insertMany(of(
+            parse("{ '_id': 1, 'name': 'Alice', 'email': 'alice@company.com', 'position': 'Software Developer', 'current_task': "
+                  + "{ 'project_id': 1, 'project_name': 'Aggregation Improvements', 'project_duration': 5, 'hours': 20 } }"),
+            parse("{ '_id': 2, 'name': 'Bob', 'email': 'bob@company.com', 'position': 'Sales', 'current_task': { 'project_id': 2, "
+                  + "'project_name': 'Write Blog Posts', 'project_duration': 2, 'hours': 10, 'notes': 'Progress is slow. "
+                  + "Waiting for feedback.' } }"),
+            parse("{ '_id': 3, 'name': 'Charlie', 'email': 'charlie@company.com', 'position': 'HR (On Leave)', 'current_task': null }"),
+            parse("{ '_id': 4, 'name': 'Dianne', 'email': 'diane@company.com', 'position': 'Web Designer', 'current_task': { "
+                  + "'project_id': 3, 'project_name': 'Update Home Page', 'notes': 'Need to scope this project.' } }")));
+
+        List<Document> list = getDs().aggregate("employees")
+                                     .project(Projection.of()
+                                                        .include("name")
+                                                        .include("object_size", bsonSize(SystemVariables.ROOT)))
+                                     .execute(Document.class)
+                                     .toList();
+
+        List<Document> expected = of(
+            parse("{ '_id' : 1, 'name' : 'Alice', 'object_size' : 203 }"),
+            parse("{ '_id' : 2, 'name' : 'Bob', 'object_size' : 229 }"),
+            parse("{ '_id' : 3, 'name' : 'Charlie', 'object_size' : 105 }"),
+            parse("{ '_id' : 4, 'name' : 'Dianne', 'object_size' : 196   }"));
+
+        assertListEquals(expected, list);
     }
 }

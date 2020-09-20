@@ -16,8 +16,19 @@ public final class DataSizeExpressions {
      * Returns the size of a given string or binary data value’s content in bytes.
      *
      * @param expression the binary size expression
+     * @aggregation.expression $binarySize
      */
     public static Expression binarySize(Expression expression) {
         return new Expression("$binarySize", expression);
+    }
+
+    /**
+     * Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON.
+     *
+     * @param expression the bson size expression
+     * @aggregation.expression $bsonSize
+     */
+    public static Expression bsonSize(Expression expression) {
+        return new Expression("$bsonSize", expression);
     }
 }
