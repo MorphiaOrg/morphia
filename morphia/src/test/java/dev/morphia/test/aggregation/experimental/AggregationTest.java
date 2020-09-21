@@ -46,6 +46,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.Type;
 import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.test.MorphiaTestExtension;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.aggregation.experimental.model.Author;
 import dev.morphia.test.aggregation.experimental.model.Book;
@@ -56,6 +57,7 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -91,6 +93,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SuppressWarnings("unused")
+@ExtendWith({MorphiaTestExtension.class})
 public class AggregationTest extends TestBase {
 
     @Test

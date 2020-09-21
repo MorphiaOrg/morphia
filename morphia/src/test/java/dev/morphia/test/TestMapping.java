@@ -54,6 +54,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,6 +80,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 
 @SuppressWarnings({"unchecked", "unchecked"})
+@ExtendWith({MorphiaTestExtension.class})
 public class TestMapping extends TestBase {
 
     @Test
@@ -93,7 +95,7 @@ public class TestMapping extends TestBase {
         MapperOptions options = MapperOptions.builder()
                                              .collectionNaming(NamingStrategy.lowerCase())
                                              .build();
-        Datastore datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        Datastore datastore = Morphia.createDatastore(MorphiaTestExtension.TEST_DB_NAME, options);
         List<MappedClass> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         assertEquals("containsmapwithembeddedinterface", map.get(0).getCollectionName());
@@ -102,7 +104,7 @@ public class TestMapping extends TestBase {
         options = MapperOptions.builder()
                                .collectionNaming(NamingStrategy.kebabCase())
                                .build();
-        datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        datastore = Morphia.createDatastore(MorphiaTestExtension.TEST_DB_NAME, options);
         map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         assertEquals("contains-map-with-embedded-interface", map.get(0).getCollectionName());
@@ -128,7 +130,7 @@ public class TestMapping extends TestBase {
         MapperOptions options = MapperOptions.builder()
                                              .fieldNaming(NamingStrategy.snakeCase())
                                              .build();
-        Datastore datastore1 = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        Datastore datastore1 = Morphia.createDatastore(MorphiaTestExtension.TEST_DB_NAME, options);
         List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         List<MappedField> fields = map.get(0).getFields();
@@ -142,7 +144,7 @@ public class TestMapping extends TestBase {
         options = MapperOptions.builder()
                                .fieldNaming(NamingStrategy.kebabCase())
                                .build();
-        final Datastore datastore2 = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        final Datastore datastore2 = Morphia.createDatastore(MorphiaTestExtension.TEST_DB_NAME, options);
         map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         fields = map.get(0).getFields();
@@ -346,11 +348,11 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testExternalClass() {
-        Datastore datastore = Morphia.createDatastore(TEST_DB_NAME);
+        Datastore datastore = Morphia.createDatastore(MorphiaTestExtension.TEST_DB_NAME);
         List<MappedClass> mappedClasses = datastore.getMapper().map(UnannotatedEmbedded.class);
         assertEquals(1, mappedClasses.size(), "Should be able to map explicitly passed class references");
 
-        datastore = Morphia.createDatastore(TEST_DB_NAME);
+        datastore = Morphia.createDatastore(MorphiaTestExtension.TEST_DB_NAME);
         datastore.getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
         assertFalse(datastore.getMapper().isMapped(UnannotatedEmbedded.class),
             "Should not be able to map unannotated classes with mapPackage");

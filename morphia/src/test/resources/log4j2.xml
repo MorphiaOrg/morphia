@@ -14,9 +14,11 @@
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
+<!--
         <logger name="dev.morphia" level="info">
             <AppenderRef ref="Console"/>
         </logger>
+-->
         <logger name="Mongod.30000" level="error">
             <AppenderRef ref="mongo"/>
         </logger>

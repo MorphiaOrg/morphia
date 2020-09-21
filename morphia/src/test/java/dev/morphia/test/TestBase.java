@@ -1,24 +1,14 @@
 package dev.morphia.test;
 
-import com.antwerkz.bottlerocket.BottleRocket;
-import com.antwerkz.bottlerocket.clusters.ReplicaSet;
-import com.antwerkz.bottlerocket.configuration.types.Verbosity;
-import com.github.zafarkhaja.semver.Version;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.Datastore;
-import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
-import dev.morphia.query.DefaultQueryFactory;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,81 +28,39 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-@SuppressWarnings("WeakerAccess")
+@ExtendWith({MorphiaTestExtension.class})
 public abstract class TestBase {
-    protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    private static final MapperOptions mapperOptions = MapperOptions.DEFAULT;
-    private static MongoClient mongoClient;
 
-    private final MongoDatabase database;
-    private final Datastore ds;
-
-    protected TestBase() {
-        this.database = getMongoClient().getDatabase(TEST_DB_NAME);
-        this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
-        ds.setQueryFactory(new DefaultQueryFactory());
-    }
-
-    static void startMongo() {
-        Builder builder = MongoClientSettings.builder();
-
-        try {
-            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
-        } catch (Exception ignored) {
-            // not a 4.0 driver
-        }
-
-        String mongodb = System.getenv("MONGODB");
-        Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final ReplicaSet cluster = new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
-        //        cluster.addNode(new Configuration());
-        //        cluster.addNode(new Configuration());
-
-        cluster.configure(c -> {
-            c.systemLog(s -> {
-                s.setTraceAllExceptions(true);
-                s.setVerbosity(Verbosity.FIVE);
-                return null;
-            });
-            return null;
-        });
-        cluster.clean();
-        cluster.start();
-        mongoClient = cluster.getClient(builder);
-    }
+    @SuppressWarnings("unused")
+    protected MongoClient mongoClient;
+    @SuppressWarnings("unused")
+    protected MongoDatabase database;
+    @SuppressWarnings("unused")
+    protected Datastore ds;
 
     public MongoDatabase getDatabase() {
         return database;
     }
 
     public Datastore getDs() {
+        if (ds == null) {
+            System.out.println("******************* ds = " + ds);
+            new Exception("\"TestBase.getDs\" trace").printStackTrace(System.out);
+        }
         return ds;
+    }
+
+    public MongoClient getMongoClient() {
+        return mongoClient;
     }
 
     public Mapper getMapper() {
         return getDs().getMapper();
     }
 
-    public MongoClient getMongoClient() {
-        if (mongoClient == null) {
-            startMongo();
-        }
-        return mongoClient;
-    }
-
     public boolean isReplicaSet() {
         return runIsMaster().get("setName") != null;
-    }
-
-    @BeforeEach
-    public void setUp() {
-        cleanup();
-    }
-
-    @AfterEach
-    public void tearDown() {
-        cleanup();
     }
 
     protected void assertCapped(Class<?> type, Integer max, Integer size) {
@@ -128,20 +76,6 @@ public abstract class TestBase {
 
     protected void checkMinServerVersion(double version) {
         assumeTrue(serverIsAtLeastVersion(version), "Server should be at least " + version + " but found " + getServerVersion());
-    }
-
-    protected void cleanup() {
-        MongoDatabase db = getDatabase();
-        if (true) {
-            throw new RuntimeException("************************************************************");
-        }
-        db.listCollectionNames().forEach(s -> {
-
-            if (!s.equals("zipcodes")) {
-                LOG.info("dropping collection " + s);
-                db.getCollection(s).drop();
-            }
-        });
     }
 
     protected int count(MongoCursor<?> cursor) {
@@ -175,15 +109,19 @@ public abstract class TestBase {
     }
 
     protected void clear(Class<?>... types) {
+/*
         for (Class<?> type : types) {
             getMapper().getCollection(type).deleteMany(new Document());
         }
+*/
     }
 
     protected void clear(String... collections) {
+/*
         for (String collection : collections) {
             getDatabase().getCollection(collection).deleteMany(new Document());
         }
+*/
     }
 
     protected void insert(String collectionName, List<Document> list) {

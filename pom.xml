@@ -38,7 +38,7 @@
         <json.assert.version>1.2.3</json.assert.version>
         <maven.version>3.6.2</maven.version>
         <revapi.maven.plugin.version>0.11.4</revapi.maven.plugin.version>
-        <revapi.java.version>0.20.1</revapi.java.version>
+        <revapi.java.version>0.22.0</revapi.java.version>
         <slf4j.version>1.7.30</slf4j.version>
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M9</surefire.version>
@@ -61,14 +61,16 @@
                         <compilerArgument>-Xlint:deprecation</compilerArgument>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>${surefire.version}</version>
-                    <configuration>
-                        <alwaysGenerateSurefireReport>true</alwaysGenerateSurefireReport>
-                    </configuration>
-                </plugin>
+                <!--
+                                <plugin>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-surefire-report-plugin</artifactId>
+                                    <version>3.0.0-M5</version>
+                                    <configuration>
+                                        <alwaysGenerateSurefireReport>true</alwaysGenerateSurefireReport>
+                                    </configuration>
+                                </plugin>
+                -->
             </plugins>
         </pluginManagement>
 
@@ -76,7 +78,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>${surefire.version}</version>
+                <version>3.0.0-M9</version>
                 <configuration>
                     <alwaysGenerateSurefireReport>true</alwaysGenerateSurefireReport>
                 </configuration>

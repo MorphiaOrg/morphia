@@ -1,11 +1,14 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.MathExpressions;
+import dev.morphia.test.MorphiaTestExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.trunc;
 
+@ExtendWith({MorphiaTestExtension.class})
 public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
