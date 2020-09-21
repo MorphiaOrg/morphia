@@ -96,12 +96,10 @@ public class AggregationTest extends TestBase {
     @Test
     public void testAdd() {
         getMapper().map(Sales.class);
-        List<Document> parse = asList(
+        insert("sales", asList(
             parse("{ '_id' : 1, 'item' : 'abc', 'price' : 10, 'fee' : 2, date: ISODate('2014-03-01T08:00:00Z') }"),
             parse("{ '_id' : 2, 'item' : 'jkl', 'price' : 20, 'fee' : 1, date: ISODate('2014-03-01T09:00:00Z') }"),
-            parse("{ '_id' : 3, 'item' : 'xyz', 'price' : 5,  'fee' : 0, date: ISODate('2014-03-15T09:00:00Z') }"));
-        getDatabase().getCollection("sales", Document.class)
-                     .insertMany(parse);
+            parse("{ '_id' : 3, 'item' : 'xyz', 'price' : 5,  'fee' : 0, date: ISODate('2014-03-15T09:00:00Z') }")));
         Aggregation<Sales> pipeline = getDs()
                                           .aggregate(Sales.class)
                                           .project(Projection.of()
@@ -444,9 +442,9 @@ public class AggregationTest extends TestBase {
     @Test
     public void testMerge() {
         checkMinServerVersion(4.2);
-        MongoCollection<Document> salaries = getDatabase().getCollection("salaries");
+        clear("budgets");
 
-        salaries.insertMany(List.of(
+        insert("salaries", List.of(
             parse("{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }"),
             parse("{ '_id' : 2, employee: 'Bee', dept: 'A', salary: 120000, fiscal_year: 2017 }"),
             parse("{ '_id' : 3, employee: 'Cat', dept: 'Z', salary: 115000, fiscal_year: 2017 }"),

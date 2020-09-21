@@ -180,6 +180,12 @@ public abstract class TestBase {
         }
     }
 
+    protected void clear(String... collections) {
+        for (String collection : collections) {
+            getDatabase().getCollection(collection).deleteMany(new Document());
+        }
+    }
+
     protected void insert(String collectionName, List<Document> list) {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         collection.deleteMany(new Document());
