@@ -3,7 +3,7 @@ package dev.morphia.test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SampleTest {
+public class TestSample {
     String injected;
 
     @Test

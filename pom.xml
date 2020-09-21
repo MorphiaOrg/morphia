@@ -166,6 +166,7 @@
 
     <modules>
         <module>junit5</module>
+        <module>testng</module>
         <module>build-plugins</module>
         <module>util</module>
         <module>morphia</module>
