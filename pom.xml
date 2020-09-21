@@ -41,7 +41,7 @@
         <revapi.java.version>0.22.0</revapi.java.version>
         <slf4j.version>1.7.30</slf4j.version>
         <sofia.version>0.23</sofia.version>
-        <surefire.version>3.0.0-M9</surefire.version>
+        <surefire.version>3.0.0-M5</surefire.version>
         <zt.exec.version>1.10</zt.exec.version>
         <junit.version>4.13</junit.version>
         <junit5.version>5.6.2</junit5.version>
@@ -78,7 +78,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M9</version>
+                <version>${surefire.version}</version>
                 <configuration>
                     <alwaysGenerateSurefireReport>true</alwaysGenerateSurefireReport>
                 </configuration>
@@ -171,5 +171,6 @@
         <module>legacy-tests</module>
 <!--        <module>no-proxy-deps-tests</module>-->
         <module>examples</module>
+        <module>junit5</module>
     </modules>
 </project>
