@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.impls.ConvertType;
+import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
@@ -9,9 +10,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.List;
 
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.convert;
+import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.isNumber;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toBool;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toDate;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toDecimal;
@@ -20,6 +24,8 @@ import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.t
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toLong;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toObjectId;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.type;
+import static dev.morphia.aggregation.experimental.stages.AddFields.of;
+import static org.bson.Document.parse;
 
 public class TypeExpressionsTest extends ExpressionsTestBase {
 
@@ -33,6 +39,26 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
     public void testToBool() {
         checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toBool: 'true' }", toBool(value("true")), true);
+    }
+
+    @Test
+    public void testIsNumber() {
+        insert("examples", List.of(
+            parse("{ '_id' : 1, 'reading' : 42 }"),
+            parse("{ '_id' : 2, 'reading' : 'slowly' }")));
+
+        List<Document> actual = getDs().aggregate("examples")
+                                       .addFields(of()
+                                                      .field("isNumber", isNumber(field("reading")))
+                                                      .field("hasType", type(field("reading"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 1, 'reading' : 42, 'isNumber' : true, 'hasType' : 'int' }"),
+            parse("{ '_id' : 2, 'reading' : 'slowly', 'isNumber' : false, 'hasType' : 'string' }"));
+
+        assertListEquals(expected, actual);
     }
 
     @Test

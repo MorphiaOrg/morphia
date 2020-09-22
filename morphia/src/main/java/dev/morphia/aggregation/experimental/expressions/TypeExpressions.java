@@ -27,6 +27,19 @@ public final class TypeExpressions {
     }
 
     /**
+     * Checks if the specified expression resolves to one of the <a hre="https://docs.mongodb.com/manual/reference/bson-types/#bson-types">
+     * numeric BSON types.</a>
+     *
+     * @param input the value to check
+     * @return the new expression
+     * @aggregation.expression $isNumber
+     * @since 2.1
+     */
+    public static Expression isNumber(Expression input) {
+        return new Expression("$isNumber", input);
+    }
+
+    /**
      * Converts value to a boolean.
      *
      * @param input the value to process
