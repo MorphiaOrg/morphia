@@ -5,7 +5,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * @since 2.1
@@ -32,9 +32,9 @@ public class FunctionExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                writeNamedValue(mapper, writer, "body", body, encoderContext);
-                writeNamedValue(mapper, writer, "args", args, encoderContext);
-                writeNamedValue(mapper, writer, "lang", lang, encoderContext);
+                value(mapper, writer, "body", body, encoderContext);
+                value(mapper, writer, "args", args, encoderContext);
+                value(mapper, writer, "lang", lang, encoderContext);
             });
         });
     }

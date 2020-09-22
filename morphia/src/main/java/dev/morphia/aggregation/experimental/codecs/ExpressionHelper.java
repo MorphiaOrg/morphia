@@ -50,8 +50,8 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void writeNamedValue(Mapper mapper, BsonWriter writer, String name, Object value,
-                                       EncoderContext encoderContext) {
+    public static void value(Mapper mapper, BsonWriter writer, String name, Object value,
+                             EncoderContext encoderContext) {
         if (value != null) {
             writer.writeName(name);
             Codec codec = mapper.getCodecRegistry().get(value.getClass());

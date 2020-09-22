@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IndexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.RegexExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.ReplaceExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.TrimExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,28 @@ public final class StringExpressions {
     private static final Logger LOG = LoggerFactory.getLogger(StringExpressions.class);
 
     private StringExpressions() {
+    }
+
+    /**
+     * Replaces all instances of a search string in an input string with a replacement string.
+     *
+     * @return the new expression
+     * @aggregation.expression $replaceAll
+     * @since 2.1
+     */
+    public static Expression replaceAll(Expression input, Expression find, Expression replacement) {
+        return new ReplaceExpression("$replaceAll", input, find, replacement);
+    }
+
+    /**
+     * Replaces the first instance of a search string in an input string with a replacement string.
+     *
+     * @return the new expression
+     * @aggregation.expression $replaceOne
+     * @since 2.1
+     */
+    public static Expression replaceOne(Expression input, Expression find, Expression replacement) {
+        return new ReplaceExpression("$replaceOne", input, find, replacement);
     }
 
     /**

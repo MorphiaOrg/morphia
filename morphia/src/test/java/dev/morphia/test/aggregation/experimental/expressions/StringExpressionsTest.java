@@ -1,11 +1,16 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.StringExpressions;
+import dev.morphia.aggregation.experimental.stages.AddFields;
+import dev.morphia.aggregation.experimental.stages.Projection;
+import org.bson.Document;
 import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.indexOfBytes;
@@ -14,6 +19,8 @@ import static dev.morphia.aggregation.experimental.expressions.StringExpressions
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.regexFind;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.regexFindAll;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.regexMatch;
+import static dev.morphia.aggregation.experimental.expressions.StringExpressions.replaceAll;
+import static dev.morphia.aggregation.experimental.expressions.StringExpressions.replaceOne;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.rtrim;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.split;
 import static dev.morphia.aggregation.experimental.expressions.StringExpressions.strLenBytes;
@@ -27,7 +34,6 @@ import static dev.morphia.aggregation.experimental.expressions.StringExpressions
 import static org.bson.Document.parse;
 
 public class StringExpressionsTest extends ExpressionsTestBase {
-
     @Test
     public void testConcat() {
         assertAndCheckDocShape("{ $concat: [ 'item', ' - ', 'description' ] }", concat(value("item"), value(" - "), value("description")),
@@ -62,7 +68,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
         assertAndCheckDocShape("{ $ltrim: { input: '    winter wonderland' } }", ltrim(value("    winter wonderland")),
             "winter wonderland");
         assertAndCheckDocShape("{ $ltrim: { input: 'winter wonderland' } }", ltrim(value("winter wonderland"))
-                                                                   .chars(value("winter")),
+                                                                                 .chars(value("winter")),
             " wonderland");
     }
 
@@ -70,13 +76,13 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     public void testRegexFind() {
         checkMinServerVersion(4.2);
         assertAndCheckDocShape("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
-                                                                                       .pattern("inter"),
+                                                                                                     .pattern("inter"),
             parse("{match: 'inter', idx:1, captures:[]}"));
         assertAndCheckDocShape("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
-                                                                                       .pattern(Pattern.compile("inter")),
+                                                                                                     .pattern(Pattern.compile("inter")),
             parse("{match: 'inter', idx:1, captures:[]}"));
         assertAndCheckDocShape("{ $regexFind: { input: 'winter wonderland', regex: /splinter/ } }", regexFind(value("winter wonderland"))
-                                                                                          .pattern("splinter"), null);
+                                                                                                        .pattern("splinter"), null);
     }
 
     @Test
@@ -104,12 +110,59 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     }
 
     @Test
+    public void testReplaceAll() {
+        insert("myCollection", List.of(
+            parse("{ _id: 1, name: 'cafe' }"),
+            parse("{ _id: 2, name: 'Cafe' }"),
+            parse("{ _id: 3, name: 'café' }")));
+
+        List<Document> actual = getDs().aggregate("myCollection")
+                                       .addFields(AddFields.of()
+                                                           .field("resultObject",
+                                                               replaceAll(field("name"), literal("Cafe"), literal("CAFE"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 1, 'name' : 'cafe', 'resultObject' : 'cafe' }"),
+            parse("{ '_id' : 2, 'name' : 'Cafe', 'resultObject' : 'CAFE' }"),
+            parse("{ '_id' : 3, 'name' : 'café', 'resultObject' : 'café' }"));
+
+        assertListEquals(expected, actual);
+    }
+
+    @Test
+    public void testReplaceOne() {
+        insert("myCollection", List.of(
+            parse("{ '_id' : 1, 'item' : 'blue paint' }"),
+            parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
+            parse("{ '_id' : 3, 'item' : 'blue paint with blue paintbrush' }"),
+            parse("{ '_id' : 4, 'item' : 'blue paint with green paintbrush' }")));
+
+        List<Document> actual = getDs().aggregate("myCollection")
+                                       .project(Projection.of()
+                                                          .include("item",
+                                                              replaceOne(field("$item"), literal("blue paint"),
+                                                                  literal("red paint"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 1, 'item' : 'red paint' }"),
+            parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
+            parse("{ '_id' : 3, 'item' : 'red paint with blue paintbrush' }"),
+            parse("{ '_id' : 4, 'item' : 'red paint with green paintbrush' }"));
+
+        assertListEquals(expected, actual);
+    }
+
+    @Test
     public void testRtrim() {
         checkMinServerVersion(4.0);
         assertAndCheckDocShape("{ $rtrim: { input: 'winter wonderland    ' } }", rtrim(value("winter wonderland    ")),
             "winter wonderland");
         assertAndCheckDocShape("{ $rtrim: { input: 'winter wonderland' } }", rtrim(value("winter wonderland"))
-                                                                   .chars(value("land")),
+                                                                                 .chars(value("land")),
             "winter wonder");
     }
 

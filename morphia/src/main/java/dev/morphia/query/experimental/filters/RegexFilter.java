@@ -26,8 +26,8 @@ public class RegexFilter extends Filter {
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
-        ExpressionHelper.writeNamedValue(mapper, writer, "$regex", new BsonRegularExpression(regex), context);
-        ExpressionHelper.writeNamedValue(mapper, writer, "$options", options, context);
+        ExpressionHelper.value(mapper, writer, "$regex", new BsonRegularExpression(regex), context);
+        ExpressionHelper.value(mapper, writer, "$options", options, context);
         if (isNot()) {
             writer.writeEndDocument();
         }

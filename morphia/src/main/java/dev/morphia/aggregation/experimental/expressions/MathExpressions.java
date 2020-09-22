@@ -19,6 +19,17 @@ public final class MathExpressions {
     }
 
     /**
+     * Returns the absolute value of a number.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $abs
+     */
+    public static Expression abs(Expression value) {
+        return new MathExpression("$abs", value);
+    }
+
+    /**
      * Adds numbers together or adds numbers and a date. If one of the arguments is a date, $add treats the other arguments as
      * milliseconds to add to the date.
      *
@@ -35,6 +46,17 @@ public final class MathExpressions {
     }
 
     /**
+     * Returns the smallest integer greater than or equal to the specified number.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $ceil
+     */
+    public static Expression ceil(Expression value) {
+        return new MathExpression("$ceil", value);
+    }
+
+    /**
      * Returns the result of dividing the first number by the second. Accepts two argument expressions.
      *
      * @param numerator the numerator
@@ -44,42 +66,6 @@ public final class MathExpressions {
      */
     public static Expression divide(Expression numerator, Expression divisor) {
         return new MathExpression("$divide", List.of(numerator, divisor));
-    }
-
-    /**
-     * Multiplies numbers together and returns the result. Pass the arguments to $multiply in an array.
-     *
-     * @param first      the first expression to add
-     * @param additional any additional expressions
-     * @return the new expression
-     * @aggregation.expression $multiply
-     */
-    public static Expression multiply(Expression first, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
-        expressions.addAll(asList(additional));
-        return new MathExpression("$multiply", expressions);
-    }
-
-    /**
-     * Returns the absolute value of a number.
-     *
-     * @param value the value
-     * @return the new expression
-     * @aggregation.expression $abs
-     */
-    public static Expression abs(Expression value) {
-        return new MathExpression("$abs", value);
-    }
-
-    /**
-     * Returns the smallest integer greater than or equal to the specified number.
-     *
-     * @param value the value
-     * @return the new expression
-     * @aggregation.expression $ceil
-     */
-    public static Expression ceil(Expression value) {
-        return new MathExpression("$ceil", value);
     }
 
     /**
@@ -151,6 +137,20 @@ public final class MathExpressions {
     }
 
     /**
+     * Multiplies numbers together and returns the result. Pass the arguments to $multiply in an array.
+     *
+     * @param first      the first expression to add
+     * @param additional any additional expressions
+     * @return the new expression
+     * @aggregation.expression $multiply
+     */
+    public static Expression multiply(Expression first, Expression... additional) {
+        List<Expression> expressions = new ArrayList<>(asList(first));
+        expressions.addAll(asList(additional));
+        return new MathExpression("$multiply", expressions);
+    }
+
+    /**
      * Raises a number to the specified exponent.
      *
      * @param number   the base name
@@ -202,7 +202,7 @@ public final class MathExpressions {
 
     /**
      * Truncates a number to a whole integer or to a specified decimal place.
-     *
+     * <p>
      * NOTE:  Prior to 4.2, the place value wasn't available.  Pass null if your server is older than 4.2.
      *
      * @param number the value

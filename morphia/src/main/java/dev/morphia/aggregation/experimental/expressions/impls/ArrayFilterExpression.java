@@ -4,8 +4,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
 public class ArrayFilterExpression extends Expression {
     private final Expression array;
@@ -29,7 +29,7 @@ public class ArrayFilterExpression extends Expression {
         writer.writeStartDocument(getOperation());
         writeNamedExpression(mapper, writer, "input", array, encoderContext);
         writeNamedExpression(mapper, writer, "cond", conditional, encoderContext);
-        writeNamedValue(mapper, writer, "as", as, encoderContext);
+        value(mapper, writer, "as", as, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

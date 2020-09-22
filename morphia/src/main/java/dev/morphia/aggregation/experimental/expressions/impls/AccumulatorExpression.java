@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * @since 2.1
@@ -37,13 +37,13 @@ public class AccumulatorExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                writeNamedValue(mapper, writer, "init", initFunction, encoderContext);
-                writeNamedValue(mapper, writer, "initArgs", initArgs, encoderContext);
-                writeNamedValue(mapper, writer, "accumulate", accumulateFunction, encoderContext);
-                writeNamedValue(mapper, writer, "accumulateArgs", accumulateArgs, encoderContext);
-                writeNamedValue(mapper, writer, "merge", mergeFunction, encoderContext);
-                writeNamedValue(mapper, writer, "finalize", finalizeFunction, encoderContext);
-                writeNamedValue(mapper, writer, "lang", lang, encoderContext);
+                value(mapper, writer, "init", initFunction, encoderContext);
+                value(mapper, writer, "initArgs", initArgs, encoderContext);
+                value(mapper, writer, "accumulate", accumulateFunction, encoderContext);
+                value(mapper, writer, "accumulateArgs", accumulateArgs, encoderContext);
+                value(mapper, writer, "merge", mergeFunction, encoderContext);
+                value(mapper, writer, "finalize", finalizeFunction, encoderContext);
+                value(mapper, writer, "lang", lang, encoderContext);
             });
         });
     }

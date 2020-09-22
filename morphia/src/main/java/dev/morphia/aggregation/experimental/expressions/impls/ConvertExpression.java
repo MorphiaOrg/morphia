@@ -4,8 +4,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
 public class ConvertExpression extends Expression {
     private final Expression input;
@@ -24,7 +24,7 @@ public class ConvertExpression extends Expression {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         writeNamedExpression(mapper, writer, "input", input, encoderContext);
-        writeNamedValue(mapper, writer, "to", to.getName(), encoderContext);
+        value(mapper, writer, "to", to.getName(), encoderContext);
         writeNamedExpression(mapper, writer, "onError", onError, encoderContext);
         writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
         writer.writeEndDocument();

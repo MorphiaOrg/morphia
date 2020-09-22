@@ -7,8 +7,8 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.regex.Pattern;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedValue;
 
 public class RegexExpression extends Expression {
     private final Expression input;
@@ -25,8 +25,8 @@ public class RegexExpression extends Expression {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
         writeNamedExpression(mapper, writer, "input", input, encoderContext);
-        writeNamedValue(mapper, writer, "regex", new BsonRegularExpression(regex), encoderContext);
-        writeNamedValue(mapper, writer, "options", options, encoderContext);
+        value(mapper, writer, "regex", new BsonRegularExpression(regex), encoderContext);
+        value(mapper, writer, "options", options, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }
