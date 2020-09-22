@@ -111,6 +111,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testReplaceAll() {
+        checkMinServerVersion(4.4);
         insert("myCollection", List.of(
             parse("{ _id: 1, name: 'cafe' }"),
             parse("{ _id: 2, name: 'Cafe' }"),
@@ -133,6 +134,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testReplaceOne() {
+        checkMinServerVersion(4.4);
         insert("myCollection", List.of(
             parse("{ '_id' : 1, 'item' : 'blue paint' }"),
             parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
