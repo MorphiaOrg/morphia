@@ -23,9 +23,9 @@ import java.util.List;
 import static dev.morphia.query.experimental.filters.Filters.geoWithin;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 
 public class GeoWithinQueriesWithPolygonTest extends TestBase {
     @Test

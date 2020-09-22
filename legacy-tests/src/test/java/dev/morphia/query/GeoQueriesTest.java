@@ -11,7 +11,7 @@ import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.near;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GeoQueriesTest extends TestBase {
     @Test

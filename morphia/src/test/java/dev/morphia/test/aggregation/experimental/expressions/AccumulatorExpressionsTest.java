@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.test.models.User;
@@ -13,6 +14,7 @@ import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpres
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.first;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.function;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.last;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.min;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
@@ -129,6 +131,38 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 'jkl', 'firstSalesDate' : ISODate('2014-02-03T09:00:00Z') }"),
             parse("{ '_id' : 'abc', 'firstSalesDate' : ISODate('2014-01-01T08:00:00Z') }"));
 
+        assertDocumentEquals(expected, actual);
+    }
+
+    @Test
+    public void testFunction() {
+        checkMinServerVersion(4.4);
+        insert("players", of(
+            parse("{ _id: 1, name: 'Miss Cheevous',  scores: [ 10, 5, 10 ] }"),
+            parse("{ _id: 2, name: 'Miss Ann Thrope', scores: [ 10, 10, 10 ] }"),
+            parse("{ _id: 3, name: 'Mrs. Eppie Delta ', scores: [ 9, 8, 8 ] }")));
+
+        List<Document> actual = getDs().aggregate("players")
+                                       .addFields(AddFields.of()
+                                                           .field("isFound", function("function(name) {\n"
+                                                                                      + "  return hex_md5(name) == "
+                                                                                      + "\"15b0a220baa16331e8d80e15367677ad\"\n"
+                                                                                      + "}", field("name")))
+                                                           .field("message", function("function(name, scores) {\n"
+                                                                                      + "  let total = Array.sum(scores);\n"
+                                                                                      + "  return `Hello ${name}.  Your total score is"
+                                                                                      + " ${total}.`\n"
+                                                                                      + "}", field("name"), field("scores"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = of(
+            parse("{ '_id' : 1, 'name' : 'Miss Cheevous', 'scores' : [ 10, 5, 10 ], 'isFound' : false, 'message' : 'Hello Miss Cheevous. "
+                  + " Your total score is 25.' }"),
+            parse("{ '_id' : 2, 'name' : 'Miss Ann Thrope', 'scores' : [ 10, 10, 10 ], 'isFound' : true, 'message' : 'Hello Miss Ann "
+                  + "Thrope.  Your total score is 30.' }"),
+            parse("{ '_id' : 3, 'name' : 'Mrs. Eppie Delta ', 'scores' : [ 9, 8, 8 ], 'isFound' : false, 'message' : 'Hello Mrs. Eppie "
+                  + "Delta .  Your total score is 25.' }"));
         assertDocumentEquals(expected, actual);
     }
 

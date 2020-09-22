@@ -23,7 +23,7 @@ import static dev.morphia.query.experimental.filters.Filters.near;
 import static dev.morphia.query.experimental.filters.Filters.nearSphere;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GeoNearQueriesTest extends TestBase {
     @Test

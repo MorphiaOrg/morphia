@@ -21,7 +21,7 @@ import java.util.List;
 import static dev.morphia.query.experimental.filters.Filters.geoIntersects;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("unchecked")
 public class GeoIntersectsQueriesWithPointTest extends TestBase {

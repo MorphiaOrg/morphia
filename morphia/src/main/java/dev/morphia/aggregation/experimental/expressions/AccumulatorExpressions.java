@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.Accumulator;
 import dev.morphia.aggregation.experimental.expressions.impls.AccumulatorExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.FunctionExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Push;
 
 import java.util.ArrayList;
@@ -63,6 +64,19 @@ public final class AccumulatorExpressions {
         expressions.add(value);
         expressions.addAll(asList(additional));
         return new Accumulator("$avg", expressions);
+    }
+
+    /**
+     * Defines a custom aggregation function or expression in JavaScript.
+     *
+     * @param body the function body
+     * @param args the function arguments
+     * @return the new expression
+     * @aggregation.expression $function
+     * @since 2.1
+     */
+    public static Expression function(String body, Expression... args) {
+        return new FunctionExpression(body, args);
     }
 
     /**
