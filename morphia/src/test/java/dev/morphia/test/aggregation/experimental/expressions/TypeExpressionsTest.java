@@ -43,6 +43,7 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testIsNumber() {
+        checkMinServerVersion(4.4);
         insert("examples", List.of(
             parse("{ '_id' : 1, 'reading' : 42 }"),
             parse("{ '_id' : 2, 'reading' : 'slowly' }")));
