@@ -1,7 +1,7 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
 
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.and;
 import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.not;

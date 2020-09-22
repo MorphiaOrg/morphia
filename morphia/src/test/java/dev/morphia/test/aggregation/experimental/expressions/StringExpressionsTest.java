@@ -1,7 +1,7 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.StringExpressions;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.regex.Pattern;

@@ -4,7 +4,7 @@ import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.test.models.User;
 import org.bson.Document;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.util.List;

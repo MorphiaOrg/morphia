@@ -23,14 +23,14 @@ import dev.morphia.mapping.MappedField;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.SpecializedEntity;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class GenericsMappingTest extends TestBase {
 
@@ -44,7 +44,7 @@ public class GenericsMappingTest extends TestBase {
         MappedClass mapping = getMapper().map(SpecializedEntity.class).get(0);
 
         MappedField test = mapping.getMappedField("test");
-        assertEquals(UUID.class, test.getType());
+        assertEquals(test.getType(), UUID.class);
 
 
         SpecializedEntity beforeDB = new SpecializedEntity();
@@ -56,9 +56,9 @@ public class GenericsMappingTest extends TestBase {
                                           .filter(eq("_id", beforeDB.getId()))
                                           .first();
 
-        assertEquals(beforeDB.getId(), loaded.getId());
+        assertEquals(loaded.getId(), beforeDB.getId());
 
-        assertEquals(beforeDB.getTest(), loaded.getTest());
+        assertEquals(loaded.getTest(), beforeDB.getTest());
     }
 
     @Test
@@ -73,14 +73,14 @@ public class GenericsMappingTest extends TestBase {
         ct.integerThing = hai;
 
         getDs().save(ct);
-        Assertions.assertNotNull(ct.id);
-        assertEquals(1, getDs().find(ContainsThings.class).count());
+        assertNotNull(ct.id);
+        assertEquals(getDs().find(ContainsThings.class).count(), 1);
         final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
                                                .next();
-        Assertions.assertNotNull(ctLoaded);
-        Assertions.assertNotNull(ctLoaded.id);
-        Assertions.assertNotNull(ctLoaded.stringThing);
-        Assertions.assertNotNull(ctLoaded.integerThing);
+        assertNotNull(ctLoaded);
+        assertNotNull(ctLoaded.id);
+        assertNotNull(ctLoaded.stringThing);
+        assertNotNull(ctLoaded.integerThing);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class GenericsMappingTest extends TestBase {
 
         getDs().save(status);
 
-        Assertions.assertNotNull(getDs().find(EmailStatus.class).first());
+        assertNotNull(getDs().find(EmailStatus.class).first());
     }
 
     @Embedded

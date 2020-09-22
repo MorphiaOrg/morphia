@@ -295,8 +295,6 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testSaveAndRemove() {
-        getMapper().getCollection(Rectangle.class).drop();
-
         final Rectangle rect = new Rectangle(10, 10);
         ObjectId id = new ObjectId();
         rect.setId(id);

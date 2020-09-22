@@ -31,7 +31,6 @@ public class FiltersTest extends TestBase {
     @Test
     public void testBitsAllClear() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
@@ -58,7 +57,6 @@ public class FiltersTest extends TestBase {
     @Test
     public void testBitsAllSet() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
@@ -86,7 +84,6 @@ public class FiltersTest extends TestBase {
     @Test
     public void testBitsAnyClear() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
@@ -114,7 +111,6 @@ public class FiltersTest extends TestBase {
     @Test
     public void testBitsAnySet() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),

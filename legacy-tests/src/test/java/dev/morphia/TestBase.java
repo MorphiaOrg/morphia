@@ -1,8 +1,9 @@
 package dev.morphia;
 
 import com.antwerkz.bottlerocket.BottleRocket;
+import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
-import com.antwerkz.bottlerocket.configuration.Configuration;
+import com.antwerkz.bottlerocket.clusters.SingleNode;
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
@@ -71,9 +72,9 @@ public abstract class TestBase {
             throw new RuntimeException(e.getMessage(), e);
         }
         Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final ReplicaSet cluster = new ReplicaSet(mongodbRoot, "morphia_test", version);
-        cluster.addNode(new Configuration());
-        cluster.addNode(new Configuration());
+        final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
+                                     ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
+                                     : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
 
         cluster.start();
         mongoClient = cluster.getClient(builder);

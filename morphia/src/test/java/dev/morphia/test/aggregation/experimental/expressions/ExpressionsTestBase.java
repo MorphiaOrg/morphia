@@ -9,18 +9,17 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-import org.junit.jupiter.api.BeforeEach;
+import org.testng.annotations.BeforeMethod;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 
 public class ExpressionsTestBase extends TestBase {
-    @BeforeEach
+    @BeforeMethod
     public void seed() {
         getMapper().getCollection(User.class).drop();
         getDs().save(new User("", LocalDate.now()));
@@ -34,8 +33,8 @@ public class ExpressionsTestBase extends TestBase {
                             .get(MathExpression.class))
             .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        assertEquals(0, writer.getDocsLevel());
-        assertEquals(0, writer.getArraysLevel());
+        assertEquals(writer.getDocsLevel(), 0);
+        assertEquals(writer.getArraysLevel(), 0);
         assertDocumentEquals(expected, actual);
 
         Document test = getDs().aggregate(User.class)
@@ -47,7 +46,8 @@ public class ExpressionsTestBase extends TestBase {
     }
 
     protected void assertListEquals(List<Document> expected, List<Document> actual) {
-        assertEquals(expected.size(), actual.size());
-        expected.forEach(d -> assertTrue(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
+        assertEquals(actual.size(), expected.size());
+        expected.forEach(
+            d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
     }
 }

@@ -26,7 +26,7 @@ import static java.lang.Boolean.FALSE;
 public final class Conversions {
     private static final Logger LOG = LoggerFactory.getLogger(Conversions.class);
 
-    private static final Map<Class<?>, Map<Class<?>, Function<?, ?>>> conversions = new HashMap<>();
+    private static final Map<Class<?>, Map<Class<?>, Function<?, ?>>> CONVERSIONS = new HashMap<>();
 
     static {
         registerStringConversions();
@@ -102,6 +102,40 @@ public final class Conversions {
     }
 
     /**
+     * Attempts to convert a value to the given type
+     *
+     * @param value  the value to convert
+     * @param target the target type
+     * @param <T>    the target type
+     * @return the potentially converted value
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> T convert(Object value, Class<T> target) {
+        if (value == null) {
+            return (T) convertNull(target);
+        }
+
+        final Class<?> fromType = value.getClass();
+        if (fromType.equals(target)) {
+            return (T) value;
+        }
+
+        final Function function = CONVERSIONS
+                                      .computeIfAbsent(fromType, (f) -> new HashMap<>())
+                                      .get(target);
+        if (function == null) {
+            if (target.equals(String.class)) {
+                return (T) value.toString();
+            }
+            if (target.isEnum() && fromType.equals(String.class)) {
+                return (T) Enum.valueOf((Class<? extends Enum>) target, (String) value);
+            }
+            return (T) value;
+        }
+        return (T) function.apply(value);
+    }
+
+    /**
      * Register a conversion between two types.  For example, to register the conversion of {@link Date} to a {@link Long}, this method
      * could be invoked as follows:
      *
@@ -126,42 +160,8 @@ public final class Conversions {
                                               }
                                               return function.apply(s);
                                           };
-        conversions.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
+        CONVERSIONS.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
                    .put(target, conversion);
-    }
-
-    /**
-     * Attempts to convert a value to the given type
-     *
-     * @param value  the value to convert
-     * @param target the target type
-     * @param <T>    the target type
-     * @return the potentially converted value
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> T convert(Object value, Class<T> target) {
-        if (value == null) {
-            return (T) convertNull(target);
-        }
-
-        final Class<?> fromType = value.getClass();
-        if (fromType.equals(target)) {
-            return (T) value;
-        }
-
-        final Function function = conversions
-                                      .computeIfAbsent(fromType, (f) -> new HashMap<>())
-                                      .get(target);
-        if (function == null) {
-            if (target.equals(String.class)) {
-                return (T) value.toString();
-            }
-            if (target.isEnum() && fromType.equals(String.class)) {
-                return (T) Enum.valueOf((Class<? extends Enum>) target, (String) value);
-            }
-            return (T) value;
-        }
-        return (T) function.apply(value);
     }
 
     private static Object convertNull(Class<?> toType) {

@@ -6,7 +6,7 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
 import org.bson.Document;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,8 +29,8 @@ import static dev.morphia.query.experimental.filters.Filters.nor;
 import static dev.morphia.query.experimental.filters.Filters.or;
 import static dev.morphia.query.experimental.filters.Filters.size;
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 public class FiltersTest extends TestBase {
 
@@ -47,7 +47,6 @@ public class FiltersTest extends TestBase {
     @Test
     public void testBitsAllClear() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
@@ -56,25 +55,22 @@ public class FiltersTest extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
 
-        List<User> found = getDs().find(User.class)
-                                  .disableValidation()
-                                  .filter(bitsAllClear("a", 35)).iterator(options)
-                                  .toList();
+        lazyAssert(() -> getDs().getLoggedQuery(options),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAllClear("a", 35)).iterator(options)
+                                      .toList().size(), 2));
 
-        assertEquals(2, found.size(), () -> getDs().getLoggedQuery(options));
-
-        found = getDs().find(User.class)
-                       .disableValidation()
-                       .filter(bitsAllClear("a", new int[]{1, 5})).iterator(options)
-                       .toList();
-
-        assertEquals(2, found.size(), () -> getDs().getLoggedQuery(options));
+        lazyAssert(() -> getDs().getLoggedQuery(options),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAllClear("a", new int[]{1, 5})).iterator(options)
+                                      .toList().size(), 2));
     }
 
     @Test
     public void testBitsAllSet() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
@@ -83,26 +79,24 @@ public class FiltersTest extends TestBase {
 
         final FindOptions options = new FindOptions().logQuery();
 
-        List<User> found = getDs().find(User.class)
-                                  .disableValidation()
-                                  .filter(bitsAllSet("a", 50)).iterator(options)
-                                  .toList();
-
-        assertEquals(1, found.size(), () -> getDs().getLoggedQuery(options));
+        lazyAssert(() -> getDs().getLoggedQuery(options),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAllSet("a", 50)).iterator(options)
+                                      .toList().size(), 1));
 
         final FindOptions findOptions = new FindOptions().logQuery();
-        found = getDs().find(User.class)
-                       .disableValidation()
-                       .filter(bitsAllSet("a", new int[]{1, 5})).iterator(findOptions)
-                       .toList();
 
-        assertEquals(1, found.size(), () -> getDs().getLoggedQuery(findOptions));
+        lazyAssert(() -> getDs().getLoggedQuery(findOptions),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAllSet("a", new int[]{1, 5})).iterator(findOptions)
+                                      .toList().size(), 1));
     }
 
     @Test
     public void testBitsAnyClear() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
@@ -111,26 +105,24 @@ public class FiltersTest extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
 
-        List<User> found = getDs().find(User.class)
-                                  .disableValidation()
-                                  .filter(bitsAnyClear("a", 35)).iterator(options)
-                                  .toList();
-
-        assertEquals(3, found.size(), () -> getDs().getLoggedQuery(options));
+        lazyAssert(() -> getDs().getLoggedQuery(options),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAnyClear("a", 35)).iterator(options)
+                                      .toList().size(), 3));
 
         final FindOptions findOptions = new FindOptions().logQuery();
-        found = getDs().find(User.class)
-                       .disableValidation()
-                       .filter(bitsAnyClear("a", new int[]{1, 5})).iterator(findOptions)
-                       .toList();
 
-        assertEquals(2, found.size(), () -> getDs().getLoggedQuery(findOptions));
+        lazyAssert(() -> getDs().getLoggedQuery(findOptions),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAnyClear("a", new int[]{1, 5})).iterator(findOptions)
+                                      .toList().size(), 2));
     }
 
     @Test
     public void testBitsAnySet() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
-        collection.drop();
 
         collection.insertMany(asList(
             new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
@@ -139,20 +131,19 @@ public class FiltersTest extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
 
-        List<User> found = getDs().find(User.class)
-                                  .disableValidation()
-                                  .filter(bitsAnySet("a", 35)).iterator(options)
-                                  .toList();
-
-        assertEquals(1, found.size(), () -> getDs().getLoggedQuery(options));
+        lazyAssert(() -> getDs().getLoggedQuery(options),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAnySet("a", 35)).iterator(options)
+                                      .toList().size(), 1));
 
         final FindOptions findOptions = new FindOptions().logQuery();
-        found = getDs().find(User.class)
-                       .disableValidation()
-                       .filter(bitsAnySet("a", new int[]{1, 5})).iterator(findOptions)
-                       .toList();
 
-        assertEquals(1, found.size(), () -> getDs().getLoggedQuery(findOptions));
+        lazyAssert(() -> getDs().getLoggedQuery(findOptions),
+            () -> assertEquals(getDs().find(User.class)
+                                      .disableValidation()
+                                      .filter(bitsAnySet("a", new int[]{1, 5})).iterator(findOptions)
+                                      .toList().size(), 1));
     }
 
     @Test
@@ -168,7 +159,7 @@ public class FiltersTest extends TestBase {
                                       .filter(expr(gt(field("spent"), field("budget")))).iterator()
                                       .toList();
 
-        assertEquals(3, budgets.size());
+        assertEquals(budgets.size(), 3);
     }
 
     @Test
@@ -208,13 +199,13 @@ public class FiltersTest extends TestBase {
                             .filter(size("likes", 3)).iterator()
                             .next();
 
-        assertEquals("John", likes.name);
+        assertEquals(likes.name, "John");
 
         likes = getDs().find(User.class)
                        .filter(size("likes", 2)).iterator()
                        .next();
 
-        assertEquals("Janice", likes.name);
+        assertEquals(likes.name, "Janice");
 
         likes = getDs().find(User.class)
                        .filter(size("likes", 20)).iterator()
@@ -222,5 +213,4 @@ public class FiltersTest extends TestBase {
 
         assertNull(likes);
     }
-
 }

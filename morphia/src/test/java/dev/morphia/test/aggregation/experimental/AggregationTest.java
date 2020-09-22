@@ -46,7 +46,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.Type;
 import dev.morphia.query.internal.MorphiaCursor;
-import dev.morphia.test.MorphiaTestExtension;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.aggregation.experimental.model.Author;
 import dev.morphia.test.aggregation.experimental.model.Book;
@@ -56,8 +55,7 @@ import dev.morphia.test.aggregation.experimental.model.Sales;
 import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -89,11 +87,10 @@ import static dev.morphia.query.experimental.filters.Filters.type;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.bson.Document.parse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 @SuppressWarnings("unused")
-@ExtendWith({MorphiaTestExtension.class})
 public class AggregationTest extends TestBase {
 
     @Test
@@ -144,7 +141,7 @@ public class AggregationTest extends TestBase {
             parse("{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
                   + "'totalQuiz' : 16, 'totalScore' : 40 }"));
 
-        assertEquals(list, result);
+        assertEquals(result, list);
     }
 
     @Test
@@ -174,7 +171,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': { 'min': NumberDecimal('199.99'), 'max': NumberDecimal('385.00') },'count': 2 }"),
             parse("{'_id': { 'min': NumberDecimal('385.00'), 'max': NumberDecimal('483.00') },'count': 2 }"));
 
-        assertEquals(documents, results);
+        assertEquals(results, documents);
     }
 
     @Test
@@ -205,7 +202,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 0, 'count': 4, 'titles': ['The Pillars of Society', 'Dancer', 'The Great Wave off Kanagawa', 'Blue Flower']}"),
             parse("{'_id': 200, 'count': 2, 'titles': ['Melancholy III', 'Composition VII']}"),
             parse("{'_id': 'Other', 'count': 2, 'titles': ['The Persistence of Memory', 'The Scream']}"));
-        assertEquals(documents, results);
+        assertEquals(results, documents);
     }
 
     @Test
@@ -215,14 +212,14 @@ public class AggregationTest extends TestBase {
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .match(eq("name", "john doe"));
-        assertEquals(1, count(pipeline.execute(User.class)));
+        assertEquals(count(pipeline.execute(User.class)), 1);
 
-        assertEquals(2, count(pipeline.execute(User.class,
-            new dev.morphia.aggregation.experimental.AggregationOptions()
+        assertEquals(count(pipeline.execute(User.class,
+            new AggregationOptions()
                 .collation(Collation.builder()
                                     .locale("en")
                                     .collationStrength(SECONDARY)
-                                    .build()))));
+                                    .build()))), 2);
     }
 
     @Test
@@ -253,7 +250,7 @@ public class AggregationTest extends TestBase {
                                  .count("passing_scores")
                                  .execute(Document.class)
                                  .next();
-        assertEquals(parse("{ \"passing_scores\" : 4 }"), scores);
+        assertEquals(scores, parse("{ \"passing_scores\" : 4 }"));
     }
 
     @Test
@@ -382,10 +379,10 @@ public class AggregationTest extends TestBase {
             new Book("The Odyssey", "Homer", 10),
             new Book("Iliad", "Homer", 10)));
 
-        assertEquals(2, getDs().aggregate(Book.class)
-                               .limit(2)
-                               .execute(Document.class)
-                               .toList().size());
+        assertEquals(getDs().aggregate(Book.class)
+                            .limit(2)
+                            .execute(Document.class)
+                            .toList().size(), 2);
     }
 
     @Test
@@ -410,10 +407,10 @@ public class AggregationTest extends TestBase {
                                      .sort(on().ascending("_id"))
                                      .execute(Order.class)
                                      .toList();
-        assertEquals(inventories.get(0), lookups.get(0).getInventoryDocs().get(0));
-        assertEquals(inventories.get(3), lookups.get(1).getInventoryDocs().get(0));
-        assertEquals(inventories.get(4), lookups.get(2).getInventoryDocs().get(0));
-        assertEquals(inventories.get(5), lookups.get(2).getInventoryDocs().get(1));
+        assertEquals(lookups.get(0).getInventoryDocs().get(0), inventories.get(0));
+        assertEquals(lookups.get(1).getInventoryDocs().get(0), inventories.get(3));
+        assertEquals(lookups.get(2).getInventoryDocs().get(0), inventories.get(4));
+        assertEquals(lookups.get(2).getInventoryDocs().get(1), inventories.get(5));
     }
 
 /*
@@ -445,7 +442,6 @@ public class AggregationTest extends TestBase {
     @Test
     public void testMerge() {
         checkMinServerVersion(4.2);
-        clear("budgets");
 
         insert("salaries", List.of(
             parse("{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }"),
@@ -483,7 +479,6 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testNullGroupId() {
-        getMapper().getCollection(User.class).drop();
         getDs().save(asList(new User("John", LocalDate.now()),
             new User("Paul", LocalDate.now()),
             new User("George", LocalDate.now()),
@@ -493,12 +488,11 @@ public class AggregationTest extends TestBase {
                                          .group(Group.of()
                                                      .field("count", sum(value(1))));
 
-        assertEquals(Integer.valueOf(4), pipeline.execute(Document.class).tryNext().getInteger("count"));
+        assertEquals(pipeline.execute(Document.class).tryNext().getInteger("count"), Integer.valueOf(4));
     }
 
     @Test
     public void testOut() {
-        clear(Book.class, Author.class);
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
             new Book("Eclogues", "Dante", 2),
@@ -511,14 +505,14 @@ public class AggregationTest extends TestBase {
                            .field("books", push()
                                                .single(field("title"))))
                .out(Out.to(Author.class));
-        assertEquals(2, getMapper().getCollection(Author.class).countDocuments());
+        assertEquals(getMapper().getCollection(Author.class).countDocuments(), 2);
 
         getDs().aggregate(Book.class)
                .group(Group.of(id("author"))
                            .field("books", push()
                                                .single(field("title"))))
                .out(Out.to("different"));
-        assertEquals(2, getDatabase().getCollection("different").countDocuments());
+        assertEquals(getDatabase().getCollection("different").countDocuments(), 2);
     }
 
     @Test
@@ -570,7 +564,7 @@ public class AggregationTest extends TestBase {
                                                                .include("title")
                                                                .include("author"));
         MorphiaCursor<ProjectedBook> aggregate = pipeline.execute(ProjectedBook.class);
-        assertEquals(new ProjectedBook(1, "abc123", "zzz", "aaa"), aggregate.next());
+        assertEquals(aggregate.next(), new ProjectedBook(1, "abc123", "zzz", "aaa"));
 
         pipeline = getDs().aggregate(Book.class)
                           .project(Projection.of()
@@ -579,15 +573,15 @@ public class AggregationTest extends TestBase {
                                              .include("author"));
         aggregate = pipeline.execute(ProjectedBook.class);
 
-        assertEquals(new ProjectedBook(null, "abc123", "zzz", "aaa"), aggregate.next());
+        assertEquals(aggregate.next(), new ProjectedBook(null, "abc123", "zzz", "aaa"));
 
         pipeline = getDs().aggregate(Book.class)
                           .project(Projection.of()
                                              .exclude("lastModified"));
         final MorphiaCursor<Document> docAgg = pipeline.execute(Document.class);
 
-        assertEquals(parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}"),
-            docAgg.next());
+        assertEquals(docAgg.next(),
+            parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}"));
     }
 
     @Test
@@ -740,7 +734,7 @@ public class AggregationTest extends TestBase {
                                          .aggregate(User.class)
                                          .sample(3);
 
-        assertEquals(3, pipeline.execute(User.class).toList().size());
+        assertEquals(pipeline.execute(User.class).toList().size(), 3);
     }
 
     @Test
@@ -767,7 +761,7 @@ public class AggregationTest extends TestBase {
             parse("{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
                   + "'totalQuiz' : 16, 'totalScore' : 40 }"));
 
-        assertEquals(list, result);
+        assertEquals(result, list);
     }
 
     @Test
@@ -794,7 +788,7 @@ public class AggregationTest extends TestBase {
     }
 
     private void compare(int id, List<Document> expected, List<Document> actual) {
-        assertEquals(find(id, expected), find(id, actual));
+        assertEquals(find(id, actual), find(id, expected));
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

@@ -2,7 +2,7 @@ package dev.morphia.test.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.stages.Projection;
 import org.bson.Document;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.List;
 

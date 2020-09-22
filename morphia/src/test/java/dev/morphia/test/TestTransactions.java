@@ -4,10 +4,8 @@ import com.mongodb.TransactionOptions;
 import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,17 +13,16 @@ import java.util.List;
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
 import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
-@Tags(@Tag("transactions"))
+//@Tags(@Tag("transactions"))
 public class TestTransactions extends TestBase {
-    @BeforeEach
+    @BeforeMethod
     public void before() {
         checkMinServerVersion(4.0);
-        assumeTrue(isReplicaSet());
+        assumeTrue(isReplicaSet(), "These tests require a replica set");
         getDs().save(new Rectangle(1, 1));
         getDs().find(Rectangle.class).findAndDelete();
         getDs().save(new User("", LocalDate.now()));
@@ -64,7 +61,7 @@ public class TestTransactions extends TestBase {
             session.insert(rectangle);
 
             assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(1, session.find(Rectangle.class).count());
+            assertEquals(session.find(Rectangle.class).count(), 1);
 
             return null;
         });
@@ -81,12 +78,12 @@ public class TestTransactions extends TestBase {
             session.insert(rectangles);
 
             assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(rectangles, session.find(Rectangle.class).iterator().toList());
+            assertEquals(session.find(Rectangle.class).iterator().toList(), rectangles);
 
             return null;
         });
 
-        assertEquals(2, getDs().find(Rectangle.class).count());
+        assertEquals(getDs().find(Rectangle.class).count(), 2);
     }
 
     @Test
@@ -118,19 +115,19 @@ public class TestTransactions extends TestBase {
 
         getDs().withTransaction((session) -> {
 
-            assertEquals(rectangle, getDs().find(Rectangle.class).first());
-            assertEquals(rectangle, session.find(Rectangle.class).first());
+            assertEquals(getDs().find(Rectangle.class).first(), rectangle);
+            assertEquals(session.find(Rectangle.class).first(), rectangle);
 
             rectangle.setWidth(20);
             session.merge(rectangle);
 
-            assertEquals(1, getDs().find(Rectangle.class).first().getWidth(), 0.5);
-            assertEquals(20, session.find(Rectangle.class).first().getWidth(), 0.5);
+            assertEquals(getDs().find(Rectangle.class).first().getWidth(), 1, 0.5);
+            assertEquals(session.find(Rectangle.class).first().getWidth(), 20, 0.5);
 
             return null;
         });
 
-        assertEquals(20, getDs().find(Rectangle.class).first().getWidth(), 0.5);
+        assertEquals(getDs().find(Rectangle.class).first().getWidth(), 20, 0.5);
     }
 
     @Test
@@ -154,8 +151,7 @@ public class TestTransactions extends TestBase {
             return null;
         });
 
-        assertEquals(rectangle.getWidth() + 13, getDs().find(Rectangle.class)
-                                                       .first().getWidth(), 0.5);
+        assertEquals(getDs().find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
     }
 
     @Test
@@ -193,7 +189,7 @@ public class TestTransactions extends TestBase {
             session.save(rectangle);
 
             assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(42, session.find(Rectangle.class).first().getWidth(), 0.5);
+            assertEquals(session.find(Rectangle.class).first().getWidth(), 42, 0.5);
 
             return null;
         });
@@ -210,12 +206,12 @@ public class TestTransactions extends TestBase {
             session.save(rectangles);
 
             assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(2, session.find(Rectangle.class).count());
+            assertEquals(session.find(Rectangle.class).count(), 2);
 
             return null;
         });
 
-        assertEquals(2, getDs().find(Rectangle.class).count());
+        assertEquals(getDs().find(Rectangle.class).count(), 2);
     }
 
     @Test
@@ -231,15 +227,13 @@ public class TestTransactions extends TestBase {
                    .update(inc("width", 13))
                    .execute();
 
-            assertEquals(rectangle.getWidth() + 13, session.find(Rectangle.class)
-                                                           .first().getWidth(), 0.5);
+            assertEquals(session.find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
 
             assertNull(getDs().find(Rectangle.class).first());
             return null;
         });
 
-        assertEquals(rectangle.getWidth() + 13, getDs().find(Rectangle.class)
-                                                       .first().getWidth(), 0.5);
+        assertEquals(getDs().find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
     }
 
 }

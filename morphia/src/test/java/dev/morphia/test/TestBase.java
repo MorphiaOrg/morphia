@@ -1,16 +1,28 @@
 package dev.morphia.test;
 
+import com.antwerkz.bottlerocket.BottleRocket;
+import com.antwerkz.bottlerocket.clusters.MongoCluster;
+import com.antwerkz.bottlerocket.clusters.ReplicaSet;
+import com.antwerkz.bottlerocket.clusters.SingleNode;
+import com.antwerkz.bottlerocket.configuration.types.Verbosity;
+import com.github.zafarkhaja.semver.Version;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeMethod;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,38 +33,39 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
-@ExtendWith({MorphiaTestExtension.class})
 public abstract class TestBase {
+    protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
+    protected static MongoClient mongoClient;
+    private final MapperOptions mapperOptions = MapperOptions.DEFAULT;
 
-    @SuppressWarnings("unused")
-    protected MongoClient mongoClient;
     @SuppressWarnings("unused")
     protected MongoDatabase database;
     @SuppressWarnings("unused")
     protected Datastore ds;
 
-    public MongoDatabase getDatabase() {
-        return database;
-    }
-
-    public Datastore getDs() {
-        if (ds == null) {
-            System.out.println("******************* ds = " + ds);
-            new Exception("\"TestBase.getDs\" trace").printStackTrace(System.out);
+    public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
+        if (!condition) {
+            fail(messageSupplier.get());
         }
-        return ds;
     }
 
-    public MongoClient getMongoClient() {
-        return mongoClient;
+    @BeforeMethod
+    public void beforeEach() {
+        cleanup();
+    }
+
+    public MongoDatabase getDatabase() {
+        if (database == null) {
+            database = getMongoClient().getDatabase(TEST_DB_NAME);
+        }
+        return database;
     }
 
     public Mapper getMapper() {
@@ -63,15 +76,23 @@ public abstract class TestBase {
         return runIsMaster().get("setName") != null;
     }
 
-    protected void assertCapped(Class<?> type, Integer max, Integer size) {
-        Document result = getOptions(type);
-        assertTrue(result.getBoolean("capped"));
-        assertEquals(max, result.get("max"));
-        assertEquals(size, result.get("size"));
+    public Datastore getDs() {
+        if (ds == null) {
+            ds = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
+        }
+        return ds;
     }
 
     protected void assertDocumentEquals(Object expected, Object actual) {
         assertDocumentEquals("", expected, actual);
+    }
+
+    public void lazyAssert(Supplier<String> messageSupplier, Runnable assertion) {
+        try {
+            assertion.run();
+        } catch (AssertionError error) {
+            fail(messageSupplier.get(), error);
+        }
     }
 
     protected void checkMinServerVersion(double version) {
@@ -108,20 +129,17 @@ public abstract class TestBase {
         return Double.parseDouble(version.substring(0, 3));
     }
 
-    protected void clear(Class<?>... types) {
-/*
-        for (Class<?> type : types) {
-            getMapper().getCollection(type).deleteMany(new Document());
-        }
-*/
+    protected void assertCapped(Class<?> type, Integer max, Integer size) {
+        Document result = getOptions(type);
+        Assert.assertTrue(result.getBoolean("capped"));
+        assertEquals(result.get("max"), max);
+        assertEquals(result.get("size"), size);
     }
 
-    protected void clear(String... collections) {
-/*
-        for (String collection : collections) {
-            getDatabase().getCollection(collection).deleteMany(new Document());
+    protected void assumeTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new SkipException(message);
         }
-*/
     }
 
     protected void insert(String collectionName, List<Document> list) {
@@ -153,6 +171,13 @@ public abstract class TestBase {
         return (Document) cursor.getList("firstBatch", Document.class)
                                 .get(0)
                                 .get("options");
+    }
+
+    protected MongoClient getMongoClient() {
+        if (mongoClient == null) {
+            startMongo();
+        }
+        return mongoClient;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -193,14 +218,7 @@ public abstract class TestBase {
                 }
             }
         } else {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
-        }
-    }
-
-    private void assertSameNullity(String path, Object expected, Object actual) {
-        if (expected == null && actual != null
-            || actual == null && expected != null) {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
@@ -224,12 +242,56 @@ public abstract class TestBase {
         return getDatabase().getCollection(getMapper().getMappedClass(type).getCollectionName());
     }
 
+    private void assertSameNullity(String path, Object expected, Object actual) {
+        if (expected == null && actual != null
+            || actual == null && expected != null) {
+            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+        }
+    }
+
     private void assertSameType(String path, Object expected, Object actual) {
         if (expected instanceof List && actual instanceof List) {
             return;
         }
         if (!expected.getClass().equals(actual.getClass())) {
-            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
+    }
+
+    private void cleanup() {
+        MongoDatabase db = getDatabase();
+        db.listCollectionNames().forEach(s -> {
+            if (!s.equals("zipcodes")) {
+                db.getCollection(s).drop();
+            }
+        });
+    }
+
+    private void startMongo() {
+        Builder builder = MongoClientSettings.builder();
+
+        try {
+            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
+        } catch (Exception ignored) {
+            // not a 4.0 driver
+        }
+
+        String mongodb = System.getenv("MONGODB");
+        Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
+        final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
+                                     ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
+                                     : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
+
+        cluster.configure(c -> {
+            c.systemLog(s -> {
+                s.setTraceAllExceptions(true);
+                s.setVerbosity(Verbosity.FIVE);
+                return null;
+            });
+            return null;
+        });
+        cluster.clean();
+        cluster.start();
+        mongoClient = cluster.getClient(builder);
     }
 }

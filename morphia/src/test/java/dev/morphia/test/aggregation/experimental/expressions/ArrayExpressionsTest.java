@@ -5,7 +5,7 @@ import dev.morphia.aggregation.experimental.expressions.ArrayExpressions;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import org.bson.Document;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.List;
 
@@ -145,7 +145,6 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testReverseArray() {
         MongoCollection<Document> users = getDatabase().getCollection("users");
-        users.drop();
         users.insertMany(
             List.of(parse("{ '_id' : 1, 'name' : 'dave123', 'favorites' : [ 'chocolate', 'cake', 'butter', 'apples' ] }"),
                 parse("{ '_id' : 2, 'name' : 'li', 'favorites' : [ 'apples', 'pudding', 'pie' ] }"),

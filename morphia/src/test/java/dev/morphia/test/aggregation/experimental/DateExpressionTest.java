@@ -12,7 +12,7 @@ import dev.morphia.test.aggregation.experimental.model.StringDates;
 import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +42,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.field
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static org.bson.Document.parse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 public class DateExpressionTest extends ExpressionsTestBase {
     @Test
@@ -63,17 +63,17 @@ public class DateExpressionTest extends ExpressionsTestBase {
                                                        .include("dayOfWeek", dayOfWeek(field("date")))
                                                        .include("week", week(field("date"))));
         Document dates = pipeline.execute(Document.class).tryNext();
-        assertEquals(1, dates.getInteger("_id").intValue());
-        assertEquals(2014, dates.getInteger("year").intValue());
-        assertEquals(1, dates.getInteger("month").intValue());
-        assertEquals(1, dates.getInteger("day").intValue());
-        assertEquals(8, dates.getInteger("hour").intValue());
-        assertEquals(15, dates.getInteger("minutes").intValue());
-        assertEquals(39, dates.getInteger("seconds").intValue());
-        assertEquals(736, dates.getInteger("milliseconds").intValue());
-        assertEquals(1, dates.getInteger("dayOfYear").intValue());
-        assertEquals(4, dates.getInteger("dayOfWeek").intValue());
-        assertEquals(0, dates.getInteger("week").intValue());
+        assertEquals(dates.getInteger("_id").intValue(), 1);
+        assertEquals(dates.getInteger("year").intValue(), 2014);
+        assertEquals(dates.getInteger("month").intValue(), 1);
+        assertEquals(dates.getInteger("day").intValue(), 1);
+        assertEquals(dates.getInteger("hour").intValue(), 8);
+        assertEquals(dates.getInteger("minutes").intValue(), 15);
+        assertEquals(dates.getInteger("seconds").intValue(), 39);
+        assertEquals(dates.getInteger("milliseconds").intValue(), 736);
+        assertEquals(dates.getInteger("dayOfYear").intValue(), 1);
+        assertEquals(dates.getInteger("dayOfWeek").intValue(), 4);
+        assertEquals(dates.getInteger("week").intValue(), 0);
     }
 
     @Test
@@ -125,26 +125,8 @@ public class DateExpressionTest extends ExpressionsTestBase {
                 .execute(Document.class)
                 .next();
         result.remove("_id");
-        assertEquals(parse("{'date': ISODate('2017-02-08T12:00:00Z'), 'date_iso': ISODate('2017-02-08T12:00:00Z'),"
-                           + "'date_timezone': ISODate('2017-01-01T04:46:12Z')}"), result);
-    }
-
-    @Test
-    public void testDateToString() {
-        LocalDate joined = LocalDate.parse("2016-05-01 UTC", DateTimeFormatter.ofPattern("yyyy-MM-dd z"));
-        getMapper().getCollection(User.class).drop();
-        getDs().save(new User("John Doe", joined));
-        Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .project(of().include("string",
-                                             dateToString()
-                                                 .format("%Y-%m-%d")
-                                                 .date(field("joined"))));
-
-        MorphiaCursor<StringDates> it = pipeline.execute(StringDates.class);
-        while (it.hasNext()) {
-            assertEquals("2016-05-01", it.next().getString());
-        }
+        assertEquals(result, parse("{'date': ISODate('2017-02-08T12:00:00Z'), 'date_iso': ISODate('2017-02-08T12:00:00Z'),"
+                                   + "'date_timezone': ISODate('2017-01-01T04:46:12Z')}"));
     }
 
     @Test
@@ -164,12 +146,12 @@ public class DateExpressionTest extends ExpressionsTestBase {
                                                                          .timeZone("America/New_York")))
                                        .execute(Document.class)
                                        .toList();
-        assertEquals(List.of(
+        assertEquals(result, List.of(
             parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
             parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
             parse("{ '_id' : 3, 'date' : null }"),
             parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T05:00:00Z') }"),
-            parse("{ '_id' : 5, 'date' : ISODate('2017-02-09T08:35:02.055Z') }")), result);
+            parse("{ '_id' : 5, 'date' : ISODate('2017-02-09T08:35:02.055Z') }")));
 
 
         result = getDs().aggregate(LogMessage.class)
@@ -179,18 +161,36 @@ public class DateExpressionTest extends ExpressionsTestBase {
                         .execute(Document.class)
                         .toList();
 
-        assertEquals(List.of(
+        assertEquals(result, List.of(
             parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
             parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
             parse("{ '_id' : 3, 'date' : null }"),
             parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T00:00:00Z') }"),
-            parse("{ '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")), result);
+            parse("{ '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")));
+    }
+
+    @Test
+    public void testDateToString() {
+        LocalDate joined = LocalDate.parse("2016-05-01 UTC", DateTimeFormatter.ofPattern("yyyy-MM-dd z"));
+        getMapper().getCollection(User.class).drop();
+        getDs().save(new User("John Doe", joined));
+        Aggregation<User> pipeline = getDs()
+                                         .aggregate(User.class)
+                                         .project(of().include("string",
+                                             dateToString()
+                                                 .format("%Y-%m-%d")
+                                                 .date(field("joined"))));
+
+        MorphiaCursor<StringDates> it = pipeline.execute(StringDates.class);
+        while (it.hasNext()) {
+            assertEquals(it.next().getString(), "2016-05-01");
+        }
     }
 
     @Test
     public void testIsoDayOfWeek() throws ParseException {
         assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
-                           .timezone(value("America/Chicago")), 6);
+                                         .timezone(value("America/Chicago")), 6);
         assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01"))), 5);
     }
 
@@ -232,7 +232,7 @@ public class DateExpressionTest extends ExpressionsTestBase {
             parse("{'_id': 1, 'item': 'apple', 'qty': 5, 'order_date': '2018-03-10', 'convertedDate': ISODate('2018-03-10T00:00:00Z')}"),
             parse("{'_id': 2, 'item': 'pie', 'qty': 10, 'order_date': '2018-03-12', 'convertedDate': ISODate('2018-03-12T00:00:00Z')}"));
 
-        assertEquals(documents, result);
+        assertEquals(result, documents);
     }
 
     @Entity("logmessages")

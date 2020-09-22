@@ -27,8 +27,7 @@ import dev.morphia.test.TestBase;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.List;
 
@@ -51,6 +50,7 @@ import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
 import static org.bson.Document.parse;
+import static org.testng.Assert.assertEquals;
 
 
 public class CodecStructureTest extends TestBase {
@@ -151,9 +151,9 @@ public class CodecStructureTest extends TestBase {
                    .get(Sample.class)
                    .encode(writer, Sample.of(15L), EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        Assertions.assertEquals(0, writer.getDocsLevel());
-        Assertions.assertEquals(0, writer.getArraysLevel());
-        Assertions.assertEquals(15L, ((Document) actual.get("$sample")).getLong("size").longValue());
+        assertEquals(writer.getDocsLevel(), 0);
+        assertEquals(writer.getArraysLevel(), 0);
+        assertEquals(((Document) actual.get("$sample")).getLong("size").longValue(), 15L);
     }
 
     @Test
@@ -230,9 +230,9 @@ public class CodecStructureTest extends TestBase {
                    .get(Skip.class)
                    .encode(writer, Skip.of(15L), EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        Assertions.assertEquals(0, writer.getDocsLevel());
-        Assertions.assertEquals(0, writer.getArraysLevel());
-        Assertions.assertEquals(15L, actual.getLong("$skip").longValue());
+        assertEquals(writer.getDocsLevel(), 0);
+        assertEquals(writer.getArraysLevel(), 0);
+        assertEquals(actual.getLong("$skip").longValue(), 15L);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -242,8 +242,8 @@ public class CodecStructureTest extends TestBase {
                             .get(value.getClass()))
             .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        Assertions.assertEquals(0, writer.getDocsLevel());
-        Assertions.assertEquals(0, writer.getArraysLevel());
+        assertEquals(writer.getDocsLevel(), 0);
+        assertEquals(writer.getArraysLevel(), 0);
 
         assertDocumentEquals(expected, actual);
     }

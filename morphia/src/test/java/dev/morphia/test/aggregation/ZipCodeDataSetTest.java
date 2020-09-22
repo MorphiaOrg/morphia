@@ -12,10 +12,11 @@ import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.State;
 import org.bson.Document;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Ignore;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.net.URL;
@@ -31,9 +32,8 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.field
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Group.of;
 import static dev.morphia.query.experimental.filters.Filters.gte;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
@@ -41,10 +41,11 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * @mongodb.driver.manual tutorial/aggregation-zip-code-data-set/ Aggregation with the Zip Code Data Set
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
+@Ignore
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
 
-    @BeforeEach
+    @BeforeMethod
     public void installData() {
         File file = new File("zips.json");
         try {
@@ -55,9 +56,8 @@ public class ZipCodeDataSetTest extends TestBase {
                 }
             }
             MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
-            long count = zips.countDocuments();
-            if (count != 29353) {
-                LOG.info("Count is " + count + ".  (Re)installing sample data");
+            if (zips.countDocuments() == 0) {
+                LOG.info("Count is 0.  (Re)installing sample data");
                 MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
                 zipcodes.drop();
                 Files.lines(file.toPath())
@@ -135,11 +135,11 @@ public class ZipCodeDataSetTest extends TestBase {
 
             State state = states.get("SD");
 
-            assertEquals("SIOUX FALLS", state.getBiggest().getName());
-            assertEquals(102046, state.getBiggest().getPopulation().longValue());
+            assertEquals(state.getBiggest().getName(), "SIOUX FALLS");
+            assertEquals(state.getBiggest().getPopulation().longValue(), 102046);
 
-            assertEquals("ZEONA", state.getSmallest().getName());
-            assertEquals(8, state.getSmallest().getPopulation().longValue());
+            assertEquals(state.getSmallest().getName(), "ZEONA");
+            assertEquals(state.getSmallest().getPopulation().longValue(), 8);
         }
     }
 
@@ -151,7 +151,7 @@ public class ZipCodeDataSetTest extends TestBase {
 
                 if (population.getState().equals(state)) {
                     found = true;
-                    assertEquals(Long.valueOf(value), population.getPopulation());
+                    assertEquals(population.getPopulation(), Long.valueOf(value));
                 }
                 LOG.debug("population = " + population);
             }

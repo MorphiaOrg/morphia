@@ -1,7 +1,7 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.acos;
@@ -18,7 +18,7 @@ import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpre
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.tan;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
-    @BeforeEach
+    @BeforeMethod
     public void before() {
         checkMinServerVersion(4.2);
     }

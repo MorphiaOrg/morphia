@@ -162,7 +162,6 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         MappedClass mappedClass = getMapper().getMappedClass(IndexedClass.class);
 
-        collection.drop();
         IndexOptionsBuilder options = new IndexOptionsBuilder()
                                           .name("index_name")
                                           .background(true)

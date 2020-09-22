@@ -22,9 +22,7 @@ import static dev.morphia.utils.IndexType.TEXT;
 public class TestTextIndexing extends TestBase {
     @Test(expected = MongoCommandException.class)
     public void shouldNotAllowMultipleTextIndexes() {
-        Class<MultipleTextIndexes> clazz = MultipleTextIndexes.class;
-        getMapper().map(clazz);
-        getMapper().getCollection(clazz).drop();
+        getMapper().map(MultipleTextIndexes.class);
         getDs().ensureIndexes();
     }
 
@@ -47,7 +45,6 @@ public class TestTextIndexing extends TestBase {
     @Test
     public void testSingleAnnotation() {
         getMapper().map(CompoundTextIndex.class);
-        getMapper().getCollection(CompoundTextIndex.class).drop();
         getDs().ensureIndexes();
 
         List<Document> indexInfo = getIndexInfo(CompoundTextIndex.class);
@@ -71,7 +68,6 @@ public class TestTextIndexing extends TestBase {
         Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
 
         getMapper().map(clazz);
-        getMapper().getCollection(clazz).drop();
         getDs().ensureIndexes();
 
         List<Document> indexInfo = getIndexInfo(clazz);
