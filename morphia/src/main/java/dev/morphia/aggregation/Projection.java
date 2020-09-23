@@ -12,7 +12,7 @@ import java.util.List;
  * @deprecated use {@link dev.morphia.aggregation.experimental.stages.Projection} instead
  */
 @Deprecated(since = "2.0", forRemoval = true)
-public final class  Projection {
+public final class Projection {
 
     private final String target;
     private final String source;
@@ -43,12 +43,79 @@ public final class  Projection {
     }
 
     /**
+     * Creates an addition projection
+     *
+     * @param args the projection arguments
+     * @return the projection
+     * @aggregation.expression $add
+     */
+    public static Projection add(Object... args) {
+        return expression("$add", args);
+    }
+
+    /**
+     * Creates a division projection
+     *
+     * @param arg1 subtraction argument
+     * @param arg2 subtraction argument
+     * @return the projection
+     * @aggregation.expression $divide
+     */
+    public static Projection divide(Object arg1, Object arg2) {
+        return expression("$divide", arg1, arg2);
+    }
+
+    /**
+     * Provides access to arbitrary expressions taking an array of arguments, such as $concat
+     *
+     * @param operator the operator for the projection
+     * @param args     the projection arguments
+     * @return the projection
+     */
+    public static Projection expression(String operator, Object... args) {
+        return new Projection(operator, args);
+    }
+
+    /**
+     * Creates a list projection
+     *
+     * @param args the projection arguments
+     * @return the projection
+     */
+    public static Projection list(Object... args) {
+        return new Projection(null, args);
+    }
+
+    /**
+     * Creates a modulo projection
+     *
+     * @param arg1 subtraction argument
+     * @param arg2 subtraction argument
+     * @return the projection
+     * @aggregation.expression $mod
+     */
+    public static Projection mod(Object arg1, Object arg2) {
+        return expression("$mod", arg1, arg2);
+    }
+
+    /**
+     * Creates a multiplication projection
+     *
+     * @param args the projection arguments
+     * @return the projection
+     * @aggregation.expression $multiply
+     */
+    public static Projection multiply(Object... args) {
+        return expression("$multiply", args);
+    }
+
+    /**
      * Creates a projection on a field
      *
      * @param field the field
      * @return the projection
      */
-    public static  Projection projection(String field) {
+    public static Projection projection(String field) {
         return new Projection(field);
     }
 
@@ -59,7 +126,7 @@ public final class  Projection {
      * @param projectedField the new field name
      * @return the projection
      */
-    public static  Projection projection(String field, String projectedField) {
+    public static Projection projection(String field, String projectedField) {
         return new Projection(field, projectedField);
     }
 
@@ -71,75 +138,8 @@ public final class  Projection {
      * @param subsequent the other projections to apply
      * @return the projection
      */
-    public static  Projection projection(String field, Projection projection, Projection... subsequent) {
+    public static Projection projection(String field, Projection projection, Projection... subsequent) {
         return new Projection(field, projection, subsequent);
-    }
-
-    /**
-     * Provides access to arbitrary expressions taking an array of arguments, such as $concat
-     *
-     * @param operator the operator for the projection
-     * @param args     the projection arguments
-     * @return the projection
-     */
-    public static  Projection expression(String operator, Object... args) {
-        return new Projection(operator, args);
-    }
-
-    /**
-     * Creates a list projection
-     *
-     * @param args the projection arguments
-     * @return the projection
-     */
-    public static  Projection list(Object... args) {
-        return new Projection(null, args);
-    }
-
-    /**
-     * Creates an addition projection
-     *
-     * @param args the projection arguments
-     * @return the projection
-     * @aggregation.expression $add
-     */
-    public static  Projection add(Object... args) {
-        return expression("$add", args);
-    }
-
-    /**
-     * Creates a subtraction projection
-     *
-     * @param arg1 subtraction argument
-     * @param arg2 subtraction argument
-     * @return the projection
-     * @aggregation.expression $subtract
-     */
-    public static  Projection subtract(Object arg1, Object arg2) {
-        return expression("$subtract", arg1, arg2);
-    }
-
-    /**
-     * Creates a multiplication projection
-     *
-     * @param args the projection arguments
-     * @return the projection
-     * @aggregation.expression $multiply
-     */
-    public static  Projection multiply(Object... args) {
-        return expression("$multiply", args);
-    }
-
-    /**
-     * Creates a division projection
-     *
-     * @param arg1 subtraction argument
-     * @param arg2 subtraction argument
-     * @return the projection
-     * @aggregation.expression $divide
-     */
-    public static  Projection divide(Object arg1, Object arg2) {
-        return expression("$divide", arg1, arg2);
     }
 
     /**
@@ -154,15 +154,15 @@ public final class  Projection {
     }
 
     /**
-     * Creates a modulo projection
+     * Creates a subtraction projection
      *
      * @param arg1 subtraction argument
      * @param arg2 subtraction argument
      * @return the projection
-     * @aggregation.expression $mod
+     * @aggregation.expression $subtract
      */
-    public static  Projection mod(Object arg1, Object arg2) {
-        return expression("$mod", arg1, arg2);
+    public static Projection subtract(Object arg1, Object arg2) {
+        return expression("$subtract", arg1, arg2);
     }
 
     /**
@@ -173,17 +173,17 @@ public final class  Projection {
     }
 
     /**
-     * @return the projected field name
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
      * @return any projections applied to this field
      */
     public List<Projection> getProjections() {
         return projections;
+    }
+
+    /**
+     * @return the projected field name
+     */
+    public String getSource() {
+        return source;
     }
 
     /**
@@ -213,6 +213,6 @@ public final class  Projection {
     @Override
     public String toString() {
         return String.format("Projection{projectedField='%s', sourceField='%s', projections=%s, suppressed=%s}",
-                             source, target, projections, suppressed);
+            source, target, projections, suppressed);
     }
 }

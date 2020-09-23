@@ -13,12 +13,12 @@ public class SampleCodec extends StageCodec<Sample> {
     }
 
     @Override
-    protected void encodeStage(BsonWriter writer, Sample value, EncoderContext encoderContext) {
-        document(writer, () -> writer.writeInt64("size", value.getSize()));
+    public Class<Sample> getEncoderClass() {
+        return Sample.class;
     }
 
     @Override
-    public Class<Sample> getEncoderClass() {
-        return Sample.class;
+    protected void encodeStage(BsonWriter writer, Sample value, EncoderContext encoderContext) {
+        document(writer, () -> writer.writeInt64("size", value.getSize()));
     }
 }

@@ -11,12 +11,12 @@ public class SkipCodec extends StageCodec<Skip> {
     }
 
     @Override
-    protected void encodeStage(BsonWriter writer, Skip value, EncoderContext encoderContext) {
-        writer.writeInt64(value.getSize());
+    public Class<Skip> getEncoderClass() {
+        return Skip.class;
     }
 
     @Override
-    public Class<Skip> getEncoderClass() {
-        return Skip.class;
+    protected void encodeStage(BsonWriter writer, Skip value, EncoderContext encoderContext) {
+        writer.writeInt64(value.getSize());
     }
 }

@@ -80,6 +80,7 @@ public class CurrentOp extends Stage {
     public boolean isAllUsers() {
         return allUsers;
     }
+
     /**
      * @return include idle connections?
      * @morphia.internal
@@ -115,6 +116,7 @@ public class CurrentOp extends Stage {
     /**
      * If set to true for an aggregation running on mongos, $currentOp reports only those operations running locally on that mongos. If
      * false, then the $currentOp will instead report operations running on the shards.
+     *
      * @param localOps true to include only local ops
      * @return this
      */

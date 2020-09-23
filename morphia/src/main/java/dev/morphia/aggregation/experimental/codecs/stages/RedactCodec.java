@@ -17,6 +17,6 @@ public class RedactCodec extends StageCodec<Redact> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Redact value, EncoderContext encoderContext) {
-       value.getExpression().encode(getMapper(), writer, encoderContext);
+        value.getExpression().encode(getMapper(), writer, encoderContext);
     }
 }

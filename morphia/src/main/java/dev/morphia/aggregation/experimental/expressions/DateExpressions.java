@@ -23,136 +23,13 @@ public final class DateExpressions {
     }
 
     /**
-     * Converts a value to a date. If the value cannot be converted to a date, $toDate errors. If the value is null or missing,
-     * $toDate returns null.
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $toDate
-     */
-    public static DateExpression toDate(Expression value) {
-        return new DateExpression("$toDate", value);
-    }
-
-    /**
-     * Returns the day of the month for a date as a number between 1 and 31.
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $dayOfMonth
-     */
-    public static DateExpression dayOfMonth(Expression value) {
-        return new DateExpression("$dayOfMonth", value);
-    }
-
-    /**
-     * Returns the day of the year for a date as a number between 1 and 366 (leap year).
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $dayOfYear
-     */
-    public static DateExpression dayOfYear(Expression value) {
-        return new DateExpression("$dayOfYear", value);
-    }
-
-    /**
-     * Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $dayOfWeek
-     */
-    public static DateExpression dayOfWeek(Expression value) {
-        return new DateExpression("$dayOfWeek", value);
-    }
-
-    /**
-     * Returns the month for a date as a number between 1 (January) and 12 (December).
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $month
-     */
-    public static DateExpression month(Expression value) {
-        return new DateExpression("$month", value);
-    }
-
-    /**
-     * Returns the hour for a date as a number between 0 and 23.
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $hour
-     */
-    public static DateExpression hour(Expression value) {
-        return new DateExpression("$hour", value);
-    }
-
-    /**
-     * Returns the minute for a date as a number between 0 and 59.
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $minute
-     */
-    public static DateExpression minute(Expression value) {
-        return new DateExpression("$minute", value);
-    }
-
-    /**
-     * Returns the seconds for a date as a number between 0 and 60 (leap seconds).
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $second
-     */
-    public static DateExpression second(Expression value) {
-        return new DateExpression("$second", value);
-    }
-
-    /**
-     * Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the year) and 53
-     * (leap year).
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $week
-     */
-    public static DateExpression week(Expression value) {
-        return new DateExpression("$week", value);
-    }
-
-    /**
-     * Returns the milliseconds of a date as a number between 0 and 999.
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $millisecond
-     */
-    public static DateExpression milliseconds(Expression value) {
-        return new DateExpression("$millisecond", value);
-    }
-
-    /**
-     * Returns the year for a date as a number (e.g. 2014).
-     *
-     * @param value the expression containing the date value
-     * @return the new expression
-     * @aggregation.expression $year
-     */
-    public static DateExpression year(Expression value) {
-        return new DateExpression("$year", value);
-    }
-
-    /**
-     * Returns the date as a formatted string.
+     * Constructs and returns a Date object given the date’s constituent properties.
      *
      * @return the new expression
-     * @aggregation.expression $dateToString
+     * @aggregation.expression $dateFromParts
      */
-    public static DateToString dateToString() {
-        return new DateToString();
+    public static DateFromParts dateFromParts() {
+        return new DateFromParts();
     }
 
     /**
@@ -168,11 +45,66 @@ public final class DateExpressions {
     /**
      * Constructs and returns a Date object given the date’s constituent properties.
      *
+     * @param date The input date for which to return parts.
      * @return the new expression
-     * @aggregation.expression $dateFromParts
+     * @aggregation.expression $dateToParts
      */
-    public static DateFromParts dateFromParts() {
-        return new DateFromParts();
+    public static DateToParts dateToParts(Expression date) {
+        return new DateToParts(date);
+    }
+
+    /**
+     * Returns the date as a formatted string.
+     *
+     * @return the new expression
+     * @aggregation.expression $dateToString
+     */
+    public static DateToString dateToString() {
+        return new DateToString();
+    }
+
+    /**
+     * Returns the day of the month for a date as a number between 1 and 31.
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $dayOfMonth
+     */
+    public static DateExpression dayOfMonth(Expression value) {
+        return new DateExpression("$dayOfMonth", value);
+    }
+
+    /**
+     * Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $dayOfWeek
+     */
+    public static DateExpression dayOfWeek(Expression value) {
+        return new DateExpression("$dayOfWeek", value);
+    }
+
+    /**
+     * Returns the day of the year for a date as a number between 1 and 366 (leap year).
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $dayOfYear
+     */
+    public static DateExpression dayOfYear(Expression value) {
+        return new DateExpression("$dayOfYear", value);
+    }
+
+    /**
+     * Returns the hour for a date as a number between 0 and 23.
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $hour
+     */
+    public static DateExpression hour(Expression value) {
+        return new DateExpression("$hour", value);
     }
 
     /**
@@ -212,14 +144,82 @@ public final class DateExpressions {
     }
 
     /**
-     * Constructs and returns a Date object given the date’s constituent properties.
+     * Returns the milliseconds of a date as a number between 0 and 999.
      *
-     * @param date The input date for which to return parts.
+     * @param value the expression containing the date value
      * @return the new expression
-     * @aggregation.expression $dateToParts
+     * @aggregation.expression $millisecond
      */
-    public static DateToParts dateToParts(Expression date) {
-        return new DateToParts(date);
+    public static DateExpression milliseconds(Expression value) {
+        return new DateExpression("$millisecond", value);
+    }
+
+    /**
+     * Returns the minute for a date as a number between 0 and 59.
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $minute
+     */
+    public static DateExpression minute(Expression value) {
+        return new DateExpression("$minute", value);
+    }
+
+    /**
+     * Returns the month for a date as a number between 1 (January) and 12 (December).
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $month
+     */
+    public static DateExpression month(Expression value) {
+        return new DateExpression("$month", value);
+    }
+
+    /**
+     * Returns the seconds for a date as a number between 0 and 60 (leap seconds).
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $second
+     */
+    public static DateExpression second(Expression value) {
+        return new DateExpression("$second", value);
+    }
+
+    /**
+     * Converts a value to a date. If the value cannot be converted to a date, $toDate errors. If the value is null or missing,
+     * $toDate returns null.
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $toDate
+     */
+    public static DateExpression toDate(Expression value) {
+        return new DateExpression("$toDate", value);
+    }
+
+    /**
+     * Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the year) and 53
+     * (leap year).
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $week
+     */
+    public static DateExpression week(Expression value) {
+        return new DateExpression("$week", value);
+    }
+
+    /**
+     * Returns the year for a date as a number (e.g. 2014).
+     *
+     * @param value the expression containing the date value
+     * @return the new expression
+     * @aggregation.expression $year
+     */
+    public static DateExpression year(Expression value) {
+        return new DateExpression("$year", value);
     }
 
     /**

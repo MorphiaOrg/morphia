@@ -5,6 +5,12 @@
       "justification": "Driver classes should be ignored"
     }
   ],
+  "java.class.removed": [
+    {
+      "class": "class dev.morphia.aggregation.experimental.codecs.MergeCodec",
+      "justification": "internal implementation class"
+    }
+  ],
   "java.method.visibilityReduced": [
     {
       "class": "com.mongodb.*",
@@ -25,7 +31,7 @@
   ],
   "java.method.parameterTypeChanged": [
     {
-      "class" : "com.mongodb.*",
+      "class": "com.mongodb.*",
       "justification": "Driver classes should be ignored"
     }
   ],

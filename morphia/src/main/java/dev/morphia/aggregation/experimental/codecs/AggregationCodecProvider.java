@@ -69,9 +69,9 @@ import java.util.Map;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class AggregationCodecProvider implements CodecProvider {
 
-    private Map<Class, StageCodec> codecs;
     private final Codec expressionCodec;
     private final Mapper mapper;
+    private Map<Class, StageCodec> codecs;
 
     public AggregationCodecProvider(Mapper mapper) {
         this.mapper = mapper;

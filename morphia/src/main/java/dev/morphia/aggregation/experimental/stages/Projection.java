@@ -46,22 +46,6 @@ public class Projection extends Stage {
     }
 
     /**
-     * Includes a field.
-     *
-     * @param name  the field name
-     * @param value the value expression
-     * @return this
-     */
-    public Projection include(String name, Expression value) {
-        if (includes == null) {
-            includes = Fields.on(this);
-        }
-        includes.add(name, value);
-        validateProjections();
-        return this;
-    }
-
-    /**
      * @return the fields
      * @morphia.internal
      */
@@ -80,6 +64,21 @@ public class Projection extends Stage {
         return fields;
     }
 
+    /**
+     * Includes a field.
+     *
+     * @param name  the field name
+     * @param value the value expression
+     * @return this
+     */
+    public Projection include(String name, Expression value) {
+        if (includes == null) {
+            includes = Fields.on(this);
+        }
+        includes.add(name, value);
+        validateProjections();
+        return this;
+    }
 
     /**
      * Includes a field.
@@ -91,15 +90,6 @@ public class Projection extends Stage {
         return include(name, value(true));
     }
 
-    private Projection exclude(String name, Expression value) {
-        if (excludes == null) {
-            excludes = Fields.on(this);
-        }
-        excludes.add(name, value);
-        validateProjections();
-        return this;
-    }
-
     /**
      * Suppresses the _id field in the resulting document.
      *
@@ -107,6 +97,15 @@ public class Projection extends Stage {
      */
     public Projection suppressId() {
         suppressId = true;
+        return this;
+    }
+
+    private Projection exclude(String name, Expression value) {
+        if (excludes == null) {
+            excludes = Fields.on(this);
+        }
+        excludes.add(name, value);
+        validateProjections();
         return this;
     }
 

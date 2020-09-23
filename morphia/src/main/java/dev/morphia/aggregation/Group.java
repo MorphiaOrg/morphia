@@ -52,13 +52,40 @@ public final class Group {
     }
 
     /**
-     * Create a group of Groups for use as an ID
+     * Returns an array of all unique values that results from applying an expression to each document in a group of documents that share
+     * the same group by key. Order of the elements in the output array is unspecified.
      *
-     * @param fields the Groups to group
-     * @return the Group
+     * @param field the field to process
+     * @return an Accumulator
+     * @aggregation.expression $addToSet
      */
-    public static List<Group> id(Group... fields) {
-        return asList(fields);
+    public static Accumulator addToSet(String field) {
+        return new Accumulator("$addToSet", field);
+    }
+
+    /**
+     * Returns the average value of the numeric values that result from applying a specified expression to each document in a group of
+     * documents that share the same group by key. $avg ignores non-numeric values.
+     *
+     * @param field the field to process
+     * @return an Accumulator
+     * @aggregation.expression $avg
+     */
+    public static Accumulator average(String field) {
+        return new Accumulator("$avg", field);
+    }
+
+    /**
+     * Returns the value that results from applying an expression to the first document in a group of documents that share the same group
+     * by
+     * key. Only meaningful when documents are in a defined order.
+     *
+     * @param field the field to process
+     * @return an Accumulator
+     * @aggregation.expression $first
+     */
+    public static Accumulator first(String field) {
+        return new Accumulator("$first", field);
     }
 
     /**
@@ -116,40 +143,13 @@ public final class Group {
     }
 
     /**
-     * Returns an array of all unique values that results from applying an expression to each document in a group of documents that share
-     * the same group by key. Order of the elements in the output array is unspecified.
+     * Create a group of Groups for use as an ID
      *
-     * @param field the field to process
-     * @return an Accumulator
-     * @aggregation.expression $addToSet
+     * @param fields the Groups to group
+     * @return the Group
      */
-    public static Accumulator addToSet(String field) {
-        return new Accumulator("$addToSet", field);
-    }
-
-    /**
-     * Returns the average value of the numeric values that result from applying a specified expression to each document in a group of
-     * documents that share the same group by key. $avg ignores non-numeric values.
-     *
-     * @param field the field to process
-     * @return an Accumulator
-     * @aggregation.expression $avg
-     */
-    public static Accumulator average(String field) {
-        return new Accumulator("$avg", field);
-    }
-
-    /**
-     * Returns the value that results from applying an expression to the first document in a group of documents that share the same group
-     * by
-     * key. Only meaningful when documents are in a defined order.
-     *
-     * @param field the field to process
-     * @return an Accumulator
-     * @aggregation.expression $first
-     */
-    public static Accumulator first(String field) {
-        return new Accumulator("$first", field);
+    public static List<Group> id(Group... fields) {
+        return asList(fields);
     }
 
     /**

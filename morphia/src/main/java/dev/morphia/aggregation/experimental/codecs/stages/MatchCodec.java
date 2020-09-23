@@ -15,6 +15,11 @@ public class MatchCodec extends StageCodec<Match> {
     }
 
     @Override
+    public Class<Match> getEncoderClass() {
+        return Match.class;
+    }
+
+    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected void encodeStage(BsonWriter writer, Match value, EncoderContext encoderContext) {
         document(writer, () -> {
@@ -22,10 +27,5 @@ public class MatchCodec extends StageCodec<Match> {
                 filter.encode(getMapper(), writer, encoderContext);
             }
         });
-    }
-
-    @Override
-    public Class<Match> getEncoderClass() {
-        return Match.class;
     }
 }

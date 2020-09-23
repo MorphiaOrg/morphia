@@ -67,6 +67,17 @@ public final class AccumulatorExpressions {
     }
 
     /**
+     * Returns a value from the first document for each group. Order is only defined if the documents are in a defined order.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $first
+     */
+    public static Expression first(Expression value) {
+        return new Expression("$first", value);
+    }
+
+    /**
      * Defines a custom aggregation function or expression in JavaScript.
      *
      * @param body the function body
@@ -77,17 +88,6 @@ public final class AccumulatorExpressions {
      */
     public static Expression function(String body, Expression... args) {
         return new FunctionExpression(body, asList(args));
-    }
-
-    /**
-     * Returns a value from the first document for each group. Order is only defined if the documents are in a defined order.
-     *
-     * @param value the value
-     * @return the new expression
-     * @aggregation.expression $first
-     */
-    public static Expression first(Expression value) {
-        return new Expression("$first", value);
     }
 
     /**

@@ -17,7 +17,7 @@ public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
 
     @Override
     protected void encodeStage(BsonWriter writer, ReplaceWith replace, EncoderContext encoderContext) {
-        if(replace.getValue() != null) {
+        if (replace.getValue() != null) {
             replace.getValue().encode(getMapper(), writer, encoderContext);
         } else {
             replace.getDocument().encode(getMapper(), writer, encoderContext);

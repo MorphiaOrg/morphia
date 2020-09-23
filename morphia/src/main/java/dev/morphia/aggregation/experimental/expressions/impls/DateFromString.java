@@ -18,6 +18,15 @@ public class DateFromString extends Expression {
         super("$dateFromString");
     }
 
+    public DateFromString dateString(String dateString) {
+        return dateString(Expressions.value(dateString));
+    }
+
+    public DateFromString dateString(Expression dateString) {
+        this.dateString = dateString;
+        return this;
+    }
+
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
@@ -33,10 +42,6 @@ public class DateFromString extends Expression {
         writer.writeEndDocument();
     }
 
-    public DateFromString dateString(String dateString) {
-        return dateString(Expressions.value(dateString));
-    }
-
     public DateFromString format(Expression format) {
         this.format = format;
         return this;
@@ -44,11 +49,6 @@ public class DateFromString extends Expression {
 
     public DateFromString format(String format) {
         return format(Expressions.value(format));
-    }
-
-    public DateFromString dateString(Expression dateString) {
-        this.dateString = dateString;
-        return this;
     }
 
     public DateFromString onError(String onError) {

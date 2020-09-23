@@ -32,22 +32,6 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     private WriteConcern writeConcern;
     private Document hint;
 
-    @Override
-    public <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
-        MongoCollection<C> updated = collection;
-        if (writeConcern() != null) {
-            updated = updated.withWriteConcern(writeConcern());
-        }
-        if (getReadConcern() != null) {
-            updated = updated.withReadConcern(getReadConcern());
-        }
-        if (getReadPreference() != null) {
-            updated = updated.withReadPreference(getReadPreference());
-        }
-
-        return updated;
-    }
-
     /**
      * @return the configuration value
      */
@@ -106,14 +90,6 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     }
 
     /**
-     * @param unit the target unit type
-     * @return the configuration value
-     */
-    public long getMaxTime(TimeUnit unit) {
-        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
-    }
-
-    /**
      * @return the configuration value
      */
     public int batchSize() {
@@ -128,28 +104,6 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      */
     public AggregationOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
-        return this;
-    }
-
-    /**
-     * @return the hint for which index to use. A null value means no hint is set.
-     * @mongodb.server.release 3.6
-     * @since 2.0
-     */
-    public Document hint() {
-        return hint;
-    }
-
-    /**
-     * Sets the hint for which index to use. A null value means no hint is set.
-     *
-     * @param hint the hint
-     * @return this
-     * @mongodb.server.release 3.6
-     * @since 3.6
-     */
-    public AggregationOptions hint(String hint) {
-        this.hint = new Document("hint", hint);
         return this;
     }
 
@@ -234,6 +188,14 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     }
 
     /**
+     * @param unit the target unit type
+     * @return the configuration value
+     */
+    public long getMaxTime(TimeUnit unit) {
+        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
+    }
+
+    /**
      * @return the configuration value
      */
     public long getMaxTimeMS() {
@@ -252,6 +214,66 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      */
     public ReadPreference getReadPreference() {
         return readPreference;
+    }
+
+    /**
+     * @return the hint for which index to use. A null value means no hint is set.
+     * @mongodb.server.release 3.6
+     * @since 2.0
+     */
+    public Document hint() {
+        return hint;
+    }
+
+    /**
+     * Sets the hint for which index to use. A null value means no hint is set.
+     *
+     * @param hint the hint
+     * @return this
+     * @mongodb.server.release 3.6
+     * @since 3.6
+     */
+    public AggregationOptions hint(String hint) {
+        this.hint = new Document("hint", hint);
+        return this;
+    }
+
+    @Override
+    public <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
+        MongoCollection<C> updated = collection;
+        if (writeConcern() != null) {
+            updated = updated.withWriteConcern(writeConcern());
+        }
+        if (getReadConcern() != null) {
+            updated = updated.withReadConcern(getReadConcern());
+        }
+        if (getReadPreference() != null) {
+            updated = updated.withReadPreference(getReadPreference());
+        }
+
+        return updated;
+    }
+
+    /**
+     * Specifies the read concern.
+     *
+     * @param readConcern the read concern to use
+     * @return this
+     */
+    public AggregationOptions readConcern(ReadConcern readConcern) {
+        this.readConcern = readConcern;
+        return this;
+    }
+
+    /**
+     * Sets the read preference to use
+     *
+     * @param readPreference the read preference
+     * @return this
+     */
+    public AggregationOptions readPreference(ReadPreference readPreference) {
+        this.readPreference = readPreference;
+        return this;
     }
 
     /**
@@ -281,39 +303,10 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     }
 
     /**
-     * Specifies the read concern.
-     *
-     * @param readConcern the read concern to use
-     * @return this
-     */
-    public AggregationOptions readConcern(ReadConcern readConcern) {
-        this.readConcern = readConcern;
-        return this;
-    }
-
-    /**
      * @return the configuration value
      */
     public ReadPreference readPreference() {
         return readPreference;
-    }
-
-    /**
-     * Sets the read preference to use
-     *
-     * @param readPreference the read preference
-     * @return this
-     */
-    public AggregationOptions readPreference(ReadPreference readPreference) {
-        this.readPreference = readPreference;
-        return this;
-    }
-
-    /**
-     * @return the configuration value
-     */
-    public WriteConcern writeConcern() {
-        return writeConcern;
     }
 
     /**
@@ -325,5 +318,12 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     public AggregationOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
+    }
+
+    /**
+     * @return the configuration value
+     */
+    public WriteConcern writeConcern() {
+        return writeConcern;
     }
 }

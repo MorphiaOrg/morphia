@@ -16,6 +16,11 @@ public class LookupCodec extends StageCodec<Lookup> {
     }
 
     @Override
+    public Class<Lookup> getEncoderClass() {
+        return Lookup.class;
+    }
+
+    @Override
     protected void encodeStage(BsonWriter writer, Lookup value, EncoderContext encoderContext) {
         document(writer, () -> {
             if (value.getFrom() != null) {
@@ -29,10 +34,5 @@ public class LookupCodec extends StageCodec<Lookup> {
             writer.writeString("foreignField", value.getForeignField());
             writer.writeString("as", value.getAs());
         });
-    }
-
-    @Override
-    public Class<Lookup> getEncoderClass() {
-        return Lookup.class;
     }
 }

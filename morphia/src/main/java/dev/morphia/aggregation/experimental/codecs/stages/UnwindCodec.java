@@ -21,7 +21,7 @@ public class UnwindCodec extends StageCodec<Unwind> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Unwind value, EncoderContext encoderContext) {
-        if(!value.optionsPresent()) {
+        if (!value.optionsPresent()) {
             value.getPath().encode(getMapper(), writer, encoderContext);
         } else {
             document(writer, () -> {

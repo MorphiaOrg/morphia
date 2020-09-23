@@ -77,8 +77,7 @@ public class UpdateOperator {
         return value;
     }
 
-    protected <T extends UpdateOperator> T value(Object value) {
+    protected void value(Object value) {
         this.value = value;
-        return (T) this;
     }
 }

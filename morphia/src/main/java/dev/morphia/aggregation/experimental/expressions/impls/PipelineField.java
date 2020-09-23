@@ -16,16 +16,16 @@ public class PipelineField {
         this.value = value;
     }
 
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+        writer.writeName(name);
+        value.encode(mapper, writer, encoderContext);
+    }
+
     public String getName() {
         return name;
     }
 
     public Expression getValue() {
         return value;
-    }
-
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeName(name);
-        value.encode(mapper, writer, encoderContext);
     }
 }

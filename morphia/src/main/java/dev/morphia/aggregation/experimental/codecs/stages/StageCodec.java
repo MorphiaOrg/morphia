@@ -19,14 +19,6 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
         this.mapper = mapper;
     }
 
-    protected CodecRegistry getCodecRegistry() {
-        return mapper.getCodecRegistry();
-    }
-
-    protected Mapper getMapper() {
-        return mapper;
-    }
-
     @Override
     public final T decode(BsonReader reader, DecoderContext decoderContext) {
         throw new UnsupportedOperationException(Sofia.encodingOnly());
@@ -41,5 +33,13 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
     }
 
     protected abstract void encodeStage(BsonWriter writer, T value, EncoderContext encoderContext);
+
+    protected CodecRegistry getCodecRegistry() {
+        return mapper.getCodecRegistry();
+    }
+
+    protected Mapper getMapper() {
+        return mapper;
+    }
 
 }

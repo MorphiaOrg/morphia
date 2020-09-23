@@ -28,6 +28,18 @@ public final class ComparisonExpressions {
     }
 
     /**
+     * Returns true if the values are equivalent.
+     *
+     * @param first  an expression for the value to compare
+     * @param second an expression yielding the value to check against
+     * @return the new expression
+     * @aggregation.expression $eq
+     */
+    public static Expression eq(Expression first, Expression second) {
+        return new Expression("$eq", List.of(first, second));
+    }
+
+    /**
      * Compares two values and returns:
      *
      * <li>true when the first value is greater than the second value.
@@ -58,6 +70,18 @@ public final class ComparisonExpressions {
     }
 
     /**
+     * Returns true if the first value is less than the second.
+     *
+     * @param first  an expression for the value to compare
+     * @param second an expression yielding the value to check against
+     * @return the new expression
+     * @aggregation.expression $lt
+     */
+    public static Expression lt(Expression first, Expression second) {
+        return new Expression("$lt", List.of(first, second));
+    }
+
+    /**
      * Compares two values and returns:
      *
      * <li>true when the first value is less than or equivalent to the second value.
@@ -70,30 +94,6 @@ public final class ComparisonExpressions {
      */
     public static Expression lte(Expression first, Expression second) {
         return new Expression("$lte", List.of(first, second));
-    }
-
-    /**
-     * Returns true if the values are equivalent.
-     *
-     * @param first  an expression for the value to compare
-     * @param second an expression yielding the value to check against
-     * @return the new expression
-     * @aggregation.expression $eq
-     */
-    public static Expression eq(Expression first, Expression second) {
-        return new Expression("$eq", List.of(first, second));
-    }
-
-    /**
-     * Returns true if the first value is less than the second.
-     *
-     * @param first  an expression for the value to compare
-     * @param second an expression yielding the value to check against
-     * @return the new expression
-     * @aggregation.expression $lt
-     */
-    public static Expression lt(Expression first, Expression second) {
-        return new Expression("$lt", List.of(first, second));
     }
 
     /**

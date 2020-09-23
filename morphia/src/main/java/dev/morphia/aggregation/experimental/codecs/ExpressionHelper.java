@@ -14,12 +14,6 @@ public final class ExpressionHelper {
     private ExpressionHelper() {
     }
 
-    public static void document(BsonWriter writer, Runnable body) {
-        writer.writeStartDocument();
-        body.run();
-        writer.writeEndDocument();
-    }
-
     public static void array(BsonWriter writer, Runnable body) {
         writer.writeStartArray();
         body.run();
@@ -30,6 +24,12 @@ public final class ExpressionHelper {
         writer.writeStartArray(name);
         body.run();
         writer.writeEndArray();
+    }
+
+    public static void document(BsonWriter writer, Runnable body) {
+        writer.writeStartDocument();
+        body.run();
+        writer.writeEndDocument();
     }
 
     public static void document(BsonWriter writer, String name, Runnable body) {

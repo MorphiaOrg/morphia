@@ -37,29 +37,6 @@ public final class ArrayExpressions {
     }
 
     /**
-     * Returns the element at the specified array index.
-     *
-     * @param array the array to use
-     * @param index the index to return
-     * @return the new expression
-     * @aggregation.expression $arrayElemAt
-     */
-    public static Expression elementAt(Expression array, Expression index) {
-        return new Expression("$arrayElemAt", List.of(array, index));
-    }
-
-    /**
-     * Counts and returns the total number of items in an array.
-     *
-     * @param array the array to use
-     * @return the new expression
-     * @aggregation.expression $size
-     */
-    public static Expression size(Expression array) {
-        return new Expression("$size", array);
-    }
-
-    /**
      * Converts an array of key value pairs to a document.
      *
      * @param array the array to use
@@ -80,6 +57,18 @@ public final class ArrayExpressions {
      */
     public static Expression concatArrays(Expression array, Expression additional) {
         return new Expression("$concatArrays", asList(array, additional));
+    }
+
+    /**
+     * Returns the element at the specified array index.
+     *
+     * @param array the array to use
+     * @param index the index to return
+     * @return the new expression
+     * @aggregation.expression $arrayElemAt
+     */
+    public static Expression elementAt(Expression array, Expression index) {
+        return new Expression("$arrayElemAt", List.of(array, index));
     }
 
     /**
@@ -187,6 +176,17 @@ public final class ArrayExpressions {
      */
     public static Expression reverseArray(Expression array) {
         return new Expression("$reverseArray", array);
+    }
+
+    /**
+     * Counts and returns the total number of items in an array.
+     *
+     * @param array the array to use
+     * @return the new expression
+     * @aggregation.expression $size
+     */
+    public static Expression size(Expression array) {
+        return new Expression("$size", array);
     }
 
     /**

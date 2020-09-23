@@ -79,6 +79,83 @@ public interface AggregationPipeline {
     <U> Iterator<U> aggregate(String collectionName, Class<U> target, AggregationOptions options, ReadPreference readPreference);
 
     /**
+     * Categorizes incoming documents into groups, called buckets, based on a specified expression and
+     * bucket boundaries.
+     * <p>
+     * Each bucket is represented as a document in the output. The document for each bucket contains
+     * an _id field, whose value specifies the inclusive lower bound of the bucket and a count field
+     * that contains the number of documents in the bucket. The count field is included by default
+     * when the output is not specified.
+     *
+     * @param field      the field that used as groupby for bucketing
+     * @param boundaries An array of values based on the groupBy expression that specify the
+     *                   boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary
+     *                   and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/bucket $bucket
+     * @since 1.5
+     */
+    AggregationPipeline bucket(String field, List<?> boundaries);
+
+    /**
+     * Categorizes incoming documents into groups, called buckets, based on a specified expression and
+     * bucket boundaries.
+     * <p>
+     * Each bucket is represented as a document in the output. The document for each bucket contains
+     * an _id field, whose value specifies the inclusive lower bound of the bucket and a count field
+     * that contains the number of documents in the bucket. The count field is included by default
+     * when the output is not specified.
+     *
+     * @param field      the field that used as groupby for bucketing
+     * @param boundaries An array of values based on the groupBy expression that specify the
+     *                   boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary
+     *                   and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
+     * @param options    options that include defaultField for values that not match in any boundaries
+     *                   and also allow to specify output by using accumulator {@link Accumulator}
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/bucket $bucket
+     * @since 1.5
+     */
+    AggregationPipeline bucket(String field, List<?> boundaries, BucketOptions options);
+
+    /**
+     * Categorizes incoming documents into a specific number of groups, called buckets, based on a
+     * specified expression. Bucket boundaries are automatically determined in an attempt to evenly
+     * distribute the documents into the specified number of buckets.
+     * <p>
+     * Each bucket is represented as a document in the output. The document for each bucket contains
+     * an _id field, whose value specifies the inclusive lower bound and the exclusive upper bound for
+     * the bucket, and a count field that contains the number of documents in the bucket. The count
+     * field is included by default when the output is not specified.
+     *
+     * @param field       the field that used as groupby for auto bucketing
+     * @param bucketCount the number of buckets into which input documents are grouped
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/bucketAuto $bucketAuto
+     * @since 1.5
+     */
+    AggregationPipeline bucketAuto(String field, int bucketCount);
+
+    /**
+     * Categorizes incoming documents into a specific number of groups, called buckets, based on a
+     * specified expression. Bucket boundaries are automatically determined in an attempt to evenly
+     * distribute the documents into the specified number of buckets.
+     * <p>
+     * Each bucket is represented as a document in the output. The document for each bucket contains
+     * an _id field, whose value specifies the inclusive lower bound and the exclusive upper bound for
+     * the bucket, and a count field that contains the number of documents in the bucket. The count
+     * field is included by default when the output is not specified.
+     *
+     * @param field       the field that used as groupby for auto bucketing
+     * @param bucketCount the number of buckets into which input documents are grouped
+     * @param options     options that include granularity for buckets and output
+     * @return this
+     * @mongodb.driver.manual reference/operator/aggregation/bucketAuto $bucketAuto
+     * @since 1.5
+     */
+    AggregationPipeline bucketAuto(String field, int bucketCount, BucketAutoOptions options);
+
+    /**
      * Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality of $match,
      * $sort, and $limit for geospatial data. The output documents include an additional distance field and can include a location
      * identifier field.
@@ -214,17 +291,6 @@ public interface AggregationPipeline {
     AggregationPipeline project(Projection... projections);
 
     /**
-     * Deconstructs an array field from the input documents to output a document for each element. Each output document replaces the array
-     * with an element value. For each input document, outputs n documents where n is the number of array elements and can be zero for an
-     * empty array.
-     *
-     * @param field   the field to unwind
-     * @param options unwind options
-     * @return this
-     */
-    AggregationPipeline unwind(String field, UnwindOptions options);
-
-    /**
      * Randomly selects the specified number of documents from the previous pipeline stage.
      *
      * @param sampleSize the number of documents to select
@@ -272,87 +338,21 @@ public interface AggregationPipeline {
      * with an element value. For each input document, outputs n documents where n is the number of array elements and can be zero for an
      * empty array.
      *
+     * @param field   the field to unwind
+     * @param options unwind options
+     * @return this
+     */
+    AggregationPipeline unwind(String field, UnwindOptions options);
+
+    /**
+     * Deconstructs an array field from the input documents to output a document for each element. Each output document replaces the array
+     * with an element value. For each input document, outputs n documents where n is the number of array elements and can be zero for an
+     * empty array.
+     *
      * @param field the field to unwind
      * @return this
      * @aggregation.expression $unwind
      */
     AggregationPipeline unwind(String field);
-
-    /**
-     * Categorizes incoming documents into groups, called buckets, based on a specified expression and
-     * bucket boundaries.
-     * <p>
-     * Each bucket is represented as a document in the output. The document for each bucket contains
-     * an _id field, whose value specifies the inclusive lower bound of the bucket and a count field
-     * that contains the number of documents in the bucket. The count field is included by default
-     * when the output is not specified.
-     *
-     * @param field      the field that used as groupby for bucketing
-     * @param boundaries An array of values based on the groupBy expression that specify the
-     *                   boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary
-     *                   and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/bucket $bucket
-     * @since 1.5
-     */
-    AggregationPipeline bucket(String field, List<?> boundaries);
-
-    /**
-     * Categorizes incoming documents into groups, called buckets, based on a specified expression and
-     * bucket boundaries.
-     * <p>
-     * Each bucket is represented as a document in the output. The document for each bucket contains
-     * an _id field, whose value specifies the inclusive lower bound of the bucket and a count field
-     * that contains the number of documents in the bucket. The count field is included by default
-     * when the output is not specified.
-     *
-     * @param field      the field that used as groupby for bucketing
-     * @param boundaries An array of values based on the groupBy expression that specify the
-     *                   boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary
-     *                   and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
-     * @param options    options that include defaultField for values that not match in any boundaries
-     *                   and also allow to specify output by using accumulator {@link Accumulator}
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/bucket $bucket
-     * @since 1.5
-     */
-    AggregationPipeline bucket(String field, List<?> boundaries, BucketOptions options);
-
-    /**
-     * Categorizes incoming documents into a specific number of groups, called buckets, based on a
-     * specified expression. Bucket boundaries are automatically determined in an attempt to evenly
-     * distribute the documents into the specified number of buckets.
-     * <p>
-     * Each bucket is represented as a document in the output. The document for each bucket contains
-     * an _id field, whose value specifies the inclusive lower bound and the exclusive upper bound for
-     * the bucket, and a count field that contains the number of documents in the bucket. The count
-     * field is included by default when the output is not specified.
-     *
-     * @param field       the field that used as groupby for auto bucketing
-     * @param bucketCount the number of buckets into which input documents are grouped
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/bucketAuto $bucketAuto
-     * @since 1.5
-     */
-    AggregationPipeline bucketAuto(String field, int bucketCount);
-
-    /**
-     * Categorizes incoming documents into a specific number of groups, called buckets, based on a
-     * specified expression. Bucket boundaries are automatically determined in an attempt to evenly
-     * distribute the documents into the specified number of buckets.
-     * <p>
-     * Each bucket is represented as a document in the output. The document for each bucket contains
-     * an _id field, whose value specifies the inclusive lower bound and the exclusive upper bound for
-     * the bucket, and a count field that contains the number of documents in the bucket. The count
-     * field is included by default when the output is not specified.
-     *
-     * @param field       the field that used as groupby for auto bucketing
-     * @param bucketCount the number of buckets into which input documents are grouped
-     * @param options     options that include granularity for buckets and output
-     * @return this
-     * @mongodb.driver.manual reference/operator/aggregation/bucketAuto $bucketAuto
-     * @since 1.5
-     */
-    AggregationPipeline bucketAuto(String field, int bucketCount, BucketAutoOptions options);
 
 }

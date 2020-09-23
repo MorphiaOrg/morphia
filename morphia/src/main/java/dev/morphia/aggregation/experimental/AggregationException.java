@@ -17,7 +17,7 @@ public class AggregationException extends RuntimeException {
      * Creates an exception with a message and a cause
      *
      * @param message the message
-     * @param cause the cause
+     * @param cause   the cause
      */
     public AggregationException(String message, Exception cause) {
         super(message, cause);

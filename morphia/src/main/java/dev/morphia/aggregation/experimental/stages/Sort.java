@@ -44,7 +44,7 @@ public class Sort extends Stage {
     /**
      * Adds an descending sort definition on the field.
      *
-     * @param field the sort field
+     * @param field      the sort field
      * @param additional any additional fields to sort on
      * @return this
      */

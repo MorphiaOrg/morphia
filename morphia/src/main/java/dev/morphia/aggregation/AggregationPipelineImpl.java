@@ -52,14 +52,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         this.source = source;
     }
 
-    /**
-     * @return the stages
-     * @morphia.internal
-     */
-    public List<Document> getStages() {
-        return stages;
-    }
-
     @Override
     public <U> Iterator<U> aggregate(Class<U> target) {
         return aggregate(target, AggregationOptions.builder().build(), collection.getReadPreference());
@@ -85,6 +77,41 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
         AggregateIterable<U> cursor = collection.aggregate(stages, target);
         return cursor.iterator();
+    }
+
+    @Override
+    public AggregationPipeline bucket(String field, List<?> boundaries) {
+        return bucket(field, boundaries, new BucketOptions());
+    }
+
+    @Override
+    public AggregationPipeline bucket(String field, List<?> boundaries, BucketOptions options) {
+        if (boundaries == null || boundaries.size() < 2) {
+            throw new RuntimeException("Boundaries list should be present and has at least 2 elements");
+        }
+        Document document = options.toDocument();
+        document.put("groupBy", "$" + field);
+        document.put("boundaries", boundaries);
+        stages.add(new Document("$bucket", document));
+        return this;
+    }
+
+    @Override
+    public AggregationPipeline bucketAuto(String field, int bucketCount) {
+        return bucketAuto(field, bucketCount, new BucketAutoOptions());
+    }
+
+    @Override
+    public AggregationPipeline bucketAuto(String field, int bucketCount, BucketAutoOptions options) {
+
+        if (bucketCount < 1) {
+            throw new RuntimeException("bucket count should be more than 0");
+        }
+        Document document = options.toDocument();
+        document.put("groupBy", "$" + field);
+        document.put("buckets", bucketCount);
+        stages.add(new Document("$bucketAuto", document));
+        return this;
     }
 
     @Override
@@ -149,12 +176,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline sample(int sampleSize) {
-        stages.add(new Document("$sample", new Document("size", sampleSize)));
-        return this;
-    }
-
-    @Override
     public <U> Iterator<U> out(Class<U> target) {
         return out(mapper.getCollection(target).getNamespace().getCollectionName(), target);
     }
@@ -188,6 +209,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
+    public AggregationPipeline sample(int sampleSize) {
+        stages.add(new Document("$sample", new Document("size", sampleSize)));
+        return this;
+    }
+
+    @Override
     public AggregationPipeline skip(int count) {
         stages.add(new Document("$skip", count));
         return this;
@@ -205,8 +232,8 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline unwind(String field) {
-        stages.add(new Document("$unwind", "$" + field));
+    public AggregationPipeline sortByCount(String field) {
+        stages.add(new Document("$sortByCount", "$" + field));
         return this;
     }
 
@@ -223,44 +250,48 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline sortByCount(String field) {
-        stages.add(new Document("$sortByCount", "$" + field));
+    public AggregationPipeline unwind(String field) {
+        stages.add(new Document("$unwind", "$" + field));
         return this;
     }
 
-    @Override
-    public AggregationPipeline bucket(String field, List<?> boundaries) {
-        return bucket(field, boundaries, new BucketOptions());
+    /**
+     * @return the stages
+     * @morphia.internal
+     */
+    public List<Document> getStages() {
+        return stages;
     }
 
     @Override
-    public AggregationPipeline bucket(String field, List<?> boundaries, BucketOptions options) {
-        if (boundaries == null || boundaries.size() < 2) {
-            throw new RuntimeException("Boundaries list should be present and has at least 2 elements");
+    public String toString() {
+        return stages.toString();
+    }
+
+    private void putIfNull(Document document, String name, Object value) {
+        if (value != null) {
+            document.put(name, value);
         }
-        Document document = options.toDocument();
-        document.put("groupBy", "$" + field);
-        document.put("boundaries", boundaries);
-        stages.add(new Document("$bucket", document));
-        return this;
     }
 
-    @Override
-    public AggregationPipeline bucketAuto(String field, int bucketCount) {
-        return bucketAuto(field, bucketCount, new BucketAutoOptions());
-    }
+    private Document toDocument(Group group) {
+        Document document = new Document();
 
-    @Override
-    public AggregationPipeline bucketAuto(String field, int bucketCount, BucketAutoOptions options) {
-
-        if (bucketCount < 1) {
-            throw new RuntimeException("bucket count should be more than 0");
+        if (group.getAccumulator() != null) {
+            document.put(group.getName(), group.getAccumulator().toDocument());
+        } else if (group.getProjections() != null) {
+            final Document projection = new Document();
+            for (Projection p : group.getProjections()) {
+                projection.putAll(toDocument(p));
+            }
+            document.put(group.getName(), projection);
+        } else if (group.getNested() != null) {
+            document.put(group.getName(), toDocument(group.getNested()));
+        } else {
+            document.put(group.getName(), group.getSourceField());
         }
-        Document document = options.toDocument();
-        document.put("groupBy", "$" + field);
-        document.put("buckets", bucketCount);
-        stages.add(new Document("$bucketAuto", document));
-        return this;
+
+        return document;
     }
 
     /**
@@ -311,32 +342,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         }
     }
 
-    private Document toDocument(Group group) {
-        Document document = new Document();
-
-        if (group.getAccumulator() != null) {
-            document.put(group.getName(), group.getAccumulator().toDocument());
-        } else if (group.getProjections() != null) {
-            final Document projection = new Document();
-            for (Projection p : group.getProjections()) {
-                projection.putAll(toDocument(p));
-            }
-            document.put(group.getName(), projection);
-        } else if (group.getNested() != null) {
-            document.put(group.getName(), toDocument(group.getNested()));
-        } else {
-            document.put(group.getName(), group.getSourceField());
-        }
-
-        return document;
-    }
-
-    private void putIfNull(Document document, String name, Object value) {
-        if (value != null) {
-            document.put(name, value);
-        }
-    }
-
     private List<Object> toExpressionArgs(List<Object> args) {
         List<Object> result = new ArrayList<>();
         for (Object arg : args) {
@@ -353,10 +358,5 @@ public class AggregationPipelineImpl implements AggregationPipeline {
             }
         }
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return stages.toString();
     }
 }

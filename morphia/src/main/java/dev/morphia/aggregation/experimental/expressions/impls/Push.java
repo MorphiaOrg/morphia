@@ -15,20 +15,24 @@ public class Push extends Expression implements FieldHolder<Push> {
         super("$push");
     }
 
-    public Push single(Expression source) {
-        if(document != null) {
-            throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
+    @Override
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+        writer.writeStartDocument();
+        writer.writeName(getOperation());
+        if (field != null) {
+            field.encode(mapper, writer, encoderContext);
+        } else if (document != null) {
+            document.encode(mapper, writer, encoderContext);
         }
-        this.field = source;
-        return this;
+        writer.writeEndDocument();
     }
 
     @Override
     public Push field(String name, Expression expression) {
-        if(field != null) {
+        if (field != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
         }
-        if(document == null) {
+        if (document == null) {
             document = Expressions.of();
         }
         document.field(name, expression);
@@ -36,15 +40,11 @@ public class Push extends Expression implements FieldHolder<Push> {
         return this;
     }
 
-    @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(getOperation());
-        if (field != null) {
-            field.encode(mapper, writer, encoderContext);
-        } else if(document != null) {
-            document.encode(mapper, writer, encoderContext);
+    public Push single(Expression source) {
+        if (document != null) {
+            throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
         }
-        writer.writeEndDocument();
+        this.field = source;
+        return this;
     }
 }

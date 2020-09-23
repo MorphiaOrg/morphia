@@ -14,36 +14,25 @@ public final class TrigonometryExpressions {
     }
 
     /**
-     * Returns the sine of a value that is measured in radians.
+     * Returns the inverse cosine (arc cosine) of a value in radians.
      *
      * @param value the value
      * @return the new expression
-     * @aggregation.expression $sin
+     * @aggregation.expression $acos
      */
-    public static Expression sin(Expression value) {
-        return new Expression("$sin", value);
+    public static Expression acos(Expression value) {
+        return new Expression("$acos", value);
     }
 
     /**
-     * Returns the cosine of a value that is measured in radians.
+     * Returns the inverse hyperbolic cosine (hyperbolic arc cosine) of a value in radians.
      *
      * @param value the value
      * @return the new expression
-     * @aggregation.expression $cos
+     * @aggregation.expression $acosh
      */
-    public static Expression cos(Expression value) {
-        return new Expression("$cos", value);
-    }
-
-    /**
-     * Returns the tangent of a value that is measured in radians.
-     *
-     * @param value the value
-     * @return the new expression
-     * @aggregation.expression $tan
-     */
-    public static Expression tan(Expression value) {
-        return new Expression("$tan", value);
+    public static Expression acosh(Expression value) {
+        return new Expression("$acosh", value);
     }
 
     /**
@@ -58,14 +47,14 @@ public final class TrigonometryExpressions {
     }
 
     /**
-     * Returns the inverse cosine (arc cosine) of a value in radians.
+     * Returns the inverse hyperbolic sine (hyperbolic arc sine) of a value in radians.
      *
      * @param value the value
      * @return the new expression
-     * @aggregation.expression $acos
+     * @aggregation.expression $asinh
      */
-    public static Expression acos(Expression value) {
-        return new Expression("$acos", value);
+    public static Expression asinh(Expression value) {
+        return new Expression("$asinh", value);
     }
 
     /**
@@ -93,28 +82,6 @@ public final class TrigonometryExpressions {
     }
 
     /**
-     * Returns the inverse hyperbolic sine (hyperbolic arc sine) of a value in radians.
-     *
-     * @param value the value
-     * @return the new expression
-     * @aggregation.expression $asinh
-     */
-    public static Expression asinh(Expression value) {
-        return new Expression("$asinh", value);
-    }
-
-    /**
-     * Returns the inverse hyperbolic cosine (hyperbolic arc cosine) of a value in radians.
-     *
-     * @param value the value
-     * @return the new expression
-     * @aggregation.expression $acosh
-     */
-    public static Expression acosh(Expression value) {
-        return new Expression("$acosh", value);
-    }
-
-    /**
      * Returns the inverse hyperbolic tangent (hyperbolic arc tangent) of a value in radians.
      *
      * @param value the value
@@ -123,6 +90,17 @@ public final class TrigonometryExpressions {
      */
     public static Expression atanh(Expression value) {
         return new Expression("$atanh", value);
+    }
+
+    /**
+     * Returns the cosine of a value that is measured in radians.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $cos
+     */
+    public static Expression cos(Expression value) {
+        return new Expression("$cos", value);
     }
 
     /**
@@ -145,6 +123,28 @@ public final class TrigonometryExpressions {
      */
     public static Expression radiansToDegrees(Expression value) {
         return new Expression("$radiansToDegrees", value);
+    }
+
+    /**
+     * Returns the sine of a value that is measured in radians.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $sin
+     */
+    public static Expression sin(Expression value) {
+        return new Expression("$sin", value);
+    }
+
+    /**
+     * Returns the tangent of a value that is measured in radians.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $tan
+     */
+    public static Expression tan(Expression value) {
+        return new Expression("$tan", value);
     }
 
 }

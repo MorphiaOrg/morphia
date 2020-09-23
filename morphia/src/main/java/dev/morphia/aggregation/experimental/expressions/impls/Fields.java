@@ -11,8 +11,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expre
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 
 public class Fields<T> {
-    private T owner;
     private final List<PipelineField> fields = new ArrayList<>();
+    private T owner;
 
     protected Fields(T owner) {
         this.owner = owner;
@@ -35,14 +35,14 @@ public class Fields<T> {
         return owner;
     }
 
-    public List<PipelineField> getFields() {
-        return fields;
-    }
-
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         for (PipelineField field : fields) {
             expression(mapper, writer, field.getName(), field.getValue(), encoderContext);
         }
+    }
+
+    public List<PipelineField> getFields() {
+        return fields;
     }
 
     public int size() {

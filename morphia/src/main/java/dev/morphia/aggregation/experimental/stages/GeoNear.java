@@ -102,6 +102,14 @@ public class GeoNear extends Stage {
     }
 
     /**
+     * @return the query
+     * @morphia.internal
+     */
+    public Filter[] getFilters() {
+        return filters;
+    }
+
+    /**
      * @return includeLocs
      * @morphia.internal
      */
@@ -139,14 +147,6 @@ public class GeoNear extends Stage {
      */
     public Point getPoint() {
         return point;
-    }
-
-    /**
-     * @return the query
-     * @morphia.internal
-     */
-    public Filter[] getFilters() {
-        return filters;
     }
 
     /**

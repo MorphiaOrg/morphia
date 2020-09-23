@@ -106,19 +106,19 @@ public class Lookup extends Stage {
     }
 
     /**
-     * @return the embeded pipeline's variables
-     * @morphia.internal
-     */
-    public DocumentExpression getVariables() {
-        return variables;
-    }
-
-    /**
      * @return the value
      * @morphia.internal
      */
     public String getLocalField() {
         return localField;
+    }
+
+    /**
+     * @return the embeded pipeline's variables
+     * @morphia.internal
+     */
+    public DocumentExpression getVariables() {
+        return variables;
     }
 
     /**

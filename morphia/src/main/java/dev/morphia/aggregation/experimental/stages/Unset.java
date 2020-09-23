@@ -35,6 +35,14 @@ public class Unset extends Stage {
         return unset;
     }
 
+    /**
+     * @return the fields
+     * @morphia.internal
+     */
+    public List<Expression> getFields() {
+        return fields;
+    }
+
     private Unset add(String name) {
         String fieldName = name;
         if (fieldName.startsWith("$")) {
@@ -43,13 +51,5 @@ public class Unset extends Stage {
         }
         fields.add(Expressions.value(fieldName));
         return this;
-    }
-
-    /**
-     * @return the fields
-     * @morphia.internal
-     */
-    public List<Expression> getFields() {
-        return fields;
     }
 }

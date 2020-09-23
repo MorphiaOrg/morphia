@@ -14,6 +14,11 @@ public class SortCodec extends StageCodec<Sort> {
     }
 
     @Override
+    public Class<Sort> getEncoderClass() {
+        return Sort.class;
+    }
+
+    @Override
     protected void encodeStage(BsonWriter writer, Sort value, EncoderContext encoderContext) {
         document(writer, () -> {
             for (SortType sort : value.getSorts()) {
@@ -21,10 +26,5 @@ public class SortCodec extends StageCodec<Sort> {
                 sort.getDirection().encode(writer);
             }
         });
-    }
-
-    @Override
-    public Class<Sort> getEncoderClass() {
-        return Sort.class;
     }
 }

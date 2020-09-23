@@ -30,18 +30,6 @@ public final class BooleanExpressions {
     }
 
     /**
-     * Evaluates one or more expressions and returns true if any of the expressions are true. Otherwise, $or returns false.
-     *
-     * @param first      the first expression
-     * @param additional any additional expressions
-     * @return the new expression
-     * @aggregation.expression $or
-     */
-    public static Expression or(Expression first, Expression... additional) {
-        return new Expression("$or", toList(first, additional));
-    }
-
-    /**
      * Evaluates a boolean and returns the opposite boolean value; i.e. when passed an expression that evaluates to true, $not returns
      * false; when passed an expression that evaluates to false, $not returns true.
      *
@@ -51,6 +39,18 @@ public final class BooleanExpressions {
      */
     public static Expression not(Expression value) {
         return new Expression("$not", List.of(value));
+    }
+
+    /**
+     * Evaluates one or more expressions and returns true if any of the expressions are true. Otherwise, $or returns false.
+     *
+     * @param first      the first expression
+     * @param additional any additional expressions
+     * @return the new expression
+     * @aggregation.expression $or
+     */
+    public static Expression or(Expression first, Expression... additional) {
+        return new Expression("$or", toList(first, additional));
     }
 
 }

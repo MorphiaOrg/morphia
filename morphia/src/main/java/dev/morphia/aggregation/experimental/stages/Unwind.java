@@ -30,11 +30,6 @@ public class Unwind extends Stage {
                    .path(name);
     }
 
-    private Unwind path(String path) {
-        this.path = field(path);
-        return this;
-    }
-
     /**
      * @return the value
      * @morphia.internal
@@ -90,6 +85,11 @@ public class Unwind extends Stage {
      */
     public Unwind preserveNullAndEmptyArrays(Boolean preserveNullAndEmptyArrays) {
         this.preserveNullAndEmptyArrays = preserveNullAndEmptyArrays;
+        return this;
+    }
+
+    private Unwind path(String path) {
+        this.path = field(path);
         return this;
     }
 }

@@ -13,8 +13,8 @@ import dev.morphia.sofia.Sofia;
  * @aggregation.expression $group
  */
 public class Group extends Stage {
-    private Fields<Group> fields;
     private final GroupId id;
+    private Fields<Group> fields;
 
     protected Group() {
         super("$group");
@@ -24,25 +24,6 @@ public class Group extends Stage {
     protected Group(GroupId id) {
         super("$group");
         this.id = id;
-    }
-
-    /**
-     * Creates a group stage with no ID definition
-     *
-     * @return the new stage
-     */
-    public static Group of() {
-        return new Group();
-    }
-
-    /**
-     * Creates a group stage with an ID definition
-     *
-     * @param id the group ID
-     * @return the new stage
-     */
-    public static Group of(GroupId id) {
-        return new Group(id);
     }
 
     /**
@@ -75,6 +56,25 @@ public class Group extends Stage {
     }
 
     /**
+     * Creates a group stage with an ID definition
+     *
+     * @param id the group ID
+     * @return the new stage
+     */
+    public static Group of(GroupId id) {
+        return new Group(id);
+    }
+
+    /**
+     * Creates a group stage with no ID definition
+     *
+     * @return the new stage
+     */
+    public static Group of() {
+        return new Group();
+    }
+
+    /**
      * Adds a field to the group.  This method is equivalent to calling {@code field("name", Expression.field("name"))}
      *
      * @param name the field name
@@ -89,7 +89,7 @@ public class Group extends Stage {
     /**
      * Adds a named field to the group with an expression giving the value.
      *
-     * @param name the name of the field
+     * @param name       the name of the field
      * @param expression the expression giving the value
      * @return this
      */
@@ -151,7 +151,7 @@ public class Group extends Stage {
         /**
          * Adds a named field to the group with an expression giving the value.
          *
-         * @param name the name of the field
+         * @param name       the name of the field
          * @param expression the expression giving the value
          * @return this
          */

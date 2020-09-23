@@ -16,6 +16,11 @@ public class GroupCodec extends StageCodec<Group> {
     }
 
     @Override
+    public Class<Group> getEncoderClass() {
+        return Group.class;
+    }
+
+    @Override
     protected void encodeStage(BsonWriter writer, Group group, EncoderContext encoderContext) {
         document(writer, () -> {
             GroupId id = group.getId();
@@ -36,10 +41,5 @@ public class GroupCodec extends StageCodec<Group> {
             }
 
         });
-    }
-
-    @Override
-    public Class<Group> getEncoderClass() {
-        return Group.class;
     }
 }

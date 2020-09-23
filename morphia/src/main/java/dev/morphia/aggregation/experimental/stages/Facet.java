@@ -28,6 +28,7 @@ public class Facet extends Stage {
 
     /**
      * Creates a new facet stage
+     *
      * @return the new stage
      */
     public static Facet of() {
@@ -37,7 +38,7 @@ public class Facet extends Stage {
     /**
      * Adds a field to the facet
      *
-     * @param name the field name
+     * @param name   the field name
      * @param stages the pipeline defining the field
      * @return this
      */
