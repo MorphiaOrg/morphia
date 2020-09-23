@@ -7,7 +7,7 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class IfNull extends Expression implements FieldHolder<IfNull> {
     private Expression target;
@@ -23,9 +23,9 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         writer.writeStartDocument();
         writer.writeName(getOperation());
         writer.writeStartArray();
-        writeUnnamedExpression(mapper, writer, target, encoderContext);
-        writeUnnamedExpression(mapper, writer, replacement, encoderContext);
-        writeUnnamedExpression(mapper, writer, document, encoderContext);
+        expression(mapper, writer, target, encoderContext);
+        expression(mapper, writer, replacement, encoderContext);
+        expression(mapper, writer, document, encoderContext);
         writer.writeEndArray();
         writer.writeEndDocument();
     }

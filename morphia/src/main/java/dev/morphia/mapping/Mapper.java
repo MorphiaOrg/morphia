@@ -238,6 +238,7 @@ public class Mapper {
      * @param type the type look up
      * @param <T>  the class type
      * @return the collection mapped for this class
+     * @morphia.internal
      */
     public <T> MongoCollection<T> getCollection(Class<T> type) {
         MappedClass mappedClass = getMappedClass(type);

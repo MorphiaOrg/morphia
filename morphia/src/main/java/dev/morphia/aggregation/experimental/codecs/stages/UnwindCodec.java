@@ -5,7 +5,9 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class UnwindCodec extends StageCodec<Unwind> {
     public UnwindCodec(Mapper mapper) {
@@ -22,11 +24,11 @@ public class UnwindCodec extends StageCodec<Unwind> {
         if(!value.optionsPresent()) {
             value.getPath().encode(getMapper(), writer, encoderContext);
         } else {
-            writer.writeStartDocument();
-            expression(getMapper(), writer, "path", value.getPath(), encoderContext);
-            writeNamedValue(writer, "includeArrayIndex", value.getIncludeArrayIndex(), encoderContext);
-            writeNamedValue(writer, "preserveNullAndEmptyArrays", value.getPreserveNullAndEmptyArrays(), encoderContext);
-            writer.writeEndDocument();
+            document(writer, () -> {
+                expression(getMapper(), writer, "path", value.getPath(), encoderContext);
+                value(getMapper(), writer, "includeArrayIndex", value.getIncludeArrayIndex(), encoderContext);
+                value(getMapper(), writer, "preserveNullAndEmptyArrays", value.getPreserveNullAndEmptyArrays(), encoderContext);
+            });
         }
     }
 }

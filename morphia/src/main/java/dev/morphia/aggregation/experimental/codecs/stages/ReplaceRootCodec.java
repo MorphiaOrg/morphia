@@ -5,6 +5,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class ReplaceRootCodec extends StageCodec<ReplaceRoot> {
     public ReplaceRootCodec(Mapper mapper) {
         super(mapper);
@@ -17,13 +19,13 @@ public class ReplaceRootCodec extends StageCodec<ReplaceRoot> {
 
     @Override
     protected void encodeStage(BsonWriter writer, ReplaceRoot replace, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName("newRoot");
-        if(replace.getValue() != null) {
-            replace.getValue().encode(getMapper(), writer, encoderContext);
-        } else {
-            replace.getDocument().encode(getMapper(), writer, encoderContext);
-        }
-        writer.writeEndDocument();
+        document(writer, () -> {
+            writer.writeName("newRoot");
+            if (replace.getValue() != null) {
+                replace.getValue().encode(getMapper(), writer, encoderContext);
+            } else {
+                replace.getDocument().encode(getMapper(), writer, encoderContext);
+            }
+        });
     }
 }

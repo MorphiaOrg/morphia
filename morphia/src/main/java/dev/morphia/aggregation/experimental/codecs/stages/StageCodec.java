@@ -10,6 +10,8 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public abstract class StageCodec<T extends Stage> implements Codec<T> {
     private final Mapper mapper;
 
@@ -32,19 +34,12 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
 
     @Override
     public final void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(value.getStageName());
-        encodeStage(writer, value, encoderContext);
-        writer.writeEndDocument();
+        document(writer, () -> {
+            writer.writeName(value.getStageName());
+            encodeStage(writer, value, encoderContext);
+        });
     }
 
     protected abstract void encodeStage(BsonWriter writer, T value, EncoderContext encoderContext);
 
-    protected void writeNamedValue(BsonWriter writer, String name, Object value, EncoderContext encoderContext) {
-        if (value != null) {
-            writer.writeName(name);
-            Codec codec = getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
-        }
-    }
 }

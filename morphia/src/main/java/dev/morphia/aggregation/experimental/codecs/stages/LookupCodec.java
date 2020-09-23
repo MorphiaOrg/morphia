@@ -6,6 +6,9 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+
 public class LookupCodec extends StageCodec<Lookup> {
 
     public LookupCodec(Mapper mapper) {
@@ -14,18 +17,18 @@ public class LookupCodec extends StageCodec<Lookup> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Lookup value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        if(value.getFrom() != null) {
-            writeNamedValue(writer, "from", value.getFrom(), encoderContext);
-        } else {
-            MongoCollection collection = getMapper().getCollection(value.getFromType());
-            writer.writeString("from", collection.getNamespace().getCollectionName());
-        }
+        document(writer, () -> {
+            if (value.getFrom() != null) {
+                value(getMapper(), writer, "from", value.getFrom(), encoderContext);
+            } else {
+                MongoCollection collection = getMapper().getCollection(value.getFromType());
+                writer.writeString("from", collection.getNamespace().getCollectionName());
+            }
 
-        writer.writeString("localField", value.getLocalField());
-        writer.writeString("foreignField", value.getForeignField());
-        writer.writeString("as", value.getAs());
-        writer.writeEndDocument();
+            writer.writeString("localField", value.getLocalField());
+            writer.writeString("foreignField", value.getForeignField());
+            writer.writeString("as", value.getAs());
+        });
     }
 
     @Override

@@ -57,6 +57,19 @@ public final class ExpressionHelper {
     /**
      * @param mapper
      * @param writer
+     * @param expression
+     * @param encoderContext
+     * @morphia.internal
+     */
+    public static void expression(Mapper mapper, BsonWriter writer, Expression expression, EncoderContext encoderContext) {
+        if (expression != null) {
+            expression.encode(mapper, writer, encoderContext);
+        }
+    }
+
+    /**
+     * @param mapper
+     * @param writer
      * @param name
      * @param value
      * @param encoderContext
@@ -68,20 +81,6 @@ public final class ExpressionHelper {
             writer.writeName(name);
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
-        }
-    }
-
-    /**
-     * @param mapper
-     * @param writer
-     * @param expression
-     * @param encoderContext
-     * @morphia.internal
-     */
-    public static void writeUnnamedExpression(Mapper mapper, BsonWriter writer, Expression expression,
-                                              EncoderContext encoderContext) {
-        if (expression != null) {
-            expression.encode(mapper, writer, encoderContext);
         }
     }
 

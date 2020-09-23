@@ -9,6 +9,9 @@ import org.bson.codecs.EncoderContext;
 import java.util.List;
 import java.util.Map.Entry;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+
 public class FacetCodec extends StageCodec<Facet> {
     public FacetCodec(Mapper mapper) {
         super(mapper);
@@ -21,10 +24,10 @@ public class FacetCodec extends StageCodec<Facet> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Facet value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        for (Entry<String, List<Stage>> entry : value.getFields().entrySet()) {
-          writeNamedValue(writer, entry.getKey(), entry.getValue(), encoderContext);
-        }
-        writer.writeEndDocument();
+        document(writer, () -> {
+            for (Entry<String, List<Stage>> entry : value.getFields().entrySet()) {
+                value(getMapper(), writer, entry.getKey(), entry.getValue(), encoderContext);
+            }
+        });
     }
 }

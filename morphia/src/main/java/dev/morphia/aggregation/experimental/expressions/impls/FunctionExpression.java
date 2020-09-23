@@ -4,6 +4,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import java.util.List;
+
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
@@ -12,7 +14,7 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value
  */
 public class FunctionExpression extends Expression {
     private final String body;
-    private final Expression[] args;
+    private final List<Expression> args;
     private final String lang = "js";
 
     /**
@@ -22,7 +24,7 @@ public class FunctionExpression extends Expression {
      * @param args the funcation arguments
      * @morphia.internal
      */
-    public FunctionExpression(String body, Expression[] args) {
+    public FunctionExpression(String body, List<Expression> args) {
         super("$function");
         this.body = body;
         this.args = args;

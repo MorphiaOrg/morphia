@@ -7,6 +7,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class GroupCodec extends StageCodec<Group> {
 
     public GroupCodec(Mapper mapper) {
@@ -15,25 +17,25 @@ public class GroupCodec extends StageCodec<Group> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Group group, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        GroupId id = group.getId();
-        if (id != null) {
-            writer.writeName("_id");
-            if(id.getDocument() != null) {
-                id.getDocument().encode(getMapper(), writer, encoderContext);
+        document(writer, () -> {
+            GroupId id = group.getId();
+            if (id != null) {
+                writer.writeName("_id");
+                if (id.getDocument() != null) {
+                    id.getDocument().encode(getMapper(), writer, encoderContext);
+                } else {
+                    id.getField().encode(getMapper(), writer, encoderContext);
+                }
             } else {
-                id.getField().encode(getMapper(), writer, encoderContext);
+                writer.writeNull("_id");
             }
-        } else {
-            writer.writeNull("_id");
-        }
 
-        Fields<Group> fields = group.getFields();
-        if(fields != null) {
-            fields.encode(getMapper(), writer, encoderContext);
-        }
+            Fields<Group> fields = group.getFields();
+            if (fields != null) {
+                fields.encode(getMapper(), writer, encoderContext);
+            }
 
-        writer.writeEndDocument();
+        });
     }
 
     @Override

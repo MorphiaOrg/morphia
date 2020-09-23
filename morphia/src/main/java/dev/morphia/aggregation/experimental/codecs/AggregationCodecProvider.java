@@ -14,6 +14,7 @@ import dev.morphia.aggregation.experimental.codecs.stages.IndexStatsCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LimitCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.LookupCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.MatchCodec;
+import dev.morphia.aggregation.experimental.codecs.stages.MergeCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.OutCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.PlanCacheStatsCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.ProjectionCodec;

@@ -10,7 +10,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
  * Defines helper methods for the date expressions
@@ -236,7 +236,7 @@ public final class DateExpressions {
         public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
             writer.writeStartDocument();
             writer.writeName(getOperation());
-            writeUnnamedExpression(mapper, writer, (Expression) getValue(), encoderContext);
+            expression(mapper, writer, (Expression) getValue(), encoderContext);
             writer.writeEndDocument();
         }
     }

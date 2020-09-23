@@ -5,6 +5,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class PlanCacheStatsCodec extends StageCodec<PlanCacheStats> {
     public PlanCacheStatsCodec(Mapper mapper) {
         super(mapper);
@@ -17,7 +19,7 @@ public class PlanCacheStatsCodec extends StageCodec<PlanCacheStats> {
 
     @Override
     protected void encodeStage(BsonWriter writer, PlanCacheStats value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeEndDocument();
+        document(writer, () -> {
+        });
     }
 }

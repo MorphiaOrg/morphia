@@ -24,7 +24,7 @@ public class UnsetCodec extends StageCodec<Unset> {
         List<Expression> fields = value.getFields();
         if (fields.size() == 1) {
             fields.get(0).encode(getMapper(), writer, encoderContext);
-        } else if(fields.size()> 1) {
+        } else if (fields.size() > 1) {
             Codec codec = getCodecRegistry().get(fields.getClass());
             encoderContext.encodeWithChildContext(codec, writer, fields);
         }

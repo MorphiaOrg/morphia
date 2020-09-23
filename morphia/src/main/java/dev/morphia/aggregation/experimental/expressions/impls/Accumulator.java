@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
  * Base class for the accumulator expression types.
@@ -35,7 +35,7 @@ public class Accumulator extends Expression {
             writer.writeStartArray();
         }
         for (Expression expression : expressions) {
-            writeUnnamedExpression(mapper, writer, expression, encoderContext);
+            expression(mapper, writer, expression, encoderContext);
         }
         if (expressions.size() > 1) {
             writer.writeEndArray();

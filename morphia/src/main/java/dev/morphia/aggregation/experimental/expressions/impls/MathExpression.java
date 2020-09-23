@@ -6,7 +6,7 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 import static java.util.Arrays.asList;
 
 /**
@@ -47,7 +47,7 @@ public class MathExpression extends Expression {
         }
         for (Expression operand : operands) {
             if (operand != null) {
-                writeUnnamedExpression(mapper, writer, operand, encoderContext);
+                expression(mapper, writer, operand, encoderContext);
             } else {
                 writer.writeNull();
             }

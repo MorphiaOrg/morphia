@@ -6,6 +6,8 @@ import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class MatchCodec extends StageCodec<Match> {
 
     public MatchCodec(Mapper mapper) {
@@ -15,12 +17,11 @@ public class MatchCodec extends StageCodec<Match> {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected void encodeStage(BsonWriter writer, Match value, EncoderContext encoderContext) {
-        Filter[] filters = value.getFilters();
-        writer.writeStartDocument();
-        for (Filter filter : filters) {
-            filter.encode(getMapper(), writer, encoderContext);
-        }
-        writer.writeEndDocument();
+        document(writer, () -> {
+            for (Filter filter : value.getFilters()) {
+                filter.encode(getMapper(), writer, encoderContext);
+            }
+        });
     }
 
     @Override

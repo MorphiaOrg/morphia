@@ -76,7 +76,7 @@ public final class AccumulatorExpressions {
      * @since 2.1
      */
     public static Expression function(String body, Expression... args) {
-        return new FunctionExpression(body, args);
+        return new FunctionExpression(body, asList(args));
     }
 
     /**

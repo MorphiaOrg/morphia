@@ -4,7 +4,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedValue;
 
 /**
@@ -31,8 +31,8 @@ public class ArrayIndexExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartArray(getOperation());
-        writeUnnamedExpression(mapper, writer, array, encoderContext);
-        writeUnnamedExpression(mapper, writer, search, encoderContext);
+        expression(mapper, writer, array, encoderContext);
+        expression(mapper, writer, search, encoderContext);
         writeUnnamedValue(mapper, writer, start, encoderContext);
         writeUnnamedValue(mapper, writer, end, encoderContext);
         writer.writeEndArray();

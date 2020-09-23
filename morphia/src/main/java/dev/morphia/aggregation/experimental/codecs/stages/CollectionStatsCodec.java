@@ -5,6 +5,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class CollectionStatsCodec extends StageCodec<CollectionStats> {
     public CollectionStatsCodec(Mapper mapper) {
         super(mapper);
@@ -17,21 +19,17 @@ public class CollectionStatsCodec extends StageCodec<CollectionStats> {
 
     @Override
     protected void encodeStage(BsonWriter writer, CollectionStats value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        if (value.getHistogram()) {
-            writer.writeStartDocument("latencyStats");
-            writer.writeBoolean("histograms", true);
-            writer.writeEndDocument();
-        }
-        if (value.getScale() != null) {
-            writer.writeStartDocument("storageStats");
-            writer.writeInt32("scale", value.getScale());
-            writer.writeEndDocument();
-        }
-        if (value.getCount()) {
-            writer.writeStartDocument("count");
-            writer.writeEndDocument();
-        }
-        writer.writeEndDocument();
+        document(writer, () -> {
+            if (value.getHistogram()) {
+                document(writer, "latencyStats", () -> writer.writeBoolean("histograms", true));
+            }
+            if (value.getScale() != null) {
+                document(writer, "storageStats", () -> writer.writeInt32("scale", value.getScale()));
+            }
+            if (value.getCount()) {
+                document(writer, "count", () -> {
+                });
+            }
+        });
     }
 }

@@ -6,6 +6,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class SortCodec extends StageCodec<Sort> {
     public SortCodec(Mapper mapper) {
         super(mapper);
@@ -13,12 +15,12 @@ public class SortCodec extends StageCodec<Sort> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Sort value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        for (SortType sort : value.getSorts()) {
-            writer.writeName(sort.getField());
-            sort.getDirection().encode(writer);
-        }
-        writer.writeEndDocument();
+        document(writer, () -> {
+            for (SortType sort : value.getSorts()) {
+                writer.writeName(sort.getField());
+                sort.getDirection().encode(writer);
+            }
+        });
     }
 
     @Override
