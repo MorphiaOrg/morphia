@@ -62,9 +62,9 @@ public final class Expressions {
     }
 
     /**
-     * @param first
-     * @param additional
-     * @return
+     * @param first      the first item
+     * @param additional additional items
+     * @return a list of them all
      * @morphia.internal
      */
     public static <T> List<T> toList(T first, T... additional) {
