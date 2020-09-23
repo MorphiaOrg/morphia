@@ -3,16 +3,19 @@ package dev.morphia.aggregation.experimental.codecs;
 import dev.morphia.aggregation.experimental.codecs.stages.StageCodec;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.Merge;
-import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class MergeCodec extends StageCodec<Merge> {
     public MergeCodec(Mapper mapper) {
         super(mapper);
@@ -24,59 +27,45 @@ public class MergeCodec extends StageCodec<Merge> {
     }
 
     @Override
-    protected void encodeStage(BsonWriter writer, Merge value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        String collection;
-        String database = null;
-        if(value.getType() != null) {
-            collection = getMapper().getMappedClass(value.getType()).getCollectionName();
-        } else {
-            collection = value.getCollection();
-            database = value.getDatabase();
-        }
+    protected void encodeStage(BsonWriter writer, Merge merge, EncoderContext encoderContext) {
+        document(writer, () -> {
+            String collection = merge.getType() != null
+                                ? getMapper().getMappedClass(merge.getType()).getCollectionName()
+                                : merge.getCollection();
+            String database = merge.getDatabase();
 
-        if(database == null) {
-            writer.writeString("into", collection);
-        } else {
-            writer.writeStartDocument("into");
-            writer.writeString("db", database);
-            writer.writeString("coll", collection);
-            writer.writeEndDocument();
-        }
-
-        List<String> on = value.getOn();
-        if(on != null) {
-            if(on.size() == 1) {
-                writer.writeString("on", on.get(0));
+            if (database == null) {
+                writer.writeString("into", collection);
             } else {
-                writer.writeStartArray("on");
-                for (String name : on) {
-                    writer.writeString(name);
+                document(writer, "into", () -> {
+                    writer.writeString("db", database);
+                    writer.writeString("coll", collection);
+                });
+            }
+
+            List<String> on = merge.getOn();
+            if (on != null) {
+                if (on.size() == 1) {
+                    writer.writeString("on", on.get(0));
+                } else {
+                    array(writer, "on", () -> on.forEach(writer::writeString));
                 }
-                writer.writeEndArray();
             }
-        }
-        Map<String, Expression> variables = value.getVariables();
-        if(variables != null) {
-            writer.writeStartDocument("let");
-            for (Entry<String, Expression> entry : variables.entrySet()) {
-                writer.writeName(entry.getKey());
-                entry.getValue().encode(getMapper(), writer, encoderContext);
+            Map<String, Expression> variables = merge.getVariables();
+            if (variables != null) {
+                document(writer, "let", () -> {
+                    for (Entry<String, Expression> entry : variables.entrySet()) {
+                        value(getMapper(), writer, entry.getKey(), entry.getValue(), encoderContext);
+                    }
+                });
             }
-            writer.writeEndDocument();
-        }
-        writeEnum(writer, "whenMatched", value.getWhenMatched(), encoderContext);
-        List<Stage> pipeline = value.getWhenMatchedPipeline();
-        if(pipeline != null) {
-            writer.writeName("whenMatched");
-            Codec codec = getCodecRegistry().get(pipeline.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, pipeline);
-        }
-        writeEnum(writer, "whenNotMatched", value.getWhenNotMatched(), encoderContext);
-        writer.writeEndDocument();
+            writeEnum(writer, "whenMatched", merge.getWhenMatched());
+            value(getMapper(), writer, "whenMatched", merge.getWhenMatchedPipeline(), encoderContext);
+            writeEnum(writer, "whenNotMatched", merge.getWhenNotMatched());
+        });
     }
 
-    private void writeEnum(BsonWriter writer, String name, Enum value, EncoderContext encoderContext) {
+    private void writeEnum(BsonWriter writer, String name, Enum<?> value) {
         if (value != null) {
             writer.writeString(name, value.name().toLowerCase());
         }
