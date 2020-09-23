@@ -5,16 +5,10 @@
       "justification": "Driver classes should be ignored"
     }
   ],
-  "java.class.removed": [
+  "java.class.nonPublicPartOfAPI": [
     {
-      "class": "class dev.morphia.aggregation.experimental.codecs.MergeCodec",
-      "justification": "internal implementation class"
-    }
-  ],
-  "java.method.visibilityReduced": [
-    {
-      "class": "com.mongodb.*",
-      "justification": "Driver classes should be ignored"
+      "class": "morphia.bson.*",
+      "justification": "Internal classes"
     }
   ],
   "java.class.nowFinal": [
@@ -23,10 +17,30 @@
       "justification": "Driver classes should be ignored"
     }
   ],
+  "java.class.removed": [
+    {
+      "class": "class dev.morphia.aggregation.experimental.codecs.MergeCodec",
+      "justification": "internal implementation class"
+    }
+  ],
+  "java.generics.formalTypeParameterRemoved": [
+    {
+      "old": "method <T extends dev.morphia.query.experimental.updates.UpdateOperator> T dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
+      "new": "method void dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
+      "justification": "internal implementation"
+    }
+  ],
   "java.method.addedToInterface": [
     {
       "class": "com.mongodb.*",
       "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.method.defaultValueChanged": [
+    {
+      "old": "method dev.morphia.annotations.CappedAt dev.morphia.annotations.Entity::cap()",
+      "new": "method dev.morphia.annotations.CappedAt dev.morphia.annotations.Entity::cap()",
+      "justification": "only used if the user doesn't want a cap applied"
     }
   ],
   "java.method.parameterTypeChanged": [
@@ -41,10 +55,17 @@
       "justification": "Driver classes should be ignored"
     }
   ],
-  "java.class.nonPublicPartOfAPI": [
+  "java.method.visibilityReduced": [
     {
-      "class": "morphia.bson.*",
-      "justification": "Internal classes"
+      "class": "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
+    }
+  ],
+  "java.method.returnTypeChanged": [
+    {
+      "old": "method <T extends dev.morphia.query.experimental.updates.UpdateOperator> T dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
+      "new": "method void dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
+      "justification": "internal implementation"
     }
   ]
 }
