@@ -254,7 +254,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         for (MappedClass mc : mapper.getMappedClasses()) {
             if (mc.getEntityAnnotation() != null) {
                 CappedAt cappedAt = mc.getEntityAnnotation().cap();
-                if (cappedAt.value() > 0) {
+                if (cappedAt.value() > 0 || cappedAt.count() > 0) {
                     final CappedAt cap = mc.getEntityAnnotation().cap();
                     final String collName = mc.getCollectionName();
                     final CreateCollectionOptions dbCapOpts = new CreateCollectionOptions()

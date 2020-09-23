@@ -38,7 +38,7 @@ public @interface Entity {
     /**
      * @return The capped collection configuration options
      */
-    CappedAt cap() default @CappedAt(0);
+    CappedAt cap() default @CappedAt(value = -1, count = -1);
 
     /**
      * @return The default write concern to use when dealing with this entity
