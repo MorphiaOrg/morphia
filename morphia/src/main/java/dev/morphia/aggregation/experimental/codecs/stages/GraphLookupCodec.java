@@ -7,7 +7,7 @@ import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class GraphLookupCodec extends StageCodec<GraphLookup> {
     public GraphLookupCodec(Mapper mapper) {
@@ -29,7 +29,7 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
             MongoCollection collection = getMapper().getCollection(value.getFromType());
             writer.writeString("from", collection.getNamespace().getCollectionName());
         }
-        writeNamedExpression(getMapper(), writer, "startWith", value.getStartWith(), encoderContext);
+        expression(getMapper(), writer, "startWith", value.getStartWith(), encoderContext);
         writeNamedValue(writer, "connectFromField", value.getConnectFromField(), encoderContext);
         writeNamedValue(writer, "connectToField", value.getConnectToField(), encoderContext);
         writeNamedValue(writer, "as", value.getAs(), encoderContext);

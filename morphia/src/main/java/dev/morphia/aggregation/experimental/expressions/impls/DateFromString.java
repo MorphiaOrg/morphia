@@ -5,7 +5,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class DateFromString extends Expression {
     private Expression dateString;
@@ -23,11 +23,11 @@ public class DateFromString extends Expression {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
 
-        writeNamedExpression(mapper, writer, "dateString", dateString, encoderContext);
-        writeNamedExpression(mapper, writer, "format", format, encoderContext);
-        writeNamedExpression(mapper, writer, "timezone", timeZone, encoderContext);
-        writeNamedExpression(mapper, writer, "onError", onError, encoderContext);
-        writeNamedExpression(mapper, writer, "onNull", onNull, encoderContext);
+        expression(mapper, writer, "dateString", dateString, encoderContext);
+        expression(mapper, writer, "format", format, encoderContext);
+        expression(mapper, writer, "timezone", timeZone, encoderContext);
+        expression(mapper, writer, "onError", onError, encoderContext);
+        expression(mapper, writer, "onNull", onNull, encoderContext);
 
         writer.writeEndDocument();
         writer.writeEndDocument();

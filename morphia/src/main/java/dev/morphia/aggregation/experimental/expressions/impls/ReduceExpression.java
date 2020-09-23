@@ -4,7 +4,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class ReduceExpression extends Expression {
     private final Expression input;
@@ -22,9 +22,9 @@ public class ReduceExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
-        writeNamedExpression(mapper, writer, "input", input, encoderContext);
-        writeNamedExpression(mapper, writer, "initialValue", initial, encoderContext);
-        writeNamedExpression(mapper, writer, "in", in, encoderContext);
+        expression(mapper, writer, "input", input, encoderContext);
+        expression(mapper, writer, "initialValue", initial, encoderContext);
+        expression(mapper, writer, "in", in, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

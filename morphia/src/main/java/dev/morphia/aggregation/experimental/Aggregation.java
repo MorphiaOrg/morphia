@@ -18,6 +18,7 @@ import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sort;
+import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.query.experimental.filters.Filter;
@@ -355,6 +356,32 @@ public interface Aggregation<T> {
      * @aggregation.expression $sortByCount
      */
     Aggregation<T> sortByCount(Expression sort);
+
+    /**
+     * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
+     * stage outputs the combined result set (including duplicates) to the next stage.
+     *
+     * @param type   the type to perform the pipeline against
+     * @param first  the first pipeline stage
+     * @param others the other pipeline stages
+     * @return this
+     * @aggregation.expression $unionWith
+     * @since 2.1
+     */
+    Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others);
+
+    /**
+     * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
+     * stage outputs the combined result set (including duplicates) to the next stage.
+     *
+     * @param collection the collection to perform the pipeline against
+     * @param first      the first pipeline stage
+     * @param others     the other pipeline stages
+     * @return this
+     * @aggregation.expression $unionWith
+     * @since 2.1
+     */
+    Aggregation<T> unionWith(String collection, Stage first, Stage... others);
 
     /**
      * Removes/excludes fields from documents.  Names must not start with '$'.

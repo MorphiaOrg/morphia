@@ -5,7 +5,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class UnwindCodec extends StageCodec<Unwind> {
     public UnwindCodec(Mapper mapper) {
@@ -23,7 +23,7 @@ public class UnwindCodec extends StageCodec<Unwind> {
             value.getPath().encode(getMapper(), writer, encoderContext);
         } else {
             writer.writeStartDocument();
-            writeNamedExpression(getMapper(), writer, "path", value.getPath(), encoderContext);
+            expression(getMapper(), writer, "path", value.getPath(), encoderContext);
             writeNamedValue(writer, "includeArrayIndex", value.getIncludeArrayIndex(), encoderContext);
             writeNamedValue(writer, "preserveNullAndEmptyArrays", value.getPreserveNullAndEmptyArrays(), encoderContext);
             writer.writeEndDocument();

@@ -12,9 +12,7 @@ import org.bson.codecs.EncoderContext;
 import org.testng.annotations.BeforeMethod;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import static java.lang.String.format;
 import static org.testng.Assert.assertEquals;
 
 
@@ -43,11 +41,5 @@ public class ExpressionsTestBase extends TestBase {
                                .execute(Document.class)
                                .next();
         assertEquals(expectedValue, test.get("test"));
-    }
-
-    protected void assertListEquals(List<Document> expected, List<Document> actual) {
-        assertEquals(actual.size(), expected.size());
-        expected.forEach(
-            d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
     }
 }

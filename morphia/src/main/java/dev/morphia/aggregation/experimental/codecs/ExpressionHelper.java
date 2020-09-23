@@ -20,6 +20,18 @@ public final class ExpressionHelper {
         writer.writeEndDocument();
     }
 
+    public static void array(BsonWriter writer, Runnable body) {
+        writer.writeStartArray();
+        body.run();
+        writer.writeEndArray();
+    }
+
+    public static void array(BsonWriter writer, String name, Runnable body) {
+        writer.writeStartArray(name);
+        body.run();
+        writer.writeEndArray();
+    }
+
     public static void document(BsonWriter writer, String name, Runnable body) {
         writer.writeStartDocument(name);
         body.run();
@@ -34,8 +46,8 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void writeNamedExpression(Mapper mapper, BsonWriter writer, String name, Expression expression,
-                                            EncoderContext encoderContext) {
+    public static void expression(Mapper mapper, BsonWriter writer, String name, Expression expression,
+                                  EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
             expression.encode(mapper, writer, encoderContext);

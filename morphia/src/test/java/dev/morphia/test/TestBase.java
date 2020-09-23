@@ -95,6 +95,12 @@ public abstract class TestBase {
         }
     }
 
+    protected void assertListEquals(List<Document> expected, List<Document> actual) {
+        assertEquals(actual.size(), expected.size());
+        expected.forEach(
+            d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
+    }
+
     protected void checkMinServerVersion(double version) {
         assumeTrue(serverIsAtLeastVersion(version), "Server should be at least " + version + " but found " + getServerVersion());
     }

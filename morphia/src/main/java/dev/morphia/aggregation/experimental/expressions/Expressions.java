@@ -67,8 +67,9 @@ public final class Expressions {
      * @return
      * @morphia.internal
      */
-    static List<Expression> toList(Expression first, Expression[] additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
+    public static <T> List<T> toList(T first, T... additional) {
+        List<T> expressions = new ArrayList<>();
+        expressions.add(first);
         expressions.addAll(asList(additional));
         return expressions;
     }

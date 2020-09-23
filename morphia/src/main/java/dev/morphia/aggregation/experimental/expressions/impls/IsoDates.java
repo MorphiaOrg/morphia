@@ -4,7 +4,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
  * Reusable type for ISO Date related expressions.
@@ -29,8 +29,8 @@ public class IsoDates extends Expression {
         writer.writeName(getOperation());
 
         writer.writeStartDocument();
-        writeNamedExpression(mapper, writer, "date", date, encoderContext);
-        writeNamedExpression(mapper, writer, "timezone", timezone, encoderContext);
+        expression(mapper, writer, "date", date, encoderContext);
+        expression(mapper, writer, "timezone", timezone, encoderContext);
         writer.writeEndDocument();
 
         writer.writeEndDocument();

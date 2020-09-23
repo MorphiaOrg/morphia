@@ -4,8 +4,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
 
 /**
  * Returns a document that contains the constituent parts of a given BSON Date value as individual properties. The properties returned
@@ -30,8 +30,8 @@ public class DateToParts extends Expression {
         writer.writeName(getOperation());
 
         writer.writeStartDocument();
-        writeNamedExpression(mapper, writer, "date", date, encoderContext);
-        writeNamedExpression(mapper, writer, "timezone", timeZone, encoderContext);
+        expression(mapper, writer, "date", date, encoderContext);
+        expression(mapper, writer, "timezone", timeZone, encoderContext);
         value(mapper, writer, "iso8601", iso8601, encoderContext);
         writer.writeEndDocument();
 

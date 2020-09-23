@@ -4,7 +4,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class TrimExpression extends Expression {
     private final Expression input;
@@ -24,8 +24,8 @@ public class TrimExpression extends Expression {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeStartDocument(getOperation());
-        writeNamedExpression(mapper, writer, "input", input, encoderContext);
-        writeNamedExpression(mapper, writer, "chars", chars, encoderContext);
+        expression(mapper, writer, "input", input, encoderContext);
+        expression(mapper, writer, "chars", chars, encoderContext);
         writer.writeEndDocument();
         writer.writeEndDocument();
     }

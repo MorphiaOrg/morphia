@@ -6,7 +6,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeNamedExpression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class BucketCodec extends StageCodec<Bucket> {
     public BucketCodec(Mapper mapper) {
@@ -21,7 +21,7 @@ public class BucketCodec extends StageCodec<Bucket> {
     @Override
     protected void encodeStage(BsonWriter writer, Bucket value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writeNamedExpression(getMapper(), writer, "groupBy", value.getGroupBy(), encoderContext);
+        expression(getMapper(), writer, "groupBy", value.getGroupBy(), encoderContext);
         writeNamedValue(writer, "boundaries", value.getBoundaries(), encoderContext);
         writeNamedValue(writer, "default", value.getDefaultValue(), encoderContext);
         DocumentExpression output = value.getOutput();

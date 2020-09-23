@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
@@ -29,6 +30,7 @@ import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.experimental.stages.UnionWith;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
@@ -240,6 +242,18 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> sortByCount(Expression sort) {
         stages.add(SortByCount.on(sort));
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others) {
+        stages.add(new UnionWith(type, Expressions.toList(first, others)));
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> unionWith(String collection, Stage first, Stage... others) {
+        stages.add(new UnionWith(collection, Expressions.toList(first, others)));
         return this;
     }
 
