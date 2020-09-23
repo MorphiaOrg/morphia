@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 @SuppressWarnings("unchecked")
 class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
     @Override
@@ -57,17 +59,17 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
 
         @Override
         public void encode(BsonWriter writer, Map<K, V> map, EncoderContext encoderContext) {
-            writer.writeStartDocument();
-            for (Entry<K, V> entry : map.entrySet()) {
-                final K key = entry.getKey();
-                writer.writeName(Conversions.convert(key, String.class));
-                if (entry.getValue() == null) {
-                    writer.writeNull();
-                } else {
-                    codec.encode(writer, entry.getValue(), encoderContext);
+            document(writer, () -> {
+                for (Entry<K, V> entry : map.entrySet()) {
+                    final K key = entry.getKey();
+                    writer.writeName(Conversions.convert(key, String.class));
+                    if (entry.getValue() == null) {
+                        writer.writeNull();
+                    } else {
+                        codec.encode(writer, entry.getValue(), encoderContext);
+                    }
                 }
-            }
-            writer.writeEndDocument();
+            });
         }
 
         @Override

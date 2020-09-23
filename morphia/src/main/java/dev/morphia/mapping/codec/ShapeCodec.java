@@ -9,6 +9,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 @SuppressWarnings("removal")
 class ShapeCodec implements Codec<dev.morphia.query.Shape> {
     @Override
@@ -18,13 +21,18 @@ class ShapeCodec implements Codec<dev.morphia.query.Shape> {
 
     @Override
     public void encode(BsonWriter writer, dev.morphia.query.Shape value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeStartArray(value.getGeometry());
-        for (Point point : value.getPoints()) {
-            encodePosition(writer, point.getCoordinates());
-        }
-        writer.writeEndArray();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            array(writer, value.getGeometry(), () -> {
+                for (Point point : value.getPoints()) {
+                    encodePosition(writer, point.getCoordinates());
+                }
+            });
+        });
+    }
+
+    @Override
+    public Class<dev.morphia.query.Shape> getEncoderClass() {
+        return dev.morphia.query.Shape.class;
     }
 
     private void encodePosition(BsonWriter writer, Position value) {
@@ -35,10 +43,5 @@ class ShapeCodec implements Codec<dev.morphia.query.Shape> {
         }
 
         writer.writeEndArray();
-    }
-
-    @Override
-    public Class<dev.morphia.query.Shape> getEncoderClass() {
-        return dev.morphia.query.Shape.class;
     }
 }

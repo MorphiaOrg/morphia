@@ -7,6 +7,8 @@ import org.bson.codecs.EncoderContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
@@ -16,7 +18,7 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expre
  * @since 2.0
  */
 public class SwitchExpression extends Expression {
-    List<Pair> branches = new ArrayList<>();
+    private final List<Pair> branches = new ArrayList<>();
     private Expression defaultCase;
 
     /**
@@ -52,21 +54,19 @@ public class SwitchExpression extends Expression {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeStartDocument(getOperation());
-        writer.writeStartArray("branches");
-        for (Pair branch : branches) {
-            writer.writeStartDocument();
-            writer.writeName("case");
-            branch.caseExpression.encode(mapper, writer, encoderContext);
-            writer.writeName("then");
-            branch.then.encode(mapper, writer, encoderContext);
-            writer.writeEndDocument();
-        }
-        writer.writeEndArray();
-        expression(mapper, writer, "default", defaultCase, encoderContext);
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            document(writer, getOperation(), () -> {
+                array(writer, "branches", () -> {
+                    for (Pair branch : branches) {
+                        document(writer, () -> {
+                            expression(mapper, writer, "case", branch.caseExpression, encoderContext);
+                            expression(mapper, writer, "then", branch.then, encoderContext);
+                        });
+                    }
+                });
+                expression(mapper, writer, "default", defaultCase, encoderContext);
+            });
+        });
     }
 
     private static class Pair {

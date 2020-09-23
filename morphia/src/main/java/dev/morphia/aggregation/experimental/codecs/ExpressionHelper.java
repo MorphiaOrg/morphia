@@ -75,8 +75,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void value(Mapper mapper, BsonWriter writer, String name, Object value,
-                             EncoderContext encoderContext) {
+    public static void value(Mapper mapper, BsonWriter writer, String name, Object value, EncoderContext encoderContext) {
         if (value != null) {
             writer.writeName(name);
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
@@ -91,8 +90,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void writeUnnamedValue(Mapper mapper, BsonWriter writer, Object value,
-                                         EncoderContext encoderContext) {
+    public static void value(Mapper mapper, BsonWriter writer, Object value, EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);

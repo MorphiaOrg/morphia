@@ -4,8 +4,10 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.writeUnnamedValue;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * @since 2.0
@@ -29,14 +31,14 @@ public class ArrayIndexExpression extends Expression {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeStartArray(getOperation());
-        expression(mapper, writer, array, encoderContext);
-        expression(mapper, writer, search, encoderContext);
-        writeUnnamedValue(mapper, writer, start, encoderContext);
-        writeUnnamedValue(mapper, writer, end, encoderContext);
-        writer.writeEndArray();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            array(writer, getOperation(), () -> {
+                expression(mapper, writer, array, encoderContext);
+                expression(mapper, writer, search, encoderContext);
+                value(mapper, writer, start, encoderContext);
+                value(mapper, writer, end, encoderContext);
+            });
+        });
 
     }
 

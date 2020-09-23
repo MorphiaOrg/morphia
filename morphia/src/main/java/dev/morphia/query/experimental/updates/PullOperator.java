@@ -7,6 +7,8 @@ import dev.morphia.query.OperationTarget;
 import dev.morphia.query.experimental.filters.Filter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 /**
  * Defines an operator for $pull
  *
@@ -28,9 +30,7 @@ public class PullOperator extends UpdateOperator {
             @Override
             public Object encode(Mapper mapper) {
                 DocumentWriter writer = new DocumentWriter();
-                writer.writeStartDocument();
-                ((Filter) getValue()).encode(mapper, writer, EncoderContext.builder().build());
-                writer.writeEndDocument();
+                document(writer, () -> ((Filter) getValue()).encode(mapper, writer, EncoderContext.builder().build()));
 
                 return writer.getDocument();
             }

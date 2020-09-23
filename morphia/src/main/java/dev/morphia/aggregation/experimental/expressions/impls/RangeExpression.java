@@ -4,6 +4,9 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class RangeExpression extends Expression {
     private final int start;
     private final int end;
@@ -17,15 +20,15 @@ public class RangeExpression extends Expression {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeStartArray(getOperation());
-        writer.writeInt32(start);
-        writer.writeInt32(end);
-        if (step != null) {
-            writer.writeInt32(step);
-        }
-        writer.writeEndArray();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            array(writer, getOperation(), () -> {
+                writer.writeInt32(start);
+                writer.writeInt32(end);
+                if (step != null) {
+                    writer.writeInt32(step);
+                }
+            });
+        });
     }
 
     public RangeExpression step(Integer step) {

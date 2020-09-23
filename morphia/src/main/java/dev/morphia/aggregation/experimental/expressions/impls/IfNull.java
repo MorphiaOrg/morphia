@@ -7,6 +7,8 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class IfNull extends Expression implements FieldHolder<IfNull> {
@@ -20,14 +22,13 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(getOperation());
-        writer.writeStartArray();
-        expression(mapper, writer, target, encoderContext);
-        expression(mapper, writer, replacement, encoderContext);
-        expression(mapper, writer, document, encoderContext);
-        writer.writeEndArray();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            array(writer, getOperation(), () -> {
+                expression(mapper, writer, target, encoderContext);
+                expression(mapper, writer, replacement, encoderContext);
+                expression(mapper, writer, document, encoderContext);
+            });
+        });
     }
 
     @Override

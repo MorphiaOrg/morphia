@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 import static com.mongodb.CursorType.NonTailable;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
 
@@ -345,12 +346,12 @@ public class MorphiaQuery<T> implements Query<T> {
 
     Document getQueryDocument() {
         DocumentWriter writer = new DocumentWriter(seedQuery);
-        writer.writeStartDocument();
-        EncoderContext context = EncoderContext.builder().build();
-        for (Filter filter : filters) {
-            filter.encode(mapper, writer, context);
-        }
-        writer.writeEndDocument();
+        document(writer, () -> {
+            EncoderContext context = EncoderContext.builder().build();
+            for (Filter filter : filters) {
+                filter.encode(mapper, writer, context);
+            }
+        });
 
         return writer.getDocument();
     }

@@ -5,6 +5,8 @@ import org.bson.BsonWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 /**
  * Sorts all input documents and returns them to the pipeline in sorted order.
  *
@@ -94,9 +96,7 @@ public class Sort extends Stage {
         META {
             @Override
             public void encode(BsonWriter writer) {
-                writer.writeStartDocument();
-                writer.writeString("$meta", "textScore");
-                writer.writeEndDocument();
+                document(writer, () -> writer.writeString("$meta", "textScore"));
             }
         };
 

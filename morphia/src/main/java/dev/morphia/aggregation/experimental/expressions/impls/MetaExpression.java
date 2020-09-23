@@ -4,6 +4,9 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+
 public class MetaExpression extends Expression {
 
     public MetaExpression() {
@@ -12,8 +15,6 @@ public class MetaExpression extends Expression {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeString(getOperation(), "textScore");
-        writer.writeEndDocument();
+        document(writer, () -> value(mapper, writer, getOperation(), "textScore", encoderContext));
     }
 }

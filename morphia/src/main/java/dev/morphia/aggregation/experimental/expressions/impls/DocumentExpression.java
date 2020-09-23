@@ -4,6 +4,8 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class DocumentExpression extends Expression implements FieldHolder<DocumentExpression> {
     private final Fields<DocumentExpression> fields = Fields.on(this);
 
@@ -12,16 +14,12 @@ public class DocumentExpression extends Expression implements FieldHolder<Docume
     }
 
     public void encode(String name, Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument(name);
-        fields.encode(mapper, writer, encoderContext);
-        writer.writeEndDocument();
+        document(writer, name, () -> fields.encode(mapper, writer, encoderContext));
     }
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        fields.encode(mapper, writer, encoderContext);
-        writer.writeEndDocument();
+        document(writer, () -> fields.encode(mapper, writer, encoderContext));
     }
 
     @Override

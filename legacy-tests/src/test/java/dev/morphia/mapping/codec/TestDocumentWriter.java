@@ -9,6 +9,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -22,35 +24,33 @@ public class TestDocumentWriter extends TestBase {
                           + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
 
         DocumentWriter writer = new DocumentWriter();
-        writer.writeStartDocument();
-        writer.writeStartDocument("$group");
+        document(writer, () -> {
+            document(writer, "$group", () -> {
 
-        writer.writeStartDocument("_id");
-        writer.writeStartDocument("$dateToString");
-        writer.writeString("format", "%Y-%m-%d");
-        writer.writeString("date", "$date");
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+                document(writer, "_id", () -> {
+                    document(writer, "$dateToString", () -> {
+                        writer.writeString("format", "%Y-%m-%d");
+                        writer.writeString("date", "$date");
+                    });
+                });
 
-        writer.writeStartDocument("totalSaleAmount");
-        writer.writeStartDocument("$sum");
-        writer.writeStartArray("$multiply");
-        writer.writeString("$price");
-        writer.writeString("$quantity");
-        writer.writeEndArray();
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+                document(writer, "totalSaleAmount", () -> {
+                    document(writer, "$sum", () -> {
+                        array(writer, "$multiply", () -> {
+                            writer.writeString("$price");
+                            writer.writeString("$quantity");
+                        });
+                    });
+                });
 
-        writer.writeStartDocument("averageQuantity");
-        writer.writeString("$avg", "$quantity");
-        writer.writeEndDocument();
+                document(writer, "averageQuantity", () -> writer.writeString("$avg", "$quantity"));
 
-        writer.writeStartDocument("count");
-        writer.writeInt32("$sum", 1);
-        writer.writeEndDocument();
+                document(writer, "count", () -> {
+                    writer.writeInt32("$sum", 1);
+                });
 
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+            });
+        });
         String s = writer.getDocument().toJson();
         JSONAssert.assertEquals(expected, s, false);
     }
@@ -59,17 +59,17 @@ public class TestDocumentWriter extends TestBase {
     public void testArrays() {
         DocumentWriter writer = new DocumentWriter();
 
-        writer.writeStartDocument();
-        check(writer, 1, 0);
-        writer.writeStartArray("stuff");
-        check(writer, 1, 1);
-        writer.writeString("hello");
-        writer.writeInt32(42);
-        writer.writeEndArray();
-        check(writer, 1, 0);
-        writer.writeName("next");
-        writer.writeString("something simple");
-        writer.writeEndDocument();
+        document(writer, () -> {
+            check(writer, 1, 0);
+            array(writer, "stuff", () -> {
+                check(writer, 1, 1);
+                writer.writeString("hello");
+                writer.writeInt32(42);
+            });
+            check(writer, 1, 0);
+            writer.writeName("next");
+            writer.writeString("something simple");
+        });
 
         check(writer, 0, 0);
         assertEquals(new Document("stuff", asList("hello", 42))
@@ -80,16 +80,16 @@ public class TestDocumentWriter extends TestBase {
     public void testArraysWithDocs() {
         DocumentWriter writer = new DocumentWriter();
 
-        writer.writeStartDocument();
-        check(writer, 1, 0);
-        writer.writeStartArray("stuff");
-        check(writer, 1, 1);
-        writer.writeStartDocument();
-        writer.writeInt32("doc", 42);
-        writer.writeEndDocument();
-        writer.writeEndArray();
-        check(writer, 1, 0);
-        writer.writeEndDocument();
+        document(writer, () -> {
+            check(writer, 1, 0);
+            array(writer, "stuff", () -> {
+                check(writer, 1, 1);
+                document(writer, () -> {
+                    writer.writeInt32("doc", 42);
+                });
+            });
+            check(writer, 1, 0);
+        });
 
         check(writer, 0, 0);
         assertEquals(new Document("stuff", asList(new Document("doc", 42))), writer.getDocument());
@@ -99,43 +99,36 @@ public class TestDocumentWriter extends TestBase {
     public void testBasic() {
         DocumentWriter writer = new DocumentWriter();
 
-        writer.writeStartDocument();
-        writer.writeEndDocument();
+        document(writer, () -> {
+        });
 
         check(writer, 0, 0);
         Document document = writer.getDocument();
         assertEquals(new Document(), document);
 
-        writer = new DocumentWriter();
-        writer.writeStartDocument();
-        writer.writeName("first");
-        writer.writeInt32(42);
-        writer.writeName("second");
-        writer.writeBoolean(false);
-        writer.writeInt64("third", 100L);
-        writer.writeEndDocument();
+        DocumentWriter writer2 = new DocumentWriter();
+        document(writer2, () -> {
+            writer2.writeName("first");
+            writer2.writeInt32(42);
+            writer2.writeName("second");
+            writer2.writeBoolean(false);
+            writer2.writeInt64("third", 100L);
+        });
 
-        check(writer, 0, 0);
+        check(writer2, 0, 0);
         assertEquals(new Document("first", 42)
                          .append("second", false)
                          .append("third", 100L),
-            writer.getDocument());
+            writer2.getDocument());
     }
 
     @Test
     public void testDuplicateKeys() {
         DocumentWriter writer = new DocumentWriter();
-        writer.writeStartDocument();
-
-        writer.writeStartDocument("id");
-        writer.writeInt32("first", 1);
-        writer.writeEndDocument();
-
-        writer.writeStartDocument("id");
-        writer.writeInt32("second", 2);
-        writer.writeEndDocument();
-
-        writer.writeEndDocument();
+        document(writer, () -> {
+            document(writer, "id", () -> writer.writeInt32("first", 1));
+            document(writer, "id", () -> writer.writeInt32("second", 2));
+        });
 
         Document document = (Document) writer.getDocument().get("id");
 
@@ -166,12 +159,10 @@ public class TestDocumentWriter extends TestBase {
     @Test
     public void testSubdocuments() {
         DocumentWriter writer = new DocumentWriter();
-        writer.writeStartDocument();
-        writer.writeName("subdoc");
-        writer.writeStartDocument();
-        writer.writeInt32("nested", 42);
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            writer.writeName("subdoc");
+            document(writer, () -> writer.writeInt32("nested", 42));
+        });
 
         check(writer, 0, 0);
         assertEquals(new Document("subdoc", new Document("nested", 42)), writer.getDocument());

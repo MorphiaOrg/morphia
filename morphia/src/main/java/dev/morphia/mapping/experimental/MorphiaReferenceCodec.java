@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
 
 /**
@@ -69,10 +70,10 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
             wrap = MorphiaReference.wrap(value);
         }
         DocumentWriter writer = new DocumentWriter();
-        writer.writeStartDocument();
-        writer.writeName("ref");
-        encode(writer, wrap, EncoderContext.builder().build());
-        writer.writeEndDocument();
+        document(writer, () -> {
+            writer.writeName("ref");
+            encode(writer, wrap, EncoderContext.builder().build());
+        });
         return writer.getDocument().get("ref");
     }
 

@@ -7,6 +7,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.Arrays;
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.lang.String.format;
 
 class LogicalFilter extends Filter {
@@ -21,9 +22,7 @@ class LogicalFilter extends Filter {
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartArray(getFilterName());
         for (Filter filter : filters) {
-            writer.writeStartDocument();
-            filter.encode(mapper, writer, context);
-            writer.writeEndDocument();
+            document(writer, () -> filter.encode(mapper, writer, context));
         }
         writer.writeEndArray();
     }

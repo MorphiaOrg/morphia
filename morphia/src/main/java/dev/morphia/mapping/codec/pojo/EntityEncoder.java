@@ -14,6 +14,8 @@ import org.bson.types.ObjectId;
 import java.util.Collection;
 import java.util.Map;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 /**
  * @since 2.0
  */
@@ -53,22 +55,23 @@ class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     @SuppressWarnings("unchecked")
     private void encodeEntity(BsonWriter writer, T value, EncoderContext encoderContext) {
         if (areEquivalentTypes(value.getClass(), morphiaCodec.getEntityModel().getType())) {
-            writer.writeStartDocument();
+            document(writer, () -> {
 
-            FieldModel<?> idModel = morphiaCodec.getEntityModel().getIdModel();
-            encodeIdProperty(writer, value, encoderContext, idModel);
+                FieldModel<?> idModel = morphiaCodec.getEntityModel().getIdModel();
+                encodeIdProperty(writer, value, encoderContext, idModel);
 
-            if (morphiaCodec.getEntityModel().useDiscriminator()) {
-                writer.writeString(morphiaCodec.getEntityModel().getDiscriminatorKey(), morphiaCodec.getEntityModel().getDiscriminator());
-            }
-
-            for (FieldModel<?> fieldModel : morphiaCodec.getEntityModel().getFieldModels()) {
-                if (fieldModel.equals(idModel)) {
-                    continue;
+                if (morphiaCodec.getEntityModel().useDiscriminator()) {
+                    writer.writeString(morphiaCodec.getEntityModel().getDiscriminatorKey(),
+                        morphiaCodec.getEntityModel().getDiscriminator());
                 }
-                encodeProperty(writer, value, encoderContext, fieldModel);
-            }
-            writer.writeEndDocument();
+
+                for (FieldModel<?> fieldModel : morphiaCodec.getEntityModel().getFieldModels()) {
+                    if (fieldModel.equals(idModel)) {
+                        continue;
+                    }
+                    encodeProperty(writer, value, encoderContext, fieldModel);
+                }
+            });
         } else {
             morphiaCodec.getRegistry().get((Class<T>) value.getClass())
                         .encode(writer, value, encoderContext);

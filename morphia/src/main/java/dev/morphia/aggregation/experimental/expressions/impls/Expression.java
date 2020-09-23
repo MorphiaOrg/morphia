@@ -2,10 +2,12 @@ package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import java.util.StringJoiner;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * Base class for all the expression types.
@@ -40,11 +42,7 @@ public class Expression {
      */
     @SuppressWarnings("rawtypes")
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(operation);
-        Codec codec = mapper.getCodecRegistry().get(value.getClass());
-        encoderContext.encodeWithChildContext(codec, writer, value);
-        writer.writeEndDocument();
+        document(writer, () -> value(mapper, writer, operation, value, encoderContext));
     }
 
     /**

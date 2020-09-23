@@ -5,6 +5,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 public class DateFromParts extends Expression {
@@ -51,26 +52,21 @@ public class DateFromParts extends Expression {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(getOperation());
-        writer.writeStartDocument();
-
-        expression(mapper, writer, "year", year, encoderContext);
-        expression(mapper, writer, "month", month, encoderContext);
-        expression(mapper, writer, "day", day, encoderContext);
-        expression(mapper, writer, "hour", hour, encoderContext);
-        expression(mapper, writer, "minute", minute, encoderContext);
-        expression(mapper, writer, "second", second, encoderContext);
-        expression(mapper, writer, "millisecond", millisecond, encoderContext);
-
-        expression(mapper, writer, "isoWeekYear", isoWeekYear, encoderContext);
-        expression(mapper, writer, "isoWeek", isoWeek, encoderContext);
-        expression(mapper, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
-
-        expression(mapper, writer, "timezone", timezone, encoderContext);
-
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            document(writer, getOperation(), () -> {
+                expression(mapper, writer, "year", year, encoderContext);
+                expression(mapper, writer, "month", month, encoderContext);
+                expression(mapper, writer, "day", day, encoderContext);
+                expression(mapper, writer, "hour", hour, encoderContext);
+                expression(mapper, writer, "minute", minute, encoderContext);
+                expression(mapper, writer, "second", second, encoderContext);
+                expression(mapper, writer, "millisecond", millisecond, encoderContext);
+                expression(mapper, writer, "isoWeekYear", isoWeekYear, encoderContext);
+                expression(mapper, writer, "isoWeek", isoWeek, encoderContext);
+                expression(mapper, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
+                expression(mapper, writer, "timezone", timezone, encoderContext);
+            });
+        });
     }
 
     /**

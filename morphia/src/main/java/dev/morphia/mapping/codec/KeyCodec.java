@@ -15,6 +15,8 @@ import org.bson.codecs.EncoderContext;
 import java.util.Iterator;
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 /**
  * Defines the codec for Key types
  */
@@ -30,16 +32,16 @@ public class KeyCodec implements Codec<Key> {
 
     @Override
     public void encode(BsonWriter writer, Key value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        String collection = value.getCollection();
-        if (collection == null) {
-            collection = mapper.getMappedClass(value.getType()).getCollectionName();
-        }
-        writer.writeString("$ref", collection);
-        writer.writeName("$id");
-        Codec codec = mapper.getCodecRegistry().get(value.getId().getClass());
-        codec.encode(writer, value.getId(), encoderContext);
-        writer.writeEndDocument();
+        document(writer, () -> {
+            String collection = value.getCollection();
+            if (collection == null) {
+                collection = mapper.getMappedClass(value.getType()).getCollectionName();
+            }
+            writer.writeString("$ref", collection);
+            writer.writeName("$id");
+            Codec codec = mapper.getCodecRegistry().get(value.getId().getClass());
+            codec.encode(writer, value.getId(), encoderContext);
+        });
     }
 
     @Override

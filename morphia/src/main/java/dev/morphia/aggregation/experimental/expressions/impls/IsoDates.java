@@ -4,6 +4,7 @@ import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
@@ -25,15 +26,12 @@ public class IsoDates extends Expression {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(getOperation());
-
-        writer.writeStartDocument();
-        expression(mapper, writer, "date", date, encoderContext);
-        expression(mapper, writer, "timezone", timezone, encoderContext);
-        writer.writeEndDocument();
-
-        writer.writeEndDocument();
+        document(writer, () -> {
+            document(writer, getOperation(), () -> {
+                expression(mapper, writer, "date", date, encoderContext);
+                expression(mapper, writer, "timezone", timezone, encoderContext);
+            });
+        });
     }
 
     /**

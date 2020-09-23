@@ -44,6 +44,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 /**
  * @morphia.internal
  */
@@ -155,10 +157,10 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     public Object encode(Object value) {
         try {
             DocumentWriter writer = new DocumentWriter();
-            writer.writeStartDocument();
-            writer.writeName("ref");
-            encode(writer, value, EncoderContext.builder().build());
-            writer.writeEndDocument();
+            document(writer, () -> {
+                writer.writeName("ref");
+                encode(writer, value, EncoderContext.builder().build());
+            });
             return writer.getDocument().get("ref");
         } catch (ReferenceException e) {
             return value;

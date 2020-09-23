@@ -12,6 +12,9 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.StringJoiner;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+
 /**
  * @morphia.internal
  */
@@ -68,12 +71,9 @@ public class OperationTarget {
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
         } else if (mappedValue != null) {
-            Codec codec = mapper.getCodecRegistry().get(mappedValue.getClass());
             DocumentWriter writer = new DocumentWriter();
-            writer.writeStartDocument();
-            writer.writeName("mapped");
-            codec.encode(writer, mappedValue, EncoderContext.builder().build());
-            writer.writeEndDocument();
+            Object finalMappedValue = mappedValue;
+            document(writer, () -> value(mapper, writer, "mapped", finalMappedValue, EncoderContext.builder().build()));
             mappedValue = writer.getDocument().get("mapped");
         }
         return new Document(target.translatedPath(), mappedValue);

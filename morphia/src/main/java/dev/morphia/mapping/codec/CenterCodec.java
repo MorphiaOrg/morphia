@@ -8,6 +8,8 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 @SuppressWarnings("removal")
 class CenterCodec implements Codec<dev.morphia.query.Shape.Center> {
     @Override
@@ -17,14 +19,12 @@ class CenterCodec implements Codec<dev.morphia.query.Shape.Center> {
 
     @Override
     public void encode(BsonWriter writer, dev.morphia.query.Shape.Center value, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeStartArray(value.getGeometry());
-
-        encodePosition(writer, value.getCenter().getPosition());
-        writer.writeDouble(value.getRadius());
-
-        writer.writeEndArray();
-        writer.writeEndDocument();
+        document(writer, () -> {
+            document(writer, value.getGeometry(), () -> {
+                encodePosition(writer, value.getCenter().getPosition());
+                writer.writeDouble(value.getRadius());
+            });
+        });
     }
 
     private void encodePosition(BsonWriter writer, Position value) {

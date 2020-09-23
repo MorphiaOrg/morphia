@@ -7,6 +7,8 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+
 public class Push extends Expression implements FieldHolder<Push> {
     private Expression field;
     private DocumentExpression document;
@@ -17,14 +19,14 @@ public class Push extends Expression implements FieldHolder<Push> {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(getOperation());
-        if (field != null) {
-            field.encode(mapper, writer, encoderContext);
-        } else if (document != null) {
-            document.encode(mapper, writer, encoderContext);
-        }
-        writer.writeEndDocument();
+        document(writer, () -> {
+            writer.writeName(getOperation());
+            if (field != null) {
+                field.encode(mapper, writer, encoderContext);
+            } else if (document != null) {
+                document.encode(mapper, writer, encoderContext);
+            }
+        });
     }
 
     @Override

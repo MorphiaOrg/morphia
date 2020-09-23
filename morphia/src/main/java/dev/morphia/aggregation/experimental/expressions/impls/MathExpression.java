@@ -6,6 +6,7 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 import static java.util.Arrays.asList;
 
@@ -40,21 +41,21 @@ public class MathExpression extends Expression {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeStartDocument();
-        writer.writeName(getOperation());
-        if (operands.size() > 1) {
-            writer.writeStartArray();
-        }
-        for (Expression operand : operands) {
-            if (operand != null) {
-                expression(mapper, writer, operand, encoderContext);
-            } else {
-                writer.writeNull();
+        document(writer, () -> {
+            writer.writeName(getOperation());
+            if (operands.size() > 1) {
+                writer.writeStartArray();
             }
-        }
-        if (operands.size() > 1) {
-            writer.writeEndArray();
-        }
-        writer.writeEndDocument();
+            for (Expression operand : operands) {
+                if (operand != null) {
+                    expression(mapper, writer, operand, encoderContext);
+                } else {
+                    writer.writeNull();
+                }
+            }
+            if (operands.size() > 1) {
+                writer.writeEndArray();
+            }
+        });
     }
 }
