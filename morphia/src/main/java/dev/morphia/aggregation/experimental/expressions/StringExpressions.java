@@ -23,28 +23,6 @@ public final class StringExpressions {
     }
 
     /**
-     * Replaces all instances of a search string in an input string with a replacement string.
-     *
-     * @return the new expression
-     * @aggregation.expression $replaceAll
-     * @since 2.1
-     */
-    public static Expression replaceAll(Expression input, Expression find, Expression replacement) {
-        return new ReplaceExpression("$replaceAll", input, find, replacement);
-    }
-
-    /**
-     * Replaces the first instance of a search string in an input string with a replacement string.
-     *
-     * @return the new expression
-     * @aggregation.expression $replaceOne
-     * @since 2.1
-     */
-    public static Expression replaceOne(Expression input, Expression find, Expression replacement) {
-        return new ReplaceExpression("$replaceOne", input, find, replacement);
-    }
-
-    /**
      * Concatenates any number of strings.
      *
      * @param first      the first array expression
@@ -127,6 +105,34 @@ public final class StringExpressions {
     }
 
     /**
+     * Replaces all instances of a search string in an input string with a replacement string.
+     *
+     * @param input       the input value/source
+     * @param find        the search expression
+     * @param replacement the replacement value
+     * @return the new expression
+     * @aggregation.expression $replaceAll
+     * @since 2.1
+     */
+    public static Expression replaceAll(Expression input, Expression find, Expression replacement) {
+        return new ReplaceExpression("$replaceAll", input, find, replacement);
+    }
+
+    /**
+     * Replaces the first instance of a search string in an input string with a replacement string.
+     *
+     * @param input       the input value/source
+     * @param find        the search expression
+     * @param replacement the replacement value
+     * @return the new expression
+     * @aggregation.expression $replaceOne
+     * @since 2.1
+     */
+    public static Expression replaceOne(Expression input, Expression find, Expression replacement) {
+        return new ReplaceExpression("$replaceOne", input, find, replacement);
+    }
+
+    /**
      * Removes whitespace or the specified characters from the end of a string.
      *
      * @param input The string to trim. The argument can be any valid expression that resolves to a string.
@@ -200,6 +206,7 @@ public final class StringExpressions {
      * @deprecated Deprecated since version 3.4: $substr is now an alias for {@link #substrBytes(Expression, int, int)}
      */
     @Deprecated
+    @SuppressWarnings("unused")
     public static Expression substr(Expression input, int start, int length) {
         throw new UnsupportedOperationException("Use $substrBytes or $substrCP.");
     }
@@ -255,17 +262,6 @@ public final class StringExpressions {
     }
 
     /**
-     * Removes whitespace or the specified characters from the beginning and end of a string.
-     *
-     * @param input the string to process
-     * @return the new expression
-     * @aggregation.expression $trim
-     */
-    public static TrimExpression trim(Expression input) {
-        return new TrimExpression("$trim", input);
-    }
-
-    /**
      * Converts a string to uppercase. Accepts a single argument expression.
      *
      * @param input the string to process
@@ -274,6 +270,17 @@ public final class StringExpressions {
      */
     public static Expression toUpper(Expression input) {
         return new Expression("$toUpper", input);
+    }
+
+    /**
+     * Removes whitespace or the specified characters from the beginning and end of a string.
+     *
+     * @param input the string to process
+     * @return the new expression
+     * @aggregation.expression $trim
+     */
+    public static TrimExpression trim(Expression input) {
+        return new TrimExpression("$trim", input);
     }
 
 }
