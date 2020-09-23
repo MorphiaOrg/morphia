@@ -749,6 +749,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testUnionWith() {
+        checkMinServerVersion(4.4);
         insert("sales2019q1", List.of(
             parse("{ store: 'A', item: 'Chocolates', quantity: 150 }"),
             parse("{ store: 'B', item: 'Chocolates', quantity: 50 }"),
