@@ -111,12 +111,14 @@ public class TestTransactions extends TestBase {
     @Test
     public void merge() {
         Rectangle rectangle = new Rectangle(1, 1);
+
         getDs().save(rectangle);
+        assertEquals(getDs().find(Rectangle.class).count(), 1);
 
         getDs().withTransaction((session) -> {
 
-            assertEquals(getDs().find(Rectangle.class).first(), rectangle);
-            assertEquals(session.find(Rectangle.class).first(), rectangle);
+            assertEquals(getDs().find(Rectangle.class).first(), new Rectangle(1, 1));
+            assertEquals(session.find(Rectangle.class).first(), new Rectangle(1, 1));
 
             rectangle.setWidth(20);
             session.merge(rectangle);
