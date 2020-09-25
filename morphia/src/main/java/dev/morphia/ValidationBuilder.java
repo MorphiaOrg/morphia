@@ -22,6 +22,8 @@ import dev.morphia.annotations.Validation;
 
 /**
  * This is an internal class subject to change and removal.  Do not use.
+ *
+ * @morphia.internal
  */
 public class ValidationBuilder extends AnnotationBuilder<Validation> implements Validation {
     /**

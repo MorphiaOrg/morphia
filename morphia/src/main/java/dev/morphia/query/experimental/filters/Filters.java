@@ -8,10 +8,13 @@ import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Type;
 import org.bson.BsonWriter;
+import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.bson.Document.parse;
 
 /**
  * Defines helper methods to generate filter operations for queries.
@@ -94,15 +97,34 @@ public final class Filters {
     }
 
     /**
-     * Validate documents against the given JSON Schema.
+     * Filters documents against the given JSON Schema.
      *
      * @param field the field to check
      * @param val   the value to check
      * @return the filter
      * @query.filter $jsonSchema
+     * @deprecated use {@link #jsonSchema(Document)} instead
      */
+    @Deprecated(forRemoval = true)
     public static Filter jsonSchema(String field, Object val) {
-        return new Filter("$jsonSchema", field, val);
+        return jsonSchema(parse(val.toString()));
+    }
+
+    /**
+     * Filters documents against the given JSON Schema.
+     *
+     * @param schema the schema to use
+     * @return the filter
+     * @query.filter $jsonSchema
+     * @since 2.1
+     */
+    public static Filter jsonSchema(Document schema) {
+        return new Filter("$jsonSchema", null, schema) {
+            @Override
+            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+                value(mapper, writer, getFilterName(), schema, context);
+            }
+        };
     }
 
     /**

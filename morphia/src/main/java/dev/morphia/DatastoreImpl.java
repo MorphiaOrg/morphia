@@ -38,15 +38,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.filters.Filters.in;
-import static java.util.Collections.singletonList;
 import static org.bson.Document.parse;
 
 /**
@@ -286,7 +283,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void enableDocumentValidation() {
         for (MappedClass mc : mapper.getMappedClasses()) {
-            enableValidation(mc, mc.getAnnotation(Validation.class));
+            mc.enableDocumentValidation(getDatabase());
         }
     }
 
@@ -307,36 +304,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndexes(Class<T> clazz) {
         final IndexHelper indexHelper = new IndexHelper(mapper);
         indexHelper.createIndex(mapper.getCollection(clazz), mapper.getMappedClass(clazz));
-    }
-
-    private <T> List<T> getByKeys(Class<T> clazz, Iterable<Key<T>> keys) {
-
-        final Map<String, List<Key>> kindMap = new HashMap<>();
-        final List<T> entities = new ArrayList<>();
-        for (Key<?> key : keys) {
-            mapper.updateCollection(key);
-
-            if (kindMap.containsKey(key.getCollection())) {
-                kindMap.get(key.getCollection()).add(key);
-            } else {
-                kindMap.put(key.getCollection(), new ArrayList<>(singletonList((Key) key)));
-            }
-        }
-        for (Map.Entry<String, List<Key>> entry : kindMap.entrySet()) {
-            final List<Key> kindKeys = entry.getValue();
-
-            final List<Object> objIds = new ArrayList<>();
-            for (Key key : kindKeys) {
-                objIds.add(key.getId());
-            }
-            final List kindResults = find(entry.getKey()).disableValidation()
-                                                         .filter(in("_id", objIds))
-                                                         .iterator()
-                                                         .toList();
-            entities.addAll(kindResults);
-        }
-
-        return entities;
     }
 
     @Override
@@ -549,7 +516,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         field.setFieldValue(entity, newVersion);
     }
 
-    void enableValidation(MappedClass mc, Validation validation) {
+    /**
+     * @param mc         internal
+     * @param validation internal
+     * @morphia.internal
+     */
+    public void enableValidation(MappedClass mc, Validation validation) {
         if (validation != null) {
             String collectionName = mc.getCollectionName();
             try {

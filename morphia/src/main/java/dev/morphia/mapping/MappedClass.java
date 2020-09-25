@@ -15,11 +15,15 @@
  */
 package dev.morphia.mapping;
 
+import com.mongodb.MongoCommandException;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.ValidationOptions;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
@@ -34,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
+import static org.bson.Document.parse;
 
 /**
  * @morphia.internal
@@ -50,13 +55,13 @@ public class MappedClass {
      */
     private final EntityModel<?> entityModel;
     private final Class<?> type;
+    private final List<MappedClass> interfaces = new ArrayList<>();
+    private final List<MappedClass> subtypes = new ArrayList<>();
     /**
      * special fields representing the Key of the object
      */
     private MappedField idField;
     private MappedClass superClass;
-    private final List<MappedClass> interfaces = new ArrayList<>();
-    private final List<MappedClass> subtypes = new ArrayList<>();
 
     /**
      * Creates a MappedClass instance
@@ -83,20 +88,86 @@ public class MappedClass {
     }
 
     /**
-     * @return the MappedClasses for all the known subtypes
+     * Call the lifecycle methods
+     *
+     * @param event    the lifecycle annotation
+     * @param entity   the entity to process
+     * @param document the document to use
+     * @param mapper   the Mapper to use
      */
-    public List<MappedClass> getSubtypes() {
-        return Collections.unmodifiableList(subtypes);
+    public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
+                                     Mapper mapper) {
+        entityModel.callLifecycleMethods(event, entity, document, mapper);
     }
 
     /**
-     * Update mappings based on fields/annotations.
+     * Enables any document validation defined on the class
+     *
+     * @param database the database to update
+     * @morphia.internal
      */
-    public void update() {
-        final List<MappedField> fields = getFields(Id.class);
-        if (fields != null && !fields.isEmpty()) {
-            idField = fields.get(0);
+    public void enableDocumentValidation(MongoDatabase database) {
+        Validation validation = getAnnotation(Validation.class);
+        if (validation != null) {
+            String collectionName = getCollectionName();
+            try {
+                database.runCommand(new Document("collMod", collectionName)
+                                        .append("validator", parse(validation.value()))
+                                        .append("validationLevel", validation.level().getValue())
+                                        .append("validationAction", validation.action().getValue()));
+            } catch (MongoCommandException e) {
+                if (e.getCode() == 26) {
+                    database.createCollection(collectionName,
+                        new CreateCollectionOptions()
+                            .validationOptions(new ValidationOptions()
+                                                   .validator(parse(validation.value()))
+                                                   .validationLevel(validation.level())
+                                                   .validationAction(validation.action())));
+                } else {
+                    throw e;
+                }
+            }
         }
+    }
+
+    /**
+     * Looks for an annotation of the type given
+     *
+     * @param clazz the type to search for
+     * @param <T>   the annotation type
+     * @return the instance if it was found or null
+     * @morphia.internal
+     */
+    public <T extends Annotation> T getAnnotation(Class<T> clazz) {
+        return entityModel.getAnnotation(clazz);
+    }
+
+    /**
+     * @return the collName
+     */
+    public String getCollectionName() {
+        return entityModel.getCollectionName();
+    }
+
+    /**
+     * @return the embeddedAn
+     */
+    public Embedded getEmbeddedAnnotation() {
+        return entityModel.getAnnotation(Embedded.class);
+    }
+
+    /**
+     * @return the entityAn
+     */
+    public Entity getEntityAnnotation() {
+        return entityModel.getAnnotation(Entity.class);
+    }
+
+    /**
+     * @return the underlying model of the type
+     */
+    public EntityModel<?> getEntityModel() {
+        return entityModel;
     }
 
     /**
@@ -116,79 +187,10 @@ public class MappedClass {
     }
 
     /**
-     * This is an internal method subject to change without notice.
-     *
-     * @return the parent class of this type if there is one null otherwise
-     * @since 1.3
+     * @return the fields
      */
-    public MappedClass getSuperClass() {
-        return superClass;
-    }
-
-    /**
-     * @return true if the MappedClass is an interface
-     */
-    public boolean isInterface() {
-        return type.isInterface();
-    }
-
-    /**
-     * This is an internal method subject to change without notice.
-     *
-     * @return true if the MappedClass is abstract
-     * @since 1.3
-     */
-    public boolean isAbstract() {
-        return Modifier.isAbstract(type.getModifiers());
-    }
-
-    /**
-     * Call the lifecycle methods
-     *
-     * @param event    the lifecycle annotation
-     * @param entity   the entity to process
-     * @param document the document to use
-     * @param mapper   the Mapper to use
-     */
-    public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
-                                     Mapper mapper) {
-        entityModel.callLifecycleMethods(event, entity, document, mapper);
-    }
-
-    /**
-     * Checks if this mapped type has the given lifecycle event defined
-     *
-     * @param type the event type
-     * @return true if this annotation has been found
-     */
-    public boolean hasLifecycle(Class<? extends Annotation> type) {
-        return entityModel.hasLifecycle(type);
-    }
-
-    /**
-     * Looks for an annotation of the type given
-     *
-     * @param clazz the type to search for
-     * @param <T>   the annotation type
-     * @return the instance if it was found or null
-     * @morphia.internal
-     */
-    public <T extends Annotation> T getAnnotation(Class<T> clazz) {
-        return entityModel.getAnnotation(clazz);
-    }
-
-    /**
-     * @return the embeddedAn
-     */
-    public Embedded getEmbeddedAnnotation() {
-        return entityModel.getAnnotation(Embedded.class);
-    }
-
-    /**
-     * @return the entityAn
-     */
-    public Entity getEntityAnnotation() {
-        return entityModel.getAnnotation(Entity.class);
+    public List<MappedField> getFields() {
+        return fields;
     }
 
     /**
@@ -229,6 +231,30 @@ public class MappedClass {
     }
 
     /**
+     * @return the MappedClasses for all the known subtypes
+     */
+    public List<MappedClass> getSubtypes() {
+        return Collections.unmodifiableList(subtypes);
+    }
+
+    /**
+     * This is an internal method subject to change without notice.
+     *
+     * @return the parent class of this type if there is one null otherwise
+     * @since 1.3
+     */
+    public MappedClass getSuperClass() {
+        return superClass;
+    }
+
+    /**
+     * @return the clazz
+     */
+    public Class<?> getType() {
+        return type;
+    }
+
+    /**
      * @return the ID field for the class
      */
     public MappedField getVersionField() {
@@ -237,10 +263,13 @@ public class MappedClass {
     }
 
     /**
-     * @return the fields
+     * Checks if this mapped type has the given lifecycle event defined
+     *
+     * @param type the event type
+     * @return true if this annotation has been found
      */
-    public List<MappedField> getFields() {
-        return fields;
+    public boolean hasLifecycle(Class<? extends Annotation> type) {
+        return entityModel.hasLifecycle(type);
     }
 
     @Override
@@ -269,17 +298,30 @@ public class MappedClass {
     }
 
     /**
-     * @return the clazz
+     * This is an internal method subject to change without notice.
+     *
+     * @return true if the MappedClass is abstract
+     * @since 1.3
      */
-    public Class<?> getType() {
-        return type;
+    public boolean isAbstract() {
+        return Modifier.isAbstract(type.getModifiers());
     }
 
     /**
-     * @return the collName
+     * @return true if the MappedClass is an interface
      */
-    public String getCollectionName() {
-        return entityModel.getCollectionName();
+    public boolean isInterface() {
+        return type.isInterface();
+    }
+
+    /**
+     * Update mappings based on fields/annotations.
+     */
+    public void update() {
+        final List<MappedField> fields = getFields(Id.class);
+        if (fields != null && !fields.isEmpty()) {
+            idField = fields.get(0);
+        }
     }
 
     /**
@@ -288,16 +330,12 @@ public class MappedClass {
      * @param mapper the Mapper to use for validation
      */
     public void validate(Mapper mapper) {
-        MorphiaInstanceCreator factory = entityModel.getInstanceCreatorFactory()
-                                                    .create();
-        new MappingValidator(factory).validate(mapper, this);
+        new MappingValidator(entityModel.getInstanceCreatorFactory().create())
+            .validate(mapper, this);
     }
 
-    /**
-     * @return the underlying model of the type
-     */
-    public EntityModel<?> getEntityModel() {
-        return entityModel;
+    private void addSubtype(MappedClass mappedClass) {
+        subtypes.add(mappedClass);
     }
 
     /**
@@ -325,10 +363,6 @@ public class MappedClass {
         update();
     }
 
-    private void addSubtype(MappedClass mappedClass) {
-        subtypes.add(mappedClass);
-    }
-
     private void discoverFields() {
         entityModel.getFieldModels().forEach(model -> {
             final MappedField field = new MappedField(this, model);
@@ -339,4 +373,5 @@ public class MappedClass {
             }
         });
     }
+
 }

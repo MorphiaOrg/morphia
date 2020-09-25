@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.test;
 
 import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
@@ -24,25 +24,35 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
+import dev.morphia.DatastoreImpl;
+import dev.morphia.InsertManyOptions;
+import dev.morphia.InsertOneOptions;
+import dev.morphia.ModifyOptions;
+import dev.morphia.UpdateOptions;
+import dev.morphia.ValidationBuilder;
 import dev.morphia.annotations.Validation;
-import dev.morphia.entities.DocumentValidation;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
-import dev.morphia.testmodel.User;
+import dev.morphia.test.models.Contact;
+import dev.morphia.test.models.DocumentValidation;
+import dev.morphia.test.models.User;
 import org.bson.Document;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.updates.UpdateOperators.set;
+import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
 import static java.util.Arrays.asList;
+import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -53,7 +63,7 @@ public class TestDocumentValidation extends TestBase {
     public void createValidation() {
         getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
-        assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
+        assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
         try {
             getDs().save(new DocumentValidation("John", 1, new Date()));
@@ -115,6 +125,7 @@ public class TestDocumentValidation extends TestBase {
             new DocumentValidation("Sarah", 8, new Date()),
             new DocumentValidation("Amy", 8, new Date()),
             new DocumentValidation("James", 8, new Date()));
+
         try {
             getDs().insert(list);
             fail("Document validation should have complained");
@@ -129,8 +140,29 @@ public class TestDocumentValidation extends TestBase {
     }
 
     @Test
+    public void jsonSchemaValidation() {
+        insert("contacts", List.of(
+            parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
+            parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
+        MappedClass mapped = getDs().getMapper().map(Contact.class).get(0);
+        mapped.enableDocumentValidation(getDatabase());
+
+        Assert.assertThrows(MongoWriteException.class, () -> {
+            getDs().find(Contact.class)
+                   .filter(eq("_id", 1))
+                   .update(unset("phone"))
+                   .execute();
+        });
+
+        getDs().find(Contact.class)
+               .filter(eq("_id", 2))
+               .update(unset("name"))
+               .execute();
+    }
+
+    @Test
     public void overwriteValidation() {
-        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
+        Document validator = parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
         MongoDatabase database = addValidation(validator);
 
         assertEquals(validator, getValidator());
@@ -146,7 +178,7 @@ public class TestDocumentValidation extends TestBase {
 
         getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
-        assertEquals(Document.parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
+        assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
         try {
             database.getCollection("validation").insertOne(rhubarb);
@@ -203,7 +235,7 @@ public class TestDocumentValidation extends TestBase {
         getMapper().map(User.class);
         getDs().enableDocumentValidation();
 
-        final User user = new User("Jim Halpert", new Date());
+        final User user = new User("Jim Halpert", LocalDate.now());
         user.age = 5;
 
         try {
@@ -214,7 +246,7 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(user, new InsertOneOptions().bypassDocumentValidation(true));
 
-        Assert.assertEquals(1, getDs().find(User.class).count());
+        Assert.assertEquals(getDs().find(User.class).count(), 1);
     }
 
     @Test
@@ -227,7 +259,7 @@ public class TestDocumentValidation extends TestBase {
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         UpdateOptions options = new UpdateOptions()
                                     .bypassDocumentValidation(false);
-        Update update = query.update(set("number", 5));
+        Update<DocumentValidation> update = query.update(set("number", 5));
         try {
             update.execute(options);
             fail("Document validation should have complained");
@@ -244,7 +276,7 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void validationDocuments() {
-        Document validator = Document.parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
+        Document validator = parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
         getMapper().map(DocumentValidation.class);
         MappedClass mappedClass = getMapper().getMappedClass(DocumentValidation.class);
 
@@ -260,7 +292,7 @@ public class TestDocumentValidation extends TestBase {
                                         .validator(validator)
                                         .validationLevel(ValidationLevel.MODERATE)
                                         .validationAction(ValidationAction.ERROR);
-        MongoDatabase database = getMongoClient().getDatabase(TEST_DB_NAME);
+        MongoDatabase database = getMongoClient().getDatabase(TestBase.TEST_DB_NAME);
         database.getCollection("validation").drop();
         database.createCollection("validation", new CreateCollectionOptions().validationOptions(options));
         return database;
@@ -281,7 +313,7 @@ public class TestDocumentValidation extends TestBase {
 
     @SuppressWarnings("unchecked")
     private Document getValidation() {
-        Document document = getMongoClient().getDatabase(TEST_DB_NAME)
+        Document document = getMongoClient().getDatabase(TestBase.TEST_DB_NAME)
                                             .runCommand(new Document("listCollections", 1)
                                                             .append("filter", new Document("name", "validation")));
 

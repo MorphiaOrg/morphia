@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.morphia.entities;
+package dev.morphia.test.models;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;

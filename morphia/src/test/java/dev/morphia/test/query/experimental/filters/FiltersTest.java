@@ -6,6 +6,7 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
 import org.bson.Document;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import static dev.morphia.query.experimental.filters.Filters.expr;
 import static dev.morphia.query.experimental.filters.Filters.gt;
 import static dev.morphia.query.experimental.filters.Filters.gte;
 import static dev.morphia.query.experimental.filters.Filters.in;
+import static dev.morphia.query.experimental.filters.Filters.jsonSchema;
 import static dev.morphia.query.experimental.filters.Filters.lt;
 import static dev.morphia.query.experimental.filters.Filters.lte;
 import static dev.morphia.query.experimental.filters.Filters.nin;
@@ -29,11 +31,11 @@ import static dev.morphia.query.experimental.filters.Filters.nor;
 import static dev.morphia.query.experimental.filters.Filters.or;
 import static dev.morphia.query.experimental.filters.Filters.size;
 import static java.util.Arrays.asList;
+import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
 public class FiltersTest extends TestBase {
-
     @Test
     public void testAnd() {
         getDs().find(Budget.class)
@@ -149,11 +151,11 @@ public class FiltersTest extends TestBase {
     @Test
     public void testExpr() {
         insert("budget", asList(
-            Document.parse("{ '_id' : 1, 'category' : 'food', 'budget': 400, 'spent': 450 }"),
-            Document.parse("{ '_id' : 2, 'category' : 'drinks', 'budget': 100, 'spent': 150 }"),
-            Document.parse("{ '_id' : 3, 'category' : 'clothes', 'budget': 100, 'spent': 50 }"),
-            Document.parse("{ '_id' : 4, 'category' : 'misc', 'budget': 500, 'spent': 300 }"),
-            Document.parse("{ '_id' : 5, 'category' : 'travel', 'budget': 200, 'spent': 650 }")));
+            parse("{ '_id' : 1, 'category' : 'food', 'budget': 400, 'spent': 450 }"),
+            parse("{ '_id' : 2, 'category' : 'drinks', 'budget': 100, 'spent': 150 }"),
+            parse("{ '_id' : 3, 'category' : 'clothes', 'budget': 100, 'spent': 50 }"),
+            parse("{ '_id' : 4, 'category' : 'misc', 'budget': 500, 'spent': 300 }"),
+            parse("{ '_id' : 5, 'category' : 'travel', 'budget': 200, 'spent': 650 }")));
 
         List<Budget> budgets = getDs().find(Budget.class)
                                       .filter(expr(gt(field("spent"), field("budget")))).iterator()
@@ -167,6 +169,42 @@ public class FiltersTest extends TestBase {
         getDs().find(Budget.class)
                .filter(in("budget", asList(123, 234)))
                .iterator();
+    }
+
+    @Test
+    public void testJsonSchema() {
+        insert("inventory", List.of(
+            parse("{ item: 'journal', qty: NumberInt(25), size: { h: 14, w: 21, uom: 'cm' }, instock: true }"),
+            parse("{ item: 'notebook', qty: NumberInt(50), size: { h: 8.5, w: 11, uom: 'in' }, instock: true }"),
+            parse("{ item: 'paper', qty: NumberInt(100), size: { h: 8.5, w: 11, uom: 'in' }, instock: 1 }"),
+            parse("{ item: 'planner', qty: NumberInt(75), size: { h: 22.85, w: 30, uom: 'cm' }, instock: 1 }"),
+            parse("{ item: 'postcard', qty: NumberInt(45), size: { h: 10, w: 15.25, uom: 'cm' }, instock: true }"),
+            parse("{ item: 'apple', qty: NumberInt(45), status: 'A', instock: true }"),
+            parse("{ item: 'pears', qty: NumberInt(50), status: 'A', instock: true }")));
+
+        Document myschema = parse("{\n"
+                                  + "  required: [ 'item', 'qty', 'instock' ],\n"
+                                  + "  properties: {\n"
+                                  + "    item: { bsonType: 'string' },\n"
+                                  + "    qty: { bsonType: 'int' },\n"
+                                  + "    size: {\n"
+                                  + "      bsonType: 'object',\n"
+                                  + "      required: [ 'uom' ],\n"
+                                  + "      properties: {\n"
+                                  + "        uom: { bsonType: 'string' },\n"
+                                  + "        h: { bsonType: 'double' },\n"
+                                  + "        w: { bsonType: 'double' }\n"
+                                  + "      }\n"
+                                  + "    },\n"
+                                  + "    instock: { bsonType: 'bool' }\n"
+                                  + "  }\n"
+                                  + "}");
+
+        List<Document> inventory = getDs().find("inventory", Document.class).filter(jsonSchema(myschema))
+                                          .iterator()
+                                          .toList();
+
+        Assert.assertFalse(inventory.isEmpty(), "Should find some matches");
     }
 
     @Test
