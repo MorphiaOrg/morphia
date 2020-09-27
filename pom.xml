@@ -166,7 +166,7 @@
     <modules>
         <module>build-plugins</module>
         <module>util</module>
-        <module>morphia</module>
+        <module>core</module>
         <module>legacy-tests</module>
         <!--        <module>no-proxy-deps-tests</module>-->
         <module>examples</module>
