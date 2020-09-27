@@ -11,13 +11,13 @@ The closest analog to this would be references.
 Currently there are two ways to define a reference:
 
 1. The traditional way has been to annotate a field `@Reference` and Morphia applies magic behind the scenes using proxies to make lazy references work.
-This has worked well enough in the past but the proxy-based implementation gets a bit complicated.
-If a developer forgets to include the proxy library, lazy references are not possible and suddenly all references become eager references and queries are silently more expensive than perhaps were intended.
+This has worked well enough in the past, but the proxy-based implementation gets a bit complicated.
+If a developer forgets to include the proxy library, lazy references are not possible and suddenly all references become eager references and queries are silently more expensive than perhaps was intended.
 On other hand, these fields can be assigned and accessed like any other field on a class without regard to or even knowledge of its reference status.
 2. The newer, currently "experimental", approach is to use the wrapper type `MorphiaReference`.
 This approach is a bit more opaque in that developers must create these references using `MorphiaReference#wrap()` to create the reference wrapper.
-To access the value one must use `MorphaReference#get()` to retrieve the value.
-This exposes the implementation detail of the reference but it makes it obvious that it *is* a reference and so could incur extra cost in retrieving.
+To access the value one must use `MorphiaReference#get()` to retrieve the value.
+This exposes the implementation detail of the reference, but it makes it obvious that it *is* a reference and so could incur extra cost in retrieving.
 In addition, all such references are lazy by default without regard to the presence of any proxying library and so yields no surprise costs.
 
 Similar options will be covered here and then some follow up discussion/questions on short comings.
@@ -59,14 +59,15 @@ It has a few issues to discuss:
 1. It makes proxying mandatory.
 There is no way to make the GridFS fetch lazy without proxying.
 On the one hand, it's a reasonably solved problem.
-On the other, the implementation is a bit complex with unexpected sharp edges here and there.
+On the other hand, the implementation is a bit complex with unexpected sharp edges here and there.
 2. There's no way to stream the data like this.
 Because it's mapped as an image, the data would all need to be read in to memory so the image could be created.
 3. A Codec would need to be created to handle whatever data is stored in GridFS. Of course, this isn't unique to this solution so shouldn't be weighted too heavily.
 Alternately, this GridFS data could be mapped to a `byte[]` and then no conversion would be necessary.
 4. This setup isn't entirely future proof.
 The annotation as defined doesn't currently allow for any knob turning in regards to how an element gets stored.
-While attributes could be added to the annotation, it could only ever be a subset of what the datbase supports. e .g., the `metadata` field could never be fully utilized in this scenario since anything defined on the annotation would be applied to every item uniformly.
+While attributes could be added to the annotation, it could only ever be a subset of what the datbase supports.
+e.g., the `metadata` field could never be fully utilized in this scenario since anything defined on the annotation would be applied to every item uniformly.
 Any missing attributes could be added later to the annotation but that would not be binary compatible even with default values on the new attributes.
 5. This approach currently exposes no lifecycle management options. e.g., how would one delete the `Image` stored here?
 Methods could be added to, say, `Datastore` but then the API starts to spread out a bit.
@@ -110,8 +111,9 @@ Like the reference wrapper approach, this is a bit more opaque but allows for ex
 Some issues to consider:
 
 1. Typed `GridFSItems` will also require a Codec of some sort.
-Alternately, `store()`/`stream()` could be overloaded to take lambdas tospecify how to de/serialize the data.
+Alternately, `store()`/`stream()` could be overloaded to take lambdas to specify how to de/serialize the data.
 2. Mapping to a specific bucket either requires a bucket name being passed in to the `store()` method (thus, moving mapping information potentially outside of the mapped class) or a helper annotation on the field to list the bucket name.
+The annotation seems cleanest.
 3. Item specific `GridFSOptions` would need to be passed to `store()`.
 This potentially moves mapping information awayfrom the entity (perhaps to a DAO or repository class) but does at least allow element specific metadata, e.g., to be attached to an item without such data being globally applied via the annotation.
 
