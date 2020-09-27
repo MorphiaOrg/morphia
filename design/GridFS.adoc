@@ -79,13 +79,13 @@ A new wrapper type will be introduced with helper methods:
 ----
 public class GridFSItem {
     public static <T> GridFSItem<T> store(T item);
-    public static <T> GridFSItem<T> store(T item, GridFSOptions options); footnote:leak[Potentially leaks mapping information]
+    public static <T> GridFSItem<T> store(T item, GridFSOptions options); // Potentially leaks mapping information
 
     public static <T> GridFSItem<T> store(InputStream stream);
-    public static <T> GridFSItem<T> store(InputStream stream, GridFSOptions options); footnote:leak[]
+    public static <T> GridFSItem<T> store(InputStream stream, GridFSOptions options); // Potentially leaks mapping information
 
     public static <T> GridFSItem<T> store(String bucket, T item);
-    public static <T> GridFSItem<T> store(String bucket, T item, GridFSOptions options); footnote:leak[]
+    public static <T> GridFSItem<T> store(String bucket, T item, GridFSOptions options); // Potentially leaks mapping information
 
     public T get();
     public InputStream stream();
@@ -101,7 +101,7 @@ public class ImageUpload {
     private ObjectId id;
     private double[] coordinates;
     private String[] tags;
-    //    @GridFS("images") footnote:[Possible helper annotation?]
+    //    @GridFS("images")  // Possible helper annotation?
     private GridFSItem<Image> image;
 }
 ----
@@ -110,10 +110,10 @@ Like the reference wrapper approach, this is a bit more opaque but allows for ex
 Some issues to consider:
 
 1. Typed `GridFSItems` will also require a Codec of some sort.
-Alternately, `store()`/`stream()` could be overloaded to take lambdas to specify how to de/serialize the data.
+Alternately, `store()`/`stream()` could be overloaded to take lambdas tospecify how to de/serialize the data.
 2. Mapping to a specific bucket either requires a bucket name being passed in to the `store()` method (thus, moving mapping information potentially outside of the mapped class) or a helper annotation on the field to list the bucket name.
 3. Item specific `GridFSOptions` would need to be passed to `store()`.
-This potentially moves mapping information away from the entity(perhaps to a DAO or repository class) but does at least allow element specific metadata, e.g., to be attached to an item without such data being globally applied via the annotation.
+This potentially moves mapping information awayfrom the entity (perhaps to a DAO or repository class) but does at least allow element specific metadata, e.g., to be attached to an item without such data being globally applied via the annotation.
 
 There is an inclination to map `Image` itself with various GridFS related data but such mapping are not possible with externally defined third party types.
 
