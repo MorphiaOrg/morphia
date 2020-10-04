@@ -1022,7 +1022,8 @@ public class TestQuery extends TestBase {
 
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
 
-        assertEquals(1, query.filter(eq("pic", p)).count());
+        Query<ContainsPic> pic = query.filter(eq("pic", p));
+        assertEquals(1, pic.count());
 
         getDs().find(ContainsPic.class).filter(eq("pic.name", "foo")).iterator(new FindOptions().limit(1))
                .next();

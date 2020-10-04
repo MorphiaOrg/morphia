@@ -20,7 +20,7 @@ class CenterFilter extends Filter {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(field(mapper));
+        writer.writeStartDocument(path(mapper));
         writer.writeStartDocument("$geoWithin");
 
         writer.writeStartArray(getFilterName());

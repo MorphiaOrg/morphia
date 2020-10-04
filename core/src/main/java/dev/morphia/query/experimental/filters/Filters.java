@@ -37,7 +37,7 @@ public final class Filters {
         return new Filter("$eq", field, val) {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                writer.writeName(field(mapper));
+                writer.writeName(path(mapper));
                 writeUnnamedValue(getValue(mapper), mapper, writer, context);
             }
         };
@@ -54,7 +54,7 @@ public final class Filters {
         return new Filter("$exists", field, null) {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                writer.writeStartDocument(field(mapper));
+                writer.writeStartDocument(path(mapper));
                 writer.writeName(getFilterName());
                 writer.writeBoolean(!isNot());
                 writer.writeEndDocument();
@@ -140,7 +140,7 @@ public final class Filters {
         return new Filter("$mod", field, null) {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                writer.writeStartDocument(field(mapper));
+                writer.writeStartDocument(path(mapper));
                 writer.writeName(getFilterName());
                 writer.writeStartArray();
                 writeUnnamedValue(divisor, mapper, writer, context);

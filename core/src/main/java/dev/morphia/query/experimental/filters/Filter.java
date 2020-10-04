@@ -1,7 +1,9 @@
 package dev.morphia.query.experimental.filters;
 
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.query.OperationTarget;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -47,7 +49,7 @@ public class Filter {
      * @morphia.internal
      */
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(field(mapper));
+        writer.writeStartDocument(path(mapper));
         if (not) {
             writer.writeStartDocument("$not");
         }
@@ -99,13 +101,20 @@ public class Filter {
         return format("%s %s %s", field, filterName, value);
     }
 
-    protected String field(Mapper mapper) {
-        if (field != null && pathTarget == null) {
-            pathTarget = new PathTarget(mapper, entityClass, field, validate);
-            field = pathTarget.translatedPath();
+    protected Object getValue(Mapper mapper) {
+        if (!mapped) {
+            PathTarget target = pathTarget(mapper);
+            if (target != null) {
+                OperationTarget operationTarget = new OperationTarget(pathTarget, value);
+                this.value = operationTarget.getValue();
+                MappedField mappedField = target.getTarget();
+                if (mappedField != null && mappedField.getFieldModel().getCodec() instanceof PropertyHandler) {
+                    this.value = ((Document) operationTarget.encode(mapper)).get(field);
+                }
+            }
+            mapped = true;
         }
-
-        return field;
+        return value;
     }
 
     protected String getFilterName() {
@@ -116,17 +125,21 @@ public class Filter {
         return value;
     }
 
-    protected Object getValue(Mapper mapper) {
-        if (!mapped) {
-            String field = field(mapper);
-            if (pathTarget != null) {
-                this.value = ((Document) new OperationTarget(pathTarget, value)
-                                             .encode(mapper))
-                                 .get(field);
-            }
-            mapped = true;
+    protected String path(Mapper mapper) {
+        if (field != null && pathTarget == null) {
+            pathTarget = new PathTarget(mapper, entityClass, field, validate);
+            field = pathTarget.translatedPath();
         }
-        return value;
+
+        return field;
+    }
+
+    private PathTarget pathTarget(Mapper mapper) {
+        if (pathTarget == null) {
+            pathTarget = new PathTarget(mapper, entityClass, field, validate);
+        }
+
+        return pathTarget;
     }
 
     protected void writeNamedValue(String name, Object named, Mapper mapper, BsonWriter writer,
