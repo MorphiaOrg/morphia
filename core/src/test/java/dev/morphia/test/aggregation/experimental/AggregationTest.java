@@ -305,7 +305,7 @@ public class AggregationTest extends TestBase {
                                   + "    ],"
                                   + "}");
 
-        assertDocumentEquals(document, result);
+        assertDocumentEquals(result, document);
     }
 
     @Test
@@ -339,7 +339,7 @@ public class AggregationTest extends TestBase {
             parse("{'_id': 6, 'name': 'Dan', 'reportsTo': 'Andrew', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
                   + "'Eliot', 'reportsTo': 'Dev'},{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot'}]}"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -432,7 +432,7 @@ public class AggregationTest extends TestBase {
             parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'A' }, 'salaries' : 125000 }"),
             parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
 /*
@@ -615,7 +615,7 @@ public class AggregationTest extends TestBase {
                                            .stream()
                                            .map(d -> (Document) d.get("name"))
                                            .collect(toList());
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
 
         actual = getDs().aggregate(Author.class)
                         .replaceRoot(ReplaceRoot.with(ifNull().target(field("name"))
@@ -629,7 +629,7 @@ public class AggregationTest extends TestBase {
                             .collect(toList());
         expected.add(new Document("_id", 4)
                          .append("missingName", true));
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
 
         actual = getDs().aggregate(Author.class)
                         .replaceRoot(ReplaceRoot.with(mergeObjects()
@@ -647,7 +647,7 @@ public class AggregationTest extends TestBase {
         expected.add(new Document("_id", 4)
                          .append("first", "")
                          .append("last", ""));
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -672,7 +672,7 @@ public class AggregationTest extends TestBase {
                                            .stream()
                                            .map(d -> (Document) d.get("name"))
                                            .collect(toList());
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
 
         actual = getDs().aggregate(Author.class)
                         .replaceWith(with(ifNull().target(field("name"))
@@ -686,7 +686,7 @@ public class AggregationTest extends TestBase {
                             .collect(toList());
         expected.add(new Document("_id", 4)
                          .append("missingName", true));
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
 
         actual = getDs().aggregate(Author.class)
                         .replaceWith(with(mergeObjects()
@@ -704,7 +704,7 @@ public class AggregationTest extends TestBase {
         expected.add(new Document("_id", 4)
                          .append("first", "")
                          .append("last", ""));
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -839,7 +839,7 @@ public class AggregationTest extends TestBase {
             parse("{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Nuts', 'quantity' : 200 }"),
             parse("{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Pie', 'quantity' : 100 }"));
 
-        assertListEquals(expected, actual);
+        assertListEquals(actual, expected);
     }
 
     @Test

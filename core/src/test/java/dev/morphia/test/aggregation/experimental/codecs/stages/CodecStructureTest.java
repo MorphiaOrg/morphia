@@ -245,7 +245,7 @@ public class CodecStructureTest extends TestBase {
         assertEquals(writer.getDocsLevel(), 0);
         assertEquals(writer.getArraysLevel(), 0);
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test

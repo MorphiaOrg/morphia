@@ -129,7 +129,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 2, 'name' : 'Cafe', 'resultObject' : 'CAFE' }"),
             parse("{ '_id' : 3, 'name' : 'café', 'resultObject' : 'café' }"));
 
-        assertListEquals(expected, actual);
+        assertListEquals(actual, expected);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'item' : 'red paint with blue paintbrush' }"),
             parse("{ '_id' : 4, 'item' : 'red paint with green paintbrush' }"));
 
-        assertListEquals(expected, actual);
+        assertListEquals(actual, expected);
     }
 
     @Test

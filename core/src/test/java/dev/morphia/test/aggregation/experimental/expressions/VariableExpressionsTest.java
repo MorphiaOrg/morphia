@@ -35,7 +35,7 @@ public class VariableExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 1, 'finalTotal' : 9.450000000000001 }"),
             parse("{ '_id' : 2, 'finalTotal' : 10.25 }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
 }

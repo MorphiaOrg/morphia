@@ -36,8 +36,9 @@ public class MapperOptions {
     private final NamingStrategy collectionNaming;
     private final NamingStrategy fieldNaming;
     private final UuidRepresentation uuidRepresentation;
-    private ClassLoader classLoader;
     private final QueryFactory queryFactory;
+    private final boolean enablePolymorphicQueries;
+    private ClassLoader classLoader;
 
     private MapperOptions(Builder builder) {
         ignoreFinals = builder.ignoreFinals;
@@ -54,6 +55,7 @@ public class MapperOptions {
         fieldNaming = builder.fieldNaming;
         uuidRepresentation = builder.uuidRepresentation;
         queryFactory = builder.queryFactory;
+        enablePolymorphicQueries = builder.enablePolymorphicQueries;
     }
 
     /**
@@ -89,6 +91,10 @@ public class MapperOptions {
         builder.creator = original.getCreator();
         builder.classLoader = original.getClassLoader();
         return builder;
+    }
+
+    public boolean enablePolymorphicQueries() {
+        return enablePolymorphicQueries;
     }
 
     /**
@@ -209,6 +215,7 @@ public class MapperOptions {
         private boolean storeEmpties;
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
+        private boolean enablePolymorphicQueries;
         private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
         private String discriminatorKey = "_t";
@@ -320,6 +327,16 @@ public class MapperOptions {
          */
         public Builder ignoreFinals(boolean ignoreFinals) {
             this.ignoreFinals = ignoreFinals;
+            return this;
+        }
+
+        /**
+         * @param enablePolymorphicQueries if true queries are updated, in some cases, to check for subtypes' discriminator values so
+         *                                 that subtype might be returned by a query.
+         * @return this
+         */
+        public Builder enablePolymorphicQueries(boolean enablePolymorphicQueries) {
+            this.enablePolymorphicQueries = enablePolymorphicQueries;
             return this;
         }
 

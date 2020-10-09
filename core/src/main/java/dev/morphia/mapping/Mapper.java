@@ -18,10 +18,12 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
+import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.sofia.Sofia;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
+import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,6 +80,7 @@ public class Mapper {
     private final MorphiaCodecProvider morphiaCodecProvider;
     private final Datastore datastore;
     private final CodecRegistry codecRegistry;
+    private final Map<Class<?>, List<MappedClass>> hierarchy = new HashMap<>();
 
     /**
      * Creates a Mapper with the given options.
@@ -265,6 +269,10 @@ public class Mapper {
         return discriminatorLookup;
     }
 
+    public List<MappedClass> getHierarcy(Class<?> type) {
+        return hierarchy.get(type);
+    }
+
     /**
      * Gets the ID value for an entity
      *
@@ -366,6 +374,33 @@ public class Mapper {
         return options;
     }
 
+    public void updateQueryWithDiscriminators(BsonWriter writer, Class<?> type) {
+        if (options.enablePolymorphicQueries()) {
+            MappedClass mappedClass = getMappedClass(type);
+            if (mappedClass == null) {
+                return;
+            }
+            Entity entityAnnotation = mappedClass.getEntityAnnotation();
+            if (entityAnnotation == null || entityAnnotation.useDiscriminator()) {
+                String key = discriminatorKey(type);
+                Set<String> discriminators = subtypeDiscriminators(type);
+                if (discriminators.size() > 1) {
+                    Filters.in(key, discriminators)
+                           .encode(this, writer, EncoderContext.builder().build());
+                } else {
+                    Filters.eq(key, discriminators.iterator().next())
+                           .encode(this, writer, EncoderContext.builder().build());
+                }
+            }
+        }
+    }
+
+    private String discriminatorKey(Class<?> type) {
+        return mappedClasses.get(type)
+                            .getEntityModel()
+                            .getDiscriminatorKey();
+    }
+
     /**
      * Sets the options this Mapper should use
      *
@@ -458,6 +493,24 @@ public class Mapper {
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
+    }
+
+    private MappedClass register(MappedClass mc) {
+        EntityModel<?> entityModel = mc.getEntityModel();
+        discriminatorLookup.addModel(entityModel);
+        registerHierarchy(entityModel.getType(), mc);
+
+        mappedClasses.put(mc.getType(), mc);
+        if (mc.getEntityAnnotation() != null) {
+            mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                                     .add(mc);
+        }
+
+        if (!mc.isInterface()) {
+            mc.validate(this);
+        }
+
+        return mc;
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)
@@ -576,19 +629,29 @@ public class Mapper {
                       .collect(Collectors.toList());
     }
 
-    private MappedClass register(MappedClass mc) {
-        mappedClasses.put(mc.getType(), mc);
-        if (mc.getEntityAnnotation() != null) {
-            mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                     .add(mc);
+    private void registerHierarchy(Class<?> type, MappedClass mappedClass) {
+        if (type != null && !type.equals(Object.class)) {
+            List<MappedClass> subtypes = hierarchy.get(type);
+            if (subtypes == null) {
+                subtypes = new ArrayList<>();
+                hierarchy.put(type, subtypes);
+                registerHierarchy(type.getSuperclass(), mappedClass);
+            }
+            if (mappedClass != null) {
+                subtypes.add(mappedClass);
+            }
         }
-        discriminatorLookup.addModel(mc.getEntityModel());
+    }
 
-        if (!mc.isInterface()) {
-            mc.validate(this);
-        }
+    private Set<String> subtypeDiscriminators(Class<?> type) {
+        List<MappedClass> mappedClasses = hierarchy.get(type);
+        String key = discriminatorKey(type);
 
-        return mc;
+        return mappedClasses.stream()
+                            .map(MappedClass::getEntityModel)
+                            .filter(m -> key.equals(m.getDiscriminatorKey()))
+                            .map(EntityModel::getDiscriminator)
+                            .collect(Collectors.toSet());
     }
 
     private <T> boolean hasAnnotation(Class<T> clazz, List<Class<? extends Annotation>> annotations) {

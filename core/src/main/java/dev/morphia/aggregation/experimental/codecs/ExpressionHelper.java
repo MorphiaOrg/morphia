@@ -2,9 +2,13 @@ package dev.morphia.aggregation.experimental.codecs;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.BsonWriter;
+import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
+
+import java.util.function.Consumer;
 
 /**
  * @morphia.internal
@@ -36,6 +40,15 @@ public final class ExpressionHelper {
         writer.writeStartDocument(name);
         body.run();
         writer.writeEndDocument();
+    }
+
+    public static Document document(Document seed, Consumer<BsonWriter> body) {
+        DocumentWriter writer = new DocumentWriter(seed);
+        writer.writeStartDocument();
+        body.accept(writer);
+        writer.writeEndDocument();
+
+        return writer.getDocument();
     }
 
     /**

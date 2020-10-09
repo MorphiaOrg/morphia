@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.mongodb.CursorType.NonTailable;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static java.lang.String.format;
 
@@ -429,6 +430,10 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     private Document getQueryDocument() {
         final Document obj = new Document();
+
+        document(obj, writer -> {
+            mapper.updateQueryWithDiscriminators(writer, getEntityClass());
+        });
 
         if (baseQuery != null) {
             obj.putAll(baseQuery);

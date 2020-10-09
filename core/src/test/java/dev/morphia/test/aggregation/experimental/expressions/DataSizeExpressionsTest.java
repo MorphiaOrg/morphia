@@ -39,7 +39,7 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'name' : 'concert.jpg', 'imageSize' : 269 }"),
             parse("{ '_id' : 5, 'name' : 'empty.jpg', 'imageSize' : 0 }"));
 
-        assertListEquals(expected, documents);
+        assertListEquals(documents, expected);
     }
 
     @Test
@@ -68,6 +68,6 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'name' : 'Charlie', 'object_size' : 105 }"),
             parse("{ '_id' : 4, 'name' : 'Dianne', 'object_size' : 196   }"));
 
-        assertListEquals(expected, list);
+        assertListEquals(list, expected);
     }
 }

@@ -91,10 +91,10 @@ public class DateExpressionTest extends ExpressionsTestBase {
                                                                            .timezone(value("America/New_York"))))
                                 .execute(Document.class)
                                 .next();
-        assertDocumentEquals(parse("{\"_id\":2,\"date\":{\"year\":2017,\"month\":1,\"day\":1,\"hour\":1,\"minute\":29,\"second\":9,"
-                                   + "\"millisecond\":123},\"date_iso\":{\"isoWeekYear\":2016,\"isoWeek\":52,\"isoDayOfWeek\":7,"
-                                   + "\"hour\":1,\"minute\":29,\"second\":9,\"millisecond\":123},\"date_timezone\":{\"year\":2016,"
-                                   + "\"month\":12,\"day\":31,\"hour\":20,\"minute\":29,\"second\":9,\"millisecond\":123}}"), parts);
+        assertDocumentEquals(parts, parse("{\"_id\":2,\"date\":{\"year\":2017,\"month\":1,\"day\":1,\"hour\":1,\"minute\":29,\"second\":9,"
+                                          + "\"millisecond\":123},\"date_iso\":{\"isoWeekYear\":2016,\"isoWeek\":52,\"isoDayOfWeek\":7,"
+                                          + "\"hour\":1,\"minute\":29,\"second\":9,\"millisecond\":123},\"date_timezone\":{\"year\":2016,"
+                                          + "\"month\":12,\"day\":31,\"hour\":20,\"minute\":29,\"second\":9,\"millisecond\":123}}"));
     }
 
     @Test

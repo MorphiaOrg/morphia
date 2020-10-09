@@ -45,6 +45,6 @@ public class ConditionalExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 2, 'name' : 'Bob Hanna', 'summary' : 'Needs improvement.' }"),
             parse("{ '_id' : 3, 'name' : 'James Torrelio', 'summary' : 'Doing great!' }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 }

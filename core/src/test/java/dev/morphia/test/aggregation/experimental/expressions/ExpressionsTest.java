@@ -36,6 +36,6 @@ public class ExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 0.75, 'count' : 1 }"),
             parse("{ '_id' : 1.0, 'count' : 2 }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 }

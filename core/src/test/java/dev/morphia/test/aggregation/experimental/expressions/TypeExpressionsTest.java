@@ -59,7 +59,7 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 1, 'reading' : 42, 'isNumber' : true, 'hasType' : 'int' }"),
             parse("{ '_id' : 2, 'reading' : 'slowly', 'isNumber' : false, 'hasType' : 'string' }"));
 
-        assertListEquals(expected, actual);
+        assertListEquals(actual, expected);
     }
 
     @Test

@@ -347,6 +347,7 @@ public class MorphiaQuery<T> implements Query<T> {
     Document getQueryDocument() {
         DocumentWriter writer = new DocumentWriter(seedQuery);
         document(writer, () -> {
+            mapper.updateQueryWithDiscriminators(writer, getEntityClass());
             EncoderContext context = EncoderContext.builder().build();
             for (Filter filter : filters) {
                 filter.encode(mapper, writer, context);

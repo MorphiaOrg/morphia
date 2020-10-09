@@ -54,7 +54,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 2, 'item' : 'ABC2', 'dimensions' : { 'l' : 50, 'w' : 25, 'uom' : 'cm' } }"),
             parse("{ '_id' : 3, 'item' : 'ABC3', 'dimensions' : { 'l' : 50 } }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 2, 'adjustedGrades' : [ ] }"),
             parse("{ '_id' : 3, 'adjustedGrades' : [ 5, 10, 11 ] }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'name' : 'ahn', 'reverseFavorites' : [ ] }"),
             parse("{ '_id' : 4, 'name' : 'ty', 'reverseFavorites' : null }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'item' : 'ZZZ1', 'numberOfColors' : 'NA' }"),
             parse("{ '_id' : 5, 'item' : 'ZZZ2', 'numberOfColors' : 'NA' }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'name' : 'ahn', 'threeFavorites' : [ 'pears', 'pecans', 'chocolate' ] }"),
             parse("{ '_id' : 4, 'name' : 'ty', 'threeFavorites' : [ 'ice cream' ] }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -236,6 +236,6 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ 'transposed' : [ [ 1, 2, 3 ], [ 2, 3, 4 ] ] }"),
             parse("{ 'transposed' : [ [ 8, 7, 5 ], [ 7, 6, 4 ] ] }"));
 
-        assertDocumentEquals(expected, actual);
+        assertDocumentEquals(actual, expected);
     }
 }

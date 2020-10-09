@@ -147,12 +147,13 @@ public class TestDocumentValidation extends TestBase {
         MappedClass mapped = getDs().getMapper().map(Contact.class).get(0);
         mapped.enableDocumentValidation(getDatabase());
 
-        Assert.assertThrows(MongoWriteException.class, () -> {
-            getDs().find(Contact.class)
-                   .filter(eq("_id", 1))
-                   .update(unset("phone"))
-                   .execute();
-        });
+        Assert.assertThrows(MongoWriteException.class,
+            () -> {
+                getDs().find(Contact.class)
+                       .filter(eq("_id", 1))
+                       .update(set("age", 42))
+                       .execute();
+            });
 
         getDs().find(Contact.class)
                .filter(eq("_id", 2))

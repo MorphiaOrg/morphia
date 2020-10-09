@@ -35,10 +35,14 @@ import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.query.QueryFactory;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.BannedUser;
+import dev.morphia.test.models.BlogImage;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.CityPopulation;
+import dev.morphia.test.models.Jpg;
+import dev.morphia.test.models.Png;
 import dev.morphia.test.models.State;
 import dev.morphia.test.models.User;
 import dev.morphia.test.models.errors.BadConstructorBased;
@@ -94,20 +98,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void constructors() {
-        getDs().getMapper().map(ConstructorBased.class);
-
-        ContainsFinalField value = new ContainsFinalField();
-        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", MorphiaReference.wrap(value));
-
-        getDs().save(List.of(value, instance));
-
-        ConstructorBased first = getDs().find(ConstructorBased.class).first();
-        assertNotNull(first);
-        assertEquals(instance, first);
-    }
-
-    @Test
     public void collectionNaming() {
         MapperOptions options = MapperOptions.builder()
                                              .collectionNaming(NamingStrategy.lowerCase())
@@ -126,6 +116,20 @@ public class TestMapping extends TestBase {
 
         assertEquals(map.get(0).getCollectionName(), "contains-map-with-embedded-interface");
         assertEquals(map.get(1).getCollectionName(), "cil");
+    }
+
+    @Test
+    public void constructors() {
+        getDs().getMapper().map(ConstructorBased.class);
+
+        ContainsFinalField value = new ContainsFinalField();
+        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", MorphiaReference.wrap(value));
+
+        getDs().save(List.of(value, instance));
+
+        ConstructorBased first = getDs().find(ConstructorBased.class).first();
+        assertNotNull(first);
+        assertEquals(instance, first);
     }
 
     @Test
@@ -236,6 +240,17 @@ public class TestMapping extends TestBase {
     }
 
     @Test
+    public void testCollectionMapping() {
+        getMapper().map(ContainsCollection.class);
+        final ObjectId savedKey = getDs().save(new ContainsCollection()).id;
+        final ContainsCollection loaded = getDs().find(ContainsCollection.class)
+                                                 .filter(eq("_id", savedKey))
+                                                 .first();
+        assertEquals((new ContainsCollection()).coll, loaded.coll);
+        assertNotNull(loaded.id);
+    }
+
+    @Test
     public void testEmbeddedArrayElementHasNoClassname() {
         getMapper().map(ContainsEmbeddedArray.class);
         final ContainsEmbeddedArray cea = new ContainsEmbeddedArray();
@@ -278,17 +293,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void testCollectionMapping() {
-        getMapper().map(ContainsCollection.class);
-        final ObjectId savedKey = getDs().save(new ContainsCollection()).id;
-        final ContainsCollection loaded = getDs().find(ContainsCollection.class)
-                                                 .filter(eq("_id", savedKey))
-                                                 .first();
-        assertEquals((new ContainsCollection()).coll, loaded.coll);
-        assertNotNull(loaded.id);
-    }
-
-    @Test
     public void testEnumKeyedMap() {
         final ContainsEnum1KeyMap map = new ContainsEnum1KeyMap();
         map.values.put(Enum1.A, "I'm a");
@@ -319,6 +323,31 @@ public class TestMapping extends TestBase {
         datastore.getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
         assertFalse(datastore.getMapper().isMapped(UnannotatedEmbedded.class),
             "Should not be able to map unannotated classes with mapPackage");
+    }
+
+    @Test(dataProvider = "queryFactories")
+    public void testFieldAsDiscriminator(QueryFactory queryFactory) {
+        Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
+            MapperOptions.builder()
+                         .queryFactory(queryFactory)
+                         .enablePolymorphicQueries(true)
+                         .build());
+
+        datastore.getMapper().map(BlogImage.class, Png.class, Jpg.class);
+
+        BlogImage png = new Png();
+        png.content = "I'm a png";
+        datastore.save(png);
+
+        BlogImage jpg = new Jpg();
+        jpg.content = "I'm a jpg";
+        datastore.save(jpg);
+
+        findFirst(datastore, Png.class, png);
+        findFirst(datastore, Jpg.class, jpg);
+        Query<BlogImage> query = datastore.find(BlogImage.class);
+        assertEquals(query.count(), 2, query.toString());
+        assertListEquals(query.iterator().toList(), List.of(jpg, png));
     }
 
     @Test
@@ -380,6 +409,15 @@ public class TestMapping extends TestBase {
         assertEquals(values.size(), 2);
         assertNotNull(values.get(1));
         assertNotNull(values.get(2));
+    }
+
+    @Test
+    public void testHierarchies() {
+        getMapper().map(Png.class);
+        assertEquals(getMapper().getHierarcy(Png.class).size(), 1);
+
+        getMapper().map(BlogImage.class);
+        assertEquals(getMapper().getHierarcy(BlogImage.class).size(), 2);
     }
 
     @Test
@@ -492,18 +530,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void testMapLike() {
-        final ContainsMapLike ml = new ContainsMapLike();
-        ml.m.put("first", "test");
-        getDs().save(ml);
-        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).iterator(new FindOptions().limit(1))
-                                                .next();
-        assertNotNull(mlLoaded);
-        assertNotNull(mlLoaded.m);
-        assertTrue(mlLoaded.m.containsKey("first"));
-    }
-
-    @Test
     public void testLongArrayMapping() {
         getMapper().map(ContainsLongAndStringArray.class);
         getDs().save(new ContainsLongAndStringArray());
@@ -523,6 +549,18 @@ public class TestMapping extends TestBase {
         assertEquals(loaded.strings, array.strings);
 
         assertNotNull(loaded.id);
+    }
+
+    @Test
+    public void testMapLike() {
+        final ContainsMapLike ml = new ContainsMapLike();
+        ml.m.put("first", "test");
+        getDs().save(ml);
+        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).iterator(new FindOptions().limit(1))
+                                                .next();
+        assertNotNull(mlLoaded);
+        assertNotNull(mlLoaded.m);
+        assertTrue(mlLoaded.m.containsKey("first"));
     }
 
     @Test
@@ -607,42 +645,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void testReferenceWithoutIdValue() {
-        assertThrows(ReferenceException.class, () -> {
-            getMapper().map(Book.class, Author.class);
-            final Book book = new Book();
-            book.author = new Author();
-            getDs().save(book);
-        });
-    }
-
-    @Test
-    public void testUuidId() {
-        getMapper().map(List.of(ContainsUuidId.class));
-        final ContainsUuidId uuidId = new ContainsUuidId();
-        final UUID before = uuidId.id;
-        getDs().save(uuidId);
-        final ContainsUuidId loaded = getDs().find(ContainsUuidId.class).filter(eq("_id", before)).first();
-        assertNotNull(loaded);
-        assertNotNull(loaded.id);
-        assertEquals(before, loaded.id);
-    }
-
-    @Test
-    public void testUUID() {
-        getMapper().map(ContainsUUID.class);
-        final ContainsUUID uuid = new ContainsUUID();
-        final UUID before = uuid.uuid;
-        getDs().save(uuid);
-        final ContainsUUID loaded = getDs().find(ContainsUUID.class).iterator(new FindOptions().limit(1))
-                                           .next();
-        assertNotNull(loaded);
-        assertNotNull(loaded.id);
-        assertNotNull(loaded.uuid);
-        assertEquals(before, loaded.uuid);
-    }
-
-    @Test
     //    @Tag("references")
     @Ignore("entity caching needs to be implemented")
     public void testRecursiveReference() {
@@ -676,6 +678,48 @@ public class TestMapping extends TestBase {
         assertNotNull(finalParentLoaded.getChild());
         assertNotNull(finalChildLoaded.getParent());
 */
+    }
+
+    @Test
+    public void testReferenceWithoutIdValue() {
+        assertThrows(ReferenceException.class, () -> {
+            getMapper().map(Book.class, Author.class);
+            final Book book = new Book();
+            book.author = new Author();
+            getDs().save(book);
+        });
+    }
+
+    @Test
+    public void testUUID() {
+        getMapper().map(ContainsUUID.class);
+        final ContainsUUID uuid = new ContainsUUID();
+        final UUID before = uuid.uuid;
+        getDs().save(uuid);
+        final ContainsUUID loaded = getDs().find(ContainsUUID.class).iterator(new FindOptions().limit(1))
+                                           .next();
+        assertNotNull(loaded);
+        assertNotNull(loaded.id);
+        assertNotNull(loaded.uuid);
+        assertEquals(before, loaded.uuid);
+    }
+
+    @Test
+    public void testUuidId() {
+        getMapper().map(List.of(ContainsUuidId.class));
+        final ContainsUuidId uuidId = new ContainsUuidId();
+        final UUID before = uuidId.id;
+        getDs().save(uuidId);
+        final ContainsUuidId loaded = getDs().find(ContainsUuidId.class).filter(eq("_id", before)).first();
+        assertNotNull(loaded);
+        assertNotNull(loaded.id);
+        assertEquals(before, loaded.id);
+    }
+
+    protected void findFirst(Datastore datastore, Class<?> type, BlogImage expected) {
+        Query<?> query = datastore.find(type);
+        assertEquals(query.count(), 1, query.toString());
+        assertEquals(query.first(), expected, query.toString());
     }
 
     private void validateField(List<MappedField> fields, String mapped, String java) {
@@ -831,10 +875,10 @@ public class TestMapping extends TestBase {
 
     @Entity(value = "cil", useDiscriminator = false)
     private static class ContainsIntegerListNew {
-        @Id
-        private ObjectId id;
         @AlsoLoad("intList")
         private final List<Integer> integers = new ArrayList<>();
+        @Id
+        private ObjectId id;
     }
 
     @Entity

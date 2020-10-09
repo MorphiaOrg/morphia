@@ -67,11 +67,9 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                       .execute(Document.class)
                                       .toList();
 
-        List<Document> list = of(
+        assertListEquals(group, of(
             parse("{ '_id' : 'Homer', 'avgCopies' : 10.0 }"),
-            parse("{ '_id' : 'Dante', 'avgCopies' : 1.6666666666666667 }"));
-
-        assertListEquals(list, group);
+            parse("{ '_id' : 'Dante', 'avgCopies' : 1.6666666666666667 }")));
     }
 
     @Test
@@ -86,12 +84,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : { 'day' : 46, 'year' : 2014 }, 'itemsSold' : [ 'xyz', 'abc' ] }"),
             parse("{ '_id' : { 'day' : 34, 'year' : 2014 }, 'itemsSold' : [ 'xyz', 'jkl' ] }"),
-            parse("{ '_id' : { 'day' : 1, 'year' : 2014 }, 'itemsSold' : [ 'abc' ] }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{ '_id' : { 'day' : 1, 'year' : 2014 }, 'itemsSold' : [ 'abc' ] }")));
     }
 
     @Test
@@ -106,12 +102,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{'_id' : 'jkl', 'avgAmount' : 20.0, 'avgQuantity' : 1.0 }"),
             parse("{'_id' : 'abc', 'avgAmount' : 60.0, 'avgQuantity' : 6.0 }"),
-            parse("{'_id' : 'xyz', 'avgAmount' : 37.5, 'avgQuantity' : 7.5 }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{'_id' : 'xyz', 'avgAmount' : 37.5, 'avgQuantity' : 7.5 }")));
     }
 
     @Test
@@ -126,12 +120,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : 'xyz', 'firstSalesDate' : ISODate('2014-02-03T09:05:00Z') }"),
             parse("{ '_id' : 'jkl', 'firstSalesDate' : ISODate('2014-02-03T09:00:00Z') }"),
-            parse("{ '_id' : 'abc', 'firstSalesDate' : ISODate('2014-01-01T08:00:00Z') }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{ '_id' : 'abc', 'firstSalesDate' : ISODate('2014-01-01T08:00:00Z') }")));
     }
 
     @Test
@@ -156,14 +148,13 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : 1, 'name' : 'Miss Cheevous', 'scores' : [ 10, 5, 10 ], 'isFound' : false, 'message' : 'Hello Miss Cheevous. "
                   + " Your total score is 25.' }"),
             parse("{ '_id' : 2, 'name' : 'Miss Ann Thrope', 'scores' : [ 10, 10, 10 ], 'isFound' : true, 'message' : 'Hello Miss Ann "
                   + "Thrope.  Your total score is 30.' }"),
             parse("{ '_id' : 3, 'name' : 'Mrs. Eppie Delta ', 'scores' : [ 9, 8, 8 ], 'isFound' : false, 'message' : 'Hello Mrs. Eppie "
-                  + "Delta .  Your total score is 25.' }"));
-        assertDocumentEquals(expected, actual);
+                  + "Delta .  Your total score is 25.' }")));
     }
 
     @Test
@@ -178,12 +169,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : 'xyz', 'lastSalesDate' : ISODate('2014-02-15T14:12:12Z') }"),
             parse("{ '_id' : 'jkl', 'lastSalesDate' : ISODate('2014-02-03T09:00:00Z') }"),
-            parse("{ '_id' : 'abc', 'lastSalesDate' : ISODate('2014-02-15T08:00:00Z') }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{ '_id' : 'abc', 'lastSalesDate' : ISODate('2014-02-15T08:00:00Z') }")));
     }
 
     @Test
@@ -198,12 +187,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{'_id' : 'jkl', 'avgAmount' : 20.0, 'avgQuantity' : 1.0 }"),
             parse("{'_id' : 'abc', 'avgAmount' : 60.0, 'avgQuantity' : 6.0 }"),
-            parse("{'_id' : 'xyz', 'avgAmount' : 37.5, 'avgQuantity' : 7.5 }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{'_id' : 'xyz', 'avgAmount' : 37.5, 'avgQuantity' : 7.5 }")));
     }
 
     @Test
@@ -217,12 +204,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : 'xyz', 'minQuantity' : 5 }"),
             parse("{ '_id' : 'jkl', 'minQuantity' : 1 }"),
-            parse("{ '_id' : 'abc', 'minQuantity' : 2 }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{ '_id' : 'abc', 'minQuantity' : 2 }")));
     }
 
     @Test
@@ -239,14 +224,12 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : { 'day' : 46, 'year' : 2014 },'itemsSold' : [{ 'item' : 'abc', 'quantity' : 10 }, { 'item' : 'xyz', "
                   + "'quantity' : 10 },{ 'item' : 'xyz', 'quantity' : 5 },{ 'item' : 'xyz', 'quantity' : 10 }]}"),
             parse("{ '_id' : { 'day' : 34, 'year' : 2014 },'itemsSold' : [{ 'item' : 'jkl', 'quantity' : 1 },{ 'item' : 'xyz', "
                   + "'quantity' : 5 }]}"),
-            parse("{ '_id' : { 'day' : 1, 'year' : 2014 },'itemsSold' : [ { 'item' : 'abc', 'quantity' : 2 } ]}"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{ '_id' : { 'day' : 1, 'year' : 2014 },'itemsSold' : [ { 'item' : 'abc', 'quantity' : 2 } ]}")));
     }
 
     @Test
@@ -265,11 +248,9 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : 2, 'stdDev' : 8.04155872120988 }"),
-            parse("{ '_id' : 1, 'stdDev' : 8.04155872120988 }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{ '_id' : 1, 'stdDev' : 8.04155872120988 }")));
     }
 
     @Test
@@ -296,12 +277,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = of(
+        assertDocumentEquals(actual, of(
             parse("{ '_id' : { 'day' : 46, 'year' : 2014 }, 'totalAmount' : 150, 'count' : 2 }"),
             parse("{ '_id' : { 'day' : 34, 'year' : 2014 }, 'totalAmount' : 45, 'count' : 2 }"),
-            parse("{ '_id' : { 'day' : 1, 'year' : 2014 }, 'totalAmount' : 20, 'count' : 1 }"));
-
-        assertDocumentEquals(expected, actual);
+            parse("{ '_id' : { 'day' : 1, 'year' : 2014 }, 'totalAmount' : 20, 'count' : 1 }")));
     }
 
     private void largerDataSet() {

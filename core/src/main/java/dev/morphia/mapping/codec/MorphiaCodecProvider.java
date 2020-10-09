@@ -46,7 +46,7 @@ public class MorphiaCodecProvider implements CodecProvider {
     public <T> MorphiaCodec<T> get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && mapper.isMappable(type)) {
-            codec = new MorphiaCodec<T>(datastore, mapper.getMappedClass(type), propertyCodecProviders,
+            codec = new MorphiaCodec<>(datastore, mapper.getMappedClass(type), propertyCodecProviders,
                 mapper.getDiscriminatorLookup(), registry);
             codecs.put(type, codec);
         }
@@ -62,10 +62,9 @@ public class MorphiaCodecProvider implements CodecProvider {
      * @param <T>      the entity type
      * @return the new codec
      */
-    @SuppressWarnings("unchecked")
     public <T> Codec<T> getRefreshCodec(T entity, CodecRegistry registry) {
         MappedClass mappedClass = mapper.getMappedClass(entity.getClass());
-        return new MorphiaCodec<T>(datastore, mappedClass, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
+        return new MorphiaCodec<>(datastore, mappedClass, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
             @Override
             protected EntityDecoder<T> getDecoder() {
                 return new EntityDecoder<>(this) {

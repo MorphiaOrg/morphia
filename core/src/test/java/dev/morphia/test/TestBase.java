@@ -16,6 +16,8 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.query.DefaultQueryFactory;
+import dev.morphia.query.LegacyQueryFactory;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -83,7 +86,15 @@ public abstract class TestBase {
         return ds;
     }
 
-    protected void assertDocumentEquals(Object expected, Object actual) {
+    @DataProvider(name = "queryFactories")
+    public Object[] queryFactories() {
+        return new Object[]{
+            new DefaultQueryFactory(),
+            new LegacyQueryFactory()
+        };
+    }
+
+    protected void assertDocumentEquals(Object actual, Object expected) {
         assertDocumentEquals("", expected, actual);
     }
 
@@ -95,7 +106,7 @@ public abstract class TestBase {
         }
     }
 
-    protected void assertListEquals(List<Document> expected, List<Document> actual) {
+    protected void assertListEquals(List<?> actual, List<?> expected) {
         assertEquals(actual.size(), expected.size());
         expected.forEach(
             d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
