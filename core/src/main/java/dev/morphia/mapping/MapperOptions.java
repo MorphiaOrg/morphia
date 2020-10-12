@@ -29,6 +29,7 @@ public class MapperOptions {
     private final boolean storeEmpties;
     private final boolean cacheClassLookups;
     private final boolean mapSubPackages;
+    private final DateStorage dateStorage;
     private final MorphiaInstanceCreator creator;
     private final String discriminatorKey;
     private final DiscriminatorFunction discriminator;
@@ -56,6 +57,7 @@ public class MapperOptions {
         uuidRepresentation = builder.uuidRepresentation;
         queryFactory = builder.queryFactory;
         enablePolymorphicQueries = builder.enablePolymorphicQueries;
+        dateStorage = builder.dateStorage;
     }
 
     /**
@@ -63,18 +65,6 @@ public class MapperOptions {
      */
     public static Builder builder() {
         return new Builder();
-    }
-
-    /**
-     * @return a builder to set mapping options
-     */
-    public static Builder legacy() {
-        return new Builder()
-                   .discriminatorKey("className")
-                   .discriminator(DiscriminatorFunction.className())
-                   .collectionNaming(NamingStrategy.identity())
-                   .fieldNaming(NamingStrategy.identity())
-                   .queryFactory(new LegacyQueryFactory());
     }
 
     /**
@@ -90,11 +80,21 @@ public class MapperOptions {
         builder.mapSubPackages = original.isMapSubPackages();
         builder.creator = original.getCreator();
         builder.classLoader = original.getClassLoader();
+        builder.dateStorage = original.getDateStorage();
         return builder;
     }
 
-    public boolean enablePolymorphicQueries() {
-        return enablePolymorphicQueries;
+    /**
+     * @return a builder to set mapping options
+     */
+    public static Builder legacy() {
+        return new Builder()
+                   .dateStorage(DateStorage.SYSTEM_DEFAULT)
+                   .discriminatorKey("className")
+                   .discriminator(DiscriminatorFunction.className())
+                   .collectionNaming(NamingStrategy.identity())
+                   .fieldNaming(NamingStrategy.identity())
+                   .queryFactory(new LegacyQueryFactory());
     }
 
     /**
@@ -130,6 +130,10 @@ public class MapperOptions {
      */
     public MorphiaInstanceCreator getCreator() {
         return creator;
+    }
+
+    public DateStorage getDateStorage() {
+        return dateStorage;
     }
 
     /**
@@ -176,6 +180,10 @@ public class MapperOptions {
         return cacheClassLookups;
     }
 
+    public boolean isEnablePolymorphicQueries() {
+        return enablePolymorphicQueries;
+    }
+
     /**
      * @return true if Morphia should ignore final fields
      */
@@ -210,6 +218,7 @@ public class MapperOptions {
     @SuppressWarnings("unused")
     public static final class Builder {
 
+        private final List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
         private boolean ignoreFinals;
         private boolean storeNulls;
         private boolean storeEmpties;
@@ -218,9 +227,9 @@ public class MapperOptions {
         private boolean enablePolymorphicQueries;
         private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
+        private DateStorage dateStorage = DateStorage.UTC;
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName();
-        private final List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
         private NamingStrategy collectionNaming = NamingStrategy.camelCase();
         private NamingStrategy fieldNaming = NamingStrategy.identity();
         private UuidRepresentation uuidRepresentation = STANDARD;
@@ -279,6 +288,29 @@ public class MapperOptions {
         }
 
         /**
+         * @param dateStorage the storage format to use for dates
+         * @return this
+         * @deprecated use {@link #dateStorage(DateStorage)} instead.
+         */
+        @Deprecated
+        public Builder dateForm(DateStorage dateStorage) {
+            return dateStorage(dateStorage);
+        }
+
+        /**
+         * The default value for this is {@link DateStorage#UTC}.  To use the {@link DateStorage#SYSTEM_DEFAULT}, either set this value
+         * explicitly here or use the {@link #legacy()} Builder.
+         *
+         * @param dateStorage the storage format to use for dates
+         * @return this
+         * @since 2.0
+         */
+        public Builder dateStorage(DateStorage dateStorage) {
+            this.dateStorage = dateStorage;
+            return this;
+        }
+
+        /**
          * @param disableEmbeddedIndexes if true scanning @Embedded fields for indexing is disabled
          * @return this
          */
@@ -310,6 +342,16 @@ public class MapperOptions {
         }
 
         /**
+         * @param enablePolymorphicQueries if true queries are updated, in some cases, to check for subtypes' discriminator values so
+         *                                 that subtype might be returned by a query.
+         * @return this
+         */
+        public Builder enablePolymorphicQueries(boolean enablePolymorphicQueries) {
+            this.enablePolymorphicQueries = enablePolymorphicQueries;
+            return this;
+        }
+
+        /**
          * Sets the naming strategy to use for fields unless expliclity set via @Property
          *
          * @param strategy the strategy to use
@@ -327,16 +369,6 @@ public class MapperOptions {
          */
         public Builder ignoreFinals(boolean ignoreFinals) {
             this.ignoreFinals = ignoreFinals;
-            return this;
-        }
-
-        /**
-         * @param enablePolymorphicQueries if true queries are updated, in some cases, to check for subtypes' discriminator values so
-         *                                 that subtype might be returned by a query.
-         * @return this
-         */
-        public Builder enablePolymorphicQueries(boolean enablePolymorphicQueries) {
-            this.enablePolymorphicQueries = enablePolymorphicQueries;
             return this;
         }
 

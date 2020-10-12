@@ -375,7 +375,7 @@ public class Mapper {
     }
 
     public void updateQueryWithDiscriminators(BsonWriter writer, Class<?> type) {
-        if (options.enablePolymorphicQueries()) {
+        if (options.isEnablePolymorphicQueries()) {
             MappedClass mappedClass = getMappedClass(type);
             if (mappedClass == null) {
                 return;

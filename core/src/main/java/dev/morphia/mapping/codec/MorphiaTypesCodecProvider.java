@@ -26,6 +26,9 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
     public MorphiaTypesCodecProvider(Mapper mapper) {
         this.mapper = mapper;
 
+        addCodec(new MorphiaDateCodec(mapper));
+        addCodec(new MorphiaLocalDateTimeCodec(mapper));
+        addCodec(new MorphiaLocalTimeCodec());
         addCodec(new ClassCodec());
         addCodec(new CenterCodec());
         addCodec(new HashMapCodec());
