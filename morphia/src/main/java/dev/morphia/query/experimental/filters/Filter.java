@@ -1,7 +1,9 @@
 package dev.morphia.query.experimental.filters;
 
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.query.OperationTarget;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -17,7 +19,7 @@ import static java.lang.String.format;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Filter {
-    private String filterName;
+    private final String filterName;
     private String field;
     private Object value;
     private boolean not;
@@ -26,11 +28,11 @@ public class Filter {
     private PathTarget pathTarget;
     private boolean mapped;
 
-    protected Filter(final String name) {
+    protected Filter(String name) {
         this.filterName = name;
     }
 
-    protected Filter(final String name, final String field, final Object value) {
+    protected Filter(String name, String field, Object value) {
         this.filterName = name;
         this.field = field;
         this.value = value;
@@ -46,7 +48,7 @@ public class Filter {
      * @param context the context
      * @morphia.internal
      */
-    public void encode(final Mapper mapper, final BsonWriter writer, final EncoderContext context) {
+    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(field(mapper));
         if (not) {
             writer.writeStartDocument("$not");
@@ -66,7 +68,7 @@ public class Filter {
      * @return this
      * @morphia.internal
      */
-    public Filter entityType(final Class<?> type) {
+    public Filter entityType(Class<?> type) {
         this.entityClass = type;
         return this;
     }
@@ -78,7 +80,7 @@ public class Filter {
      * @return this
      * @morphia.internal
      */
-    public Filter isValidating(final boolean validate) {
+    public Filter isValidating(boolean validate) {
         this.validate = validate;
         return this;
     }
@@ -99,9 +101,9 @@ public class Filter {
         return format("%s %s %s", field, filterName, value);
     }
 
-    protected String field(final Mapper mapper) {
+    protected String field(Mapper mapper) {
         if (field != null && pathTarget == null) {
-            pathTarget = new PathTarget(mapper, entityClass, field, validate);
+            pathTarget = pathTarget(mapper);
             field = pathTarget.translatedPath();
         }
 
@@ -116,21 +118,24 @@ public class Filter {
         return value;
     }
 
-    protected Object getValue(final Mapper mapper) {
+    protected Object getValue(Mapper mapper) {
         if (!mapped) {
-            String field = field(mapper);
-            if (pathTarget != null) {
-                this.value = ((Document) new OperationTarget(pathTarget, value)
-                                             .encode(mapper))
-                                 .get(field);
+            PathTarget target = pathTarget(mapper);
+            if (target != null) {
+                OperationTarget operationTarget = new OperationTarget(pathTarget, value);
+                this.value = operationTarget.getValue();
+                MappedField mappedField = target.getTarget();
+                if (mappedField != null && mappedField.getFieldModel().getCodec() instanceof PropertyHandler) {
+                    this.value = ((Document) operationTarget.encode(mapper)).get(field);
+                }
             }
             mapped = true;
         }
         return value;
     }
 
-    protected void writeNamedValue(final String name, final Object named, final Mapper mapper, final BsonWriter writer,
-                                   final EncoderContext encoderContext) {
+    protected void writeNamedValue(String name, Object named, Mapper mapper, BsonWriter writer,
+                                   EncoderContext encoderContext) {
         writer.writeName(name);
         if (named != null) {
             Codec codec = mapper.getCodecRegistry().get(named.getClass());
@@ -140,13 +145,21 @@ public class Filter {
         }
     }
 
-    protected void writeUnnamedValue(final Object value, final Mapper mapper, final BsonWriter writer,
-                                     final EncoderContext encoderContext) {
+    protected void writeUnnamedValue(Object value, Mapper mapper, BsonWriter writer,
+                                     EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
         } else {
             writer.writeNull();
         }
+    }
+
+    private PathTarget pathTarget(Mapper mapper) {
+        if (pathTarget == null) {
+            pathTarget = new PathTarget(mapper, entityClass, field, validate);
+        }
+
+        return pathTarget;
     }
 }
