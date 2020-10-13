@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unchecked")
 public class MorphiaTypesCodecProvider implements CodecProvider {
-    private Mapper mapper;
+    private final Mapper mapper;
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
 
     /**
@@ -23,9 +23,12 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
      *
      * @param mapper the mapper to use
      */
-    public MorphiaTypesCodecProvider(final Mapper mapper) {
+    public MorphiaTypesCodecProvider(Mapper mapper) {
         this.mapper = mapper;
 
+        addCodec(new MorphiaDateCodec(mapper));
+        addCodec(new MorphiaLocalDateTimeCodec(mapper));
+        addCodec(new MorphiaLocalTimeCodec());
         addCodec(new ClassCodec());
         addCodec(new CenterCodec());
         addCodec(new HashMapCodec());
@@ -47,12 +50,8 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
             short.class, Short.class).forEach(c -> addCodec(new TypedArrayCodec(c, mapper)));
     }
 
-    protected <T> void addCodec(final Codec<T> codec) {
-        codecs.put(codec.getEncoderClass(), codec);
-    }
-
     @Override
-    public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
+    public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         final Codec<T> codec = (Codec<T>) codecs.get(clazz);
         if (codec != null) {
             return codec;
@@ -61,6 +60,10 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         } else {
             return null;
         }
+    }
+
+    protected <T> void addCodec(Codec<T> codec) {
+        codecs.put(codec.getEncoderClass(), codec);
     }
 
     private static class HashMapCodec extends MapCodec {
