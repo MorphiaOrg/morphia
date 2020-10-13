@@ -132,6 +132,9 @@ public class MapperOptions {
         return creator;
     }
 
+    /**
+     * @return the date storage configuration value
+     */
     public DateStorage getDateStorage() {
         return dateStorage;
     }
@@ -180,6 +183,9 @@ public class MapperOptions {
         return cacheClassLookups;
     }
 
+    /**
+     * @return true if polymorphic queries are enabled
+     */
     public boolean isEnablePolymorphicQueries() {
         return enablePolymorphicQueries;
     }

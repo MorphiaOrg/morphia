@@ -21,7 +21,7 @@ public class MorphiaLocalDateTimeCodec implements Codec<LocalDateTime> {
 
     private final Mapper mapper;
 
-    public MorphiaLocalDateTimeCodec(Mapper mapper) {
+    MorphiaLocalDateTimeCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 

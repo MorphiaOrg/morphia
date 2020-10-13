@@ -269,6 +269,12 @@ public class Mapper {
         return discriminatorLookup;
     }
 
+    /**
+     * @param type the type
+     * @return the list
+     * @morphia.internal
+     * @since 2.1
+     */
     public List<MappedClass> getHierarcy(Class<?> type) {
         return hierarchy.get(type);
     }
@@ -374,6 +380,14 @@ public class Mapper {
         return options;
     }
 
+    /**
+     * Updates a query with the type's subclass discriminators if polymorphic queries are enabled.
+     *
+     * @param writer the writer to update
+     * @param type   the type being queried
+     * @morphia.internal
+     * @since 2.1
+     */
     public void updateQueryWithDiscriminators(BsonWriter writer, Class<?> type) {
         if (options.isEnablePolymorphicQueries()) {
             MappedClass mappedClass = getMappedClass(type);

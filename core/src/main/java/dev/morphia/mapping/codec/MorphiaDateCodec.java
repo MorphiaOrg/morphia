@@ -20,7 +20,7 @@ public class MorphiaDateCodec implements Codec<LocalDate> {
 
     private final Mapper mapper;
 
-    public MorphiaDateCodec(Mapper mapper) {
+    MorphiaDateCodec(Mapper mapper) {
         this.mapper = mapper;
     }
 
