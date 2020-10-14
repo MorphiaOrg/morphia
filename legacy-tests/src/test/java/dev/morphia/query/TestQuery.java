@@ -46,6 +46,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.mongodb.client.model.Collation.builder;
 import static dev.morphia.query.Sort.ascending;
@@ -365,10 +366,18 @@ public class TestQuery extends TestBase {
 
         Document query = new Document("op", "query")
                              .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName());
-        Document profileRecord = profileCollection.find(query).first();
-
-        String message = profileRecord.toJson(getDatabase().getCodecRegistry().get(Document.class));
-        assertEquals(message, expectedComment, getCommentFromProfileRecord(profileRecord));
+        List<Document> documents = profileCollection.find(query)
+                                                    .into(new ArrayList<>());
+        AtomicBoolean found = new AtomicBoolean(false);
+        documents.forEach(d -> {
+            String comment = getCommentFromProfileRecord(d);
+            String result = d.toJson(getDatabase().getCodecRegistry().get(Document.class));
+            if (comment != null) {
+                assertEquals(result, expectedComment, comment);
+            } else {
+                System.out.println("Not found in message: " + result);
+            }
+        });
     }
 
     @Test
