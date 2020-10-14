@@ -46,7 +46,7 @@ public class EntityModel<T> {
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
     private final Map<String, FieldModel<?>> fieldModelsByField;
-    private final Map<Object, FieldModel<?>> fieldModelsByMappedName;
+    private final Map<String, FieldModel<?>> fieldModelsByMappedName;
     private final Datastore datastore;
     private final InstanceCreatorFactory<T> creatorFactory;
     private final boolean discriminatorEnabled;
@@ -63,6 +63,10 @@ public class EntityModel<T> {
      */
     EntityModel(EntityModelBuilder<T> builder) {
         type = builder.getType();
+        if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
+            throw new MappingException(Sofia.noInnerClasses(type.getName()));
+        }
+
         discriminatorEnabled = builder.isDiscriminatorEnabled();
         discriminatorKey = builder.discriminatorKey();
         discriminator = builder.discriminator();

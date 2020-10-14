@@ -54,8 +54,6 @@ public class MappedClass {
      * the type we are mapping to/from
      */
     private final EntityModel<?> entityModel;
-    private final Class<?> type;
-    private final List<MappedClass> interfaces = new ArrayList<>();
     private final List<MappedClass> subtypes = new ArrayList<>();
     /**
      * special fields representing the Key of the object
@@ -69,17 +67,9 @@ public class MappedClass {
      * @param entityModel the ClassModel
      * @param mapper      the Mapper to use
      */
-    public MappedClass(EntityModel entityModel, Mapper mapper) {
+    public MappedClass(EntityModel<?> entityModel, Mapper mapper) {
         this.entityModel = entityModel;
-        type = entityModel.getType();
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Creating MappedClass for " + type);
-        }
-
-        if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
-            throw new MappingException(format("Cannot use non-static inner class: %s. Please make static.", type));
-        }
         discover(mapper);
 
         if (LOG.isDebugEnabled()) {
@@ -251,7 +241,7 @@ public class MappedClass {
      * @return the clazz
      */
     public Class<?> getType() {
-        return type;
+        return entityModel.getType();
     }
 
     /**
@@ -274,7 +264,7 @@ public class MappedClass {
 
     @Override
     public int hashCode() {
-        return type.hashCode();
+        return getType().hashCode();
     }
 
     @Override
@@ -288,7 +278,7 @@ public class MappedClass {
 
         final MappedClass that = (MappedClass) o;
 
-        return type.equals(that.type);
+        return getType().equals(that.getType());
 
     }
 
@@ -304,14 +294,14 @@ public class MappedClass {
      * @since 1.3
      */
     public boolean isAbstract() {
-        return Modifier.isAbstract(type.getModifiers());
+        return Modifier.isAbstract(getType().getModifiers());
     }
 
     /**
      * @return true if the MappedClass is an interface
      */
     public boolean isInterface() {
-        return type.isInterface();
+        return getType().isInterface();
     }
 
     /**
@@ -342,7 +332,7 @@ public class MappedClass {
      * Discovers interesting (that we care about) things about the class.
      */
     private void discover(Mapper mapper) {
-        Class<?> superclass = type.getSuperclass();
+        Class<?> superclass = getType().getSuperclass();
         if (superclass != null && !superclass.equals(Object.class)) {
             superClass = mapper.getMappedClass(superclass);
             if (superClass != null) {
@@ -350,11 +340,10 @@ public class MappedClass {
             }
         }
 
-        for (Class<?> aClass : type.getInterfaces()) {
+        for (Class<?> aClass : getType().getInterfaces()) {
             final MappedClass mappedClass = mapper.getMappedClass(aClass);
             if (mappedClass != null) {
                 mappedClass.addSubtype(this);
-                this.interfaces.add(mappedClass);
             }
         }
 
