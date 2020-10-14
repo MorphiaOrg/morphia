@@ -367,7 +367,8 @@ public class TestQuery extends TestBase {
                              .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName());
         Document profileRecord = profileCollection.find(query).first();
 
-        assertEquals(profileRecord.toString(), expectedComment, getCommentFromProfileRecord(profileRecord));
+        String message = profileRecord.toJson(getDatabase().getCodecRegistry().get(Document.class));
+        assertEquals(message, expectedComment, getCommentFromProfileRecord(profileRecord));
     }
 
     @Test
@@ -670,7 +671,7 @@ public class TestQuery extends TestBase {
         assertEquals(1, fbUser1.getId());
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (final FacebookUser user : users) {
+        for (FacebookUser user : users) {
             fbUserKeys.add(getMapper().getKey(user));
         }
 
@@ -688,7 +689,7 @@ public class TestQuery extends TestBase {
         final Keys k1Loaded = datastore.find(Keys.class)
                                        .filter(eq("_id", k1.getId()))
                                        .first();
-        for (final Key<FacebookUser> key : k1Loaded.getUsers()) {
+        for (Key<FacebookUser> key : k1Loaded.getUsers()) {
             assertNotNull(key.getId());
         }
 
@@ -1244,14 +1245,14 @@ public class TestQuery extends TestBase {
                           .tryNext());
     }
 
-    private <T> void assertListEquals(final List<T> list, final MongoCursor<T> cursor) {
+    private <T> void assertListEquals(List<T> list, MongoCursor<T> cursor) {
         for (T t : list) {
             assertEquals(list.toString(), t, cursor.next());
         }
     }
 
     @SuppressWarnings("removal")
-    private void check(final Query<User> query) {
+    private void check(Query<User> query) {
         query
             .field("version").equal("latest")
             .and(
@@ -1276,7 +1277,7 @@ public class TestQuery extends TestBase {
         Assert.assertEquals(parse, queryObject);
     }
 
-    private int[] copy(final int[] array, final int start, final int count) {
+    private int[] copy(int[] array, int start, int count) {
         return copyOfRange(array, start, start + count);
     }
 
@@ -1285,7 +1286,7 @@ public class TestQuery extends TestBase {
         profileCollection.drop();
     }
 
-    private String getCommentFromProfileRecord(final Document profileRecord) {
+    private String getCommentFromProfileRecord(Document profileRecord) {
         if (profileRecord.containsKey("command")) {
             Document commandDocument = ((Document) profileRecord.get("command"));
             if (commandDocument.containsKey("comment")) {
@@ -1303,7 +1304,7 @@ public class TestQuery extends TestBase {
         return null;
     }
 
-    private Query<Pic> getQuery(final QueryFactory queryFactory) {
+    private Query<Pic> getQuery(QueryFactory queryFactory) {
         return queryFactory.createQuery(getDs(), Pic.class);
     }
 
@@ -1354,7 +1355,7 @@ public class TestQuery extends TestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
+        public void setId(ObjectId id) {
             this.id = id;
         }
 
@@ -1362,7 +1363,7 @@ public class TestQuery extends TestBase {
             return lazyObjectIdPic;
         }
 
-        public void setLazyObjectIdPic(final PicWithObjectId lazyObjectIdPic) {
+        public void setLazyObjectIdPic(PicWithObjectId lazyObjectIdPic) {
             this.lazyObjectIdPic = lazyObjectIdPic;
         }
 
@@ -1370,7 +1371,7 @@ public class TestQuery extends TestBase {
             return lazyPic;
         }
 
-        public void setLazyPic(final Pic lazyPic) {
+        public void setLazyPic(Pic lazyPic) {
             this.lazyPic = lazyPic;
         }
 
@@ -1378,7 +1379,7 @@ public class TestQuery extends TestBase {
             return name;
         }
 
-        public void setName(final String name) {
+        public void setName(String name) {
             this.name = name;
         }
 
@@ -1386,7 +1387,7 @@ public class TestQuery extends TestBase {
             return pic;
         }
 
-        public void setPic(final Pic pic) {
+        public void setPic(Pic pic) {
             this.pic = pic;
         }
 
@@ -1394,7 +1395,7 @@ public class TestQuery extends TestBase {
             return size;
         }
 
-        public void setSize(final int size) {
+        public void setSize(int size) {
             this.size = size;
         }
 
@@ -1420,7 +1421,7 @@ public class TestQuery extends TestBase {
         public ContainsRenamedFields() {
         }
 
-        ContainsRenamedFields(final String firstName, final String lastName) {
+        ContainsRenamedFields(String firstName, String lastName) {
             this.firstName = firstName;
             this.lastName = lastName;
         }
@@ -1446,7 +1447,7 @@ public class TestQuery extends TestBase {
         protected HasIntId() {
         }
 
-        HasIntId(final int id) {
+        HasIntId(int id) {
             this.id = id;
         }
     }
@@ -1469,7 +1470,7 @@ public class TestQuery extends TestBase {
         IntVector() {
         }
 
-        IntVector(final int... scalars) {
+        IntVector(int... scalars) {
             this.scalars = scalars;
         }
     }
@@ -1498,16 +1499,16 @@ public class TestQuery extends TestBase {
         protected Keyword() {
         }
 
-        Keyword(final String k) {
+        Keyword(String k) {
             this.keyword = k;
         }
 
-        Keyword(final String k, final Integer score) {
+        Keyword(String k, Integer score) {
             this.keyword = k;
             this.score = score;
         }
 
-        Keyword(final Integer score) {
+        Keyword(Integer score) {
             this.score = score;
         }
 
@@ -1517,7 +1518,7 @@ public class TestQuery extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1547,7 +1548,7 @@ public class TestQuery extends TestBase {
         public Photo() {
         }
 
-        Photo(final List<String> keywords) {
+        Photo(List<String> keywords) {
             this.keywords = keywords;
         }
     }
@@ -1561,14 +1562,14 @@ public class TestQuery extends TestBase {
         PhotoWithKeywords() {
         }
 
-        PhotoWithKeywords(final String... words) {
+        PhotoWithKeywords(String... words) {
             keywords = new ArrayList<>(words.length);
-            for (final String word : words) {
+            for (String word : words) {
                 keywords.add(new Keyword(word));
             }
         }
 
-        PhotoWithKeywords(final Keyword... keyword) {
+        PhotoWithKeywords(Keyword... keyword) {
             keywords.addAll(asList(keyword));
         }
 
@@ -1578,7 +1579,7 @@ public class TestQuery extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1610,7 +1611,7 @@ public class TestQuery extends TestBase {
         public Pic() {
         }
 
-        Pic(final String name) {
+        Pic(String name) {
             this.name = name;
         }
 
@@ -1618,28 +1619,8 @@ public class TestQuery extends TestBase {
             return id;
         }
 
-        public void setId(final ObjectId id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
-        }
-
         @Override
-        public int hashCode() {
-            int result = getId() != null ? getId().hashCode() : 0;
-            result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-            result = 31 * result + (isPrePersist() ? 1 : 0);
-            return result;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
@@ -1658,6 +1639,26 @@ public class TestQuery extends TestBase {
             return getName() != null ? getName().equals(pic.getName()) : pic.getName() == null;
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+            result = 31 * result + (isPrePersist() ? 1 : 0);
+            return result;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
         @PrePersist
         public void tweak() {
             prePersist = true;
@@ -1667,7 +1668,7 @@ public class TestQuery extends TestBase {
             return prePersist;
         }
 
-        public void setPrePersist(final boolean prePersist) {
+        public void setPrePersist(boolean prePersist) {
             this.prePersist = prePersist;
         }
     }
@@ -1681,7 +1682,7 @@ public class TestQuery extends TestBase {
 
     private static class RectangleComparator implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o2.getHeight(), o1.getHeight());
         }
@@ -1689,7 +1690,7 @@ public class TestQuery extends TestBase {
 
     private static class RectangleComparator1 implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o2.getHeight(), o1.getHeight());
             return compare != 0 ? compare : Double.compare(o2.getWidth(), o1.getWidth());
         }
@@ -1697,7 +1698,7 @@ public class TestQuery extends TestBase {
 
     private static class RectangleComparator2 implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
         }
@@ -1705,7 +1706,7 @@ public class TestQuery extends TestBase {
 
     private static class RectangleComparator3 implements Comparator<Rectangle> {
         @Override
-        public int compare(final Rectangle o1, final Rectangle o2) {
+        public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
         }
@@ -1720,7 +1721,7 @@ public class TestQuery extends TestBase {
         ReferenceKey() {
         }
 
-        ReferenceKey(final String name) {
+        ReferenceKey(String name) {
             this.name = name;
         }
 
@@ -1732,7 +1733,7 @@ public class TestQuery extends TestBase {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }

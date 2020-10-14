@@ -1,8 +1,8 @@
 package dev.morphia;
 
-import com.antwerkz.bottlerocket.BottleRocket;
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
+import com.antwerkz.bottlerocket.clusters.SingleNode;
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import static com.antwerkz.bottlerocket.BottleRocket.DEFAULT_VERSION;
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -70,8 +71,10 @@ public abstract class TestBase {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final MongoCluster cluster = new ReplicaSet(mongodbRoot, "morphia_test", version);
+        Version version = mongodb != null ? Version.valueOf(mongodb) : DEFAULT_VERSION;
+        final MongoCluster cluster = version.equals(DEFAULT_VERSION)
+                                     ? new ReplicaSet(mongodbRoot, "morphia_test", version)
+                                     : new SingleNode(mongodbRoot, "morphia_test", version);
 
         cluster.start();
         mongoClient = cluster.getClient(builder);
@@ -111,11 +114,11 @@ public abstract class TestBase {
         cleanup();
     }
 
-    protected void assertDocumentEquals(final Object expected, final Object actual) {
+    protected void assertDocumentEquals(Object expected, Object actual) {
         assertDocumentEquals("", expected, actual);
     }
 
-    protected void checkMinServerVersion(final double version) {
+    protected void checkMinServerVersion(double version) {
         assumeTrue(serverIsAtLeastVersion(version));
     }
 
@@ -128,7 +131,7 @@ public abstract class TestBase {
         });
     }
 
-    protected int count(final MongoCursor<?> cursor) {
+    protected int count(MongoCursor<?> cursor) {
         int count = 0;
         while (cursor.hasNext()) {
             cursor.next();
@@ -137,7 +140,7 @@ public abstract class TestBase {
         return count;
     }
 
-    protected int count(final Iterator<?> iterator) {
+    protected int count(Iterator<?> iterator) {
         int count = 0;
         while (iterator.hasNext()) {
             count++;
@@ -146,15 +149,15 @@ public abstract class TestBase {
         return count;
     }
 
-    protected MongoCollection<Document> getDocumentCollection(final Class<?> type) {
+    protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
         return getDatabase().getCollection(getMappedClass(type).getCollectionName());
     }
 
-    protected List<Document> getIndexInfo(final Class<?> clazz) {
+    protected List<Document> getIndexInfo(Class<?> clazz) {
         return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
 
-    protected MappedClass getMappedClass(final Class<?> aClass) {
+    protected MappedClass getMappedClass(Class<?> aClass) {
         Mapper mapper = getMapper();
         mapper.map(aClass);
 
@@ -173,16 +176,16 @@ public abstract class TestBase {
      * @param version must be a major version, e.g. 1.8, 2,0, 2.2
      * @return true if server is at least specified version
      */
-    protected boolean serverIsAtLeastVersion(final double version) {
+    protected boolean serverIsAtLeastVersion(double version) {
         return getServerVersion() >= version;
     }
 
-    protected String toString(final Document document) {
+    protected String toString(Document document) {
         return document.toJson(getMapper().getCodecRegistry().get(Document.class));
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void assertDocumentEquals(final String path, final Object expected, final Object actual) {
+    private void assertDocumentEquals(String path, Object expected, Object actual) {
         assertSameNullity(path, expected, actual);
         if (expected == null) {
             return;
@@ -190,7 +193,7 @@ public abstract class TestBase {
         assertSameType(path, expected, actual);
 
         if (expected instanceof Document) {
-            for (final Entry<String, Object> entry : ((Document) expected).entrySet()) {
+            for (Entry<String, Object> entry : ((Document) expected).entrySet()) {
                 final String key = entry.getKey();
                 Object expectedValue = entry.getValue();
                 Object actualValue = ((Document) actual).get(key);
@@ -223,14 +226,14 @@ public abstract class TestBase {
         }
     }
 
-    private void assertSameNullity(final String path, final Object expected, final Object actual) {
+    private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
             || actual == null && expected != null) {
             assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
         }
     }
 
-    private void assertSameType(final String path, final Object expected, final Object actual) {
+    private void assertSameType(String path, Object expected, Object actual) {
         if (expected instanceof List && actual instanceof List) {
             return;
         }
@@ -239,7 +242,7 @@ public abstract class TestBase {
         }
     }
 
-    private void download(final URL url, final File file) throws IOException {
+    private void download(URL url, File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
         try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
             byte[] read = new byte[49152];
