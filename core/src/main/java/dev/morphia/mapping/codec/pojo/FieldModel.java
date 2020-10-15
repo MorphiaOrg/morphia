@@ -16,17 +16,35 @@
 
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.DBRef;
+import dev.morphia.Key;
+import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
 import morphia.org.bson.codecs.pojo.TypeData;
+import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.StringJoiner;
+
+import static java.util.Arrays.asList;
 
 /**
  * Represents a field on a class and stores various metadata such as generic parameters.
@@ -43,9 +61,10 @@ public final class FieldModel<T> {
     private final Codec<T> codec;
     private final PropertyAccessor<T> accessor;
     private final PropertySerialization<T> serialization;
-    private final List<Annotation> annotations;
+    private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
     private volatile Codec<T> cachedCodec;
     private Class<?> normalizedType;
+    private final List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
 
     FieldModel(Field field, String name, String mappedName, TypeData<T> typeData,
                List<Annotation> annotations, Codec<T> codec, PropertyAccessor<T> accessor,
@@ -54,13 +73,25 @@ public final class FieldModel<T> {
         this.name = Objects.requireNonNull(name, Sofia.notNull("name"));
         this.mappedName = Objects.requireNonNull(mappedName, Sofia.notNull("name"));
         this.typeData = Objects.requireNonNull(typeData, Sofia.notNull("typeData"));
-        this.annotations = annotations;
         this.codec = codec;
         this.cachedCodec = codec;
         this.accessor = accessor;
         this.serialization = serialization;
 
         this.field.setAccessible(true);
+        annotations.forEach(ann -> annotationMap.put(ann.annotationType(), ann));
+
+        List<String> result;
+        final AlsoLoad al = getAnnotation(AlsoLoad.class);
+        if (al != null && al.value().length > 0) {
+            final List<String> names = new ArrayList<>();
+            names.add(getMappedName());
+            names.addAll(asList(al.value()));
+            result = names;
+        } else {
+            result = Collections.singletonList(getMappedName());
+        }
+        loadNames = result;
     }
 
     /**
@@ -109,19 +140,7 @@ public final class FieldModel<T> {
      * @return the annotation instance or null
      */
     public <A extends Annotation> A getAnnotation(Class<A> type) {
-        for (Annotation annotation : annotations) {
-            if (type.equals(annotation.annotationType())) {
-                return type.cast(annotation);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @return the annotations on this Field
-     */
-    public List<Annotation> getAnnotations() {
-        return annotations;
+        return type.cast(annotationMap.get(type));
     }
 
     /**
@@ -139,10 +158,33 @@ public final class FieldModel<T> {
     }
 
     /**
+     * @param document the Document get the value from
+     * @return the value from first mapping of this field
+     */
+    public Object getDocumentValue(Document document) {
+        return document.get(loadFromDocument(document));
+    }
+
+    /**
      * @return the field
      */
     public Field getField() {
         return field;
+    }
+
+    /**
+     * @return the full name of the class plus java field name
+     */
+    public String getFullName() {
+        Field field = getField();
+        return String.format("%s#%s", field.getDeclaringClass().getName(), field.getName());
+    }
+
+    /**
+     * @return the name of the field's (key)name for mongodb, in order of loading.
+     */
+    public List<String> getLoadNames() {
+        return loadNames;
     }
 
     /**
@@ -173,16 +215,65 @@ public final class FieldModel<T> {
     }
 
     /**
+     * If the java field is a list/array/map then the sub-type T is returned (ex. List&lt;T&gt;, T[], Map&lt;?,T&gt;)
+     *
+     * @return the parameterized type of the field
+     */
+    public Class<?> getSpecializedType() {
+        Class<?> specializedType;
+        if (getType().isArray()) {
+            specializedType = getType().getComponentType();
+        } else {
+            final List<TypeData<?>> typeParameters = getTypeData().getTypeParameters();
+            specializedType = !typeParameters.isEmpty() ? typeParameters.get(0).getType() : null;
+        }
+
+        return specializedType;
+    }
+
+    public Class<?> getType() {
+        return getTypeData().getType();
+    }
+
+    /**
      * @return the type data for the field
      */
     public TypeData<T> getTypeData() {
         return typeData;
     }
 
+    /**
+     * Gets the value of the field mapped on the instance given.
+     *
+     * @param instance the instance to use
+     * @return the value stored in the java field
+     */
+    public Object getValue(Object instance) {
+        try {
+            Object target = instance;
+            if (target instanceof MorphiaProxy) {
+                target = ((MorphiaProxy) instance).unwrap();
+            }
+            return getField().get(target);
+        } catch (ReflectiveOperationException e) {
+            throw new MappingException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Indicates whether the annotation is present in the mapping (does not check the java field annotations, just the ones discovered)
+     *
+     * @param type the annotation to search for
+     * @return true if the annotation was found
+     */
+    public boolean hasAnnotation(Class<? extends Annotation> type) {
+        return annotationMap.containsKey(type);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getField(), getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
-            getAnnotations(), getCachedCodec(), getNormalizedType());
+            annotationMap.values(), getCachedCodec(), getNormalizedType());
     }
 
     @Override
@@ -201,7 +292,6 @@ public final class FieldModel<T> {
                && Objects.equals(getCodec(), that.getCodec())
                && getAccessor().equals(that.getAccessor())
                && serialization.equals(that.serialization)
-               && getAnnotations().equals(that.getAnnotations())
                && Objects.equals(getCachedCodec(), that.getCachedCodec())
                && Objects.equals(getNormalizedType(), that.getNormalizedType());
     }
@@ -212,8 +302,77 @@ public final class FieldModel<T> {
                    .add("name='" + name + "'")
                    .add("mappedName='" + mappedName + "'")
                    .add("typeData=" + typeData)
-                   .add("annotations=" + annotations)
+                   .add("annotations=" + annotationMap.values())
                    .toString();
+    }
+
+    /**
+     * @return true if the MappedField is an array
+     */
+    public boolean isArray() {
+        return getType().isArray();
+    }
+
+    /**
+     * @return true if the MappedField is a Map
+     */
+    public boolean isMap() {
+        return Map.class.isAssignableFrom(getTypeData().getType());
+    }
+
+    /**
+     * @return true if this field is a container type such as a List, Map, Set, or array
+     */
+    public boolean isMultipleValues() {
+        return !isScalarValue();
+    }
+
+    /**
+     * @return true if this field is a reference to a foreign document
+     * @see Reference
+     * @see Key
+     * @see DBRef
+     */
+    public boolean isReference() {
+        return hasAnnotation(Reference.class) || Key.class == getType() || DBRef.class == getType();
+    }
+
+    /**
+     * @return true if this field is not a container type such as a List, Map, Set, or array
+     */
+    public boolean isScalarValue() {
+        return !isMap() && !isArray() && !isCollection();
+    }
+
+    /**
+     * @return true if the MappedField is a Set
+     */
+    public boolean isSet() {
+        return Set.class.isAssignableFrom(getTypeData().getType());
+    }
+
+    /**
+     * @return true if this field is marked as transient
+     */
+    public boolean isTransient() {
+        return !hasAnnotation(Transient.class)
+               && !hasAnnotation(java.beans.Transient.class)
+               && Modifier.isTransient(getType().getModifiers());
+    }
+
+    /**
+     * Sets the value for the java field
+     *
+     * @param instance the instance to update
+     * @param value    the value to set
+     */
+    public void setFieldValue(Object instance, Object value) {
+        try {
+            final Field field = getField();
+            field.set(instance, Conversions.convert(value, field.getType()));
+        } catch (IllegalAccessException e) {
+            throw new MappingException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -224,6 +383,24 @@ public final class FieldModel<T> {
      */
     public boolean shouldSerialize(T value) {
         return serialization.shouldSerialize(value);
+    }
+
+    private boolean isCollection() {
+        return Collection.class.isAssignableFrom(getTypeData().getType());
+    }
+
+    private String loadFromDocument(Document document) {
+        String mappedFieldName = getMappedName();
+        if (document.containsKey(mappedFieldName)) {
+            return mappedFieldName;
+        }
+        for (String name : getLoadNames()) {
+            if (document.containsKey(name)) {
+                return name;
+            }
+        }
+
+        return null;
     }
 
     void cachedCodec(Codec<T> codec) {
