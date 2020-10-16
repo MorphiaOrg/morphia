@@ -3,8 +3,8 @@ package dev.morphia.mapping.validation.fieldrules;
 
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 public class LazyReferenceOnArray extends FieldConstraint {
 
     @Override
-    protected void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
+    protected void check(Mapper mapper, MappedClass mc, FieldModel mf, Set<ConstraintViolation> ve) {
         final Reference ref = mf.getAnnotation(Reference.class);
         if (ref != null && ref.lazy()) {
             final Class type = mf.getType();

@@ -6,8 +6,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 
@@ -20,7 +20,7 @@ import java.util.Set;
 public class IdDoesNotMix extends FieldConstraint {
 
     @Override
-    protected void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
+    protected void check(Mapper mapper, MappedClass mc, FieldModel mf, Set<ConstraintViolation> ve) {
         // an @Id field can not be a Value, Reference, or Embedded
         if (mf.hasAnnotation(Id.class)) {
             if (mf.hasAnnotation(Reference.class) || mf.hasAnnotation(Embedded.class) || mf.hasAnnotation(Property.class)) {

@@ -17,8 +17,8 @@
 package dev.morphia.internal;
 
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
 
@@ -39,7 +39,7 @@ public class PathTarget {
     private final Mapper mapper;
     private MappedClass context;
     private final MappedClass root;
-    private MappedField target;
+    private FieldModel target;
     private boolean resolved;
 
     /**
@@ -113,7 +113,7 @@ public class PathTarget {
      *
      * @return the field
      */
-    public MappedField getTarget() {
+    public FieldModel getTarget() {
         if (!resolved) {
             resolve();
         }
@@ -132,7 +132,7 @@ public class PathTarget {
     private void resolve() {
         context = this.root;
         position = 0;
-        MappedField field = null;
+        FieldModel field = null;
         while (hasNext()) {
             String segment = next();
 
@@ -149,7 +149,7 @@ public class PathTarget {
                 if (hasNext() && field.isReference()) {
                     failValidation();
                 }
-                translate(field.getMappedFieldName());
+                translate(field.getMappedName());
                 if (field.isMap() && hasNext()) {
                     next();  // consume the map key segment
                 }
@@ -172,9 +172,9 @@ public class PathTarget {
         segments.set(position - 1, nameToStore);
     }
 
-    private MappedField resolveField(String segment) {
+    private FieldModel resolveField(String segment) {
         if (context != null) {
-            MappedField mf = context.getMappedField(segment);
+            FieldModel mf = context.getMappedField(segment);
             if (mf == null) {
                 mf = context.getMappedFieldByJavaField(segment);
             }

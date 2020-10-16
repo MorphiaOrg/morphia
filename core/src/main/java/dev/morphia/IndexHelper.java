@@ -26,9 +26,9 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
@@ -93,11 +93,11 @@ public final class IndexHelper {
 
     private List<Index> collectFieldIndexes(MappedClass mc) {
         List<Index> list = new ArrayList<>();
-        for (MappedField mf : mc.getFields()) {
+        for (FieldModel mf : mc.getFields()) {
             if (mf.hasAnnotation(Indexed.class)) {
-                list.add(convert(mf.getAnnotation(Indexed.class), mf.getMappedFieldName()));
+                list.add(convert(mf.getAnnotation(Indexed.class), mf.getMappedName()));
             } else if (mf.hasAnnotation(Text.class)) {
-                list.add(convert(mf.getAnnotation(Text.class), mf.getMappedFieldName()));
+                list.add(convert(mf.getAnnotation(Text.class), mf.getMappedName()));
             }
         }
         return list;

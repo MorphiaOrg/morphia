@@ -20,10 +20,10 @@ import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.experimental.MorphiaSessionImpl;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
@@ -153,13 +153,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> void setInitialVersion(MappedField versionField, T entity) {
+    private <T> void setInitialVersion(FieldModel versionField, T entity) {
         if (versionField != null) {
-            Object value = versionField.getFieldValue(entity);
+            Object value = versionField.getValue(entity);
             if (value != null && !value.equals(0)) {
                 throw new ValidationException(Sofia.versionManuallySet());
             } else {
-                versionField.setFieldValue(entity, 1L);
+                versionField.setValue(entity, 1L);
             }
         }
     }
@@ -362,7 +362,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             Class<?> type = entities.get(0).getClass();
             MappedClass mappedClass = mapper.getMappedClass(type);
             final MongoCollection collection = mapper.getCollection(type);
-            MappedField versionField = mappedClass.getVersionField();
+            FieldModel versionField = mappedClass.getVersionField();
             if (versionField != null) {
                 for (T entity : entities) {
                     setInitialVersion(versionField, entity);
@@ -442,7 +442,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected <T> void saveDocument(T entity, MongoCollection<T> collection, InsertOneOptions options) {
-        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getFieldValue(entity);
+        Object id = mapper.getMappedClass(entity.getClass()).getIdField().getValue(entity);
         ClientSession clientSession = findSession(options);
 
         if (id == null) {
@@ -473,11 +473,11 @@ public class DatastoreImpl implements AdvancedDatastore {
             return false;
         }
 
-        MappedField idField = mc.getIdField();
-        final Object idValue = idField.getFieldValue(entity);
-        final MappedField versionField = mc.getVersionField();
+        FieldModel idField = mc.getIdField();
+        final Object idValue = idField.getValue(entity);
+        final FieldModel versionField = mc.getVersionField();
 
-        Long oldVersion = (Long) versionField.getFieldValue(entity);
+        Long oldVersion = (Long) versionField.getValue(entity);
         long newVersion = oldVersion == null ? 1L : oldVersion + 1;
         ClientSession session = findSession(options);
 
@@ -496,7 +496,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         } else if (idValue != null) {
             final UpdateResult res = find(collection.getNamespace().getCollectionName())
                                          .filter(eq("_id", idValue),
-                                             eq(versionField.getMappedFieldName(), oldVersion))
+                                             eq(versionField.getMappedName(), oldVersion))
                                          .update(UpdateOperators.set(entity))
                                          .execute(new UpdateOptions()
                                                       .bypassDocumentValidation(options.getBypassDocumentValidation())
@@ -512,8 +512,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         return true;
     }
 
-    private <T> void updateVersion(T entity, MappedField field, Long newVersion) {
-        field.setFieldValue(entity, newVersion);
+    private <T> void updateVersion(T entity, FieldModel field, Long newVersion) {
+        field.setValue(entity, newVersion);
     }
 
     /**

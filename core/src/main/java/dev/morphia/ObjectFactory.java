@@ -1,7 +1,7 @@
 package dev.morphia;
 
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import org.bson.Document;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public interface ObjectFactory {
      * @param document  the state to populate the new instance with
      * @return the new instance
      */
-    Object createInstance(Mapper mapper, MappedField mf, Document document);
+    Object createInstance(Mapper mapper, FieldModel mf, Document document);
 
     /**
      * Defines how morphia creates a List object.
@@ -49,7 +49,7 @@ public interface ObjectFactory {
      * @param mf the MappedField containing any metadata that might define the type of the List to create
      * @return the List
      */
-    List createList(MappedField mf);
+    List createList(FieldModel mf);
 
     /**
      * Defines how morphia creates a Map object.
@@ -57,7 +57,7 @@ public interface ObjectFactory {
      * @param mf the MappedField containing any metadata that might define the type of the Map to create
      * @return the Map
      */
-    Map createMap(MappedField mf);
+    Map createMap(FieldModel mf);
 
     /**
      * Defines how morphia creates a Set object.
@@ -65,5 +65,5 @@ public interface ObjectFactory {
      * @param mf the MappedField containing any metadata that might define the type of the Set to create
      * @return the Set
      */
-    Set createSet(MappedField mf);
+    Set createSet(FieldModel mf);
 }

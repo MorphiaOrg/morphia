@@ -25,10 +25,10 @@ public class MorphiaPropertySerialization implements PropertySerialization {
      * @param options the options to apply
      * @param field   the field in question
      */
-    public MorphiaPropertySerialization(MapperOptions options, FieldModelBuilder<?> field) {
+    public MorphiaPropertySerialization(MapperOptions options, FieldModelBuilder field) {
         this.options = options;
-        annotations = field.getAnnotations();
-        modifiers = field.getField().getModifiers();
+        annotations = field.annotations();
+        modifiers = field.field().getModifiers();
     }
 
     @Override

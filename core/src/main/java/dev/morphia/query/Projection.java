@@ -132,7 +132,7 @@ public class Projection {
         Document projection = new Document();
         mapper.getMappedClass(clazz).getFields()
               .stream()
-              .map(mf -> new PathTarget(mapper, mapper.getMappedClass(clazz), mf.getMappedFieldName()).translatedPath())
+              .map(mf -> new PathTarget(mapper, mapper.getMappedClass(clazz), mf.getMappedName()).translatedPath())
               .forEach(name -> projection.put(name, 1));
 
         return projection;

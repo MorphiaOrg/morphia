@@ -20,7 +20,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.query.Query;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -90,8 +90,8 @@ public class TestSerializedFormat extends TestBase {
     }
 
     private void verifyCoverage(Document document) {
-        for (MappedField field : getMapper().getMappedClass(ReferenceType.class).getFields()) {
-            String name = field.getMappedFieldName();
+        for (FieldModel field : getMapper().getMappedClass(ReferenceType.class).getFields()) {
+            String name = field.getMappedName();
             boolean found = document.containsKey(name);
             if (!found) {
                 for (String s : document.keySet()) {

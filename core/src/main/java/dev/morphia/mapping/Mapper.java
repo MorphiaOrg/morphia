@@ -16,6 +16,7 @@ import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.query.experimental.filters.Filters;
@@ -29,8 +30,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -64,8 +63,6 @@ public class Mapper {
      * @morphia.internal
      */
     public static final String IGNORED_FIELDNAME = ".";
-
-    private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
 
     /**
      * Set of classes that registered by this mapper
@@ -119,8 +116,8 @@ public class Mapper {
      * @return the new model
      * @morphia.internal
      */
-    public <T> EntityModel<T> createEntityModel(Class<T> clazz) {
-        return new EntityModelBuilder<>(this.datastore, clazz)
+    public <T> EntityModel createEntityModel(Class<T> clazz) {
+        return new EntityModelBuilder(this.datastore, clazz)
                    .build();
     }
 
@@ -291,9 +288,9 @@ public class Mapper {
         }
         final MappedClass mappedClass = getMappedClass(entity.getClass());
         if (mappedClass != null) {
-            final MappedField idField = mappedClass.getIdField();
+            final FieldModel idField = mappedClass.getIdField();
             if (idField != null) {
-                return idField.getFieldValue(entity);
+                return idField.getValue(entity);
             }
         }
 
@@ -510,7 +507,7 @@ public class Mapper {
     }
 
     private MappedClass register(MappedClass mc) {
-        EntityModel<?> entityModel = mc.getEntityModel();
+        EntityModel entityModel = mc.getEntityModel();
         discriminatorLookup.addModel(entityModel);
         registerHierarchy(entityModel.getType(), mc);
 
@@ -593,7 +590,7 @@ public class Mapper {
         MongoCollection<?> collection = getCollection(entity.getClass());
         Document id = collection.find(new Document("_id", getMappedClass(entity.getClass())
                                                               .getIdField()
-                                                              .getFieldValue(entity)), Document.class)
+                                                              .getValue(entity)), Document.class)
                                 .first();
 
         refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());

@@ -22,6 +22,8 @@ import static java.util.Collections.singletonList;
 public class RevApiConfig extends AbstractMojo {
     @Parameter(name = "input", defaultValue = "${project.basedir}/config/revapi-input.json")
     private File input;
+    @Parameter(name = "seed", defaultValue = "${project.basedir}/config/revapi-seed.json")
+    private File seed;
     @Parameter(name = "output", defaultValue = "${project.basedir}/config/revapi.json")
     private File output;
 
@@ -31,12 +33,14 @@ public class RevApiConfig extends AbstractMojo {
 
         try {
             ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-            Map<String, List<Map<String, String>>> map = (Map<String, List<Map<String, String>>>) mapper.readValue(input,
+            Map<String, List<Map<String, String>>> inputMap = (Map<String, List<Map<String, String>>>) mapper.readValue(input,
                 LinkedHashMap.class);
+            List<Map<String, String>> seedMap = (List<Map<String, String>>) mapper.readValue(seed, ArrayList.class);
             Map config = new LinkedHashMap();
             config.put("extension", "revapi.ignore");
-            final List<Map> nodes = new ArrayList<>();
-            map.forEach((code, instances) -> {
+
+            final List<Map> nodes = new ArrayList<>(seedMap);
+            inputMap.forEach((code, instances) -> {
                 nodes.addAll(instances.stream()
                                       .map(instance -> {
                                           Map node = new LinkedHashMap();
@@ -45,8 +49,8 @@ public class RevApiConfig extends AbstractMojo {
                                           return node;
                                       })
                                       .collect(Collectors.toList()));
-                config.put("configuration", nodes);
             });
+            config.put("configuration", nodes);
 
             mapper.writer()
                   .withDefaultPrettyPrinter()

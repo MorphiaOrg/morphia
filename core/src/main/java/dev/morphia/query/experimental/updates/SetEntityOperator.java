@@ -39,7 +39,7 @@ public class SetEntityOperator extends UpdateOperator {
                 codec.encode(writer, getValue(), EncoderContext.builder().build());
 
                 Document document = writer.getDocument();
-                document.remove(mappedClass.getVersionField().getMappedFieldName());
+                document.remove(mappedClass.getVersionField().getMappedName());
                 return document;
             }
         };

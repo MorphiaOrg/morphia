@@ -25,11 +25,11 @@ import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.experimental.Constructor;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.mapping.validation.ConstraintViolationException;
@@ -140,7 +140,7 @@ public class TestMapping extends TestBase {
         Datastore datastore1 = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
         List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
-        List<MappedField> fields = map.get(0).getFields();
+        List<FieldModel> fields = map.get(0).getFields();
         validateField(fields, "_id", "id");
         validateField(fields, "embedded_values", "embeddedValues");
 
@@ -224,7 +224,7 @@ public class TestMapping extends TestBase {
         MappedClass mappedClass = mapper.getMappedClass(State.class);
         assertEquals(mappedClass.getFields()
                                 .stream()
-                                .map(MappedField::getMappedFieldName)
+                                .map(FieldModel::getMappedName)
                                 .collect(toList()), List.of("_id", "state", "biggestCity", "smallestCity"));
     }
 
@@ -722,9 +722,9 @@ public class TestMapping extends TestBase {
         assertEquals(query.first(), expected, query.toString());
     }
 
-    private void validateField(List<MappedField> fields, String mapped, String java) {
-        assertNotNull(fields.stream().filter(f -> f.getMappedFieldName().equals(mapped)
-                                                  && f.getJavaFieldName().equals(java)),
+    private void validateField(List<FieldModel> fields, String mapped, String java) {
+        assertNotNull(fields.stream().filter(f -> f.getMappedName().equals(mapped)
+                                                  && f.getName().equals(java)),
             mapped);
     }
 

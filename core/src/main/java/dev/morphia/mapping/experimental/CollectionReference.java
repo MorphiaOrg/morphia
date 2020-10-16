@@ -4,8 +4,8 @@ import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
@@ -90,7 +90,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     @Override
-    public Object encode(Mapper mapper, Object value, MappedField field) {
+    public Object encode(Mapper mapper, Object value, FieldModel field) {
         if (isResolved()) {
             List ids = new ArrayList();
             for (Object entity : get()) {

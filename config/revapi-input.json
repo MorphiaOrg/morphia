@@ -5,6 +5,12 @@
       "justification": "Driver classes should be ignored"
     }
   ],
+  "java.class.noLongerImplementsInterface": [
+    {
+      "class": "dev.morphia.mapping.InstanceCreatorFactory",
+      "justification": "internal implementation class"
+    }
+  ],
   "java.class.nonPublicPartOfAPI": [
     {
       "class": "morphia.bson.*",
@@ -19,7 +25,13 @@
   ],
   "java.class.removed": [
     {
-      "class": "class dev.morphia.aggregation.experimental.codecs.MergeCodec",
+      "class": "dev.morphia.aggregation.experimental.codecs.MergeCodec",
+      "justification": "internal implementation class"
+    }
+  ],
+  "java.class.superTypeTypeParametersChanged": [
+    {
+      "class": "dev.morphia.mapping.InstanceCreatorFactoryImpl",
       "justification": "internal implementation class"
     }
   ],
@@ -27,6 +39,10 @@
     {
       "old": "method <T extends dev.morphia.query.experimental.updates.UpdateOperator> T dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
       "new": "method void dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
+      "justification": "internal implementation"
+    },
+    {
+      "class": "dev.morphia.mapping.experimental.ConstructorCreator",
       "justification": "internal implementation"
     }
   ],
@@ -43,19 +59,77 @@
       "justification": "only used if the user doesn't want a cap applied"
     }
   ],
+  "java.method.numberOfParametersChanged": [
+    {
+      "classQualifiedName": "dev.morphia.mapping.codec.pojo.FieldModelBuilder",
+      "justification": "internal implementation"
+    }
+  ],
   "java.method.parameterTypeChanged": [
     {
       "class": "com.mongodb.*",
       "justification": "Driver classes should be ignored"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.MorphiaConvention",
+      "justification": "internal implementation"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.MorphiaDefaultsConvention",
+      "justification": "internal implementation"
+    }
+  ],
+  "java.method.parameterTypeParameterChanged": [
+    {
+      "classQualifiedName": "dev.morphia.mapping.NoArgCreator",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.DiscriminatorFunction",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.DiscriminatorLookup",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.InstanceCreatorFactory",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.InstanceCreatorFactoryImpl",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.codec.MorphiaPropertySerialization",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.MorphiaConvention",
+      "justification": "internal implementation"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.MorphiaDefaultsConvention",
+      "justification": "internal implementation"
+    },
+    {
+      "package": "dev.morphia.mapping.codec",
+      "justification": "implementation detail"
+    },
+    {
+      "package": "dev.morphia.mapping.codec.pojo",
+      "justification": "implementation detail"
+    },
+    {
+      "package": "dev.morphia.mapping.experimental",
+      "justification": "implementation detail"
+    },
+    {
+      "package": "dev.morphia.mapping.validation.classrules",
+      "justification": "implementation detail"
     }
   ],
   "java.method.removed": [
-    {
-      "class": "com.mongodb.*",
-      "justification": "Driver classes should be ignored"
-    }
-  ],
-  "java.method.visibilityReduced": [
     {
       "class": "com.mongodb.*",
       "justification": "Driver classes should be ignored"
@@ -66,6 +140,70 @@
       "old": "method <T extends dev.morphia.query.experimental.updates.UpdateOperator> T dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
       "new": "method void dev.morphia.query.experimental.updates.UpdateOperator::value(java.lang.Object)",
       "justification": "internal implementation"
+    },
+    {
+      "package": "dev.morphia.internal",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.MappedClass",
+      "justification": "internal implementation"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.Mapper",
+      "justification": "internal implementation"
+    },
+    {
+      "classQualifiedName": "dev.morphia.internal.PathTarget",
+      "justification": "internal implementation"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.NoArgCreator",
+      "justification": "implementation detail"
+    },
+    {
+      "package": "dev.morphia.mapping.codec.pojo",
+      "justification": "internal implementation"
+    }
+  ],
+  "java.method.returnTypeTypeParametersChanged": [
+    {
+      "classQualifiedName": "dev.morphia.mapping.NoArgCreator",
+      "justification": "implementation detail"
+    },
+    {
+      "package": "dev.morphia.mapping.codec",
+      "justification": "implementation detail"
+    },
+    {
+      "package": "dev.morphia.mapping.codec.pojo",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.MappedClass",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.InstanceCreatorFactory",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.InstanceCreatorFactoryImpl",
+      "justification": "implementation detail"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.Mapper",
+      "justification": "implementation detail"
+    },
+    {
+      "package": "dev.morphia.mapping.experimental",
+      "justification": "implementation detail"
+    }
+  ],
+  "java.method.visibilityReduced": [
+    {
+      "class": "com.mongodb.*",
+      "justification": "Driver classes should be ignored"
     }
   ]
 }

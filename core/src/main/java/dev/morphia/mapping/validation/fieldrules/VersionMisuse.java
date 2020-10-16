@@ -3,9 +3,9 @@ package dev.morphia.mapping.validation.fieldrules;
 
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 
@@ -30,7 +30,7 @@ public class VersionMisuse extends FieldConstraint {
     }
 
     @Override
-    protected void check(Mapper mapper, MappedClass mc, MappedField mf, Set<ConstraintViolation> ve) {
+    protected void check(Mapper mapper, MappedClass mc, FieldModel mf, Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(Version.class) && !mc.isAbstract()) {
             final Class<?> type = mf.getField().getType();
             if (Long.class.equals(type) || long.class.equals(type)) {
@@ -39,13 +39,13 @@ public class VersionMisuse extends FieldConstraint {
 
                 // check initial value
                 if (Long.class.equals(type)) {
-                    if (mf.getFieldValue(testInstance) != null) {
+                    if (mf.getValue(testInstance) != null) {
                         ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                             format("When using @%s on a Long field, it must be initialized to null.",
                                 Version.class.getSimpleName())));
                     }
                 } else if (long.class.equals(type)) {
-                    if ((Long) mf.getFieldValue(testInstance) != 0L) {
+                    if ((Long) mf.getValue(testInstance) != 0L) {
                         ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                             format("When using @%s on a long field, it must be initialized to 0.",
                                 Version.class.getSimpleName())));

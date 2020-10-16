@@ -33,26 +33,25 @@ import static java.util.Arrays.asList;
 /**
  * A model of metadata about a type
  *
- * @param <T> the entity type
  * @morphia.internal
  * @since 2.0
  */
 @SuppressWarnings("unchecked")
-public class EntityModel<T> {
+public class EntityModel {
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
         PreLoad.class,
         PostPersist.class,
         PostLoad.class);
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
-    private final Map<String, FieldModel<?>> fieldModelsByField;
-    private final Map<String, FieldModel<?>> fieldModelsByMappedName;
+    private final Map<String, FieldModel> fieldModelsByField;
+    private final Map<String, FieldModel> fieldModelsByMappedName;
     private final Datastore datastore;
-    private final InstanceCreatorFactory<T> creatorFactory;
+    private final InstanceCreatorFactory creatorFactory;
     private final boolean discriminatorEnabled;
     private final String discriminatorKey;
     private final String discriminator;
-    private final Class<T> type;
+    private final Class<?> type;
     private final String collectionName;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
 
@@ -61,7 +60,7 @@ public class EntityModel<T> {
      *
      * @param builder the builder to pull values from
      */
-    EntityModel(EntityModelBuilder<T> builder) {
+    EntityModel(EntityModelBuilder builder) {
         type = builder.getType();
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
@@ -75,7 +74,9 @@ public class EntityModel<T> {
         this.fieldModelsByField = new LinkedHashMap<>();
         this.fieldModelsByMappedName = new LinkedHashMap<>();
         builder.fieldModels().forEach(modelBuilder -> {
-            FieldModel<?> model = modelBuilder.build();
+            FieldModel model = modelBuilder
+                                      .entityModel(this)
+                                      .build();
             fieldModelsByMappedName.put(model.getMappedName(), model);
             for (String name : modelBuilder.alternateNames()) {
                 if (fieldModelsByMappedName.put(name, model) != null) {
@@ -87,7 +88,7 @@ public class EntityModel<T> {
 
         this.datastore = builder.getDatastore();
         this.collectionName = builder.getCollectionName();
-        creatorFactory = new InstanceCreatorFactoryImpl<>(this);
+        creatorFactory = new InstanceCreatorFactoryImpl(this);
     }
 
     /**
@@ -162,7 +163,7 @@ public class EntityModel<T> {
      * @param name the property name
      * @return the named FieldModel or null if it does not exist
      */
-    public FieldModel<?> getFieldModelByName(String name) {
+    public FieldModel getFieldModelByName(String name) {
         return fieldModelsByMappedName.getOrDefault(name, fieldModelsByField.get(name));
     }
 
@@ -171,21 +172,21 @@ public class EntityModel<T> {
      *
      * @return the list of fields
      */
-    public Collection<FieldModel<?>> getFieldModels() {
+    public Collection<FieldModel> getFieldModels() {
         return fieldModelsByField.values();
     }
 
     /**
      * @return the model for the id field
      */
-    public FieldModel<?> getIdModel() {
+    public FieldModel getIdModel() {
         return fieldModelsByMappedName.get("_id");
     }
 
     /**
      * @return a new InstanceCreator instance for the ClassModel
      */
-    public MorphiaInstanceCreator<T> getInstanceCreator() {
+    public MorphiaInstanceCreator getInstanceCreator() {
         return creatorFactory.create();
     }
 
@@ -193,7 +194,7 @@ public class EntityModel<T> {
      * @return thee creator factory
      * @morphia.internal
      */
-    public InstanceCreatorFactory<T> getInstanceCreatorFactory() {
+    public InstanceCreatorFactory getInstanceCreatorFactory() {
         return creatorFactory;
     }
 
@@ -226,7 +227,7 @@ public class EntityModel<T> {
     /**
      * @return the type of this model
      */
-    public Class<T> getType() {
+    public Class<?> getType() {
         return type;
     }
 
@@ -252,7 +253,7 @@ public class EntityModel<T> {
         if (!(o instanceof EntityModel)) {
             return false;
         }
-        final EntityModel<?> that = (EntityModel<?>) o;
+        final EntityModel that = (EntityModel) o;
         return discriminatorEnabled == that.discriminatorEnabled
                && Objects.equals(getAnnotations(), that.getAnnotations())
                && Objects.equals(fieldModelsByField, that.fieldModelsByField)
@@ -268,7 +269,8 @@ public class EntityModel<T> {
 
     @Override
     public String toString() {
-        String fields = fieldModelsByField.values().stream().map(f -> format("%s %s", f.getTypeData(), f.getName()))
+        String fields = fieldModelsByField.values().stream()
+                                          .map(FieldModel::toString)
                                           .collect(Collectors.joining(", "));
         return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), type.getSimpleName(), fields);
     }

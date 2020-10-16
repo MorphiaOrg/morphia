@@ -25,6 +25,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
@@ -49,16 +50,16 @@ public class MappedClass {
     /**
      * a list of the fields to map
      */
-    private final List<MappedField> fields = new ArrayList<>();
+    private final List<FieldModel> fields = new ArrayList<>();
     /**
      * the type we are mapping to/from
      */
-    private final EntityModel<?> entityModel;
+    private final EntityModel entityModel;
     private final List<MappedClass> subtypes = new ArrayList<>();
     /**
      * special fields representing the Key of the object
      */
-    private MappedField idField;
+    private FieldModel idField;
     private MappedClass superClass;
 
     /**
@@ -67,7 +68,7 @@ public class MappedClass {
      * @param entityModel the ClassModel
      * @param mapper      the Mapper to use
      */
-    public MappedClass(EntityModel<?> entityModel, Mapper mapper) {
+    public MappedClass(EntityModel entityModel, Mapper mapper) {
         this.entityModel = entityModel;
 
         discover(mapper);
@@ -156,7 +157,7 @@ public class MappedClass {
     /**
      * @return the underlying model of the type
      */
-    public EntityModel<?> getEntityModel() {
+    public EntityModel getEntityModel() {
         return entityModel;
     }
 
@@ -166,11 +167,11 @@ public class MappedClass {
      * @param clazz The Annotation to find.
      * @return the list of fields
      */
-    public List<MappedField> getFields(Class<? extends Annotation> clazz) {
-        final List<MappedField> results = new ArrayList<>();
-        for (MappedField mf : fields) {
-            if (mf.hasAnnotation(clazz)) {
-                results.add(mf);
+    public List<FieldModel> getFields(Class<? extends Annotation> clazz) {
+        final List<FieldModel> results = new ArrayList<>();
+        for (FieldModel fieldModel : fields) {
+            if (fieldModel.hasAnnotation(clazz)) {
+                results.add(fieldModel);
             }
         }
         return results;
@@ -179,14 +180,14 @@ public class MappedClass {
     /**
      * @return the fields
      */
-    public List<MappedField> getFields() {
+    public List<FieldModel> getFields() {
         return fields;
     }
 
     /**
      * @return the idField
      */
-    public MappedField getIdField() {
+    public FieldModel getIdField() {
         return idField;
     }
 
@@ -196,10 +197,10 @@ public class MappedClass {
      * @param storedName the name to search for
      * @return true if that mapped field name is found
      */
-    public MappedField getMappedField(String storedName) {
+    public FieldModel getMappedField(String storedName) {
         return fields.stream()
-                     .filter(mappedField -> mappedField.getMappedFieldName().equals(storedName)
-                                            || mappedField.getJavaFieldName().equals(storedName))
+                     .filter(mappedField -> mappedField.getMappedName().equals(storedName)
+                                            || mappedField.getName().equals(storedName))
                      .findFirst()
                      .orElse(null);
     }
@@ -210,10 +211,10 @@ public class MappedClass {
      * @param name the Java field name to search for
      * @return the MappedField for the named Java field
      */
-    public MappedField getMappedFieldByJavaField(String name) {
-        for (MappedField mf : fields) {
-            if (name.equals(mf.getJavaFieldName())) {
-                return mf;
+    public FieldModel getMappedFieldByJavaField(String name) {
+        for (FieldModel fieldModel : fields) {
+            if (name.equals(fieldModel.getName())) {
+                return fieldModel;
             }
         }
 
@@ -247,8 +248,8 @@ public class MappedClass {
     /**
      * @return the ID field for the class
      */
-    public MappedField getVersionField() {
-        List<MappedField> fields = getFields(Version.class);
+    public FieldModel getVersionField() {
+        List<FieldModel> fields = getFields(Version.class);
         return fields.isEmpty() ? null : fields.get(0);
     }
 
@@ -308,7 +309,7 @@ public class MappedClass {
      * Update mappings based on fields/annotations.
      */
     public void update() {
-        final List<MappedField> fields = getFields(Id.class);
+        final List<FieldModel> fields = getFields(Id.class);
         if (fields != null && !fields.isEmpty()) {
             idField = fields.get(0);
         }
@@ -353,8 +354,7 @@ public class MappedClass {
     }
 
     private void discoverFields() {
-        entityModel.getFieldModels().forEach(model -> {
-            final MappedField field = new MappedField(this, model);
+        entityModel.getFieldModels().forEach(field -> {
             if (!field.isTransient()) {
                 fields.add(field);
             } else {

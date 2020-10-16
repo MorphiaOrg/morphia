@@ -17,7 +17,7 @@ import java.util.Set;
 public class ConstructorParameterNameConstraint implements ClassConstraint {
     @Override
     public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
-        EntityModel<?> model = mc.getEntityModel();
+        EntityModel model = mc.getEntityModel();
         Constructor<?> fullConstructor = ConstructorCreator.getFullConstructor(model);
         if (fullConstructor != null) {
             for (Parameter parameter : fullConstructor.getParameters()) {

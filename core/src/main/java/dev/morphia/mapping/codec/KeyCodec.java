@@ -2,9 +2,9 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.Key;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonWriter;
@@ -63,9 +63,9 @@ public class KeyCodec implements Codec<Key> {
         while (idValue == null && iterator.hasNext()) {
             mappedClass = iterator.next();
             try {
-                final MappedField idField = mappedClass.getIdField();
+                final FieldModel idField = mappedClass.getIdField();
                 if (idField != null) {
-                    final Class<?> idType = idField.getTypeData().getType();
+                    final Class<?> idType = idField.getType();
                     idValue = mapper.getCodecRegistry().get(idType).decode(reader, decoderContext);
                 }
             } catch (Exception e) {

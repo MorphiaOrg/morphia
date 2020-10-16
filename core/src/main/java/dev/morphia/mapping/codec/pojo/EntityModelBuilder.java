@@ -32,23 +32,22 @@ import static morphia.org.bson.codecs.pojo.PojoSpecializationHelper.specializeTy
 /**
  * Builder for EntityModels
  *
- * @param <T> the entity type
  * @morphia.internal
  * @since 2.0
  */
 @SuppressWarnings("UnusedReturnValue")
-public class EntityModelBuilder<T> {
+public class EntityModelBuilder {
     private final Datastore datastore;
-    private final List<FieldModelBuilder<?>> fieldModels = new ArrayList<>();
-    private final Class<T> type;
+    private final List<FieldModelBuilder> fieldModels = new ArrayList<>();
+    private final Class<?> type;
     private final Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<>();
+    private final Set<Class<?>> classes = new LinkedHashSet<>();
+    private final Set<Class<?>> interfaces = new LinkedHashSet<>();
+    private final Set<Annotation> annotations = new LinkedHashSet<>();
     private boolean discriminatorEnabled;
     private String discriminator;
     private String discriminatorKey;
     private String idFieldName;
-    private final Set<Class<?>> classes = new LinkedHashSet<>();
-    private final Set<Class<?>> interfaces = new LinkedHashSet<>();
-    private final Set<Annotation> annotations = new LinkedHashSet<>();
 
     /**
      * Create a builder
@@ -56,7 +55,7 @@ public class EntityModelBuilder<T> {
      * @param datastore the datastore to use
      * @param type      the entity type
      */
-    public EntityModelBuilder(Datastore datastore, Class<T> type) {
+    public EntityModelBuilder(Datastore datastore, Class<?> type) {
         this.datastore = datastore;
         this.type = type;
 
@@ -76,7 +75,7 @@ public class EntityModelBuilder<T> {
      *
      * @param builder the field to add
      */
-    public void addModel(FieldModelBuilder<?> builder) {
+    public void addModel(FieldModelBuilder builder) {
         fieldModels.add(builder);
     }
 
@@ -92,7 +91,7 @@ public class EntityModelBuilder<T> {
      *
      * @return the new instance
      */
-    public EntityModel<T> build() {
+    public EntityModel build() {
         annotations.forEach(a -> annotationsMap.putIfAbsent(a.annotationType(), a));
 
         for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
@@ -104,7 +103,7 @@ public class EntityModelBuilder<T> {
             Objects.requireNonNull(discriminator, Sofia.notNull("discriminator"));
         }
 
-        return new EntityModel<>(this);
+        return new EntityModel(this);
     }
 
     /**
@@ -113,7 +112,7 @@ public class EntityModelBuilder<T> {
      * @param discriminator the discriminator
      * @return this
      */
-    public EntityModelBuilder<T> discriminator(String discriminator) {
+    public EntityModelBuilder discriminator(String discriminator) {
         this.discriminator = discriminator;
         return this;
     }
@@ -131,7 +130,7 @@ public class EntityModelBuilder<T> {
      * @param key the key to use
      * @return this
      */
-    public EntityModelBuilder<T> discriminatorKey(String key) {
+    public EntityModelBuilder discriminatorKey(String key) {
         discriminatorKey = key;
         return this;
     }
@@ -149,7 +148,7 @@ public class EntityModelBuilder<T> {
      * @param enabled true to enable the use of a discriminator
      * @return this
      */
-    public EntityModelBuilder<T> enableDiscriminator(boolean enabled) {
+    public EntityModelBuilder enableDiscriminator(boolean enabled) {
         this.discriminatorEnabled = enabled;
         return this;
     }
@@ -161,8 +160,8 @@ public class EntityModelBuilder<T> {
      * @return the field
      * @throws NoSuchElementException if no value is present
      */
-    public FieldModelBuilder<?> fieldModelByFieldName(String name) throws NoSuchElementException {
-        return fieldModels.stream().filter(f -> f.getField().getName().equals(name))
+    public FieldModelBuilder fieldModelByFieldName(String name) throws NoSuchElementException {
+        return fieldModels.stream().filter(f -> f.field().getName().equals(name))
                           .findFirst()
                           .orElseThrow();
     }
@@ -170,7 +169,7 @@ public class EntityModelBuilder<T> {
     /**
      * @return the fields on this model
      */
-    public List<FieldModelBuilder<?>> fieldModels() {
+    public List<FieldModelBuilder> fieldModels() {
         return fieldModels;
     }
 
@@ -189,7 +188,7 @@ public class EntityModelBuilder<T> {
      *
      * @return the type
      */
-    public Class<T> getType() {
+    public Class<?> getType() {
         return type;
     }
 
@@ -219,7 +218,7 @@ public class EntityModelBuilder<T> {
      * @param name the name
      * @return this
      */
-    public EntityModelBuilder<T> idFieldName(String name) {
+    public EntityModelBuilder idFieldName(String name) {
         this.idFieldName = name;
         return this;
     }
@@ -274,7 +273,7 @@ public class EntityModelBuilder<T> {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private String getMappedFieldName(FieldModelBuilder<?> fieldBuilder) {
+    private String getMappedFieldName(FieldModelBuilder fieldBuilder) {
         MapperOptions options = datastore.getMapper().getOptions();
         if (fieldBuilder.hasAnnotation(Id.class)) {
             return "_id";
@@ -295,7 +294,7 @@ public class EntityModelBuilder<T> {
             }
         }
 
-        return options.getFieldNaming().apply(fieldBuilder.getName());
+        return options.getFieldNaming().apply(fieldBuilder.name());
     }
 
     private TypeParameterMap getTypeParameterMap(List<String> genericTypeNames, Type propertyType) {
@@ -344,17 +343,17 @@ public class EntityModelBuilder<T> {
         return genericTypeNames;
     }
 
-    <F> FieldModelBuilder<F> createFieldModelBuilder(FieldMetadata<F> fieldMetadata) {
-        FieldModelBuilder<F> fieldModelBuilder = FieldModel.<F>builder()
-                                                     .field(fieldMetadata.getField())
-                                                     .fieldName(fieldMetadata.getName())
-                                                     .typeData(fieldMetadata.getTypeData())
-                                                     .annotations(fieldMetadata.getAnnotations());
+    FieldModelBuilder createFieldModelBuilder(FieldMetadata<?> fieldMetadata) {
+        FieldModelBuilder fieldModelBuilder = FieldModel.builder()
+                                                        .field(fieldMetadata.getField())
+                                                        .fieldName(fieldMetadata.getName())
+                                                        .typeData(fieldMetadata.getTypeData())
+                                                        .annotations(fieldMetadata.getAnnotations());
 
         fieldModelBuilder.mappedName(getMappedFieldName(fieldModelBuilder));
 
         if (fieldMetadata.getTypeParameters() != null) {
-            fieldModelBuilder.typeData(specializeTypeData(fieldModelBuilder.getTypeData(), fieldMetadata.getTypeParameters(),
+            fieldModelBuilder.typeData(specializeTypeData(fieldModelBuilder.typeData(), fieldMetadata.getTypeParameters(),
                 fieldMetadata.getTypeParameterMap()));
         }
 

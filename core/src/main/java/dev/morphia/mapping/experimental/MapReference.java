@@ -4,8 +4,8 @@ import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import org.bson.Document;
 
@@ -66,7 +66,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * @param document    the Document to decode
      * @return the entities
      */
-    public static MapReference decode(Datastore datastore, Mapper mapper, MappedField mappedField,
+    public static MapReference decode(Datastore datastore, Mapper mapper, FieldModel mappedField,
                                       Document document) {
         final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
 
@@ -104,7 +104,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * {@inheritDoc}
      */
     @Override
-    public Object encode(Mapper mapper, Object value, MappedField field) {
+    public Object encode(Mapper mapper, Object value, FieldModel field) {
         if (isResolved()) {
             Map<String, Object> ids = new LinkedHashMap<>();
             for (Entry<Object, T> entry : get().entrySet()) {

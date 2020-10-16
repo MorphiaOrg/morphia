@@ -6,30 +6,29 @@ import dev.morphia.mapping.experimental.ConstructorCreator;
 import dev.morphia.sofia.Sofia;
 
 /**
- * @param <T>
  * @morphia.internal
  */
-public class InstanceCreatorFactoryImpl<T> implements InstanceCreatorFactory<T> {
-    private final EntityModel<T> model;
+public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
+    private final EntityModel model;
 
     /**
      * Creates a factory for this type
      *
      * @param model the type's model
      */
-    public InstanceCreatorFactoryImpl(EntityModel<T> model) {
+    public InstanceCreatorFactoryImpl(EntityModel model) {
         this.model = model;
     }
 
     @Override
-    public MorphiaInstanceCreator<T> create() {
+    public MorphiaInstanceCreator create() {
         if (!model.getType().isInterface()) {
             if (ConstructorCreator.getFullConstructor(model) != null) {
-                return new ConstructorCreator<>(model);
+                return new ConstructorCreator(model);
             }
 
             try {
-                return new NoArgCreator<>(model.getType().getDeclaredConstructor());
+                return new NoArgCreator(model.getType().getDeclaredConstructor());
             } catch (NoSuchMethodException e) {
                 throw new MappingException(Sofia.noargConstructorNotFound(model.getType().getName()));
 

@@ -40,8 +40,8 @@ public final class DiscriminatorLookup {
      * @param entityModels the models to map
      * @param packages     the packages to search
      */
-    public DiscriminatorLookup(Map<Class<?>, EntityModel<?>> entityModels, Set<String> packages) {
-        for (EntityModel<?> entityModel : entityModels.values()) {
+    public DiscriminatorLookup(Map<Class<?>, EntityModel> entityModels, Set<String> packages) {
+        for (EntityModel entityModel : entityModels.values()) {
             if (entityModel.getDiscriminator() != null) {
                 discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
             }
@@ -54,7 +54,7 @@ public final class DiscriminatorLookup {
      *
      * @param entityModel the model
      */
-    public void addModel(EntityModel<?> entityModel) {
+    public void addModel(EntityModel entityModel) {
         if (entityModel.getDiscriminator() != null) {
             discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
         }

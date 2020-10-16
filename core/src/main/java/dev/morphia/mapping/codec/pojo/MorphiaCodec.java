@@ -3,7 +3,6 @@ package dev.morphia.mapping.codec.pojo;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import org.bson.BsonReader;
@@ -31,15 +30,16 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * @morphia.internal
  * @since 2.0
  */
+@SuppressWarnings("unchecked")
 public class MorphiaCodec<T> implements CollectibleCodec<T> {
-    private final MappedField idField;
+    private final FieldModel idField;
     private final Mapper mapper;
-    private final EntityModel<T> entityModel;
+    private final EntityModel entityModel;
     private final MappedClass mappedClass;
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
-    private final EntityEncoder<T> encoder = new EntityEncoder<>(this);
+    private final EntityEncoder encoder = new EntityEncoder(this);
 
     /**
      * Creates a new codec
@@ -50,7 +50,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @param registry               the codec registry for lookups
      * @param discriminatorLookup    the discriminator to type lookup
      */
-    @SuppressWarnings("unchecked")
     public MorphiaCodec(Datastore datastore, MappedClass mappedClass,
                         List<PropertyCodecProvider> propertyCodecProviders,
                         DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
@@ -58,7 +57,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         this.mapper = datastore.getMapper();
         this.discriminatorLookup = discriminatorLookup;
 
-        this.entityModel = (EntityModel<T>) mappedClass.getEntityModel();
+        this.entityModel = mappedClass.getEntityModel();
         this.registry = fromRegistries(fromCodecs(this), registry);
         this.propertyCodecRegistry = new PropertyCodecRegistryImpl(this, registry, propertyCodecProviders);
         idField = mappedClass.getIdField();
@@ -67,13 +66,13 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
-        return getDecoder().decode(reader, decoderContext);
+        return (T) getDecoder().decode(reader, decoderContext);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void specializePropertyCodecs() {
-        EntityModel<T> entityModel = getEntityModel();
-        for (FieldModel<?> fieldModel : entityModel.getFieldModels()) {
+        EntityModel entityModel = getEntityModel();
+        for (FieldModel fieldModel : entityModel.getFieldModels()) {
             Codec codec = fieldModel.getCodec() != null ? fieldModel.getCodec()
                                                         : propertyCodecRegistry.get(fieldModel.getTypeData());
             fieldModel.cachedCodec(codec);
@@ -83,40 +82,40 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     /**
      * @return the entity model backing this codec
      */
-    public EntityModel<T> getEntityModel() {
+    public EntityModel getEntityModel() {
         return entityModel;
     }
 
-    protected EntityDecoder<T> getDecoder() {
-        return new EntityDecoder<>(this);
+    protected EntityDecoder getDecoder() {
+        return new EntityDecoder(this);
     }
 
     @Override
-    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
         encoder.encode(writer, value, encoderContext);
     }
 
     @Override
-    public Class<T> getEncoderClass() {
+    @SuppressWarnings("rawtypes")
+    public Class getEncoderClass() {
         return getEntityModel().getType();
     }
 
     @Override
-    public T generateIdIfAbsentFromDocument(T entity) {
+    public Object generateIdIfAbsentFromDocument(Object entity) {
         if (!documentHasId(entity)) {
-            idField.setFieldValue(entity, convert(new ObjectId(), idField.getType()));
+            idField.setValue(entity, convert(new ObjectId(), idField.getType()));
         }
         return entity;
     }
 
     @Override
-    public boolean documentHasId(T entity) {
-        return mappedClass.getIdField().getFieldValue(entity) != null;
+    public boolean documentHasId(Object entity) {
+        return mappedClass.getIdField().getValue(entity) != null;
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public BsonValue getDocumentId(T document) {
+    public BsonValue getDocumentId(Object document) {
         throw new UnsupportedOperationException("is this even necessary?");
 /*
         final Object id = mappedClass.getIdField().getFieldValue(document);

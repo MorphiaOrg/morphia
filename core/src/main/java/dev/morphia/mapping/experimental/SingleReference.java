@@ -3,8 +3,8 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.DBRef;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.Query;
 import dev.morphia.sofia.Sofia;
@@ -36,7 +36,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
         this.id = id;
         if (mappedClass.getType().isInstance(id)) {
             value = (T) id;
-            this.id = mappedClass.getIdField().getFieldValue(value);
+            this.id = mappedClass.getIdField().getValue(value);
             resolve();
         }
 
@@ -58,12 +58,12 @@ public class SingleReference<T> extends MorphiaReference<T> {
      */
     public static MorphiaReference<?> decode(Datastore datastore,
                                              Mapper mapper,
-                                             MappedField mappedField,
-                                             Class paramType, Document document) {
+                                             FieldModel mappedField,
+                                             Class<?> paramType, Document document) {
         final MappedClass mappedClass = mapper.getMappedClass(paramType);
-        Object id = document.get(mappedField.getMappedFieldName());
+        Object id = document.get(mappedField.getMappedName());
 
-        return new SingleReference(datastore, mappedClass, id);
+        return new SingleReference<>(datastore, mappedClass, id);
     }
 
     MappedClass getMappedClass(Mapper mapper) {
@@ -117,7 +117,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     Object getId(Mapper mapper, Datastore datastore, MappedClass fieldClass) {
         if (id == null) {
             MappedClass mappedClass = getMappedClass(mapper);
-            id = mappedClass.getIdField().getFieldValue(get());
+            id = mappedClass.getIdField().getValue(get());
             if (!mappedClass.equals(fieldClass)) {
                 id = new DBRef(mappedClass.getCollectionName(), id);
             }
@@ -126,7 +126,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    public Object encode(Mapper mapper, Object value, MappedField optionalExtraInfo) {
+    public Object encode(Mapper mapper, Object value, FieldModel optionalExtraInfo) {
         if (isResolved()) {
             return wrapId(mapper, optionalExtraInfo, get());
         } else {

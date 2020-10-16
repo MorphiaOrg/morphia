@@ -4,8 +4,8 @@ import com.mongodb.DBRef;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Handler;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,7 @@ public abstract class MorphiaReference<T> {
         this.datastore = datastore;
     }
 
-    static Object wrapId(Mapper mapper, MappedField field, Object entity) {
+    static Object wrapId(Mapper mapper, FieldModel field, Object entity) {
         Object id = mapper.getId(entity);
         mapper.getMappedClass(entity.getClass());
         Object encoded = id;
@@ -110,7 +110,7 @@ public abstract class MorphiaReference<T> {
      * @return the encoded vale
      * @morphia.internal
      */
-    public abstract Object encode(Mapper mapper, Object value, MappedField optionalExtraInfo);
+    public abstract Object encode(Mapper mapper, Object value, FieldModel optionalExtraInfo);
 
     protected void resolve() {
         resolved = true;

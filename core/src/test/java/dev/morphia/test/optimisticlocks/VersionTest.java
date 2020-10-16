@@ -5,7 +5,7 @@ import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
-import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -146,8 +146,8 @@ public class VersionTest extends TestBase {
 
     @Test
     public void testVersionFieldNameContribution() {
-        final MappedField mappedFieldByJavaField = getMapper().getMappedClass(NamedVersion.class).getMappedFieldByJavaField("v");
-        assertEquals(mappedFieldByJavaField.getMappedFieldName(), "v");
+        final FieldModel mappedFieldByJavaField = getMapper().getMappedClass(NamedVersion.class).getMappedFieldByJavaField("v");
+        assertEquals(mappedFieldByJavaField.getMappedName(), "v");
     }
 
     @Test

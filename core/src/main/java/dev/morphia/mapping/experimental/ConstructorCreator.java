@@ -17,13 +17,11 @@ import java.util.function.BiFunction;
  * Defines a Creator that uses a full constructor to create an instance rather than field injection.  This requires that a class have a
  * constructor that accepts a parameter for each mapped field on the class.
  *
- * @param <T> the model type
  * @morphia.internal
  */
-@SuppressWarnings("unchecked")
-public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
+public class ConstructorCreator implements MorphiaInstanceCreator {
     private final Object[] parameters;
-    private final Constructor<T> constructor;
+    private final Constructor<?> constructor;
     private final EntityModel model;
     private final Map<String, BiFunction<Object[], Object, Void>> positions = new LinkedHashMap<>();
 
@@ -60,15 +58,14 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
 
     /**
      * @param model the model to check
-     * @param <T>   the model type
      * @return the constructor taking all fields if it exists
      * @morphia.internal
      */
-    public static <T> Constructor<T> getFullConstructor(EntityModel<T> model) {
+    public static Constructor<?> getFullConstructor(EntityModel model) {
         for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
             if (constructor.getParameterCount() == model.getFieldModels().size()
                 && constructor.getAnnotation(dev.morphia.annotations.experimental.Constructor.class) != null) {
-                return (Constructor<T>) constructor;
+                return constructor;
             }
         }
         return null;
@@ -85,12 +82,12 @@ public class ConstructorCreator<T> implements MorphiaInstanceCreator<T> {
     }
 
     @Override
-    public <S> void set(S value, FieldModel<S> model) {
+    public void set(Object value, FieldModel model) {
         positions.get(model.getName()).apply(parameters, value);
     }
 
     @Override
-    public T getInstance() {
+    public Object getInstance() {
         try {
             return constructor.newInstance(parameters);
         } catch (ReflectiveOperationException e) {

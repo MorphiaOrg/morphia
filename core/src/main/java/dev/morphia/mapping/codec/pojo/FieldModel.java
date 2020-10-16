@@ -49,37 +49,36 @@ import static java.util.Arrays.asList;
 /**
  * Represents a field on a class and stores various metadata such as generic parameters.
  *
- * @param <T> the type of the field that the FieldModel represents.
  * @morphia.internal
  * @since 2.0
  */
-public final class FieldModel<T> {
+public final class FieldModel {
     private final Field field;
     private final String name;
-    private final TypeData<T> typeData;
+    private final TypeData<?> typeData;
     private final String mappedName;
-    private final Codec<T> codec;
-    private final PropertyAccessor<T> accessor;
-    private final PropertySerialization<T> serialization;
+    private final Codec<? super Object> codec;
+    private final PropertyAccessor<? super Object> accessor;
+    private final PropertySerialization<? super Object> serialization;
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
-    private volatile Codec<T> cachedCodec;
-    private Class<?> normalizedType;
     private final List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
+    private final EntityModel entityModel;
+    private volatile Codec<? super Object> cachedCodec;
+    private Class<?> normalizedType;
 
-    FieldModel(Field field, String name, String mappedName, TypeData<T> typeData,
-               List<Annotation> annotations, Codec<T> codec, PropertyAccessor<T> accessor,
-               PropertySerialization<T> serialization) {
-        this.field = Objects.requireNonNull(field, Sofia.notNull("field"));
-        this.name = Objects.requireNonNull(name, Sofia.notNull("name"));
-        this.mappedName = Objects.requireNonNull(mappedName, Sofia.notNull("name"));
-        this.typeData = Objects.requireNonNull(typeData, Sofia.notNull("typeData"));
-        this.codec = codec;
-        this.cachedCodec = codec;
-        this.accessor = accessor;
-        this.serialization = serialization;
+    FieldModel(FieldModelBuilder builder) {
+        entityModel = builder.entityModel();
+        field = Objects.requireNonNull(builder.field(), Sofia.notNull("field"));
+        name = Objects.requireNonNull(builder.name(), Sofia.notNull("name"));
+        mappedName = Objects.requireNonNull(builder.mappedName(), Sofia.notNull("name"));
+        typeData = Objects.requireNonNull(builder.typeData(), Sofia.notNull("typeData"));
+        codec = builder.codec();
+        cachedCodec = codec;
+        accessor = builder.accessor();
+        serialization = builder.serialization();
 
-        this.field.setAccessible(true);
-        annotations.forEach(ann -> annotationMap.put(ann.annotationType(), ann));
+        field.setAccessible(true);
+        builder.annotations().forEach(ann -> annotationMap.put(ann.annotationType(), ann));
 
         List<String> result;
         final AlsoLoad al = getAnnotation(AlsoLoad.class);
@@ -97,11 +96,10 @@ public final class FieldModel<T> {
     /**
      * Create a new {@link FieldModelBuilder}
      *
-     * @param <T> the type of the field
      * @return the builder
      */
-    public static <T> FieldModelBuilder<T> builder() {
-        return new FieldModelBuilder<>();
+    public static FieldModelBuilder builder() {
+        return new FieldModelBuilder();
     }
 
     /**
@@ -128,7 +126,7 @@ public final class FieldModel<T> {
     /**
      * @return the accessor to use when accessing this field
      */
-    public PropertyAccessor<T> getAccessor() {
+    public PropertyAccessor<? super Object> getAccessor() {
         return accessor;
     }
 
@@ -146,14 +144,14 @@ public final class FieldModel<T> {
     /**
      * @return the cached codec
      */
-    public Codec<T> getCachedCodec() {
+    public Codec<? super Object> getCachedCodec() {
         return cachedCodec;
     }
 
     /**
      * @return the custom codec to use if set or null
      */
-    public Codec<T> getCodec() {
+    public Codec<?> getCodec() {
         return codec;
     }
 
@@ -163,6 +161,14 @@ public final class FieldModel<T> {
      */
     public Object getDocumentValue(Document document) {
         return document.get(loadFromDocument(document));
+    }
+
+    /**
+     * @return the entity model owner of this field
+     * @since 2.1
+     */
+    public EntityModel getEntityModel() {
+        return entityModel;
     }
 
     /**
@@ -231,6 +237,9 @@ public final class FieldModel<T> {
         return specializedType;
     }
 
+    /**
+     * @return the type of this field
+     */
     public Class<?> getType() {
         return getTypeData().getType();
     }
@@ -238,7 +247,7 @@ public final class FieldModel<T> {
     /**
      * @return the type data for the field
      */
-    public TypeData<T> getTypeData() {
+    public TypeData<?> getTypeData() {
         return typeData;
     }
 
@@ -284,7 +293,7 @@ public final class FieldModel<T> {
         if (!(o instanceof FieldModel)) {
             return false;
         }
-        final FieldModel<?> that = (FieldModel<?>) o;
+        final FieldModel that = (FieldModel) o;
         return getField().equals(that.getField())
                && getName().equals(that.getName())
                && getTypeData().equals(that.getTypeData())
@@ -366,7 +375,7 @@ public final class FieldModel<T> {
      * @param instance the instance to update
      * @param value    the value to set
      */
-    public void setFieldValue(Object instance, Object value) {
+    public void setValue(Object instance, Object value) {
         try {
             final Field field = getField();
             field.set(instance, Conversions.convert(value, field.getType()));
@@ -381,7 +390,7 @@ public final class FieldModel<T> {
      * @param value the value to check
      * @return true if the given value should be serialized
      */
-    public boolean shouldSerialize(T value) {
+    public boolean shouldSerialize(Object value) {
         return serialization.shouldSerialize(value);
     }
 
@@ -403,7 +412,7 @@ public final class FieldModel<T> {
         return null;
     }
 
-    void cachedCodec(Codec<T> codec) {
+    void cachedCodec(Codec<? super Object> codec) {
         this.cachedCodec = codec;
     }
 

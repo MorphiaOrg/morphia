@@ -43,10 +43,10 @@ public class MorphiaCodecProvider implements CodecProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> MorphiaCodec<T> get(Class<T> type, CodecRegistry registry) {
-        MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
+    public <T> MorphiaCodec get(Class<T> type, CodecRegistry registry) {
+        MorphiaCodec codec = (MorphiaCodec) codecs.get(type);
         if (codec == null && mapper.isMappable(type)) {
-            codec = new MorphiaCodec<>(datastore, mapper.getMappedClass(type), propertyCodecProviders,
+            codec = new MorphiaCodec(datastore, mapper.getMappedClass(type), propertyCodecProviders,
                 mapper.getDiscriminatorLookup(), registry);
             codecs.put(type, codec);
         }
@@ -66,18 +66,18 @@ public class MorphiaCodecProvider implements CodecProvider {
         MappedClass mappedClass = mapper.getMappedClass(entity.getClass());
         return new MorphiaCodec<>(datastore, mappedClass, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
             @Override
-            protected EntityDecoder<T> getDecoder() {
-                return new EntityDecoder<>(this) {
+            protected EntityDecoder getDecoder() {
+                return new EntityDecoder(this) {
                     @Override
-                    protected MorphiaInstanceCreator<T> getInstanceCreator(EntityModel<T> classModel) {
-                        return new MorphiaInstanceCreator<>() {
+                    protected MorphiaInstanceCreator getInstanceCreator(EntityModel classModel) {
+                        return new MorphiaInstanceCreator() {
                             @Override
                             public T getInstance() {
                                 return entity;
                             }
 
                             @Override
-                            public <S> void set(S value, FieldModel<S> model) {
+                            public void set(Object value, FieldModel model) {
                                 model.getAccessor().set(getInstance(), value);
                             }
                         };

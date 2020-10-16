@@ -7,29 +7,28 @@ import dev.morphia.sofia.Sofia;
 import java.lang.reflect.Constructor;
 
 /**
- * @param <E>
  * @morphia.internal
  */
-public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
-    private E instance;
-    private final Constructor<E> noArgsConstructor;
+public class NoArgCreator implements MorphiaInstanceCreator {
+    private Object instance;
+    private final Constructor<?> noArgsConstructor;
 
     /**
      * Creates the creator
      *
      * @param noArgsConstructor the constructor
      */
-    public NoArgCreator(Constructor<E> noArgsConstructor) {
+    public NoArgCreator(Constructor<?> noArgsConstructor) {
         this.noArgsConstructor = noArgsConstructor;
         this.noArgsConstructor.setAccessible(true);
     }
 
     @Override
-    public <S> void set(S value, FieldModel<S> model) {
+    public void set(Object value, FieldModel model) {
         model.getAccessor().set(instance(), value);
     }
 
-    private E instance() {
+    private Object instance() {
         if (instance == null) {
             try {
                 instance = noArgsConstructor.newInstance();
@@ -41,7 +40,7 @@ public class NoArgCreator<E> implements MorphiaInstanceCreator<E> {
     }
 
     @Override
-    public E getInstance() {
+    public Object getInstance() {
         return instance();
     }
 }

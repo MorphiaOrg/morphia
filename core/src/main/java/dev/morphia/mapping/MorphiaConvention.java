@@ -13,5 +13,5 @@ public interface MorphiaConvention {
      * @param datastore the datastore to use
      * @param builder   the builder to apply the convention to
      */
-    void apply(Datastore datastore, EntityModelBuilder<?> builder);
+    void apply(Datastore datastore, EntityModelBuilder builder);
 }

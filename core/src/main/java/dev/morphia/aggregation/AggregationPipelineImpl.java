@@ -6,8 +6,8 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UnwindOptions;
 import dev.morphia.Datastore;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
 import dev.morphia.query.Query;
@@ -303,8 +303,8 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     private Document toDocument(Projection projection) {
         String target;
         if (firstStage) {
-            MappedField field = mapper.getMappedClass(source).getMappedField(projection.getTarget());
-            target = field != null ? field.getMappedFieldName() : projection.getTarget();
+            FieldModel field = mapper.getMappedClass(source).getMappedField(projection.getTarget());
+            target = field != null ? field.getMappedName() : projection.getTarget();
         } else {
             target = projection.getTarget();
         }

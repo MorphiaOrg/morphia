@@ -1,7 +1,7 @@
 package dev.morphia;
 
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import org.bson.BsonDocument;
 import org.bson.Document;
@@ -37,9 +37,9 @@ public class UpdateDocument implements Bson {
 
         Document document = writer.getDocument();
         document.remove("_id");
-        MappedField versionField = codec.getMappedClass().getVersionField();
+        FieldModel versionField = codec.getMappedClass().getVersionField();
         if (versionField != null) {
-            document.remove(versionField.getMappedFieldName());
+            document.remove(versionField.getMappedName());
         }
         return document.toBsonDocument(Document.class, codecRegistry);
     }

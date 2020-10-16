@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.pojo.FieldModel;
@@ -56,13 +55,12 @@ public class OperationTarget {
         if (target == null) {
             return value;
         }
-        MappedField mappedField = this.target.getTarget();
+        FieldModel mappedField = this.target.getTarget();
         Object mappedValue = value;
 
-        FieldModel<?> model = mappedField != null
-                              ? mappedField.getDeclaringClass()
-                                           .getEntityModel()
-                                           .getFieldModelByName(mappedField.getJavaFieldName())
+        FieldModel model = mappedField != null
+                              ? mappedField.getEntityModel()
+                                           .getFieldModelByName(mappedField.getName())
                               : null;
 
         Codec cachedCodec = model != null && !(mappedValue instanceof LegacyQuery)

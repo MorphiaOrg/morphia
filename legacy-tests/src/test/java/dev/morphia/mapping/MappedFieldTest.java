@@ -5,6 +5,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -18,6 +19,7 @@ import java.util.Map;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class MappedFieldTest extends TestBase {
@@ -31,69 +33,68 @@ public class MappedFieldTest extends TestBase {
     }
     @Test
     public void arrayFieldMapping() {
-        final MappedField field = getMappedField("arrayOfInt");
+        final FieldModel field = getMappedField("arrayOfInt");
 
         assertFalse(field.isScalarValue());
         assertTrue(field.isMultipleValues());
         assertTrue(field.isArray());
         assertTrue(field.getType().isArray());
-        assertEquals("arrayOfInt", field.getJavaFieldName());
-        assertEquals("arrayOfInt", field.getMappedFieldName());
+        assertEquals("arrayOfInt", field.getName());
+        assertEquals("arrayOfInt", field.getMappedName());
     }
 
-    private MappedField getMappedField(String name) {
+    private FieldModel getMappedField(String name) {
         return mappedClass.getMappedField(name);
     }
 
     @Test
     public void basicFieldMapping() {
-        final MappedField field = getMappedField("name");
+        final FieldModel field = getMappedField("name");
 
         assertTrue(field.isScalarValue());
-        assertTrue(String.class == field.getType());
-        assertEquals("name", field.getJavaFieldName());
-        assertEquals("n", field.getMappedFieldName());
+        assertSame(String.class, field.getType());
+        assertEquals("name", field.getName());
+        assertEquals("n", field.getMappedName());
     }
 
     @Test
     public void collectionFieldMapping() {
-        final MappedField field = getMappedField("listOfString");
+        final FieldModel field = getMappedField("listOfString");
 
         assertFalse(field.isScalarValue());
         assertTrue(field.isMultipleValues());
         assertFalse(field.isArray());
-        assertTrue(List.class == field.getType());
-        assertTrue(String.class == field.getNormalizedType());
-        assertEquals("listOfString", field.getJavaFieldName());
-        assertEquals("listOfString", field.getMappedFieldName());
+        assertSame(List.class, field.getType());
+        assertSame(String.class, field.getNormalizedType());
+        assertEquals("listOfString", field.getName());
+        assertEquals("listOfString", field.getMappedName());
     }
 
     @Test
     public void idFieldMapping() {
-        final MappedField field = getMappedField("id");
+        final FieldModel field = getMappedField("id");
 
         assertTrue(field.isScalarValue());
-        assertTrue(ObjectId.class == field.getType());
-        assertEquals("id", field.getJavaFieldName());
-        assertEquals("_id", field.getMappedFieldName());
+        assertSame(ObjectId.class, field.getType());
+        assertEquals("id", field.getName());
+        assertEquals("_id", field.getMappedName());
     }
 
     @Test
     public void nestedCollectionsMapping() {
-        final MappedField field = getMappedField("listOfListOfString");
+        final FieldModel field = getMappedField("listOfListOfString");
 
         assertFalse(field.isScalarValue());
         assertTrue(field.isMultipleValues());
         assertFalse(field.isArray());
-        assertTrue(List.class == field.getType());
+        assertSame(List.class, field.getType());
 
         final TypeData<?> typeData = field.getTypeData();
-        final Class<?> typeParameter = typeData.getType();
-        assertTrue(List.class == typeData.getType());
+        assertSame(List.class, typeData.getType());
 
         assertEquals(String.class, typeData.getTypeParameters().get(0).getTypeParameters().get(0).getType());
-        assertEquals("listOfListOfString", field.getJavaFieldName());
-        assertEquals("listOfListOfString", field.getMappedFieldName());
+        assertEquals("listOfListOfString", field.getName());
+        assertEquals("listOfListOfString", field.getMappedName());
 
         final List<List<String>> list = new ArrayList<>();
         list.add(dbList("a", "b", "c"));

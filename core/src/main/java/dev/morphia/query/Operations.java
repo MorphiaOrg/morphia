@@ -3,8 +3,8 @@ package dev.morphia.query;
 import dev.morphia.UpdateDocument;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
@@ -47,15 +47,15 @@ class Operations {
     }
 
     protected void versionUpdate() {
-        MappedField versionField = mappedClass.getVersionField();
+        FieldModel versionField = mappedClass.getVersionField();
         if (versionField != null) {
             List<OperationTarget> operationTargets = ops.get("$inc");
-            String version = versionField.getMappedFieldName();
+            String version = versionField.getMappedName();
             boolean already = operationTargets != null
                               && operationTargets.stream()
                                                  .anyMatch(tv -> tv.getTarget().translatedPath().equals(version));
             if (!already) {
-                add("$inc", new OperationTarget(new PathTarget(mapper, mappedClass, versionField.getJavaFieldName()), 1L));
+                add("$inc", new OperationTarget(new PathTarget(mapper, mappedClass, versionField.getName()), 1L));
             }
         }
     }
