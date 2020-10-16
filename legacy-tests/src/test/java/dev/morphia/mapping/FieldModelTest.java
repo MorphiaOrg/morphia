@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-public class MappedFieldTest extends TestBase {
+public class FieldModelTest extends TestBase {
 
     private MappedClass mappedClass;
 
@@ -31,6 +31,7 @@ public class MappedFieldTest extends TestBase {
         getMapper().map(List.of(TestEntity.class));
         mappedClass = getMapper().getMappedClass(TestEntity.class);
     }
+
     @Test
     public void arrayFieldMapping() {
         final FieldModel field = getMappedField("arrayOfInt");
