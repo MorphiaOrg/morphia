@@ -374,10 +374,10 @@ public class TestQuery extends TestBase {
             String result = d.toJson(getDatabase().getCodecRegistry().get(Document.class));
             if (comment != null) {
                 assertEquals(result, expectedComment, comment);
-            } else {
-                System.out.println("Not found in message: " + result);
+                found.set(true);
             }
         });
+        Assert.assertTrue("Should have found the comment", found.get());
     }
 
     @Test
