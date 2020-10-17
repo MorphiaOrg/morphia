@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Getting Started on Morphia</title>
+    <link>/2.0.2/getting-started/</link>
+    <description>Recent content in Getting Started on Morphia</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
+    
+	<atom:link href="/2.0.2/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Migrating to 2.0</title>
+      <link>/2.0.2/getting-started/migration/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/2.0.2/getting-started/migration/</guid>
+      <description>These are the major goals of the 2.0 release:
+ Modernization of the implementation Clean up and modernization of the API Attempt to make the API more self-consistent.  This release aims to make the API smaller, lighter, and more fluent. The pre-2.0 deprecations are being removed and new deprecations added to further improve the API and the developer experience. As such there are a few things to note when upgrading.</description>
+    </item>
+    
+    <item>
+      <title>Quick Tour</title>
+      <link>/2.0.2/getting-started/quick-tour/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/2.0.2/getting-started/quick-tour/</guid>
+      <description>Morphia wraps the MongoDB Java driver so some level of familiarity with using the driver can be helpful. Morphia does its best to abstract much of that away but if something is confusing, please consult the Java driver documentation as well.
+The following code snippets come from the QuickTour.java example code that can be found with the Morphia source.
+Setting up Morphia The following example shows how to create the initial Morphia instance.</description>
+    </item>
+    
+  </channel>
+</rss>
