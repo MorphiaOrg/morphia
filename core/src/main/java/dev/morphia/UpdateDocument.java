@@ -37,7 +37,7 @@ public class UpdateDocument implements Bson {
 
         Document document = writer.getDocument();
         document.remove("_id");
-        FieldModel versionField = codec.getMappedClass().getVersionField();
+        FieldModel versionField = codec.getEntityModel().getVersionField();
         if (versionField != null) {
             document.remove(versionField.getMappedName());
         }

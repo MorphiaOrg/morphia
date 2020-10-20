@@ -146,7 +146,7 @@ public class VersionTest extends TestBase {
 
     @Test
     public void testVersionFieldNameContribution() {
-        final FieldModel mappedFieldByJavaField = getMapper().getMappedClass(NamedVersion.class).getMappedFieldByJavaField("v");
+        final FieldModel mappedFieldByJavaField = getMapper().getEntityModel(NamedVersion.class).getField("v");
         assertEquals(mappedFieldByJavaField.getMappedName(), "v");
     }
 

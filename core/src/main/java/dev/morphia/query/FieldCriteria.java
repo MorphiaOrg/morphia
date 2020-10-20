@@ -2,8 +2,8 @@ package dev.morphia.query;
 
 
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
 
 import java.util.HashMap;
@@ -21,15 +21,14 @@ class FieldCriteria extends AbstractCriteria {
     private final boolean not;
     private final Mapper mapper;
 
-    FieldCriteria(Mapper mapper, String field, FilterOperator op, Object value, MappedClass mappedClass,
+    FieldCriteria(Mapper mapper, String field, FilterOperator op, Object value, EntityModel model,
                   boolean validating) {
-        this(mapper, field, op, value, false, mappedClass, validating);
+        this(mapper, field, op, value, false, model, validating);
     }
 
-    FieldCriteria(Mapper mapper, String fieldName, FilterOperator op, Object value,
-                  boolean not, MappedClass mappedClass, boolean validating) {
+    FieldCriteria(Mapper mapper, String fieldName, FilterOperator op, Object value, boolean not, EntityModel model, boolean validating) {
         this.mapper = mapper;
-        final PathTarget pathTarget = new PathTarget(mapper, mappedClass,
+        final PathTarget pathTarget = new PathTarget(mapper, model,
             fieldName, validating);
 
         this.field = pathTarget.translatedPath();

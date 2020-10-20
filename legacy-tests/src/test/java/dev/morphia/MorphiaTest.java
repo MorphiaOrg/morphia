@@ -1,8 +1,8 @@
 package dev.morphia;
 
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.testmappackage.AbstractBaseClass;
 import dev.morphia.testmappackage.SimpleEntity;
 import dev.morphia.testmappackage.testmapsubpackage.SimpleEntityInSubPackage;
@@ -10,6 +10,7 @@ import dev.morphia.testmappackage.testmapsubpackage.testmapsubsubpackage.SimpleE
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -23,10 +24,10 @@ public class MorphiaTest extends TestBase {
         getMapper().mapPackage("dev.morphia.testmappackage");
 
         // then
-        Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
-        Collection<Class<?>> classes = mappedClasses.stream().map(mc -> mc.getType())
-                                                    .collect(Collectors.toList());
-        assertEquals(classes.size(), 2);
+        List<EntityModel> list = getMapper().getMappedEntities();
+        Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                                           .collect(Collectors.toList());
+        assertEquals(2, classes.size());
         assertTrue(classes.toString(), classes.contains(AbstractBaseClass.class));
         assertTrue(classes.toString(), classes.contains(SimpleEntity.class));
     }
@@ -43,10 +44,10 @@ public class MorphiaTest extends TestBase {
         mapper.mapPackage("dev.morphia.testmappackage");
 
         // then
-        Collection<MappedClass> mappedClasses = mapper.getMappedClasses();
-        assertEquals(mappedClasses.toString(), 4, mappedClasses.size());
-        Collection<Class<?>> classes = mappedClasses.stream().map(mc -> mc.getType())
-            .collect(Collectors.toList());
+        List<EntityModel> list = mapper.getMappedEntities();
+        assertEquals(list.toString(), 4, list.size());
+        Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                                           .collect(Collectors.toList());
         assertTrue(classes.contains(AbstractBaseClass.class));
         assertTrue(classes.contains(SimpleEntity.class));
         assertTrue(classes.contains(SimpleEntityInSubPackage.class));

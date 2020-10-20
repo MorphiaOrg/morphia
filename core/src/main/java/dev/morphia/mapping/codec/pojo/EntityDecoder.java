@@ -31,8 +31,8 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     @Override
     public Object decode(BsonReader reader, DecoderContext decoderContext) {
         Object entity;
-        if (morphiaCodec.getMappedClass().hasLifecycle(PreLoad.class)
-            || morphiaCodec.getMappedClass().hasLifecycle(PostLoad.class)
+        if (morphiaCodec.getEntityModel().hasLifecycle(PreLoad.class)
+            || morphiaCodec.getEntityModel().hasLifecycle(PostLoad.class)
             || morphiaCodec.getMapper().hasInterceptors()) {
             entity = decodeWithLifecycle(reader, decoderContext);
         } else {
@@ -84,7 +84,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
             if (classModel.useDiscriminator() && classModel.getDiscriminatorKey().equals(name)) {
                 reader.readString();
             } else {
-                decodeModel(reader, decoderContext, instanceCreator, classModel.getFieldModelByName(name));
+                decodeModel(reader, decoderContext, instanceCreator, classModel.getField(name));
             }
         }
         reader.readEndDocument();
@@ -126,11 +126,11 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
         entity = instanceCreator.getInstance();
 
         Document document = morphiaCodec.getRegistry().get(Document.class).decode(reader, decoderContext);
-        morphiaCodec.getMappedClass().callLifecycleMethods(PreLoad.class, entity, document, morphiaCodec.getMapper());
+        morphiaCodec.getEntityModel().callLifecycleMethods(PreLoad.class, entity, document, morphiaCodec.getMapper());
 
         decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
 
-        morphiaCodec.getMappedClass().callLifecycleMethods(PostLoad.class, entity, document, morphiaCodec.getMapper());
+        morphiaCodec.getEntityModel().callLifecycleMethods(PostLoad.class, entity, document, morphiaCodec.getMapper());
         return entity;
     }
 

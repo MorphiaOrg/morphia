@@ -3,7 +3,6 @@ package dev.morphia.query;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import org.bson.Document;
@@ -68,11 +67,10 @@ public abstract class UpdateBase<T> {
      * @return the operations listed
      */
     public Document toDocument() {
-        final MappedClass mc = mapper.getMappedClass(type);
-        final Operations operations = new Operations(mapper, mc);
+        final Operations operations = new Operations(mapper, mapper.getEntityModel(type));
 
         for (UpdateOperator update : updates) {
-            PathTarget pathTarget = new PathTarget(mapper, mapper.getMappedClass(type), update.field(), true);
+            PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), true);
             operations.add(update.operator(), update.toTarget(pathTarget));
         }
         return operations.toDocument();

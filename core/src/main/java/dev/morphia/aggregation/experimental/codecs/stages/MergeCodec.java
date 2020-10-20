@@ -29,7 +29,7 @@ public class MergeCodec extends StageCodec<Merge> {
     protected void encodeStage(BsonWriter writer, Merge merge, EncoderContext encoderContext) {
         document(writer, () -> {
             String collection = merge.getType() != null
-                                ? getMapper().getMappedClass(merge.getType()).getCollectionName()
+                                ? getMapper().getEntityModel(merge.getType()).getCollectionName()
                                 : merge.getCollection();
             String database = merge.getDatabase();
 

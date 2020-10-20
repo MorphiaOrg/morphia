@@ -1,7 +1,7 @@
 package dev.morphia.mapping.validation.classrules;
 
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.validation.ClassConstraint;
 import dev.morphia.mapping.validation.ConstraintViolation;
@@ -16,14 +16,14 @@ import java.util.Set;
 public class DuplicatedAttributeNames implements ClassConstraint {
 
     @Override
-    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
+    public void check(Mapper mapper, EntityModel entityModel, Set<ConstraintViolation> ve) {
         final Set<String> foundNames = new HashSet<>();
-        for (FieldModel model : mc.getFields()) {
+        for (FieldModel model : entityModel.getFields()) {
             for (String name : model.getLoadNames()) {
                 if (!foundNames.add(name)) {
-                    ve.add(new ConstraintViolation(Level.FATAL, mc, model, getClass(),
-                                                   "Mapping to MongoDB field name '" + name
-                                                   + "' is duplicated; you cannot map different java fields to the same MongoDB field."));
+                    ve.add(new ConstraintViolation(Level.FATAL, entityModel, model, getClass(),
+                        "Mapping to MongoDB field name '" + name
+                        + "' is duplicated; you cannot map different java fields to the same MongoDB field."));
                 }
             }
         }

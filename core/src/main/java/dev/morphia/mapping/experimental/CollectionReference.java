@@ -3,8 +3,8 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
@@ -28,19 +28,19 @@ import static java.util.Arrays.asList;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
-    private MappedClass mappedClass;
+    private EntityModel entityModel;
     private List ids;
     private final Map<String, List<Object>> collections = new HashMap<>();
 
-    CollectionReference(Datastore datastore, MappedClass mappedClass, List ids) {
+    CollectionReference(Datastore datastore, EntityModel entityModel, List ids) {
         super(datastore);
-        this.mappedClass = mappedClass;
+        this.entityModel = entityModel;
         if (ids != null) {
-            if (ids.stream().allMatch(mappedClass.getType()::isInstance)) {
+            if (ids.stream().allMatch(entityModel.getType()::isInstance)) {
                 setValues(ids);
             } else {
                 for (Object o : ids) {
-                    collate(mappedClass, collections, o);
+                    collate(entityModel, collections, o);
                 }
                 this.ids = ids;
             }
@@ -52,7 +52,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     protected CollectionReference() {
     }
 
-    static void collate(MappedClass valueType, Map<String, List<Object>> collections,
+    static void collate(EntityModel valueType, Map<String, List<Object>> collections,
                         Object o) {
         final String collectionName;
         final Object id;
@@ -81,7 +81,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
     @Override
     public Class<C> getType() {
-        return (Class<C>) mappedClass.getType();
+        return (Class<C>) entityModel.getType();
     }
 
     @Override
@@ -103,10 +103,10 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     @Override
-    final List<Object> getId(Mapper mapper, Datastore datastore, MappedClass mappedClass) {
+    final List<Object> getId(Mapper mapper, Datastore datastore, EntityModel entityModel) {
         if (ids == null) {
             ids = getValues().stream()
-                             .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, mappedClass))
+                             .map(v -> ReferenceCodec.encodeId(mapper, datastore, v, entityModel))
                              .collect(Collectors.toList());
         }
         return ids;
@@ -170,7 +170,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
             if (!ignoreMissing() && idMap.size() != collectionIds.size()) {
                 throw new ReferenceException(
-                    Sofia.missingReferencedEntities(mappedClass.getType().getSimpleName()));
+                    Sofia.missingReferencedEntities(entityModel.getType().getSimpleName()));
 
             }
         }

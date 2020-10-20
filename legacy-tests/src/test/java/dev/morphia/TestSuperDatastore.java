@@ -32,7 +32,7 @@ public class TestSuperDatastore extends TestBase {
 
         getDs().save(new Circle());
 
-        assertEquals(2, getDs().find(Rectangle.class).count());
+        assertEquals(1, getDs().find(Rectangle.class).count());
 
         // when
         getDs().find(Circle.class).filter(eq("_id", rect.getId())).findAndDelete();

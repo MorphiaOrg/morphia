@@ -31,7 +31,7 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.ValidationBuilder;
 import dev.morphia.annotations.Validation;
-import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
@@ -144,16 +144,14 @@ public class TestDocumentValidation extends TestBase {
         insert("contacts", List.of(
             parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
             parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
-        MappedClass mapped = getDs().getMapper().map(Contact.class).get(0);
-        mapped.enableDocumentValidation(getDatabase());
+        EntityModel mapped = getDs().getMapper().map(Contact.class).get(0);
+        getDs().enableDocumentValidation();
 
         Assert.assertThrows(MongoWriteException.class,
-            () -> {
-                getDs().find(Contact.class)
-                       .filter(eq("_id", 1))
-                       .update(set("age", 42))
-                       .execute();
-            });
+            () -> getDs().find(Contact.class)
+                         .filter(eq("_id", 1))
+                         .update(set("age", 42))
+                         .execute());
 
         getDs().find(Contact.class)
                .filter(eq("_id", 2))
@@ -279,11 +277,11 @@ public class TestDocumentValidation extends TestBase {
     public void validationDocuments() {
         Document validator = parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
         getMapper().map(DocumentValidation.class);
-        MappedClass mappedClass = getMapper().getMappedClass(DocumentValidation.class);
+        EntityModel model = getMapper().getEntityModel(DocumentValidation.class);
 
         for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {
             for (ValidationAction action : EnumSet.allOf(ValidationAction.class)) {
-                checkValidation(validator, mappedClass, level, action);
+                checkValidation(validator, model, level, action);
             }
         }
     }
@@ -299,9 +297,9 @@ public class TestDocumentValidation extends TestBase {
         return database;
     }
 
-    private void checkValidation(Document validator, MappedClass mappedClass, ValidationLevel level,
+    private void checkValidation(Document validator, EntityModel model, ValidationLevel level,
                                  ValidationAction action) {
-        updateValidation(mappedClass, level, action);
+        updateValidation(model, level, action);
         Document expected = new Document("validator", validator)
                                 .append("validationLevel", level.getValue())
                                 .append("validationAction", action.getValue());
@@ -326,9 +324,9 @@ public class TestDocumentValidation extends TestBase {
         return (Document) getValidation().get("validator");
     }
 
-    private void updateValidation(MappedClass mappedClass, ValidationLevel level, ValidationAction action) {
-        ((DatastoreImpl) getDs()).enableValidation(mappedClass, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
-                                                                                       .level(level)
-                                                                                       .action(action));
+    private void updateValidation(EntityModel model, ValidationLevel level, ValidationAction action) {
+        ((DatastoreImpl) getDs()).enableValidation(model, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
+                                                                                 .level(level)
+                                                                                 .action(action));
     }
 }

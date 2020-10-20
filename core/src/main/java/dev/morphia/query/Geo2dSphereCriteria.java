@@ -2,9 +2,9 @@ package dev.morphia.query;
 
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Geometry;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -20,14 +20,14 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     private CoordinateReferenceSystem crs;
 
     private Geo2dSphereCriteria(Mapper mapper, String field, dev.morphia.query.FilterOperator operator,
-                                Geometry geometry, MappedClass mappedClass, boolean validating) {
-        super(mapper, field, operator, geometry, mappedClass, validating);
+                                Geometry geometry, EntityModel model, boolean validating) {
+        super(mapper, field, operator, geometry, model, validating);
         this.geometry = geometry;
     }
 
     static Geo2dSphereCriteria geo(Mapper mapper, String field, dev.morphia.query.FilterOperator operator,
-                                   Geometry value, MappedClass mappedClass, boolean validating) {
-        return new Geo2dSphereCriteria(mapper, field, operator, value, mappedClass, validating);
+                                   Geometry value, EntityModel model, boolean validating) {
+        return new Geo2dSphereCriteria(mapper, field, operator, value, model, validating);
     }
 
     @Override

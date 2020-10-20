@@ -11,10 +11,9 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.query.DefaultQueryFactory;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.junit.After;
@@ -52,7 +51,6 @@ public abstract class TestBase {
     protected TestBase() {
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
-        ds.setQueryFactory(new DefaultQueryFactory());
     }
 
     static void startMongo() {
@@ -156,18 +154,18 @@ public abstract class TestBase {
     }
 
     protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
-        return getDatabase().getCollection(getMappedClass(type).getCollectionName());
+        return getDatabase().getCollection(getEntityModel(type).getCollectionName());
     }
 
     protected List<Document> getIndexInfo(Class<?> clazz) {
         return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
 
-    protected MappedClass getMappedClass(Class<?> aClass) {
+    protected EntityModel getEntityModel(Class<?> aClass) {
         Mapper mapper = getMapper();
         mapper.map(aClass);
 
-        return mapper.getMappedClass(aClass);
+        return mapper.getEntityModel(aClass);
     }
 
     protected double getServerVersion() {

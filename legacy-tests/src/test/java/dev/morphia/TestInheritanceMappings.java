@@ -17,6 +17,7 @@ package dev.morphia;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
@@ -119,7 +120,15 @@ public class TestInheritanceMappings extends TestBase {
         assertNotNull(c.getId());
 
         assertEquals(1, getDs().find(Car.class).count());
-        assertEquals(1, getDs().find(AbstractVehicle.class).count());
+        assertEquals(0, getDs().find(AbstractVehicle.class).count());
+
+        Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), MapperOptions.builder()
+                                                                                                              .enablePolymorphicQueries(
+                                                                                                                  true)
+                                                                                                              .build());
+        datastore.getMapper().map(Car.class, AbstractVehicle.class);
+
+        assertEquals(1, datastore.find(AbstractVehicle.class).count());
 
     }
 

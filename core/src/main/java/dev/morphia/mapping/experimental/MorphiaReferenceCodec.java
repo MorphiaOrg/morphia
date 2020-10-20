@@ -51,13 +51,13 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
                              .decode(reader, decoderContext);
         value = processId(value, mapper, decoderContext);
         if (Set.class.isAssignableFrom(getTypeData().getType())) {
-            return new SetReference<>(getDatastore(), getFieldMappedClass(), (List) value);
+            return new SetReference<>(getDatastore(), getEntityModelForField(), (List) value);
         } else if (Collection.class.isAssignableFrom(getTypeData().getType())) {
-            return new ListReference<>(getDatastore(), getFieldMappedClass(), (List) value);
+            return new ListReference<>(getDatastore(), getEntityModelForField(), (List) value);
         } else if (Map.class.isAssignableFrom(getTypeData().getType())) {
-            return new MapReference<>(getDatastore(), (Map) value, getFieldMappedClass());
+            return new MapReference<>(getDatastore(), (Map) value, getEntityModelForField());
         } else {
-            return new SingleReference<>(getDatastore(), getFieldMappedClass(), value);
+            return new SingleReference<>(getDatastore(), getEntityModelForField(), value);
         }
     }
 
@@ -79,7 +79,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
 
     @Override
     public void encode(BsonWriter writer, MorphiaReference value, EncoderContext encoderContext) {
-        Object ids = value.getId(mapper, getDatastore(), getFieldMappedClass());
+        Object ids = value.getId(mapper, getDatastore(), getEntityModelForField());
         Codec codec = mapper.getCodecRegistry().get(ids.getClass());
         codec.encode(writer, ids, encoderContext);
     }

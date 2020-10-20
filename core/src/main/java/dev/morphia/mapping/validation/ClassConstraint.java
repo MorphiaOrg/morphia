@@ -1,8 +1,8 @@
 package dev.morphia.mapping.validation;
 
 
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 
 import java.util.Set;
 
@@ -11,11 +11,12 @@ import java.util.Set;
  */
 public interface ClassConstraint {
     /**
-     * Check that a MappedClass meets the constraint
+     * Check that an EntityModel meets the constraint
      *
-     * @param mc     the MappedClass to check
+     * @param model  the model to check
      * @param ve     the set of violations
      * @param mapper the Mapper to use for validation
+     * @since 2.1
      */
-    void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve);
+    void check(Mapper mapper, EntityModel model, Set<ConstraintViolation> ve);
 }

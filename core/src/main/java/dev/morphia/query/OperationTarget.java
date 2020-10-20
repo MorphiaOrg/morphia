@@ -60,7 +60,7 @@ public class OperationTarget {
 
         FieldModel model = mappedField != null
                               ? mappedField.getEntityModel()
-                                           .getFieldModelByName(mappedField.getName())
+                                           .getField(mappedField.getName())
                               : null;
 
         Codec cachedCodec = model != null && !(mappedValue instanceof LegacyQuery)

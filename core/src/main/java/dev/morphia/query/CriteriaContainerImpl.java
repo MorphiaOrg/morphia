@@ -1,8 +1,8 @@
 package dev.morphia.query;
 
 
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import static dev.morphia.query.CriteriaJoin.AND;
 @Deprecated(since = "2.0", forRemoval = true)
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
     private final Mapper mapper;
-    private final MappedClass mappedClass;
+    private final EntityModel model;
     private final CriteriaJoin joinMethod;
     private final List<Criteria> children = new ArrayList<>();
     private LegacyQuery<?> query;
@@ -32,7 +32,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
         this.joinMethod = joinMethod;
         this.mapper = mapper;
         this.query = query;
-        mappedClass = mapper.getMappedClass(query.getEntityClass());
+        model = mapper.getEntityModel(query.getEntityClass());
     }
 
     /**
@@ -117,7 +117,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(String name) {
-        return new FieldEndImpl<>(mapper, name, this, mappedClass, query.isValidatingNames());
+        return new FieldEndImpl<>(mapper, name, this, model, query.isValidatingNames());
     }
 
     /**

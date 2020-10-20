@@ -10,8 +10,8 @@ import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.mongodb.CursorType.NonTailable;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static java.lang.String.format;
 
@@ -44,7 +43,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private final Mapper mapper;
     private final String collectionName;
     private final MongoCollection<T> collection;
-    private final MappedClass mappedClass;
+    private final EntityModel model;
     private boolean validateName = true;
     private boolean validateType = true;
     private Document baseQuery;
@@ -63,7 +62,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         clazz = null;
         collection = null;
         collectionName = null;
-        mappedClass = null;
+        model = null;
         validateName = false;
         validateType = false;
 
@@ -80,7 +79,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();
-        mappedClass = mapper.getMappedClass(clazz);
+        model = mapper.getEntityModel(clazz);
         if (collectionName != null) {
             this.collection = datastore.getDatabase().getCollection(collectionName, clazz);
             this.collectionName = collectionName;
@@ -110,7 +109,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
         add(container);
 
-        return new FieldEndImpl<CriteriaContainer>(mapper, field, container, mappedClass, this.isValidatingNames());
+        return new FieldEndImpl<CriteriaContainer>(mapper, field, container, model, this.isValidatingNames());
     }
 
     @Override
@@ -217,7 +216,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends Query<T>> field(String name) {
-        return new FieldEndImpl<>(mapper, name, this, mappedClass, this.isValidatingNames());
+        return new FieldEndImpl<>(mapper, name, this, model, this.isValidatingNames());
     }
 
     @Override
@@ -230,7 +229,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         final String prop = parts[0].trim();
         final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
 
-        add(new FieldCriteria(mapper, prop, op, value, mapper.getMappedClass(this.getEntityClass()), this.isValidatingNames()));
+        add(new FieldCriteria(mapper, prop, op, value, mapper.getEntityModel(this.getEntityClass()), this.isValidatingNames()));
 
         return this;
     }
@@ -331,19 +330,19 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public Document toDocument() {
         final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
+        EntityModel model = mapper.getEntityModel(getEntityClass());
+        Entity entityAnnotation = model != null ? model.getEntityAnnotation() : null;
         if (entityAnnotation != null && entityAnnotation.useDiscriminator()
             && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
+            && !query.containsKey(model.getDiscriminatorKey())) {
 
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
+            List<EntityModel> subtypes = mapper.getEntityModel(getEntityClass()).getSubtypes();
             List<String> values = new ArrayList<>();
-            values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (MappedClass subtype : subtypes) {
-                values.add(subtype.getEntityModel().getDiscriminator());
+            values.add(model.getDiscriminator());
+            for (EntityModel subtype : subtypes) {
+                values.add(subtype.getDiscriminator());
             }
-            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
+            query.put(model.getDiscriminatorKey(),
                 new Document("$in", values));
         }
         return query;
@@ -431,16 +430,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private Document getQueryDocument() {
         final Document obj = new Document();
 
-        document(obj, writer -> {
-            mapper.updateQueryWithDiscriminators(writer, getEntityClass());
-        });
-
         if (baseQuery != null) {
             obj.putAll(baseQuery);
         }
 
         obj.putAll(compoundContainer.toDocument());
-
+        mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), obj);
         return obj;
     }
 

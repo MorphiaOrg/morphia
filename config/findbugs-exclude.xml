@@ -54,10 +54,6 @@
         <Package name="~org\.mongodb\.morphia\.testmappackage.*"/>
     </Match>
     <Match>
-        <Class name="dev.morphia.mapping.MappedClass"/>
-        <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
-    </Match>
-    <Match>
         <Bug code="SQL,XSS,J2EE,SW,STI,DL,JLM,MWN,NN,RS,UL,HRS,PT,MTIA,XFB"/>
     </Match>
     <Match>

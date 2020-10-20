@@ -10,8 +10,8 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.EmbeddedMappingTest.AnotherNested;
 import dev.morphia.mapping.EmbeddedMappingTest.Nested;
 import dev.morphia.mapping.EmbeddedMappingTest.NestedImpl;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.types.ObjectId;
@@ -32,10 +32,10 @@ public class TestMapper extends TestBase {
 
     @Test
     public void annotations() {
-        List<MappedClass> classes = getMapper().map(List.of(Rectangle.class));
-        MappedClass mappedClass = classes.get(0);
-        Entity annotation = mappedClass.getAnnotation(Entity.class);
-        Assert.assertEquals("shapes", mappedClass.getCollectionName());
+        List<EntityModel> classes = getMapper().map(List.of(Rectangle.class));
+        EntityModel entityModel = classes.get(0);
+        Entity annotation = entityModel.getAnnotation(Entity.class);
+        Assert.assertEquals("shapes", entityModel.getCollectionName());
         Assert.assertNotNull(annotation.toString(), annotation);
     }
 
@@ -95,9 +95,9 @@ public class TestMapper extends TestBase {
         getMapper().map(NestedImpl.class, AnotherNested.class);
 
         Mapper mapper = getMapper();
-        List<MappedClass> subTypes = mapper.getSubTypes(mapper.getMappedClass(Nested.class));
-        Assert.assertTrue(subTypes.contains(mapper.getMappedClass(NestedImpl.class)));
-        Assert.assertTrue(subTypes.contains(mapper.getMappedClass(AnotherNested.class)));
+        List<EntityModel> subTypes = mapper.getEntityModel(Nested.class).getSubtypes();
+        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(NestedImpl.class)));
+        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(AnotherNested.class)));
     }
 
     @Entity

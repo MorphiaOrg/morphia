@@ -2,11 +2,15 @@ package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.Version;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.Mapper;
@@ -19,7 +23,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -53,6 +56,10 @@ public class EntityModel {
     private final String discriminator;
     private final Class<?> type;
     private final String collectionName;
+    private final List<EntityModel> subtypes = new ArrayList<>();
+    private final EntityModel superClass;
+    private final FieldModel idField;
+    private final FieldModel versionField;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
 
     /**
@@ -66,6 +73,7 @@ public class EntityModel {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
         }
 
+        superClass = builder.superclass();
         discriminatorEnabled = builder.isDiscriminatorEnabled();
         discriminatorKey = builder.discriminatorKey();
         discriminator = builder.discriminator();
@@ -75,8 +83,8 @@ public class EntityModel {
         this.fieldModelsByMappedName = new LinkedHashMap<>();
         builder.fieldModels().forEach(modelBuilder -> {
             FieldModel model = modelBuilder
-                                      .entityModel(this)
-                                      .build();
+                                   .entityModel(this)
+                                   .build();
             fieldModelsByMappedName.put(model.getMappedName(), model);
             for (String name : modelBuilder.alternateNames()) {
                 if (fieldModelsByMappedName.put(name, model) != null) {
@@ -89,6 +97,14 @@ public class EntityModel {
         this.datastore = builder.getDatastore();
         this.collectionName = builder.getCollectionName();
         creatorFactory = new InstanceCreatorFactoryImpl(this);
+
+        if (superClass != null) {
+            superClass.addSubtype(this);
+        }
+        builder.interfaces().forEach(i -> i.addSubtype(this));
+
+        idField = getFields(Id.class).stream().findFirst().orElse(null);
+        versionField = getFields(Version.class).stream().findFirst().orElse(null);
     }
 
     /**
@@ -160,10 +176,24 @@ public class EntityModel {
     }
 
     /**
+     * @return the embeddedAn
+     */
+    public Embedded getEmbeddedAnnotation() {
+        return getAnnotation(Embedded.class);
+    }
+
+    /**
+     * @return the entityAn
+     */
+    public Entity getEntityAnnotation() {
+        return getAnnotation(Entity.class);
+    }
+
+    /**
      * @param name the property name
      * @return the named FieldModel or null if it does not exist
      */
-    public FieldModel getFieldModelByName(String name) {
+    public FieldModel getField(String name) {
         return fieldModelsByMappedName.getOrDefault(name, fieldModelsByField.get(name));
     }
 
@@ -172,15 +202,27 @@ public class EntityModel {
      *
      * @return the list of fields
      */
-    public Collection<FieldModel> getFieldModels() {
-        return fieldModelsByField.values();
+    public List<FieldModel> getFields() {
+        return new ArrayList<>(fieldModelsByField.values());
+    }
+
+    /**
+     * Returns all the fields on this model annotated by the given type
+     *
+     * @param type the annotation type
+     * @return the list of fields
+     */
+    public List<FieldModel> getFields(Class<? extends Annotation> type) {
+        return fieldModelsByField.values().stream()
+                                 .filter(model -> model.hasAnnotation(type))
+                                 .collect(Collectors.toList());
     }
 
     /**
      * @return the model for the id field
      */
-    public FieldModel getIdModel() {
-        return fieldModelsByMappedName.get("_id");
+    public FieldModel getIdField() {
+        return idField;
     }
 
     /**
@@ -225,10 +267,33 @@ public class EntityModel {
     }
 
     /**
+     * Get the subtypes of this model
+     *
+     * @return the subtypes
+     */
+    public List<EntityModel> getSubtypes() {
+        return subtypes;
+    }
+
+    /**
+     * @return the model of the superclass of this type or null
+     */
+    public EntityModel getSuperClass() {
+        return superClass;
+    }
+
+    /**
      * @return the type of this model
      */
     public Class<?> getType() {
         return type;
+    }
+
+    /**
+     * @return the ID field for the class
+     */
+    public FieldModel getVersionField() {
+        return versionField;
     }
 
     /**
@@ -275,8 +340,32 @@ public class EntityModel {
         return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), type.getSimpleName(), fields);
     }
 
+    /**
+     * This is an internal method subject to change without notice.
+     *
+     * @return true if the EntityModel is abstract
+     * @since 1.3
+     */
+    public boolean isAbstract() {
+        return Modifier.isAbstract(getType().getModifiers());
+    }
+
+    /**
+     * @return true if the EntityModel is an interface
+     */
+    public boolean isInterface() {
+        return getType().isInterface();
+    }
+
     protected boolean useDiscriminator() {
         return discriminatorEnabled;
+    }
+
+    private void addSubtype(EntityModel entityModel) {
+        subtypes.add(entityModel);
+        if (superClass != null) {
+            superClass.addSubtype(entityModel);
+        }
     }
 
     private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, Document document,

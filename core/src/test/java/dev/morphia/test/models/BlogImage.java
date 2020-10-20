@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 
 import java.util.Objects;
 
-@Entity(value = "blogImages", discriminatorKey = "type", discriminator = "JPG")
+@Entity(value = "blogImages", discriminatorKey = "type")
 public abstract class BlogImage {
     @Id
     public ObjectId id;

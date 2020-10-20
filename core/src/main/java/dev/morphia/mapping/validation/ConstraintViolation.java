@@ -1,7 +1,7 @@
 package dev.morphia.mapping.validation;
 
 
-import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 
 
@@ -9,7 +9,7 @@ import dev.morphia.mapping.codec.pojo.FieldModel;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 public class ConstraintViolation {
-    private final MappedClass clazz;
+    private final EntityModel type;
     private final Class<? extends ClassConstraint> validator;
     private final String message;
     private final Level level;
@@ -18,30 +18,30 @@ public class ConstraintViolation {
     /**
      * Creates a violation instance to record invalid mapping metadata
      *
-     * @param level     the severity of the violation
-     * @param clazz     the errant class
-     * @param field     the errant field
-     * @param validator the constraint failed
-     * @param message   the message for the failure
+     * @param level       the severity of the violation
+     * @param entityModel the errant class
+     * @param field       the errant field
+     * @param validator   the constraint failed
+     * @param message     the message for the failure
      */
-    public ConstraintViolation(Level level, MappedClass clazz, FieldModel field,
+    public ConstraintViolation(Level level, EntityModel entityModel, FieldModel field,
                                Class<? extends ClassConstraint> validator, String message) {
-        this(level, clazz, validator, message);
+        this(level, entityModel, validator, message);
         this.field = field;
     }
 
     /**
      * Creates a violation instance to record invalid mapping metadata
      *
-     * @param level     the severity of the violation
-     * @param clazz     the errant class
-     * @param validator the constraint failed
-     * @param message   the message for the failure
+     * @param level       the severity of the violation
+     * @param entityModel the errant class
+     * @param validator   the constraint failed
+     * @param message     the message for the failure
      */
-    public ConstraintViolation(Level level, MappedClass clazz, Class<? extends ClassConstraint> validator,
+    public ConstraintViolation(Level level, EntityModel entityModel, Class<? extends ClassConstraint> validator,
                                String message) {
         this.level = level;
-        this.clazz = clazz;
+        this.type = entityModel;
         this.message = message;
         this.validator = validator;
     }
@@ -58,7 +58,7 @@ public class ConstraintViolation {
      */
     public String getPrefix() {
         final String fn = (field != null) ? field.getName() : "";
-        return clazz.getType().getName() + "." + fn;
+        return type.getType().getName() + "." + fn;
     }
 
     /**

@@ -5,6 +5,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.types.ObjectId;
@@ -24,12 +25,12 @@ import static org.junit.Assert.assertTrue;
 
 public class FieldModelTest extends TestBase {
 
-    private MappedClass mappedClass;
+    private EntityModel entityModel;
 
     @Before
     public void mapping() {
         getMapper().map(List.of(TestEntity.class));
-        mappedClass = getMapper().getMappedClass(TestEntity.class);
+        entityModel = getMapper().getEntityModel(TestEntity.class);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class FieldModelTest extends TestBase {
     }
 
     private FieldModel getMappedField(String name) {
-        return mappedClass.getMappedField(name);
+        return entityModel.getField(name);
     }
 
     @Test

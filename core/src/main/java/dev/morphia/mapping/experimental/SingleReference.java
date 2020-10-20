@@ -2,8 +2,8 @@ package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
 import dev.morphia.Datastore;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.Query;
@@ -20,23 +20,23 @@ import static dev.morphia.query.experimental.filters.Filters.eq;
  */
 @SuppressWarnings("unchecked")
 public class SingleReference<T> extends MorphiaReference<T> {
-    private MappedClass mappedClass;
+    private EntityModel entityModel;
     private Object id;
     private T value;
 
     /**
      * @param datastore   the datastore to use
-     * @param mappedClass the entity's mapped class
+     * @param entityModel the entity's mapped class
      * @param id          the ID value
      * @morphia.internal
      */
-    public SingleReference(Datastore datastore, MappedClass mappedClass, Object id) {
+    public SingleReference(Datastore datastore, EntityModel entityModel, Object id) {
         super(datastore);
-        this.mappedClass = mappedClass;
+        this.entityModel = entityModel;
         this.id = id;
-        if (mappedClass.getType().isInstance(id)) {
+        if (entityModel.getType().isInstance(id)) {
             value = (T) id;
-            this.id = mappedClass.getIdField().getValue(value);
+            this.id = entityModel.getIdField().getValue(value);
             resolve();
         }
 
@@ -60,18 +60,10 @@ public class SingleReference<T> extends MorphiaReference<T> {
                                              Mapper mapper,
                                              FieldModel mappedField,
                                              Class<?> paramType, Document document) {
-        final MappedClass mappedClass = mapper.getMappedClass(paramType);
+        final EntityModel entityModel = mapper.getEntityModel(paramType);
         Object id = document.get(mappedField.getMappedName());
 
-        return new SingleReference<>(datastore, mappedClass, id);
-    }
-
-    MappedClass getMappedClass(Mapper mapper) {
-        if (mappedClass == null) {
-            mappedClass = mapper.getMappedClass(get().getClass());
-        }
-
-        return mappedClass;
+        return new SingleReference<>(datastore, entityModel, id);
     }
 
     @Override
@@ -80,7 +72,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
             value = (T) buildQuery().iterator().tryNext();
             if (value == null && !ignoreMissing()) {
                 throw new ReferenceException(
-                    Sofia.missingReferencedEntity(mappedClass.getType().getSimpleName()));
+                    Sofia.missingReferencedEntity(entityModel.getType().getSimpleName()));
             }
             resolve();
         }
@@ -89,7 +81,19 @@ public class SingleReference<T> extends MorphiaReference<T> {
 
     @Override
     public Class<T> getType() {
-        return (Class<T>) mappedClass.getType();
+        return (Class<T>) entityModel.getType();
+    }
+
+    @Override
+    Object getId(Mapper mapper, Datastore datastore, EntityModel fieldClass) {
+        if (id == null) {
+            EntityModel entityModel = getEntityModel(mapper);
+            id = entityModel.getIdField().getValue(get());
+            if (!entityModel.equals(fieldClass)) {
+                id = new DBRef(entityModel.getCollectionName(), id);
+            }
+        }
+        return id;
     }
 
     Query<?> buildQuery() {
@@ -101,7 +105,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
             query = getDatastore().find(clazz)
                                   .filter(eq("_id", ((DBRef) id).getId()));
         } else {
-            query = getDatastore().find(mappedClass.getType())
+            query = getDatastore().find(entityModel.getType())
                                   .filter(eq("_id", id));
         }
         return query;
@@ -113,16 +117,12 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return List.of(id);
     }
 
-    @Override
-    Object getId(Mapper mapper, Datastore datastore, MappedClass fieldClass) {
-        if (id == null) {
-            MappedClass mappedClass = getMappedClass(mapper);
-            id = mappedClass.getIdField().getValue(get());
-            if (!mappedClass.equals(fieldClass)) {
-                id = new DBRef(mappedClass.getCollectionName(), id);
-            }
+    EntityModel getEntityModel(Mapper mapper) {
+        if (entityModel == null) {
+            entityModel = mapper.getEntityModel(get().getClass());
         }
-        return id;
+
+        return entityModel;
     }
 
     @Override

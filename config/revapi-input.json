@@ -5,6 +5,12 @@
       "justification": "Driver classes should be ignored"
     }
   ],
+  "java.annotation.attributeRemoved": [
+    {
+      "classQualifiedName": "dev.morphia.mapping.MapperOptions.Builder",
+      "justification": "feature reinstated"
+    }
+  ],
   "java.class.noLongerImplementsInterface": [
     {
       "class": "dev.morphia.mapping.InstanceCreatorFactory",
@@ -146,10 +152,6 @@
       "justification": "implementation detail"
     },
     {
-      "classQualifiedName": "dev.morphia.mapping.MappedClass",
-      "justification": "internal implementation"
-    },
-    {
       "classQualifiedName": "dev.morphia.mapping.Mapper",
       "justification": "internal implementation"
     },
@@ -177,10 +179,6 @@
     },
     {
       "package": "dev.morphia.mapping.codec.pojo",
-      "justification": "implementation detail"
-    },
-    {
-      "classQualifiedName": "dev.morphia.mapping.MappedClass",
       "justification": "implementation detail"
     },
     {

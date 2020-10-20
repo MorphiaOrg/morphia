@@ -4,14 +4,13 @@ import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.entities.version.AbstractVersionedBase;
 import dev.morphia.entities.version.Versioned;
 import dev.morphia.entities.version.VersionedChildEntity;
-import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
@@ -61,11 +60,11 @@ public class TestVersionAnnotation extends TestBase {
     public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
         getMapper().mapPackage("dev.morphia.entities.version");
 
-        Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(3));
+        List<EntityModel> entities = getMapper().getMappedEntities();
+        assertThat(entities.size(), is(3));
         List<Class<?>> list = new ArrayList<>();
-        for (MappedClass mappedClass : mappedClasses) {
-            list.add(mappedClass.getType());
+        for (EntityModel entityModel : entities) {
+            list.add(entityModel.getType());
         }
         assertTrue(list.contains(VersionedChildEntity.class));
         assertTrue(list.contains(AbstractVersionedBase.class));
@@ -75,11 +74,11 @@ public class TestVersionAnnotation extends TestBase {
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
         getMapper().map(VersionedChildEntity.class);
 
-        Collection<MappedClass> mappedClasses = getMapper().getMappedClasses();
-        assertThat(mappedClasses.size(), is(2));
+        List<EntityModel> mappedEntities = getMapper().getMappedEntities();
+        assertThat(mappedEntities.size(), is(2));
         List<Class<?>> list = new ArrayList<>();
-        for (MappedClass mappedClass : mappedClasses) {
-            list.add(mappedClass.getType());
+        for (EntityModel entityModel : mappedEntities) {
+            list.add(entityModel.getType());
         }
         assertTrue(list.contains(VersionedChildEntity.class));
         assertTrue(list.contains(AbstractVersionedBase.class));

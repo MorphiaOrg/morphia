@@ -24,11 +24,11 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.experimental.Constructor;
 import dev.morphia.annotations.experimental.Name;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
@@ -57,6 +57,7 @@ import org.bson.types.ObjectId;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -84,14 +85,12 @@ public class TestMapping extends TestBase {
 
     @Test
     public void badConstructorMapping() {
-        assertThrows(ConstraintViolationException.class, () -> {
-            getDs().getMapper().map(BadConstructorBased.class);
-        });
+        assertThrows(ConstraintViolationException.class, () -> getDs().getMapper().map(BadConstructorBased.class));
     }
 
     @Test
     public void childMapping() {
-        List<MappedClass> list = getMapper().map(User.class, BannedUser.class);
+        List<EntityModel> list = getMapper().map(User.class, BannedUser.class);
 
         assertEquals(list.get(0).getCollectionName(), "users");
         assertEquals(list.get(1).getCollectionName(), "banned");
@@ -103,7 +102,7 @@ public class TestMapping extends TestBase {
                                              .collectionNaming(NamingStrategy.lowerCase())
                                              .build();
         Datastore datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
-        List<MappedClass> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+        List<EntityModel> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         assertEquals(map.get(0).getCollectionName(), "containsmapwithembeddedinterface");
         assertEquals(map.get(1).getCollectionName(), "cil");
@@ -138,7 +137,7 @@ public class TestMapping extends TestBase {
                                              .fieldNaming(NamingStrategy.snakeCase())
                                              .build();
         Datastore datastore1 = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
-        List<MappedClass> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+        List<EntityModel> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         List<FieldModel> fields = map.get(0).getFields();
         validateField(fields, "_id", "id");
@@ -162,6 +161,11 @@ public class TestMapping extends TestBase {
         validateField(fields, "_id", "id");
         validateField(fields, "int-list", "intList");
 
+    }
+
+    @org.junit.Test
+    public void shouldSupportGenericArrays() {
+        getMapper().map(MyEntity.class);
     }
 
     @Test
@@ -221,11 +225,10 @@ public class TestMapping extends TestBase {
 
         assertEquals(loaded, state);
 
-        MappedClass mappedClass = mapper.getMappedClass(State.class);
-        assertEquals(mappedClass.getFields()
-                                .stream()
-                                .map(FieldModel::getMappedName)
-                                .collect(toList()), List.of("_id", "state", "biggestCity", "smallestCity"));
+        assertEquals(mapper.getEntityModel(State.class)
+                           .getFields().stream()
+                           .map(FieldModel::getMappedName)
+                           .collect(toList()), List.of("_id", "state", "biggestCity", "smallestCity"));
     }
 
     @Test
@@ -316,8 +319,8 @@ public class TestMapping extends TestBase {
     @Test
     public void testExternalClass() {
         Datastore datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
-        List<MappedClass> mappedClasses = datastore.getMapper().map(UnannotatedEmbedded.class);
-        assertEquals(mappedClasses.size(), 1, "Should be able to map explicitly passed class references");
+        assertEquals(datastore.getMapper().map(UnannotatedEmbedded.class).size(), 1,
+            "Should be able to map explicitly passed class references");
 
         datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
         datastore.getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
@@ -405,19 +408,10 @@ public class TestMapping extends TestBase {
         assertNotNull(mapLoaded);
 
 
-        Map values = mapLoaded.values;
+        Map<?, ?> values = mapLoaded.values;
         assertEquals(values.size(), 2);
         assertNotNull(values.get(1));
         assertNotNull(values.get(2));
-    }
-
-    @Test
-    public void testHierarchies() {
-        getMapper().map(Png.class);
-        assertEquals(getMapper().getHierarcy(Png.class).size(), 1);
-
-        getMapper().map(BlogImage.class);
-        assertEquals(getMapper().getHierarcy(BlogImage.class).size(), 2);
     }
 
     @Test
@@ -955,6 +949,14 @@ public class TestMapping extends TestBase {
         }
     }
 
+    @Entity("generic_arrays")
+    static class MyEntity {
+        @Id
+        private String id;
+        private Integer[] integers;
+        private Super3<Integer>[] super3s;
+    }
+
     @Entity(value = "Normal", useDiscriminator = false)
     static class Normal {
         @Id
@@ -980,6 +982,16 @@ public class TestMapping extends TestBase {
     @Embedded(useDiscriminator = false)
     private static class RenamedEmbedded {
         private String name;
+    }
+
+    private static class Super1<T extends Object> {
+        private T field;
+    }
+
+    private static class Super2<T extends Serializable> extends Super1<T> {
+    }
+
+    private static class Super3<T extends Number> extends Super2<T> {
     }
 
     private static class UnannotatedEmbedded {

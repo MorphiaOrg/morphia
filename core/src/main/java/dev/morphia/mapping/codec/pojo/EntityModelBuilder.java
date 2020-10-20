@@ -19,6 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static morphia.org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
 
@@ -48,6 +50,8 @@ public class EntityModelBuilder {
     private String discriminator;
     private String discriminatorKey;
     private String idFieldName;
+    private final List<EntityModel> interfaceModels;
+    private EntityModel superclass;
 
     /**
      * Create a builder
@@ -59,11 +63,23 @@ public class EntityModelBuilder {
         this.datastore = datastore;
         this.type = type;
 
-        TypeData<?> parentClassTypeData = null;
         buildHierarchy(this.type);
         Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
+        Class<?> type1 = type.getSuperclass();
 
-        for (Class<?> klass : classes) {
+        if (!Object.class.equals(type1)) {
+            this.superclass = datastore.getMapper().getEntityModel(type1);
+        }
+
+        this.interfaceModels = interfaces.stream()
+                                         .map(i -> datastore.getMapper().getEntityModel(i))
+                                         .filter(Objects::nonNull)
+                                         .collect(Collectors.toList());
+
+        List<Class<?>> list = new ArrayList<>(List.of(type));
+        list.addAll(classes);
+        TypeData<?> parentClassTypeData = null;
+        for (Class<?> klass : list) {
             processFields(klass, parentClassTypeData, processTypeNames(klass), propertyTypeParameterMap);
 
             parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
@@ -224,10 +240,24 @@ public class EntityModelBuilder {
     }
 
     /**
+     * @return the interfaces implemented by this model or its super types
+     */
+    public List<EntityModel> interfaces() {
+        return interfaceModels;
+    }
+
+    /**
      * @return true if the discriminator is enabled
      */
     public boolean isDiscriminatorEnabled() {
         return discriminatorEnabled;
+    }
+
+    /**
+     * @return the super class of this type or null
+     */
+    public EntityModel superclass() {
+        return superclass;
     }
 
     protected Map<Class<? extends Annotation>, Annotation> annotationsMap() {
@@ -246,20 +276,23 @@ public class EntityModelBuilder {
     }
 
     private void buildHierarchy(Class<?> type) {
-        if (type != null && !type.isEnum() && !type.equals(Object.class)) {
-            if (type.isInterface()) {
-                interfaces.add(type);
-            } else {
-                classes.add(type);
-            }
-            annotations.addAll(Set.of(type.getAnnotations()));
-            interfaces.addAll(Set.of(type.getInterfaces()));
-            buildHierarchy(type.getSuperclass());
+        annotations.addAll(Set.of(type.getAnnotations()));
+        interfaces.addAll(findInterfaces(type));
 
-            for (Class<?> anInterface : type.getInterfaces()) {
-                buildHierarchy(anInterface);
-            }
-        }
+        classes.addAll(findParentClasses(type.getSuperclass()));
+        classes.forEach(c -> interfaces.addAll(findInterfaces(c)));
+    }
+
+    private List<? extends Class<?>> findInterfaces(Class<?> type) {
+        List<Class<?>> list = new ArrayList<>();
+        List<Class<?>> interfaces = Arrays.asList(type.getInterfaces());
+        annotations.addAll(Set.of(type.getAnnotations()));
+        list.addAll(interfaces);
+        list.addAll(interfaces.stream()
+                              .flatMap(i -> findInterfaces(i).stream())
+                              .collect(Collectors.toList()));
+
+        return list;
     }
 
     private <S> void cachePropertyTypeData(FieldMetadata<?> metadata,
@@ -270,6 +303,16 @@ public class EntityModelBuilder {
         TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
         propertyTypeParameterMap.put(metadata.getName(), typeParameterMap);
         metadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
+    }
+
+    private Set<Class<?>> findParentClasses(Class<?> type) {
+        Set<Class<?>> classes = new LinkedHashSet<>();
+        while (type != null && !type.isEnum() && !type.equals(Object.class)) {
+            classes.add(type);
+            annotations.addAll(Set.of(type.getAnnotations()));
+            type = type.getSuperclass();
+        }
+        return classes;
     }
 
     @SuppressWarnings("ConstantConditions")

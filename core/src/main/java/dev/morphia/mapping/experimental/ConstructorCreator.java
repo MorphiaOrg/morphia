@@ -63,7 +63,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      */
     public static Constructor<?> getFullConstructor(EntityModel model) {
         for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
-            if (constructor.getParameterCount() == model.getFieldModels().size()
+            if (constructor.getParameterCount() == model.getFields().size()
                 && constructor.getAnnotation(dev.morphia.annotations.experimental.Constructor.class) != null) {
                 return constructor;
             }

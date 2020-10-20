@@ -8,8 +8,6 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
-import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
@@ -243,21 +241,7 @@ public class MorphiaQuery<T> implements Query<T> {
     @Override
     public Document toDocument() {
         final Document query = getQueryDocument();
-        MappedClass mappedClass = mapper.getMappedClass(getEntityClass());
-        Entity entityAnnotation = mappedClass != null ? mappedClass.getEntityAnnotation() : null;
-        if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(mappedClass.getEntityModel().getDiscriminatorKey())) {
 
-            List<MappedClass> subtypes = mapper.getMappedClass(getEntityClass()).getSubtypes();
-            List<String> values = new ArrayList<>();
-            values.add(mappedClass.getEntityModel().getDiscriminator());
-            for (MappedClass subtype : subtypes) {
-                values.add(subtype.getEntityModel().getDiscriminator());
-            }
-            query.put(mappedClass.getEntityModel().getDiscriminatorKey(),
-                new Document("$in", values));
-        }
         return query;
     }
 
@@ -347,14 +331,16 @@ public class MorphiaQuery<T> implements Query<T> {
     Document getQueryDocument() {
         DocumentWriter writer = new DocumentWriter(seedQuery);
         document(writer, () -> {
-            mapper.updateQueryWithDiscriminators(writer, getEntityClass());
             EncoderContext context = EncoderContext.builder().build();
             for (Filter filter : filters) {
                 filter.encode(mapper, writer, context);
             }
         });
 
-        return writer.getDocument();
+        Document query = writer.getDocument();
+        mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), query);
+
+        return query;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -363,7 +349,7 @@ public class MorphiaQuery<T> implements Query<T> {
         private final String name;
 
         private MorphiaQueryFieldEnd(String name) {
-            super(mapper, name, MorphiaQuery.this, mapper.getMappedClass(getEntityClass()), validate);
+            super(mapper, name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
             this.name = name;
         }
 

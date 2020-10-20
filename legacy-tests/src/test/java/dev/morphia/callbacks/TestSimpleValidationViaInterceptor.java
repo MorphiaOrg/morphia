@@ -7,7 +7,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.callbacks.TestSimpleValidationViaInterceptor.NonNullValidation.NonNullValidationException;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import org.bson.Document;
@@ -80,8 +79,8 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
     public static class NonNullValidation implements EntityInterceptor {
         @Override
         public void prePersist(Object ent, Document document, Mapper mapper) {
-            final MappedClass mc = mapper.getMappedClass(ent.getClass());
-            final List<FieldModel> fieldsToTest = mc.getFields(NonNull.class);
+            final List<FieldModel> fieldsToTest = mapper.getEntityModel(ent.getClass())
+                                                        .getFields(NonNull.class);
             for (FieldModel mf : fieldsToTest) {
                 if (mf.getValue(ent) == null) {
                     throw new NonNullValidationException(mf);

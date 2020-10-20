@@ -27,8 +27,8 @@ import com.mongodb.client.model.Collation;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -109,11 +109,11 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
         iterable.skip(skip);
         if (sort != null) {
             Document mapped = new Document();
-            MappedClass mappedClass = mapper.getMappedClass(type);
+            EntityModel model = mapper.getEntityModel(type);
             for (Entry<String, Object> entry : sort.entrySet()) {
                 Object value = entry.getValue();
                 boolean metaScore = value instanceof Document && ((Document) value).get("$meta") != null;
-                mapped.put(new PathTarget(mapper, mappedClass, entry.getKey(), !metaScore).translatedPath(), value);
+                mapped.put(new PathTarget(mapper, model, entry.getKey(), !metaScore).translatedPath(), value);
             }
             iterable.sort(mapped);
         }

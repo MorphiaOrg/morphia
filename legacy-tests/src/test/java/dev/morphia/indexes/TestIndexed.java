@@ -131,14 +131,14 @@ public class TestIndexed extends TestBase {
 
     @Test
     public void testIndexedRecursiveEntity() {
-        getMapper().getMappedClass(CircularEmbeddedEntity.class);
+        getMapper().getEntityModel(CircularEmbeddedEntity.class);
         getDs().ensureIndexes();
         assertThat(getIndexInfo(CircularEmbeddedEntity.class), hasIndexNamed("a_1"));
     }
 
     @Test
     public void testIndexes() {
-        getMapper().getMappedClass(Ad2.class);
+        getMapper().getEntityModel(Ad2.class);
 
         assertThat(getIndexInfo(Ad2.class), doesNotHaveIndexNamed("active_1_lastMod_-1"));
         getDs().ensureIndexes(Ad2.class);

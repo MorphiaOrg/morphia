@@ -5,12 +5,12 @@ import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.experimental.ListReference;
@@ -110,14 +110,14 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     /**
      * Encodes a value
      *
-     * @param mapper           the mapper to use
-     * @param datastore        the datastore to use
-     * @param value            the value to encode
-     * @param fieldMappedClass the mapped class of the field type
+     * @param mapper    the mapper to use
+     * @param datastore the datastore to use
+     * @param value     the value to encode
+     * @param model     the mapped class of the field type
      * @return the encoded value
      * @morphia.internal
      */
-    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, MappedClass fieldMappedClass) {
+    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, EntityModel model) {
         Object idValue;
         MongoCollection<?> collection = null;
         if (value instanceof Key) {
@@ -131,9 +131,9 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         }
 
         String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;
-        String fieldCollectionName = fieldMappedClass.getCollectionName();
+        String fieldCollectionName = model.getCollectionName();
 
-        Reference annotation = fieldMappedClass.getAnnotation(Reference.class);
+        Reference annotation = model.getAnnotation(Reference.class);
         if (annotation != null && !annotation.idOnly()
             || valueCollectionName != null && !valueCollectionName.equals(fieldCollectionName)) {
             if (idValue == null) {
@@ -210,7 +210,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             }
             return ids;
         } else {
-            return encodeId(getDatastore().getMapper(), getDatastore(), value, getFieldMappedClass());
+            return encodeId(getDatastore().getMapper(), getDatastore(), value, getEntityModelForField());
         }
     }
 
@@ -269,7 +269,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     }
 
     MorphiaReference readList(List value) {
-        return new ListReference(getDatastore(), getFieldMappedClass(), value);
+        return new ListReference(getDatastore(), getEntityModelForField(), value);
     }
 
     MorphiaReference readMap(Map<Object, Object> value) {
@@ -279,15 +279,15 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
         }
 
-        return new MapReference(getDatastore(), (Map<String, Object>) ids, getFieldMappedClass());
+        return new MapReference(getDatastore(), (Map<String, Object>) ids, getEntityModelForField());
     }
 
     MorphiaReference readSet(List value) {
-        return new SetReference(getDatastore(), getFieldMappedClass(), value);
+        return new SetReference(getDatastore(), getEntityModelForField(), value);
     }
 
     MorphiaReference readSingle(Object value) {
-        return new SingleReference(getDatastore(), getFieldMappedClass(), value);
+        return new SingleReference(getDatastore(), getEntityModelForField(), value);
     }
 }
 

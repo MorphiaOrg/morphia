@@ -1,11 +1,10 @@
 package dev.morphia.mapping.validation;
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
 import dev.morphia.mapping.validation.classrules.EmbeddedAndId;
@@ -50,17 +49,16 @@ public class MappingValidator {
     }
 
     /**
+     * @param entityModel the EntityModel to validate
+     * @param mapper      the Mapper to use for validation
      * @morphia.internal
-     *
-     * @param mappedClass the MappedClass to validate
-     * @param mapper the Mapper to use for validation
      */
-    public void validate(Mapper mapper, MappedClass mappedClass) {
+    public void validate(Mapper mapper, EntityModel entityModel) {
         final Set<ConstraintViolation> ve = new TreeSet<>((o1, o2) -> o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1);
 
         final List<ClassConstraint> rules = getConstraints();
         for (ClassConstraint v : rules) {
-            v.check(mapper, mappedClass, ve);
+            v.check(mapper, entityModel, ve);
         }
 
         if (!ve.isEmpty()) {
@@ -108,9 +106,6 @@ public class MappingValidator {
         constraints.add(new VersionMisuse(creator));
 
         constraints.add(new ContradictingFieldAnnotation(Reference.class, Property.class));
-        constraints.add(new ContradictingFieldAnnotation(Reference.class, Embedded.class));
-
-        constraints.add(new ContradictingFieldAnnotation(Embedded.class, Property.class));
 
         return constraints;
     }

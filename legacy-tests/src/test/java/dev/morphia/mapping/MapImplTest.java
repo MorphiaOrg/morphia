@@ -38,7 +38,7 @@ public class MapImplTest extends TestBase {
 
 
         MongoCollection<Document> collection = getDatabase().getCollection(getMapper()
-                                                                               .getMappedClass(ContainsGoo.class).getCollectionName());
+                                                                               .getEntityModel(ContainsGoo.class).getCollectionName());
         Document first = (Document) collection
                                         .find()
                                         .first()
@@ -63,7 +63,7 @@ public class MapImplTest extends TestBase {
                .execute();
 
         MongoCollection<Document> collection = getDatabase().getCollection(getMapper()
-                                                                               .getMappedClass(ContainsGoo.class).getCollectionName());
+                                                                               .getEntityModel(ContainsGoo.class).getCollectionName());
 
         final Document goo = (Document) ((Document) collection
                                                            .find()
@@ -90,7 +90,7 @@ public class MapImplTest extends TestBase {
 
         MongoCollection<Document> collection = getDatabase()
                                                    .getCollection(getMapper()
-                                                                      .getMappedClass(MapOfInterfaces.class).getCollectionName());
+                                                                      .getEntityModel(MapOfInterfaces.class).getCollectionName());
         //check className in the map values.
         final Document goo = (Document) ((Document) collection
                                                            .find()
@@ -111,7 +111,7 @@ public class MapImplTest extends TestBase {
         //check className in the map values.
         MongoCollection<Document> collection = getDatabase()
                                                    .getCollection(getMapper()
-                                                                      .getMappedClass(MapOfInterfaces.class).getCollectionName());
+                                                                      .getEntityModel(MapOfInterfaces.class).getCollectionName());
 
         final Document goo = (Document) ((Document) collection
                                                         .find()

@@ -19,12 +19,11 @@ import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
-import dev.morphia.query.experimental.filters.Filters;
+import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
-import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,8 +65,8 @@ public class Mapper {
     /**
      * Set of classes that registered by this mapper
      */
-    private final Map<Class, MappedClass> mappedClasses = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<>();
+    private final Map<Class, EntityModel> mappedEntities = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
 
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
@@ -77,7 +75,6 @@ public class Mapper {
     private final MorphiaCodecProvider morphiaCodecProvider;
     private final Datastore datastore;
     private final CodecRegistry codecRegistry;
-    private final Map<Class<?>, List<MappedClass>> hierarchy = new HashMap<>();
 
     /**
      * Creates a Mapper with the given options.
@@ -203,7 +200,7 @@ public class Mapper {
      * @morphia.internal
      */
     public <T> Class<T> getClassFromCollection(String collection) {
-        final List<MappedClass> classes = getClassesMappedToCollection(collection);
+        final List<EntityModel> classes = getClassesMappedToCollection(collection);
         if (classes.size() > 1) {
             Sofia.logMoreThanOneMapper(collection,
                 classes.stream()
@@ -220,12 +217,12 @@ public class Mapper {
      * @return the mapped types
      * @morphia.internal
      */
-    public List<MappedClass> getClassesMappedToCollection(String collection) {
-        final Set<MappedClass> mcs = mappedClassesByCollection.get(collection);
-        if (mcs == null || mcs.isEmpty()) {
+    public List<EntityModel> getClassesMappedToCollection(String collection) {
+        final Set<EntityModel> entities = mappedEntitiesByCollection.get(collection);
+        if (entities == null || entities.isEmpty()) {
             throw new MappingException(Sofia.collectionNotMapped(collection));
         }
-        return new ArrayList<>(mcs);
+        return new ArrayList<>(entities);
     }
 
     /**
@@ -242,17 +239,17 @@ public class Mapper {
      * @morphia.internal
      */
     public <T> MongoCollection<T> getCollection(Class<T> type) {
-        MappedClass mappedClass = getMappedClass(type);
-        if (mappedClass == null) {
+        EntityModel entityModel = getEntityModel(type);
+        if (entityModel == null) {
             throw new MappingException(Sofia.notMappable(type.getName()));
         }
-        if (mappedClass.getCollectionName() == null) {
+        if (entityModel.getCollectionName() == null) {
             throw new MappingException(Sofia.noMappedCollection(type.getName()));
         }
 
-        MongoCollection<T> collection = datastore.getDatabase().getCollection(mappedClass.getCollectionName(), type);
+        MongoCollection<T> collection = datastore.getDatabase().getCollection(entityModel.getCollectionName(), type);
 
-        Entity annotation = mappedClass.getEntityAnnotation();
+        Entity annotation = entityModel.getEntityAnnotation();
         if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
             collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
         }
@@ -267,13 +264,13 @@ public class Mapper {
     }
 
     /**
-     * @param type the type
-     * @return the list
-     * @morphia.internal
-     * @since 2.1
+     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     *
+     * @param type the type to process
+     * @return the EntityModel for the object given
      */
-    public List<MappedClass> getHierarcy(Class<?> type) {
-        return hierarchy.get(type);
+    public EntityModel getEntityModel(Class type) {
+        return getEntityModel(type, false);
     }
 
     /**
@@ -286,9 +283,9 @@ public class Mapper {
         if (entity == null) {
             return null;
         }
-        final MappedClass mappedClass = getMappedClass(entity.getClass());
-        if (mappedClass != null) {
-            final FieldModel idField = mappedClass.getIdField();
+        final EntityModel model = getEntityModel(entity.getClass());
+        if (model != null) {
+            final FieldModel idField = model.getIdField();
             if (idField != null) {
                 return idField.getValue(entity);
             }
@@ -321,7 +318,7 @@ public class Mapper {
 
         final Object id = getId(entity);
         final Class<T> aClass = (Class<T>) entity.getClass();
-        return id == null ? null : new Key<>(aClass, getMappedClass(aClass).getCollectionName(), id);
+        return id == null ? null : new Key<>(aClass, getEntityModel(aClass).getCollectionName(), id);
     }
 
     /**
@@ -344,30 +341,10 @@ public class Mapper {
     }
 
     /**
-     * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
-     *
-     * @param type the type to process
-     * @return the MappedClass for the object given
+     * @return collection of EntityModels
      */
-    public MappedClass getMappedClass(Class type) {
-        return getMappedClass(type, false);
-    }
-
-    /**
-     * Maps a set of classes
-     *
-     * @param entityClasses the classes to map
-     * @return the MappedClass references
-     */
-    public List<MappedClass> map(Class... entityClasses) {
-        return map(List.of(entityClasses), true);
-    }
-
-    /**
-     * @return collection of MappedClasses
-     */
-    public Collection<MappedClass> getMappedClasses() {
-        return new ArrayList<>(mappedClasses.values());
+    public List<EntityModel> getMappedEntities() {
+        return new ArrayList<>(mappedEntities.values());
     }
 
     /**
@@ -375,41 +352,6 @@ public class Mapper {
      */
     public MapperOptions getOptions() {
         return options;
-    }
-
-    /**
-     * Updates a query with the type's subclass discriminators if polymorphic queries are enabled.
-     *
-     * @param writer the writer to update
-     * @param type   the type being queried
-     * @morphia.internal
-     * @since 2.1
-     */
-    public void updateQueryWithDiscriminators(BsonWriter writer, Class<?> type) {
-        if (options.isEnablePolymorphicQueries()) {
-            MappedClass mappedClass = getMappedClass(type);
-            if (mappedClass == null) {
-                return;
-            }
-            Entity entityAnnotation = mappedClass.getEntityAnnotation();
-            if (entityAnnotation == null || entityAnnotation.useDiscriminator()) {
-                String key = discriminatorKey(type);
-                Set<String> discriminators = subtypeDiscriminators(type);
-                if (discriminators.size() > 1) {
-                    Filters.in(key, discriminators)
-                           .encode(this, writer, EncoderContext.builder().build());
-                } else {
-                    Filters.eq(key, discriminators.iterator().next())
-                           .encode(this, writer, EncoderContext.builder().build());
-                }
-            }
-        }
-    }
-
-    private String discriminatorKey(Class<?> type) {
-        return mappedClasses.get(type)
-                            .getEntityModel()
-                            .getDiscriminatorKey();
     }
 
     /**
@@ -424,18 +366,6 @@ public class Mapper {
     }
 
     /**
-     * Finds any subtypes for the given MappedClass.
-     *
-     * @param mc the parent type
-     * @return the list of subtypes
-     * @morphia.internal
-     * @since 1.3
-     */
-    public List<MappedClass> getSubTypes(MappedClass mc) {
-        return mc.getSubtypes();
-    }
-
-    /**
      * Gets the write concern for entity or returns the default write concern for this datastore
      *
      * @param clazz the class to use when looking up the WriteConcern
@@ -445,7 +375,7 @@ public class Mapper {
     public WriteConcern getWriteConcern(Class clazz) {
         WriteConcern wc = null;
         if (clazz != null) {
-            final Entity entityAnn = getMappedClass(clazz).getEntityAnnotation();
+            final Entity entityAnn = getEntityModel(clazz).getEntityAnnotation();
             if (entityAnn != null && !entityAnn.concern().isEmpty()) {
                 wc = WriteConcern.valueOf(entityAnn.concern());
             }
@@ -480,7 +410,17 @@ public class Mapper {
      * @return true if the Class has been mapped
      */
     public boolean isMapped(Class c) {
-        return mappedClasses.containsKey(c);
+        return mappedEntities.containsKey(c);
+    }
+
+    /**
+     * Maps a set of classes
+     *
+     * @param entityClasses the classes to map
+     * @return the EntityModel references
+     */
+    public List<EntityModel> map(Class... entityClasses) {
+        return map(List.of(entityClasses), true);
     }
 
     /**
@@ -489,7 +429,7 @@ public class Mapper {
      * @param classes the classes to map
      * @return the list of mapped classes
      */
-    public List<MappedClass> map(List<Class> classes) {
+    public List<EntityModel> map(List<Class> classes) {
         return map(classes, true);
     }
 
@@ -506,22 +446,137 @@ public class Mapper {
         }
     }
 
-    private MappedClass register(MappedClass mc) {
-        EntityModel entityModel = mc.getEntityModel();
-        discriminatorLookup.addModel(entityModel);
-        registerHierarchy(entityModel.getType(), mc);
+    /**
+     * Maps all the classes found in the package to which the given class belongs.
+     *
+     * @param clazz the class to use when trying to find others to map
+     */
+    public void mapPackageFromClass(Class clazz) {
+        mapPackage(clazz.getPackage().getName());
+    }
 
-        mappedClasses.put(mc.getType(), mc);
-        if (mc.getEntityAnnotation() != null) {
-            mappedClassesByCollection.computeIfAbsent(mc.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                     .add(mc);
+    /**
+     * Refreshes an entity with the current state in the database.
+     *
+     * @param entity the entity to refresh
+     * @param <T>    the entity type
+     */
+    public <T> void refresh(T entity) {
+        Codec<T> refreshCodec = morphiaCodecProvider.getRefreshCodec(entity, getCodecRegistry());
+
+        MongoCollection<?> collection = getCollection(entity.getClass());
+        Document id = collection.find(new Document("_id", getEntityModel(entity.getClass())
+                                                              .getIdField()
+                                                              .getValue(entity)), Document.class)
+                                .first();
+
+        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+    }
+
+    /**
+     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
+     *
+     * @param entity The POJO
+     * @return the Document
+     * @morphia.internal
+     */
+    public Document toDocument(Object entity) {
+
+        final EntityModel entityModel = getEntityModel(entity.getClass());
+
+        DocumentWriter writer = new DocumentWriter();
+        ((Codec) getCodecRegistry().get(entityModel.getType()))
+            .encode(writer, entity, EncoderContext.builder().build());
+
+        return writer.getDocument();
+    }
+
+    /**
+     * Updates the collection value on a Key with the mapped value on the Key's type Class
+     *
+     * @param key the Key to update
+     * @return the collection name on the Key
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public String updateCollection(Key key) {
+        if (key.getCollection() == null && key.getType() == null) {
+            throw new IllegalStateException("Key is invalid! " + key);
+        } else if (key.getCollection() == null) {
+            key.setCollection(getEntityModel(key.getType()).getCollectionName());
         }
 
-        if (!mc.isInterface()) {
-            mc.validate(this);
-        }
+        return key.getCollection();
+    }
 
-        return mc;
+    /**
+     * Updates a query with the type's subclass discriminators if polymorphic queries are enabled.
+     *
+     * @param writer the writer to update
+     * @param type   the type being queried
+     * @morphia.internal
+     * @since 2.1
+     */
+/*
+    public void updateQueryWithDiscriminators(BsonWriter writer, Class<?> type) {
+            EntityModel entityModel = getEntityModel(type);
+            if (entityModel == null) {
+                return;
+            }
+            Entity entityAnnotation = entityModel.getEntityAnnotation();
+            if (entityAnnotation == null || entityAnnotation.useDiscriminator()) {
+                String key = discriminatorKey(type);
+
+
+                List<EntityModel> entityModels = entityModel.getSubtypes();
+                Set<String> discriminators = new LinkedHashSet<>();
+
+                discriminators.add(entityModel.getDiscriminator());
+                if (options.isEnablePolymorphicQueries()) {
+                    discriminators.addAll(entityModels.stream()
+                                                   .filter(m -> key.equals(m.getDiscriminatorKey()))
+                                                   .map(EntityModel::getDiscriminator)
+                                                   .collect(Collectors.toSet()));
+                }
+
+                if (discriminators.size() > 1) {
+                    Filters.in(key, discriminators)
+                           .encode(this, writer, EncoderContext.builder().build());
+                } else {
+                    Filters.eq(key, discriminators.iterator().next())
+                           .encode(this, writer, EncoderContext.builder().build());
+                }
+            }
+    }
+*/
+
+    /**
+     * Updates a query with any discriminators from subtypes if polymorphic queries are enabled
+     *
+     * @param model the query model
+     * @param query the query document
+     */
+    public void updateQueryWithDiscriminators(EntityModel model, Document query) {
+        Entity annotation = model != null ? model.getEntityAnnotation() : null;
+        if (annotation != null && annotation.useDiscriminator()
+            && !query.containsKey("_id")
+            && !query.containsKey(model.getDiscriminatorKey())) {
+            List<EntityModel> subtypes = model.getSubtypes();
+            List<String> values = new ArrayList<>();
+            values.add(model.getDiscriminator());
+            if (options.isEnablePolymorphicQueries()) {
+                for (EntityModel subtype : subtypes) {
+                    values.add(subtype.getDiscriminator());
+                }
+            }
+            query.put(model.getDiscriminatorKey(),
+                new Document("$in", values));
+        }
+    }
+
+
+    private String discriminatorKey(Class<?> type) {
+        return mappedEntities.get(type)
+                             .getDiscriminatorKey();
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)
@@ -547,122 +602,26 @@ public class Mapper {
     }
 
     /**
-     * Gets the {@link MappedClass} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
      *
      * @param type the type to process
-     * @return the MappedClass for the object given
+     * @return the EntityModel for the object given
      */
-    private MappedClass getMappedClass(Class type, boolean allowUnannotated) {
+    private EntityModel getEntityModel(Class type, boolean allowUnannotated) {
         if (type == null) {
             return null;
         }
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        MappedClass mc = mappedClasses.get(actual);
+        EntityModel model = mappedEntities.get(actual);
 
-        if (mc == null) {
+        if (model == null) {
             if (!isMappable(actual) && !allowUnannotated) {
                 return null;
             }
-            mc = register(new MappedClass(createEntityModel(type), this));
+            model = register(createEntityModel(type));
         }
 
-        return mc;
-    }
-
-    /**
-     * Maps all the classes found in the package to which the given class belongs.
-     *
-     * @param clazz the class to use when trying to find others to map
-     */
-    public void mapPackageFromClass(Class clazz) {
-        mapPackage(clazz.getPackage().getName());
-    }
-
-    /**
-     * Refreshes an entity with the current state in the database.
-     *
-     * @param entity the entity to refresh
-     * @param <T>    the entity type
-     */
-    public <T> void refresh(T entity) {
-        Codec<T> refreshCodec = morphiaCodecProvider.getRefreshCodec(entity, getCodecRegistry());
-
-        MongoCollection<?> collection = getCollection(entity.getClass());
-        Document id = collection.find(new Document("_id", getMappedClass(entity.getClass())
-                                                              .getIdField()
-                                                              .getValue(entity)), Document.class)
-                                .first();
-
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
-    }
-
-    /**
-     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
-     *
-     * @param entity The POJO
-     * @return the Document
-     * @morphia.internal
-     */
-    public Document toDocument(Object entity) {
-
-        final MappedClass mc = getMappedClass(entity.getClass());
-
-        DocumentWriter writer = new DocumentWriter();
-        Codec codec = getCodecRegistry().get(mc.getType());
-        codec.encode(writer, entity,
-            EncoderContext.builder()
-                          .build());
-
-        return writer.getDocument();
-    }
-
-    /**
-     * Updates the collection value on a Key with the mapped value on the Key's type Class
-     *
-     * @param key the Key to update
-     * @return the collection name on the Key
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public String updateCollection(Key key) {
-        if (key.getCollection() == null && key.getType() == null) {
-            throw new IllegalStateException("Key is invalid! " + key);
-        } else if (key.getCollection() == null) {
-            key.setCollection(getMappedClass(key.getType()).getCollectionName());
-        }
-
-        return key.getCollection();
-    }
-
-    private List<MappedClass> map(List<Class> classes, boolean allowUnannotated) {
-        return classes.stream()
-                      .map(c -> getMappedClass(c, allowUnannotated))
-                      .filter(Objects::nonNull)
-                      .collect(Collectors.toList());
-    }
-
-    private void registerHierarchy(Class<?> type, MappedClass mappedClass) {
-        if (type != null && !type.equals(Object.class)) {
-            List<MappedClass> subtypes = hierarchy.get(type);
-            if (subtypes == null) {
-                subtypes = new ArrayList<>();
-                hierarchy.put(type, subtypes);
-                registerHierarchy(type.getSuperclass(), mappedClass);
-            }
-            if (mappedClass != null) {
-                subtypes.add(mappedClass);
-            }
-        }
-    }
-
-    private Set<String> subtypeDiscriminators(Class<?> type) {
-        List<MappedClass> mappedClasses = hierarchy.get(type);
-        String key = discriminatorKey(type);
-
-        return mappedClasses.stream()
-                            .map(MappedClass::getEntityModel)
-                            .filter(m -> key.equals(m.getDiscriminatorKey()))
-                            .map(EntityModel::getDiscriminator)
-                            .collect(Collectors.toSet());
+        return model;
     }
 
     private <T> boolean hasAnnotation(Class<T> clazz, List<Class<? extends Annotation>> annotations) {
@@ -679,6 +638,31 @@ public class Mapper {
                || Arrays.stream(clazz.getInterfaces())
                         .map(i -> hasAnnotation(i, annotations))
                         .reduce(false, (l, r) -> l || r);
+    }
+
+    private List<EntityModel> map(List<Class> classes, boolean allowUnannotated) {
+        return classes.stream()
+                      .map(c -> getEntityModel(c, allowUnannotated))
+                      .filter(Objects::nonNull)
+                      .collect(Collectors.toList());
+    }
+
+    private EntityModel register(EntityModel entityModel) {
+        discriminatorLookup.addModel(entityModel);
+
+        mappedEntities.put(entityModel.getType(), entityModel);
+        if (entityModel.getEntityAnnotation() != null) {
+            mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                                      .add(entityModel);
+        }
+
+        if (!entityModel.isInterface()) {
+            new MappingValidator(entityModel.getInstanceCreatorFactory().create())
+                .validate(this, entityModel);
+
+        }
+
+        return entityModel;
     }
 
 }

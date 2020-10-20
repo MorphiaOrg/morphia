@@ -121,6 +121,10 @@ public class Filter {
         return filterName;
     }
 
+    public String getField() {
+        return field;
+    }
+
     protected Object getValue() {
         return value;
     }

@@ -89,20 +89,6 @@ public class TestSerializedFormat extends TestBase {
         Assert.assertEquals(parse, document);
     }
 
-    private void verifyCoverage(Document document) {
-        for (FieldModel field : getMapper().getMappedClass(ReferenceType.class).getFields()) {
-            String name = field.getMappedName();
-            boolean found = document.containsKey(name);
-            if (!found) {
-                for (String s : document.keySet()) {
-                    found |= s.startsWith(name + ".");
-
-                }
-            }
-            assertTrue("Not found in document: " + name, found);
-        }
-    }
-
     @Test
     public void testSavedEntityFormat() {
         ReferenceType entity = new ReferenceType(1, "I'm a field value");
@@ -151,10 +137,24 @@ public class TestSerializedFormat extends TestBase {
 
         getDs().save(entity);
 
-        String collectionName = getDs().getMapper().getMappedClass(ReferenceType.class).getCollectionName();
+        String collectionName = getDs().getMapper().getEntityModel(ReferenceType.class).getCollectionName();
         Document document = getDatabase().getCollection(collectionName).find().first();
         Assert.assertEquals(Document.parse(readFully("/ReferenceType.json")), document);
         verifyCoverage(document);
+    }
+
+    private void verifyCoverage(Document document) {
+        for (FieldModel field : getMapper().getEntityModel(ReferenceType.class).getFields()) {
+            String name = field.getMappedName();
+            boolean found = document.containsKey(name);
+            if (!found) {
+                for (String s : document.keySet()) {
+                    found |= s.startsWith(name + ".");
+
+                }
+            }
+            assertTrue("Not found in document: " + name, found);
+        }
     }
 
     private String readFully(String name) {

@@ -3,8 +3,8 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import org.bson.Document;
@@ -31,17 +31,17 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     /**
      * @param datastore   the datastore to use
      * @param ids         the IDs of the entities
-     * @param mappedClass the MappedClass for the entity type
+     * @param entityModel the model of the entity type
      * @morphia.internal
      */
-    public MapReference(Datastore datastore, Map<String, Object> ids, MappedClass mappedClass) {
+    public MapReference(Datastore datastore, Map<String, Object> ids, EntityModel entityModel) {
         super(datastore);
         if (ids != null) {
-            //            if (ids.entrySet().stream().allMatch(mappedClass.getType()::isInstance)) {
+            //            if (ids.entrySet().stream().allMatch(entityModel.getType()::isInstance)) {
             //                setValues(ids);
             //            } else {
             for (Entry<String, Object> entry : ids.entrySet()) {
-                CollectionReference.collate(mappedClass, collections, entry.getValue());
+                CollectionReference.collate(entityModel, collections, entry.getValue());
             }
             this.ids = ids;
             //            }
@@ -73,7 +73,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         final Map<String, Object> ids = (Map<String, Object>) mappedField.getDocumentValue(document);
         MapReference reference = null;
         if (ids != null) {
-            reference = new MapReference(datastore, ids, mapper.getMappedClass(subType));
+            reference = new MapReference(datastore, ids, mapper.getEntityModel(subType));
         }
 
         return reference;
@@ -117,7 +117,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     }
 
     @Override
-    public Map<String, Object> getId(Mapper mapper, Datastore datastore, MappedClass field) {
+    public Map<String, Object> getId(Mapper mapper, Datastore datastore, EntityModel field) {
         if (ids == null) {
             ids = new LinkedHashMap<>();
             values.entrySet().stream()

@@ -8,6 +8,7 @@ import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MapperOptions.Builder;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import org.bson.Document;
@@ -98,18 +99,24 @@ public class MapperOptionsTest extends TestBase {
     }
 
     @Test
-    public void lowercaseDefaultCollection() {
-        DummyEntity entity = new DummyEntity();
+    public void customDiscriminators() {
+        getDs().getMapper().map(EntityDiscriminator.class, EntityDiscriminator2.class);
 
-        String collectionName = getMapper().getMappedClass(entity.getClass()).getCollectionName();
-        Assert.assertEquals("uppercase", "dummyEntity", collectionName);
+        EntityDiscriminator entityDiscriminator = new EntityDiscriminator();
+        entityDiscriminator.name = "entityDiscriminator";
 
-        Builder builder = MapperOptions.builder(getMapper().getOptions());
-        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-            builder.collectionNaming(NamingStrategy.lowerCase()).build());
+        EntityDiscriminator2 entityDiscriminator2 = new EntityDiscriminator2();
+        entityDiscriminator2.name = "entityDiscriminator2";
 
-        collectionName = datastore.getMapper().getMappedClass(entity.getClass()).getCollectionName();
-        Assert.assertEquals("lowercase", "dummyentity", collectionName);
+        getDs().save(List.of(entityDiscriminator, entityDiscriminator2));
+
+        Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
+                                                   .filter(ne("name", "hi"));
+        FindOptions options = new FindOptions()
+                                  .logQuery();
+        List<EntityDiscriminator2> list = query.iterator(options)
+                                               .toList();
+        Assert.assertEquals(getDs().getLoggedQuery(options), 1, list.size());
     }
 
     @Test
@@ -150,38 +157,32 @@ public class MapperOptionsTest extends TestBase {
                          .build());
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 
-        MappedClass mappedClass = datastore.getMapper().getMappedClass(EntityDiscriminator.class);
-        Assert.assertEquals("_t", mappedClass.getEntityModel().getDiscriminatorKey());
-        Assert.assertEquals("h", mappedClass.getEntityModel().getDiscriminator());
+        EntityModel entityModel = datastore.getMapper().getEntityModel(EntityDiscriminator.class);
+        Assert.assertEquals("_t", entityModel.getDiscriminatorKey());
+        Assert.assertEquals("h", entityModel.getDiscriminator());
 
-        mappedClass = datastore.getMapper().getMappedClass(EmbeddedDiscriminator.class);
-        Assert.assertEquals("_e", mappedClass.getEntityModel().getDiscriminatorKey());
-        Assert.assertEquals("b", mappedClass.getEntityModel().getDiscriminator());
+        entityModel = datastore.getMapper().getEntityModel(EmbeddedDiscriminator.class);
+        Assert.assertEquals("_e", entityModel.getDiscriminatorKey());
+        Assert.assertEquals("b", entityModel.getDiscriminator());
 
-        mappedClass = datastore.getMapper().getMappedClass(HasMap.class);
-        Assert.assertEquals("_t", mappedClass.getEntityModel().getDiscriminatorKey());
-        Assert.assertEquals(HasMap.class.getSimpleName().toLowerCase(), mappedClass.getEntityModel().getDiscriminator());
+        entityModel = datastore.getMapper().getEntityModel(HasMap.class);
+        Assert.assertEquals("_t", entityModel.getDiscriminatorKey());
+        Assert.assertEquals(HasMap.class.getSimpleName().toLowerCase(), entityModel.getDiscriminator());
     }
 
     @Test
-    public void customDiscriminators() {
-        List<MappedClass> classes = getDs().getMapper().map(EntityDiscriminator.class, EntityDiscriminator2.class);
+    public void lowercaseDefaultCollection() {
+        DummyEntity entity = new DummyEntity();
 
-        EntityDiscriminator entityDiscriminator = new EntityDiscriminator();
-        entityDiscriminator.name = "entityDiscriminator";
+        String collectionName = getMapper().getEntityModel(entity.getClass()).getCollectionName();
+        Assert.assertEquals("uppercase", "dummyEntity", collectionName);
 
-        EntityDiscriminator2 entityDiscriminator2 = new EntityDiscriminator2();
-        entityDiscriminator2.name = "entityDiscriminator2";
+        Builder builder = MapperOptions.builder(getMapper().getOptions());
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
+            builder.collectionNaming(NamingStrategy.lowerCase()).build());
 
-        getDs().save(List.of(entityDiscriminator, entityDiscriminator2));
-
-        Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
-                                                   .filter(ne("name", "hi"));
-        FindOptions options = new FindOptions()
-                                  .logQuery();
-        List<EntityDiscriminator2> list = query.iterator(options)
-                                               .toList();
-        Assert.assertEquals(getDs().getLoggedQuery(options), 1, list.size());
+        collectionName = datastore.getMapper().getEntityModel(entity.getClass()).getCollectionName();
+        Assert.assertEquals("lowercase", "dummyentity", collectionName);
     }
 
     private void shouldFindField(Datastore datastore, HasList hl, List<String> expected) {

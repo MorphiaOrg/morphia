@@ -25,10 +25,9 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
@@ -40,9 +39,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
  * A helper class for dealing with index definitions
@@ -73,57 +74,39 @@ public final class IndexHelper {
         }
     }
 
-    Index convert(Text text, String nameToStore) {
-        return new IndexBuilder()
-                   .options(text.options())
-                   .fields(Collections.singletonList(new FieldBuilder()
-                                                                .value(nameToStore)
-                                                                .type(IndexType.TEXT)
-                                                                .weight(text.value())));
-    }
+    private List<Index> collectFieldIndexes(EntityModel entityModel) {
+        List<Index> list = entityModel.getFields(Indexed.class).stream()
+                                      .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
+                                      .collect(Collectors.toList());
 
-    Index convert(Indexed indexed, String nameToStore) {
-        List<Field> fields = Collections.singletonList(new FieldBuilder()
-                                                                  .value(nameToStore)
-                                                                  .type(fromValue(indexed.value().toIndexValue())));
-        return new IndexBuilder()
-                   .options(indexed.options())
-                   .fields(fields);
-    }
+        list.addAll(entityModel.getFields(Text.class).stream()
+                               .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
+                               .collect(Collectors.toList()));
 
-    private List<Index> collectFieldIndexes(MappedClass mc) {
-        List<Index> list = new ArrayList<>();
-        for (FieldModel mf : mc.getFields()) {
-            if (mf.hasAnnotation(Indexed.class)) {
-                list.add(convert(mf.getAnnotation(Indexed.class), mf.getMappedName()));
-            } else if (mf.hasAnnotation(Text.class)) {
-                list.add(convert(mf.getAnnotation(Text.class), mf.getMappedName()));
-            }
-        }
         return list;
     }
 
-    private List<Index> collectIndexes(MappedClass mc, List<MappedClass> parentMCs) {
-        if (parentMCs.contains(mc) || mc.getEmbeddedAnnotation() != null && parentMCs.isEmpty()) {
+    private List<Index> collectIndexes(EntityModel entityModel, List<EntityModel> parentModels) {
+        if (parentModels.contains(entityModel) || entityModel.getEmbeddedAnnotation() != null && parentModels.isEmpty()) {
             return emptyList();
         }
 
-        List<Index> indexes = collectTopLevelIndexes(mc);
-        indexes.addAll(collectFieldIndexes(mc));
+        List<Index> indexes = collectTopLevelIndexes(entityModel);
+        indexes.addAll(collectFieldIndexes(entityModel));
 
         return indexes;
     }
 
-    private List<Index> collectTopLevelIndexes(MappedClass mc) {
+    private List<Index> collectTopLevelIndexes(EntityModel entityModel) {
         List<Index> list = new ArrayList<>();
-        if (mc != null) {
-            final Indexes indexes = mc.getAnnotation(Indexes.class);
+        if (entityModel != null) {
+            final Indexes indexes = entityModel.getAnnotation(Indexes.class);
             if (indexes != null) {
                 for (Index index : indexes.value()) {
                     List<Field> fields = new ArrayList<>();
                     for (Field field : index.fields()) {
                         fields.add(new FieldBuilder()
-                                       .value(findField(mc, index.options(), field.value()))
+                                       .value(findField(entityModel, index.options(), field.value()))
                                        .type(field.type())
                                        .weight(field.weight()));
                     }
@@ -131,7 +114,7 @@ public final class IndexHelper {
                     list.add(replaceFields(index, fields));
                 }
             }
-            list.addAll(collectTopLevelIndexes(mc.getSuperClass()));
+            list.addAll(collectTopLevelIndexes(entityModel.getSuperClass()));
         }
 
         return list;
@@ -142,22 +125,43 @@ public final class IndexHelper {
                    .fields(list);
     }
 
-    Document calculateKeys(MappedClass mc, Index index) {
+    Document calculateKeys(EntityModel entityModel, Index index) {
         Document keys = new Document();
         for (Field field : index.fields()) {
             String path;
             try {
-                path = findField(mc, index.options(), field.value());
+                path = findField(entityModel, index.options(), field.value());
             } catch (Exception e) {
                 path = field.value();
                 if (!index.options().disableValidation()) {
-                    throw new MappingException(Sofia.invalidIndexPath(path, mc.getType().getName()));
+                    throw new MappingException(Sofia.invalidIndexPath(path, entityModel.getType().getName()));
                 }
-                LOG.warn(Sofia.invalidIndexPath(path, mc.getType().getName()));
+                LOG.warn(Sofia.invalidIndexPath(path, entityModel.getType().getName()));
             }
             keys.putAll(new Document(path, field.type().toIndexValue()));
         }
         return keys;
+    }
+
+    Index convert(Indexed indexed, String nameToStore) {
+        return indexed == null
+               ? null
+               : new IndexBuilder()
+                     .options(indexed.options())
+                     .fields(singletonList(new FieldBuilder()
+                                               .value(nameToStore)
+                                               .type(fromValue(indexed.value().toIndexValue()))));
+    }
+
+    Index convert(Text text, String nameToStore) {
+        return text == null
+               ? null
+               : new IndexBuilder()
+                     .options(text.options())
+                     .fields(singletonList(new FieldBuilder()
+                                               .value(nameToStore)
+                                               .type(IndexType.TEXT)
+                                               .weight(text.value())));
     }
 
     com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
@@ -202,27 +206,27 @@ public final class IndexHelper {
                                                  .build();
     }
 
-    String findField(MappedClass mc, IndexOptions options, String path) {
-        if (path.equals("$**")) {
-            return path;
-        }
-
-        return new PathTarget(mapper, mc, path, !options.disableValidation()).translatedPath();
-    }
-
-    void createIndex(MongoCollection collection, MappedClass mc) {
-        if (!mc.isInterface() && !mc.isAbstract()) {
-            for (Index index : collectIndexes(mc, Collections.emptyList())) {
-                createIndex(collection, mc, index);
+    void createIndex(MongoCollection<?> collection, EntityModel model) {
+        if (!model.isInterface() && !model.isAbstract()) {
+            for (Index index : collectIndexes(model, Collections.emptyList())) {
+                createIndex(collection, model, index);
             }
         }
     }
 
-    void createIndex(MongoCollection collection, MappedClass mc, Index index) {
-        Document keys = calculateKeys(mc, index);
+    void createIndex(MongoCollection<?> collection, EntityModel entityModel, Index index) {
+        Document keys = calculateKeys(entityModel, index);
         com.mongodb.client.model.IndexOptions indexOptions = convert(index.options());
         calculateWeights(index, indexOptions);
 
         collection.createIndex(keys, indexOptions);
+    }
+
+    String findField(EntityModel entityModel, IndexOptions options, String path) {
+        if (path.equals("$**")) {
+            return path;
+        }
+
+        return new PathTarget(mapper, entityModel, path, !options.disableValidation()).translatedPath();
     }
 }

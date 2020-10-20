@@ -3,8 +3,8 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.DBRef;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Handler;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 
 import java.util.List;
@@ -33,10 +33,10 @@ public abstract class MorphiaReference<T> {
 
     static Object wrapId(Mapper mapper, FieldModel field, Object entity) {
         Object id = mapper.getId(entity);
-        mapper.getMappedClass(entity.getClass());
+        mapper.getEntityModel(entity.getClass());
         Object encoded = id;
         if (!entity.getClass().equals(field.getType())) {
-            encoded = new DBRef(mapper.getMappedClass(entity.getClass()).getCollectionName(), encoded);
+            encoded = new DBRef(mapper.getEntityModel(entity.getClass()).getCollectionName(), encoded);
         }
 
         return encoded;
@@ -116,7 +116,7 @@ public abstract class MorphiaReference<T> {
         resolved = true;
     }
 
-    abstract Object getId(Mapper mapper, Datastore datastore, MappedClass mappedClass);
+    abstract Object getId(Mapper mapper, Datastore datastore, EntityModel entityModel);
 
     /**
      * @return the datastore

@@ -16,8 +16,8 @@
 
 package dev.morphia.internal;
 
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
@@ -37,8 +37,8 @@ public class PathTarget {
     private final boolean validateNames;
     private int position;
     private final Mapper mapper;
-    private MappedClass context;
-    private final MappedClass root;
+    private final EntityModel root;
+    private EntityModel context;
     private FieldModel target;
     private boolean resolved;
 
@@ -49,7 +49,7 @@ public class PathTarget {
      * @param root   root
      * @param path   path
      */
-    public PathTarget(Mapper mapper, MappedClass root, String path) {
+    public PathTarget(Mapper mapper, EntityModel root, String path) {
         this(mapper, root, path, true);
     }
 
@@ -61,7 +61,7 @@ public class PathTarget {
      * @param path          path
      * @param validateNames true if names should be validated
      */
-    public PathTarget(Mapper mapper, MappedClass root, String path, boolean validateNames) {
+    public PathTarget(Mapper mapper, EntityModel root, String path, boolean validateNames) {
         segments = asList(path.split("\\."));
         this.root = root;
         this.mapper = mapper;
@@ -78,7 +78,7 @@ public class PathTarget {
      * @param <T>    the root type
      */
     public <T> PathTarget(Mapper mapper, Class<T> type, String path) {
-        this(mapper, mapper.getMappedClass(type), path, true);
+        this(mapper, mapper.getEntityModel(type), path, true);
     }
 
     /**
@@ -91,7 +91,7 @@ public class PathTarget {
      * @param <T>           the root type
      */
     public <T> PathTarget(Mapper mapper, Class<T> type, String path, boolean validateNames) {
-        this(mapper, mapper.getMappedClass(type), path, validateNames);
+        this(mapper, mapper.getEntityModel(type), path, validateNames);
     }
 
     /**
@@ -174,12 +174,9 @@ public class PathTarget {
 
     private FieldModel resolveField(String segment) {
         if (context != null) {
-            FieldModel mf = context.getMappedField(segment);
+            FieldModel mf = context.getField(segment);
             if (mf == null) {
-                mf = context.getMappedFieldByJavaField(segment);
-            }
-            if (mf == null) {
-                Iterator<MappedClass> subTypes = mapper.getSubTypes(context).iterator();
+                Iterator<EntityModel> subTypes = context.getSubtypes().iterator();
                 while (mf == null && subTypes.hasNext()) {
                     context = subTypes.next();
                     mf = resolveField(segment);
@@ -187,7 +184,7 @@ public class PathTarget {
             }
 
             if (mf != null) {
-                context = mapper.getMappedClass(mf.getNormalizedType());
+                context = mapper.getEntityModel(mf.getNormalizedType());
             }
             return mf;
         } else {

@@ -2,8 +2,8 @@ package dev.morphia.query;
 
 import dev.morphia.UpdateDocument;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
@@ -21,11 +21,11 @@ import java.util.StringJoiner;
 class Operations {
     private final Map<String, List<OperationTarget>> ops = new HashMap<>();
     private final Mapper mapper;
-    private final MappedClass mappedClass;
+    private final EntityModel entityModel;
 
-    Operations(Mapper mapper, MappedClass mappedClass) {
+    Operations(Mapper mapper, EntityModel model) {
         this.mapper = mapper;
-        this.mappedClass = mappedClass;
+        this.entityModel = model;
     }
 
     @Override
@@ -47,7 +47,7 @@ class Operations {
     }
 
     protected void versionUpdate() {
-        FieldModel versionField = mappedClass.getVersionField();
+        FieldModel versionField = entityModel.getVersionField();
         if (versionField != null) {
             List<OperationTarget> operationTargets = ops.get("$inc");
             String version = versionField.getMappedName();
@@ -55,7 +55,7 @@ class Operations {
                               && operationTargets.stream()
                                                  .anyMatch(tv -> tv.getTarget().translatedPath().equals(version));
             if (!already) {
-                add("$inc", new OperationTarget(new PathTarget(mapper, mappedClass, versionField.getName()), 1L));
+                add("$inc", new OperationTarget(new PathTarget(mapper, entityModel, versionField.getName()), 1L));
             }
         }
     }

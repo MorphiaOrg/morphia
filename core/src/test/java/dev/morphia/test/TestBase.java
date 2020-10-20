@@ -256,7 +256,7 @@ public abstract class TestBase {
     }
 
     protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
-        return getDatabase().getCollection(getMapper().getMappedClass(type).getCollectionName());
+        return getDatabase().getCollection(getMapper().getEntityModel(type).getCollectionName());
     }
 
     private void assertSameNullity(String path, Object expected, Object actual) {

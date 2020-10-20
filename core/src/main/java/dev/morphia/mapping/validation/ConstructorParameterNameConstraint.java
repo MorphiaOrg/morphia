@@ -1,6 +1,5 @@
 package dev.morphia.mapping.validation;
 
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.experimental.ConstructorCreator;
@@ -16,15 +15,14 @@ import java.util.Set;
  */
 public class ConstructorParameterNameConstraint implements ClassConstraint {
     @Override
-    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
-        EntityModel model = mc.getEntityModel();
+    public void check(Mapper mapper, EntityModel model, Set<ConstraintViolation> ve) {
         Constructor<?> fullConstructor = ConstructorCreator.getFullConstructor(model);
         if (fullConstructor != null) {
             for (Parameter parameter : fullConstructor.getParameters()) {
                 String name = ConstructorCreator.getParameterName(parameter);
-                if (model.getFieldModelByName(name) == null) {
+                if (model.getField(name) == null) {
                     throw new ConstraintViolationException(
-                        new ConstraintViolation(Level.FATAL, mc, getClass(), Sofia.misnamedConstructorParameter(model.getType(), name)));
+                        new ConstraintViolation(Level.FATAL, model, getClass(), Sofia.misnamedConstructorParameter(model.getType(), name)));
                 }
             }
         }

@@ -2,8 +2,8 @@ package dev.morphia.mapping.validation.classrules;
 
 
 import dev.morphia.annotations.Embedded;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.ClassConstraint;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
@@ -17,10 +17,10 @@ import java.util.Set;
 public class EmbeddedAndId implements ClassConstraint {
 
     @Override
-    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
-        if (mc.getEmbeddedAnnotation() != null && mc.getIdField() != null) {
-            ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(),
-                                           "@" + Embedded.class.getSimpleName() + " classes cannot specify a @Id field"));
+    public void check(Mapper mapper, EntityModel entityModel, Set<ConstraintViolation> ve) {
+        if (entityModel.getEmbeddedAnnotation() != null && entityModel.getIdField() != null) {
+            ve.add(new ConstraintViolation(Level.FATAL, entityModel, getClass(),
+                "@" + Embedded.class.getSimpleName() + " classes cannot specify a @Id field"));
         }
     }
 

@@ -4,7 +4,6 @@ import dev.morphia.EntityInterceptor;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.query.FindOptions;
@@ -72,8 +71,7 @@ public class NewAnnotationTest extends TestBase {
 
         @Override
         public void prePersist(Object ent, Document document, Mapper mapper) {
-            final MappedClass mc = mapper.getMappedClass(ent.getClass());
-            final List<FieldModel> toLowercase = mc.getFields(Lowercase.class);
+            final List<FieldModel> toLowercase = mapper.getEntityModel(ent.getClass()).getFields(Lowercase.class);
             for (FieldModel mf : toLowercase) {
                 try {
                     final Object fieldValue = mf.getValue(ent);

@@ -21,7 +21,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -38,10 +38,10 @@ import static org.junit.Assert.assertNotNull;
 public class TestEmbeddedArrayIndexes extends TestBase {
     @Test
     public void testParamEntity() {
-        final MappedClass mc = getMapper().getMappedClass(A.class);
-        assertNotNull(mc);
+        final EntityModel entityModel = getMapper().getEntityModel(A.class);
+        assertNotNull(entityModel);
 
-        assertNotNull(mc.getAnnotation(Indexes.class));
+        assertNotNull(entityModel.getAnnotation(Indexes.class));
 
         getDs().ensureIndexes(A.class);
 

@@ -2,7 +2,6 @@ package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.DiscriminatorLookup;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import org.bson.BsonReader;
@@ -35,7 +34,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final FieldModel idField;
     private final Mapper mapper;
     private final EntityModel entityModel;
-    private final MappedClass mappedClass;
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
@@ -45,22 +43,21 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * Creates a new codec
      *
      * @param datastore              the datastore
-     * @param mappedClass            the MappedClass backing this codec
+     * @param model                  the model backing this codec
      * @param propertyCodecProviders the codec provider for properties
      * @param registry               the codec registry for lookups
      * @param discriminatorLookup    the discriminator to type lookup
      */
-    public MorphiaCodec(Datastore datastore, MappedClass mappedClass,
+    public MorphiaCodec(Datastore datastore, EntityModel model,
                         List<PropertyCodecProvider> propertyCodecProviders,
                         DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
-        this.mappedClass = mappedClass;
         this.mapper = datastore.getMapper();
         this.discriminatorLookup = discriminatorLookup;
 
-        this.entityModel = mappedClass.getEntityModel();
+        this.entityModel = model;
         this.registry = fromRegistries(fromCodecs(this), registry);
         this.propertyCodecRegistry = new PropertyCodecRegistryImpl(this, registry, propertyCodecProviders);
-        idField = mappedClass.getIdField();
+        idField = model.getIdField();
         specializePropertyCodecs();
     }
 
@@ -69,14 +66,9 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return (T) getDecoder().decode(reader, decoderContext);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void specializePropertyCodecs() {
-        EntityModel entityModel = getEntityModel();
-        for (FieldModel fieldModel : entityModel.getFieldModels()) {
-            Codec codec = fieldModel.getCodec() != null ? fieldModel.getCodec()
-                                                        : propertyCodecRegistry.get(fieldModel.getTypeData());
-            fieldModel.cachedCodec(codec);
-        }
+    @Override
+    public boolean documentHasId(Object entity) {
+        return entityModel.getIdField().getValue(entity) != null;
     }
 
     /**
@@ -109,9 +101,14 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return entity;
     }
 
-    @Override
-    public boolean documentHasId(Object entity) {
-        return mappedClass.getIdField().getValue(entity) != null;
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void specializePropertyCodecs() {
+        EntityModel entityModel = getEntityModel();
+        for (FieldModel fieldModel : entityModel.getFields()) {
+            Codec codec = fieldModel.getCodec() != null ? fieldModel.getCodec()
+                                                        : propertyCodecRegistry.get(fieldModel.getTypeData());
+            fieldModel.cachedCodec(codec);
+        }
     }
 
     @Override
@@ -126,13 +123,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
         return null;
 */
-    }
-
-    /**
-     * @return the MappedClass for this codec
-     */
-    public MappedClass getMappedClass() {
-        return mappedClass;
     }
 
     /**

@@ -2,8 +2,8 @@ package dev.morphia.query;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
@@ -103,13 +103,37 @@ public class Projection {
         return null;
     }
 
+    private void iterate(Mapper mapper, Document projection, Class<?> clazz, List<String> fields,
+                         int include) {
+        if (fields != null) {
+            for (String field : fields) {
+                projection.put(new PathTarget(mapper, mapper.getEntityModel(clazz), field).translatedPath(), include);
+            }
+        }
+    }
+
+    private Document knownFields(Mapper mapper, Class<?> clazz) {
+        Document projection = new Document();
+        mapper.getEntityModel(clazz).getFields()
+              .stream()
+              .map(mf -> new PathTarget(mapper, mapper.getEntityModel(clazz), mf.getMappedName()).translatedPath())
+              .forEach(name -> projection.put(name, 1));
+
+        return projection;
+    }
+
+    private Document meta(Mapper mapper, Class<?> clazz) {
+        String fieldName = new PathTarget(mapper, clazz, meta.getField(), false).translatedPath();
+        return new Document(fieldName, meta.toDatabase().get(meta.getField()));
+    }
+
     private Document project(Mapper mapper, Class<?> clazz) {
         Document projection = new Document();
         iterate(mapper, projection, clazz, includes, 1);
         iterate(mapper, projection, clazz, excludes, 0);
 
-        final MappedClass mc = mapper.getMappedClass(clazz);
-        Entity entityAnnotation = mc.getEntityAnnotation();
+        final EntityModel model = mapper.getEntityModel(clazz);
+        Entity entityAnnotation = model.getEntityAnnotation();
 
         if (isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
             projection.put(mapper.getOptions().getDiscriminatorKey(), 1);
@@ -119,32 +143,8 @@ public class Projection {
     }
 
     private Document slice(Mapper mapper, Class<?> clazz) {
-        String fieldName = new PathTarget(mapper, mapper.getMappedClass(clazz), arrayField).translatedPath();
+        String fieldName = new PathTarget(mapper, mapper.getEntityModel(clazz), arrayField).translatedPath();
         return new Document(fieldName, slice.toDatabase());
-    }
-
-    private Document meta(Mapper mapper, Class<?> clazz) {
-        String fieldName = new PathTarget(mapper, clazz, meta.getField(), false).translatedPath();
-        return new Document(fieldName, meta.toDatabase().get(meta.getField()));
-    }
-
-    private Document knownFields(Mapper mapper, Class<?> clazz) {
-        Document projection = new Document();
-        mapper.getMappedClass(clazz).getFields()
-              .stream()
-              .map(mf -> new PathTarget(mapper, mapper.getMappedClass(clazz), mf.getMappedName()).translatedPath())
-              .forEach(name -> projection.put(name, 1));
-
-        return projection;
-    }
-
-    private void iterate(Mapper mapper, Document projection, Class<?> clazz, List<String> fields,
-                         int include) {
-        if (fields != null) {
-            for (String field : fields) {
-                projection.put(new PathTarget(mapper, mapper.getMappedClass(clazz), field).translatedPath(), include);
-            }
-        }
     }
 
     boolean isIncluding() {

@@ -74,6 +74,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -1180,17 +1181,14 @@ public class TestLegacyQuery extends LegacyTestBase {
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
-        try {
+        assertThrows(ValidationException.class, () -> {
             getDs()
                 .find(ContainsRenamedFields.class)
                 .execute(new FindOptions()
                              .projection().include("bad field name")
                              .limit(1))
                 .tryNext();
-            fail("Validation should have caught the bad field");
-        } catch (ValidationException e) {
-            // success!
-        }
+        });
     }
 
     @Test

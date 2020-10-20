@@ -1,7 +1,6 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -46,7 +45,7 @@ public class MorphiaCodecProvider implements CodecProvider {
     public <T> MorphiaCodec get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec codec = (MorphiaCodec) codecs.get(type);
         if (codec == null && mapper.isMappable(type)) {
-            codec = new MorphiaCodec(datastore, mapper.getMappedClass(type), propertyCodecProviders,
+            codec = new MorphiaCodec(datastore, mapper.getEntityModel(type), propertyCodecProviders,
                 mapper.getDiscriminatorLookup(), registry);
             codecs.put(type, codec);
         }
@@ -63,8 +62,8 @@ public class MorphiaCodecProvider implements CodecProvider {
      * @return the new codec
      */
     public <T> Codec<T> getRefreshCodec(T entity, CodecRegistry registry) {
-        MappedClass mappedClass = mapper.getMappedClass(entity.getClass());
-        return new MorphiaCodec<>(datastore, mappedClass, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
+        EntityModel model = mapper.getEntityModel(entity.getClass());
+        return new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
             @Override
             protected EntityDecoder getDecoder() {
                 return new EntityDecoder(this) {

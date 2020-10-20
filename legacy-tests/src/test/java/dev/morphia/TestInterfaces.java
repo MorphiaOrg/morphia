@@ -2,7 +2,7 @@ package dev.morphia;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MappedClass;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.Shape;
@@ -25,7 +25,7 @@ public class TestInterfaces extends TestBase {
         final MongoCollection<Document> shapes = getDatabase().getCollection("shapes");
         final MongoCollection<Document> shapeshifters = getDatabase().getCollection("shapeshifters");
 
-        List<MappedClass> map = getMapper().map(ShapeShifter.class);
+        List<EntityModel> map = getMapper().map(ShapeShifter.class);
 
         final Shape rectangle = new Rectangle(2, 5);
 

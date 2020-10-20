@@ -1,8 +1,7 @@
 package dev.morphia.mapping.validation.fieldrules;
 
-
-import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
@@ -10,9 +9,8 @@ import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-
 /**
- * @author Uwe Schaefer, (us@thomas-daily.de)
+ * Checks that contradicting annotations aren't defined.
  */
 public class ContradictingFieldAnnotation extends FieldConstraint {
 
@@ -31,11 +29,11 @@ public class ContradictingFieldAnnotation extends FieldConstraint {
     }
 
     @Override
-    protected final void check(Mapper mapper, MappedClass mc, FieldModel mf, Set<ConstraintViolation> ve) {
+    protected final void check(Mapper mapper, EntityModel entityModel, FieldModel mf, Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(a1) && mf.hasAnnotation(a2)) {
-            ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
-                                           String.format("A field can be either annotated with @%s OR @%s, but not both.",
-                                                         a1.getSimpleName(), a2.getSimpleName())));
+            ve.add(new ConstraintViolation(Level.FATAL, entityModel, mf, getClass(),
+                String.format("A field can be either annotated with @%s OR @%s, but not both.",
+                    a1.getSimpleName(), a2.getSimpleName())));
         }
     }
 }
