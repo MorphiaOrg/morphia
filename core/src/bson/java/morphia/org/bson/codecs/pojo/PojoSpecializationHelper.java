@@ -25,25 +25,6 @@ import java.util.Map;
  */
 public final class PojoSpecializationHelper {
 
-    @SuppressWarnings("unchecked")
-    public static <V> TypeData<V> specializeTypeData(TypeData<V> typeData, List<TypeData<?>> typeParameters,
-                                                     TypeParameterMap typeParameterMap) {
-        if (!typeParameterMap.hasTypeParameters() || typeParameters.isEmpty()) {
-            return typeData;
-        }
-
-        Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap = typeParameterMap.getPropertyToClassParamIndexMap();
-        Either<Integer, TypeParameterMap> classTypeParamRepresentsWholeField = propertyToClassParamIndexMap.get(-1);
-        if (classTypeParamRepresentsWholeField != null) {
-            Integer index = classTypeParamRepresentsWholeField.map(i -> i, e -> {
-                throw new IllegalStateException("Invalid state, the whole class cannot be represented by a subtype.");
-            });
-            return (TypeData<V>) typeParameters.get(index);
-        } else {
-            return getTypeData(typeData, typeParameters, propertyToClassParamIndexMap);
-        }
-    }
-
     private static <V> TypeData<V> getTypeData(TypeData<V> typeData, List<TypeData<?>> specializedTypeParameters,
                                                Map<Integer, Either<Integer, TypeParameterMap>> propertyToClassParamIndexMap) {
         List<TypeData<?>> subTypeParameters = new ArrayList<>(typeData.getTypeParameters());

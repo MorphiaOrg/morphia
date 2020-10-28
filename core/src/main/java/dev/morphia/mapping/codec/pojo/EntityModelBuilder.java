@@ -11,7 +11,6 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MorphiaConvention;
 import dev.morphia.sofia.Sofia;
 import morphia.org.bson.codecs.pojo.TypeData;
-import morphia.org.bson.codecs.pojo.TypeParameterMap;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -24,12 +23,11 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static morphia.org.bson.codecs.pojo.PojoSpecializationHelper.specializeTypeData;
 
 /**
  * Builder for EntityModels
@@ -64,11 +62,11 @@ public class EntityModelBuilder {
         this.type = type;
 
         buildHierarchy(this.type);
-        Map<String, TypeParameterMap> propertyTypeParameterMap = new HashMap<>();
-        Class<?> type1 = type.getSuperclass();
+        final Map<String, Map<String, Type>> parameterization = findParameterization(type);
+        propagateTypes(parameterization);
 
-        if (!Object.class.equals(type1)) {
-            this.superclass = datastore.getMapper().getEntityModel(type1);
+        if (!Object.class.equals(type.getSuperclass())) {
+            this.superclass = datastore.getMapper().getEntityModel(type.getSuperclass());
         }
 
         this.interfaceModels = interfaces.stream()
@@ -78,12 +76,45 @@ public class EntityModelBuilder {
 
         List<Class<?>> list = new ArrayList<>(List.of(type));
         list.addAll(classes);
-        TypeData<?> parentClassTypeData = null;
         for (Class<?> klass : list) {
-            processFields(klass, parentClassTypeData, processTypeNames(klass), propertyTypeParameterMap);
-
-            parentClassTypeData = TypeData.newInstance(klass.getGenericSuperclass(), klass);
+            processFields(klass, parameterization);
         }
+    }
+
+    static public Map<String, Map<String, Type>> findParameterization(Class<?> type) {
+        if (type.getSuperclass() == null) {
+            return new HashMap<>();
+        }
+        Map<String, Map<String, Type>> parentMap = findParameterization(type.getSuperclass());
+        Map<String, Type> typeMap = mapArguments(type.getSuperclass(), type.getGenericSuperclass());
+
+        parentMap.put(type.getSuperclass().getName(), typeMap);
+        return parentMap;
+    }
+
+    private static Map<String, Type> mapArguments(Class<?> type, Type typeSignature) {
+        Map<String, Type> map = new HashMap<>();
+        if (type != null && typeSignature instanceof ParameterizedType) {
+            TypeVariable<?>[] typeParameters = type.getTypeParameters();
+            if (typeParameters.length != 0) {
+                Type[] arguments = ((ParameterizedType) typeSignature).getActualTypeArguments();
+                for (int i = 0; i < typeParameters.length; i++) {
+                    TypeVariable<?> typeParameter = typeParameters[i];
+                    map.put(typeParameter.getName(), arguments[i]);
+                }
+            }
+        }
+        return map;
+    }
+
+    private Set<Class<?>> findParentClasses(Class<?> type) {
+        Set<Class<?>> classes = new LinkedHashSet<>();
+        while (type != null && !type.isEnum() && !type.equals(Object.class) && !type.getPackageName().startsWith("java")) {
+            classes.add(type);
+            annotations.addAll(Set.of(type.getAnnotations()));
+            type = type.getSuperclass();
+        }
+        return classes;
     }
 
     /**
@@ -295,24 +326,30 @@ public class EntityModelBuilder {
         return list;
     }
 
-    private <S> void cachePropertyTypeData(FieldMetadata<?> metadata,
-                                           Map<String, TypeParameterMap> propertyTypeParameterMap,
-                                           TypeData<S> parentClassTypeData,
-                                           List<String> genericTypeNames,
-                                           Type genericType) {
-        TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
-        propertyTypeParameterMap.put(metadata.getName(), typeParameterMap);
-        metadata.typeParameterInfo(typeParameterMap, parentClassTypeData);
-    }
+    private void processFields(Class<?> currentClass, Map<String, Map<String, Type>> parameterization) {
+        for (Field field : currentClass.getDeclaredFields()) {
+            TypeData<?> typeData = TypeData.newInstance(field);
 
-    private Set<Class<?>> findParentClasses(Class<?> type) {
-        Set<Class<?>> classes = new LinkedHashSet<>();
-        while (type != null && !type.isEnum() && !type.equals(Object.class)) {
-            classes.add(type);
-            annotations.addAll(Set.of(type.getAnnotations()));
-            type = type.getSuperclass();
+            Type genericType = field.getGenericType();
+            if (genericType instanceof TypeVariable) {
+                Map<String, Type> map = parameterization.get(currentClass.getName());
+                if (map != null) {
+                    Type mapped = map.get(((TypeVariable<?>) genericType).getName());
+                    if (mapped instanceof Class) {
+                        typeData = TypeData.newInstance(field.getGenericType(), (Class<?>) mapped);
+                    }
+                }
+            }
+
+            FieldModelBuilder fieldModelBuilder = FieldModel.builder()
+                                                            .field(field)
+                                                            .fieldName(field.getName())
+                                                            .typeData(typeData)
+                                                            .annotations(List.of(field.getDeclaredAnnotations()));
+            fieldModelBuilder.mappedName(getMappedFieldName(fieldModelBuilder));
+
+            addModel(fieldModelBuilder);
         }
-        return classes;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -340,66 +377,22 @@ public class EntityModelBuilder {
         return options.getFieldNaming().apply(fieldBuilder.name());
     }
 
-    private TypeParameterMap getTypeParameterMap(List<String> genericTypeNames, Type propertyType) {
-        int classParamIndex = genericTypeNames.indexOf(propertyType.toString());
-        TypeParameterMap.Builder builder = TypeParameterMap.builder();
-        if (classParamIndex != -1) {
-            builder.addIndex(classParamIndex);
-        } else {
-            if (propertyType instanceof ParameterizedType) {
-                ParameterizedType pt = (ParameterizedType) propertyType;
-                for (int i = 0; i < pt.getActualTypeArguments().length; i++) {
-                    classParamIndex = genericTypeNames.indexOf(pt.getActualTypeArguments()[i].toString());
-                    if (classParamIndex != -1) {
-                        builder.addIndex(i, classParamIndex);
+    private void propagateTypes(Map<String, Map<String, Type>> parameterization) {
+        List<Map<String, Type>> maps = new ArrayList<>();
+        maps.addAll(parameterization.values());
+
+        for (int index = 0; index < maps.size(); index++) {
+            Map<String, Type> current = maps.get(index);
+            if (index + 1 < maps.size()) {
+                for (Entry<String, Type> entry : current.entrySet()) {
+                    int peek = index + 1;
+                    while (entry.getValue() instanceof TypeVariable) {
+                        Map<String, Type> next = maps.get(peek++);
+                        entry.setValue(next.get(((TypeVariable<?>) entry.getValue()).getName()));
                     }
                 }
             }
         }
-        return builder.build();
     }
 
-    private void processFields(Class<?> currentClass,
-                               TypeData<?> parentClassTypeData,
-                               List<String> genericTypeNames, Map<String, TypeParameterMap> propertyTypeParameterMap) {
-        for (Field field : currentClass.getDeclaredFields()) {
-            final TypeData<?> typeData = TypeData.newInstance(field);
-
-            Type genericType = field.getGenericType();
-            TypeParameterMap typeParameterMap = getTypeParameterMap(genericTypeNames, genericType);
-            FieldMetadata<?> fieldMetadata = new FieldMetadata<>(field, typeData, typeParameterMap, parentClassTypeData);
-
-            cachePropertyTypeData(fieldMetadata, propertyTypeParameterMap, parentClassTypeData, genericTypeNames, genericType);
-
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                fieldMetadata.addAnnotation(annotation);
-            }
-            addModel(createFieldModelBuilder(fieldMetadata));
-        }
-    }
-
-    private List<String> processTypeNames(Class<?> currentClass) {
-        List<String> genericTypeNames = new ArrayList<>();
-        for (TypeVariable<? extends Class<?>> classTypeVariable : currentClass.getTypeParameters()) {
-            genericTypeNames.add(classTypeVariable.getName());
-        }
-        return genericTypeNames;
-    }
-
-    FieldModelBuilder createFieldModelBuilder(FieldMetadata<?> fieldMetadata) {
-        FieldModelBuilder fieldModelBuilder = FieldModel.builder()
-                                                        .field(fieldMetadata.getField())
-                                                        .fieldName(fieldMetadata.getName())
-                                                        .typeData(fieldMetadata.getTypeData())
-                                                        .annotations(fieldMetadata.getAnnotations());
-
-        fieldModelBuilder.mappedName(getMappedFieldName(fieldModelBuilder));
-
-        if (fieldMetadata.getTypeParameters() != null) {
-            fieldModelBuilder.typeData(specializeTypeData(fieldModelBuilder.typeData(), fieldMetadata.getTypeParameters(),
-                fieldMetadata.getTypeParameterMap()));
-        }
-
-        return fieldModelBuilder;
-    }
 }

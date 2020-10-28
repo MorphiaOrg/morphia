@@ -509,47 +509,6 @@ public class Mapper {
     }
 
     /**
-     * Updates a query with the type's subclass discriminators if polymorphic queries are enabled.
-     *
-     * @param writer the writer to update
-     * @param type   the type being queried
-     * @morphia.internal
-     * @since 2.1
-     */
-/*
-    public void updateQueryWithDiscriminators(BsonWriter writer, Class<?> type) {
-            EntityModel entityModel = getEntityModel(type);
-            if (entityModel == null) {
-                return;
-            }
-            Entity entityAnnotation = entityModel.getEntityAnnotation();
-            if (entityAnnotation == null || entityAnnotation.useDiscriminator()) {
-                String key = discriminatorKey(type);
-
-
-                List<EntityModel> entityModels = entityModel.getSubtypes();
-                Set<String> discriminators = new LinkedHashSet<>();
-
-                discriminators.add(entityModel.getDiscriminator());
-                if (options.isEnablePolymorphicQueries()) {
-                    discriminators.addAll(entityModels.stream()
-                                                   .filter(m -> key.equals(m.getDiscriminatorKey()))
-                                                   .map(EntityModel::getDiscriminator)
-                                                   .collect(Collectors.toSet()));
-                }
-
-                if (discriminators.size() > 1) {
-                    Filters.in(key, discriminators)
-                           .encode(this, writer, EncoderContext.builder().build());
-                } else {
-                    Filters.eq(key, discriminators.iterator().next())
-                           .encode(this, writer, EncoderContext.builder().build());
-                }
-            }
-    }
-*/
-
-    /**
      * Updates a query with any discriminators from subtypes if polymorphic queries are enabled
      *
      * @param model the query model
