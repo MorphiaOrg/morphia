@@ -121,7 +121,7 @@ public class Filter {
         return filterName;
     }
 
-    public String getField() {
+    protected String getField() {
         return field;
     }
 

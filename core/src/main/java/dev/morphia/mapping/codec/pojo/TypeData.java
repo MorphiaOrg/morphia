@@ -19,7 +19,6 @@ package dev.morphia.mapping.codec.pojo;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -38,6 +37,7 @@ import static org.bson.assertions.Assertions.notNull;
  *
  * @param <T> the underlying type being represented
  * @morphia.internal
+ * @since 2.0
  */
 public final class TypeData<T> implements TypeWithTypeParameters<T> {
     private final Class<T> type;
@@ -52,20 +52,6 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
      */
     public static <T> Builder<T> builder(Class<T> type) {
         return new Builder<T>(notNull("type", type));
-    }
-
-    /**
-     * Creates a TypeData reflecting the type of the given method.
-     *
-     * @param method the method to analyze
-     * @return the new TypeData information
-     */
-    public static TypeData<?> newInstance(Method method) {
-        if (isGetter(method)) {
-            return newInstance(method.getGenericReturnType(), method.getReturnType());
-        } else {
-            return newInstance(method.getGenericParameterTypes()[0], method.getParameterTypes()[0]);
-        }
     }
 
     /**
@@ -203,17 +189,6 @@ public final class TypeData<T> implements TypeWithTypeParameters<T> {
             }
         }
         return builder.toString();
-    }
-
-    private static boolean isGetter(Method method) {
-        if (method.getParameterTypes().length > 0) {
-            return false;
-        } else if (method.getName().startsWith("get") && method.getName().length() > "get".length()) {
-            return Character.isUpperCase(method.getName().charAt("get".length()));
-        } else {
-            return method.getName().startsWith("is") && method.getName().length() > "is".length() && Character.isUpperCase(
-                method.getName().charAt("is".length()));
-        }
     }
 
     @Override

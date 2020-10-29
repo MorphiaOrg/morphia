@@ -160,6 +160,10 @@
     {
       "package": "dev.morphia.mapping.codec.pojo",
       "justification": "internal implementation"
+    },
+    {
+      "classQualifiedName": "dev.morphia.mapping.codec.PropertyCodec",
+      "justification": "internal type"
     }
   ],
   "java.method.returnTypeTypeParametersChanged": [

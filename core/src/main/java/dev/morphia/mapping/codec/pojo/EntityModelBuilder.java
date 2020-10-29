@@ -80,7 +80,7 @@ public class EntityModelBuilder {
         }
     }
 
-    static public Map<String, Map<String, Type>> findParameterization(Class<?> type) {
+    private Map<String, Map<String, Type>> findParameterization(Class<?> type) {
         if (type.getSuperclass() == null) {
             return new HashMap<>();
         }
@@ -91,7 +91,7 @@ public class EntityModelBuilder {
         return parentMap;
     }
 
-    private static Map<String, Type> mapArguments(Class<?> type, Type typeSignature) {
+    private Map<String, Type> mapArguments(Class<?> type, Type typeSignature) {
         Map<String, Type> map = new HashMap<>();
         if (type != null && typeSignature instanceof ParameterizedType) {
             TypeVariable<?>[] typeParameters = type.getTypeParameters();
@@ -377,8 +377,7 @@ public class EntityModelBuilder {
     }
 
     private void propagateTypes(Map<String, Map<String, Type>> parameterization) {
-        List<Map<String, Type>> maps = new ArrayList<>();
-        maps.addAll(parameterization.values());
+        List<Map<String, Type>> maps = new ArrayList<>(parameterization.values());
 
         for (int index = 0; index < maps.size(); index++) {
             Map<String, Type> current = maps.get(index);
