@@ -11,6 +11,7 @@ import dev.morphia.mapping.validation.classrules.EmbeddedAndId;
 import dev.morphia.mapping.validation.classrules.EmbeddedAndValue;
 import dev.morphia.mapping.validation.classrules.EntityAndEmbed;
 import dev.morphia.mapping.validation.classrules.EntityCannotBeMapOrIterable;
+import dev.morphia.mapping.validation.classrules.EntityOrEmbed;
 import dev.morphia.mapping.validation.classrules.MultipleId;
 import dev.morphia.mapping.validation.classrules.MultipleVersions;
 import dev.morphia.mapping.validation.classrules.NoId;
@@ -93,6 +94,7 @@ public class MappingValidator {
         constraints.add(new NoId());
         constraints.add(new EmbeddedAndId());
         constraints.add(new EntityAndEmbed());
+        constraints.add(new EntityOrEmbed());
         constraints.add(new EmbeddedAndValue());
         constraints.add(new EntityCannotBeMapOrIterable());
         constraints.add(new DuplicatedAttributeNames());

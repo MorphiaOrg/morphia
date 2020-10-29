@@ -4,6 +4,7 @@ package dev.morphia.mapping;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
+import dev.morphia.EmbeddedBuilder;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
 import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
@@ -45,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
+import static dev.morphia.sofia.Sofia.entityOrEmbedded;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -108,15 +110,42 @@ public class Mapper {
     }
 
     /**
-     * @param clazz the model type
-     * @param <T>   type model type
-     * @return the new model
-     * @morphia.internal
+     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     *
+     * @param type the type to process
+     * @return the EntityModel for the object given
      */
-    public <T> EntityModel createEntityModel(Class<T> clazz) {
-        return new EntityModelBuilder(this.datastore, clazz)
-                   .build();
+    public EntityModel getEntityModel(Class type) {
+        if (type == null) {
+            return null;
+        }
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        EntityModel model = mappedEntities.get(actual);
+
+        if (model == null) {
+            if (!isMappable(actual)) {
+                return null;
+            }
+            model = register(createEntityModel(type));
+        }
+
+        return model;
     }
+
+    /**
+     * Maps a set of classes
+     *
+     * @param entityClasses the classes to map
+     * @return the EntityModel references
+     */
+    public List<EntityModel> map(Class... entityClasses) {
+        return map(List.of(entityClasses));
+    }
+
+    //    private <T> EntityModel createEntityModel(Class<T> clazz, Embedded annotation) {
+    //        return new EntityModelBuilder(this.datastore, clazz, annotation)
+    //                   .build();
+    //    }
 
     /**
      * Updates a collection to use a specific WriteConcern
@@ -264,13 +293,21 @@ public class Mapper {
     }
 
     /**
-     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     * Maps a set of classes
      *
-     * @param type the type to process
-     * @return the EntityModel for the object given
+     * @param classes the classes to map
+     * @return the list of mapped classes
      */
-    public EntityModel getEntityModel(Class type) {
-        return getEntityModel(type, false);
+    public List<EntityModel> map(List<Class> classes) {
+        for (Class type : classes) {
+            if (!isMappable(type)) {
+                throw new MappingException(entityOrEmbedded(type.getName()));
+            }
+        }
+        return classes.stream()
+                      .map(this::getEntityModel)
+                      .filter(Objects::nonNull)
+                      .collect(Collectors.toList());
     }
 
     /**
@@ -414,23 +451,32 @@ public class Mapper {
     }
 
     /**
-     * Maps a set of classes
+     * Maps an external class.  This is intended for use on types needed in a system but come from an external source where the more
+     * traditional approach of decorating the type in source with Morphia annotations is not possible.
      *
-     * @param entityClasses the classes to map
-     * @return the EntityModel references
-     */
-    public List<EntityModel> map(Class... entityClasses) {
-        return map(List.of(entityClasses), true);
-    }
-
-    /**
-     * Maps a set of classes
-     *
-     * @param classes the classes to map
+     * @param type the type to map
+     * @param <A>  the annotation to apply.  Currently only {@code @Embedded} is supported
      * @return the list of mapped classes
+     * @morphia.experimental
+     * @see EmbeddedBuilder
+     * @since 2.1
      */
-    public List<EntityModel> map(List<Class> classes) {
-        return map(classes, true);
+    public <A extends Annotation> EntityModel mapExternal(A annotation, Class type) {
+        if (type == null) {
+            return null;
+        }
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        EntityModel model = mappedEntities.get(actual);
+
+        if (model == null) {
+            if (annotation == null) {
+                annotation = (A) EmbeddedBuilder.builder();
+            }
+            model = register(createEntityModel(type, annotation));
+        }
+
+
+        return model;
     }
 
     /**
@@ -440,10 +486,30 @@ public class Mapper {
      */
     public synchronized void mapPackage(String packageName) {
         try {
-            map(getClasses(getClass().getClassLoader(), packageName, getOptions().isMapSubPackages()), false);
+            getClasses(getClass().getClassLoader(), packageName, getOptions().isMapSubPackages())
+                .stream()
+                .map(this::getEntityModel)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
+    }
+
+    /**
+     * @param clazz the model type
+     * @param <T>   type model type
+     * @return the new model
+     * @morphia.internal
+     */
+    private <T> EntityModel createEntityModel(Class<T> clazz) {
+        return new EntityModelBuilder(this.datastore, clazz)
+                   .build();
+    }
+
+    private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
+        return new EntityModelBuilder(this.datastore, annotation, clazz)
+                   .build();
     }
 
     /**
@@ -560,29 +626,6 @@ public class Mapper {
         return new ArrayList<>(classes);
     }
 
-    /**
-     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
-     *
-     * @param type the type to process
-     * @return the EntityModel for the object given
-     */
-    private EntityModel getEntityModel(Class type, boolean allowUnannotated) {
-        if (type == null) {
-            return null;
-        }
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        EntityModel model = mappedEntities.get(actual);
-
-        if (model == null) {
-            if (!isMappable(actual) && !allowUnannotated) {
-                return null;
-            }
-            model = register(createEntityModel(type));
-        }
-
-        return model;
-    }
-
     private <T> boolean hasAnnotation(Class<T> clazz, List<Class<? extends Annotation>> annotations) {
         if (clazz == null) {
             return false;
@@ -599,16 +642,8 @@ public class Mapper {
                         .reduce(false, (l, r) -> l || r);
     }
 
-    private List<EntityModel> map(List<Class> classes, boolean allowUnannotated) {
-        return classes.stream()
-                      .map(c -> getEntityModel(c, allowUnannotated))
-                      .filter(Objects::nonNull)
-                      .collect(Collectors.toList());
-    }
-
     private EntityModel register(EntityModel entityModel) {
         discriminatorLookup.addModel(entityModel);
-
         mappedEntities.put(entityModel.getType(), entityModel);
         if (entityModel.getEntityAnnotation() != null) {
             mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())

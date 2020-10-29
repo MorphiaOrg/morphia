@@ -1,21 +1,7 @@
-/*
-  Copyright (C) 2010 Olafur Gauti Gudmundsson
-  <p/>
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
-  obtain a copy of the License at
-  <p/>
-  http://www.apache.org/licenses/LICENSE-2.0
-  <p/>
-  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
- */
-
-
 package dev.morphia.test;
 
-
 import dev.morphia.Datastore;
+import dev.morphia.EmbeddedBuilder;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
@@ -78,7 +64,6 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
-
 
 @SuppressWarnings({"unchecked", "unchecked"})
 public class TestMapping extends TestBase {
@@ -192,6 +177,16 @@ public class TestMapping extends TestBase {
     @Test
     public void testBadMappings() {
         assertThrows(MappingException.class, () -> {
+            getMapper().map(UnannotatedEntity.class);
+            fail("Missing @Entity and @Embedded should have been caught");
+        });
+
+        assertThrows(MappingException.class, () -> {
+            getMapper().map(UnannotatedEmbedded.class);
+            fail("Missing @Entity and @Embedded should have been caught");
+        });
+
+        assertThrows(MappingException.class, () -> {
             getMapper().map(MissingId.class);
             fail("Validation: Missing @Id field not caught");
         });
@@ -276,7 +271,8 @@ public class TestMapping extends TestBase {
     public void testEmbeddedEntity() {
         getMapper().map(ContainsEmbeddedEntity.class);
         getDs().save(new ContainsEmbeddedEntity());
-        final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class).iterator(new FindOptions().limit(1))
+        final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
+                                                        .iterator(new FindOptions().limit(1))
                                                         .next();
         assertNotNull(ceeLoaded);
         assertNotNull(ceeLoaded.id);
@@ -319,7 +315,7 @@ public class TestMapping extends TestBase {
     @Test
     public void testExternalClass() {
         Datastore datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
-        assertEquals(datastore.getMapper().map(UnannotatedEmbedded.class).size(), 1,
+        assertNotNull(datastore.getMapper().mapExternal(EmbeddedBuilder.builder(), UnannotatedEmbedded.class),
             "Should be able to map explicitly passed class references");
 
         datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
@@ -992,6 +988,13 @@ public class TestMapping extends TestBase {
     }
 
     private static class Super3<T extends Number> extends Super2<T> {
+    }
+
+    private static class UnannotatedEntity {
+        @Id
+        private ObjectId id;
+        private String field;
+        private Long number;
     }
 
     private static class UnannotatedEmbedded {

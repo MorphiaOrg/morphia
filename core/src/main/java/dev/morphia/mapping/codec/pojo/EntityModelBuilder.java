@@ -80,6 +80,15 @@ public class EntityModelBuilder {
         }
     }
 
+    public <T, A extends Annotation> EntityModelBuilder(Datastore datastore, A annotation, Class<T> clazz) {
+        this(datastore, clazz);
+        LinkedHashSet<Annotation> temp = new LinkedHashSet<>();
+        temp.add(annotation);
+        temp.addAll(annotations);
+        annotations.clear();
+        annotations.addAll(temp);
+    }
+
     private Map<String, Map<String, Type>> findParameterization(Class<?> type) {
         if (type.getSuperclass() == null) {
             return new HashMap<>();
