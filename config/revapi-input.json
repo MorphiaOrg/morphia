@@ -17,12 +17,6 @@
       "justification": "internal implementation class"
     }
   ],
-  "java.class.nonPublicPartOfAPI": [
-    {
-      "class": "morphia.bson.*",
-      "justification": "Internal classes"
-    }
-  ],
   "java.class.nowFinal": [
     {
       "class": "com.mongodb.*",

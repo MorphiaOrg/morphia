@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package morphia.org.bson.codecs.pojo;
+package dev.morphia.mapping.codec.pojo;
 
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 

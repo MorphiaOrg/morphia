@@ -7,7 +7,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
-import morphia.org.bson.codecs.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.TypeData;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;

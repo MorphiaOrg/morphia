@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import morphia.org.bson.codecs.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.TypeData;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;

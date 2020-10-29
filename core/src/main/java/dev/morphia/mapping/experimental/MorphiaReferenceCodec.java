@@ -5,7 +5,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
-import morphia.org.bson.codecs.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.TypeData;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonTypeClassMap;

@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec;
 
 
-import morphia.org.bson.codecs.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.TypeData;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 

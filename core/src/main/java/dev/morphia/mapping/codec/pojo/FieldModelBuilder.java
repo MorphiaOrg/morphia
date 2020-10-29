@@ -16,7 +16,6 @@
 
 package dev.morphia.mapping.codec.pojo;
 
-import morphia.org.bson.codecs.pojo.TypeData;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
