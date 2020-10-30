@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Reference Guides on Morphia</title>
-    <link>/2.0.2/guides/</link>
+    <link>/1.6.0/guides/</link>
     <description>Recent content in Reference Guides on Morphia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
     
-	<atom:link href="/2.0.2/guides/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/1.6.0/guides/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Annotations</title>
-      <link>/2.0.2/guides/annotations/</link>
+      <link>/1.6.0/guides/annotations/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/2.0.2/guides/annotations/</guid>
+      <guid>/1.6.0/guides/annotations/</guid>
       <description>Below is a list of all the annotations and a brief description of how to use them.
 Indexes Indexes can be defined on each field directly for single field indexing or at the class level for compund indexes. To see the next few annotations in context, please refer to TestIndexCollections.java or TestIndexed.java in the Morphia source.
 Index The @Index documentation can be found here. There are two pieces to this annotation that are mutually exclusive.</description>
@@ -24,49 +24,49 @@ Index The @Index documentation can be found here. There are two pieces to this a
     
     <item>
       <title>Aggregation</title>
-      <link>/2.0.2/guides/aggregation/</link>
+      <link>/1.6.0/guides/aggregation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/aggregation/</guid>
+      <guid>/1.6.0/guides/aggregation/</guid>
       <description>The aggregation framework in MongoDB allows you to define a series (called a pipeline) of operations (called stages) against the data in a collection. These pipelines can be used for analytics or they can be used to convert your data from one form to another. This guide will not go in to the details of how aggregation works, however. The official MongoDB documentation has extensive tutorials on such details. Rather, this guide will focus on the Morphia API.</description>
     </item>
     
     <item>
       <title>Configuration</title>
-      <link>/2.0.2/guides/configuration/</link>
+      <link>/1.6.0/guides/configuration/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/configuration/</guid>
+      <guid>/1.6.0/guides/configuration/</guid>
       <description>Morphia 2.0 introduces a number of new ways to configure its behavior. These values are listed below:
  Collection naming Property naming The discriminator key The discriminator value  Collection and property naming Traditionally Morphia has used with the class&amp;rsquo;s &amp;ldquo;simple name&amp;rdquo; for the collection name if you choose to not manually map the name of an entity&amp;rsquo;s collection. Similarly, an entity&amp;rsquo;s properties were named after the Java field name unless mapped otherwise with the @Property annotation.</description>
     </item>
     
     <item>
       <title>Indexing</title>
-      <link>/2.0.2/guides/indexing/</link>
+      <link>/1.6.0/guides/indexing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/indexing/</guid>
+      <guid>/1.6.0/guides/indexing/</guid>
       <description>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. In addition to the familiar ascending/descending index types, Morphia and MongoDB support TTL, text, and geospatial indexes. When defining text indexes there are certain restrictions which will be covered below. Full details for all these types are available in the manual.
 There are two ways to define indexes: at the class level and at the field level.</description>
     </item>
     
     <item>
       <title>Life Cycle Methods</title>
-      <link>/2.0.2/guides/lifecyclemethods/</link>
+      <link>/1.6.0/guides/lifecyclemethods/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/lifecyclemethods/</guid>
+      <guid>/1.6.0/guides/lifecyclemethods/</guid>
       <description>There are various annotations which can be used to register callbacks on certain life cycle events. These include Pre/Post-Persist (Save) , and Pre/Post-Load.
  @PrePersist - Called before save, it can return a Document in place of an empty one. @PostPersist - Called after the save call to the database @PreLoad - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values) @PostLoad - Called after populating the entity with the values from the document  See the annotations guide for a full list of the annotations supported.</description>
     </item>
     
     <item>
       <title>Querying</title>
-      <link>/2.0.2/guides/querying/</link>
+      <link>/1.6.0/guides/querying/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/querying/</guid>
+      <guid>/1.6.0/guides/querying/</guid>
       <description>Creating a Query Morphia provides Query&amp;lt;T&amp;gt; class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible. To create the Query, we invoke the following code:
 Query&amp;lt;Product&amp;gt; query = datastore.find(Product.class); find() returns an instance of Query which we can use to build a query.
 filter() The most significant method filter(Filter...). This method takes a number of filters to apply to the query being built.</description>
@@ -74,30 +74,30 @@ filter() The most significant method filter(Filter...). This method takes a numb
     
     <item>
       <title>Querying (Deprecated)</title>
-      <link>/2.0.2/guides/querying-old/</link>
+      <link>/1.6.0/guides/querying-old/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/querying-old/</guid>
+      <guid>/1.6.0/guides/querying-old/</guid>
       <description>This page describes the older approach to querying. While this older API is still supported, efforts should be made to update to the new API as outlined in the other querying guide. This old API is active using the legacy configuration. The new API will attempt to redirect most calls to use the new Filters based approach.
 Note that at this time complex queries using and or or clauses can not be correctly transparently translated and will require manual effort to update to the new API.</description>
     </item>
     
     <item>
       <title>References</title>
-      <link>/2.0.2/guides/references/</link>
+      <link>/1.6.0/guides/references/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/references/</guid>
+      <guid>/1.6.0/guides/references/</guid>
       <description>Morphia supports two styles of defining references: the @Reference annotation and the experimental MorphiaReference. The annotation based approach is discussed here. This guide will cover the wrapper based approach.
 This API is experimental. Its implementation and API subject to change based on user feedback. However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</description>
     </item>
     
     <item>
       <title>Schema Validation</title>
-      <link>/2.0.2/guides/schemavalidation/</link>
+      <link>/1.6.0/guides/schemavalidation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/schemavalidation/</guid>
+      <guid>/1.6.0/guides/schemavalidation/</guid>
       <description>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&amp;rsquo;s source. Schema validationprovides the capability to perform schema validation during updates and insertions. Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
 Below we have a basic entity definition. Note the new annotation @Validation.
 @Entity(&amp;#34;validation&amp;#34;) @Validation(&amp;#34;{ number : { $gt : 10 } }&amp;#34;) public class DocumentValidation { @Id private ObjectId id; private String string; private int number; private Date date; .</description>
@@ -105,40 +105,40 @@ Below we have a basic entity definition. Note the new annotation @Validation.
     
     <item>
       <title>Text Search</title>
-      <link>/2.0.2/guides/textsearch/</link>
+      <link>/1.6.0/guides/textsearch/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/textsearch/</guid>
+      <guid>/1.6.0/guides/textsearch/</guid>
       <description>Text Searching Morphia also supports MongoDB&amp;rsquo;s text search capabilities. In order to execute a text search against a collection, the collection must have a text index defined first. Using Morphia that definition would look like this:
 @Indexes(@Index(fields = @Field(value = &amp;#34;$**&amp;#34;, type = IndexType.TEXT))) public static class Greeting { @Id private ObjectId id; private String value; private String language; ... } The $** value tells MongoDB to create a text index on all the text fields in a document.</description>
     </item>
     
     <item>
       <title>Transactions</title>
-      <link>/2.0.2/guides/transactions/</link>
+      <link>/1.6.0/guides/transactions/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/transactions/</guid>
+      <guid>/1.6.0/guides/transactions/</guid>
       <description>Starting with MongoDB version 4.0, multi-document transactions are now supported on replica sets. Morphia 2.0 introduces a simple mechanism to access this functionality. Morphia 2.0 adds the methods withTransaction(MorphiaTransaction&amp;lt;T&amp;gt; transaction) and withTransaction(ClientSessionOptions options, MorphiaTransaction&amp;lt;T&amp;gt; transaction) allowing for the execution of logic scoped to a transaction.
 The API is designed to work with Java 8&amp;rsquo;s lambda syntax for the most convenience. In this example, let&amp;rsquo;s assume we&amp;rsquo;re building a shopping site.</description>
     </item>
     
     <item>
       <title>Updating</title>
-      <link>/2.0.2/guides/updating/</link>
+      <link>/1.6.0/guides/updating/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/updating/</guid>
+      <guid>/1.6.0/guides/updating/</guid>
       <description>Updates in 2.0, are issued off of a Query instance in contrast to the old approach of using Datastore#update() in previous versions. These update operations are executed on the server without pulling any documents in to your application. Update operations are defined using a set of functions as defined on UpdateOperators In our examples, we&amp;rsquo;ll be using the following model:
 @Entity(&amp;#34;hotels&amp;#34;) public class Hotel { @Id private ObjectId id; private String name; private int stars; @Embedded private Address address; List&amp;lt;Integer&amp;gt; roomNumbers = new ArrayList&amp;lt;Integer&amp;gt;(); // .</description>
     </item>
     
     <item>
       <title>Updating (Deprecated)</title>
-      <link>/2.0.2/guides/updating-old/</link>
+      <link>/1.6.0/guides/updating-old/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2.0.2/guides/updating-old/</guid>
+      <guid>/1.6.0/guides/updating-old/</guid>
       <description>There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.
 Updating (on the server) The update method on Datastore is used to issue a command to the server to change existing documents. The effects of the update command are defined via UpdateOperations methods.
 The Field Expression The field expression, used by all update operations, can be either a single field name or any dot-notation form (for embedded elements).</description>
