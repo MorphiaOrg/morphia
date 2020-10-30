@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
 import com.mongodb.client.MongoCollection;
-import dev.morphia.annotations.Collation;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Field;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Index;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.Indexes;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Text;
+import dev.morphia.TestBase;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;

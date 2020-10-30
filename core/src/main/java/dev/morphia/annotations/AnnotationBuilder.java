@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
 import dev.morphia.mapping.MappingException;
 
@@ -25,16 +25,20 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
-abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
+/**
+ * @param <T>
+ * @morphia.internal
+ */
+public abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     private final Map<String, Object> values = new HashMap<String, Object>();
 
-    AnnotationBuilder() {
+    protected AnnotationBuilder() {
         for (Method method : annotationType().getDeclaredMethods()) {
             values.put(method.getName(), method.getDefaultValue());
         }
     }
 
-    AnnotationBuilder(T original) {
+    protected AnnotationBuilder(T original) {
         try {
             for (Method method : annotationType().getDeclaredMethods()) {
                 values.put(method.getName(), method.invoke(original));
@@ -45,11 +49,11 @@ abstract class AnnotationBuilder<T extends Annotation> implements Annotation {
     }
 
     @SuppressWarnings("unchecked")
-    <V> V get(String key) {
+    protected <V> V get(String key) {
         return (V) values.get(key);
     }
 
-    void put(String key, Object value) {
+    protected void put(String key, Object value) {
         if (value != null) {
             values.put(key, value);
         }

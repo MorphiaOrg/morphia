@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
 import com.mongodb.client.MongoCollection;
-import dev.morphia.annotations.Collation;
-import dev.morphia.annotations.Field;
-import dev.morphia.annotations.Index;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.Indexes;
-import dev.morphia.annotations.Text;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -55,7 +48,11 @@ public final class IndexHelper {
 
     private final Mapper mapper;
 
-    IndexHelper(Mapper mapper) {
+    /**
+     * @param mapper the mapper
+     * @morphia.internal
+     */
+    public IndexHelper(Mapper mapper) {
         this.mapper = mapper;
     }
 
@@ -206,7 +203,12 @@ public final class IndexHelper {
                                                  .build();
     }
 
-    void createIndex(MongoCollection<?> collection, EntityModel model) {
+    /**
+     * @param collection the collection
+     * @param model      the model
+     * @morphia.internal
+     */
+    public void createIndex(MongoCollection<?> collection, EntityModel model) {
         if (!model.isInterface() && !model.isAbstract()) {
             for (Index index : collectIndexes(model, Collections.emptyList())) {
                 createIndex(collection, model, index);

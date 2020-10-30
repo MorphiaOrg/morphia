@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
-import dev.morphia.annotations.Validation;
 
 /**
  * This is an internal class subject to change and removal.  Do not use.

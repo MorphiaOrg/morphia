@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
-import dev.morphia.annotations.Collation;
-import dev.morphia.annotations.Index;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
 import org.bson.Document;
 
 import java.util.Map.Entry;

@@ -15,6 +15,7 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.AggregationImpl;
 import dev.morphia.annotations.CappedAt;
+import dev.morphia.annotations.IndexHelper;
 import dev.morphia.annotations.Validation;
 import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.experimental.MorphiaSessionImpl;

@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
 import com.mongodb.client.model.CollationAlternate;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
-import dev.morphia.annotations.Collation;
 
-class CollationBuilder extends AnnotationBuilder<Collation> implements Collation {
+/**
+ * @morphia.internal
+ */
+public class CollationBuilder extends AnnotationBuilder<Collation> implements Collation {
     @Override
     public Class<Collation> annotationType() {
         return Collation.class;

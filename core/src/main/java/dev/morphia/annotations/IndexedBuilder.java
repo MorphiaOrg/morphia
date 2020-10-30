@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Text;
+import dev.morphia.utils.IndexDirection;
 
-class TextBuilder extends AnnotationBuilder<Text> implements Text {
+class IndexedBuilder extends AnnotationBuilder<Indexed> implements Indexed {
     @Override
-    public Class<Text> annotationType() {
-        return Text.class;
+    public Class<Indexed> annotationType() {
+        return Indexed.class;
     }
 
     @Override
@@ -31,16 +30,16 @@ class TextBuilder extends AnnotationBuilder<Text> implements Text {
     }
 
     @Override
-    public int value() {
+    public IndexDirection value() {
         return get("value");
     }
 
-    TextBuilder options(IndexOptions options) {
+    IndexedBuilder options(IndexOptions options) {
         put("options", options);
         return this;
     }
 
-    TextBuilder value(int value) {
+    IndexedBuilder value(IndexDirection value) {
         put("value", value);
         return this;
     }

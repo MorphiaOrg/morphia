@@ -4,12 +4,12 @@ package dev.morphia.mapping;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
-import dev.morphia.EmbeddedBuilder;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
 import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.experimental.EmbeddedBuilder;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
@@ -454,8 +454,9 @@ public class Mapper {
      * Maps an external class.  This is intended for use on types needed in a system but come from an external source where the more
      * traditional approach of decorating the type in source with Morphia annotations is not possible.
      *
-     * @param type the type to map
-     * @param <A>  the annotation to apply.  Currently only {@code @Embedded} is supported
+     * @param annotation the annotation to apply.  might be null.
+     * @param type       the type to map
+     * @param <A>        the annotation to apply.  Currently only {@code @Embedded} is supported
      * @return the list of mapped classes
      * @morphia.experimental
      * @see EmbeddedBuilder

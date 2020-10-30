@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package dev.morphia;
+package dev.morphia.annotations;
 
-import dev.morphia.annotations.Field;
 import dev.morphia.utils.IndexType;
 
 class FieldBuilder extends AnnotationBuilder<Field> implements Field {

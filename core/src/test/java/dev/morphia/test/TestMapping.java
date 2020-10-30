@@ -1,7 +1,6 @@
 package dev.morphia.test;
 
 import dev.morphia.Datastore;
-import dev.morphia.EmbeddedBuilder;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Embedded;
@@ -9,6 +8,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.experimental.Constructor;
+import dev.morphia.annotations.experimental.EmbeddedBuilder;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;

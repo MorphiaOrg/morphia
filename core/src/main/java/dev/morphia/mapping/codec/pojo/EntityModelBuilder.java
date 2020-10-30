@@ -80,6 +80,14 @@ public class EntityModelBuilder {
         }
     }
 
+    /**
+     * @param datastore  the datastore
+     * @param annotation the annotation
+     * @param clazz      the type
+     * @param <T>        the class type
+     * @param <A>        the annotation type
+     * @morphia.internal
+     */
     public <T, A extends Annotation> EntityModelBuilder(Datastore datastore, A annotation, Class<T> clazz) {
         this(datastore, clazz);
         LinkedHashSet<Annotation> temp = new LinkedHashSet<>();
