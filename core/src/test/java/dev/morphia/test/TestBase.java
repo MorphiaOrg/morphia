@@ -45,13 +45,11 @@ import static org.testng.Assert.fail;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    protected static MongoClient mongoClient;
+    private static MongoClient mongoClient;
     private final MapperOptions mapperOptions = MapperOptions.DEFAULT;
 
-    @SuppressWarnings("unused")
-    protected MongoDatabase database;
-    @SuppressWarnings("unused")
-    protected Datastore ds;
+    private MongoDatabase database;
+    private Datastore datastore;
 
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
         if (!condition) {
@@ -71,19 +69,19 @@ public abstract class TestBase {
         return database;
     }
 
-    public Mapper getMapper() {
-        return getDs().getMapper();
+    public Datastore getDatastore() {
+        if (datastore == null) {
+            datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
+        }
+        return datastore;
     }
 
     public boolean isReplicaSet() {
         return runIsMaster().get("setName") != null;
     }
 
-    public Datastore getDs() {
-        if (ds == null) {
-            ds = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
-        }
-        return ds;
+    public Mapper getMapper() {
+        return getDatastore().getMapper();
     }
 
     @DataProvider(name = "queryFactories")

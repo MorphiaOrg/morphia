@@ -61,6 +61,7 @@ public class EntityModel {
     private final FieldModel idField;
     private final FieldModel versionField;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
+    private MorphiaInstanceCreator instanceCreator;
 
     /**
      * Creates a new instance
@@ -229,6 +230,10 @@ public class EntityModel {
      * @return a new InstanceCreator instance for the ClassModel
      */
     public MorphiaInstanceCreator getInstanceCreator() {
+        //        if(instanceCreator == null) {
+        //            instanceCreator = creatorFactory.create();
+        //        }
+        //        return instanceCreator;
         return creatorFactory.create();
     }
 

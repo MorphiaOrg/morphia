@@ -71,13 +71,13 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void averageCitySizeByState() {
-        Aggregation pipeline = getDs().aggregate(City.class)
-                                      .group(of(id().field("state")
-                                                    .field("city"))
-                                                 .field("pop", sum(field("pop"))))
-                                      .group(of(
-                                          id("_id.state"))
-                                                 .field("avgCityPop", avg(field("pop"))));
+        Aggregation pipeline = getDatastore().aggregate(City.class)
+                                             .group(of(id().field("state")
+                                                           .field("city"))
+                                                        .field("pop", sum(field("pop"))))
+                                             .group(of(
+                                                 id("_id.state"))
+                                                        .field("avgCityPop", avg(field("pop"))));
         validate(pipeline.execute(Population.class), "MN", 5372);
     }
 
@@ -85,10 +85,10 @@ public class ZipCodeDataSetTest extends TestBase {
     @Test
     public void populationsAbove10M() {
         Aggregation pipeline
-            = getDs().aggregate(City.class)
-                     .group(of(id("state"))
-                                .field("totalPop", sum(field("pop"))))
-                     .match(gte("totalPop", 10000000));
+            = getDatastore().aggregate(City.class)
+                            .group(of(id("state"))
+                                       .field("totalPop", sum(field("pop"))))
+                            .match(gte("totalPop", 10000000));
 
         validate(pipeline.execute(Population.class), "CA", 29754890);
         validate(pipeline.execute(Population.class), "OH", 10846517);
@@ -98,32 +98,32 @@ public class ZipCodeDataSetTest extends TestBase {
     public void smallestAndLargestCities() {
         getMapper().mapPackage(getClass().getPackage().getName());
 
-        Aggregation pipeline = getDs().aggregate(City.class)
+        Aggregation pipeline = getDatastore().aggregate(City.class)
 
-                                      .group(of(id().field("state")
-                                                    .field("city"))
-                                                 .field("pop", sum(field("pop"))))
+                                             .group(of(id().field("state")
+                                                           .field("city"))
+                                                        .field("pop", sum(field("pop"))))
 
-                                      .sort(Sort.on().ascending("pop"))
+                                             .sort(Sort.on().ascending("pop"))
 
-                                      .group(of(
-                                          id("_id.state"))
-                                                 .field("biggestCity", last(field("_id.city")))
-                                                 .field("biggestPop", last(field("pop")))
-                                                 .field("smallestCity", first(field("_id.city")))
-                                                 .field("smallestPop", first(field("pop"))))
+                                             .group(of(
+                                                 id("_id.state"))
+                                                        .field("biggestCity", last(field("_id.city")))
+                                                        .field("biggestPop", last(field("pop")))
+                                                        .field("smallestCity", first(field("_id.city")))
+                                                        .field("smallestPop", first(field("pop"))))
 
-                                      .project(
-                                          Projection.of()
-                                                    .exclude("_id")
-                                                    .include("state", field("_id"))
-                                                    .include("biggestCity",
-                                                        Expressions.of()
-                                                                   .field("name", field("biggestCity"))
-                                                                   .field("pop", field("biggestPop")))
-                                                    .include("smallestCity",
-                                                        Expressions.of()
-                                                                   .field("name", field("smallestCity"))
+                                             .project(
+                                                 Projection.of()
+                                                           .exclude("_id")
+                                                           .include("state", field("_id"))
+                                                           .include("biggestCity",
+                                                               Expressions.of()
+                                                                          .field("name", field("biggestCity"))
+                                                                          .field("pop", field("biggestPop")))
+                                                           .include("smallestCity",
+                                                               Expressions.of()
+                                                                          .field("name", field("smallestCity"))
                                                                    .field("pop", field("smallestPop"))));
 
         try (MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class)) {

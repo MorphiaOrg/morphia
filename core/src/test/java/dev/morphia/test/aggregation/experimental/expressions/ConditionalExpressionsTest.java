@@ -24,21 +24,21 @@ public class ConditionalExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 2, 'name' : 'Bob Hanna', 'scores' : [ 71, 64, 81 ] }"),
             parse("{ '_id' : 3, 'name' : 'James Torrelio', 'scores' : [ 91, 84, 97 ] }")));
 
-        List<Document> actual = getDs().aggregate("grades")
-                                       .project(Projection.of()
-                                                          .include("name")
-                                                          .include("summary", switchExpression()
-                                                                                  .branch(gte(avg(field("scores")), value(80)),
-                                                                                      value("Doing great!"))
-                                                                                  .branch(and(
-                                                                                      gte(avg(field("scores")), value(80)),
-                                                                                      gte(avg(field("scores")), value(90))),
-                                                                                      value("Doing pretty well."))
-                                                                                  .branch(lte(avg(field("scores")), value(80)),
-                                                                                      value("Needs improvement."))
-                                                                                  .defaultCase(value("No Scores found."))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("grades")
+                                              .project(Projection.of()
+                                                                 .include("name")
+                                                                 .include("summary", switchExpression()
+                                                                                         .branch(gte(avg(field("scores")), value(80)),
+                                                                                             value("Doing great!"))
+                                                                                         .branch(and(
+                                                                                             gte(avg(field("scores")), value(80)),
+                                                                                             gte(avg(field("scores")), value(90))),
+                                                                                             value("Doing pretty well."))
+                                                                                         .branch(lte(avg(field("scores")), value(80)),
+                                                                                             value("Needs improvement."))
+                                                                                         .defaultCase(value("No Scores found."))))
+                                              .execute(Document.class)
+                                              .toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : 1, 'name' : 'Susan Wilkes', 'summary' : 'Doing great!' }"),

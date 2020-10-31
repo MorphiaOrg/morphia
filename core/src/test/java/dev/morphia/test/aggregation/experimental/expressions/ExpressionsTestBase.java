@@ -20,7 +20,7 @@ public class ExpressionsTestBase extends TestBase {
     @BeforeMethod
     public void seed() {
         getMapper().getCollection(User.class).drop();
-        getDs().save(new User("", LocalDate.now()));
+        getDatastore().save(new User("", LocalDate.now()));
     }
 
     @SuppressWarnings("unchecked")
@@ -35,11 +35,11 @@ public class ExpressionsTestBase extends TestBase {
         assertEquals(writer.getArraysLevel(), 0);
         assertDocumentEquals(actual, expected);
 
-        Document test = getDs().aggregate(User.class)
-                               .project(Projection.of()
-                                                  .include("test", value))
-                               .execute(Document.class)
-                               .next();
+        Document test = getDatastore().aggregate(User.class)
+                                      .project(Projection.of()
+                                                         .include("test", value))
+                                      .execute(Document.class)
+                                      .next();
         assertEquals(expectedValue, test.get("test"));
     }
 }

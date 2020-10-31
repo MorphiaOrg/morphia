@@ -62,28 +62,28 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void createValidation() {
         getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
+        getDatastore().enableDocumentValidation();
         assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
         try {
-            getDs().save(new DocumentValidation("John", 1, new Date()));
+            getDatastore().save(new DocumentValidation("John", 1, new Date()));
             fail("Document should have failed validation");
         } catch (MongoWriteException e) {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
 
-        getDs().save(new DocumentValidation("Harold", 100, new Date()));
+        getDatastore().save(new DocumentValidation("Harold", 100, new Date()));
 
     }
 
     @Test
     public void findAndModify() {
         getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
+        getDatastore().enableDocumentValidation();
 
-        getDs().save(new DocumentValidation("Harold", 100, new Date()));
+        getDatastore().save(new DocumentValidation("Harold", 100, new Date()));
 
-        Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
+        Query<DocumentValidation> query = getDatastore().find(DocumentValidation.class);
         ModifyOptions options = new ModifyOptions()
                                     .bypassDocumentValidation(false);
         Modify<DocumentValidation> modify = query.modify(set("number", 5));
@@ -104,20 +104,20 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void insert() {
         getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
+        getDatastore().enableDocumentValidation();
 
         try {
-            getDs().insert(new DocumentValidation("Harold", 8, new Date()));
+            getDatastore().insert(new DocumentValidation("Harold", 8, new Date()));
             fail("Document validation should have complained");
         } catch (MongoWriteException e) {
             // expected
         }
 
-        getDs().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
-                                                                            .bypassDocumentValidation(true));
+        getDatastore().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
+                                                                                   .bypassDocumentValidation(true));
 
-        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
-                                                 .filter(eq("number", 8));
+        Query<DocumentValidation> query = getDatastore().find(DocumentValidation.class)
+                                                        .filter(eq("number", 8));
         Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
@@ -127,14 +127,14 @@ public class TestDocumentValidation extends TestBase {
             new DocumentValidation("James", 8, new Date()));
 
         try {
-            getDs().insert(list);
+            getDatastore().insert(list);
             fail("Document validation should have complained");
         } catch (MongoBulkWriteException e) {
             // expected
         }
 
-        getDs().insert(list, new InsertManyOptions()
-                                 .bypassDocumentValidation(true));
+        getDatastore().insert(list, new InsertManyOptions()
+                                        .bypassDocumentValidation(true));
 
         Assert.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
@@ -144,19 +144,19 @@ public class TestDocumentValidation extends TestBase {
         insert("contacts", List.of(
             parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
             parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
-        EntityModel mapped = getDs().getMapper().map(Contact.class).get(0);
-        getDs().enableDocumentValidation();
+        EntityModel mapped = getDatastore().getMapper().map(Contact.class).get(0);
+        getDatastore().enableDocumentValidation();
 
         Assert.assertThrows(MongoWriteException.class,
-            () -> getDs().find(Contact.class)
-                         .filter(eq("_id", 1))
-                         .update(set("age", 42))
-                         .execute());
+            () -> getDatastore().find(Contact.class)
+                                .filter(eq("_id", 1))
+                                .update(set("age", 42))
+                                .execute());
 
-        getDs().find(Contact.class)
-               .filter(eq("_id", 2))
-               .update(unset("name"))
-               .execute();
+        getDatastore().find(Contact.class)
+                      .filter(eq("_id", 2))
+                      .update(unset("name"))
+                      .execute();
     }
 
     @Test
@@ -176,7 +176,7 @@ public class TestDocumentValidation extends TestBase {
         }
 
         getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
+        getDatastore().enableDocumentValidation();
         assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
         try {
@@ -186,7 +186,7 @@ public class TestDocumentValidation extends TestBase {
         }
 
         try {
-            getDs().save(new DocumentValidation("John", 1, new Date()));
+            getDatastore().save(new DocumentValidation("John", 1, new Date()));
             fail("Document should have failed validation");
         } catch (MongoWriteException e) {
             assertTrue(e.getMessage().contains("Document failed validation"));
@@ -196,20 +196,20 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void save() {
         getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
+        getDatastore().enableDocumentValidation();
 
         try {
-            getDs().save(new DocumentValidation("Harold", 8, new Date()));
+            getDatastore().save(new DocumentValidation("Harold", 8, new Date()));
             fail("Document validation should have complained");
         } catch (MongoWriteException e) {
             // expected
         }
 
-        getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
-                                                                          .bypassDocumentValidation(true));
+        getDatastore().save(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
+                                                                                 .bypassDocumentValidation(true));
 
-        Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
-                                                 .filter(eq("number", 8));
+        Query<DocumentValidation> query = getDatastore().find(DocumentValidation.class)
+                                                        .filter(eq("number", 8));
         Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
@@ -218,13 +218,13 @@ public class TestDocumentValidation extends TestBase {
             new DocumentValidation("Harold", 8, new Date()),
             new DocumentValidation("Harold", 8, new Date()));
         try {
-            getDs().save(list);
+            getDatastore().save(list);
             fail("Document validation should have complained");
         } catch (MongoBulkWriteException e) {
             // expected
         }
 
-        getDs().save(list, new InsertManyOptions().bypassDocumentValidation(true));
+        getDatastore().save(list, new InsertManyOptions().bypassDocumentValidation(true));
 
         Assert.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
@@ -232,30 +232,30 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void testBypassDocumentValidation() {
         getMapper().map(User.class);
-        getDs().enableDocumentValidation();
+        getDatastore().enableDocumentValidation();
 
         final User user = new User("Jim Halpert", LocalDate.now());
         user.age = 5;
 
         try {
-            getDs().save(user);
+            getDatastore().save(user);
             fail("Document validation should have rejected the document");
         } catch (MongoWriteException ignored) {
         }
 
-        getDs().save(user, new InsertOneOptions().bypassDocumentValidation(true));
+        getDatastore().save(user, new InsertOneOptions().bypassDocumentValidation(true));
 
-        Assert.assertEquals(getDs().find(User.class).count(), 1);
+        Assert.assertEquals(getDatastore().find(User.class).count(), 1);
     }
 
     @Test
     public void update() {
         getMapper().map(DocumentValidation.class);
-        getDs().enableDocumentValidation();
+        getDatastore().enableDocumentValidation();
 
-        getDs().save(new DocumentValidation("Harold", 100, new Date()));
+        getDatastore().save(new DocumentValidation("Harold", 100, new Date()));
 
-        Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
+        Query<DocumentValidation> query = getDatastore().find(DocumentValidation.class);
         UpdateOptions options = new UpdateOptions()
                                     .bypassDocumentValidation(false);
         Update<DocumentValidation> update = query.update(set("number", 5));
@@ -325,8 +325,8 @@ public class TestDocumentValidation extends TestBase {
     }
 
     private void updateValidation(EntityModel model, ValidationLevel level, ValidationAction action) {
-        ((DatastoreImpl) getDs()).enableValidation(model, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
-                                                                                 .level(level)
-                                                                                 .action(action));
+        ((DatastoreImpl) getDatastore()).enableValidation(model, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
+                                                                                        .level(level)
+                                                                                        .action(action));
     }
 }

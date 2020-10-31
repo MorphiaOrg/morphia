@@ -142,11 +142,6 @@ public class Mapper {
         return map(List.of(entityClasses));
     }
 
-    //    private <T> EntityModel createEntityModel(Class<T> clazz, Embedded annotation) {
-    //        return new EntityModelBuilder(this.datastore, clazz, annotation)
-    //                   .build();
-    //    }
-
     /**
      * Updates a collection to use a specific WriteConcern
      *

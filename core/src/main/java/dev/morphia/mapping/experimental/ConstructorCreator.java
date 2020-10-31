@@ -26,17 +26,18 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     private final Map<String, BiFunction<Object[], Object, Void>> positions = new LinkedHashMap<>();
 
     /**
-     * @param model the model
+     * @param model       the model
+     * @param constructor the constructor to use
      */
-    public ConstructorCreator(EntityModel model) {
+    public ConstructorCreator(EntityModel model, Constructor<?> constructor) {
         this.model = model;
-        constructor = getFullConstructor(model);
-        if (constructor == null) {
+        this.constructor = constructor;
+        if (this.constructor == null) {
             throw new MappingException(Sofia.noSuitableConstructor(model.getType()));
         }
-        constructor.setAccessible(true);
+        this.constructor.setAccessible(true);
 
-        final Parameter[] constructorParameters = constructor.getParameters();
+        final Parameter[] constructorParameters = this.constructor.getParameters();
         this.parameters = new Object[constructorParameters.length];
         for (int i = 0; i < constructorParameters.length; i++) {
             final Parameter parameter = constructorParameters[i];
@@ -63,8 +64,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      */
     public static Constructor<?> getFullConstructor(EntityModel model) {
         for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
-            if (constructor.getParameterCount() == model.getFields().size()
-                && constructor.getAnnotation(dev.morphia.annotations.experimental.Constructor.class) != null) {
+            if (constructor.getParameterCount() == model.getFields().size() && namesMatchFields(model, constructor)) {
                 return constructor;
             }
         }
@@ -81,9 +81,14 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         return name != null ? name.value() : parameter.getName();
     }
 
-    @Override
-    public void set(Object value, FieldModel model) {
-        positions.get(model.getName()).apply(parameters, value);
+    private static boolean namesMatchFields(EntityModel model, Constructor<?> constructor) {
+        for (Parameter parameter : constructor.getParameters()) {
+            if (model.getField(getParameterName(parameter)) == null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -93,5 +98,10 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         } catch (ReflectiveOperationException e) {
             throw new MappingException(Sofia.cannotInstantiate(model.getType().getName(), e.getMessage()));
         }
+    }
+
+    @Override
+    public void set(Object value, FieldModel model) {
+        positions.get(model.getName()).apply(parameters, value);
     }
 }

@@ -41,31 +41,31 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 8645, 'title' : 'Eclogues', 'author' : 'Dante', 'copies' : 2 }"),
             parse("{ '_id' : 7000, 'title' : 'The Odyssey', 'author' : 'Homer', 'copies' : 10 }"),
             parse("{ '_id' : 7020, 'title' : 'Iliad', 'author' : 'Homer', 'copies' : 10 }")));
-        List<Document> group = getDs().aggregate("books")
-                                      .group(of(id(field("author")))
-                                                 .field("avgCopies",
-                                                     accumulator(
-                                                         "function() {\n"
-                                                         + "   return { count: 0, sum: 0 }\n"
+        List<Document> group = getDatastore().aggregate("books")
+                                             .group(of(id(field("author")))
+                                                        .field("avgCopies",
+                                                            accumulator(
+                                                                "function() {\n"
+                                                                + "   return { count: 0, sum: 0 }\n"
+                                                                + "}",
+                                                                "function(state, numCopies) {\n"
+                                                                + "   return {\n"
+                                                                + "       count: state.count + 1,\n"
+                                                                + "       sum: state.sum + numCopies\n"
+                                                                + "   }\n"
                                                          + "}",
-                                                         "function(state, numCopies) {\n"
-                                                         + "   return {\n"
-                                                         + "       count: state.count + 1,\n"
-                                                         + "       sum: state.sum + numCopies\n"
-                                                         + "   }\n"
-                                                         + "}",
-                                                         of(field("copies")),
-                                                         "function(state1, state2) {\n"
-                                                         + "   return {\n"
-                                                         + "      count: state1.count + state2.count,\n"
-                                                         + "      sum: state1.sum + state2.sum\n"
-                                                         + "   }\n"
-                                                         + "}")
-                                                         .finalizeFunction("function(state) {\n" +
-                                                                           "   return (state.sum / state.count)\n" +
-                                                                           "}")))
-                                      .execute(Document.class)
-                                      .toList();
+                                                                of(field("copies")),
+                                                                "function(state1, state2) {\n"
+                                                                + "   return {\n"
+                                                                + "      count: state1.count + state2.count,\n"
+                                                                + "      sum: state1.sum + state2.sum\n"
+                                                                + "   }\n"
+                                                                + "}")
+                                                                .finalizeFunction("function(state) {\n" +
+                                                                                  "   return (state.sum / state.count)\n" +
+                                                                                  "}")))
+                                             .execute(Document.class)
+                                             .toList();
 
         assertListEquals(group, of(
             parse("{ '_id' : 'Homer', 'avgCopies' : 10.0 }"),
@@ -76,13 +76,13 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testAddToSet() {
         regularDataSet();
 
-        List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id()
-                                                     .field("day", dayOfYear(field("date")))
-                                                     .field("year", year(field("date"))))
-                                                  .field("itemsSold", addToSet(field("item"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .group(of(id()
+                                                            .field("day", dayOfYear(field("date")))
+                                                            .field("year", year(field("date"))))
+                                                         .field("itemsSold", addToSet(field("item"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : { 'day' : 46, 'year' : 2014 }, 'itemsSold' : [ 'xyz', 'abc' ] }"),
@@ -94,13 +94,13 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testAvg() {
         regularDataSet();
 
-        List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id("item"))
-                                                  .field("avgAmount", avg(multiply(
-                                                      field("price"), field("quantity"))))
-                                                  .field("avgQuantity", avg(field("quantity"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .group(of(id("item"))
+                                                         .field("avgAmount", avg(multiply(
+                                                             field("price"), field("quantity"))))
+                                                         .field("avgQuantity", avg(field("quantity"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{'_id' : 'jkl', 'avgAmount' : 20.0, 'avgQuantity' : 1.0 }"),
@@ -112,13 +112,13 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testFirst() {
         largerDataSet();
 
-        List<Document> actual = getDs().aggregate("sales")
-                                       .sort(Sort.on()
-                                                 .ascending("item", "date"))
-                                       .group(of(id("item"))
-                                                  .field("firstSalesDate", first(field("date"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .sort(Sort.on()
+                                                        .ascending("item", "date"))
+                                              .group(of(id("item"))
+                                                         .field("firstSalesDate", first(field("date"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : 'xyz', 'firstSalesDate' : ISODate('2014-02-03T09:05:00Z') }"),
@@ -134,19 +134,20 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ _id: 2, name: 'Miss Ann Thrope', scores: [ 10, 10, 10 ] }"),
             parse("{ _id: 3, name: 'Mrs. Eppie Delta ', scores: [ 9, 8, 8 ] }")));
 
-        List<Document> actual = getDs().aggregate("players")
-                                       .addFields(AddFields.of()
-                                                           .field("isFound", function("function(name) {\n"
-                                                                                      + "  return hex_md5(name) == "
-                                                                                      + "\"15b0a220baa16331e8d80e15367677ad\"\n"
-                                                                                      + "}", field("name")))
-                                                           .field("message", function("function(name, scores) {\n"
-                                                                                      + "  let total = Array.sum(scores);\n"
-                                                                                      + "  return `Hello ${name}.  Your total score is"
-                                                                                      + " ${total}.`\n"
-                                                                                      + "}", field("name"), field("scores"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("players")
+                                              .addFields(AddFields.of()
+                                                                  .field("isFound", function("function(name) {\n"
+                                                                                             + "  return hex_md5(name) == "
+                                                                                             + "\"15b0a220baa16331e8d80e15367677ad\"\n"
+                                                                                             + "}", field("name")))
+                                                                  .field("message", function("function(name, scores) {\n"
+                                                                                             + "  let total = Array.sum(scores);\n"
+                                                                                             +
+                                                                                             "  return `Hello ${name}.  Your total score is"
+                                                                                             + " ${total}.`\n"
+                                                                                             + "}", field("name"), field("scores"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : 1, 'name' : 'Miss Cheevous', 'scores' : [ 10, 5, 10 ], 'isFound' : false, 'message' : 'Hello Miss Cheevous. "
@@ -161,13 +162,13 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testLast() {
         largerDataSet();
 
-        List<Document> actual = getDs().aggregate("sales")
-                                       .sort(Sort.on()
-                                                 .ascending("item", "date"))
-                                       .group(of(id("item"))
-                                                  .field("lastSalesDate", last(field("date"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .sort(Sort.on()
+                                                        .ascending("item", "date"))
+                                              .group(of(id("item"))
+                                                         .field("lastSalesDate", last(field("date"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : 'xyz', 'lastSalesDate' : ISODate('2014-02-15T14:12:12Z') }"),
@@ -179,13 +180,13 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testMax() {
         regularDataSet();
 
-        List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id("item"))
-                                                  .field("avgAmount", avg(multiply(
-                                                      field("price"), field("quantity"))))
-                                                  .field("avgQuantity", avg(field("quantity"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .group(of(id("item"))
+                                                         .field("avgAmount", avg(multiply(
+                                                             field("price"), field("quantity"))))
+                                                         .field("avgQuantity", avg(field("quantity"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{'_id' : 'jkl', 'avgAmount' : 20.0, 'avgQuantity' : 1.0 }"),
@@ -197,12 +198,12 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testMin() {
         regularDataSet();
 
-        List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id("item"))
-                                                  .field("minQuantity", min(field("quantity")))
-                                                  .field("avgQuantity", avg(field("quantity"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .group(of(id("item"))
+                                                         .field("minQuantity", min(field("quantity")))
+                                                         .field("avgQuantity", avg(field("quantity"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : 'xyz', 'minQuantity' : 5 }"),
@@ -214,15 +215,15 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testPush() {
         largerDataSet();
 
-        List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id()
-                                                     .field("day", dayOfYear(field("date")))
-                                                     .field("year", year(field("date"))))
-                                                  .field("itemsSold", push()
-                                                                          .field("item", field("item"))
-                                                                          .field("quantity", field("quantity"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .group(of(id()
+                                                            .field("day", dayOfYear(field("date")))
+                                                            .field("year", year(field("date"))))
+                                                         .field("itemsSold", push()
+                                                                                 .field("item", field("item"))
+                                                                                 .field("quantity", field("quantity"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : { 'day' : 46, 'year' : 2014 },'itemsSold' : [{ 'item' : 'abc', 'quantity' : 10 }, { 'item' : 'xyz', "
@@ -242,11 +243,11 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 5, 'name' : 'annT', 'quiz' : 2, 'score' : 77 }"),
             parse("{ '_id' : 6, 'name' : 'ty', 'quiz' : 2, 'score' : 82 }  }")));
 
-        List<Document> actual = getDs().aggregate("users")
-                                       .group(of(id("quiz"))
-                                                  .field("stdDev", stdDevPop(field("score"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("users")
+                                              .group(of(id("quiz"))
+                                                         .field("stdDev", stdDevPop(field("score"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : 2, 'stdDev' : 8.04155872120988 }"),
@@ -256,26 +257,26 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testStdDevSamp() {
         // we don't have a data set to test numbers so let's at least test we're creating the correct structures for the server
-        getDs().save(new User("", LocalDate.now()));
-        getDs().aggregate(User.class)
-               .sample(100)
-               .group(Group.of()
-                           .field("ageStdDev", stdDevSamp(field("age"))))
-               .execute(Document.class)
-               .toList();
+        getDatastore().save(new User("", LocalDate.now()));
+        getDatastore().aggregate(User.class)
+                      .sample(100)
+                      .group(Group.of()
+                                  .field("ageStdDev", stdDevSamp(field("age"))))
+                      .execute(Document.class)
+                      .toList();
     }
 
     @Test
     public void testSum() {
         regularDataSet();
-        List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id()
-                                                     .field("day", dayOfYear(field("date")))
-                                                     .field("year", year(field("date"))))
-                                                  .field("totalAmount", sum(multiply(field("quantity"), field("price"))))
-                                                  .field("count", sum(value(1))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("sales")
+                                              .group(of(id()
+                                                            .field("day", dayOfYear(field("date")))
+                                                            .field("year", year(field("date"))))
+                                                         .field("totalAmount", sum(multiply(field("quantity"), field("price"))))
+                                                         .field("count", sum(value(1))))
+                                              .execute(Document.class)
+                                              .toList();
 
         assertDocumentEquals(actual, of(
             parse("{ '_id' : { 'day' : 46, 'year' : 2014 }, 'totalAmount' : 150, 'count' : 2 }"),

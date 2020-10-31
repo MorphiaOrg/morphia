@@ -48,12 +48,12 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 1, 'reading' : 42 }"),
             parse("{ '_id' : 2, 'reading' : 'slowly' }")));
 
-        List<Document> actual = getDs().aggregate("examples")
-                                       .addFields(of()
-                                                      .field("isNumber", isNumber(field("reading")))
-                                                      .field("hasType", type(field("reading"))))
-                                       .execute(Document.class)
-                                       .toList();
+        List<Document> actual = getDatastore().aggregate("examples")
+                                              .addFields(of()
+                                                             .field("isNumber", isNumber(field("reading")))
+                                                             .field("hasType", type(field("reading"))))
+                                              .execute(Document.class)
+                                              .toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : 1, 'reading' : 42, 'isNumber' : true, 'hasType' : 'int' }"),
