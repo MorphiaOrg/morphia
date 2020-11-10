@@ -97,7 +97,8 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         modify.execute(options);
 
-        Assert.assertNotNull(query.filter(eq("number", 5)).iterator(new FindOptions().limit(1))
+        Assert.assertNotNull(query.filter(eq("number", 5))
+                                  .iterator(new FindOptions().limit(1))
                                   .next());
     }
 

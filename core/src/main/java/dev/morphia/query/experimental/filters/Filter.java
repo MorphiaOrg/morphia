@@ -10,6 +10,7 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.lang.String.format;
 
 /**
@@ -49,16 +50,15 @@ public class Filter {
      * @morphia.internal
      */
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(mapper));
-        if (not) {
-            writer.writeStartDocument("$not");
-        }
-        writer.writeName(filterName);
-        writeUnnamedValue(getValue(mapper), mapper, writer, context);
-        if (not) {
-            writer.writeEndDocument();
-        }
-        writer.writeEndDocument();
+        document(writer, path(mapper), () -> {
+            if (not) {
+                document(writer, "$not", () -> {
+                    writeNamedValue(filterName, getValue(mapper), mapper, writer, context);
+                });
+            } else {
+                writeNamedValue(filterName, getValue(mapper), mapper, writer, context);
+            }
+        });
     }
 
     /**

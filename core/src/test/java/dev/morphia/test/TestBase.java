@@ -19,7 +19,6 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import org.bson.Document;
-import org.bson.UuidRepresentation;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -285,7 +284,6 @@ public abstract class TestBase {
 
     private void startMongo() {
         String mongodb = System.getenv("MONGODB");
-        if (mongodb != null) {
             Builder builder = MongoClientSettings.builder();
 
             try {
@@ -294,6 +292,7 @@ public abstract class TestBase {
                 // not a 4.0 driver
             }
 
+        if (mongodb != null) {
             Version version = Version.valueOf(mongodb);
             final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
                                          ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
@@ -311,9 +310,7 @@ public abstract class TestBase {
             cluster.start();
             mongoClient = cluster.getClient(builder);
         } else {
-            mongoClient = MongoClients.create(MongoClientSettings.builder()
-                                                                 .uuidRepresentation(UuidRepresentation.STANDARD)
-                                                                 .build());
+            mongoClient = MongoClients.create(builder.build());
         }
     }
 }

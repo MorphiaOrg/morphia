@@ -8,6 +8,7 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -54,6 +55,7 @@ public abstract class TestBase {
     }
 
     static void startMongo() {
+        String mongodb = System.getenv("MONGODB");
         Builder builder = MongoClientSettings.builder();
 
         try {
@@ -62,20 +64,23 @@ public abstract class TestBase {
             // not a 4.0 driver
         }
 
-        String mongodb = System.getenv("MONGODB");
-        File mongodbRoot = new File("target/mongo");
-        try {
-            FileUtils.deleteDirectory(mongodbRoot);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
-                                     ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
-                                     : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
+        if (mongodb != null) {
+            File mongodbRoot = new File("target/mongo");
+            try {
+                FileUtils.deleteDirectory(mongodbRoot);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+            Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
+            final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
+                                         ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
+                                         : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
 
-        cluster.start();
-        mongoClient = cluster.getClient(builder);
+            cluster.start();
+            mongoClient = cluster.getClient(builder);
+        } else {
+            mongoClient = MongoClients.create(builder.build());
+        }
     }
 
     public MongoDatabase getDatabase() {

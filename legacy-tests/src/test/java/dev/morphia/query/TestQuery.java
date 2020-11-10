@@ -618,6 +618,8 @@ public class TestQuery extends TestBase {
 
         assertNotNull(getDs().find(PhotoWithKeywords.class).filter(ne("id", "scott")).iterator(new FindOptions().limit(1))
                              .next());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(eq("id", "scott").not()).iterator(new FindOptions().limit(1))
+                             .next());
     }
 
     @Test
