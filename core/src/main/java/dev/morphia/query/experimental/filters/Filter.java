@@ -20,7 +20,7 @@ import static java.lang.String.format;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class Filter {
-    private final String filterName;
+    private final String name;
     private String field;
     private Object value;
     private boolean not;
@@ -30,11 +30,11 @@ public class Filter {
     private boolean mapped;
 
     protected Filter(String name) {
-        this.filterName = name;
+        this.name = name;
     }
 
     protected Filter(String name, String field, Object value) {
-        this.filterName = name;
+        this.name = name;
         this.field = field;
         this.value = value;
     }
@@ -53,10 +53,10 @@ public class Filter {
         document(writer, path(mapper), () -> {
             if (not) {
                 document(writer, "$not", () -> {
-                    writeNamedValue(filterName, getValue(mapper), mapper, writer, context);
+                    writeNamedValue(name, getValue(mapper), mapper, writer, context);
                 });
             } else {
-                writeNamedValue(filterName, getValue(mapper), mapper, writer, context);
+                writeNamedValue(name, getValue(mapper), mapper, writer, context);
             }
         });
     }
@@ -96,9 +96,12 @@ public class Filter {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return format("%s %s %s", field, filterName, value);
+    /**
+     * @return the filter field
+     * @morphia.internal
+     */
+    public String getField() {
+        return field;
     }
 
     protected Object getValue(Mapper mapper) {
@@ -117,16 +120,25 @@ public class Filter {
         return value;
     }
 
-    protected String getFilterName() {
-        return filterName;
+    /**
+     * @return the filter name
+     * @morphia.internal
+     */
+    public String getName() {
+        return name;
     }
 
-    protected String getField() {
-        return field;
-    }
-
-    protected Object getValue() {
+    /**
+     * @return the filter value
+     * @morphia.internal
+     */
+    public Object getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return format("%s %s %s", field, name, value);
     }
 
     protected String path(Mapper mapper) {

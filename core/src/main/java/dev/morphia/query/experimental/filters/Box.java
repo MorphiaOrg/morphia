@@ -21,7 +21,7 @@ class Box extends Filter {
         writer.writeStartDocument(path(mapper));
         writer.writeStartDocument("$geoWithin");
 
-        writer.writeStartArray(getFilterName());
+        writer.writeStartArray(getName());
         writer.writeStartArray();
         for (Double value : bottomLeft.getPosition().getValues()) {
             writer.writeDouble(value);

@@ -21,8 +21,11 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
+import dev.morphia.query.experimental.filters.Filter;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +41,24 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     private WriteConcern writeConcern;
     private boolean multi;
     private ClientSession clientSession;
+
+    /**
+     * Adds a new array filter
+     *
+     * @param filter the new filter
+     * @return this
+     * @since 2.1
+     */
+    public UpdateOptions arrayFilter(Filter filter) {
+        List<Bson> arrayFilters = new ArrayList<>();
+        if (getArrayFilters() != null) {
+            arrayFilters.addAll(getArrayFilters());
+        }
+        arrayFilters.add(new Document(filter.getField(), new Document(filter.getName(), filter.getValue())));
+        arrayFilters(arrayFilters);
+
+        return this;
+    }
 
     @Override
     public UpdateOptions clientSession(ClientSession clientSession) {

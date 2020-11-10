@@ -14,16 +14,11 @@ class CenterFilter extends Filter {
     }
 
     @Override
-    protected Point getValue() {
-        return (Point) super.getValue();
-    }
-
-    @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(mapper));
         writer.writeStartDocument("$geoWithin");
 
-        writer.writeStartArray(getFilterName());
+        writer.writeStartArray(getName());
         Point center = getValue();
         writer.writeStartArray();
         for (Double value : center.getPosition().getValues()) {
@@ -35,5 +30,10 @@ class CenterFilter extends Filter {
 
         writer.writeEndDocument();
         writer.writeEndDocument();
+    }
+
+    @Override
+    public Point getValue() {
+        return (Point) super.getValue();
     }
 }

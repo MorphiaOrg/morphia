@@ -16,9 +16,11 @@
 
 package dev.morphia.internal;
 
-import dev.morphia.TestArrayUpdates.Grade;
-import dev.morphia.TestArrayUpdates.Student;
 import dev.morphia.TestBase;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.entities.EmbeddedSubtype;
 import dev.morphia.entities.EmbeddedType;
@@ -35,13 +37,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 public class PathTargetTest extends TestBase {
 
     @Test
     public void arrays() {
-        getMapper().map(EntityWithListsAndArrays.class, EmbeddedType.class, Student.class);
+        getMapper().map(EntityWithListsAndArrays.class, EmbeddedType.class);
         Mapper mapper = getMapper();
         EntityModel entityModel = mapper.getEntityModel(EntityWithListsAndArrays.class);
 
@@ -130,5 +136,47 @@ public class PathTargetTest extends TestBase {
         final PathTarget pathTarget = new PathTarget(mapper, WithNested.class, "nested.field.fail", false);
         Assert.assertEquals("nested.field.fail", pathTarget.translatedPath());
         Assert.assertNull(pathTarget.getTarget());
+    }
+
+    @Embedded
+    private static class Grade {
+        private int marks;
+
+        @Property("d")
+        private Map<String, String> data;
+
+        public Grade() {
+        }
+
+        public Grade(int marks, Map<String, String> data) {
+            this.marks = marks;
+            this.data = data;
+        }
+
+        @Override
+        public String toString() {
+            return ("marks: " + marks + ", data: " + data);
+        }
+    }
+
+    @Entity
+    private static class Student {
+        @Id
+        private long id;
+
+        private List<Grade> grades;
+
+        public Student() {
+        }
+
+        public Student(long id, Grade... grades) {
+            this.id = id;
+            this.grades = asList(grades);
+        }
+
+        @Override
+        public String toString() {
+            return ("id: " + id + ", grades: " + grades);
+        }
     }
 }

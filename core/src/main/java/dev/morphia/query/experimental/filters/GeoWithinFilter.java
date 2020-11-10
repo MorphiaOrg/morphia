@@ -38,7 +38,7 @@ public class GeoWithinFilter extends Filter {
     @Override
     public final void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(mapper));
-        writer.writeStartDocument(getFilterName());
+        writer.writeStartDocument(getName());
         writer.writeName("$geometry");
 
         Object shape = getValue();

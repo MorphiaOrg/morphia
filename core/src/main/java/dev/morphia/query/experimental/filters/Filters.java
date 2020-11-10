@@ -205,7 +205,7 @@ public final class Filters {
                 if (isNot()) {
                     document(writer, path(mapper), () -> {
                         document(writer, "$not", () -> {
-                            writer.writeName(getFilterName());
+                            writer.writeName(getName());
                             writeUnnamedValue(getValue(mapper), mapper, writer, context);
                         });
                     });
@@ -228,7 +228,7 @@ public final class Filters {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeStartDocument(path(mapper));
-                writer.writeName(getFilterName());
+                writer.writeName(getName());
                 writer.writeBoolean(!isNot());
                 writer.writeEndDocument();
             }
@@ -251,7 +251,7 @@ public final class Filters {
             }
 
             @Override
-            protected Expression getValue() {
+            public Expression getValue() {
                 return (Expression) super.getValue();
             }
         };
@@ -367,7 +367,7 @@ public final class Filters {
         return new Filter("$jsonSchema", null, schema) {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                value(mapper, writer, getFilterName(), schema, context);
+                value(mapper, writer, getName(), schema, context);
             }
         };
     }
@@ -434,7 +434,7 @@ public final class Filters {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeStartDocument(path(mapper));
-                writer.writeName(getFilterName());
+                writer.writeName(getName());
                 writer.writeStartArray();
                 writeUnnamedValue(divisor, mapper, writer, context);
                 writeUnnamedValue(remainder, mapper, writer, context);
@@ -608,7 +608,7 @@ public final class Filters {
         return new Filter("$where", null, val) {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                writer.writeName(getFilterName());
+                writer.writeName(getName());
                 String value = getValue(mapper).toString().trim();
                 if (!value.startsWith("function()")) {
                     value = format("function() { %s }", value);

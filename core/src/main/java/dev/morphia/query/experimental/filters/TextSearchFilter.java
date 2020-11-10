@@ -44,7 +44,7 @@ public class TextSearchFilter extends Filter {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(getFilterName());
+        writer.writeStartDocument(getName());
         writeNamedValue("$search", searchText, mapper, writer, context);
         if (language != null) {
             writeNamedValue("$language", language, mapper, writer, context);

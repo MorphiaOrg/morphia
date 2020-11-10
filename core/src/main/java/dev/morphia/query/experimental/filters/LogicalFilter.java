@@ -20,7 +20,7 @@ class LogicalFilter extends Filter {
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartArray(getFilterName());
+        writer.writeStartArray(getName());
         for (Filter filter : filters) {
             document(writer, () -> filter.encode(mapper, writer, context));
         }
@@ -47,6 +47,6 @@ class LogicalFilter extends Filter {
 
     @Override
     public String toString() {
-        return format("%s: %s", getFilterName(), filters);
+        return format("%s: %s", getName(), filters);
     }
 }

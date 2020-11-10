@@ -1,24 +1,29 @@
-package dev.morphia;
+package dev.morphia.test;
 
+import dev.morphia.Datastore;
+import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Property;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.test.models.Grade;
+import dev.morphia.test.models.Student;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.lt;
+import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 public class TestArrayUpdates extends TestBase {
     @Test
@@ -33,19 +38,19 @@ public class TestArrayUpdates extends TestBase {
         Query<Student> testQuery = datastore.find(Student.class)
                                             .filter(eq("_id", 1L),
                                                 eq("grades.data.name", "Test"));
-        Assert.assertNotNull(testQuery.iterator(new FindOptions().limit(1))
-                                      .tryNext());
+        assertNotNull(testQuery.iterator(new FindOptions().limit(1))
+                               .tryNext());
 
         testQuery.update(set("grades.$.data.name", "Makeup Test"))
                  .execute();
 
-        Assert.assertNull(testQuery.iterator(new FindOptions().limit(1))
-                                   .tryNext());
+        assertNull(testQuery.iterator(new FindOptions().limit(1))
+                            .tryNext());
 
-        Assert.assertNotNull(datastore.find(Student.class)
-                                      .filter(eq("_id", 1L),
-                                          eq("grades.data.name", "Makeup Test")).iterator(new FindOptions().limit(1))
-                                      .tryNext());
+        assertNotNull(datastore.find(Student.class)
+                               .filter(eq("_id", 1L),
+                                   eq("grades.data.name", "Makeup Test")).iterator(new FindOptions().limit(1))
+                               .tryNext());
     }
 
     @Test
@@ -73,51 +78,60 @@ public class TestArrayUpdates extends TestBase {
                                 .filter(eq("_id", id)).iterator(new FindOptions().limit(1))
                                 .tryNext();
 
-        Assert.assertEquals("new hash", data.files.get(0).fileHash);
-        Assert.assertEquals("fileHash2", data.files.get(1).fileHash);
+        assertEquals(data.files.get(0).fileHash, "new hash");
+        assertEquals(data.files.get(1).fileHash, "fileHash2");
 
         data = getDs().find(BatchData.class)
-                      .filter(eq("_id", id2)).iterator(new FindOptions().limit(1))
+                      .filter(eq("_id", id2))
+                      .iterator(new FindOptions().limit(1))
                       .tryNext();
 
-        Assert.assertEquals("fileHash3", data.files.get(0).fileHash);
-        Assert.assertEquals("fileHash4", data.files.get(1).fileHash);
+        assertEquals(data.files.get(0).fileHash, "fileHash3");
+        assertEquals(data.files.get(1).fileHash, "fileHash4");
     }
 
     @Test
-    public void testUpdatesWithArrayIndexPosition() {
-        getMapper().map(Student.class);
+    public void testUpdatesWithArrayFilters() {
+        getMapper().map(Student.class, Grade.class);
         final Datastore datastore = getDs();
         datastore.ensureIndexes();
 
         datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
             new Grade(90, singletonMap("name", "Test"))));
 
-        Query<Student> testQuery = datastore.find(Student.class)
-                                            .filter(eq("_id", 1L),
-                                                eq("grades.data.name", "Test"));
-        Assert.assertNotNull(testQuery.iterator(new FindOptions().limit(1))
-                                      .tryNext());
+        Query<Student> grade80 = datastore.find(Student.class)
+                                          .filter(eq("_id", 1L),
+                                              eq("grades.marks", 80));
+        Query<Student> grade90 = datastore.find(Student.class)
+                                          .filter(eq("_id", 1L),
+                                              eq("grades.marks", 90));
 
-        // Update the second element. Array indexes are zero-based.
-        testQuery.update(set("grades.1.data.name", "Makeup Test"))
-                 .execute();
+        assertNotNull(grade80.iterator().tryNext());
+        assertNotNull(grade90.iterator().tryNext());
 
-        Assert.assertNull(testQuery.iterator(new FindOptions().limit(1))
-                                   .tryNext());
+        Query<Student> student = datastore.find(Student.class).filter(eq("_id", 1L));
 
-        Assert.assertNotNull(datastore.find(Student.class)
-                                      .filter(eq("_id", 1L),
-                                          eq("grades.data.name", "Makeup Test")).iterator(new FindOptions().limit(1))
-                                      .tryNext());
+        student.update(inc("grades.$[elem].marks", 5))
+               .execute(new UpdateOptions()
+                            .arrayFilter(lt("elem.marks", 90)));
+
+        assertNull(grade80.iterator().tryNext());
+        assertNotNull(grade90.iterator().tryNext());
+
+        assertNotNull(datastore.find(Student.class)
+                               .filter(eq("_id", 1L),
+                                   eq("grades.marks", 85))
+                               .iterator()
+                               .tryNext());
+        assertNotNull(grade90.iterator().tryNext());
     }
 
     @Entity
-    public static class BatchData {
+    private static class BatchData {
 
+        private final List<Files> files = new ArrayList<>();
         @Id
         private ObjectId id;
-        private final List<Files> files = new ArrayList<>();
 
         @Override
         public String toString() {
@@ -126,7 +140,7 @@ public class TestArrayUpdates extends TestBase {
     }
 
     @Embedded
-    public static class Files {
+    private static class Files {
         private int position;
         private String fileName = "";
         private String fileHash = "";
@@ -143,48 +157,6 @@ public class TestArrayUpdates extends TestBase {
         @Override
         public String toString() {
             return format("Files{fileHash='%s', fileName='%s', position=%d}", fileHash, fileName, position);
-        }
-    }
-
-    @Embedded
-    public static class Grade {
-        private int marks;
-
-        @Property("d")
-        private Map<String, String> data;
-
-        public Grade() {
-        }
-
-        public Grade(int marks, Map<String, String> data) {
-            this.marks = marks;
-            this.data = data;
-        }
-
-        @Override
-        public String toString() {
-            return ("marks: " + marks + ", data: " + data);
-        }
-    }
-
-    @Entity
-    public static class Student {
-        @Id
-        private long id;
-
-        private List<Grade> grades;
-
-        public Student() {
-        }
-
-        public Student(long id, Grade... grades) {
-            this.id = id;
-            this.grades = asList(grades);
-        }
-
-        @Override
-        public String toString() {
-            return ("id: " + id + ", grades: " + grades);
         }
     }
 

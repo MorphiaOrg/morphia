@@ -17,7 +17,7 @@ class ElemMatchFilter extends Filter {
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
-        writer.writeStartDocument(getFilterName());
+        writer.writeStartDocument(getName());
         List<Filter> filters = (List<Filter>) getValue();
         for (Filter filter : filters) {
             filter.encode(mapper, writer, context);

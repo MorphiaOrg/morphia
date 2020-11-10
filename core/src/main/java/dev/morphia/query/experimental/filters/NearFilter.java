@@ -28,7 +28,7 @@ public class NearFilter extends Filter {
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
-        writer.writeStartDocument(getFilterName());
+        writer.writeStartDocument(getName());
         writer.writeName("$geometry");
         writeUnnamedValue(getValue(mapper), mapper, writer, context);
         if (maxDistance != null) {
