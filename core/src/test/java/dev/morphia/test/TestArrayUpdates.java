@@ -124,6 +124,18 @@ public class TestArrayUpdates extends TestBase {
                                .iterator()
                                .tryNext());
         assertNotNull(grade90.iterator().tryNext());
+
+        student.update(inc("grades.$[elem].marks", 5))
+               .execute(new UpdateOptions()
+                            .arrayFilter(lt("elem.marks", 90).not()));
+
+        assertNull(grade90.iterator().tryNext());
+        assertNotNull(datastore.find(Student.class)
+                               .filter(eq("_id", 1L),
+                                   eq("grades.marks", 95))
+                               .iterator()
+                               .tryNext());
+
     }
 
     @Entity

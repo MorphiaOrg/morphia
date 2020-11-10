@@ -39,7 +39,12 @@ public class Filter {
         this.value = value;
     }
 
-    protected boolean isNot() {
+    /**
+     * @return true if this filter has been notted
+     * @morphia.internal
+     * @see #not()
+     */
+    public boolean isNot() {
         return not;
     }
 

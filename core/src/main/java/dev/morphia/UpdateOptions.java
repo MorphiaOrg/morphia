@@ -54,7 +54,11 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
         if (getArrayFilters() != null) {
             arrayFilters.addAll(getArrayFilters());
         }
-        arrayFilters.add(new Document(filter.getField(), new Document(filter.getName(), filter.getValue())));
+        Document filterDoc = new Document(filter.getName(), filter.getValue());
+        if (filter.isNot()) {
+            filterDoc = new Document("$not", filterDoc);
+        }
+        arrayFilters.add(new Document(filter.getField(), filterDoc));
         arrayFilters(arrayFilters);
 
         return this;
