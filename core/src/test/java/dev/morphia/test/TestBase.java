@@ -19,6 +19,7 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import org.bson.Document;
+import org.bson.UuidRepresentation;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -310,7 +311,9 @@ public abstract class TestBase {
             cluster.start();
             mongoClient = cluster.getClient(builder);
         } else {
-            mongoClient = MongoClients.create();
+            mongoClient = MongoClients.create(MongoClientSettings.builder()
+                                                                 .uuidRepresentation(UuidRepresentation.STANDARD)
+                                                                 .build());
         }
     }
 }
