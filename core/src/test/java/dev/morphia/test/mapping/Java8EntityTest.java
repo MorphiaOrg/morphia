@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package dev.morphia.mapping;
+package dev.morphia.test.mapping;
 
 import dev.morphia.Datastore;
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;

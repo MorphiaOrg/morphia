@@ -43,12 +43,12 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{'_id' : 2, 'item' : 'ABC2', dimensions: [['l', 50], ['w', 25], ['uom', 'cm']]}"),
             parse("{'_id' : 3, 'item' : 'ABC3', dimensions: [['l', 25], ['l', 'cm'], ['l', 50]]}")));
 
-        List<Document> actual = getDatastore().aggregate("inventory")
-                                              .project(Projection.of()
-                                                                 .include("item")
-                                                                 .include("dimensions", arrayToObject(field("dimensions"))))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("inventory")
+                                       .project(Projection.of()
+                                                          .include("item")
+                                                          .include("dimensions", arrayToObject(field("dimensions"))))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(parse("{ '_id' : 1, 'item' : 'ABC1', 'dimensions' : { 'l' : 25, 'w' : 10, 'uom' : 'cm' } }"),
             parse("{ '_id' : 2, 'item' : 'ABC2', 'dimensions' : { 'l' : 50, 'w' : 25, 'uom' : 'cm' } }"),
@@ -105,13 +105,13 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
                 parse("{ _id: 2, quizzes: [ ] }"),
                 parse("{ _id: 3, quizzes: [ 3, 8, 9 ] }")));
 
-        List<Document> actual = getDatastore().aggregate("grades")
-                                              .project(Projection.of()
-                                                                 .include("adjustedGrades",
-                                                                     map(field("quizzes"), add(value("$$grade"), value(2)))
-                                                                         .as("grade")))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("grades")
+                                       .project(Projection.of()
+                                                          .include("adjustedGrades",
+                                                              map(field("quizzes"), add(value("$$grade"), value(2)))
+                                                                  .as("grade")))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : 1, 'adjustedGrades' : [ 7, 8, 9 ] }"),
@@ -151,12 +151,12 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
                 parse("{ '_id' : 3, 'name' : 'ahn', 'favorites' : [ ] }"),
                 parse("{ '_id' : 4, 'name' : 'ty' }")));
 
-        List<Document> actual = getDatastore().aggregate("users")
-                                              .project(Projection.of()
-                                                                 .include("name")
-                                                                 .include("reverseFavorites", reverseArray(field("favorites"))))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("users")
+                                       .project(Projection.of()
+                                                          .include("name")
+                                                          .include("reverseFavorites", reverseArray(field("favorites"))))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : 1, 'name' : 'dave123', 'reverseFavorites' : [ 'apples', 'butter', 'cake', 'chocolate' ] }"),
@@ -176,14 +176,14 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'item' : 'ZZZ1', 'description' : 'product 4 - missing colors' }"),
             parse("{ '_id' : 5, 'item' : 'ZZZ2', 'description' : 'product 5 - colors is string', colors: 'blue,red' }")));
 
-        List<Document> actual = getDatastore().aggregate("inventory")
-                                              .project(Projection.of()
-                                                                 .include("item")
-                                                                 .include("numberOfColors",
-                                                                     condition(isArray(field("$colors")), size(field("$colors")),
-                                                                         value("NA"))))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("inventory")
+                                       .project(Projection.of()
+                                                          .include("item")
+                                                          .include("numberOfColors",
+                                                              condition(isArray(field("$colors")), size(field("$colors")),
+                                                                  value("NA"))))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : 1, 'item' : 'ABC1', 'numberOfColors' : 3 }"),
@@ -203,12 +203,12 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'name' : 'ahn', favorites: [ 'pears', 'pecans', 'chocolate', 'cherries' ] }"),
             parse("{ '_id' : 4, 'name' : 'ty', favorites: [ 'ice cream' ] }")));
 
-        List<Document> actual = getDatastore().aggregate("users")
-                                              .project(Projection.of()
-                                                                 .include("name")
-                                                                 .include("threeFavorites", slice(field("favorites"), 3)))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("users")
+                                       .project(Projection.of()
+                                                          .include("name")
+                                                          .include("threeFavorites", slice(field("favorites"), 3)))
+                                       .execute(Document.class)
+                                       .toList();
         List<Document> expected = List.of(parse("{ '_id' : 1, 'name' : 'dave123', 'threeFavorites' : [ 'chocolate', 'cake', 'butter' ] }"),
             parse("{ '_id' : 2, 'name' : 'li', 'threeFavorites' : [ 'apples', 'pudding', 'pie' ] }"),
             parse("{ '_id' : 3, 'name' : 'ahn', 'threeFavorites' : [ 'pears', 'pecans', 'chocolate' ] }"),
@@ -223,15 +223,15 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ matrix: [[1, 2], [2, 3], [3, 4]] }"),
             parse("{ matrix: [[8, 7], [7, 6], [5, 4]] }")));
 
-        List<Document> actual = getDatastore().aggregate("matrices")
-                                              .project(Projection.of()
-                                                                 .suppressId()
-                                                                 .include("transposed", zip(
-                                                                     elementAt(field("matrix"), value(0)),
-                                                                     elementAt(field("matrix"), value(1)),
-                                                                     elementAt(field("matrix"), value(2)))))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("matrices")
+                                       .project(Projection.of()
+                                                          .suppressId()
+                                                          .include("transposed", zip(
+                                                              elementAt(field("matrix"), value(0)),
+                                                              elementAt(field("matrix"), value(1)),
+                                                              elementAt(field("matrix"), value(2)))))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(
             parse("{ 'transposed' : [ [ 1, 2, 3 ], [ 2, 3, 4 ] ] }"),

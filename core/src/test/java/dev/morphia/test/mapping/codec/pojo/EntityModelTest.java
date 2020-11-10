@@ -21,23 +21,23 @@ import static org.testng.Assert.assertEquals;
 public class EntityModelTest extends TestBase {
     @Test
     public void testFindParameterization() {
-        EntityModel model = new EntityModelBuilder(getDatastore(), Child.class).build();
+        EntityModel model = new EntityModelBuilder(getDs(), Child.class).build();
         assertEquals(model.getField("someField").getType(), LocalDate.class);
     }
 
     @Test
     public void testGenericFields() {
-        EntityModelBuilder builder = new EntityModelBuilder(getDatastore(), Base.class);
+        EntityModelBuilder builder = new EntityModelBuilder(getDs(), Base.class);
         assertEquals(builder.fieldModels().size(), 3, builder.fieldModels().stream()
                                                              .map(FieldModelBuilder::name)
                                                              .collect(joining(", ")));
 
-        builder = new EntityModelBuilder(getDatastore(), Parent.class);
+        builder = new EntityModelBuilder(getDs(), Parent.class);
         assertEquals(builder.fieldModels().size(), 4, builder.fieldModels().stream()
                                                              .map(FieldModelBuilder::name)
                                                              .collect(joining(", ")));
 
-        builder = new EntityModelBuilder(getDatastore(), Child.class);
+        builder = new EntityModelBuilder(getDs(), Child.class);
         assertEquals(builder.fieldModels().size(), 5, builder.fieldModels().stream()
                                                              .map(FieldModelBuilder::name)
                                                              .collect(joining(", ")));
@@ -49,27 +49,27 @@ public class EntityModelTest extends TestBase {
 
     @Test
     public void testInheritedTypes() {
-        EntityModel model = getDatastore().getMapper().map(MoreSpecificEntity.class).get(0);
+        EntityModel model = getDs().getMapper().map(MoreSpecificEntity.class).get(0);
         MoreSpecificEntity beforeDB = new MoreSpecificEntity();
         beforeDB.setId(UUID.randomUUID());
         beforeDB.setTest(UUID.randomUUID());
         beforeDB.setTest2(UUID.randomUUID());
         beforeDB.setNumber(13);
         beforeDB.setNumber2(14);
-        getDatastore().save(beforeDB);
+        getDs().save(beforeDB);
 
-        MoreSpecificEntity fromDB = getDatastore().find(MoreSpecificEntity.class)
-                                                  .filter(Filters.eq("_id", beforeDB.getId()))
-                                                  .first();
+        MoreSpecificEntity fromDB = getDs().find(MoreSpecificEntity.class)
+                                           .filter(Filters.eq("_id", beforeDB.getId()))
+                                           .first();
 
         assertEquals(model.getField("id").getType(), UUID.class);
         assertEquals(model.getField("test").getType(), UUID.class);
         assertEquals(model.getField("test2").getType(), UUID.class);
 
 
-        getDatastore().getDatabase()
-                      .getCollection("specificEntity")
-                      .deleteMany(new BasicDBObject());
+        getDs().getDatabase()
+               .getCollection("specificEntity")
+               .deleteMany(new BasicDBObject());
     }
 
     @Entity

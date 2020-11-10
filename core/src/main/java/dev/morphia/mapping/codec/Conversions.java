@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.time.Instant;
@@ -49,6 +50,8 @@ public final class Conversions {
 
         register(Float.class, Long.class, Float::longValue, "Converting a float value to a long.  Possible loss of precision.");
         register(Float.class, Integer.class, Float::intValue, "Converting a float value to an int.  Possible loss of precision.");
+
+        register(String.class, BigDecimal.class, BigDecimal::new);
 
         register(URI.class, String.class, u -> {
             try {

@@ -49,7 +49,7 @@ public class DateExpressionTest extends ExpressionsTestBase {
     public void testDateAggregation() {
         insert("sales", List.of(
             parse("{\"_id\" : 1,\"item\" : \"abc\",\"price\" : 10,\"quantity\" : 2,\"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")\n}")));
-        Aggregation<Sales> pipeline = getDatastore()
+        Aggregation<Sales> pipeline = getDs()
                                           .aggregate(Sales.class)
                                           .project(of()
                                                        .include("year", year(field("date")))
@@ -78,9 +78,9 @@ public class DateExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testDateFromParts() {
-        getDatastore().save(new Sales());
+        getDs().save(new Sales());
         Document result =
-            getDatastore()
+            getDs()
                 .aggregate(Sales.class)
                 .project(of()
                              .include("date", dateFromParts()
@@ -119,12 +119,12 @@ public class DateExpressionTest extends ExpressionsTestBase {
 
         insert("logmessages", list);
 
-        List<Document> result = getDatastore().aggregate(LogMessage.class)
-                                              .project(of().include("date", dateFromString()
-                                                                                .dateString(field("date"))
-                                                                                .timeZone("America/New_York")))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> result = getDs().aggregate(LogMessage.class)
+                                       .project(of().include("date", dateFromString()
+                                                                         .dateString(field("date"))
+                                                                         .timeZone("America/New_York")))
+                                       .execute(Document.class)
+                                       .toList();
         assertEquals(result, List.of(
             parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
             parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
@@ -133,12 +133,12 @@ public class DateExpressionTest extends ExpressionsTestBase {
             parse("{ '_id' : 5, 'date' : ISODate('2017-02-09T08:35:02.055Z') }")));
 
 
-        result = getDatastore().aggregate(LogMessage.class)
-                               .project(of().include("date", dateFromString()
-                                                                 .dateString(field("date"))
-                                                                 .timeZone(field("timezone"))))
-                               .execute(Document.class)
-                               .toList();
+        result = getDs().aggregate(LogMessage.class)
+                        .project(of().include("date", dateFromString()
+                                                          .dateString(field("date"))
+                                                          .timeZone(field("timezone"))))
+                        .execute(Document.class)
+                        .toList();
 
         assertEquals(result, List.of(
             parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
@@ -154,15 +154,15 @@ public class DateExpressionTest extends ExpressionsTestBase {
         getDocumentCollection(User.class)
             .insertOne(parse("{'_id': 2, 'item': 'abc', 'price': 10, 'quantity': 2, 'date': ISODate('2017-01-01T01:29:09.123Z')}"));
 
-        Document parts = getDatastore().aggregate(User.class)
-                                       .project(of()
-                                                    .include("date", dateToParts(field("date")))
-                                                    .include("date_iso", dateToParts(field("date"))
-                                                                             .iso8601(true))
-                                                    .include("date_timezone", dateToParts(field("date"))
-                                                                                  .timezone(value("America/New_York"))))
-                                       .execute(Document.class)
-                                       .next();
+        Document parts = getDs().aggregate(User.class)
+                                .project(of()
+                                             .include("date", dateToParts(field("date")))
+                                             .include("date_iso", dateToParts(field("date"))
+                                                                      .iso8601(true))
+                                             .include("date_timezone", dateToParts(field("date"))
+                                                                           .timezone(value("America/New_York"))))
+                                .execute(Document.class)
+                                .next();
         assertDocumentEquals(parts, parse("{\"_id\":2,\"date\":{\"year\":2017,\"month\":1,\"day\":1,\"hour\":1,\"minute\":29,\"second\":9,"
                                           + "\"millisecond\":123},\"date_iso\":{\"isoWeekYear\":2016,\"isoWeek\":52,\"isoDayOfWeek\":7,"
                                           + "\"hour\":1,\"minute\":29,\"second\":9,\"millisecond\":123},\"date_timezone\":{\"year\":2016,"
@@ -173,8 +173,8 @@ public class DateExpressionTest extends ExpressionsTestBase {
     public void testDateToString() {
         LocalDate joined = LocalDate.parse("2016-05-01 UTC", DateTimeFormatter.ofPattern("yyyy-MM-dd z"));
         getMapper().getCollection(User.class).drop();
-        getDatastore().save(new User("John Doe", joined));
-        Aggregation<User> pipeline = getDatastore()
+        getDs().save(new User("John Doe", joined));
+        Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
                                          .project(of().include("string",
                                              dateToString()
@@ -218,13 +218,13 @@ public class DateExpressionTest extends ExpressionsTestBase {
             parse("{ _id: 3, item: 'ice cream', qty: 2, price: '4.99', order_date: '2018-03-05' }"),
             parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
 
-        List<Document> result = getDatastore().aggregate(Order.class)
-                                              .addFields(AddFields.of()
-                                                                  .field("convertedDate", toDate(field("order_date"))))
-                                              .sort(Sort.on()
-                                                        .ascending("convertedDate"))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> result = getDs().aggregate(Order.class)
+                                       .addFields(AddFields.of()
+                                                           .field("convertedDate", toDate(field("order_date"))))
+                                       .sort(Sort.on()
+                                                 .ascending("convertedDate"))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> documents = List.of(
             parse(

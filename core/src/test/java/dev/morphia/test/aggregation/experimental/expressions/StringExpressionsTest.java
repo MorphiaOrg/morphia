@@ -117,12 +117,12 @@ public class StringExpressionsTest extends ExpressionsTestBase {
             parse("{ _id: 2, name: 'Cafe' }"),
             parse("{ _id: 3, name: 'café' }")));
 
-        List<Document> actual = getDatastore().aggregate("myCollection")
-                                              .addFields(AddFields.of()
-                                                                  .field("resultObject",
-                                                                      replaceAll(field("name"), literal("Cafe"), literal("CAFE"))))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("myCollection")
+                                       .addFields(AddFields.of()
+                                                           .field("resultObject",
+                                                               replaceAll(field("name"), literal("Cafe"), literal("CAFE"))))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : 1, 'name' : 'cafe', 'resultObject' : 'cafe' }"),
@@ -141,13 +141,13 @@ public class StringExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'item' : 'blue paint with blue paintbrush' }"),
             parse("{ '_id' : 4, 'item' : 'blue paint with green paintbrush' }")));
 
-        List<Document> actual = getDatastore().aggregate("myCollection")
-                                              .project(Projection.of()
-                                                                 .include("item",
-                                                                     replaceOne(field("$item"), literal("blue paint"),
-                                                                         literal("red paint"))))
-                                              .execute(Document.class)
-                                              .toList();
+        List<Document> actual = getDs().aggregate("myCollection")
+                                       .project(Projection.of()
+                                                          .include("item",
+                                                              replaceOne(field("$item"), literal("blue paint"),
+                                                                  literal("red paint"))))
+                                       .execute(Document.class)
+                                       .toList();
 
         List<Document> expected = List.of(
             parse("{ '_id' : 1, 'item' : 'red paint' }"),

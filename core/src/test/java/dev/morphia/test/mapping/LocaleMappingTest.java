@@ -1,10 +1,9 @@
-package dev.morphia.mapping;
-
+package dev.morphia.test.mapping;
 
 import dev.morphia.Datastore;
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,10 +15,6 @@ import java.util.Locale;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
-
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class LocaleMappingTest extends TestBase {
 
     @Test

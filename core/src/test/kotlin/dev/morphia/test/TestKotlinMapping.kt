@@ -10,11 +10,11 @@ import org.testng.annotations.Test
 class TestKotlinMapping : TestBase() {
     @Test
     fun dataClasses() {
-        val list = datastore.mapper.map(MyClass::class.java)
+        val list = ds.mapper.map(MyClass::class.java)
         assertFalse(list.isEmpty())
         val myClass = MyClass(ObjectId(), 42)
-        datastore.save(myClass)
-        val loaded = datastore.find(MyClass::class.java)
+        ds.save(myClass)
+        val loaded = ds.find(MyClass::class.java)
             .first()
 
         assertEquals(loaded, myClass)

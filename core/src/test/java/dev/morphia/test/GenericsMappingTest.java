@@ -50,11 +50,11 @@ public class GenericsMappingTest extends TestBase {
         SpecializedEntity beforeDB = new SpecializedEntity();
         beforeDB.setId(UUID.randomUUID());
         beforeDB.setTest(UUID.randomUUID());
-        getDatastore().save(beforeDB);
+        getDs().save(beforeDB);
 
-        SpecializedEntity loaded = getDatastore().find(SpecializedEntity.class)
-                                                 .filter(eq("_id", beforeDB.getId()))
-                                                 .first();
+        SpecializedEntity loaded = getDs().find(SpecializedEntity.class)
+                                          .filter(eq("_id", beforeDB.getId()))
+                                          .first();
 
         assertEquals(loaded.getId(), beforeDB.getId());
 
@@ -72,11 +72,11 @@ public class GenericsMappingTest extends TestBase {
         ct.stringThing = has;
         ct.integerThing = hai;
 
-        getDatastore().save(ct);
+        getDs().save(ct);
         assertNotNull(ct.id);
-        assertEquals(getDatastore().find(ContainsThings.class).count(), 1);
-        final ContainsThings ctLoaded = getDatastore().find(ContainsThings.class).iterator(new FindOptions().limit(1))
-                                                      .next();
+        assertEquals(getDs().find(ContainsThings.class).count(), 1);
+        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
+                                               .next();
         assertNotNull(ctLoaded);
         assertNotNull(ctLoaded.id);
         assertNotNull(ctLoaded.stringThing);
@@ -90,9 +90,9 @@ public class GenericsMappingTest extends TestBase {
         Status<EmailItem> status = new EmailStatus();
         status.items = List.of(new EmailItem("help@example.org"));
 
-        getDatastore().save(status);
+        getDs().save(status);
 
-        assertNotNull(getDatastore().find(EmailStatus.class).first());
+        assertNotNull(getDs().find(EmailStatus.class).first());
     }
 
     @Embedded

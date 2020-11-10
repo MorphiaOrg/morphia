@@ -1,6 +1,5 @@
 package dev.morphia.test;
 
-import com.antwerkz.bottlerocket.BottleRocket;
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
 import com.antwerkz.bottlerocket.clusters.SingleNode;
@@ -9,6 +8,7 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -69,7 +69,7 @@ public abstract class TestBase {
         return database;
     }
 
-    public Datastore getDatastore() {
+    public Datastore getDs() {
         if (datastore == null) {
             datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
         }
@@ -81,7 +81,7 @@ public abstract class TestBase {
     }
 
     public Mapper getMapper() {
-        return getDatastore().getMapper();
+        return getDs().getMapper();
     }
 
     @DataProvider(name = "queryFactories")
@@ -283,30 +283,34 @@ public abstract class TestBase {
     }
 
     private void startMongo() {
-        Builder builder = MongoClientSettings.builder();
-
-        try {
-            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
-        } catch (Exception ignored) {
-            // not a 4.0 driver
-        }
-
         String mongodb = System.getenv("MONGODB");
-        Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
-        final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
-                                     ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
-                                     : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
+        if (mongodb != null) {
+            Builder builder = MongoClientSettings.builder();
 
-        cluster.configure(c -> {
-            c.systemLog(s -> {
-                s.setTraceAllExceptions(true);
-                s.setVerbosity(Verbosity.FIVE);
+            try {
+                builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
+            } catch (Exception ignored) {
+                // not a 4.0 driver
+            }
+
+            Version version = Version.valueOf(mongodb);
+            final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
+                                         ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
+                                         : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
+
+            cluster.configure(c -> {
+                c.systemLog(s -> {
+                    s.setTraceAllExceptions(true);
+                    s.setVerbosity(Verbosity.FIVE);
+                    return null;
+                });
                 return null;
             });
-            return null;
-        });
-        cluster.clean();
-        cluster.start();
-        mongoClient = cluster.getClient(builder);
+            cluster.clean();
+            cluster.start();
+            mongoClient = cluster.getClient(builder);
+        } else {
+            mongoClient = MongoClients.create();
+        }
     }
 }

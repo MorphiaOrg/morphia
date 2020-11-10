@@ -34,23 +34,23 @@ public class VersionTest extends TestBase {
 
             final VersionedType a = new VersionedType();
             assertEquals(a.version, 0);
-            getDatastore().save(a);
+            getDs().save(a);
             assertEquals(a.version, 1);
 
-            Query<VersionedType> query = getDatastore().find(VersionedType.class)
-                                                       .filter(eq("_id", a.getId()));
-            getDatastore().save(query.iterator().next());
+            Query<VersionedType> query = getDs().find(VersionedType.class)
+                                                .filter(eq("_id", a.getId()));
+            getDs().save(query.iterator().next());
 
             assertEquals(query.iterator().next().version, 2);
 
-            getDatastore().save(a);
+            getDs().save(a);
         });
     }
 
     @Test
     public void testFindAndModify() {
         final VersionedType initial = new VersionedType();
-        Datastore ds = getDatastore();
+        Datastore ds = getDs();
         ds.save(initial);
 
         Query<VersionedType> query = ds.find(VersionedType.class)
@@ -77,8 +77,8 @@ public class VersionTest extends TestBase {
             entity1.setId(id);
             entity2.setId(id);
 
-            getDatastore().save(entity1);
-            getDatastore().save(entity2);
+            getDs().save(entity1);
+            getDs().save(entity2);
         });
     }
 
@@ -87,15 +87,15 @@ public class VersionTest extends TestBase {
         assertThrows(ConcurrentModificationException.class, () -> {
             final NamedVersion a = new NamedVersion();
             Assert.assertNull(a.v);
-            getDatastore().save(a);
+            getDs().save(a);
 
             a.text = " foosdfds ";
-            final NamedVersion a2 = getDatastore().find(NamedVersion.class)
-                                                  .filter(eq("_id", a.getId()))
-                                                  .first();
-            getDatastore().save(a2);
+            final NamedVersion a2 = getDs().find(NamedVersion.class)
+                                           .filter(eq("_id", a.getId()))
+                                           .first();
+            getDs().save(a2);
 
-            getDatastore().merge(a);
+            getDs().merge(a);
         });
     }
 
@@ -104,10 +104,10 @@ public class VersionTest extends TestBase {
         getMapper().map(List.of(VersionedType.class));
         List<VersionedType> initial = List.of(new VersionedType(), new VersionedType());
 
-        getDatastore().save(initial);
+        getDs().save(initial);
 
-        Query<VersionedType> query = getDatastore().find(VersionedType.class);
-        getDatastore().save(query.iterator().toList());
+        Query<VersionedType> query = getDs().find(VersionedType.class);
+        getDs().save(query.iterator().toList());
 
         List<VersionedType> loaded = query.iterator().toList();
 
@@ -118,13 +118,13 @@ public class VersionTest extends TestBase {
         }
 
         assertThrows(ConcurrentModificationException.class, () -> {
-            getDatastore().save(initial);
+            getDs().save(initial);
         });
     }
 
     @Test
     public void testUpdate() {
-        Datastore ds = getDatastore();
+        Datastore ds = getDs();
         List<VersionedType> initial = List.of(new VersionedType(), new VersionedType());
         ds.save(initial);
 
@@ -156,7 +156,7 @@ public class VersionTest extends TestBase {
 
         final VersionInHashcode model = new VersionInHashcode();
         model.data = "whatever";
-        getDatastore().save(model);
+        getDs().save(model);
         Assert.assertNotNull(model.version);
     }
 
@@ -164,11 +164,11 @@ public class VersionTest extends TestBase {
     public void testVersions() {
         final VersionedType a = new VersionedType();
         assertEquals(a.version, 0);
-        getDatastore().save(a);
+        getDs().save(a);
         assertEquals(a.version, 1);
         final long version1 = a.version;
 
-        getDatastore().save(a);
+        getDs().save(a);
         assertEquals(a.version, 2);
         final long version2 = a.version;
 

@@ -27,12 +27,12 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
                 "'TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=')}"),
             parse("{ _id: 5, name: 'empty.jpg', binary: new BinData(0, '') }")));
 
-        List<Document> documents = getDatastore().aggregate("images")
-                                                 .project(Projection.of()
-                                                                    .include("name", field("name"))
-                                                                    .include("imageSize", binarySize(field("binary"))))
-                                                 .execute(Document.class)
-                                                 .toList();
+        List<Document> documents = getDs().aggregate("images")
+                                          .project(Projection.of()
+                                                             .include("name", field("name"))
+                                                             .include("imageSize", binarySize(field("binary"))))
+                                          .execute(Document.class)
+                                          .toList();
         List<Document> expected = of(parse("{ '_id' : 1, 'name' : 'cat.jpg', 'imageSize' : 16 }"),
             parse("{ '_id' : 2, 'name' : 'big_ben.jpg', 'imageSize' : 41 }"),
             parse("{ '_id' : 3, 'name' : 'tea_set.jpg', 'imageSize' : 16 }"),
@@ -55,12 +55,12 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id': 4, 'name': 'Dianne', 'email': 'diane@company.com', 'position': 'Web Designer', 'current_task': { "
                   + "'project_id': 3, 'project_name': 'Update Home Page', 'notes': 'Need to scope this project.' } }")));
 
-        List<Document> list = getDatastore().aggregate("employees")
-                                            .project(Projection.of()
-                                                               .include("name")
-                                                               .include("object_size", bsonSize(SystemVariables.ROOT)))
-                                            .execute(Document.class)
-                                            .toList();
+        List<Document> list = getDs().aggregate("employees")
+                                     .project(Projection.of()
+                                                        .include("name")
+                                                        .include("object_size", bsonSize(SystemVariables.ROOT)))
+                                     .execute(Document.class)
+                                     .toList();
 
         List<Document> expected = of(
             parse("{ '_id' : 1, 'name' : 'Alice', 'object_size' : 203 }"),
