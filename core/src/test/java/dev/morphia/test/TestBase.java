@@ -76,24 +76,12 @@ public abstract class TestBase {
         return datastore;
     }
 
-    public boolean isReplicaSet() {
-        return runIsMaster().get("setName") != null;
-    }
-
     public Mapper getMapper() {
         return getDs().getMapper();
     }
 
-    @DataProvider(name = "queryFactories")
-    public Object[] queryFactories() {
-        return new Object[]{
-            new DefaultQueryFactory(),
-            new LegacyQueryFactory()
-        };
-    }
-
-    protected void assertDocumentEquals(Object actual, Object expected) {
-        assertDocumentEquals("", expected, actual);
+    public boolean isReplicaSet() {
+        return runIsMaster().get("setName") != null;
     }
 
     public void lazyAssert(Supplier<String> messageSupplier, Runnable assertion) {
@@ -104,10 +92,35 @@ public abstract class TestBase {
         }
     }
 
+    @DataProvider(name = "queryFactories")
+    public Object[] queryFactories() {
+        return new Object[]{
+            new DefaultQueryFactory(),
+            new LegacyQueryFactory()
+        };
+    }
+
+    protected void assertCapped(Class<?> type, Integer max, Integer size) {
+        Document result = getOptions(type);
+        Assert.assertTrue(result.getBoolean("capped"));
+        assertEquals(result.get("max"), max);
+        assertEquals(result.get("size"), size);
+    }
+
+    protected void assertDocumentEquals(Object actual, Object expected) {
+        assertDocumentEquals("", expected, actual);
+    }
+
     protected void assertListEquals(List<?> actual, List<?> expected) {
         assertEquals(actual.size(), expected.size());
         expected.forEach(
             d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
+    }
+
+    protected void assumeTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new SkipException(message);
+        }
     }
 
     protected void checkMinServerVersion(double version) {
@@ -132,8 +145,43 @@ public abstract class TestBase {
         return count;
     }
 
+    protected void download(URL url, File file) throws IOException {
+        LOG.info("Downloading zip data set to " + file);
+        try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
+            byte[] read = new byte[49152];
+            int count;
+            while ((count = inputStream.read(read)) != -1) {
+                outputStream.write(read, 0, count);
+            }
+        }
+    }
+
+    protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
+        return getDatabase().getCollection(getMapper().getEntityModel(type).getCollectionName());
+    }
+
     protected List<Document> getIndexInfo(Class<?> clazz) {
         return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
+    }
+
+    protected MongoClient getMongoClient() {
+        if (mongoClient == null) {
+            startMongo();
+        }
+        return mongoClient;
+    }
+
+    @NotNull
+    protected Document getOptions(Class<?> type) {
+        MongoCollection<?> collection = getMapper().getCollection(type);
+        Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
+                                                       .append("filter",
+                                                           new Document("name", collection.getNamespace().getCollectionName())));
+
+        Document cursor = (Document) result.get("cursor");
+        return (Document) cursor.getList("firstBatch", Document.class)
+                                .get(0)
+                                .get("options");
     }
 
     protected double getServerVersion() {
@@ -142,19 +190,6 @@ public abstract class TestBase {
                                       .runCommand(new Document("serverStatus", 1))
                                       .get("version");
         return Double.parseDouble(version.substring(0, 3));
-    }
-
-    protected void assertCapped(Class<?> type, Integer max, Integer size) {
-        Document result = getOptions(type);
-        Assert.assertTrue(result.getBoolean("capped"));
-        assertEquals(result.get("max"), max);
-        assertEquals(result.get("size"), size);
-    }
-
-    protected void assumeTrue(boolean condition, String message) {
-        if (!condition) {
-            throw new SkipException(message);
-        }
     }
 
     protected void insert(String collectionName, List<Document> list) {
@@ -173,26 +208,6 @@ public abstract class TestBase {
 
     protected String toString(Document document) {
         return document.toJson(getMapper().getCodecRegistry().get(Document.class));
-    }
-
-    @NotNull
-    protected Document getOptions(Class<?> type) {
-        MongoCollection<?> collection = getMapper().getCollection(type);
-        Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
-                                                       .append("filter",
-                                                           new Document("name", collection.getNamespace().getCollectionName())));
-
-        Document cursor = (Document) result.get("cursor");
-        return (Document) cursor.getList("firstBatch", Document.class)
-                                .get(0)
-                                .get("options");
-    }
-
-    protected MongoClient getMongoClient() {
-        if (mongoClient == null) {
-            startMongo();
-        }
-        return mongoClient;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -237,26 +252,6 @@ public abstract class TestBase {
         }
     }
 
-    protected void download(URL url, File file) throws IOException {
-        LOG.info("Downloading zip data set to " + file);
-        try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
-            byte[] read = new byte[49152];
-            int count;
-            while ((count = inputStream.read(read)) != -1) {
-                outputStream.write(read, 0, count);
-            }
-        }
-    }
-
-    private Document runIsMaster() {
-        return mongoClient.getDatabase("admin")
-                          .runCommand(new Document("ismaster", 1));
-    }
-
-    protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
-        return getDatabase().getCollection(getMapper().getEntityModel(type).getCollectionName());
-    }
-
     private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
             || actual == null && expected != null) {
@@ -282,15 +277,20 @@ public abstract class TestBase {
         });
     }
 
+    private Document runIsMaster() {
+        return mongoClient.getDatabase("admin")
+                          .runCommand(new Document("ismaster", 1));
+    }
+
     private void startMongo() {
         String mongodb = System.getenv("MONGODB");
-            Builder builder = MongoClientSettings.builder();
+        Builder builder = MongoClientSettings.builder();
 
-            try {
-                builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
-            } catch (Exception ignored) {
-                // not a 4.0 driver
-            }
+        try {
+            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
+        } catch (Exception ignored) {
+            // not a 4.0 driver
+        }
 
         if (mongodb != null) {
             Version version = Version.valueOf(mongodb);
