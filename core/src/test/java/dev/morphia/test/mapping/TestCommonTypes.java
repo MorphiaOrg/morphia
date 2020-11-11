@@ -36,8 +36,6 @@ public class TestCommonTypes extends TestBase {
         List<Money> monies = getDs().find(Money.class).iterator().toList();
 
         assertEquals(monies.get(0).amount, monies.get(1).amount);
-
-        System.out.println("document = " + document);
     }
 
     @Entity
