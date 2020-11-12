@@ -83,17 +83,6 @@ import static org.junit.Assert.fail;
 public class TestQuery extends TestBase {
 
     @Test
-    public void testAlternateCollections() {
-        getDs().save(new Photo(List.of("i", "am", "keywords")));
-
-        getDs().getMapper().getCollection(Photo.class)
-               .renameCollection(new MongoNamespace(getDatabase().getName(), "alternate"));
-        assertEquals(0, getDs().find(Photo.class).count());
-
-        assertEquals(1, getDs().find("alternate", Photo.class).count());
-    }
-
-    @Test
     public void genericMultiKeyValueQueries() {
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
@@ -169,6 +158,17 @@ public class TestQuery extends TestBase {
                     .tryNext();
         assertNotNull(r1);
         assertEquals(10, r1.getWidth(), 0);
+    }
+
+    @Test
+    public void testAlternateCollections() {
+        getDs().save(new Photo(List.of("i", "am", "keywords")));
+
+        getDs().getMapper().getCollection(Photo.class)
+               .renameCollection(new MongoNamespace(getDatabase().getName(), "alternate"));
+        assertEquals(0, getDs().find(Photo.class).count());
+
+        assertEquals(1, getDs().find("alternate", Photo.class).count());
     }
 
     @Test
@@ -351,7 +351,6 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCommentsShowUpInLogs() {
-        checkMinServerVersion(4.2);
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
         getDatabase().runCommand(new Document("profile", 2));
@@ -365,7 +364,8 @@ public class TestQuery extends TestBase {
         assertNotEquals(0, profileCollection.countDocuments());
 
         Document query = new Document("op", "query")
-                             .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName());
+                             .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName())
+                             .append("command.comment", new Document("$exists", true));
         Document profileRecord = profileCollection.find(query).first();
 
         assertEquals(profileRecord.toJson(getMapper().getCodecRegistry().get(Document.class)), expectedComment,
