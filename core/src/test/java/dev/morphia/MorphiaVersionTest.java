@@ -18,6 +18,7 @@ public class MorphiaVersionTest {
 
         Version version = Version.valueOf(model.getVersion());
         String minorVersion = format("%s%s", version.getMajorVersion(), version.getMinorVersion());
-        assertEquals(MorphiaVersion21.class.getSimpleName().replaceAll("\\D", ""), minorVersion);
+        //noinspection MisorderedAssertEqualsArguments
+        assertEquals(MorphiaVersion22.class.getSimpleName().replaceAll("\\D", ""), minorVersion);
     }
 }
