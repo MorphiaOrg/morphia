@@ -25,3 +25,4 @@ dev.morphia.query
 dev.morphia.query.experimental.filters
 dev.morphia.query.experimental.updates
 dev.morphia.transactions.experimental
+dev.morphia.utils
