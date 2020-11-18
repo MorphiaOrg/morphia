@@ -41,7 +41,7 @@
                 </executions>
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
-                    <javadocUrl>https://morphia.dev/2.1.0-SNAPSHOT/javadoc/</javadocUrl>
+                    <javadocUrl>https://morphia.dev/${project.version}/javadoc/</javadocUrl>
                 </configuration>
             </plugin>
             <plugin>
@@ -148,6 +148,25 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <excludePackageNames>*.internal, dev.morphia.sofia</excludePackageNames>
+                    <doclint>none</doclint>
+                    <doctitle>Morphia ${project.version}</doctitle>
+                    <windowtitle>Morphia</windowtitle>
+                    <tagletArtifacts>
+                        <tagletArtifact>1
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>util</artifactId>
+                            <version>${project.version}</version>
+                        </tagletArtifact>
+                    </tagletArtifacts>
+                </configuration>
             </plugin>
         </plugins>
     </build>
