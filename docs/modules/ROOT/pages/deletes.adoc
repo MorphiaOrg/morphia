@@ -1,0 +1,17 @@
+== Deletes
+
+Queries are used to delete documents from the database as well.
+Using
+xref:javadoc:dev/morphia/query/Query.html#delete()#[`Query#delete()`], we can delete documents matching the query.
+The default operation will only delete the first matching document.
+However, you can opt to delete all matches by passing in the appropriate options:
+
+[source,java]
+----
+datastore
+    .find(Hotel.class)
+    .filter(gt("stars", 100))
+    .delete(new DeleteOptions()
+                     .multi(true));
+----
+

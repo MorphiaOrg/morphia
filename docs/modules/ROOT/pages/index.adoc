@@ -1,0 +1,63 @@
+= Getting Started
+
+The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.
+To use Morphia using either build tool, you will need to update your build configurations with the following information.
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependencies>
+    <dependency>
+        <groupId>{groupId}</groupId>
+        <artifactId>{artifactId}</artifactId>
+        <version>{version}</version>
+    </dependency>
+</dependencies>
+----
+
+If you want to use a `-SNAPSHOT` build you will need to add the appropriate repository information to you pom:
+
+[source,xml]
+----
+<repositories>
+    <repository>
+        <id>sonatype-snapshots</id>
+        <name>Sontatype Snapshots</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+----
+
+Gradle users can use the following dependency declaration:
+
+[source,groovy,subs="verbatim,attributes"]
+----
+dependencies {
+    compile '{groupId}:{artifactId}:{version}'
+}
+----
+
+And, of course, to use `-SNAPSHOT` builds, the additional repository will be needed:
+
+[source,groovy]
+----
+repositories {
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+----
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+endif::[]
+
+[NOTE]
+====
+Morphia 2.0 requires Java 11 or greater.
+Morphia has been tested on mongodb servers as old as 3.6.15 up through the most recent builds.
+Morphia will likely work on older servers versions, but those remain untested and no guarantees are made.
+====

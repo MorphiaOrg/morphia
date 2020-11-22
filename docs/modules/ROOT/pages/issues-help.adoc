@@ -1,0 +1,38 @@
+= Issues & Help
+
+We are lucky to have a vibrant MongoDB Java community with lots of varying experience of using Morphia.
+We often find the quickest way to get support for general questions is through the https://groups.google.com/forum/#!forum/morphia[Morphia google group],
+https://community.mongodb.com/c/drivers-odms-connectors/[the mongoDB community forums], or through https://stackoverflow.com/questions/tagged/morphia[stackoverflow].
+
+== Bugs / Feature Requests
+
+If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on
+https://github.com/MorphiaOrg/morphia/issues[github].
+Please provide as much information as possible (including version numbers) about the issue type and how to reproduce it.
+Ideally, if you can create a reproducer for the issue at hand, that would be even more helpful.
+To help with this, please take a look at the https://github.com/MorphiaOrg/reproducer[reproducer] project.
+This will help you set up a quick environment for reproducing your issue and providing a working example to examine.
+This project can either be shared via a github repo on your account or perhaps attaching a zip of the project to the associated issue.
+
+== Pull Requests
+
+We are happy to accept contributions to help improve Morphia.
+We will guide user contributions to ensure they meet the standards of the codebase.
+Please ensure that any pull requests include documentation, tests, and also pass the build checks.
+
+To get started check out the source and work on a branch:
+
+[source,bash]
+----
+$ git clone https://github.com/MorphiaOrg/morphia.git
+$ cd morphia
+$ git checkout -b myNewFeature
+----
+
+Finally, ensure that the code passes all the checks.
+
+[source,bash]
+----
+$ cd core
+$ mvn -Pquality
+----

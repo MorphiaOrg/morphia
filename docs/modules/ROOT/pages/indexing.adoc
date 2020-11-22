@@ -1,0 +1,129 @@
+== Indexing
+
+Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on an entity's source.
+In addition to the familiar ascending/descending index types, Morphia and MongoDB support
+{docsRef}/core/index-ttl/[TTL], {docsRef}/core/index-text/[text], and {docsRef}/applications/geospatial-indexes/[geospatial]
+indexes.
+When defining <<_text_indexing, text indexes>> there are certain restrictions which will be covered below.
+Full details for all these types are available in the {docsRef}/indexes[manual].
+
+There are two ways to define indexes: at the class level and at the field level.
+
+=== Class Level Indexes
+
+Class level indexing begins with the xref:javadoc:dev/morphia/annotations/Indexes.html#[`@Indexes`] annotation.
+This is a container annotation whose sole purpose is to hold a number of xref:javadoc:dev/morphia/annotations/Index.html#[`@Index`] annotations.
+This annotation has two primary components to cover here:  `fields` and `options`.
+An index definition would take the following form:
+
+[source,java]
+----
+@Entity
+@Indexes({
+    @Index(fields = @Field(value = "field2", type = DESC)),
+    @Index(
+      fields = @Field("field3"),
+      options = @IndexOptions(name = "indexing_test")
+    )
+})
+public class IndexExample {
+    @Id
+    private ObjectId id;
+    private String field;
+    @Property
+    private String field2;
+    @Property("f3")
+    private String field3;
+}
+----
+
+=== Fields
+
+Which fields to index are defined with the xref:javadoc:dev/morphia/annotations/Field.html#[`@Field`] annotation.
+An arbitrary number of xref:javadoc:dev/morphia/annotations/Field.html#[`@Field`]s can be given but at least one must be present.
+The name used for the field can be either the Java field name or the mapped document field name as defined in the class's mapping via, e.g., the
+xref:javadoc:dev/morphia/annotations/Property.html#[`@Property`] or xref:javadoc:dev/morphia/annotations/Embedded.html#[`@Embedded`]
+annotations.
+For most index types, this value is validated by default.
+An exception is made for <<_text_indexing,text indexing>> as discussed below.
+
+=== Index Options
+
+Options for an index are defined on the xref:javadoc:dev/morphia/annotations/IndexOptions.html#[`@IndexOptions`].
+More complete documenation can be found in the {docsRef}/reference/method/db.collection.createIndex/#options[manual].
+Using the options allows you to run indexing in the background, e.g. By default, creating an index blocks all other operations on a database.
+When building an index on a collection, the database that holds the collection is unavailable for read or write operations until the index build completes.
+For potentially long running index building operations, consider the **background** operation so that the MongoDB database remains available during the index building operation.
+The MongoDB {docsRef}/core/index-creation/#background-construction[manual] has more detail.
+
+By default Morphia will attempt to validate the fields specified but in some cases that isn't desirable so you can turn it off via the options refernce.  `IndexOptions` lets you define {docsRef}/core/index-ttl/[TTL], {docsRef}/core/index-sparse/[sparse], and {docsRef}/core/index-partial/[partial] indexes as well.  `IndexOptions` can also be used to give an index a more human friendly name.
+
+[NOTE]
+====
+Whether user specified or MongoDB generated, index names including their full namespace (i.e. database.collection) cannot be longer than the {docsRef}/reference/limits/#Index-Name-Length[Index Name Limit].
+====
+
+==== Partial Indexes
+
+New in MongoDB 3.2, https://docs.mongodb.com/v3.2/core/index-partial/[partial indexes] only index the documents in a collection that meet a specified filter expression thereby reducing storage and maintenance costs.
+A partial filter is defined using a query as shown here:
+
+[source,java]
+----
+@Indexes({@Index(options =
+    @IndexOptions(partialFilter = "{ name : { $exists : true } }"),
+    fields = {@Field(value = "name")})})
+public class SomeClass {
+    ...
+}
+----
+
+== Field Level Indexes
+
+Field level indexing is a simpler approach to defining a basic, single key index.
+These indexes are defined by applying the
+xref:javadoc:dev/morphia/annotations/Indexed.html#[`@Indexed`] annotation to a particularfield on a class.
+Because the index definition is applied at the field level, the index is created using only that field and so the xref:javadoc:dev/morphia/annotations/Field.html#[`@Field`]
+annotations are unnecessary.
+The options for the index are the same as defined <<_index_options, above>>.
+A field level index definition would look like this:
+
+[source,java]
+----
+@Entity
+private class FieldIndex {
+    @Id
+    private ObjectId id;
+    @Indexed(options = @IndexOptions(unique = true))
+    private String name;
+    private String color;
+}
+----
+
+== [#text-indexing]#Text Indexing#
+
+Morphia's indexing supports MongoDB's text indexing and search functionality as we've briefly seen above.
+Full details can be found in the {docsRef}/core/index-text/[manual] but there are a few Morphia specific details to cover.
+Indexed field names are validated by default but validation is disabled when an index is defined using MongoDB's
+{docsRef}/core/index-text/#text-index-wildcard[`$**`] syntax.
+This special instruction tells MongoDB to create a text index on all fields with string content in a document.
+A {docsRef}/core/index-text/#compound-index[compound index] can be created incorporating a text index but it's important to note there can only be one text index on a collection.
+
+A wild card text index declaration would look like this:
+
+[source,java]
+----
+    @Indexes(@Index(fields = @Field(value = "$**", type = TEXT)))
+----
+
+[NOTE]
+====
+A collection can have at most one text index.
+====
+
+=== Collation
+
+Collation allows users to specify language-specific rules for string comparison such as rules for lettercase and accent marks.
+A collation can be defined using the `collation()` property on xref:javadoc:dev/morphia/annotations/IndexOptions.html#[`@IndexOptions`]
+and takes a xref:javadoc:dev/morphia/annotations/Collation.html#[`@Collation`] instance.
+
