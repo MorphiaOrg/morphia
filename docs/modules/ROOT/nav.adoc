@@ -1,0 +1,22 @@
+* xref:getting-started.adoc[Getting Started]
+* xref:quick-tour.adoc[Quick Tour]
+* xref:migration.adoc[Migrating to 2.0]
+
+---
+
+* xref:configuration.adoc[Configuration]
+* xref:querying.adoc[Querying]
+* xref:querying-old.adoc[Querying (Deprecated)]
+* xref:textSearch.adoc[Text Search]
+* xref:updating.adoc[Updating]
+* xref:updating-old.adoc[Updating (Deprecated)]
+* xref:aggregation.adoc[Aggregation]
+* xref:transactions.adoc[Transactions]
+* xref:annotations.adoc[Annotations]
+* xref:indexing.adoc[Indexing]
+* xref:lifeCycleMethods.adoc[Life Cycle Methods]
+
+---
+
+* xref:issues-help.adoc[Issues & Support]
+* xref:javadoc:index.html#[Javadoc]
