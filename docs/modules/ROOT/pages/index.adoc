@@ -1,0 +1,13 @@
+== Morphia Documentation
+
+Morphia is built upon the
+https://github.com/mongodb/mongo-java-driver/[MongoDB Java Driver].
+For reference documentation please see the driver documentation.
+
+=== Getting Started
+
+The xref:getting-started.adoc[Getting Started] guide contains installation instructions and a simple tutorial to get up and running quickly.
+
+=== Issues and support
+
+Please check xref:issues-help.adoc[here] if you find an issue or need help.
