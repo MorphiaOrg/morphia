@@ -28,7 +28,7 @@
     user-select: none;
 }
 
-.card-row {
+.card-row .content {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -49,7 +49,7 @@
     margin-bottom: 25px;
 }
 
-.card-row .column h1 {
+.card-row .column h2 {
     font-size: xx-large;
 }
 
