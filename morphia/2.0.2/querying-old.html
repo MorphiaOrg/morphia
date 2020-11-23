@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Querying (Deprecated)" :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+<link rel="stylesheet" href="../../_/css/site.css">
+<link rel="stylesheet" href="../../_/css/morphia.css">
+
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morhpia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="2.0.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="getting-started.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="quick-tour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="migration.html">Migrating to 2.0</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="querying.html">Querying</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="querying-old.html">Querying (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="textSearch.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="updating-old.html">Updating (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">2.0.2</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../critter/4.0.0/index.html">4.0.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../2.2.0-SNAPSHOT/index.html">2.2.0-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../2.1.0/index.html">2.1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="index.html">2.0.2</a>
+        </li>
+        <li class="version">
+          <a href="../1.6.0/index.html">1.6.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Morphia</a></li>
+    <li><a href="querying-old.html">Querying (Deprecated)</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.0.2</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../2.2.0-SNAPSHOT/index.html">2.2.0-SNAPSHOT</a>
+    <a class="version" href="../2.1.0/querying-old.html">2.1.0</a>
+    <a class="version is-current" href="querying-old.html">2.0.2</a>
+    <a class="version is-missing" href="../1.6.0/index.html">1.6.0</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/2.0.x/docs/modules/ROOT/pages/querying-old.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Querying (Deprecated)"</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This page describes the older approach to querying.
+While this older API is still supported, efforts should be made to update to the new API as outlined in the other <a href="querying.html" class="page">querying</a> guide.
+This old API is active using the
+<a href="configuration.html#_legacy" class="page">legacy configuration</a>.
+The new API will attempt to redirect most calls to use the new
+<a href="javadoc/dev/morphia/query/experimental/filters/Filters.html" class="page">Filters</a> based approach.</p>
+</div>
+<div class="paragraph">
+<p>Note that at this time complex queries using <code>and</code> or <code>or</code> clauses can not be correctly transparently translated and will require manual effort to update to the new API.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Morphia offers a fluent API with which to build up a query and map the results back to instances of your entity classes.
+It attempts to provide as much type safety and validation as possible.
+To this end, Morphia offers the <code>Query&lt;T&gt;</code> class which can be parameterized to the type of your entity.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_a_query"><a class="anchor" href="#_creating_a_query"></a>Creating a Query</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>Datastore</code> is the key class when using Morphia.
+Virtually all operations begin with the <code>Datastore</code>.
+To create the <code>Query</code>, we invoke the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Query&lt;Product&gt; query = datastore.createQuery(Product.class);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>createQuery()</code> returns an instance of <code>Query</code> with which we can build a query.</p>
+</div>
+<div class="sect2">
+<h3 id="_filter"><a class="anchor" href="#_filter"></a><code>filter()</code></h3>
+<div class="paragraph">
+<p>The first method of interest is <code>filter()</code>.
+This method takes two values: a condition string and a value.
+The <code>value</code> parameter is, of course, the value to use when applying the <code>condition</code> clause.
+The <code>condition</code> parameter is a bit more complicated.
+At its simplest, the condition is just a field name.
+In this case, the condition is assumed to be an <a href="http://docs.mongodb.org/manual/reference/operator/query/eq/">equality</a> check.
+There is a slightly more complicated variant, however.</p>
+</div>
+<div class="paragraph">
+<p>The <code>condition</code> value can also contain an operator.
+For example, to compare a numeric field against a value, you might write something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">query.filter("price &gt;=", 1000);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, we&#8217;re instructing Morphia to add a filter using <a href="http://docs.mongodb.org/manual/reference/operator/query/gte/">$gte</a>.
+This would result in a query that looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">{ { 1000 } }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The list of supported filter operations can be found in the
+<a href="https://github.com/MorphiaOrg/morphia/blob/2.0.x/morphia/src/main/java/dev/morphia/query/FilterOperator.java">FilterOperator</a> class.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operator</th>
+<th class="tableblock halign-left valign-top">Alias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$center</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$centerSphere</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$box</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$eq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">=, ==</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$ne</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">!=, &lt;&gt;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$gt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&gt;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$gte</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&gt;=</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$lt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$lte</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8656;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$exists</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exists</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$not</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$mod</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mod</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">size</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$in</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$nin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$all</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$elemMatch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">elem, elemMatch</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$where</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$near</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">near</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$nearSphere</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$within (deprecated replaced by $geoWithin)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">within</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$geoNear</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">geoNear</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$geoWithin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">geoWithin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$geoIntersects</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">geoIntersects</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each filter operator can either be referenced by its MongoDB "dollar operator" or by the aliases listed afterward.
+For example, with the equal operator, you can use the canonical <code>$eq</code> operator as you would when building a query in the shell or you could opt to use either the <code>=</code> or <code>==</code> aliases which might feel a little more natural to use than the dollar operators.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_field"><a class="anchor" href="#_field"></a><code>field()</code></h3>
+<div class="paragraph">
+<p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.
+This method takes only the field name and returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/2.0.x/morphia/src/main/java/dev/morphia/query/FieldEnd.java">class</a> providing methods with which to define your filters.
+This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
+<code>filter()</code> can be.
+To perform the same query as above, you&#8217;d write this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">query.field("price").greaterThanOrEq(1000);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in the exact same query as the <code>filter()</code> version but has the advantage that any typo in the operation name (method in this case) would easily be caught by an IDE or compiler.
+Which version you use is largely a question of preference.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
+<a href="javadoc/dev/morphia/annotations/Property.html" class="page"><code>@Property</code></a> annotation on the field.
+Morphia will normalize the name and validate the name such that a query with a bad field name will result in an error.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_complex_queries"><a class="anchor" href="#_complex_queries"></a>Complex Queries</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Of course, queries are usually more complex than single field comparisons.
+Morphia offers both <code>and()</code> and <code>or()</code> to build up more complex queries.
+An <code>and</code> query might look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">q.and(
+    q.criteria("width").equal(10),
+    q.criteria("height").equal(1)
+);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.
+For these clauses we use the <code>criteria()</code>
+method instead of <code>field()</code> but it is used in much the same fashion.  <code>and()</code> and <code>or()</code> take a [<code>varargs</code>](<a href="https://docs.oracle" class="bare">https://docs.oracle</a>
+.com/javase/8/docs/technotes/guides/language/varargs.html) parameter of type <code>Criteria</code> so you can include as many filters as necessary.
+If all you need is an <code>and</code> clause, you don&#8217;t need an explicit call to <code>and()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.createQuery(UserLocation.class)
+    .field("x").lessThan(5)
+    .field("y").greaterThan(4)
+    .field("z").greaterThan(10);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This generates an implicit <code>and</code> across the field comparisons.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_text_searching"><a class="anchor" href="#_text_searching"></a>Text Searching</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Morphia also supports MongoDB&#8217;s text search capabilities.
+In order to execute a text search against a collection, the collection must have a <a href="http://docs.mongodb.org/manual//core/index-text/">text index</a> defined first.
+Using Morphia that definition would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
+public static class Greeting {
+    @Id
+    private ObjectId id;
+    private String value;
+    private String language;
+
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.
+A more targeted index can be created, if desired, by explicitly listing which fields to index.
+Once the index is defined, we can start querying against it like this
+<a href="https://github.com/MorphiaOrg/morphia/blob/2.0.x/morphia/src/test/java/dev/morphia/query/TestTextSearching.java">test</a> does:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">morphia.map(Greeting.class);
+datastore.ensureIndexes();
+
+datastore.save(new Greeting("good morning", "english"),
+    new Greeting("good afternoon", "english"),
+    new Greeting("good night", "english"),
+    new Greeting("good riddance", "english"),
+    new Greeting("guten Morgen", "german"),
+    new Greeting("guten Tag", "german")),
+    new Greeting("gute Nacht", "german"));
+
+List&lt;Greeting&gt; good = datastore.createQuery(Greeting.class)
+                             .search("good")
+                             .order("_id")
+                             .asList();
+Assert.assertEquals(4, good.size());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see here, we create <code>Greeting</code> objects for multiple languages.
+In our test query, we&#8217;re looking for occurrences of the word "good" in any document.
+We created four such documents and our query returns exactly those four.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_query_options"><a class="anchor" href="#_other_query_options"></a>Other Query Options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There is more to querying than simply filtering against different document values.
+Listed below are some of the options for modifying the query results in different ways.</p>
+</div>
+<div class="sect2">
+<h3 id="_projections"><a class="anchor" href="#_projections"></a>Projections</h3>
+<div class="paragraph">
+<p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/">Projections</a> allow you to return only a subset of the fields in a document.
+This is useful when you need to only return a smaller view of a larger object.
+Borrowing from the
+<a href="https://github.com/MorphiaOrg/morphia/blob/2.0.x/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
+getDs().save(user);
+
+ContainsRenamedFields found = getDs()
+    .find(ContainsRenamedFields.class)
+    .project("first_name", true)
+    .get();
+Assert.assertNotNull(found.firstName);
+Assert.assertNull(found.lastName);
+
+found = getDs()
+    .find(ContainsRenamedFields.class)
+    .project("firstName", true)
+    .get();
+Assert.assertNotNull(found.firstName);
+Assert.assertNull(found.lastName);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see here, we&#8217;re saving this entity with a first and last name but our query only returns the first name (and the _id value) in the returned instance of our type.
+It&#8217;s also worth noting that this project works with both the mapped document field name
+<code>"first_name"</code> and the Java field name <code>"firstName"</code>.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>The boolean value passed in instructs Morphia to either include (`true`) or exclude (`false`) the field.  It is not currently possible to list both inclusions and exclusions in one query.</pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>While projections can be a nice performance win in some cases, it&#8217;s important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
+For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database for this entity will be removed.
+To save such instances back consider using
+<a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page"><code>Datastore#merge(T)</code></a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_limiting_and_skipping"><a class="anchor" href="#_limiting_and_skipping"></a>Limiting and Skipping</h3>
+<div class="paragraph">
+<p>Pagination of query results is often done as a combination of skips and limits.
+Morphia offers <code>Query.limit(int)</code> and <code>Query.offset(int)</code>
+for these cases.
+An example of these methods in action would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.createQuery(Person.class)
+    .asList(new FindOptions()
+	    .offset(1)
+	    .limit(10))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This query will skip the first element and take up to the next 10 items found by the query.
+There&#8217;s a caveat to using skip/limit for pagination, however.
+See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip">skip</a> documentation for more detail.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ordering"><a class="anchor" href="#_ordering"></a>Ordering</h3>
+<div class="paragraph">
+<p>Ordering the results of a query is done via [<code>Query.order(String)</code>](/javadoc/dev/morphia/query/Query.html#order-java.lang.String-) . The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.
+To reverse the sort order for a particular field simply prefix that field with a <code>-</code>.
+For example, to sort by age (youngest to oldest) and then income (highest to lowest), you would use this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">query.order("age,-income");</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tailable_cursors"><a class="anchor" href="#_tailable_cursors"></a>Tailable Cursors</h3>
+<div class="paragraph">
+<p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/">capped collection</a> it&#8217;s possible to "tail" a query so that when new documents are added to the collection that match your query, they&#8217;ll be returned by the
+<a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor">tailable cursor</a>.
+An example of this feature in action can be found in the
+<a href="https://github.com/MorphiaOrg/morphia/blob/2.0.x/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">getMorphia().map(CappedPic.class);
+getDs().ensureCaps();                                                          <i class="conum" data-value="1"></i><b>(1)</b>
+final Query&lt;CappedPic&gt; query = getDs().createQuery(CappedPic.class);
+final List&lt;CappedPic&gt; found = new ArrayList&lt;CappedPic&gt;();
+
+final Iterator&lt;CappedPic&gt; tail = query
+	.fetch(new FindOptions()
+		.cursorType(CursorType.Tailable));
+while(found.size() &lt; 10) {
+	found.add(tail.next());                                                    <i class="conum" data-value="2"></i><b>(2)</b>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are two things to note about this code sample:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>This tells Morphia to make sure that any entity configured to use a capped collection has its collection created correctly.
+If the collection already exists and is not capped, you will have to manually
+<a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped">update</a> your collection to be a capped collection.</p>
+</li>
+<li>
+<p>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.
+In this version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the application.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_raw_querying"><a class="anchor" href="#_raw_querying"></a>Raw Querying</h3>
+<div class="paragraph">
+<p>You can use Morphia to map queries you might have already written using the raw Java API against your objects, or to access features which are not yet present in Morphia.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Document query = new Document()
+	.append("albums",
+            new Document("$elemMatch",
+                    new Document("$and", new Document[] {
+                        new Document("albumId", albumDto.getAlbumId()),
+                        new Document("album",
+                            new Document("$exists", false))})));
+
+Artist result = datastore.createQuery(Artist.class, query).get();</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
