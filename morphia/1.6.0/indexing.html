@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Indexing :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+<link rel="stylesheet" href="../../_/css/site.css">
+<link rel="stylesheet" href="../../_/css/morphia.css">
+
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morhpia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="1.6.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="getting-started.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="quick-tour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="migration.html">Migrating to 2.0</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="querying.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="jrebel.html">JRebel</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="validationExtension.html">Validation Extension</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">1.6.0</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../critter/4.0.0/index.html">4.0.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../2.2.0-SNAPSHOT/index.html">2.2.0-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../2.1.0/index.html">2.1.0</a>
+        </li>
+        <li class="version">
+          <a href="../2.0.2/index.html">2.0.2</a>
+        </li>
+        <li class="version is-current">
+          <a href="index.html">1.6.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Morphia</a></li>
+    <li><a href="indexing.html">Indexing</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">1.6.0</button>
+  <div class="version-menu">
+    <a class="version" href="../2.2.0-SNAPSHOT/indexing.html">2.2.0-SNAPSHOT</a>
+    <a class="version" href="../2.1.0/indexing.html">2.1.0</a>
+    <a class="version" href="../2.0.2/indexing.html">2.0.2</a>
+    <a class="version is-current" href="indexing.html">1.6.0</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/1.6.x/docs/modules/ROOT/pages/indexing.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Indexing</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on an entity&#8217;s source.
+In addition to the familiar ascending/descending index types, Morphia and MongoDB support
+<a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL</a>, <a href="http://docs.mongodb.org/manual/core/index-text/">text</a>, andhttp://docs.mongodb.org/manual/applications/geospatial-indexes/[geospatial]
+indexes.
+When defining <a href="#_text_indexing">text indexes</a> there are certain restrictions which will be covered below.
+Full details for all these types are available in the <a href="http://docs.mongodb.org/manual/indexes">manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>There are two ways to define indexes: at the class level and at the field level.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_class_level_indexes"><a class="anchor" href="#_class_level_indexes"></a>Class Level Indexes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Class level indexing begins with the <a href="javadoc/dev/morphia/annotations/Indexes.html" class="page">@Indexes</a> annotation.
+This is a container annotation whose sole purpose is to hold a number of <a href="javadoc/dev/morphia/annotations/Index.html" class="page"><code>@Index</code></a> annotations.
+This annotation has two primary components to cover here:  <code>fields</code> and <code>options</code>.
+An index definition would take the following form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity
+@Indexes({
+    @Index(fields = @Field(value = "field2", type = DESC)),
+    @Index(
+      fields = @Field("field3"),
+      options = @IndexOptions(name = "indexing_test")
+    )
+})
+public class IndexExample {
+    @Id
+    private ObjectId id;
+    private String field;
+    @Property
+    private String field2;
+    @Property("f3")
+    private String field3;
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fields"><a class="anchor" href="#_fields"></a>Fields</h3>
+<div class="paragraph">
+<p>The fields to use in an index definition are defined with the <a href="javadoc/dev/morphia/annotations/Field.html" class="page"><code>@Field</code></a> annotation.
+An arbitrary number of <a href="javadoc/dev/morphia/annotations/Field.html" class="page"><code>@Field</code></a>s can be given but at least one must be present.</p>
+</div>
+<div class="sect3">
+<h4 id="_value"><a class="anchor" href="#_value"></a>value()</h4>
+<div class="paragraph">
+<p>Indicates which field to use for indexing.
+The name used for the field can be either the Java field name or the mapped document field name as defined in the class&#8217;s mapping via, e.g., the <a href="javadoc/dev/morphia/annotations/Property.html" class="page"><code>@Property</code></a> or
+<a href="javadoc/dev/morphia/annotations/Embedded.html" class="page"><code>@Embedded</code></a> annotations.
+For most index types, this value is validated by default.
+An exception is made for <a href="#_text_indexing">text indexes</a> as discussed below.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_type"><a class="anchor" href="#_type"></a>type()</h4>
+<div class="paragraph">
+<p><strong>Default: IndexType.ASC</strong></p>
+</div>
+<div class="paragraph">
+<p>Indicates the "type" of the index (ascending, descending, geo2D, geo2d sphere, or text) to create on the field.</p>
+</div>
+<div class="paragraph">
+<p><strong>See <a href="#javadoc:dev/morphia/utils/IndexType.html" class="page unresolved"><code>@IndexType</code></a></strong></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_weight"><a class="anchor" href="#_weight"></a>weight()</h4>
+<div class="paragraph">
+<p><strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p>Specifies the weight to use when creating a text index.
+This value only makes sense when direction is <code>IndexType.TEXT</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_index_options"><a class="anchor" href="#_index_options"></a>Index Options</h3>
+<div class="paragraph">
+<p>Options for an index are defined on the <a href="javadoc/dev/morphia/annotations/IndexOptions.html" class="page"><code>@IndexOptions</code></a>.
+More complete coverage can be found in the <a href="http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options">manual</a> but we&#8217;ll provide some basic coverage here as well.</p>
+</div>
+<div class="sect3">
+<h4 id="_background"><a class="anchor" href="#_background"></a>background()</h4>
+<div class="paragraph">
+<p><strong>Default: false</strong></p>
+</div>
+<div class="paragraph">
+<p>This value determines if the index build is a blocking call or not.
+By default, creating an index blocks all other operations on a database.
+When building an index on a collection, the database that holds the collection is unavailable for read or write operations until the index build completes.
+For potentially long running index building operations, consider the <strong>background</strong> operation so that the MongoDB database remains available during the index building operation.
+The MongoDB
+<a href="http://docs.mongodb.org/manual/core/index-creation/#background-construction">manual</a> has more detail.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_disablevalidation"><a class="anchor" href="#_disablevalidation"></a>disableValidation()</h4>
+<div class="paragraph">
+<p><strong>Default: false</strong></p>
+</div>
+<div class="paragraph">
+<p>When ensuring indexes in the database, Morphia will attempt to ensure that the field names match either the Java field names or the mapped document names.
+Setting this to <code>true</code> disables this validation.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dropdups"><a class="anchor" href="#_dropdups"></a>dropDups()</h4>
+<div class="paragraph">
+<p><strong>Default: false</strong></p>
+</div>
+<div class="paragraph">
+<p>When defining a <a href="#_unique">unique</a> index, if there are duplicate values found, the index creation will.
+Setting this value to true will instruct MongoDB to drop the documents with duplicate values.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As of MongoDB version 3.0, the dropDups option is no longer available.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_expireafterseconds"><a class="anchor" href="#_expireafterseconds"></a>expireAfterSeconds()</h4>
+<div class="paragraph">
+<p><strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p>Specifies a value, in seconds, as a <a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL</a> to control how long MongoDB retains documents in this collection.
+The field listed must contain values that are dates.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_language"><a class="anchor" href="#_language"></a>language()</h4>
+<div class="paragraph">
+<p><strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p>For <a href="#_text_indexing">text indexes</a>, the language that determines the list of stop words and the rulesfor the stemmer and tokenizer.
+See
+<a href="http://docs.mongodb.org/manual/reference/text-search-languages/">Text Search Languages</a> for the available languages and
+<a href="http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index">Specify a Language for Text Index</a> for more information and examples.
+The default value is <strong>english</strong>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_languageoverride"><a class="anchor" href="#_languageoverride"></a>languageOverride()</h4>
+<div class="paragraph">
+<p><strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p>For <a href="#_text_indexing">text indexes</a>, the name of the field in the collection’s documents that contains the override language for the document.
+The default value is <strong>language</strong>.
+See
+<a href="http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index/#specify-language-field-text-index-example">Use any Field to Specify the Language for a Document</a>
+for an example.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_name"><a class="anchor" href="#_name"></a>name()</h4>
+<div class="paragraph">
+<p><strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p>The name of the index.
+If unspecified, MongoDB generates an index name by concatenating the names of the indexed fields and the sort order.</p>
+</div>
+<div class="paragraph">
+<p>Whether user specified or MongoDB generated, index names including their full namespace (i.e. database.collection) cannot be longer than the <a href="http://docs.mongodb.org/manual/reference/limits/#Index-Name-Length">Index Name Limit</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sparse"><a class="anchor" href="#_sparse"></a>sparse()</h4>
+<div class="paragraph">
+<p><strong>Default: false</strong></p>
+</div>
+<div class="paragraph">
+<p>If <code>true</code>, the index only references documents with the specified field.
+These indexes use less space but behave differently in some situations (particularly sorts).
+See <a href="http://docs.mongodb.org/manual/core/index-sparse/">Sparse Indexes</a> for more information.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_unique"><a class="anchor" href="#_unique"></a>unique()</h4>
+<div class="paragraph">
+<p><strong>Default: false</strong></p>
+</div>
+<div class="paragraph">
+<p>Creates a unique index so that the collection will not accept insertion of documents where the index key or keys match an existing value in the index.
+Specify <code>true</code> to create a unique index.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_partialfilter"><a class="anchor" href="#_partialfilter"></a>partialFilter()</h4>
+<div class="paragraph">
+<p><strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p>New in MongoDB 3.2, [partial indexes](<a href="https://docs.mongodb.com/v3.2/core/index-partial/" class="bare">https://docs.mongodb.com/v3.2/core/index-partial/</a>) only index the documents in a collection that meet a specified filter expression thereby reducing storage and maintenance costs.
+A partial filter is defined using a query as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Indexes({@Index(options = @IndexOptions(partialFilter = "{ name : { $exists : true } }"),
+        fields = {@Field(value = "name")})})
+    public static class SomeClass { ... }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_collation"><a class="anchor" href="#_collation"></a>collation()</h4>
+<div class="paragraph">
+<p><strong>Optional</strong></p>
+</div>
+<div class="paragraph">
+<p>Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.
+A collation can be defined using the <code>collation()</code> property on <a href="javadoc/dev/morphia/annotations/IndexOptions.html" class="page"><code>@IndexOptions</code></a> and takes an
+<a href="javadoc/dev/morphia/annotations/Collation.html" class="page"><code>@Collation</code></a> instance.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_field_level_indexes"><a class="anchor" href="#_field_level_indexes"></a>Field Level Indexes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Field level indexing is a simpler approach to defining a basic, single key index.
+These indexes are defined by applying the
+<a href="javadoc/dev/morphia/annotations/Indexed.html" class="page"><code>@Indexed</code></a> annotation to a particular field on a class.
+Because the index definition is applied at the field level, the index is created using only that field and so the <a href="javadoc/dev/morphia/annotations/Field.html" class="page"><code>@Field</code></a>
+annotations are unnecessary.
+The options for the index are the same as defined above.
+A field level index definition would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity
+private class FieldIndex {
+    @Id
+    private ObjectId id;
+    @Indexed(options = @IndexOptions(unique = true))
+    private String name;
+    private String color;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_text_indexing"><a class="anchor" href="#_text_indexing"></a>Text Indexing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Morphia&#8217;s indexing supports MongoDB&#8217;s text indexing and search functionality as we&#8217;ve briefly seen above.
+Full details can be found in the <a href="http://docs.mongodb.org/manual/core/index-text/">manual</a> but there are a few Morphia specific details to cover.
+Indexed field names are validated by default but validation is disabled when an index is defined using MongoDB&#8217;s
+<a href="http://docs.mongodb.org/manual/core/index-text/#text-index-wildcard"><code>$**</code></a> syntax.
+This special instruction tells MongoDB to create a text index on all fields with string content in a document.
+A <a href="http://docs.mongodb.org/manual/core/index-text/#compound-index">compound index</a> can be created incorporating a text index but it&#8217;s important to note there can only be one text index on a collection.</p>
+</div>
+<div class="paragraph">
+<p>A wild card text index declaration would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Indexes(@Index(fields = @Field(value = "$**", type = TEXT)))</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A collection can have at most one text index.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

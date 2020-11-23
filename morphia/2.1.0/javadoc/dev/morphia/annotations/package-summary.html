@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
+<!--    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> This one is GPL -->
+    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils.js"></script>-->
+    <!--[if IE]>
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils-ie.js"></script>-->
+    <![endif]-->
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jquery-3.3.1.js"></script>-->
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jquery-migrate-3.0.1.js"></script>-->
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jquery-ui.js"></script>-->
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../../../../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morhpia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../../../../../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="2.1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../getting-started.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../querying.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../querying-old.html">Querying (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../textSearch.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../updating-old.html">Updating (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">2.1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../../../../critter/4.0.0/index.html">4.0.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../../../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../../../../2.2.0-SNAPSHOT/index.html">2.2.0-SNAPSHOT</a>
+        </li>
+        <li class="version is-current is-latest">
+          <a href="../../../../index.html">2.1.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../../../2.0.2/index.html">2.0.2</a>
+        </li>
+        <li class="version">
+          <a href="../../../../../1.6.0/index.html">1.6.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main>
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../../../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.1.0</button>
+  <div class="version-menu">
+    <a class="version" href="../../../../../2.2.0-SNAPSHOT/javadoc/dev/morphia/annotations/package-summary.html">2.2.0-SNAPSHOT</a>
+    <a class="version is-current" href="package-summary.html">2.1.0</a>
+    <a class="version" href="../../../../../2.0.2/javadoc/dev/morphia/annotations/package-summary.html">2.0.2</a>
+    <a class="version" href="../../../../../1.6.0/javadoc/dev/morphia/annotations/package-summary.html">1.6.0</a>
+  </div>
+</div>
+</div>
+    <article class="javadoc">
+        
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="dev.morphia.annotations (Morphia)";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var pathtoroot = "../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<header role="banner">
+<nav role="navigation">
+<div class="fixedNav">
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a id="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../index.html">Overview</a></li>
+<li class="navBarCell1Rev">Package</li>
+<li>Class</li>
+<li><a href="package-use.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<a id="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+</div>
+<div class="navPadding">&#xA0;</div>
+<script type="text/javascript"><!--
+$('.navPadding').css('padding-top', $('.fixedNav').css("height"));
+//-->
+</script>
+</nav>
+</header>
+<main role="main">
+<div class="header">
+<h1 title="Package" class="title">Package&#xA0;dev.morphia.annotations</h1>
+</div>
+<div class="contentContainer">
+<ul class="blockList">
+<li class="blockList">
+<table class="typeSummary">
+<caption><span>Class Summary</span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="AnnotationBuilder.html" title="class in dev.morphia.annotations">AnnotationBuilder</a>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;</th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="CollationBuilder.html" title="class in dev.morphia.annotations">CollationBuilder</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="IndexHelper.html" title="class in dev.morphia.annotations">IndexHelper</a></th>
+<td class="colLast">
+<div class="block">A helper class for dealing with index definitions</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="TextBuilder.html" title="class in dev.morphia.annotations">TextBuilder</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="ValidationBuilder.html" title="class in dev.morphia.annotations">ValidationBuilder</a></th>
+<td class="colLast">
+<div class="block">This is an internal class subject to change and removal.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
+<table class="typeSummary">
+<caption><span>Annotation Types Summary</span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Annotation Type</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="AlsoLoad.html" title="annotation in dev.morphia.annotations">AlsoLoad</a></th>
+<td class="colLast">
+<div class="block">Annotation which helps migrate schemas by loading one of several possible properties in the document into fields or methods.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="CappedAt.html" title="annotation in dev.morphia.annotations">CappedAt</a></th>
+<td class="colLast">
+<div class="block">Properties for capped collections; used in <a href="Entity.html" title="annotation in dev.morphia.annotations"><code>Entity</code></a></div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="Collation.html" title="annotation in dev.morphia.annotations">Collation</a></th>
+<td class="colLast">
+<div class="block">Defines the collation options for an index</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Converters.html" title="annotation in dev.morphia.annotations">Converters</a></th>
+<td class="colLast">Deprecated, for removal: This API element is subject to removal in a future version.</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="Embedded.html" title="annotation in dev.morphia.annotations">Embedded</a></th>
+<td class="colLast">
+<div class="block">Marks a type as eligible for mapping and embedding in entity types.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Entity.html" title="annotation in dev.morphia.annotations">Entity</a></th>
+<td class="colLast">
+<div class="block">Allows marking and naming the collectionName</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="EntityListeners.html" title="annotation in dev.morphia.annotations">EntityListeners</a></th>
+<td class="colLast">
+<div class="block">Specifies other classes to participate in the @Entity&apos;s lifecycle</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Field.html" title="annotation in dev.morphia.annotations">Field</a></th>
+<td class="colLast">
+<div class="block">Define a field to be used in an index;</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="Handler.html" title="annotation in dev.morphia.annotations">Handler</a></th>
+<td class="colLast">
+<div class="block">Defines a specific handler for a type above and beyond the codecs</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Id.html" title="annotation in dev.morphia.annotations">Id</a></th>
+<td class="colLast">
+<div class="block">Denotes the ID field on an entity.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="IdGetter.html" title="annotation in dev.morphia.annotations">IdGetter</a></th>
+<td class="colLast">
+<div class="block">This annotation allows the lazy-load proxy to return the ID of a referenced entity without reading the reference from the database.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Index.html" title="annotation in dev.morphia.annotations">Index</a></th>
+<td class="colLast">
+<div class="block">Defines an index</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="Indexed.html" title="annotation in dev.morphia.annotations">Indexed</a></th>
+<td class="colLast">
+<div class="block">Specified on fields that should be Indexed.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Indexes.html" title="annotation in dev.morphia.annotations">Indexes</a></th>
+<td class="colLast">
+<div class="block">Defines indexes for this entity type (on the collection)</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="IndexOptions.html" title="annotation in dev.morphia.annotations">IndexOptions</a></th>
+<td class="colLast">
+<div class="block">Defines the options to be used when declaring an index.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="LoadOnly.html" title="annotation in dev.morphia.annotations">LoadOnly</a></th>
+<td class="colLast">
+<div class="block">When placed on an entity field, the field will not be written to mongodb.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="NotSaved.html" title="annotation in dev.morphia.annotations">NotSaved</a></th>
+<td class="colLast">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecationComment">use <a href="LoadOnly.html" title="annotation in dev.morphia.annotations"><code>LoadOnly</code></a> instead</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="PostLoad.html" title="annotation in dev.morphia.annotations">PostLoad</a></th>
+<td class="colLast">
+<div class="block">Called after the data has been loaded into the java object.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="PostPersist.html" title="annotation in dev.morphia.annotations">PostPersist</a></th>
+<td class="colLast">
+<div class="block">Called after the data has been persisted from the java object.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="PreLoad.html" title="annotation in dev.morphia.annotations">PreLoad</a></th>
+<td class="colLast">
+<div class="block">Called before the data has been loaded from the datastore.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="PrePersist.html" title="annotation in dev.morphia.annotations">PrePersist</a></th>
+<td class="colLast">
+<div class="block">Called before the data has been persisted to the datastore (before mapping is done).</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Property.html" title="annotation in dev.morphia.annotations">Property</a></th>
+<td class="colLast">
+<div class="block">Optional annotation for specifying persistence behavior</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="Reference.html" title="annotation in dev.morphia.annotations">Reference</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Text.html" title="annotation in dev.morphia.annotations">Text</a></th>
+<td class="colLast">
+<div class="block">Marks this field for inclusion in text indexing.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="Transient.html" title="annotation in dev.morphia.annotations">Transient</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Validation.html" title="annotation in dev.morphia.annotations">Validation</a></th>
+<td class="colLast">
+<div class="block">Defines the document validation logic for a collection.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="Version.html" title="annotation in dev.morphia.annotations">Version</a></th>
+<td class="colLast">
+<div class="block">supposed to be used on a Long or long field for optimistic locking.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+</main>
+<footer role="contentinfo">
+<nav role="navigation">
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a id="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../index.html">Overview</a></li>
+<li class="navBarCell1Rev">Package</li>
+<li>Class</li>
+<li><a href="package-use.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<a id="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</nav>
+<p class="legalCopy"><small>Copyright &#xA9; 2020. All rights reserved.</small></p>
+</footer>
+
+
+
+    </article>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../../../../../_/js/site.js"></script>
+<script async src="../../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

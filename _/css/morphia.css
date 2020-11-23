@@ -1,0 +1,53 @@
+.btn-mongo {
+    background-color: #006264;
+    border-radius: 3em;
+    color: white !important;
+    font-size: 14px;
+    font-weight: 800;
+    /*line-height: 14px;*/
+    border: 2px solid #6ca439;
+    text-shadow: none;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    line-height: 1.428571429;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.card-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+    padding-right: 40px;
+}
+
+.card-row .column {
+    max-width: 50%;
+    -ms-flex-preferred-size: 50%;
+    flex-basis: 50%;
+    margin-bottom: 25px;
+}
+
+.card-row .column h1 {
+    font-size: xx-large;
+}
+
+.article .doc {
+    max-width: 85rem;
+}
