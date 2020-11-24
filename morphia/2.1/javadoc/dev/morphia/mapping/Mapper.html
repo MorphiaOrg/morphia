@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
+<!--    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> This one is GPL -->
+    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils.js"></script>-->
+    <!--[if IE]>
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils-ie.js"></script>-->
+    <![endif]-->
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jquery-3.3.1.js"></script>-->
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jquery-migrate-3.0.1.js"></script>-->
+<!--    <script type="text/javascript" src="../../../../../../_/_/js/vendor/javadoc/jquery/jquery-ui.js"></script>-->
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../../../../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../../../../../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="2.1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../getting-started.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../querying.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../querying-old.html">Querying (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../textSearch.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../updating-old.html">Updating (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">2.1</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../../../../critter/4.0.0/index.html">4.0.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../../../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../../../../2.2/index.html">2.2-SNAPSHOT</a>
+        </li>
+        <li class="version is-current is-latest">
+          <a href="../../../../index.html">2.1</a>
+        </li>
+        <li class="version">
+          <a href="../../../../../2/index.html">2</a>
+        </li>
+        <li class="version">
+          <a href="../../../../../1.6/index.html">1.6</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main>
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../../../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.1</button>
+  <div class="version-menu">
+    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/mapping/Mapper.html">2.2-SNAPSHOT</a>
+    <a class="version is-current" href="Mapper.html">2.1</a>
+    <a class="version" href="../../../../../2/javadoc/dev/morphia/mapping/Mapper.html">2</a>
+    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/mapping/Mapper.html">1.6</a>
+  </div>
+</div>
+</div>
+    <article class="javadoc">
+        
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="Mapper (Morphia)";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":42,"i14":42,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":42,"i28":10,"i29":42,"i30":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
+var pathtoroot = "../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<header role="banner">
+<nav role="navigation">
+<div class="fixedNav">
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a id="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../index.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/Mapper.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&#xA0;</li>
+<li>Nested&#xA0;|&#xA0;</li>
+<li><a href="#field.summary">Field</a>&#xA0;|&#xA0;</li>
+<li><a href="#constructor.summary">Constr</a>&#xA0;|&#xA0;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&#xA0;</li>
+<li><a href="#field.detail">Field</a>&#xA0;|&#xA0;</li>
+<li><a href="#constructor.detail">Constr</a>&#xA0;|&#xA0;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a id="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+</div>
+<div class="navPadding">&#xA0;</div>
+<script type="text/javascript"><!--
+$('.navPadding').css('padding-top', $('.fixedNav').css("height"));
+//-->
+</script>
+</nav>
+</header>
+<!-- ======== START OF CLASS DATA ======== -->
+<main role="main">
+<div class="header">
+<div class="subTitle"><span class="packageLabelInType">Package</span>&#xA0;<a href="package-summary.html">dev.morphia.mapping</a></div>
+<h2 title="Class Mapper" class="title">Class Mapper</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
+<li>
+<ul class="inheritance">
+<li>dev.morphia.mapping.Mapper</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<pre>public class <span class="typeNameLabel">Mapper</span>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
+<dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#IGNORED_FIELDNAME">IGNORED_FIELDNAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Special name that can never be used.</div>
+</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</section>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary">
+<caption><span>Constructors</span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,org.bson.codecs.configuration.CodecRegistry,dev.morphia.mapping.MapperOptions)">Mapper</a></span>&#x200B;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore,
+      org.bson.codecs.configuration.CodecRegistry&#xA0;codecRegistry,
+      <a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block">Creates a Mapper with the given options.</div>
+</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</section>
+<!-- ========== METHOD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="method.summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&#xA0;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&#xA0;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&#xA0;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&#xA0;</span></span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addInterceptor(dev.morphia.EntityInterceptor)">addInterceptor</a></span>&#x200B;(<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&#xA0;ei)</code></th>
+<td class="colLast">
+<div class="block">Adds an <a href="../EntityInterceptor.html" title="interface in dev.morphia"><code>EntityInterceptor</code></a></div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>com.mongodb.client.MongoCollection</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enforceWriteConcern(com.mongodb.client.MongoCollection,java.lang.Class)">enforceWriteConcern</a></span>&#x200B;(com.mongodb.client.MongoCollection&#xA0;collection,
+                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;type)</code></th>
+<td class="colLast">
+<div class="block">Updates a collection to use a specific WriteConcern</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fromDocument(java.lang.Class,org.bson.Document)">fromDocument</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type,
+            org.bson.Document&#xA0;document)</code></th>
+<td class="colLast">
+<div class="block">Converts a Document back to a type-safe java object (POJO)</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClass(java.lang.String)">getClass</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;discriminator)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClass(org.bson.Document)">getClass</a></span>&#x200B;(org.bson.Document&#xA0;document)</code></th>
+<td class="colLast">
+<div class="block">Gets the class as defined by any discriminator field</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClassesMappedToCollection(java.lang.String)">getClassesMappedToCollection</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;collection)</code></th>
+<td class="colLast">
+<div class="block">Finds all the types mapped to a named collection</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClassFromCollection(java.lang.String)">getClassFromCollection</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;collection)</code></th>
+<td class="colLast">
+<div class="block">Looks up the class mapped to a named collection.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>org.bson.codecs.configuration.CodecRegistry</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodecRegistry()">getCodecRegistry</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;com.mongodb.client.MongoCollection&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCollection(java.lang.Class)">getCollection</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code><a href="DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDiscriminatorLookup()">getDiscriminatorLookup</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEntityModel(java.lang.Class)">getEntityModel</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;type)</code></th>
+<td class="colLast">
+<div class="block">Gets the <a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo"><code>EntityModel</code></a> for the object (type).</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getId(java.lang.Object)">getId</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;entity)</code></th>
+<td class="colLast">
+<div class="block">Gets the ID value for an entity</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInterceptors()">getInterceptors</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Gets list of <a href="../EntityInterceptor.html" title="interface in dev.morphia"><code>EntityInterceptor</code></a>s</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T)">getKey</a></span>&#x200B;(T&#xA0;entity)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</td>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T,java.lang.String)">getKey</a></span>&#x200B;(T&#xA0;entity,
+      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;collection)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMappedEntities()">getMappedEntities</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i16" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOptions()">getOptions</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><code>com.mongodb.WriteConcern</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getWriteConcern(java.lang.Class)">getWriteConcern</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;clazz)</code></th>
+<td class="colLast">
+<div class="block">Gets the write concern for entity or returns the default write concern for this datastore</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasInterceptors()">hasInterceptors</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i19" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isMappable(java.lang.Class)">isMappable</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type)</code></th>
+<td class="colLast">
+<div class="block">Checks if a type is mappable or not</div>
+</td>
+</tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isMapped(java.lang.Class)">isMapped</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;c)</code></th>
+<td class="colLast">
+<div class="block">Checks to see if a Class has been mapped.</div>
+</td>
+</tr>
+<tr id="i21" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#map(java.lang.Class...)">map</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>...&#xA0;entityClasses)</code></th>
+<td class="colLast">
+<div class="block">Maps a set of classes</div>
+</td>
+</tr>
+<tr id="i22" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#map(java.util.List)">map</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&gt;&#xA0;classes)</code></th>
+<td class="colLast">
+<div class="block">Maps a set of classes</div>
+</td>
+</tr>
+<tr id="i23" class="rowColor">
+<td class="colFirst"><code>&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;<br><a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapExternal(A,java.lang.Class)">mapExternal</a></span>&#x200B;(A&#xA0;annotation,
+           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;type)</code></th>
+<td class="colLast">
+<div class="block">Maps an external class.</div>
+</td>
+</tr>
+<tr id="i24" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapPackage(java.lang.String)">mapPackage</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;packageName)</code></th>
+<td class="colLast">
+<div class="block">Tries to map all classes in the package specified.</div>
+</td>
+</tr>
+<tr id="i25" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapPackageFromClass(java.lang.Class)">mapPackageFromClass</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;clazz)</code></th>
+<td class="colLast">
+<div class="block">Maps all the classes found in the package to which the given class belongs.</div>
+</td>
+</tr>
+<tr id="i26" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refresh(T)">refresh</a></span>&#x200B;(T&#xA0;entity)</code></th>
+<td class="colLast">
+<div class="block">Refreshes an entity with the current state in the database.</div>
+</td>
+</tr>
+<tr id="i27" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOptions(dev.morphia.mapping.MapperOptions)">setOptions</a></span>&#x200B;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">no longer used</div>
+</div>
+</td>
+</tr>
+<tr id="i28" class="altColor">
+<td class="colFirst"><code>org.bson.Document</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDocument(java.lang.Object)">toDocument</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;entity)</code></th>
+<td class="colLast">
+<div class="block">Converts an entity (POJO) to a Document.</div>
+</td>
+</tr>
+<tr id="i29" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateCollection(dev.morphia.Key)">updateCollection</a></span>&#x200B;(<a href="../Key.html" title="class in dev.morphia">Key</a>&#xA0;key)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</td>
+</tr>
+<tr id="i30" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateQueryWithDiscriminators(dev.morphia.mapping.codec.pojo.EntityModel,org.bson.Document)">updateQueryWithDiscriminators</a></span>&#x200B;(<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;model,
+                             org.bson.Document&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block">Updates a query with any discriminators from subtypes if polymorphic queries are enabled</div>
+</td>
+</tr>
+</tbody></table>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&#xA0;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang" class="externalLink">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang" class="externalLink">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="IGNORED_FIELDNAME">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>IGNORED_FIELDNAME</h4>
+<pre>public static final&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> IGNORED_FIELDNAME</pre>
+<div class="block">Special name that can never be used. Used as default for some fields to indicate default state.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../constant-values.html#dev.morphia.mapping.Mapper.IGNORED_FIELDNAME">Constant Field Values</a></dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a id="&lt;init&gt;(dev.morphia.Datastore,org.bson.codecs.configuration.CodecRegistry,dev.morphia.mapping.MapperOptions)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Mapper</h4>
+<pre>public&#xA0;Mapper&#x200B;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore,
+              org.bson.codecs.configuration.CodecRegistry&#xA0;codecRegistry,
+              <a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&#xA0;options)</pre>
+<div class="block">Creates a Mapper with the given options.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>datastore</code> - the datastore to use</dd>
+<dd><code>codecRegistry</code> - the codec registry</dd>
+<dd><code>options</code> - the options to use</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<!-- ============ METHOD DETAIL ========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a id="addInterceptor(dev.morphia.EntityInterceptor)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addInterceptor</h4>
+<pre class="methodSignature">public&#xA0;void&#xA0;addInterceptor&#x200B;(<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&#xA0;ei)</pre>
+<div class="block">Adds an <a href="../EntityInterceptor.html" title="interface in dev.morphia"><code>EntityInterceptor</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ei</code> - the interceptor to add</dd>
+</dl>
+</li>
+</ul>
+<a id="getEntityModel(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getEntityModel</h4>
+<pre class="methodSignature">public&#xA0;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;getEntityModel&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;type)</pre>
+<div class="block">Gets the <a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo"><code>EntityModel</code></a> for the object (type). If it isn&apos;t mapped, create a new class and cache it (without validating).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>type</code> - the type to process</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the EntityModel for the object given</dd>
+</dl>
+</li>
+</ul>
+<a id="map(java.lang.Class...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>map</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&#xA0;map&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>...&#xA0;entityClasses)</pre>
+<div class="block">Maps a set of classes</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entityClasses</code> - the classes to map</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the EntityModel references</dd>
+</dl>
+</li>
+</ul>
+<a id="enforceWriteConcern(com.mongodb.client.MongoCollection,java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>enforceWriteConcern</h4>
+<pre class="methodSignature">public&#xA0;com.mongodb.client.MongoCollection&#xA0;enforceWriteConcern&#x200B;(com.mongodb.client.MongoCollection&#xA0;collection,
+                                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;type)</pre>
+<div class="block">Updates a collection to use a specific WriteConcern</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>collection</code> - the collection to update</dd>
+<dd><code>type</code> - the entity type</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the updated collection</dd>
+</dl>
+</li>
+</ul>
+<a id="fromDocument(java.lang.Class,org.bson.Document)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fromDocument</h4>
+<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;T&#xA0;fromDocument&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type,
+                          org.bson.Document&#xA0;document)</pre>
+<div class="block">Converts a Document back to a type-safe java object (POJO)</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the entity</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>type</code> - the target type</dd>
+<dd><code>document</code> - the Document containing the document from mongodb</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new entity</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="getClass(org.bson.Document)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClass</h4>
+<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;getClass&#x200B;(org.bson.Document&#xA0;document)</pre>
+<div class="block">Gets the class as defined by any discriminator field</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the class type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>document</code> - the document to check</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the class reference.  might be null</dd>
+</dl>
+</li>
+</ul>
+<a id="getClass(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClass</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;getClass&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;discriminator)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>discriminator</code> - the lookup value</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the class mapped to this discrimiator value</dd>
+</dl>
+</li>
+</ul>
+<a id="getClassFromCollection(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClassFromCollection</h4>
+<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;getClassFromCollection&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;collection)</pre>
+<div class="block">Looks up the class mapped to a named collection.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the class type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>collection</code> - the collection name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Class mapped to this collection name</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="getClassesMappedToCollection(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClassesMappedToCollection</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&#xA0;getClassesMappedToCollection&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;collection)</pre>
+<div class="block">Finds all the types mapped to a named collection</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>collection</code> - the collection to check</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the mapped types</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="getCodecRegistry()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCodecRegistry</h4>
+<pre class="methodSignature">public&#xA0;org.bson.codecs.configuration.CodecRegistry&#xA0;getCodecRegistry()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the codec registry</dd>
+</dl>
+</li>
+</ul>
+<a id="getCollection(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCollection</h4>
+<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;com.mongodb.client.MongoCollection&lt;T&gt;&#xA0;getCollection&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type)</pre>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the class type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>type</code> - the type look up</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection mapped for this class</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="getDiscriminatorLookup()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDiscriminatorLookup</h4>
+<pre class="methodSignature">public&#xA0;<a href="DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a>&#xA0;getDiscriminatorLookup()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the DiscriminatorLookup in use</dd>
+</dl>
+</li>
+</ul>
+<a id="map(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>map</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&#xA0;map&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&gt;&#xA0;classes)</pre>
+<div class="block">Maps a set of classes</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>classes</code> - the classes to map</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the list of mapped classes</dd>
+</dl>
+</li>
+</ul>
+<a id="getId(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getId</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;getId&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;entity)</pre>
+<div class="block">Gets the ID value for an entity</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to process</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the ID value</dd>
+</dl>
+</li>
+</ul>
+<a id="getInterceptors()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getInterceptors</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&gt;&#xA0;getInterceptors()</pre>
+<div class="block">Gets list of <a href="../EntityInterceptor.html" title="interface in dev.morphia"><code>EntityInterceptor</code></a>s</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Interceptors</dd>
+</dl>
+</li>
+</ul>
+<a id="getKey(java.lang.Object)">
+<!--   -->
+</a><a id="getKey(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKey</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>=&quot;2.0&quot;,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public&#xA0;&lt;T&gt;&#xA0;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&#xA0;getKey&#x200B;(T&#xA0;entity)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+<div class="block">Gets the Key for an entity</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the entity</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to process</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Key</dd>
+</dl>
+</li>
+</ul>
+<a id="getKey(java.lang.Object,java.lang.String)">
+<!--   -->
+</a><a id="getKey(T,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getKey</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>=&quot;2.0&quot;,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public&#xA0;&lt;T&gt;&#xA0;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&#xA0;getKey&#x200B;(T&#xA0;entity,
+                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;collection)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+<div class="block">Gets the Key for an entity and a specific collection</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the entity</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to process</dd>
+<dd><code>collection</code> - the collection to use in the Key rather than the mapped collection as defined on the entity&apos;s class</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Key</dd>
+</dl>
+</li>
+</ul>
+<a id="getMappedEntities()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getMappedEntities</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&#xA0;getMappedEntities()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>collection of EntityModels</dd>
+</dl>
+</li>
+</ul>
+<a id="getOptions()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getOptions</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&#xA0;getOptions()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the options used by this Mapper</dd>
+</dl>
+</li>
+</ul>
+<a id="setOptions(dev.morphia.mapping.MapperOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setOptions</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>=&quot;2.0&quot;,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public&#xA0;void&#xA0;setOptions&#x200B;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&#xA0;options)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">no longer used</div>
+</div>
+<div class="block">Sets the options this Mapper should use</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>options</code> - the options to use</dd>
+</dl>
+</li>
+</ul>
+<a id="getWriteConcern(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getWriteConcern</h4>
+<pre class="methodSignature">public&#xA0;com.mongodb.WriteConcern&#xA0;getWriteConcern&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;clazz)</pre>
+<div class="block">Gets the write concern for entity or returns the default write concern for this datastore</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - the class to use when looking up the WriteConcern</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the write concern for the type</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="hasInterceptors()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hasInterceptors</h4>
+<pre class="methodSignature">public&#xA0;boolean&#xA0;hasInterceptors()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if there are global interceptors defined</dd>
+</dl>
+</li>
+</ul>
+<a id="isMappable(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isMappable</h4>
+<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;boolean&#xA0;isMappable&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type)</pre>
+<div class="block">Checks if a type is mappable or not</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>type</code> - the class to check</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the type is mappable</dd>
+</dl>
+</li>
+</ul>
+<a id="isMapped(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isMapped</h4>
+<pre class="methodSignature">public&#xA0;boolean&#xA0;isMapped&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;c)</pre>
+<div class="block">Checks to see if a Class has been mapped.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>c</code> - the Class to check</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the Class has been mapped</dd>
+</dl>
+</li>
+</ul>
+<a id="mapExternal(java.lang.annotation.Annotation,java.lang.Class)">
+<!--   -->
+</a><a id="mapExternal(A,java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mapExternal</h4>
+<pre class="methodSignature">public&#xA0;&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&#xA0;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;mapExternal&#x200B;(A&#xA0;annotation,
+                                                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;type)</pre>
+<div class="block">Maps an external class.  This is intended for use on types needed in a system but come from an external source where the more
+ traditional approach of decorating the type in source with Morphia annotations is not possible.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>A</code> - the annotation to apply.  Currently only <code>@Embedded</code> is supported</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>annotation</code> - the annotation to apply.  might be null.</dd>
+<dd><code>type</code> - the type to map</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the list of mapped classes</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.1</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../annotations/experimental/EmbeddedBuilder.html" title="class in dev.morphia.annotations.experimental"><code>EmbeddedBuilder</code></a></dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</li>
+</ul>
+<a id="mapPackage(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mapPackage</h4>
+<pre class="methodSignature">public&#xA0;void&#xA0;mapPackage&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;packageName)</pre>
+<div class="block">Tries to map all classes in the package specified.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>packageName</code> - the name of the package to process</dd>
+</dl>
+</li>
+</ul>
+<a id="mapPackageFromClass(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mapPackageFromClass</h4>
+<pre class="methodSignature">public&#xA0;void&#xA0;mapPackageFromClass&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&#xA0;clazz)</pre>
+<div class="block">Maps all the classes found in the package to which the given class belongs.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - the class to use when trying to find others to map</dd>
+</dl>
+</li>
+</ul>
+<a id="refresh(java.lang.Object)">
+<!--   -->
+</a><a id="refresh(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>refresh</h4>
+<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;void&#xA0;refresh&#x200B;(T&#xA0;entity)</pre>
+<div class="block">Refreshes an entity with the current state in the database.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the entity type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to refresh</dd>
+</dl>
+</li>
+</ul>
+<a id="toDocument(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toDocument</h4>
+<pre class="methodSignature">public&#xA0;org.bson.Document&#xA0;toDocument&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;entity)</pre>
+<div class="block">Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - The POJO</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Document</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="updateCollection(dev.morphia.Key)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateCollection</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>=&quot;2.0&quot;,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;updateCollection&#x200B;(<a href="../Key.html" title="class in dev.morphia">Key</a>&#xA0;key)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+<div class="block">Updates the collection value on a Key with the mapped value on the Key&apos;s type Class</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the Key to update</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection name on the Key</dd>
+</dl>
+</li>
+</ul>
+<a id="updateQueryWithDiscriminators(dev.morphia.mapping.codec.pojo.EntityModel,org.bson.Document)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>updateQueryWithDiscriminators</h4>
+<pre class="methodSignature">public&#xA0;void&#xA0;updateQueryWithDiscriminators&#x200B;(<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;model,
+                                          org.bson.Document&#xA0;query)</pre>
+<div class="block">Updates a query with any discriminators from subtypes if polymorphic queries are enabled</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>model</code> - the query model</dd>
+<dd><code>query</code> - the query document</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</div>
+</div>
+</main>
+<!-- ========= END OF CLASS DATA ========= -->
+<footer role="contentinfo">
+<nav role="navigation">
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a id="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../index.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/Mapper.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&#xA0;</li>
+<li>Nested&#xA0;|&#xA0;</li>
+<li><a href="#field.summary">Field</a>&#xA0;|&#xA0;</li>
+<li><a href="#constructor.summary">Constr</a>&#xA0;|&#xA0;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&#xA0;</li>
+<li><a href="#field.detail">Field</a>&#xA0;|&#xA0;</li>
+<li><a href="#constructor.detail">Constr</a>&#xA0;|&#xA0;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a id="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</nav>
+<p class="legalCopy"><small>Copyright &#xA9; 2020. All rights reserved.</small></p>
+</footer>
+
+
+
+    </article>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../../../../../_/js/site.js"></script>
+<script async src="../../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

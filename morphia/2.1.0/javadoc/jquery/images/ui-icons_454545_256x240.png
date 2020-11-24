@@ -1,248 +1,0 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../_/css/javadoc.css">
-<!--    <script type="text/javascript" src="../../../../../_/js/vendor/script.js"></script> This one is GPL -->
-    <script type="text/javascript" src="../../../../../_/js/vendor/javadoc.js"></script>
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils.js"></script>-->
-    <!--[if IE]>
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils-ie.js"></script>-->
-    <![endif]-->
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jquery-3.3.1.js"></script>-->
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jquery-migrate-3.0.1.js"></script>-->
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jquery-ui.js"></script>-->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.1.0">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../getting-started.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../quick-tour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../querying-old.html">Querying (Deprecated)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../textSearch.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../updating-old.html">Updating (Deprecated)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.1.0</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../critter/4.0.0/index.html">4.0.0</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../2.2/index.html">2.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-current is-latest">
-          <a href="../../../index.html">2.1.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.0.2/index.html">2.0.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../1.6.0/index.html">1.6.0</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.1.0</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../2.2/javadoc/jquery/images/ui-icons_454545_256x240.png">2.2-SNAPSHOT</a>
-    <a class="version is-current" href="ui-icons_454545_256x240.png">2.1.0</a>
-    <a class="version" href="../../../../2.0.2/javadoc/jquery/images/ui-icons_454545_256x240.png">2.0.2</a>
-    <a class="version" href="../../../../1.6.0/javadoc/jquery/images/ui-icons_454545_256x240.png">1.6.0</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        �PNG
-
-   IHDR      �   E�r@   bKGD E�;�-   	pHYs   H   H F�k>  mIDATx��{leG}�?g�K��$����U�!�>T��؈�J��i6A"�V��R%;��"� �*UP)�
-�/���z�RJ�F��QP��z��BQH�VU������5sμ�9��^�3ߕ��{~����7s�7��<���.��`���� c���Ab/�@�[�V�D��0��3AX9�0�N��_�B ��&���>~�>�c�;ab�D�ߎE����Q z� 'k���M�ayԉ��6�!�:u:�:@RŤ�B�yDD���'�L��-�f�]S��q!� f�
-S�Q�&�S��7MC��r==3dJ��{��f�Z���S0�Ms��:0K٦g�ʿ��&H�U�=�mc�4�i?UĔG��U4�hc��Qb�]�!��hL���W/ ����@������pxh8�~�|�A��Qf?�ێ �1f¸����=u����Q�GJH��p����PϠI�w״m췥���ԧ>2���"�WÓP&{��n����T:s���f�q���H@���.c�I������~ S�s+�^|B�n�29�dH�������]��v�-ˌ-m�e�h�>�����q&ت��g�9x�#c�n��~!����pxh8� 4^ / ����o�#�Z@��S���^��4� KZKP�d�9���C@F[�����,��a+�����]8��v��K�qHl�w9ק�84�KB��ץ|��&��#��[�\C� ���`��R��!�����:�F
-z��C���6��)A���T1wU.I�җ!4��ig�3w��������E:��q7����n�0uA���mP��y�T�K(5ͬ�lNæb�T���rw�DV�]��t�e4���7��L���[��C��0��P��&��0����+��+�����@������pxh8� 4����Y��`��O����E�Z<��h�\J!��䞋��j�;TK�Vr�0��ͬq�cˇ��u���a����p����E{B�w"�K��5���n-��c"w�v�T�6T�hzီ|6�ŝ���Ι��N{	t��]��K��^m1(�6��m�3��'�R�f���`Ô�� �_�>��j�,�*�-E)�e��{�U�,��\u���oV��:`o��m�Ke�t��_W��O��dW3���ZՔrv|�~^�g��`j yc���p�*���f���b�] M5��9��.��L��N��q+%����ۯ�0�vc�c�J��E M5���kk�#I�<���x_��	�I#0D�w��4xh8� 4^ / ��^c���
-����d�r��DM{w�Q�t�e�{��^�`��b�r./��M:0գ��*����z���`]|S�B�(�e)�h͎/V����ܮ�"aO!�o�,�u�^���Љ�^�=�z��t`�WeCC�MQϱo���0q��%���U�o?�<��@6��HG/����������uAQ-_�u||�� �ִ*2l��ٍ�uG�@� j!�B���r�����	q�L!*)�h����� .�V�{3�� �-��!�w�$dP�*�����/P[�t1���l3�hl�y�p������0b��g�L�} �3���$�%\/��.)TwQ�"uK7d�+�2�!��@������pxh8� 4�' �aY$m��f�6�lB'�.D����Р��x7S�x��tI��eW�e}���d0�R�W��^ݢ��0](U�݋T�x����|��T�|����@v�^Df׹Lb��(�2��H��0n8;���_�Q�O��}D���&3{��Y��W�w��5*��e˗?�̖�G�
-�:H iZӖ)/MP���(:�!�/�|B��[i����:�Gf�L�`�~��:z$aa���^����ʭ|P�- kbݞ<ەL&�xJ�AABȼ�Hvᑢ�[�yS��ə�w�NJuy��%pw�0�_a"z��x���� �3i�1|� �=����@����%�JW����A���m�\� ����l��X�m9+�(��)������S��� or��ro*E`�Z��1��&=�ޗ�g�!�Rt<<�A.-V���+�l�|����suK��,&�ȇ��%����y�q�s��(A�K�*�q^�~����anb�1`�6��G�P�a�&.�	�)b���muL��I���fnE! k̠Ò� c��m���c�ȱD�-B֥֙�D`:G��e�tQ	��7�0���0��������YQ�Ӕ،?�mb�/�e׸L{8�<�q�{��X4��$s���D@����s�9�����e8��\c(���Y���"�r���7��q6�u-	|��B�� �R���i x!��9^P�HD�����g�t7K���|��2��"�.�t���V����w�E�u>�b�������f� ��a?q�h'y'r�y����#\��&��
-o+��Ԫ �����|�Y��%� _Hp���"����k��1��*ɫ���U[��&x�9�xA��s�mf�e��<�_����7�;y�6m���i�
-:�[��)�EB���7 ̰����8f��CH��`⾿�h�)�����}�(�%m���'��&���;��(�ݚ!�{:^����R��@���N���Kү"�*�<�V�敡�=��o�h~q���+`6I��i�I<#�����Z=^IE\`�0]1����%�D��A��^�a0f��,���c %[�Gxh8� 4^ / �����rdh9�����M7L)-�ӂ-���?K(����stբ�h-?�:��[ڧC�r�]�G�(�YB�3�|�C|l�eXW��_�x�V8Ɗ�b����bQ����7�����V�4J�]������l!��=�D?��'a`^�� �a�q��8���:-��O��YP��x�ۀ���֝��X�5Q "�Gִ����W}���
-���I>ȓ<�c��b�YV
-6=��*��ۿ�-\��įi|��BH���J_F�Wx�CWғ�_ �K�`B]J��"}�`�_R��β��&nDsp����t%G-�^���V�����yIc�b�9.hM�u����K��ĭ��6T���6��5Ko(�
-%Hz߲�:.��n�z�ōO >���c��lpVZM_gڰ�C�v��eG{�����<_d�����0՗e���N�%N�y�ƍ� ��Ȅp��~�Ú�/���k�������n��������|��(G� ����#.�s��9�J�ۇ��l���[��6�ɻ�&�.X���{�����SDf��<����y?O�~��ƅDP���*~b���gco��s{;�����'�Z9�Z��.��O�孁���e��U�~?�Ӆ1N 3��ڶD�(��1Gx�x�k�S�H�I~ی?O��������k���,��i�(���ׁۈ�{.�h�_���5�؋�nF�7��0Q���O����S5�:�'����/��ա���J�r�����.���KN�wu�e��r>n��-�U�$U`I�v%�����.A�U����e�d��
-��;�Ә:�+�a&�XĎ �y���� �������������G�с���	��"��4��pxh8� 4^ ��	@d6�((�Ԕ{�C::[�>�H,
-�ɴNVN����hr.�~N������Z��`�3�᝼���K��Q�|$�%�t��!�Vn%�=�*�7����f��g(�m!fy���"�k�I6Y�/�eZ�ٳ���+���z�g�6W8ɦbQ%�y�{9����Ï�*ŕ�#��7��b-t��X�͕8y��nO�{]�!ټ�*���\� �(��p�2.�H�ٙ�d�.�^Z�(N���&�l�2�&k�	�U&ף���#~�.���7��� ��6���58A7����}P:��BlkU�[�8�)�j�w0�$��W� � !s\�������QF�n(qRK��:'�X���@����=$��x����|�5:��@��]���2�S�i�.�&��
-��$`
-8�t��� �S =�&[#�߫��U3���Wҳq��^H{���➇�Z���4������"��A��H��#����U��0 +̱�1�Ɏ�;����O9���"�D�E�C+n�U:�|a��ɔ�M|�?H������W1�$~=�k��U�џ ��V������V� ���l{�� 7�	�����^�;<�,�t[������T"��3SU9l��˾�H���x^�&�a�@���)�E��&�<<B4�(b����p������Ƶ\˫\�u��f���� 7r����������^��Ci�[��.��h���_�^��mD�"DD�_3��e����� �e��X�	�,�B@�fU���/�?���g���B�R���C�&��2���P�8��@3ZtS��<����v7�^#�另�;c'�Nȹ����6�g[�J!Az^ ?�<̯�oɛ�_s[Kg{(e�}�E�~J��,�m<<�����U���g
-"&B% �7�~�{� / G�l� 4^ �� �j�����Ԓt���cA��0\(�����ܓ�Ԡ�Q�8��YN�Bݝ�?[���R��$�k���\�{�u���׾~�Q ��q�)�8���z:G�G��UK�:�07��6�-��
-WMY<�������2�Ѱ��$5�&v�}%��8�)#9&)/��K^2�+��B̳�i���\Ҥ����V�}�LD���1/i��n�]2č��>��I?U�7x���G�4�c�*�i��
-�5) ñ>�wH�����f5[q���O�.���d&J_�~W\`G{�|-���e/���Чk��d� E�����(���N�i�v=����C`�̲�Z���+ ��%m
-)s�!ī�6Fei�N��%���O*㪞v,s��@��%����4���tS/<E�%��0wr��k{ʉ2b�6ɻ��*���;�����zs�]�۝,�B��!,ų�uM�zȐ" �={����O���E����۴��w80���ۙ��%�\PL����
-��H�[/ ����@������G����9��A�Pi�G
-ѫ+!��'��^��u'þ��:�Z�@�LxZ�:�Ɩ����oQA_�RR�`��E��,���~�]M�y_��xD�$��&J�B�k�Q�@����3����=�A_��هA`��RN�#�"��tX��孋�0Z죡�Ԭa�t����R��Mi�C- k��r�a�fH4@�C��ܓ���-��`$�~�� �Ul�$^�Ufr)�0�*-C�n9W-��@M�1��a���@7�g!�7
-?̣|�l�R��/ᭁytX5��L݇��p�����@������pxh8�`:{�1����J��5��#;���ǾD" -��s�ct�Ln3�<D��B���d1w]���=4H�α�'�!���r�+t��d����eG���{h	@�.���k�q���v�e�5V�h.0�©|U������
-��C��u����k��G���O��C��Y�	�"@�E�"mNzP�S,��1����rzk�M}������y�.�{+j{���xL��wE^DPk�$�3�cA�Y�~Y���
-�/�C�H�F�����<m�47R̱�Q�3��Wa�o�~o�)�C�d݇��E�ƀl7�(̢b��s��ڸ���<<�Fx�~?@��m����@������v@]��<����=���~��WD�`��.��f���~�o��ʈ�n�VA{_��ե�M������^��y��M�Q|��ߟ^-{�~��>������Ѓ
-��(��g��X���7��i��&�X
-5WJ"�*V���J6s{��I��w�oO_��5~���YX�w(�R��! �m���)^�'��D������ɸ�����5�=�@��+���~���j��yQ`O�`�$�D��<B�F0C<�^%�@��?t�k3�}�@����{�^��y��U��|���pS�nĦ�t���e��=� �$�v��>`����H_�B���T#%].Xx��D�ѫ�OR��2�E���\K"��R\T|��:m�O���
-�x��*y=���2��~����/?Ｊ,����+%q�	�W�ޛ���3������?ܕ�?��������^� �e������	+R����oҎ�5س�~�o����Bol8� 4^ / ����@�!��/ON�G�����ۮ2t]��С8�cݮ5�z=7������ ��ˮ���g���@�/�aE[��y#�3�#z��7L�.|��
-��(cR�c�S��m�Q�$�6�ץ{D���a�{T�_j8� 4^ / ����@ñ`�/�� �_g�"d���`�ɾ�� �0����{����������C�j����_9��jD�Ջa�~?�	dc�[�����0�*a������ ��, &0��&�+���O�B4!��1��~��Ix� ��>�8�c��&�G)�j���I����� =@�5@�v�&J?��Q� l�Ç@��Q�����?��^����   %tEXtdate:create 2016-07-13T10:21:59+00:00��   %tEXtdate:modify 2016-07-13T09:26:54+00:00�͠   tEXtSoftware Adobe ImageReadyq�e<    IEND�B`�
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2020
-</footer>
--->
-<script src="../../../../../_/js/site.js"></script>
-<script async src="../../../../../_/js/vendor/highlight.js"></script>
-  </body>
-</html>

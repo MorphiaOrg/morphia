@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+    <link rel="stylesheet" href="../../../../../../../_/css/javadoc.css">
+<!--    <script type="text/javascript" src="../../../../../../../_/js/vendor/script.js"></script> This one is GPL -->
+    <script type="text/javascript" src="../../../../../../../_/js/vendor/javadoc.js"></script>
+<!--    <script type="text/javascript" src="../../../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils.js"></script>-->
+    <!--[if IE]>
+<!--    <script type="text/javascript" src="../../../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils-ie.js"></script>-->
+    <![endif]-->
+<!--    <script type="text/javascript" src="../../../../../../../_/_/js/vendor/javadoc/jquery/jquery-3.3.1.js"></script>-->
+<!--    <script type="text/javascript" src="../../../../../../../_/_/js/vendor/javadoc/jquery/jquery-migrate-3.0.1.js"></script>-->
+<!--    <script type="text/javascript" src="../../../../../../../_/_/js/vendor/javadoc/jquery/jquery-ui.js"></script>-->
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../../../../../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../../../../../../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="1.6">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../../../index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../getting-started.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../quick-tour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../migration.html">Migrating to 2.0</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../querying.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../index.html">Javadoc</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../jrebel.html">JRebel</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../../validationExtension.html">Validation Extension</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">1.6</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../../../../../critter/4.0.0/index.html">4.0.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../../../../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../../../../../2.2/index.html">2.2-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../../../../../2.1/index.html">2.1</a>
+        </li>
+        <li class="version">
+          <a href="../../../../../../2/index.html">2</a>
+        </li>
+        <li class="version is-current">
+          <a href="../../../../../index.html">1.6</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main>
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../../../../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
+  <div class="version-menu">
+    <a class="version" href="../../../../../../2.2/javadoc/dev/morphia/query/class-use/Query.html">2.2-SNAPSHOT</a>
+    <a class="version" href="../../../../../../2.1/javadoc/dev/morphia/query/class-use/Query.html">2.1</a>
+    <a class="version" href="../../../../../../2/javadoc/dev/morphia/query/class-use/Query.html">2</a>
+    <a class="version is-current" href="Query.html">1.6</a>
+  </div>
+</div>
+</div>
+    <article class="javadoc">
+        
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="Uses of Interface dev.morphia.query.Query (Morphia)";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var pathtoroot = "../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<header role="banner">
+<nav role="navigation">
+<div class="fixedNav">
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a id="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../index.html">Overview</a></li>
+<li><a href="../package-summary.html">Package</a></li>
+<li><a href="../Query.html" title="interface in dev.morphia.query">Class</a></li>
+<li class="navBarCell1Rev">Use</li>
+<li><a href="../package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<a id="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+</div>
+<div class="navPadding">&#xA0;</div>
+<script type="text/javascript"><!--
+$('.navPadding').css('padding-top', $('.fixedNav').css("height"));
+//-->
+</script>
+</nav>
+</header>
+<main role="main">
+<div class="header">
+<h2 title="Uses of Interface dev.morphia.query.Query" class="title">Uses of Interface<br>dev.morphia.query.Query</h2>
+</div>
+<div class="classUseContainer">
+<ul class="blockList">
+<li class="blockList">
+<table class="useSummary">
+<caption><span>Packages that use <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Package</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#dev.morphia">dev.morphia</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation">dev.morphia.aggregation</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#dev.morphia.dao">dev.morphia.dao</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#dev.morphia.query">dev.morphia.query</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
+<ul class="blockList">
+<li class="blockList">
+<section role="region"><a id="dev.morphia">
+<!--   -->
+</a>
+<h3>Uses of <a href="../Query.html" title="interface in dev.morphia.query">Query</a> in <a href="../../package-summary.html">dev.morphia</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../package-summary.html">dev.morphia</a> that return <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#createQuery(java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+           com.mongodb.DBObject&#xA0;q)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#createQuery(java.lang.String,java.lang.Class)">createQuery</a></span>&#x200B;(java.lang.String&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;clazz)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">this feature is being removed.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#createQuery(java.lang.String,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#x200B;(java.lang.String&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;clazz,
+           com.mongodb.DBObject&#xA0;q)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">this feature is being removed.</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#createQuery(java.lang.Class)">createQuery</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;collection)</code></th>
+<td class="colLast">
+<div class="block">Returns a new query bound to the collection (a specific <code>DBCollection</code>)</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createQuery(java.lang.Class)">createQuery</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;collection)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createQuery(java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+           com.mongodb.DBObject&#xA0;q)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createQuery(java.lang.String,java.lang.Class)">createQuery</a></span>&#x200B;(java.lang.String&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;type)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createQuery(java.lang.String,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#x200B;(java.lang.String&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;type,
+           com.mongodb.DBObject&#xA0;q)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../MapreduceResults.html" title="type parameter in MapreduceResults">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MapreduceResults.</span><code><span class="memberNameLink"><a href="../../MapreduceResults.html#createQuery()">createQuery</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#find(java.lang.String,java.lang.Class)">find</a></span>&#x200B;(java.lang.String&#xA0;collection,
+    java.lang.Class&lt;T&gt;&#xA0;clazz)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">this feature is being removed.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#find(java.lang.String,java.lang.Class,java.lang.String,V,int,int)">find</a></span>&#x200B;(java.lang.String&#xA0;collection,
+    java.lang.Class&lt;T&gt;&#xA0;clazz,
+    java.lang.String&#xA0;property,
+    V&#xA0;value,
+    int&#xA0;offset,
+    int&#xA0;size)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../AdvancedDatastore.html#find(java.lang.String,java.lang.Class)"><code>AdvancedDatastore.find(String, Class)</code></a> and apply the options to the <code>com.mongodb.client.model.FindOptions</code> parameter</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#find(java.lang.Class)">find</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz)</code></th>
+<td class="colLast">
+<div class="block">Find all instances by type</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#find(java.lang.Class,java.lang.String,V)">find</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+    java.lang.String&#xA0;property,
+    V&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#find(java.lang.Class,java.lang.String,V,int,int)">find</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+    java.lang.String&#xA0;property,
+    V&#xA0;value,
+    int&#xA0;offset,
+    int&#xA0;size)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#find(java.lang.Class)">find</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#find(java.lang.Class,java.lang.String,V)">find</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+    java.lang.String&#xA0;property,
+    V&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#find(java.lang.Class,java.lang.String,V,int,int)">find</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+    java.lang.String&#xA0;property,
+    V&#xA0;value,
+    int&#xA0;offset,
+    int&#xA0;size)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#find(java.lang.String,java.lang.Class)">find</a></span>&#x200B;(java.lang.String&#xA0;collection,
+    java.lang.Class&lt;T&gt;&#xA0;clazz)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#find(java.lang.String,java.lang.Class,java.lang.String,V,int,int)">find</a></span>&#x200B;(java.lang.String&#xA0;collection,
+    java.lang.Class&lt;T&gt;&#xA0;clazz,
+    java.lang.String&#xA0;property,
+    V&#xA0;value,
+    int&#xA0;offset,
+    int&#xA0;size)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#find(java.lang.String,java.lang.Class,java.lang.String,V,int,int,boolean)">find</a></span>&#x200B;(java.lang.String&#xA0;collection,
+    java.lang.Class&lt;T&gt;&#xA0;clazz,
+    java.lang.String&#xA0;property,
+    V&#xA0;value,
+    int&#xA0;offset,
+    int&#xA0;size,
+    boolean&#xA0;validate)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Find all instances by type in a different collection than what is mapped on the class given skipping some documents and returning a
+ fixed number of the remaining.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#get(java.lang.Class,java.lang.Iterable)">get</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+   java.lang.Iterable&lt;V&gt;&#xA0;ids)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead.</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T,&#x200B;V&gt;<br><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#get(java.lang.Class,java.lang.Iterable)">get</a></span>&#x200B;(java.lang.Class&lt;T&gt;&#xA0;clazz,
+   java.lang.Iterable&lt;V&gt;&#xA0;ids)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#queryByExample(java.lang.String,T)">queryByExample</a></span>&#x200B;(java.lang.String&#xA0;collection,
+              T&#xA0;example)</code></th>
+<td class="colLast">
+<div class="block">Returns a new query based on the example object</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#queryByExample(T)">queryByExample</a></span>&#x200B;(T&#xA0;example)</code></th>
+<td class="colLast">
+<div class="block">Returns a new query based on the example object</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#queryByExample(java.lang.String,T)">queryByExample</a></span>&#x200B;(java.lang.String&#xA0;collection,
+              T&#xA0;ex)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#queryByExample(T)">queryByExample</a></span>&#x200B;(T&#xA0;ex)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../package-summary.html">dev.morphia</a> with parameters of type <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#delete(dev.morphia.query.Query)">delete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block">Deletes entities based on the query</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#delete(dev.morphia.query.Query,com.mongodb.WriteConcern)">delete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      com.mongodb.WriteConcern&#xA0;wc)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)"><code>Datastore.delete(Query, DeleteOptions)</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)">delete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../../DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block">Deletes entities based on the query</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#delete(dev.morphia.query.Query)">delete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#delete(dev.morphia.query.Query,com.mongodb.WriteConcern)">delete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      com.mongodb.WriteConcern&#xA0;wc)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)">delete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../../DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndDelete(dev.morphia.query.Query)">findAndDelete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block">Deletes the given entities based on the query (first item only).</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndDelete(dev.morphia.query.Query,dev.morphia.FindAndModifyOptions)">findAndDelete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block">Deletes the given entities based on the query (first item only).</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndDelete(dev.morphia.query.Query)">findAndDelete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndDelete(dev.morphia.query.Query,dev.morphia.FindAndModifyOptions)">findAndDelete</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations)</code></th>
+<td class="colLast">
+<div class="block">Find the first Entity from the Query, and modify it.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+             boolean&#xA0;oldVersion)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)"><code>Datastore.findAndModify(Query, UpdateOperations, FindAndModifyOptions)</code></a></div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+             boolean&#xA0;oldVersion,
+             boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)"><code>Datastore.findAndModify(Query, UpdateOperations, FindAndModifyOptions)</code></a></div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+             <a href="../../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block">Find the first Entity from the Query, and modify it.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+             boolean&#xA0;oldVersion)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+             boolean&#xA0;oldVersion,
+             boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;T</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+             <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+             <a href="../../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;long</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#getCount(dev.morphia.query.Query)">getCount</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../Query.html#count()"><code>count()</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;long</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#getCount(dev.morphia.query.Query,dev.morphia.query.CountOptions)">getCount</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+        <a href="../CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../Query.html#count(dev.morphia.query.CountOptions)"><code>count(CountOptions)</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;long</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#getCount(dev.morphia.query.Query)">getCount</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;long</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#getCount(dev.morphia.query.Query,dev.morphia.query.CountOptions)">getCount</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+        <a href="../CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../../MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.Class,com.mongodb.MapReduceCommand)">mapReduce</a></span>&#x200B;(<a href="../../MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&#xA0;type,
+         <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;q,
+         java.lang.Class&lt;T&gt;&#xA0;outputType,
+         com.mongodb.MapReduceCommand&#xA0;baseCommand)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This feature will not be supported in 2.0</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../../MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.String,java.lang.String,java.lang.String,java.util.Map,java.lang.Class)">mapReduce</a></span>&#x200B;(<a href="../../MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&#xA0;type,
+         <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;q,
+         java.lang.String&#xA0;map,
+         java.lang.String&#xA0;reduce,
+         java.lang.String&#xA0;finalize,
+         java.util.Map&lt;java.lang.String,&#x200B;java.lang.Object&gt;&#xA0;scopeFields,
+         java.lang.Class&lt;T&gt;&#xA0;outputType)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This feature will not be supported in 2.0</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../../MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.Class,com.mongodb.MapReduceCommand)">mapReduce</a></span>&#x200B;(<a href="../../MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&#xA0;type,
+         <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query,
+         java.lang.Class&lt;T&gt;&#xA0;outputType,
+         com.mongodb.MapReduceCommand&#xA0;baseCommand)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../../MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.String,java.lang.String,java.lang.String,java.util.Map,java.lang.Class)">mapReduce</a></span>&#x200B;(<a href="../../MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&#xA0;type,
+         <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query,
+         java.lang.String&#xA0;map,
+         java.lang.String&#xA0;reduce,
+         java.lang.String&#xA0;finalize,
+         java.util.Map&lt;java.lang.String,&#x200B;java.lang.Object&gt;&#xA0;scopeFields,
+         java.lang.Class&lt;T&gt;&#xA0;outputType)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../MapReduceOptions.html" title="class in dev.morphia">MapReduceOptions</a>&lt;<a href="../../MapReduceOptions.html" title="type parameter in MapReduceOptions">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MapReduceOptions.</span><code><span class="memberNameLink"><a href="../../MapReduceOptions.html#query(dev.morphia.query.Query)">query</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Sets the query defining the input for the job.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations)</code></th>
+<td class="colLast">
+<div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+      boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)"><code>Datastore.update(Query, UpdateOperations, UpdateOptions)</code></a> with upsert set to the value of
+ createIfMissing</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+      boolean&#xA0;createIfMissing,
+      com.mongodb.WriteConcern&#xA0;wc)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)"><code>Datastore.update(Query, UpdateOperations, UpdateOptions)</code></a>
+ with upsert set to the value of createIfMissing</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+      <a href="../../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+      boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+      boolean&#xA0;createIfMissing,
+      com.mongodb.WriteConcern&#xA0;wc)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+      <a href="../../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&#xA0;options)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)"><code>Datastore.update(Query, UpdateOperations, UpdateOptions)</code></a></div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+           boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)"><code>Datastore.update(Query, UpdateOperations, UpdateOptions)</code></a> with upsert set to the value of createIfMissing</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+           boolean&#xA0;createIfMissing,
+           com.mongodb.WriteConcern&#xA0;wc)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)"><code>Datastore.update(Query, UpdateOperations, UpdateOptions)</code></a> with upsert set to the value of createIfMissing</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,T,boolean)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           T&#xA0;entity,
+           boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)"><code>Datastore.update(Query, UpdateOperations, UpdateOptions)</code></a> with upsert set to the value of createIfMissing</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+           boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&#xA0;operations,
+           boolean&#xA0;createIfMissing,
+           com.mongodb.WriteConcern&#xA0;wc)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,T,boolean)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&#xA0;query,
+           T&#xA0;entity,
+           boolean&#xA0;createIfMissing)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="dev.morphia.aggregation">
+<!--   -->
+</a>
+<h3>Uses of <a href="../Query.html" title="interface in dev.morphia.query">Query</a> in <a href="../../aggregation/package-summary.html">dev.morphia.aggregation</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../aggregation/package-summary.html">dev.morphia.aggregation</a> that return <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">GeoNear.</span><code><span class="memberNameLink"><a href="../../aggregation/GeoNear.html#getQuery()">getQuery</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Limits the results to the documents that match the query.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../aggregation/package-summary.html">dev.morphia.aggregation</a> with parameters of type <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AggregationPipeline.</span><code><span class="memberNameLink"><a href="../../aggregation/AggregationPipeline.html#match(dev.morphia.query.Query)">match</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block">Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AggregationPipelineImpl.</span><code><span class="memberNameLink"><a href="../../aggregation/AggregationPipelineImpl.html#match(dev.morphia.query.Query)">match</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../aggregation/GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">GeoNear.GeoNearBuilder.</span><code><span class="memberNameLink"><a href="../../aggregation/GeoNear.GeoNearBuilder.html#setQuery(dev.morphia.query.Query)">setQuery</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block">Limits the results to the documents that match the query.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="dev.morphia.dao">
+<!--   -->
+</a>
+<h3>Uses of <a href="../Query.html" title="interface in dev.morphia.query">Query</a> in <a href="../../dao/package-summary.html">dev.morphia.dao</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../dao/package-summary.html">dev.morphia.dao</a> that return <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#createQuery()">createQuery</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#createQuery()">createQuery</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Starts a query for this DAO entities type</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#find()">find</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#find(dev.morphia.query.Query)">find</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#find()">find</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Finds all the documents in the collection mapped by the entity class</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#find(dev.morphia.query.Query)">find</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Finds entities matching a query</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../dao/package-summary.html">dev.morphia.dao</a> with parameters of type <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>long</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#count(dev.morphia.query.Query)">count</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#count(dev.morphia.query.Query)">count</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#deleteByQuery(dev.morphia.query.Query)">deleteByQuery</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#deleteByQuery(dev.morphia.query.Query)">deleteByQuery</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Delete the entity matching a query</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#exists(dev.morphia.query.Query)">exists</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#exists(dev.morphia.query.Query)">exists</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">checks for entities which match the criteria</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#find(dev.morphia.query.Query)">find</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#find(dev.morphia.query.Query)">find</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Finds entities matching a query</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.util.List&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">K</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#findIds(dev.morphia.query.Query)">findIds</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.util.List&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">K</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#findIds(dev.morphia.query.Query)">findIds</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Finds the entities Ts by the criteria {key:value}</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#findOne(dev.morphia.query.Query)">findOne</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../dao/DAO.html" title="type parameter in DAO">T</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#findOne(dev.morphia.query.Query)">findOne</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Finds the first entity matching the query.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#findOneId(dev.morphia.query.Query)">findOneId</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#findOneId(dev.morphia.query.Query)">findOneId</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Finds the first entity&apos;s ID</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;ops)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query,
+      <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;ops)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Updates all entities matched by the constraints with the modifiers supplied.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&#xA0;ops)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;query,
+           <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&#xA0;ops)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Updates the first entity matched by the constraints with the modifiers supplied.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="dev.morphia.query">
+<!--   -->
+</a>
+<h3>Uses of <a href="../Query.html" title="interface in dev.morphia.query">Query</a> in <a href="../package-summary.html">dev.morphia.query</a></h3>
+<table class="useSummary">
+<caption><span>Classes in <a href="../package-summary.html">dev.morphia.query</a> that implement <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&#xA0;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../QueryImpl.html" title="class in dev.morphia.query">QueryImpl</a>&lt;T&gt;</span></code></th>
+<td class="colLast">
+<div class="block">Implementation of Query</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../package-summary.html">dev.morphia.query</a> that return <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#batchSize(int)">batchSize</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#batchSize(int)">batchSize</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#cloneQuery()">cloneQuery</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">not supported in 2.0</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#comment(java.lang.String)">comment</a></span>&#x200B;(java.lang.String&#xA0;comment)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#comment(java.lang.String)">comment</a></span>&#x200B;(java.lang.String&#xA0;comment)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AbstractQueryFactory.</span><code><span class="memberNameLink"><a href="../AbstractQueryFactory.html#createQuery(dev.morphia.Datastore)">createQuery</a></span>&#x200B;(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AbstractQueryFactory.</span><code><span class="memberNameLink"><a href="../AbstractQueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class)">createQuery</a></span>&#x200B;(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore,
+           com.mongodb.DBCollection&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;type)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DefaultQueryFactory.</span><code><span class="memberNameLink"><a href="../DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#x200B;(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore,
+           com.mongodb.DBCollection&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;type,
+           com.mongodb.DBObject&#xA0;query)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../QueryFactory.html#createQuery(dev.morphia.Datastore)">createQuery</a></span>&#x200B;(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore)</code></th>
+<td class="colLast">
+<div class="block">Creates an unvalidated <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> typically for use in aggregation pipelines.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../QueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class)">createQuery</a></span>&#x200B;(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore,
+           com.mongodb.DBCollection&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;type)</code></th>
+<td class="colLast">
+<div class="block">Creates and returns a <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../QueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#x200B;(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&#xA0;datastore,
+           com.mongodb.DBCollection&#xA0;collection,
+           java.lang.Class&lt;T&gt;&#xA0;type,
+           com.mongodb.DBObject&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block">Creates and returns a <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#disableCursorTimeout()">disableCursorTimeout</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#disableCursorTimeout()">disableCursorTimeout</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#disableValidation()">disableValidation</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Turns off validation (for all calls made after)</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#disableValidation()">disableValidation</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#enableCursorTimeout()">enableCursorTimeout</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#enableCursorTimeout()">enableCursorTimeout</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#enableValidation()">enableValidation</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Turns on validation (for all calls made after); by default validation is on</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#enableValidation()">enableValidation</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#filter(java.lang.String,java.lang.Object)">filter</a></span>&#x200B;(java.lang.String&#xA0;condition,
+      java.lang.Object&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block">Create a filter based on the specified condition and value.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#filter(java.lang.String,java.lang.Object)">filter</a></span>&#x200B;(java.lang.String&#xA0;condition,
+      java.lang.Object&#xA0;value)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#hintIndex(java.lang.String)">hintIndex</a></span>&#x200B;(java.lang.String&#xA0;idxName)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#hintIndex(java.lang.String)">hintIndex</a></span>&#x200B;(java.lang.String&#xA0;idxName)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#limit(int)">limit</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#limit(int)">limit</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#lowerIndexBound(com.mongodb.DBObject)">lowerIndexBound</a></span>&#x200B;(com.mongodb.DBObject&#xA0;lowerBound)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#lowerIndexBound(com.mongodb.DBObject)">lowerIndexBound</a></span>&#x200B;(com.mongodb.DBObject&#xA0;lowerBound)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#maxScan(int)">maxScan</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">no replacement is planned</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#maxScan(int)">maxScan</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>&#x200B;(long&#xA0;maxTime,
+       java.util.concurrent.TimeUnit&#xA0;maxTimeUnit)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../FindOptions.html#maxTime(long,java.util.concurrent.TimeUnit)"><code>FindOptions.maxTime(long, TimeUnit)</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>&#x200B;(long&#xA0;value,
+       java.util.concurrent.TimeUnit&#xA0;unit)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#offset(int)">offset</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#offset(int)">offset</a></span>&#x200B;(int&#xA0;value)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#order(dev.morphia.query.Meta)">order</a></span>&#x200B;(<a href="../Meta.html" title="class in dev.morphia.query">Meta</a>&#xA0;sort)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#order(dev.morphia.query.Sort...)">order</a></span>&#x200B;(<a href="../Sort.html" title="class in dev.morphia.query">Sort</a>...&#xA0;sorts)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#order(java.lang.String)">order</a></span>&#x200B;(java.lang.String&#xA0;sort)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../Query.html#order(dev.morphia.query.Sort...)"><code>order(Sort...)</code></a></div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#order(dev.morphia.query.Meta)">order</a></span>&#x200B;(<a href="../Meta.html" title="class in dev.morphia.query">Meta</a>&#xA0;sort)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#order(dev.morphia.query.Sort...)">order</a></span>&#x200B;(<a href="../Sort.html" title="class in dev.morphia.query">Sort</a>...&#xA0;sorts)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#order(java.lang.String)">order</a></span>&#x200B;(java.lang.String&#xA0;sort)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#project(dev.morphia.query.Meta)">project</a></span>&#x200B;(<a href="../Meta.html" title="class in dev.morphia.query">Meta</a>&#xA0;meta)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#project(java.lang.String,boolean)">project</a></span>&#x200B;(java.lang.String&#xA0;field,
+       boolean&#xA0;include)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#project(java.lang.String,dev.morphia.query.ArraySlice)">project</a></span>&#x200B;(java.lang.String&#xA0;field,
+       <a href="../ArraySlice.html" title="class in dev.morphia.query">ArraySlice</a>&#xA0;slice)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#project(dev.morphia.query.Meta)">project</a></span>&#x200B;(<a href="../Meta.html" title="class in dev.morphia.query">Meta</a>&#xA0;meta)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#project(java.lang.String,boolean)">project</a></span>&#x200B;(java.lang.String&#xA0;field,
+       boolean&#xA0;include)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#project(java.lang.String,dev.morphia.query.ArraySlice)">project</a></span>&#x200B;(java.lang.String&#xA0;field,
+       <a href="../ArraySlice.html" title="class in dev.morphia.query">ArraySlice</a>&#xA0;slice)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#queryNonPrimary()">queryNonPrimary</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#queryNonPrimary()">queryNonPrimary</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#queryPrimaryOnly()">queryPrimaryOnly</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#queryPrimaryOnly()">queryPrimaryOnly</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#retrievedFields(boolean,java.lang.String...)">retrievedFields</a></span>&#x200B;(boolean&#xA0;include,
+               java.lang.String...&#xA0;fields)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use <a href="../Query.html#project(java.lang.String,boolean)"><code>project(String, boolean)</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#retrievedFields(boolean,java.lang.String...)">retrievedFields</a></span>&#x200B;(boolean&#xA0;include,
+               java.lang.String...&#xA0;list)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#retrieveKnownFields()">retrieveKnownFields</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#retrieveKnownFields()">retrieveKnownFields</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#returnKey()">returnKey</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#returnKey()">returnKey</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#search(java.lang.String)">search</a></span>&#x200B;(java.lang.String&#xA0;text)</code></th>
+<td class="colLast">
+<div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#search(java.lang.String,java.lang.String)">search</a></span>&#x200B;(java.lang.String&#xA0;text,
+      java.lang.String&#xA0;language)</code></th>
+<td class="colLast">
+<div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#search(java.lang.String)">search</a></span>&#x200B;(java.lang.String&#xA0;search)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#search(java.lang.String,java.lang.String)">search</a></span>&#x200B;(java.lang.String&#xA0;search,
+      java.lang.String&#xA0;language)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#upperIndexBound(com.mongodb.DBObject)">upperIndexBound</a></span>&#x200B;(com.mongodb.DBObject&#xA0;upperBound)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly.</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#upperIndexBound(com.mongodb.DBObject)">upperIndexBound</a></span>&#x200B;(com.mongodb.DBObject&#xA0;upperBound)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#useReadPreference(com.mongodb.ReadPreference)">useReadPreference</a></span>&#x200B;(com.mongodb.ReadPreference&#xA0;readPref)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">use the methods that accept Options directly</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#useReadPreference(com.mongodb.ReadPreference)">useReadPreference</a></span>&#x200B;(com.mongodb.ReadPreference&#xA0;readPref)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#where(java.lang.String)">where</a></span>&#x200B;(java.lang.String&#xA0;js)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">no replacement is planned</div>
+</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#where(org.bson.types.CodeWScope)">where</a></span>&#x200B;(org.bson.types.CodeWScope&#xA0;js)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">no replacement is planned</div>
+</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#where(java.lang.String)">where</a></span>&#x200B;(java.lang.String&#xA0;js)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#where(org.bson.types.CodeWScope)">where</a></span>&#x200B;(org.bson.types.CodeWScope&#xA0;js)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../package-summary.html">dev.morphia.query</a> that return types with arguments of type <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#field(java.lang.String)">field</a></span>&#x200B;(java.lang.String&#xA0;field)</code></th>
+<td class="colLast">
+<div class="block">Fluent query interface: <code>createQuery(Ent.class).field(&quot;count&quot;).greaterThan(7)...</code></div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryImpl.</span><code><span class="memberNameLink"><a href="../QueryImpl.html#field(java.lang.String)">field</a></span>&#x200B;(java.lang.String&#xA0;name)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../package-summary.html">dev.morphia.query</a> with parameters of type <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&#xA0;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">FieldEnd.</span><code><span class="memberNameLink"><a href="../FieldEnd.html#elemMatch(dev.morphia.query.Query)">elemMatch</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query)</code></th>
+<td class="colLast">
+<div class="block">Checks that a field matches the provided query definition</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">FieldEndImpl.</span><code><span class="memberNameLink"><a href="../FieldEndImpl.html#elemMatch(dev.morphia.query.Query)">elemMatch</a></span>&#x200B;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&#xA0;query)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</main>
+<footer role="contentinfo">
+<nav role="navigation">
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a id="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../index.html">Overview</a></li>
+<li><a href="../package-summary.html">Package</a></li>
+<li><a href="../Query.html" title="interface in dev.morphia.query">Class</a></li>
+<li class="navBarCell1Rev">Use</li>
+<li><a href="../package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<a id="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</nav>
+<p class="legalCopy"><small>Copyright &#xA9; 2020. All rights reserved.</small></p>
+</footer>
+
+
+
+    </article>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../../../../../../_/js/site.js"></script>
+<script async src="../../../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
