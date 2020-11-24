@@ -1,7 +1,7 @@
 name: morphia
 title: Morphia
-version: 2.2.0-SNAPSHOT
-prerelease: true
+version: 2.2
+prerelease: -SNAPSHOT
 
 nav:
   - modules/ROOT/nav.adoc
