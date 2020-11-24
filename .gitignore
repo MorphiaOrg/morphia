@@ -66,8 +66,5 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
-/mongodb-osx-x86_64-3.4.17/
-/morphia/Changes-*.md
+Changes-*.md
 /config/revapi.json
-/mongodb-bin/
-/audit.sh
