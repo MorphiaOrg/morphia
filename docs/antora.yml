@@ -1,6 +1,6 @@
 name: morphia
 title: Morphia
-version: 2.0.2
+version: 2.0
 
 nav:
   - modules/ROOT/nav.adoc
