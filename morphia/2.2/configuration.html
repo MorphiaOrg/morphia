@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+<link rel="stylesheet" href="../../_/css/site.css">
+<link rel="stylesheet" href="../../_/css/morphia.css">
+
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="2.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="reference.html">Reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">2.2-SNAPSHOT</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../critter/4.0.0/index.html">4.0.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">2.2-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../2.1.0/index.html">2.1.0</a>
+        </li>
+        <li class="version">
+          <a href="../2.0.2/index.html">2.0.2</a>
+        </li>
+        <li class="version">
+          <a href="../1.6.0/index.html">1.6.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
+  <div class="version-menu">
+    <a class="version is-current" href="configuration.html">2.2-SNAPSHOT</a>
+    <a class="version" href="../2.1.0/configuration.html">2.1.0</a>
+    <a class="version" href="../2.0.2/configuration.html">2.0.2</a>
+    <a class="version is-missing" href="../1.6.0/index.html">1.6.0</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/configuration.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Morphia 2.0 introduced a number of new ways to configure its behavior.
+These values are listed below:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Collection naming</p>
+</li>
+<li>
+<p>Property naming</p>
+</li>
+<li>
+<p>The discriminator key</p>
+</li>
+<li>
+<p>The discriminator value</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_collection_and_property_naming"><a class="anchor" href="#_collection_and_property_naming"></a>Collection and property naming</h3>
+<div class="paragraph">
+<p>Traditionally Morphia has used with the class&#8217;s "simple name" for the collection name if you choose to not manually map the name of an entity&#8217;s collection.
+Similarly, an entity&#8217;s properties were named after the Java field name unless mapped otherwise with the
+<code>@Property</code> annotation.
+In 2.0, however, we define naming strategies.
+As of 2.0, the naming strategies supported out of the box are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>identity</code> This is the legacy behavior Morphia has always used.</p>
+</li>
+<li>
+<p><code>lower</code> This is simply the lower case form of the <code>identity</code> strategy.</p>
+</li>
+<li>
+<p><code>snake</code> This transforms element names in to their [snake case](<a href="https://en.wikipedia.org/wiki/Snake_case" class="bare">https://en.wikipedia.org/wiki/Snake_case</a>) versions.
+For those coming from a Python background or who work with Python developers regularly, this should look familiar.</p>
+</li>
+<li>
+<p><code>camel</code> This transforms element names in to their [camel case](<a href="https://en.wikipedia.org/wiki/Camel_case" class="bare">https://en.wikipedia.org/wiki/Camel_case</a>) versions.
+This is the form most java developers will be familiar with.</p>
+</li>
+<li>
+<p><code>kebab</code> This transforms element names in to their [kebab case](<a href="https://en.wikipedia.org/wiki/Kebab_case" class="bare">https://en.wikipedia.org/wiki/Kebab_case</a>) versions.
+This looks exactly like the <code>snake case</code> but with <code>-</code> instead of <code>_</code> so that it looks like it&#8217;s on a kebab skewer.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These strategies can all be access via the <code>NamingStrategy</code> class via their named methods.
+In the case where you have a custom naming strategy you&#8217;d like to employ, e.g., perhaps some hashing function to obscure element names, you can simply extend <code>NamingStrategy</code>
+yourself and implement whatever logic you might need.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_discriminator_keys_and_values"><a class="anchor" href="#_discriminator_keys_and_values"></a>Discriminator keys and values</h3>
+<div class="paragraph">
+<p>Morphia has long hard coded the choice of how to encode an entity&#8217;s type in to the resulting documents in the database using the
+<code>className</code> key and the simple name of the class.
+As of 2.0, you have a choice to change that if you&#8217;d like.
+The new default is to use
+<code>_t</code> as the discriminator property key.
+This was chosen in part because of its use in other systems and also for its brevity.
+By default, Morphia 2.0 stores the entity type unless you configure your types otherwise so saving space seemed prudent.</p>
+</div>
+<div class="paragraph">
+<p>Similar to how collections and fields have a naming strategy, we can apply a global function to determine the discriminator values should we choose.
+The choices here are simpler:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>className()</code>/<code>lowerClassName()</code></p>
+</li>
+<li>
+<p><code>simpleName()</code>/<code>lowerSimpleName()</code></p>
+<div class="literalblock">
+<div class="content">
+<pre>These call all be accessed via their named methods on `DiscriminatorFunction` and just like the `NamingStrategy` cases if the provided
+ options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_old_versus_new"><a class="anchor" href="#_old_versus_new"></a>Old versus New</h3>
+<div class="paragraph">
+<p>Morphia can be configured in one of two ways: the legacy mode and the modern mode.</p>
+</div>
+<div class="sect3">
+<h4 id="_legacy"><a class="anchor" href="#_legacy"></a>Legacy</h4>
+<div class="paragraph">
+<p>We&#8217;ll cover the legacy mode first as it reflects how Morphia worked prior to 2.0.  <code>MapperOptions</code> drives the configuration and so this is where we&#8217;ll start.
+Prior to 2.0, you could simply create a <code>MapperOptions</code> instance directly.
+Starting with 2.0, you will need to use one of the factory methods.
+In this instance, you will want the <code>legacy()</code> method.
+Among other things, this will configure Morphia to the legacy implementation of the <code>Query</code> class.
+The <code>legacy()</code> builder currently configures the following settings:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>className</code> as the discriminator key</p>
+</li>
+<li>
+<p><code>className()</code> as the <code>DiscriminatorFunction</code></p>
+</li>
+<li>
+<p><code>identity()</code> as both the class and field name strategies</p>
+</li>
+<li>
+<p>Configures the legacy query implementation</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_modern"><a class="anchor" href="#_modern"></a>Modern</h4>
+<div class="paragraph">
+<p>One of the big goals for 2.0 was to modernize both the API and behavior of Morphia.
+As such, the <code>builder()</code> method returns a
+<code>Builder</code> that applies some updated defaults:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>_t</code> as the new discriminator key (replacing <code>className</code>)</p>
+</li>
+<li>
+<p><code>simpleName()</code> as the discriminator function used to determine these values</p>
+</li>
+<li>
+<p><code>camelCase()</code> is the default collection naming strategy</p>
+</li>
+<li>
+<p><code>identity()</code> remains the property naming strategy</p>
+</li>
+<li>
+<p>A new <code>Query</code> implementation is configured enabling the new <code>Filters</code> based querying and disabling some older, deprecated methods.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
