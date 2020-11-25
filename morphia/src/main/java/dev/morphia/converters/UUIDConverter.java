@@ -22,12 +22,19 @@ public class UUIDConverter extends TypeConverter implements SimpleValueConverter
     }
 
     @Override
-    public Object decode(final Class targetClass, final Object fromDBObject, final MappedField optionalExtraInfo) {
-        return fromDBObject == null ? null : UUID.fromString((String) fromDBObject);
+    public Object decode(Class targetClass, Object fromDBObject, MappedField optionalExtraInfo) {
+        if (fromDBObject == null || fromDBObject instanceof UUID) {
+            return fromDBObject;
+        } /*else if (fromDBObject instanceof Binary) {
+            mapper.
+            Binary binary = (Binary) fromDBObject;
+            return UuidHelper.decodeBinaryToUuid(binary.getData(), binary.getType(), getMapper().getOptions().getUU);;
+        }*/
+        return UUID.fromString((String) fromDBObject);
     }
 
     @Override
-    public Object encode(final Object value, final MappedField optionalExtraInfo) {
+    public Object encode(Object value, MappedField optionalExtraInfo) {
         return value == null ? null : value.toString();
     }
 }

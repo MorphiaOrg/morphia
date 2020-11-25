@@ -35,7 +35,7 @@ public class DefaultConverters extends Converters {
      *
      * @param mapper the Mapper to use
      */
-    public DefaultConverters(final Mapper mapper) {
+    public DefaultConverters(Mapper mapper) {
         super(mapper);
         addConverter(new IdentityConverter(DBObject.class, BasicDBObject.class));
         addConverter(new EnumSetConverter());
@@ -62,6 +62,7 @@ public class DefaultConverters extends Converters {
         addConverter(new BigDecimalConverter());
         addConverter(new CurrencyConverter());
         addConverter(new ReferenceConverter(mapper));
+        addConverter(new UUIDConverter());
 
         // Converters for Geo entities
         addConverter(new GeometryShapeConverter.PointConverter());
@@ -85,7 +86,7 @@ public class DefaultConverters extends Converters {
     }
 
     @Override
-    protected TypeConverter getEncoder(final Class c) {
+    protected TypeConverter getEncoder(Class c) {
         TypeConverter encoder = super.getEncoder(c);
 
         if (encoder == null && identityConverter.canHandle(c)) {
@@ -95,7 +96,7 @@ public class DefaultConverters extends Converters {
     }
 
     @Override
-    protected TypeConverter getEncoder(final Object val, final MappedField mf) {
+    protected TypeConverter getEncoder(Object val, MappedField mf) {
         if (serializedConverter.canHandle(mf)) {
             return serializedConverter;
         }
