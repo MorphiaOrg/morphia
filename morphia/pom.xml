@@ -59,7 +59,7 @@
                 </executions>
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
-                    <javadocUrl>https://morphia.dev/1.5.8/javadoc/</javadocUrl>
+                    <javadocUrl>https://morphia.dev/morphia/1.6/javadoc/index.html</javadocUrl>
                 </configuration>
             </plugin>
             <plugin>
@@ -255,7 +255,6 @@
                         </executions>
                         <configuration>
                             <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                            <oldVersion>1.4.1</oldVersion>
                             <analysisConfigurationFiles>
                                 <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
                             </analysisConfigurationFiles>
