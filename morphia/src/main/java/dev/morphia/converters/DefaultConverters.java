@@ -62,7 +62,6 @@ public class DefaultConverters extends Converters {
         addConverter(new BigDecimalConverter());
         addConverter(new CurrencyConverter());
         addConverter(new ReferenceConverter(mapper));
-        addConverter(new UUIDConverter());
 
         // Converters for Geo entities
         addConverter(new GeometryShapeConverter.PointConverter());
