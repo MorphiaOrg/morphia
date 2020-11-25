@@ -19,5 +19,5 @@ extensions-config:
   - path: '@djencks/antora-javadoc'
     config:
       sources:
-        - url: ./dev.javadoc.jar
+        - url: https://oss.sonatype.org/service/local/artifact/maven/content?r=snapshots&g=dev.morphia.morphia&a=morphia-core&v=2.2.0-SNAPSHOT&c=javadoc
           module: javadoc
