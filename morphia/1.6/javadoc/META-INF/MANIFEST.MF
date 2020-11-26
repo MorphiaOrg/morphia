@@ -191,9 +191,9 @@
 </div>
     <article class="javadoc">
         Manifest-Version: 1.0
-Created-By: Apache Maven 3.6.1
-Built-By: evanchooly
-Build-Jdk: 11.0.5
+Created-By: Apache Maven 3.5.4
+Built-By: jenkins
+Build-Jdk: 11.0.6
 
 
     </article>
