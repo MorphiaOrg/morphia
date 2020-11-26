@@ -10,11 +10,11 @@ asciidoc:
     branch: 1.6.x
     groupId: dev.morphia.morphia
     artifactId: core
-    version: 1.6.0
+    version: 1.6.1
     docsRef: http://docs.mongodb.org/manual
     srcRef: https://github.com/MorphiaOrg/morphia/blob/1.6.x
 
 javadoc:
   sources:
-    - url: https://repo1.maven.org/maven2/dev/morphia/morphia/core/1.6.0/core-1.6.0-javadoc.jar
+    - url: https://repo1.maven.org/maven2/dev/morphia/morphia/core/1.6.0/core-1.6.1-javadoc.jar
       module: javadoc
