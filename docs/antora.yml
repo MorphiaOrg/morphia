@@ -13,10 +13,3 @@ asciidoc:
     version: 1.6.1
     docsRef: http://docs.mongodb.org/manual
     srcRef: https://github.com/MorphiaOrg/morphia/blob/1.6.x
-
-extensions-config:
-  - path: '@djencks/antora-javadoc'
-    config:
-      sources:
-        - url: https://repo1.maven.org/maven2/dev/morphia/morphia/core/1.6.1/core-1.6.1-javadoc.jar
-          module: javadoc
