@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Getting Started :: Morphia Docs</title>
     <meta name="generator" content="Antora 2.3.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -75,8 +75,8 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="getting-started.html">Getting Started</a>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="index.html">Getting Started</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="quick-tour.html">Quick Tour</a>
@@ -188,6 +188,10 @@
 <button class="nav-toggle"></button>
   <a href="../../landing/index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Morphia</a></li>
+    <li><a href="index.html">Getting Started</a></li>
+  </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.1</button>
@@ -202,27 +206,76 @@
   </div>
   <div class="content">
 <article class="doc">
-<div class="sect1">
-<h2 id="_morphia_documentation"><a class="anchor" href="#_morphia_documentation"></a>Morphia Documentation</h2>
-<div class="sectionbody">
+<h1 class="page">Getting Started</h1>
 <div class="paragraph">
-<p>Morphia is built upon the
-<a href="https://github.com/mongodb/mongo-java-driver/">MongoDB Java Driver</a>.
-For reference documentation please see the driver documentation.</p>
+<p>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.
+To use Morphia using either build tool, you will need to update your build configurations with the following information.</p>
 </div>
-<div class="sect2">
-<h3 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
+        &lt;artifactId&gt;morphia-core&lt;/artifactId&gt;
+        &lt;version&gt;2.1.0&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>The <a href="getting-started.html" class="page">Getting Started</a> guide contains installation instructions and a simple tutorial to get up and running quickly.</p>
+<p>If you want to use a <code>-SNAPSHOT</code> build you will need to add the appropriate repository information to you pom:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;sonatype-snapshots&lt;/id&gt;
+        &lt;name&gt;Sontatype Snapshots&lt;/name&gt;
+        &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+        &lt;snapshots&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/snapshots&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_issues_and_support"><a class="anchor" href="#_issues_and_support"></a>Issues and support</h3>
 <div class="paragraph">
-<p>Please check <a href="issues-help.html" class="page">here</a> if you find an issue or need help.</p>
+<p>Gradle users can use the following dependency declaration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
+    compile 'dev.morphia.morphia:morphia-core:2.1.0'
+}</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>And, of course, to use <code>-SNAPSHOT</code> builds, the additional repository will be needed:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">repositories {
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Morphia 2.0 requires Java 11 or greater.
+Morphia has been tested on mongodb servers as old as 3.6.15 up through the most recent builds.
+Morphia will likely work on older servers versions but those remain untested and no guarantees are made.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
