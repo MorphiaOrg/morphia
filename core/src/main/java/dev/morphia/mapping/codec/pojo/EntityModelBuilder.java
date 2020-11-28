@@ -77,7 +77,9 @@ public class EntityModelBuilder {
         List<Class<?>> list = new ArrayList<>(List.of(type));
         list.addAll(classes);
         for (Class<?> klass : list) {
-            processFields(klass, parameterization);
+            if (!klass.getPackageName().startsWith("java")) {
+                processFields(klass, parameterization);
+            }
         }
     }
 
@@ -126,7 +128,7 @@ public class EntityModelBuilder {
 
     private Set<Class<?>> findParentClasses(Class<?> type) {
         Set<Class<?>> classes = new LinkedHashSet<>();
-        while (type != null && !type.isEnum() && !type.equals(Object.class) && !type.getPackageName().startsWith("java")) {
+        while (type != null && !type.isEnum() && !type.equals(Object.class)) {
             classes.add(type);
             annotations.addAll(Set.of(type.getAnnotations()));
             type = type.getSuperclass();
@@ -404,7 +406,7 @@ public class EntityModelBuilder {
                     int peek = index + 1;
                     while (entry.getValue() instanceof TypeVariable) {
                         TypeVariable<?> typeVariable = (TypeVariable<?>) entry.getValue();
-                        Map<String, Type> next = parameters.get(peek);
+                        Map<String, Type> next = parameters.get(peek++);
                         entry.setValue(next.get(typeVariable.getName()));
                     }
                 }
