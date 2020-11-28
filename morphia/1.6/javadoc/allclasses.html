@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+    <link rel="stylesheet" href="../../../_/css/javadoc.css">
+    <script async type="text/javascript" src="./module-search-index.js"></script>
+    <script async type="text/javascript" src="./package-search-index.js"></script>
+    <script async type="text/javascript" src="./type-search-index.js"></script>
+    <script async type="text/javascript" src="./member-search-index.js"></script>
+    <script async type="text/javascript" src="./tag-search-index.js"></script>
+    <script type="text/javascript" src="../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
+    <script type="text/javascript" src="../../../_/js/vendor/javadoc.js"></script>
+    <script type="text/javascript" src="../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="1.6">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../getting-started.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../migration.html">Migrating to 2.0</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../querying.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Javadoc</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../jrebel.html">JRebel</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../validationExtension.html">Validation Extension</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">1.6</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../../critter/4.1/index.html">4.1-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../../critter/4.0/index.html">4.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../2.2/index.html">2.2-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../2.1/index.html">2.1</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0/index.html">2.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">1.6</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main>
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
+  <div class="version-menu">
+    <a class="version" href="../../2.2/javadoc/allclasses.html">2.2-SNAPSHOT</a>
+    <a class="version" href="../../2.1/javadoc/allclasses.html">2.1</a>
+    <a class="version" href="../../2.0/javadoc/allclasses.html">2.0</a>
+    <a class="version is-current" href="allclasses.html">1.6</a>
+  </div>
+</div>
+</div>
+    <article class="javadoc">
+        
+<h1 class="bar">All&#xA0;Classes</h1>
+<main role="main" class="indexContainer">
+<ul>
+<li><a href="dev/morphia/query/AbstractCriteria.html" title="class in dev.morphia.query">AbstractCriteria</a></li>
+<li><a href="dev/morphia/AbstractEntityInterceptor.html" title="class in dev.morphia">AbstractEntityInterceptor</a></li>
+<li><a href="dev/morphia/query/AbstractQueryFactory.html" title="class in dev.morphia.query">AbstractQueryFactory</a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/AbstractReference.html" title="class in dev.morphia.mapping.lazy.proxy">AbstractReference</a></li>
+<li><a href="dev/morphia/aggregation/Accumulator.html" title="class in dev.morphia.aggregation">Accumulator</a></li>
+<li><a href="dev/morphia/AdvancedDatastore.html" title="interface in dev.morphia"><span class="interfaceName">AdvancedDatastore</span></a></li>
+<li><a href="dev/morphia/aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation"><span class="interfaceName">AggregationPipeline</span></a></li>
+<li><a href="dev/morphia/aggregation/AggregationPipelineImpl.html" title="class in dev.morphia.aggregation">AggregationPipelineImpl</a></li>
+<li><a href="dev/morphia/query/validation/AllOperationValidator.html" title="class in dev.morphia.query.validation">AllOperationValidator</a></li>
+<li><a href="dev/morphia/annotations/AlsoLoad.html" title="annotation in dev.morphia.annotations">AlsoLoad</a></li>
+<li><a href="dev/morphia/query/ArraySlice.html" title="class in dev.morphia.query">ArraySlice</a></li>
+<li><a href="dev/morphia/AuthenticationException.html" title="class in dev.morphia">AuthenticationException</a></li>
+<li><a href="dev/morphia/dao/BasicDAO.html" title="class in dev.morphia.dao">BasicDAO</a></li>
+<li><a href="dev/morphia/converters/BigDecimalConverter.html" title="class in dev.morphia.converters">BigDecimalConverter</a></li>
+<li><a href="dev/morphia/converters/BooleanConverter.html" title="class in dev.morphia.converters">BooleanConverter</a></li>
+<li><a href="dev/morphia/query/BucketAutoOptions.html" title="class in dev.morphia.query">BucketAutoOptions</a></li>
+<li><a href="dev/morphia/query/BucketAutoOptions.Granularity.html" title="enum in dev.morphia.query">BucketAutoOptions.Granularity</a></li>
+<li><a href="dev/morphia/query/BucketOptions.html" title="class in dev.morphia.query">BucketOptions</a></li>
+<li><a href="dev/morphia/converters/ByteConverter.html" title="class in dev.morphia.converters">ByteConverter</a></li>
+<li><a href="dev/morphia/annotations/CappedAt.html" title="annotation in dev.morphia.annotations">CappedAt</a></li>
+<li><a href="dev/morphia/mapping/lazy/CGLibLazyProxyFactory.html" title="class in dev.morphia.mapping.lazy">CGLibLazyProxyFactory</a></li>
+<li><a href="dev/morphia/converters/CharacterConverter.html" title="class in dev.morphia.converters">CharacterConverter</a></li>
+<li><a href="dev/morphia/converters/CharArrayConverter.html" title="class in dev.morphia.converters">CharArrayConverter</a></li>
+<li><a href="dev/morphia/mapping/validation/ClassConstraint.html" title="interface in dev.morphia.mapping.validation"><span class="interfaceName">ClassConstraint</span></a></li>
+<li><a href="dev/morphia/converters/ClassConverter.html" title="class in dev.morphia.converters">ClassConverter</a></li>
+<li><a href="dev/morphia/annotations/Collation.html" title="annotation in dev.morphia.annotations">Collation</a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/CollectionObjectReference.html" title="class in dev.morphia.mapping.lazy.proxy">CollectionObjectReference</a></li>
+<li><a href="dev/morphia/mapping/experimental/CollectionReference.html" title="class in dev.morphia.mapping.experimental">CollectionReference</a></li>
+<li><a href="dev/morphia/mapping/validation/ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a></li>
+<li><a href="dev/morphia/mapping/validation/ConstraintViolation.Level.html" title="enum in dev.morphia.mapping.validation">ConstraintViolation.Level</a></li>
+<li><a href="dev/morphia/mapping/validation/ConstraintViolationException.html" title="class in dev.morphia.mapping.validation">ConstraintViolationException</a></li>
+<li><a href="dev/morphia/annotations/ConstructorArgs.html" title="annotation in dev.morphia.annotations">ConstructorArgs</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/ContainsEmbeddedWithId.html" title="class in dev.morphia.mapping.validation.classrules">ContainsEmbeddedWithId</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/ContradictingFieldAnnotation.html" title="class in dev.morphia.mapping.validation.fieldrules">ContradictingFieldAnnotation</a></li>
+<li><a href="dev/morphia/converters/ConverterException.html" title="class in dev.morphia.converters">ConverterException</a></li>
+<li><a href="dev/morphia/converters/ConverterNotFoundException.html" title="class in dev.morphia.converters">ConverterNotFoundException</a></li>
+<li><a href="dev/morphia/annotations/Converters.html" title="annotation in dev.morphia.annotations">Converters</a></li>
+<li><a href="dev/morphia/converters/Converters.html" title="class in dev.morphia.converters">Converters</a></li>
+<li><a href="dev/morphia/geo/CoordinateReferenceSystem.html" title="class in dev.morphia.geo">CoordinateReferenceSystem</a></li>
+<li><a href="dev/morphia/geo/CoordinateReferenceSystemType.html" title="enum in dev.morphia.geo">CoordinateReferenceSystemType</a></li>
+<li><a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></li>
+<li><a href="dev/morphia/query/Criteria.html" title="interface in dev.morphia.query"><span class="interfaceName">Criteria</span></a></li>
+<li><a href="dev/morphia/query/CriteriaContainer.html" title="interface in dev.morphia.query"><span class="interfaceName">CriteriaContainer</span></a></li>
+<li><a href="dev/morphia/query/CriteriaContainerImpl.html" title="class in dev.morphia.query">CriteriaContainerImpl</a></li>
+<li><a href="dev/morphia/query/CriteriaJoin.html" title="enum in dev.morphia.query">CriteriaJoin</a></li>
+<li><a href="dev/morphia/converters/CurrencyConverter.html" title="class in dev.morphia.converters">CurrencyConverter</a></li>
+<li><a href="dev/morphia/converters/CustomConverters.html" title="class in dev.morphia.converters">CustomConverters</a></li>
+<li><a href="dev/morphia/mapping/CustomMapper.html" title="interface in dev.morphia.mapping"><span class="interfaceName">CustomMapper</span></a></li>
+<li><a href="dev/morphia/DAO.html" title="class in dev.morphia">DAO</a></li>
+<li><a href="dev/morphia/dao/DAO.html" title="interface in dev.morphia.dao"><span class="interfaceName">DAO</span></a></li>
+<li><a href="dev/morphia/Datastore.html" title="interface in dev.morphia"><span class="interfaceName">Datastore</span></a></li>
+<li><a href="dev/morphia/DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></li>
+<li><a href="dev/morphia/mapping/lazy/DatastoreProvider.html" title="interface in dev.morphia.mapping.lazy"><span class="interfaceName">DatastoreProvider</span></a></li>
+<li><a href="dev/morphia/converters/DateConverter.html" title="class in dev.morphia.converters">DateConverter</a></li>
+<li><a href="dev/morphia/mapping/DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a></li>
+<li><a href="dev/morphia/converters/DefaultConverters.html" title="class in dev.morphia.converters">DefaultConverters</a></li>
+<li><a href="dev/morphia/mapping/DefaultCreator.html" title="class in dev.morphia.mapping">DefaultCreator</a></li>
+<li><a href="dev/morphia/mapping/cache/DefaultEntityCache.html" title="class in dev.morphia.mapping.cache">DefaultEntityCache</a></li>
+<li><a href="dev/morphia/mapping/cache/DefaultEntityCacheFactory.html" title="class in dev.morphia.mapping.cache">DefaultEntityCacheFactory</a></li>
+<li><a href="relocated/morphia/org/apache/commons/collections/DefaultMapEntry.html" title="class in relocated.morphia.org.apache.commons.collections">DefaultMapEntry</a></li>
+<li><a href="dev/morphia/query/DefaultQueryFactory.html" title="class in dev.morphia.query">DefaultQueryFactory</a></li>
+<li><a href="dev/morphia/query/validation/DefaultTypeValidator.html" title="class in dev.morphia.query.validation">DefaultTypeValidator</a></li>
+<li><a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></li>
+<li><a href="dev/morphia/converters/DoubleConverter.html" title="class in dev.morphia.converters">DoubleConverter</a></li>
+<li><a href="dev/morphia/query/validation/DoubleTypeValidator.html" title="class in dev.morphia.query.validation">DoubleTypeValidator</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/DuplicatedAttributeNames.html" title="class in dev.morphia.mapping.validation.classrules">DuplicatedAttributeNames</a></li>
+<li><a href="dev/morphia/annotations/Embedded.html" title="annotation in dev.morphia.annotations">Embedded</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/EmbeddedAndId.html" title="class in dev.morphia.mapping.validation.classrules">EmbeddedAndId</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/EmbeddedAndValue.html" title="class in dev.morphia.mapping.validation.classrules">EmbeddedAndValue</a></li>
+<li><a href="dev/morphia/annotations/Entity.html" title="annotation in dev.morphia.annotations">Entity</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/EntityAndEmbed.html" title="class in dev.morphia.mapping.validation.classrules">EntityAndEmbed</a></li>
+<li><a href="dev/morphia/query/validation/EntityAnnotatedValueValidator.html" title="class in dev.morphia.query.validation">EntityAnnotatedValueValidator</a></li>
+<li><a href="dev/morphia/mapping/cache/EntityCache.html" title="interface in dev.morphia.mapping.cache"><span class="interfaceName">EntityCache</span></a></li>
+<li><a href="dev/morphia/mapping/cache/EntityCacheFactory.html" title="interface in dev.morphia.mapping.cache"><span class="interfaceName">EntityCacheFactory</span></a></li>
+<li><a href="dev/morphia/mapping/cache/EntityCacheStatistics.html" title="class in dev.morphia.mapping.cache">EntityCacheStatistics</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/EntityCannotBeMapOrIterable.html" title="class in dev.morphia.mapping.validation.classrules">EntityCannotBeMapOrIterable</a></li>
+<li><a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia"><span class="interfaceName">EntityInterceptor</span></a></li>
+<li><a href="dev/morphia/annotations/EntityListeners.html" title="annotation in dev.morphia.annotations">EntityListeners</a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/EntityObjectReference.html" title="class in dev.morphia.mapping.lazy.proxy">EntityObjectReference</a></li>
+<li><a href="dev/morphia/query/validation/EntityTypeAndIdValueValidator.html" title="class in dev.morphia.query.validation">EntityTypeAndIdValueValidator</a></li>
+<li><a href="dev/morphia/converters/EnumConverter.html" title="class in dev.morphia.converters">EnumConverter</a></li>
+<li><a href="dev/morphia/converters/EnumSetConverter.html" title="class in dev.morphia.converters">EnumSetConverter</a></li>
+<li><a href="dev/morphia/mapping/EphemeralMappedField.html" title="class in dev.morphia.mapping">EphemeralMappedField</a></li>
+<li><a href="dev/morphia/query/validation/ExistsOperationValidator.html" title="class in dev.morphia.query.validation">ExistsOperationValidator</a></li>
+<li><a href="dev/morphia/logging/jdk/FasterJDKLogger.html" title="class in dev.morphia.logging.jdk">FasterJDKLogger</a></li>
+<li><a href="dev/morphia/logging/jdk/FastestJDKLogger.html" title="class in dev.morphia.logging.jdk">FastestJDKLogger</a></li>
+<li><a href="dev/morphia/annotations/Field.html" title="annotation in dev.morphia.annotations">Field</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/FieldConstraint.html" title="class in dev.morphia.mapping.validation.fieldrules">FieldConstraint</a></li>
+<li><a href="dev/morphia/query/FieldEnd.html" title="interface in dev.morphia.query"><span class="interfaceName">FieldEnd</span></a></li>
+<li><a href="dev/morphia/query/FieldEndImpl.html" title="class in dev.morphia.query">FieldEndImpl</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/FieldEnumString.html" title="class in dev.morphia.mapping.validation.classrules">FieldEnumString</a></li>
+<li><a href="dev/morphia/query/FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a></li>
+<li><a href="dev/morphia/FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></li>
+<li><a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></li>
+<li><a href="dev/morphia/converters/FloatConverter.html" title="class in dev.morphia.converters">FloatConverter</a></li>
+<li><a href="dev/morphia/geo/GeoJson.html" title="class in dev.morphia.geo">GeoJson</a></li>
+<li><a href="dev/morphia/geo/GeoJsonType.html" title="enum in dev.morphia.geo">GeoJsonType</a></li>
+<li><a href="dev/morphia/geo/Geometry.html" title="interface in dev.morphia.geo"><span class="interfaceName">Geometry</span></a></li>
+<li><a href="dev/morphia/geo/GeometryCollection.html" title="class in dev.morphia.geo">GeometryCollection</a></li>
+<li><a href="dev/morphia/geo/GeometryConverter.html" title="class in dev.morphia.geo">GeometryConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryQueryConverter.html" title="class in dev.morphia.geo">GeometryQueryConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryShapeConverter.html" title="class in dev.morphia.geo">GeometryShapeConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryShapeConverter.LineStringConverter.html" title="class in dev.morphia.geo">GeometryShapeConverter.LineStringConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryShapeConverter.MultiLineStringConverter.html" title="class in dev.morphia.geo">GeometryShapeConverter.MultiLineStringConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryShapeConverter.MultiPointConverter.html" title="class in dev.morphia.geo">GeometryShapeConverter.MultiPointConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryShapeConverter.MultiPolygonConverter.html" title="class in dev.morphia.geo">GeometryShapeConverter.MultiPolygonConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryShapeConverter.PointConverter.html" title="class in dev.morphia.geo">GeometryShapeConverter.PointConverter</a></li>
+<li><a href="dev/morphia/geo/GeometryShapeConverter.PolygonConverter.html" title="class in dev.morphia.geo">GeometryShapeConverter.PolygonConverter</a></li>
+<li><a href="dev/morphia/aggregation/GeoNear.html" title="class in dev.morphia.aggregation">GeoNear</a></li>
+<li><a href="dev/morphia/aggregation/GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></li>
+<li><a href="dev/morphia/query/validation/GeoWithinOperationValidator.html" title="class in dev.morphia.query.validation">GeoWithinOperationValidator</a></li>
+<li><a href="dev/morphia/aggregation/Group.html" title="class in dev.morphia.aggregation">Group</a></li>
+<li><a href="dev/morphia/annotations/Id.html" title="annotation in dev.morphia.annotations">Id</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/IdDoesNotMix.html" title="class in dev.morphia.mapping.validation.fieldrules">IdDoesNotMix</a></li>
+<li><a href="dev/morphia/converters/IdentityConverter.html" title="class in dev.morphia.converters">IdentityConverter</a></li>
+<li><a href="dev/morphia/annotations/IdGetter.html" title="annotation in dev.morphia.annotations">IdGetter</a></li>
+<li><a href="dev/morphia/annotations/Index.html" title="annotation in dev.morphia.annotations">Index</a></li>
+<li><a href="dev/morphia/annotations/Indexed.html" title="annotation in dev.morphia.annotations">Indexed</a></li>
+<li><a href="dev/morphia/annotations/Indexes.html" title="annotation in dev.morphia.annotations">Indexes</a></li>
+<li><a href="dev/morphia/annotations/IndexOptions.html" title="annotation in dev.morphia.annotations">IndexOptions</a></li>
+<li><a href="dev/morphia/query/validation/InOperationValidator.html" title="class in dev.morphia.query.validation">InOperationValidator</a></li>
+<li><a href="dev/morphia/InsertOptions.html" title="class in dev.morphia">InsertOptions</a></li>
+<li><a href="dev/morphia/converters/InstantConverter.html" title="class in dev.morphia.converters">InstantConverter</a></li>
+<li><a href="dev/morphia/converters/IntegerConverter.html" title="class in dev.morphia.converters">IntegerConverter</a></li>
+<li><a href="dev/morphia/query/validation/IntegerTypeValidator.html" title="class in dev.morphia.query.validation">IntegerTypeValidator</a></li>
+<li><a href="dev/morphia/converters/IterableConverter.html" title="class in dev.morphia.converters">IterableConverter</a></li>
+<li><a href="dev/morphia/logging/jdk/JDKLogger.html" title="class in dev.morphia.logging.jdk">JDKLogger</a></li>
+<li><a href="dev/morphia/logging/jdk/JDKLoggerFactory.html" title="class in dev.morphia.logging.jdk">JDKLoggerFactory</a></li>
+<li><a href="dev/morphia/Key.html" title="class in dev.morphia">Key</a></li>
+<li><a href="dev/morphia/converters/KeyConverter.html" title="class in dev.morphia.converters">KeyConverter</a></li>
+<li><a href="dev/morphia/query/validation/KeyValueTypeValidator.html" title="class in dev.morphia.query.validation">KeyValueTypeValidator</a></li>
+<li><a href="dev/morphia/mapping/lazy/LazyFeatureDependencies.html" title="class in dev.morphia.mapping.lazy">LazyFeatureDependencies</a></li>
+<li><a href="dev/morphia/mapping/lazy/LazyProxyFactory.html" title="interface in dev.morphia.mapping.lazy"><span class="interfaceName">LazyProxyFactory</span></a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/LazyReferenceFetchingException.html" title="class in dev.morphia.mapping.lazy.proxy">LazyReferenceFetchingException</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/LazyReferenceMissingDependencies.html" title="class in dev.morphia.mapping.validation.fieldrules">LazyReferenceMissingDependencies</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/LazyReferenceOnArray.html" title="class in dev.morphia.mapping.validation.fieldrules">LazyReferenceOnArray</a></li>
+<li><a href="dev/morphia/geo/LineString.html" title="class in dev.morphia.geo">LineString</a></li>
+<li><a href="dev/morphia/query/validation/ListValueValidator.html" title="class in dev.morphia.query.validation">ListValueValidator</a></li>
+<li><a href="dev/morphia/converters/LocalDateConverter.html" title="class in dev.morphia.converters">LocalDateConverter</a></li>
+<li><a href="dev/morphia/converters/LocalDateTimeConverter.html" title="class in dev.morphia.converters">LocalDateTimeConverter</a></li>
+<li><a href="dev/morphia/converters/LocaleConverter.html" title="class in dev.morphia.converters">LocaleConverter</a></li>
+<li><a href="dev/morphia/converters/LocalTimeConverter.html" title="class in dev.morphia.converters">LocalTimeConverter</a></li>
+<li><a href="dev/morphia/logging/Logger.html" title="interface in dev.morphia.logging"><span class="interfaceName">Logger</span></a></li>
+<li><a href="dev/morphia/logging/LoggerFactory.html" title="interface in dev.morphia.logging"><span class="interfaceName">LoggerFactory</span></a></li>
+<li><a href="dev/morphia/logging/Logr.html" title="interface in dev.morphia.logging"><span class="interfaceName">Logr</span></a></li>
+<li><a href="dev/morphia/logging/LogrFactory.html" title="interface in dev.morphia.logging"><span class="interfaceName">LogrFactory</span></a></li>
+<li><a href="dev/morphia/converters/LongConverter.html" title="class in dev.morphia.converters">LongConverter</a></li>
+<li><a href="dev/morphia/query/validation/LongTypeValidator.html" title="class in dev.morphia.query.validation">LongTypeValidator</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/MapKeyDifferentFromString.html" title="class in dev.morphia.mapping.validation.fieldrules">MapKeyDifferentFromString</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/MapNotSerializable.html" title="class in dev.morphia.mapping.validation.fieldrules">MapNotSerializable</a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/MapObjectReference.html" title="class in dev.morphia.mapping.lazy.proxy">MapObjectReference</a></li>
+<li><a href="dev/morphia/converters/MapOfValuesConverter.html" title="class in dev.morphia.converters">MapOfValuesConverter</a></li>
+<li><a href="dev/morphia/mapping/MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a></li>
+<li><a href="dev/morphia/mapping/MappedField.html" title="class in dev.morphia.mapping">MappedField</a></li>
+<li><a href="dev/morphia/mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a></li>
+<li><a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></li>
+<li><a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></li>
+<li><a href="dev/morphia/mapping/MappingException.html" title="class in dev.morphia.mapping">MappingException</a></li>
+<li><a href="dev/morphia/query/internal/MappingIterable.html" title="class in dev.morphia.query.internal">MappingIterable</a></li>
+<li><a href="dev/morphia/mapping/validation/MappingValidator.html" title="class in dev.morphia.mapping.validation">MappingValidator</a></li>
+<li><a href="dev/morphia/MapReduceOptions.html" title="class in dev.morphia">MapReduceOptions</a></li>
+<li><a href="dev/morphia/MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a></li>
+<li><a href="dev/morphia/MapreduceType.html" title="enum in dev.morphia">MapreduceType</a></li>
+<li><a href="dev/morphia/mapping/experimental/MapReference.html" title="class in dev.morphia.mapping.experimental">MapReference</a></li>
+<li><a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></li>
+<li><a href="dev/morphia/query/Meta.MetaDataKeyword.html" title="enum in dev.morphia.query">Meta.MetaDataKeyword</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/MisplacedProperty.html" title="class in dev.morphia.mapping.validation.fieldrules">MisplacedProperty</a></li>
+<li><a href="dev/morphia/query/validation/ModOperationValidator.html" title="class in dev.morphia.query.validation">ModOperationValidator</a></li>
+<li><a href="dev/morphia/Morphia.html" title="class in dev.morphia">Morphia</a></li>
+<li><a href="dev/morphia/query/internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a></li>
+<li><a href="dev/morphia/query/MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a></li>
+<li><a href="dev/morphia/query/internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a></li>
+<li><a href="dev/morphia/query/MorphiaKeyIterator.html" title="class in dev.morphia.query">MorphiaKeyIterator</a></li>
+<li><a href="dev/morphia/logging/MorphiaLoggerFactory.html" title="class in dev.morphia.logging">MorphiaLoggerFactory</a></li>
+<li><a href="dev/morphia/mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a></li>
+<li><a href="dev/morphia/internal/MorphiaUtils.html" title="class in dev.morphia.internal">MorphiaUtils</a></li>
+<li><a href="dev/morphia/geo/MultiLineString.html" title="class in dev.morphia.geo">MultiLineString</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/MultipleId.html" title="class in dev.morphia.mapping.validation.classrules">MultipleId</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/MultipleVersions.html" title="class in dev.morphia.mapping.validation.classrules">MultipleVersions</a></li>
+<li><a href="dev/morphia/geo/MultiPoint.html" title="class in dev.morphia.geo">MultiPoint</a></li>
+<li><a href="dev/morphia/geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a></li>
+<li><a href="dev/morphia/geo/NamedCoordinateReferenceSystem.html" title="class in dev.morphia.geo">NamedCoordinateReferenceSystem</a></li>
+<li><a href="dev/morphia/geo/NamedCoordinateReferenceSystemConverter.html" title="class in dev.morphia.geo">NamedCoordinateReferenceSystemConverter</a></li>
+<li><a href="dev/morphia/mapping/validation/classrules/NoId.html" title="class in dev.morphia.mapping.validation.classrules">NoId</a></li>
+<li><a href="dev/morphia/query/validation/NotInOperationValidator.html" title="class in dev.morphia.query.validation">NotInOperationValidator</a></li>
+<li><a href="dev/morphia/annotations/NotSaved.html" title="annotation in dev.morphia.annotations">NotSaved</a></li>
+<li><a href="dev/morphia/ObjectFactory.html" title="interface in dev.morphia"><span class="interfaceName">ObjectFactory</span></a></li>
+<li><a href="dev/morphia/converters/ObjectIdConverter.html" title="class in dev.morphia.converters">ObjectIdConverter</a></li>
+<li><a href="dev/morphia/query/validation/OperationValidator.html" title="class in dev.morphia.query.validation">OperationValidator</a></li>
+<li><a href="dev/morphia/internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a></li>
+<li><a href="dev/morphia/query/validation/PatternValueValidator.html" title="class in dev.morphia.query.validation">PatternValueValidator</a></li>
+<li><a href="dev/morphia/geo/Point.html" title="class in dev.morphia.geo">Point</a></li>
+<li><a href="dev/morphia/geo/PointBuilder.html" title="class in dev.morphia.geo">PointBuilder</a></li>
+<li><a href="dev/morphia/geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a></li>
+<li><a href="dev/morphia/annotations/Polymorphic.html" title="annotation in dev.morphia.annotations">Polymorphic</a></li>
+<li><a href="dev/morphia/annotations/PostLoad.html" title="annotation in dev.morphia.annotations">PostLoad</a></li>
+<li><a href="dev/morphia/annotations/PostPersist.html" title="annotation in dev.morphia.annotations">PostPersist</a></li>
+<li><a href="dev/morphia/annotations/PreLoad.html" title="annotation in dev.morphia.annotations">PreLoad</a></li>
+<li><a href="dev/morphia/annotations/PrePersist.html" title="annotation in dev.morphia.annotations">PrePersist</a></li>
+<li><a href="dev/morphia/annotations/PreSave.html" title="annotation in dev.morphia.annotations">PreSave</a></li>
+<li><a href="dev/morphia/aggregation/Projection.html" title="class in dev.morphia.aggregation">Projection</a></li>
+<li><a href="dev/morphia/annotations/Property.html" title="annotation in dev.morphia.annotations">Property</a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/ProxiedEntityReference.html" title="interface in dev.morphia.mapping.lazy.proxy"><span class="interfaceName">ProxiedEntityReference</span></a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/ProxiedEntityReferenceList.html" title="interface in dev.morphia.mapping.lazy.proxy"><span class="interfaceName">ProxiedEntityReferenceList</span></a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/ProxiedEntityReferenceMap.html" title="interface in dev.morphia.mapping.lazy.proxy"><span class="interfaceName">ProxiedEntityReferenceMap</span></a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/ProxiedReference.html" title="interface in dev.morphia.mapping.lazy.proxy"><span class="interfaceName">ProxiedReference</span></a></li>
+<li><a href="dev/morphia/mapping/lazy/proxy/ProxyHelper.html" title="class in dev.morphia.mapping.lazy.proxy">ProxyHelper</a></li>
+<li><a href="dev/morphia/query/PushOptions.html" title="class in dev.morphia.query">PushOptions</a></li>
+<li><a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query"><span class="interfaceName">Query</span></a></li>
+<li><a href="dev/morphia/query/QueryException.html" title="class in dev.morphia.query">QueryException</a></li>
+<li><a href="dev/morphia/query/QueryFactory.html" title="interface in dev.morphia.query"><span class="interfaceName">QueryFactory</span></a></li>
+<li><a href="dev/morphia/query/QueryImpl.html" title="class in dev.morphia.query">QueryImpl</a></li>
+<li><a href="dev/morphia/query/QueryResults.html" title="interface in dev.morphia.query"><span class="interfaceName">QueryResults</span></a></li>
+<li><a href="dev/morphia/annotations/Reference.html" title="annotation in dev.morphia.annotations">Reference</a></li>
+<li><a href="dev/morphia/converters/experimental/ReferenceConverter.html" title="class in dev.morphia.converters.experimental">ReferenceConverter</a></li>
+<li><a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html" title="class in relocated.morphia.org.apache.commons.collections">ReferenceMap</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/ReferenceToUnidentifiable.html" title="class in dev.morphia.mapping.validation.fieldrules">ReferenceToUnidentifiable</a></li>
+<li><a href="dev/morphia/annotations/Serialized.html" title="annotation in dev.morphia.annotations">Serialized</a></li>
+<li><a href="dev/morphia/converters/SerializedObjectConverter.html" title="class in dev.morphia.converters">SerializedObjectConverter</a></li>
+<li><a href="dev/morphia/mapping/Serializer.html" title="class in dev.morphia.mapping">Serializer</a></li>
+<li><a href="dev/morphia/query/Shape.html" title="class in dev.morphia.query">Shape</a></li>
+<li><a href="dev/morphia/query/Shape.Point.html" title="class in dev.morphia.query">Shape.Point</a></li>
+<li><a href="dev/morphia/converters/ShortConverter.html" title="class in dev.morphia.converters">ShortConverter</a></li>
+<li><a href="dev/morphia/logging/jdk/ShortFormatter.html" title="class in dev.morphia.logging.jdk">ShortFormatter</a></li>
+<li><a href="dev/morphia/logging/SilentLogger.html" title="class in dev.morphia.logging">SilentLogger</a></li>
+<li><a href="dev/morphia/converters/SimpleValueConverter.html" title="interface in dev.morphia.converters"><span class="interfaceName">SimpleValueConverter</span></a></li>
+<li><a href="dev/morphia/mapping/experimental/SingleReference.html" title="class in dev.morphia.mapping.experimental">SingleReference</a></li>
+<li><a href="dev/morphia/query/validation/SizeOperationValidator.html" title="class in dev.morphia.query.validation">SizeOperationValidator</a></li>
+<li><a href="dev/morphia/aggregation/Sort.html" title="class in dev.morphia.aggregation">Sort</a></li>
+<li><a href="dev/morphia/query/Sort.html" title="class in dev.morphia.query">Sort</a></li>
+<li><a href="dev/morphia/converters/StringConverter.html" title="class in dev.morphia.converters">StringConverter</a></li>
+<li><a href="dev/morphia/annotations/Text.html" title="annotation in dev.morphia.annotations">Text</a></li>
+<li><a href="dev/morphia/converters/TimestampConverter.html" title="class in dev.morphia.converters">TimestampConverter</a></li>
+<li><a href="dev/morphia/annotations/Transient.html" title="annotation in dev.morphia.annotations">Transient</a></li>
+<li><a href="dev/morphia/query/Type.html" title="enum in dev.morphia.query">Type</a></li>
+<li><a href="dev/morphia/converters/TypeConverter.html" title="class in dev.morphia.converters">TypeConverter</a></li>
+<li><a href="dev/morphia/query/validation/TypeValidator.html" title="class in dev.morphia.query.validation">TypeValidator</a></li>
+<li><a href="dev/morphia/query/UpdateException.html" title="class in dev.morphia.query">UpdateException</a></li>
+<li><a href="dev/morphia/query/UpdateOperations.html" title="interface in dev.morphia.query"><span class="interfaceName">UpdateOperations</span></a></li>
+<li><a href="dev/morphia/query/UpdateOperator.html" title="enum in dev.morphia.query">UpdateOperator</a></li>
+<li><a href="dev/morphia/query/UpdateOpsImpl.html" title="class in dev.morphia.query">UpdateOpsImpl</a></li>
+<li><a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></li>
+<li><a href="dev/morphia/query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></li>
+<li><a href="dev/morphia/converters/URIConverter.html" title="class in dev.morphia.converters">URIConverter</a></li>
+<li><a href="dev/morphia/converters/UUIDConverter.html" title="class in dev.morphia.converters">UUIDConverter</a></li>
+<li><a href="dev/morphia/annotations/Validation.html" title="annotation in dev.morphia.annotations">Validation</a></li>
+<li><a href="dev/morphia/ValidationBuilder.html" title="class in dev.morphia">ValidationBuilder</a></li>
+<li><a href="dev/morphia/query/ValidationException.html" title="class in dev.morphia.query">ValidationException</a></li>
+<li><a href="dev/morphia/query/validation/ValidationFailure.html" title="class in dev.morphia.query.validation">ValidationFailure</a></li>
+<li><a href="dev/morphia/query/validation/Validator.html" title="interface in dev.morphia.query.validation"><span class="interfaceName">Validator</span></a></li>
+<li><a href="dev/morphia/query/validation/ValueValidator.html" title="class in dev.morphia.query.validation">ValueValidator</a></li>
+<li><a href="dev/morphia/annotations/Version.html" title="annotation in dev.morphia.annotations">Version</a></li>
+<li><a href="dev/morphia/mapping/validation/fieldrules/VersionMisuse.html" title="class in dev.morphia.mapping.validation.fieldrules">VersionMisuse</a></li>
+<li><a href="dev/morphia/query/WhereCriteria.html" title="class in dev.morphia.query">WhereCriteria</a></li>
+</ul>
+</main>
+
+
+
+    </article>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

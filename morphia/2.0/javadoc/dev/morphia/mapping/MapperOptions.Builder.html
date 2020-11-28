@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
+    <script async type="text/javascript" src="../../../module-search-index.js"></script>
+    <script async type="text/javascript" src="../../../package-search-index.js"></script>
+    <script async type="text/javascript" src="../../../type-search-index.js"></script>
+    <script async type="text/javascript" src="../../../member-search-index.js"></script>
+    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
+    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
+    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
+    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../../../../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../../../../../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="2.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../getting-started.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../migration.html">Migrating to 2.0</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../querying.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../querying-old.html">Querying (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../textSearch.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../updating-old.html">Updating (Deprecated)</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">2.0</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../../../../../critter/4.1/index.html">4.1-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../../../../../critter/4.0/index.html">4.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../../../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../../../../2.2/index.html">2.2-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../../../../2.1/index.html">2.1</a>
+        </li>
+        <li class="version is-current">
+          <a href="../../../../index.html">2.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../../../1.6/index.html">1.6</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main>
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../../../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.0</button>
+  <div class="version-menu">
+    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/mapping/MapperOptions.Builder.html">2.2-SNAPSHOT</a>
+    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/mapping/MapperOptions.Builder.html">2.1</a>
+    <a class="version is-current" href="MapperOptions.Builder.html">2.0</a>
+    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/mapping/MapperOptions.Builder.html">1.6</a>
+  </div>
+</div>
+</div>
+    <article class="javadoc">
+        
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="MapperOptions.Builder (Morphia)";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":42,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":42,"i18":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
+var pathtoroot = "../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<header role="banner">
+<nav role="navigation">
+<div class="fixedNav">
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a id="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../index.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/MapperOptions.Builder.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&#xA0;</li>
+<li>Nested&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a id="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+</div>
+<div class="navPadding">&#xA0;</div>
+<script type="text/javascript"><!--
+$('.navPadding').css('padding-top', $('.fixedNav').css("height"));
+//-->
+</script>
+</nav>
+</header>
+<!-- ======== START OF CLASS DATA ======== -->
+<main role="main">
+<div class="header">
+<div class="subTitle"><span class="packageLabelInType">Package</span>&#xA0;<a href="package-summary.html">dev.morphia.mapping</a></div>
+<h2 title="Class MapperOptions.Builder" class="title">Class MapperOptions.Builder</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
+<li>
+<ul class="inheritance">
+<li>dev.morphia.mapping.MapperOptions.Builder</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>Enclosing class:</dt>
+<dd><a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dd>
+</dl>
+<hr>
+<pre>public static final class <span class="typeNameLabel">MapperOptions.Builder</span>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
+<div class="block">A builder class for setting mapping options</div>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========== METHOD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="method.summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&#xA0;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&#xA0;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&#xA0;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&#xA0;</span></span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addConvention(dev.morphia.mapping.MorphiaConvention)">addConvention</a></span>&#x200B;(<a href="MorphiaConvention.html" title="interface in dev.morphia.mapping">MorphiaConvention</a>&#xA0;convention)</code></th>
+<td class="colLast">
+<div class="block">Adds a custom convention to the list to be applied to all new MorphiaModels.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#build()">build</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#cacheClassLookups(boolean)">cacheClassLookups</a></span>&#x200B;(boolean&#xA0;cacheClassLookups)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#classLoader(java.lang.ClassLoader)">classLoader</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&#xA0;classLoader)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collectionNaming(dev.morphia.mapping.NamingStrategy)">collectionNaming</a></span>&#x200B;(<a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a>&#xA0;strategy)</code></th>
+<td class="colLast">
+<div class="block">Sets the naming strategy to use for collection names</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateForm(dev.morphia.mapping.DateStorage)">dateForm</a></span>&#x200B;(<a href="DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a>&#xA0;dateStorage)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#dateStorage(dev.morphia.mapping.DateStorage)"><code>dateStorage(DateStorage)</code></a> instead.</div>
+</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateStorage(dev.morphia.mapping.DateStorage)">dateStorage</a></span>&#x200B;(<a href="DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a>&#xA0;dateStorage)</code></th>
+<td class="colLast">
+<div class="block">The default value for this is <a href="DateStorage.html#UTC"><code>DateStorage.UTC</code></a>.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#disableEmbeddedIndexes(boolean)">disableEmbeddedIndexes</a></span>&#x200B;(boolean&#xA0;disableEmbeddedIndexes)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discriminator(dev.morphia.mapping.DiscriminatorFunction)">discriminator</a></span>&#x200B;(<a href="DiscriminatorFunction.html" title="class in dev.morphia.mapping">DiscriminatorFunction</a>&#xA0;function)</code></th>
+<td class="colLast">
+<div class="block">Sets the discriminator function to use</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discriminatorKey(java.lang.String)">discriminatorKey</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;key)</code></th>
+<td class="colLast">
+<div class="block">Defines the discriminator key name</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldNaming(dev.morphia.mapping.NamingStrategy)">fieldNaming</a></span>&#x200B;(<a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a>&#xA0;strategy)</code></th>
+<td class="colLast">
+<div class="block">Sets the naming strategy to use for fields unless expliclity set via @Property</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ignoreFinals(boolean)">ignoreFinals</a></span>&#x200B;(boolean&#xA0;ignoreFinals)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapSubPackages(boolean)">mapSubPackages</a></span>&#x200B;(boolean&#xA0;mapSubPackages)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#objectFactory(dev.morphia.mapping.codec.MorphiaInstanceCreator)">objectFactory</a></span>&#x200B;(<a href="codec/MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a>&#xA0;creator)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryFactory(dev.morphia.query.QueryFactory)">queryFactory</a></span>&#x200B;(<a href="../query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&#xA0;queryFactory)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeEmpties(boolean)">storeEmpties</a></span>&#x200B;(boolean&#xA0;storeEmpties)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i16" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeNulls(boolean)">storeNulls</a></span>&#x200B;(boolean&#xA0;storeNulls)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#useLowerCaseCollectionNames(boolean)">useLowerCaseCollectionNames</a></span>&#x200B;(boolean&#xA0;useLowerCaseCollectionNames)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#collectionNaming(dev.morphia.mapping.NamingStrategy)"><code>collectionNaming(NamingStrategy)</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidRepresentation(org.bson.UuidRepresentation)">uuidRepresentation</a></span>&#x200B;(org.bson.UuidRepresentation&#xA0;uuidRepresentation)</code></th>
+<td class="colLast">
+<div class="block">Configures the UUID representation to use</div>
+</td>
+</tr>
+</tbody></table>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&#xA0;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang" class="externalLink">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang" class="externalLink">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ METHOD DETAIL ========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a id="addConvention(dev.morphia.mapping.MorphiaConvention)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addConvention</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;addConvention&#x200B;(<a href="MorphiaConvention.html" title="interface in dev.morphia.mapping">MorphiaConvention</a>&#xA0;convention)</pre>
+<div class="block">Adds a custom convention to the list to be applied to all new MorphiaModels.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>convention</code> - the new convention</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.0</dd>
+</dl>
+</li>
+</ul>
+<a id="build()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>build</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&#xA0;build()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new options instance</dd>
+</dl>
+</li>
+</ul>
+<a id="cacheClassLookups(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>cacheClassLookups</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;cacheClassLookups&#x200B;(boolean&#xA0;cacheClassLookups)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cacheClassLookups</code> - if true class lookups are cached</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="classLoader(java.lang.ClassLoader)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>classLoader</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;classLoader&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&#xA0;classLoader)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>classLoader</code> - the ClassLoader to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="collectionNaming(dev.morphia.mapping.NamingStrategy)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collectionNaming</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;collectionNaming&#x200B;(<a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a>&#xA0;strategy)</pre>
+<div class="block">Sets the naming strategy to use for collection names</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>strategy</code> - the strategy to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="dateForm(dev.morphia.mapping.DateStorage)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dateForm</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;dateForm&#x200B;(<a href="DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a>&#xA0;dateStorage)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#dateStorage(dev.morphia.mapping.DateStorage)"><code>dateStorage(DateStorage)</code></a> instead.</div>
+</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>dateStorage</code> - the storage format to use for dates</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="dateStorage(dev.morphia.mapping.DateStorage)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dateStorage</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;dateStorage&#x200B;(<a href="DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a>&#xA0;dateStorage)</pre>
+<div class="block">The default value for this is <a href="DateStorage.html#UTC"><code>DateStorage.UTC</code></a>.  To use the <a href="DateStorage.html#SYSTEM_DEFAULT"><code>DateStorage.SYSTEM_DEFAULT</code></a>, either set this value
+ explicitly here or use the <a href="MapperOptions.html#legacy()"><code>MapperOptions.legacy()</code></a> Builder.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>dateStorage</code> - the storage format to use for dates</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.0</dd>
+</dl>
+</li>
+</ul>
+<a id="disableEmbeddedIndexes(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>disableEmbeddedIndexes</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;disableEmbeddedIndexes&#x200B;(boolean&#xA0;disableEmbeddedIndexes)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>disableEmbeddedIndexes</code> - if true scanning @Embedded fields for indexing is disabled</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="discriminator(dev.morphia.mapping.DiscriminatorFunction)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>discriminator</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;discriminator&#x200B;(<a href="DiscriminatorFunction.html" title="class in dev.morphia.mapping">DiscriminatorFunction</a>&#xA0;function)</pre>
+<div class="block">Sets the discriminator function to use</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>function</code> - the function to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="discriminatorKey(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>discriminatorKey</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;discriminatorKey&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;key)</pre>
+<div class="block">Defines the discriminator key name</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the key to use, e.g., &quot;_t&quot;.  the default/legacy value is &quot;className&quot;</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="fieldNaming(dev.morphia.mapping.NamingStrategy)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fieldNaming</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;fieldNaming&#x200B;(<a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a>&#xA0;strategy)</pre>
+<div class="block">Sets the naming strategy to use for fields unless expliclity set via @Property</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>strategy</code> - the strategy to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../annotations/Property.html" title="annotation in dev.morphia.annotations"><code>Property</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="ignoreFinals(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ignoreFinals</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;ignoreFinals&#x200B;(boolean&#xA0;ignoreFinals)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ignoreFinals</code> - if true final fields are ignored</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="mapSubPackages(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mapSubPackages</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;mapSubPackages&#x200B;(boolean&#xA0;mapSubPackages)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapSubPackages</code> - if true subpackages are mapped when given a particular package</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="objectFactory(dev.morphia.mapping.codec.MorphiaInstanceCreator)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>objectFactory</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;objectFactory&#x200B;(<a href="codec/MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a>&#xA0;creator)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>creator</code> - the object factory to use when creating instances</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="queryFactory(dev.morphia.query.QueryFactory)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>queryFactory</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;queryFactory&#x200B;(<a href="../query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&#xA0;queryFactory)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>queryFactory</code> - the query factory to use when creating queries</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="storeEmpties(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>storeEmpties</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;storeEmpties&#x200B;(boolean&#xA0;storeEmpties)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>storeEmpties</code> - if true empty maps and collection types are stored in the database</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="storeNulls(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>storeNulls</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;storeNulls&#x200B;(boolean&#xA0;storeNulls)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>storeNulls</code> - if true null values are stored in the database</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="useLowerCaseCollectionNames(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>useLowerCaseCollectionNames</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>=&quot;2.0&quot;,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;useLowerCaseCollectionNames&#x200B;(boolean&#xA0;useLowerCaseCollectionNames)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#collectionNaming(dev.morphia.mapping.NamingStrategy)"><code>collectionNaming(NamingStrategy)</code></a> instead</div>
+</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>useLowerCaseCollectionNames</code> - if true, generated collections names are lower cased</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="uuidRepresentation(org.bson.UuidRepresentation)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>uuidRepresentation</h4>
+<pre class="methodSignature">public&#xA0;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&#xA0;uuidRepresentation&#x200B;(org.bson.UuidRepresentation&#xA0;uuidRepresentation)</pre>
+<div class="block">Configures the UUID representation to use</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>uuidRepresentation</code> - the representation</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</div>
+</div>
+</main>
+<!-- ========= END OF CLASS DATA ========= -->
+<footer role="contentinfo">
+<nav role="navigation">
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a id="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a id="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../index.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/MapperOptions.Builder.html">Use</a></li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../allclasses.html">All&#xA0;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&#xA0;</li>
+<li>Nested&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a id="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</nav>
+<p class="legalCopy"><small>Copyright &#xA9; 2020. All rights reserved.</small></p>
+</footer>
+
+
+
+    </article>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../../../../../_/js/site.js"></script>
+<script async src="../../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

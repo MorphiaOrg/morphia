@@ -106,7 +106,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="jrebel.html">JRebel</a>
@@ -235,7 +235,7 @@ In practice, this is likely pretty rare but it is possible.</p>
 </div>
 <div class="paragraph">
 <p>The second line, which we skipped over, deserves a bit of consideration.
-In this case, we&#8217;re telling Morphia to look at every class in the package we&#8217;ve given and find every class annotated with <a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved"><code>@Entity</code></a> (which we&#8217;ll cover shortly) and discover the mapping metadata we&#8217;ve put on our classes.
+In this case, we&#8217;re telling Morphia to look at every class in the package we&#8217;ve given and find every class annotated with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> (which we&#8217;ll cover shortly) and discover the mapping metadata we&#8217;ve put on our classes.
 There are several variations of mapping that can be done and they can be called multiple times with different values to properly cover all your entities wherever they might live in your application.</p>
 </div>
 </div>
@@ -260,10 +260,10 @@ There are a few other options to configure on <code>MappingOptions</code>, but w
 <div class="paragraph">
 <p>There are two ways that Morphia can handle your classes: as top level entities or embedded in others.
 Any class annotated with
-<a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved"><code>@Entity</code></a> is treated as a top level document stored directly in a collection.
-Any class with <a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved"><code>@Entity</code></a> must have a field annotated with
-<a href="#javadoc:dev/morphia/annotations/Id.html" class="page unresolved"><code>@Id</code></a> to define which field to use as the <code>_id</code> value in the document written to MongoDB.  <a href="#javadoc:dev/morphia/annotations/Embedded.html" class="page unresolved"><code>@Embedded</code></a> indicates that the class will result in a subdocument inside another document.  <a href="#javadoc:dev/morphia/annotations/Embedded.html" class="page unresolved"><code>@Embedded</code></a> classes do not require the presence of an
-<a href="#javadoc:dev/morphia/annotations/Id.html" class="page unresolved">`@Id `</a> field.</p>
+<a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> is treated as a top level document stored directly in a collection.
+Any class with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> must have a field annotated with
+<a href="javadoc/dev/morphia/annotations/Id.html" class="page"><code>@Id</code></a> to define which field to use as the <code>_id</code> value in the document written to MongoDB.  <a href="javadoc/dev/morphia/annotations/Embedded.html" class="page"><code>@Embedded</code></a> indicates that the class will result in a subdocument inside another document.  <a href="javadoc/dev/morphia/annotations/Embedded.html" class="page"><code>@Embedded</code></a> classes do not require the presence of an
+<a href="javadoc/dev/morphia/annotations/Id.html" class="page">`@Id `</a> field.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s examine a more complete example:</p>
@@ -289,7 +289,7 @@ class Employee {
 </div>
 <div class="paragraph">
 <p>There are a few things here to discuss and others we&#8217;ll defer to later sections.
-This class is annotated using the <a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved"><code>@Entity</code></a> annotation so we know that it will be a top level document.
+This class is annotated using the <a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> annotation so we know that it will be a top level document.
 In the annotation, you&#8217;ll see <code>"employees"</code>.
 By default, Morphia will use the class name as the collection name.
 If you pass a String instead, it will use that value for the collection name.
@@ -299,7 +299,7 @@ There is a little more to this annotation but the
 <a href="annotations.html#_entity#" class="page">annotations guide</a> covers those details.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#javadoc:dev/morphia/annotations/Indexes.html" class="page unresolved"><code>@Indexes</code></a> annotation lists which indexes Morphia should create.
+<p>The <a href="javadoc/dev/morphia/annotations/Indexes.html" class="page"><code>@Indexes</code></a> annotation lists which indexes Morphia should create.
 In this instance, we&#8217;re defining an index named <code>salary</code> on the field salary with the default ordering of ascending.
 More information on indexing can found <a href="indexing.html" class="page">here</a>.</p>
 </div>
@@ -310,15 +310,15 @@ The ID can be any type you&#8217;d like but is generally something like <code>Ob
 There are two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy every field to a document bound for the database.</p>
 </div>
 <div class="paragraph">
-<p>The simplest of the two remaining annotations is <a href="#javadoc:dev/morphia/annotations/Property.html" class="page unresolved"><code>@Property</code></a>.
+<p>The simplest of the two remaining annotations is <a href="javadoc/dev/morphia/annotations/Property.html" class="page"><code>@Property</code></a>.
 This annotation is entirely optional.
 If you leave this annotation off, Morphia will use the Java field name as the document field name.
 Often times this is fine.
 However, some times you&#8217;ll want to change the document field name for any number of reasons.
-In those cases, you can use <a href="#javadoc:dev/morphia/annotations/Property.html" class="page unresolved"><code>@Property</code></a> and pass it the name to be used when this class is serialized out to a document to be handed off to MongoDB.</p>
+In those cases, you can use <a href="javadoc/dev/morphia/annotations/Property.html" class="page"><code>@Property</code></a> and pass it the name to be used when this class is serialized out to a document to be handed off to MongoDB.</p>
 </div>
 <div class="paragraph">
-<p>This just leaves <a href="#javadoc:dev/morphia/annotations/Reference.html" class="page unresolved"><code>@Reference</code></a>.
+<p>This just leaves <a href="javadoc/dev/morphia/annotations/Reference.html" class="page"><code>@Reference</code></a>.
 This annotation is telling Morphia that this field refers to other Morphia mapped entities.
 In this case Morphia will store what MongoDB calls a <a href="http://docs.mongodb.org/manual/reference/database-references/#dbrefs"><code>DBRef</code></a> which is just a collection name and key value.
 These referenced entities must already be saved or at least have an ID assigned or Morphia will throw an exception.</p>
