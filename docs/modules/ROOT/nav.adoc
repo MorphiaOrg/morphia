@@ -2,7 +2,7 @@
 * xref:quick-tour.adoc[Quick Tour]
 * xref:migration.adoc[Migrating to 2.0]
 
----
+'''
 
 * xref:configuration.adoc[Configuration]
 * xref:querying.adoc[Querying]
@@ -16,7 +16,7 @@
 * xref:indexing.adoc[Indexing]
 * xref:lifeCycleMethods.adoc[Life Cycle Methods]
 
----
+'''
 
 * xref:issues-help.adoc[Issues & Support]
 * xref:javadoc:index.html#[Javadoc]
