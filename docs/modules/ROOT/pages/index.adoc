@@ -1,3 +1,4 @@
+:!sectids:
 = Getting Started
 
 The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.
