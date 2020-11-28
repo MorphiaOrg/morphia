@@ -129,7 +129,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
   </li>
 </ul>
   </li>
@@ -222,7 +222,7 @@ While this older API is still supported, efforts should be made to update to the
 This old API is active using the
 <a href="configuration.html#_legacy" class="page">legacy configuration</a>.
 The new API will attempt to redirect most calls to use the new
-<a href="javadoc/dev/morphia/query/experimental/filters/Filters.html" class="page">Filters</a> based approach.</p>
+<a href="#javadoc:dev/morphia/query/experimental/filters/Filters.html" class="page unresolved">Filters</a> based approach.</p>
 </div>
 <div class="paragraph">
 <p>Note that at this time complex queries using <code>and</code> or <code>or</code> clauses can not be correctly transparently translated and will require manual effort to update to the new API.</p>
@@ -433,7 +433,7 @@ Which version you use is largely a question of preference.</p>
 <td class="content">
 <div class="paragraph">
 <p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-<a href="javadoc/dev/morphia/annotations/Property.html" class="page"><code>@Property</code></a> annotation on the field.
+<a href="#javadoc:dev/morphia/annotations/Property.html" class="page unresolved"><code>@Property</code></a> annotation on the field.
 Morphia will normalize the name and validate the name such that a query with a bad field name will result in an error.</p>
 </div>
 </td>
@@ -589,7 +589,7 @@ It&#8217;s also worth noting that this project works with both the mapped docume
 <p>While projections can be a nice performance win in some cases, it&#8217;s important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-<a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page"><code>Datastore#merge(T)</code></a></p>
+<a href="#javadoc:dev/morphia/Datastore.html#merge(T)#" class="page unresolved"><code>Datastore#merge(T)</code></a></p>
 </div>
 </td>
 </tr>

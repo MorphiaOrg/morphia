@@ -129,7 +129,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
   </li>
 </ul>
   </li>
@@ -249,7 +249,7 @@ If you encounter and bugs or usability issues, please file an
 </table>
 </div>
 <div class="paragraph">
-<p>The filters can be accessed via the <a href="javadoc/dev/morphia/query/experimental/filters/Filters.html" class="page">Filters</a> class.
+<p>The filters can be accessed via the <a href="#javadoc:dev/morphia/query/experimental/filters/Filters.html" class="page unresolved">Filters</a> class.
 The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia&#8217;s API. For example, to query for products whose prices is greater than or equal to 1000, you would write this:</p>
 </div>
 <div class="listingblock">
@@ -343,7 +343,7 @@ It&#8217;s also worth noting that this project works with both the mapped docume
 <p>While projections can be a nice performance win in some cases, it&#8217;s important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-<a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page"><code>Datastore#merge(T)</code></a></p>
+<a href="#javadoc:dev/morphia/Datastore.html#merge(T)#" class="page unresolved"><code>Datastore#merge(T)</code></a></p>
 </div>
 </td>
 </tr>
@@ -435,7 +435,7 @@ In this version of the unit test, we tail the cursor waiting to pull out objects
 <div class="paragraph">
 <p>Queries are also used to delete documents from the database as well.
 Using
-<a href="javadoc/dev/morphia/query/Query.html#delete()#" class="page"><code>Query#delete()</code></a>, we can delete documents matching the query.
+<a href="#javadoc:dev/morphia/query/Query.html#delete()#" class="page unresolved"><code>Query#delete()</code></a>, we can delete documents matching the query.
 The default operation will only delete the first matching document.
 However, you can opt to delete all matches by passing in the appropriate options:</p>
 </div>

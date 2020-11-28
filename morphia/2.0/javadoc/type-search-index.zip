@@ -1,232 +1,0 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../_/css/javadoc.css">
-<!--    <script type="text/javascript" src="../../../_/js/vendor/script.js"></script> This one is GPL -->
-    <script type="text/javascript" src="../../../_/js/vendor/javadoc.js"></script>
-<!--    <script type="text/javascript" src="../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils.js"></script>-->
-    <!--[if IE]>
-<!--    <script type="text/javascript" src="../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils-ie.js"></script>-->
-    <![endif]-->
-<!--    <script type="text/javascript" src="../../../_/_/js/vendor/javadoc/jquery/jquery-3.3.1.js"></script>-->
-<!--    <script type="text/javascript" src="../../../_/_/js/vendor/javadoc/jquery/jquery-migrate-3.0.1.js"></script>-->
-<!--    <script type="text/javascript" src="../../../_/_/js/vendor/javadoc/jquery/jquery-ui.js"></script>-->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.0">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../getting-started.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../migration.html">Migrating to 2.0</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../querying-old.html">Querying (Deprecated)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../textSearch.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../updating-old.html">Updating (Deprecated)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.0</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../critter/4.1/index.html">4.1-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../critter/4.0/index.html">4.0</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../2.2/index.html">2.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version is-current">
-          <a href="../index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.0</button>
-  <div class="version-menu">
-    <a class="version" href="../../2.2/javadoc/type-search-index.zip">2.2-SNAPSHOT</a>
-    <a class="version" href="../../2.1/javadoc/type-search-index.zip">2.1</a>
-    <a class="version is-current" href="type-search-index.zip">2.0</a>
-    <a class="version" href="../../1.6/javadoc/type-search-index.zip">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        PK  P�qQ               type-search-index.json�\[sۺ�+?���-��D���Z�3�N`��@ ��u:��]��D��,H�'�v?������ߛ��o79���*����SSu�����/oe�HV���b����H�EŪ�B }F�J*�u��g�	_٘�n��TL�k�Շ��0��,`	**��E���3v(x�pu��2
-��Ȏ����Q�Gbd2�Y通�/�'�G���T]�g���(\�u&� "���H	�4j'���؀!�Y�F��Ӹ�b�ja���g�8bm��!��3<7�y��{��2�,���J?#�gͣ�2���پ:8�+��H��'^ʥ$y"EW�/z9Y��p��?��`b�d���"�`Nf�\f8�*��}|
-�R�b������[β8kre�J���OZ%0�g,�U���-)��z�Fo�䔈1�x[J�|,�vճ��l���!mV�B�?�7t�C-=�	����nkƝ~c`��7�ޓ�t6�:~B��1��E�X>gyׄ�|B�_L�'�oV��˼��^���!9w�p� fg��峨ׅ���SE�${qA�º��{��?���(Vʠ	�9ӄ�c�P�΢��$B0 ���"�v��xu�
-��ruf�+�LK1��ȁ��?�?Hu����u��jޑ)9��&�8oC�ډ�<�cQm��/k�h��Kd����Yw�l�T9��M��XV�0��9&�����49 �s����!{Ğ"��P�)���y9�y���w���q終� o��4{~�:2����	�y�-�7徦��>-~B�U�A�������A���X���VJ���R3l������Y&^ҳ�,��zw���<X�;Ss�5lD�ӊ�T�쎩&���:+3�ҶZ��Z��[J����i�&ˬ�$���~�L����<ĺ��wc3���)�tC�����$r�����:�����7���^����"�E�W�k�FgoJ��G5�0�~"��L�V'�k���7n_�3�k����W��U�]۵d	W���
-�=�ї��t�^ԇpj�UfvZ����W	��$I:��8�W�(�ϲ�h�$���뵘4͠ҽ�O5���>M�3�Ø����0тk@�I��u��0�hE`��#�o(.|�Rߨ-�$S}�wS���r�s&�&,ȡ�I��M#�>9l+{?bK���-�+��=���M�����{�0�*D)(�r���d�� ����LIN�}�Y��(��/�-=8���3�T�Ab�UQs�\�r?)�cR�\�P���&cG�6��>{��wh.3�����7"r������+_�w����Z��1u�E�@l�J+�lG;���cͱMx����u$2.�D�
-Dw�K���/&�cz���$j"]�B���(��VD��o�v-n�%�R{a4pU�^�b��]�0N�w���w�n�ޣ�Si��3@N49���Ė��XY��-(��ȘC�0�L�{+���ka�p]��";�Z"z;<�VG�y'K�-�a���%�p$28��d� �60D�K&h�n�04�e�<��jQ�|20����Z���tjȓ*z�q��"E�Lm�������}a+hnn�����.5���!�������ܯ����
-���$O?aE��	2�"U��.�&�W�t]�>ڔ�pEUl�W�5�I��4븮rf���ᚍ�ա�f���@�-�%U��4p����z�'x��tͧ�Jc��Z�2y�^�S�	`W�#�H|���ڕ}N5~������F$6v��M;�w"��>�V_n����.��(x��(�%�ûL��o� 8�������2��e��9&<�$��&��<_�bw]�VeX�/��
-Ԋ!#v_����Nh�� ^}w�f���r@ȏ�q7F�m���${w��|�b�����$f�Qo_1]��=u������;<�G���>�jK>7%�j��.Nt�	Z_Q�kf��@>�"S�^,��$� �6E���E]�׃D��O/�y�����p"�$��D�>����u��ך뒺-b��F�۱��Ȳr��g%�hGP:$zȡh��>x�-����h�'�f�k����ڻ>�t5k�xVQ=c�ܯ9����IH�q�%xf���`|�ðVԜ��4�^ui/� �R���Azĸ��l`@�}ȓៈ؍����'��Ħ�Q�����u\�@1��W�#"��6�f�I4�xq5���9,�}�y�/%Q�w�1;�lv��������X�-8�蓔I��6���B�;�����kK�GUdm8~ncK۟V��S:���5fRkqj�{��)� ��ގ��s�����O���Q~�I|�~}&|."���Do2v�Fl�q���o!�?_��V�/�Y��?$)z4U�э.� �bU��ה�^�2���3����1k�-%*����p@]�e4V��}VR���p���CD#-^�-��ɞ����Lo�Al��(*����^f`&D�?���/�s�Y������� ����xj���%F$&>#m���ȑ2�E�����'�'��U��å�/휰u���EL���r�=����ٝ��c�ϵ9��yI4�;���1n\�-���+V�vu����=D��_}�����Ͳ�PK�=dZ
-  �R  PK   P�qQ�=dZ
-  �R                   type-search-index.jsonPK      D   �
-    
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2020
-</footer>
--->
-<script src="../../../_/js/site.js"></script>
-<script async src="../../../_/js/vendor/highlight.js"></script>
-  </body>
-</html>

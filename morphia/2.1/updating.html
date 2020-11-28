@@ -129,7 +129,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
   </li>
 </ul>
   </li>
@@ -213,7 +213,7 @@
 <p>Updates in 2.0, are issued off of a <code>Query</code> instance in contrast to the [old approach](updates-old.md) of using <code>Datastore#update()</code> in previous versions.
 These update operations are executed on the server without pulling any documents in to your application.
 Update operations are defined using a set of functions as defined on
-<a href="javadoc/dev/morphia/query/experimental/updates/UpdateOperators.html" class="page">UpdateOperators</a>  In our examples, we&#8217;ll be using the following model:</p>
+<a href="#javadoc:dev/morphia/query/experimental/updates/UpdateOperators.html" class="page unresolved">UpdateOperators</a>  In our examples, we&#8217;ll be using the following model:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -263,7 +263,7 @@ public class Address
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>execute()</code> can optionally take <a href="javadoc/dev/morphia/UpdateOptions.html" class="page">UpdateOptions</a> if there are any options you might want to apply to your update statement.</p>
+<p>The <code>execute()</code> can optionally take <a href="#javadoc:dev/morphia/UpdateOptions.html" class="page unresolved">UpdateOptions</a> if there are any options you might want to apply to your update statement.</p>
 </div>
 <div class="paragraph">
 <p>Embedded documents are updated the same way.
@@ -299,7 +299,7 @@ To change the name of the city in the address, one would use something like this
 <div class="paragraph">
 <p>By default, an update operation will only update the first document matching the query.
 This behavior can be modified via the optional
-<a href="javadoc/dev/morphia/UpdateOptions.html" class="page">UpdateOptions</a> parameter on <code>execute()</code>:</p>
+<a href="#javadoc:dev/morphia/UpdateOptions.html" class="page unresolved">UpdateOptions</a> parameter on <code>execute()</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -352,7 +352,7 @@ Using this class, you can get specific numbers from the update operation as well
 <div class="paragraph">
 <p>There are times when a document needs to be updated and also fetched from the database.
 In the server documentation, this is referred to as <a href="http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/"><code>findAndModify</code></a>.
-In Morphia, this functionality is exposed through the <a href="javadoc/dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator&#8230;&#8203;)#" class="page">Query#modify()</a>
+In Morphia, this functionality is exposed through the <a href="#javadoc:dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator&#8230;&#8203;)#" class="page unresolved">Query#modify()</a>
 method.
 With this method, you can choose to return the updated entity in either the state before or after the update.
 The default is to return the entity in the <em>after</em> state.

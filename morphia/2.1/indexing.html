@@ -129,7 +129,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
   </li>
 </ul>
   </li>
@@ -228,8 +228,8 @@ Full details for all these types are available in the <a href="http://docs.mongo
 <h2 id="_class_level_indexes"><a class="anchor" href="#_class_level_indexes"></a>Class Level Indexes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Class level indexing begins with the <a href="javadoc/dev/morphia/annotations/Indexes.html" class="page">@Indexes</a> annotation.
-This is a container annotation whose sole purpose is to hold a number of <a href="javadoc/dev/morphia/annotations/Index.html" class="page">@Index</a> annotations.
+<p>Class level indexing begins with the <a href="#javadoc:dev/morphia/annotations/Indexes.html" class="page unresolved">@Indexes</a> annotation.
+This is a container annotation whose sole purpose is to hold a number of <a href="#javadoc:dev/morphia/annotations/Index.html" class="page unresolved">@Index</a> annotations.
 This annotation has two primary components to cover here:  <code>fields</code> and <code>options</code>.
 An index definition would take the following form:</p>
 </div>
@@ -257,15 +257,15 @@ public class IndexExample {
 <div class="sect2">
 <h3 id="_fields"><a class="anchor" href="#_fields"></a>Fields</h3>
 <div class="paragraph">
-<p>The fields to use in an index definition are defined with the <a href="javadoc/dev/morphia/annotations/Field.html" class="page"><code>@Field</code></a> annotation.
-An arbitrary number of <a href="javadoc/dev/morphia/annotations/Field.html" class="page"><code>@Field</code></a>s can be given but at least one must be present.</p>
+<p>The fields to use in an index definition are defined with the <a href="#javadoc:dev/morphia/annotations/Field.html" class="page unresolved"><code>@Field</code></a> annotation.
+An arbitrary number of <a href="#javadoc:dev/morphia/annotations/Field.html" class="page unresolved"><code>@Field</code></a>s can be given but at least one must be present.</p>
 </div>
 <div class="sect3">
 <h4 id="_value"><a class="anchor" href="#_value"></a>value()</h4>
 <div class="paragraph">
 <p>Indicates which field to use for indexing.
-The name used for the field can be either the Java field name or the mapped document field name as defined in the class&#8217;s mapping via, e.g., the <a href="javadoc/dev/morphia/annotations/Property.html" class="page"><code>@Property</code></a> or
-<a href="javadoc/dev/morphia/annotations/Embedded.html" class="page"><code>@Embedded</code></a> annotations.
+The name used for the field can be either the Java field name or the mapped document field name as defined in the class&#8217;s mapping via, e.g., the <a href="#javadoc:dev/morphia/annotations/Property.html" class="page unresolved"><code>@Property</code></a> or
+<a href="#javadoc:dev/morphia/annotations/Embedded.html" class="page unresolved"><code>@Embedded</code></a> annotations.
 For most index types, this value is validated by default.
 An exception is made for <a href="#_text_indexing">text indexes</a> as discussed below.</p>
 </div>
@@ -296,7 +296,7 @@ This value only makes sense when direction is <code>IndexType.TEXT</code>.</p>
 <div class="sect2">
 <h3 id="_index_options"><a class="anchor" href="#_index_options"></a>Index Options</h3>
 <div class="paragraph">
-<p>Options for an index are defined on the <a href="javadoc/dev/morphia/annotations/IndexOptions.html" class="page"><code>@IndexOptions</code></a>.
+<p>Options for an index are defined on the <a href="#javadoc:dev/morphia/annotations/IndexOptions.html" class="page unresolved"><code>@IndexOptions</code></a>.
 More complete coverage can be found in the <a href="http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options">manual</a> but we&#8217;ll provide some basic coverage here as well.</p>
 </div>
 <div class="sect3">
@@ -418,8 +418,8 @@ A partial filter is defined using a query as shown here:</p>
 </div>
 <div class="paragraph">
 <p>Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.
-A collation can be defined using the <code>collation()</code> property on <a href="javadoc/dev/morphia/annotations/IndexOptions.html" class="page"><code>@IndexOptions</code></a> and takes an
-<a href="javadoc/dev/morphia/annotations/Collation.html" class="page"><code>@Collation</code></a> instance.</p>
+A collation can be defined using the <code>collation()</code> property on <a href="#javadoc:dev/morphia/annotations/IndexOptions.html" class="page unresolved"><code>@IndexOptions</code></a> and takes an
+<a href="#javadoc:dev/morphia/annotations/Collation.html" class="page unresolved"><code>@Collation</code></a> instance.</p>
 </div>
 </div>
 </div>
@@ -431,8 +431,8 @@ A collation can be defined using the <code>collation()</code> property on <a hre
 <div class="paragraph">
 <p>Field level indexing is a simpler approach to defining a basic, single key index.
 These indexes are defined by applying the
-<a href="javadoc/dev/morphia/annotations/Indexed.html" class="page"><code>@Indexed</code></a> annotation to a particular field on a class.
-Because the index definition is applied at the field level, the index is created using only that field and so the <a href="javadoc/dev/morphia/annotations/Field.html" class="page"><code>@Field</code></a>
+<a href="#javadoc:dev/morphia/annotations/Indexed.html" class="page unresolved"><code>@Indexed</code></a> annotation to a particular field on a class.
+Because the index definition is applied at the field level, the index is created using only that field and so the <a href="#javadoc:dev/morphia/annotations/Field.html" class="page unresolved"><code>@Field</code></a>
 annotations are unnecessary.
 The options for the index are the same as defined <a href="#options">above</a>.
 A field level index definition would look like this:</p>

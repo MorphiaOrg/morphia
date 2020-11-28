@@ -129,7 +129,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
   </li>
 </ul>
   </li>
@@ -211,17 +211,17 @@
 <h2 id="_classes"><a class="anchor" href="#_classes"></a>Classes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Mapping is achieved through one of two annotations to start:  <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> and
-<a href="javadoc/dev/morphia/annotations/Embedded.html" class="page">@Embedded</a>.
+<p>Mapping is achieved through one of two annotations to start:  <a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved">@Entity</a> and
+<a href="#javadoc:dev/morphia/annotations/Embedded.html" class="page unresolved">@Embedded</a>.
 In order for Morphia to consider any type for mapping, it must have one of these two annotation.  <code>@Entity</code> is used to denote a "top level" type.
 These types tend to have their own collections whose names can be mapped via the <code>value</code> parameter.
-Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in <a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">@MapperOptions</a>.
+Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in <a href="#javadoc:dev/morphia/mapping/MapperOptions.html" class="page unresolved">@MapperOptions</a>.
 That default is currently the camel case value of the class&#8217;s simple name.
 For example, to map a <code>UserProfile</code> entity under this strategy, the collection name would be mapped to <code>userProfile</code>.</p>
 </div>
 <div class="paragraph">
-<p>Any type annotated with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> must have a field annotated with
-<a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a>.
+<p>Any type annotated with <a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved">@Entity</a> must have a field annotated with
+<a href="#javadoc:dev/morphia/annotations/Id.html" class="page unresolved">@Id</a>.
 The type of the field can be any type as long as Morphia, or the driver, has codecs that can map the data to and from mongodb.
 When mapping an entity, one can also define <a href="indexing.html" class="page">indexes</a> and
 <a href="schemaValidation.html" class="page">schema validations</a> as part of the entity declaration as well.</p>
@@ -244,7 +244,7 @@ That is, every field must be represented in the constructor signature.</p>
 Here, there is a bit of flexibility.
 The argument name can match either the field name as found in the source or the mapped name as determined by any <code>@Property</code> annotation.
 While this is likely to be the most common case as it is the simplest, for various this won&#8217;t always be possible or preferable.
-If a constructor argument name can&#8217;t mirror the field name, using the <a href="javadoc/dev/morphia/annotations/experimental/Name.html" class="page">@Name</a> annotation, an explicit name can be given so that the argument can be properly matched to a field.</p>
+If a constructor argument name can&#8217;t mirror the field name, using the <a href="#javadoc:dev/morphia/annotations/experimental/Name.html" class="page unresolved">@Name</a> annotation, an explicit name can be given so that the argument can be properly matched to a field.</p>
 </li>
 </ol>
 </div>
@@ -280,7 +280,7 @@ For maven users, it&#8217;s as simple as adding one line to the Kotlin maven plu
 <p>Some times persisted types come from external libraries whose source is either unavailable or simply can&#8217;t be modified.
 Using these types would be impossible give the annotation requirements as stated above.
 Morphia 2.1 introduces a new experimental API that loosens these restrictions a bit.
-Using <a href="javadoc/dev/morphia/mapping/Mapper.html#mapExternal(A,java.lang.Class)<mark>" class="page">Mapper#mapExternal</a> these external types can be passed in for use as embedded types in other entities.
+Using <a href="#javadoc:dev/morphia/mapping/Mapper.html#mapExternal(A,java.lang.Class)<mark>" class="page unresolved">Mapper#mapExternal</a> these external types can be passed in for use as embedded types in other entities.
 An optional instance of <code>@Embedded</code> can created using the
 <a href="#javadoc:dev/morphia/annotations/experimental/EmbeddedBuilder.html</mark>">EmbeddedBuilder</a>.
 A null can be passed in to simply accept the default values.</p>
@@ -305,7 +305,7 @@ A null can be passed in to simply accept the default values.</p>
 <div class="paragraph">
 <p>Entities can be versioned to ensure that changes are applied serially and that no other processes are modifying an object in between the time it&#8217;s fetched, modified, and written back to the database.
 To achieve this, simply add a field to a type, it can be a <code>long</code> or a
-<code>Long</code> and annotation that field with <a href="javadoc/dev/morphia/annotations/Version.html" class="page">@Version</a>.
+<code>Long</code> and annotation that field with <a href="#javadoc:dev/morphia/annotations/Version.html" class="page unresolved">@Version</a>.
 This field must not be initialized to anything other than zero or null, however.
 Morphia will take care of the rest.
 If an object is fetched and another process updates the corresponding document in the database before it can be persisted back, an exception will be thrown when the write is attempted.</p>
@@ -318,27 +318,27 @@ If an object is fetched and another process updates the corresponding document i
 <div class="sectionbody">
 <div class="paragraph">
 <p>By default, any non-static field on a mapped class will be processed for persistence.
-If a field is to be excluded from the mapping, it can be decorated with the <code>transient</code> keyword, annotated with  <a href="javadoc/dev/morphia/annotations/Transient.html" class="page">@Transient</a>, or with the <code>java.beans.Transient</code> annotation.
+If a field is to be excluded from the mapping, it can be decorated with the <code>transient</code> keyword, annotated with  <a href="#javadoc:dev/morphia/annotations/Transient.html" class="page unresolved">@Transient</a>, or with the <code>java.beans.Transient</code> annotation.
 Otherwise all fields will be included that are defined on the mapped class and any super type.
 However, Morphia will ignore fields in any super types found in <code>java*</code> packages which includes the standard JDK classes and the Java EE APIs.</p>
 </div>
 <div class="paragraph">
 <p>There are times when it is necessary to modify a field mapping&#8217;s name, e.g. Using the
-<a href="javadoc/dev/morphia/annotations/Property.html" class="page">@Property</a> annotation, a new name can be defined that will be used when writing to and reading from the database.
+<a href="#javadoc:dev/morphia/annotations/Property.html" class="page unresolved">@Property</a> annotation, a new name can be defined that will be used when writing to and reading from the database.
 During a schema evolution, it is possible to load a field from an old name as well using the
-<a href="javadoc/dev/morphia/annotations/AlsoLoad.html" class="page">@AlsoLoad</a> annotation.
+<a href="#javadoc:dev/morphia/annotations/AlsoLoad.html" class="page unresolved">@AlsoLoad</a> annotation.
 Using this annotation, multiple old names can be used to find a field&#8217;s value in a returned document from query.
 However, only the field&#8217;s name or the value specified in the <code>@Property</code>
 annotation will be used when writing documents back to the database.
-Similarly, if data is only intended to be loaded from the database but never written back, that field can be annotated with <a href="javadoc/dev/morphia/annotations/LoadOnly.html" class="page">@LoadOnly</a></p>
+Similarly, if data is only intended to be loaded from the database but never written back, that field can be annotated with <a href="#javadoc:dev/morphia/annotations/LoadOnly.html" class="page unresolved">@LoadOnly</a></p>
 </div>
 <div class="paragraph">
 <p>If you do not specify a name via <code>@Property</code>, the default field naming strategy will be used.
 The default strategy is to use the field&#8217;s name as defined in the source.
 This strategy can be changed globally via the field naming strategy option on
-<a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">@MapperOptions</a>.
+<a href="#javadoc:dev/morphia/mapping/MapperOptions.html" class="page unresolved">@MapperOptions</a>.
 Simple indexes can be defined on a field if all that is needed for the index is a single field.
-This can be done via the <a href="javadoc/dev/morphia/annotations/Indexed.html" class="page">@Indexed</a> annotation.</p>
+This can be done via the <a href="#javadoc:dev/morphia/annotations/Indexed.html" class="page unresolved">@Indexed</a> annotation.</p>
 </div>
 </div>
 </div>

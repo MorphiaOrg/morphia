@@ -129,7 +129,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
   </li>
 </ul>
   </li>
@@ -226,47 +226,47 @@ To see the next few annotations in context, please refer to
 <div class="sect2">
 <h3 id="_index"><a class="anchor" href="#_index"></a>Index</h3>
 <div class="paragraph">
-<p>The <a href="javadoc/dev/morphia/annotations/Index.html" class="page">@Index</a> documentation can be found
-<a href="javadoc/dev/morphia/annotations/Index.html" class="page">here</a>.
+<p>The <a href="#javadoc:dev/morphia/annotations/Index.html" class="page unresolved">@Index</a> documentation can be found
+<a href="#javadoc:dev/morphia/annotations/Index.html" class="page unresolved">here</a>.
 There are two pieces to this annotation that are mutually exclusive.
 The first group of parameters are considered legacy.
 They are safe to use but will be removed in the 2.x series.
 These options and more have been conglomerated in the
-<a href="javadoc/dev/morphia/annotations/IndexOptions.html" class="page">@IndexOptions</a> annotation.</p>
+<a href="#javadoc:dev/morphia/annotations/IndexOptions.html" class="page unresolved">@IndexOptions</a> annotation.</p>
 </div>
 <div class="sect3">
 <h4 id="_field"><a class="anchor" href="#_field"></a>Field</h4>
 <div class="paragraph">
-<p>The <a href="javadoc/dev/morphia/annotations/Field.html" class="page">@Field</a> annotation defines indexing on a specific document field.
-Multiple instances of this annotation may be passed to the <a href="javadoc/dev/morphia/annotations/Index.html" class="page">@Index</a> annotation to define a compound index on multiple fields.</p>
+<p>The <a href="#javadoc:dev/morphia/annotations/Field.html" class="page unresolved">@Field</a> annotation defines indexing on a specific document field.
+Multiple instances of this annotation may be passed to the <a href="#javadoc:dev/morphia/annotations/Index.html" class="page unresolved">@Index</a> annotation to define a compound index on multiple fields.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_indexoptions"><a class="anchor" href="#_indexoptions"></a>IndexOptions</h4>
 <div class="paragraph">
-<p>The <a href="javadoc/dev/morphia/annotations/IndexOptions.html" class="page">@IndexOptions</a> annotation defines the options to apply to an index definition.
-This annotation replaces the fields found directly on the <a href="javadoc/dev/morphia/annotations/Index.html" class="page">@Index</a> annotation.
+<p>The <a href="#javadoc:dev/morphia/annotations/IndexOptions.html" class="page unresolved">@IndexOptions</a> annotation defines the options to apply to an index definition.
+This annotation replaces the fields found directly on the <a href="#javadoc:dev/morphia/annotations/Index.html" class="page unresolved">@Index</a> annotation.
 This annotation was added to ensure that index options are consistent across the various index definition approaches.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_collation"><a class="anchor" href="#_collation"></a>Collation</h4>
 <div class="paragraph">
-<p>The <a href="javadoc/dev/morphia/annotations/Collation.html" class="page">@Collation</a> annotation defines the
+<p>The <a href="#javadoc:dev/morphia/annotations/Collation.html" class="page unresolved">@Collation</a> annotation defines the
 <a href="http://docs.mongodb.org/manual/reference/collation/">collation</a> options to apply to the index definition.
 In addition to defining a collation as part of an index, a collation can be specified as part of a query as well.
 The Options classes provide facilities for specifying a specific collation to be used for any given operation.
 This collation does not have to match the one defined on the index but will, of course, be faster if it does.
 See <a href="#javadoc:dev/morphia/CountOptions.html" class="page unresolved">CountOptions</a>,
-<a href="javadoc/dev/morphia/DeleteOptions.html" class="page">DeleteOptions</a>,
+<a href="#javadoc:dev/morphia/DeleteOptions.html" class="page unresolved">DeleteOptions</a>,
 <a href="#javadoc:dev/morphia/FindOptions.html" class="page unresolved">FindOptions</a>,
-<a href="#javadoc:dev/morphia/MapReduceOptions.html" class="page unresolved">MapReduceOptions</a>, and <a href="javadoc/dev/morphia/FindAndModifyOptions.html" class="page">FindAndModifyOptions</a> for more information.</p>
+<a href="#javadoc:dev/morphia/MapReduceOptions.html" class="page unresolved">MapReduceOptions</a>, and <a href="#javadoc:dev/morphia/FindAndModifyOptions.html" class="page unresolved">FindAndModifyOptions</a> for more information.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_indexed"><a class="anchor" href="#_indexed"></a>Indexed</h4>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Indexed.html" class="page">@Indexed</a>, applied to a Java field, marks the field to be indexed by MongoDB.
+<p><a href="#javadoc:dev/morphia/annotations/Indexed.html" class="page unresolved">@Indexed</a>, applied to a Java field, marks the field to be indexed by MongoDB.
 This is used for simple, single-field indexes.
 As stated above, the <code>options</code> value replaces the individual setting values on the
 <code>@Indexed</code> annotation itself.</p>
@@ -284,7 +284,7 @@ As stated above, the <code>options</code> value replaces the individual setting 
 <div class="sect2">
 <h3 id="_entity"><a class="anchor" href="#_entity"></a>Entity</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> marks entities to be stored directly in a collection.
+<p><a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved">@Entity</a> marks entities to be stored directly in a collection.
 This annotation is optional in most cases but is required if an entity is to be mapped to a specifically named collection.
 If no mapping is given, the collection is named after the class itself.
 There are two different mechanisms for mapping cross-object relationships in Morphia:
@@ -294,9 +294,9 @@ references and embedding.</p>
 <div class="sect2">
 <h3 id="_reference"><a class="anchor" href="#_reference"></a>Reference</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Reference.html" class="page">@Reference</a> marks a field as a reference to a document stored in another collection and is linked (by a <code>DBRef</code> field).
+<p><a href="#javadoc:dev/morphia/annotations/Reference.html" class="page unresolved">@Reference</a> marks a field as a reference to a document stored in another collection and is linked (by a <code>DBRef</code> field).
 When the Entity is loaded, the referenced entity is also be loaded.
-Any object referenced via an <code>@Reference</code> field must have already have a non-null <a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a> value in the referenced entity.
+Any object referenced via an <code>@Reference</code> field must have already have a non-null <a href="#javadoc:dev/morphia/annotations/Id.html" class="page unresolved">@Id</a> value in the referenced entity.
 This can be done by either saving the referenced entities first or by manually assigning them ID values.
 By default, these referenced entities are automatically loaded by Morphia along with the referencing entity.
 This can result in a high number of database round trips just to load a single entity.
@@ -332,14 +332,14 @@ Further documentation can be found <a href="references.html" class="page">here</
 <h3 id="_embedded"><a class="anchor" href="#_embedded"></a>Embedded</h3>
 <div class="paragraph">
 <p>In contrast to <code>@Reference</code> where a nested Java reference ends up as a separate document in a collection,
-<a href="javadoc/dev/morphia/annotations/Embedded.html" class="page">@Embedded</a> tells Morphia to embed the document created from the Java object in the document of the parent object.
+<a href="#javadoc:dev/morphia/annotations/Embedded.html" class="page unresolved">@Embedded</a> tells Morphia to embed the document created from the Java object in the document of the parent object.
 This annotation can be applied to the class of the embedded type or on the field holding the embedded instance.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_validation"><a class="anchor" href="#_validation"></a>Validation</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Validation.html" class="page">@Validation</a> allows for the definition of a
+<p><a href="#javadoc:dev/morphia/annotations/Validation.html" class="page unresolved">@Validation</a> allows for the definition of a
 <a href="http://docs.mongodb.org/manual/core/document-validation/">document validation</a> schema to applied to all writes to MongoDB. Validation rules are specified on a per-collection basis using any query operators, with the exception of <code>$near</code>, <code>$nearSphere</code>, <code>$text</code>, and <code>$where</code>.
 This validation definition is done using the MongoDB query syntax as shown here:</p>
 </div>
@@ -352,34 +352,34 @@ public class SomeEntity {
 </div>
 </div>
 <div class="paragraph">
-<p>Various operations on <a href="javadoc/dev/morphia/Datastore.html" class="page">Datastore</a> and
-<a href="javadoc/dev/morphia/AdvancedDatastore.html" class="page">AdvancedDatastore</a> can bypass this validation via their Options classes.
+<p>Various operations on <a href="#javadoc:dev/morphia/Datastore.html" class="page unresolved">Datastore</a> and
+<a href="#javadoc:dev/morphia/AdvancedDatastore.html" class="page unresolved">AdvancedDatastore</a> can bypass this validation via their Options classes.
 For these operations, specify the <code>bypassDocumentValidation</code> option to disable document validation for a specific operation.
 See
-<a href="javadoc/dev/morphia/InsertOptions.html" class="page">InsertOptions</a>,
-<a href="javadoc/dev/morphia/UpdateOptions.html" class="page">UpdateOptions</a>,
-<a href="#javadoc:dev/morphia/MapReduceOptions.html" class="page unresolved">MapReduceOptions</a>, and <a href="javadoc/dev/morphia/FindAndModifyOptions.html" class="page">FindAndModifyOptions</a> for more information.</p>
+<a href="#javadoc:dev/morphia/InsertOptions.html" class="page unresolved">InsertOptions</a>,
+<a href="#javadoc:dev/morphia/UpdateOptions.html" class="page unresolved">UpdateOptions</a>,
+<a href="#javadoc:dev/morphia/MapReduceOptions.html" class="page unresolved">MapReduceOptions</a>, and <a href="#javadoc:dev/morphia/FindAndModifyOptions.html" class="page unresolved">FindAndModifyOptions</a> for more information.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_id"><a class="anchor" href="#_id"></a>Id</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a> marks a field in an entity to be the <code>_id</code> field in MongoDB. This annotation is required on all top level entities regardless of the presence of an <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a>
+<p><a href="#javadoc:dev/morphia/annotations/Id.html" class="page unresolved">@Id</a> marks a field in an entity to be the <code>_id</code> field in MongoDB. This annotation is required on all top level entities regardless of the presence of an <a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved">@Entity</a>
 annotation.
-If a class is marked with <a href="javadoc/dev/morphia/annotations/Embedded.html" class="page">@Embedded</a> this annotation is not required since embedded documents are not required to have <code>_id</code> fields.</p>
+If a class is marked with <a href="#javadoc:dev/morphia/annotations/Embedded.html" class="page unresolved">@Embedded</a> this annotation is not required since embedded documents are not required to have <code>_id</code> fields.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_property"><a class="anchor" href="#_property"></a>Property</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Property.html" class="page">@Property</a> is an optional annotation instructing Morphia to persist the field using the given name in the document saved in MongoDB. By default, the field name is used as the property name.
+<p><a href="#javadoc:dev/morphia/annotations/Property.html" class="page unresolved">@Property</a> is an optional annotation instructing Morphia to persist the field using the given name in the document saved in MongoDB. By default, the field name is used as the property name.
 This can be overridden by passing a String with the new name to the annotation.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_transient"><a class="anchor" href="#_transient"></a>Transient</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Transient.html" class="page">@Transient</a> instructs Morphia to ignore this field when converting an entity to a document.
+<p><a href="#javadoc:dev/morphia/annotations/Transient.html" class="page unresolved">@Transient</a> instructs Morphia to ignore this field when converting an entity to a document.
 The Java keyword <code>transient</code> can also be used instead.</p>
 </div>
 </div>
@@ -393,13 +393,13 @@ The field&#8217;s value gets converted to a <code>byte[]</code> and passed to Mo
 <div class="sect2">
 <h3 id="_notsaved"><a class="anchor" href="#_notsaved"></a>NotSaved</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/NotSaved.html" class="page">@NotSaved</a> instructs Morphia to ignore this field when saving but will still be loaded from the database when the entity is read.</p>
+<p><a href="#javadoc:dev/morphia/annotations/NotSaved.html" class="page unresolved">@NotSaved</a> instructs Morphia to ignore this field when saving but will still be loaded from the database when the entity is read.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_alsoload"><a class="anchor" href="#_alsoload"></a>AlsoLoad</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/AlsoLoad.html" class="page">@AlsoLoad</a> instructs Morphia to look for a field under different names than the mapped name.
+<p><a href="#javadoc:dev/morphia/annotations/AlsoLoad.html" class="page unresolved">@AlsoLoad</a> instructs Morphia to look for a field under different names than the mapped name.
 When a field gets remapped to a new name, you can either update the database and migrate all the fields at once or use this annotation to tell Morphia what older names to try if the current one fails.
 It is an error to have values under both the old and new key names when loading a document.
 These alternate names are not used in queries, however, so if there are queries against this field they should be updated to use the alternate names as well or the database should be updated such that every instance of the old name is renamed.</p>
@@ -408,7 +408,7 @@ These alternate names are not used in queries, however, so if there are queries 
 <div class="sect2">
 <h3 id="_version"><a class="anchor" href="#_version"></a>Version</h3>
 <div class="paragraph">
-<p><a href="javadoc/dev/morphia/annotations/Version.html" class="page">@Version</a> marks a field in an entity to control optimistic locking.
+<p><a href="#javadoc:dev/morphia/annotations/Version.html" class="page unresolved">@Version</a> marks a field in an entity to control optimistic locking.
 If the versions change in the database while modifying an entity (including deletes) a <code>ConcurrentModificationException</code> will be thrown.
 This field will be automatically managed for you&#8201;&#8212;&#8201;there is no need to set a value and you should not do so.
 If another name beside the Java field name is desired, a name can be passed to this annotation to change the document&#8217;s field name.</p>

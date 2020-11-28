@@ -1,236 +1,0 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../_/css/javadoc.css">
-<!--    <script type="text/javascript" src="../../../../../_/js/vendor/script.js"></script> This one is GPL -->
-    <script type="text/javascript" src="../../../../../_/js/vendor/javadoc.js"></script>
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils.js"></script>-->
-    <!--[if IE]>
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jszip-utils/dist/jszip-utils-ie.js"></script>-->
-    <![endif]-->
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jquery-3.3.1.js"></script>-->
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jquery-migrate-3.0.1.js"></script>-->
-<!--    <script type="text/javascript" src="../../../../../_/_/js/vendor/javadoc/jquery/jquery-ui.js"></script>-->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../getting-started.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../index.html">Javadoc</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../validationExtension.html">Validation Extension</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../critter/4.1/index.html">4.1-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../critter/4.0/index.html">4.0</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../2.2/index.html">2.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../2.2/javadoc/jquery/images/ui-icons_222222_256x240.png">2.2-SNAPSHOT</a>
-    <a class="version" href="../../../../2.1/javadoc/jquery/images/ui-icons_222222_256x240.png">2.1</a>
-    <a class="version" href="../../../../2.0/javadoc/jquery/images/ui-icons_222222_256x240.png">2.0</a>
-    <a class="version is-current" href="ui-icons_222222_256x240.png">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        �PNG
-
-   IHDR      �   E�r@   bKGD "�b�   	pHYs   H   H F�k>  'IDATx��{he�}�?g����{��1)�����]K&qq�U�4kbiK�R(H��B��P(I�vJ�_��ӮIV�@nB�5i�N��iG�jq�&~A#Q����rX'����9�:�ܫ{�3�E{�=�y�o~3g~��Mp�&����1Xxh8<�#dlЅ�Mx1�&��$�5~��V��	��c�$��ױ���, ���	��ƹ�i���N:�Z��ߊY���>�"�B ��H!�������-C�u�8t�}����8�!�B��	*�OF�.[�aͲ��l��B&���1h�>��M]hN���4MAb���̐!(�hE�1�5jձcO�<6�e7��,e���S(� f�o�16+3�y
-JR|{�^3�^����{�88������~'����pxh8<4�� �g����������2� n6e̘�����{�����Q�����pӀ��P�A��iۺߖ�f�S����(�D��'�L�6=����T:s���f�q��羀l��.c�I
-���ǧ�=�i���M�>��ڠLN{U��&������&��{u��o��� �.�.��4~#����pxh8<4�� �g��Û��p���^i����/�0���TW�c����Q��� �@)��y��u}`L��Uc���%T��� ����ȥ
-�A��R��@�?��P�-`����BKl�b����Z}�������Ш��͢uJ��%U�]�K2��ets�Y���@,e e���豅r��jcܭs��M�n�0A���mP��y�D�K(5�,�lN�&b�D�m�rwYDV����t�e$��謷��L���[��C��0O��	P��&��0����+��;��g���3@������pxh8<4����Y��`��O����F�Z<��h�\J!c��`����j�;TK�Vr�0��ʹqc�cGz�䟾c�[ ̕P5�t�h�)���ti���З߭ty��׎�����&��M/Е����S���u����@��݅���n���b�9��`y�9�󉡔�Ya�SX�0e���q�J`nB���g����b�����3���4P�- k�**�@HC�z(}�򯂬�U����cj2��=��Ob�� ��3�����R��05���1U�\8SMi�U��}���΀�l�Hl�N����J��q+%e� 7s���"�<։�ּ�z����M�L�T��ƾP��1f�1i��Ѹ��Vp������pxh8<4�z�A��+ o`�I_�R�����~�~��f��սh`�Ic�K�h����Q�p��xx`=�j�`]|S�B�(������(��v���F3�4v�؁6��T��4���5��� :���*��-D#�n6��a��J<U���~�y(�1��(,�|t�z�}��d��j��0u]PT��-D}@� ���
-�n�+[�Ύ� A�B�T���(V� K������BT<𑹗[F{ m��=��-�ڤ����$��.��JR�Uj��:X��e�n�e���bՅ��"C	��e2�@�Ј�݂�	�Ѱ���xxh8<4�� ��1@kX6I��<��M*�Љ�Ѣ�+�b���04(�.�M3Z�<]&i�UuY�a� ^2�w�ͻ�ɨn�U�@�n����E�4���O�Us�.J���}��dw�Ed�p��� ��me^f���mFgg������T��G4�Ѱ����m��������N��է��N�c�����������5�L�xi���D��9�|��%ܔ�h�P=�áb����o�p�VBG�X ,�#E��+�\�^��o ʼdM��ɳ]�d����.�@ 䮚���D���e��FU6'g6��)��52p|��f��X�_a�"z��x���� �w�.c�t�
-� �g���3@ñ�`"�i��K�9���sD07�
-ӕS��E�oC�Y�Z�l'N��~_Sƞ��y���a��xK�������z�-&|(�ϜC�K������Xg�d����5Ig��8k8YTL=�,/
-]s��w-~��t�����e��	^�~�&6vh�}�Զ�:g���?m�bG!����1�:O8� ��]�%��2�����v
-�E�@�5"�6	Y�rXcRb��ݎ���E%���`�#�D��r¤��Z�:�ϛ!�x�R� �h�!��}v�۴��ϳ����x�y}FrA1#�*�u�T�?>��!�x#�~��G���k���@3K@�:>P�R�����M�A|��e]K�g�F.B� ���t�l �OY d��!(v�V�X��%m�#� �I[RR�`2�T��	��H��w�Y�u=���b�YPEc�U%�&@��Ĺ�]��}�q���o7*�G�L���e�QX�5�U����-����³��8| ���_�ݟ��5\�5�p�VH^��\�Fآ��a��a��5�l1�4[��#�b�o�P�1�E��is��wMJ'5�T���06�B|I�,b�����`�ՈP���X�k��B�$�[��-E�OHt�|�3�D�(i��d9�N6@x/ؠm�(�#�wj�P�t��/Z���ob q%[:���3^�~a��5���5�����|E닃�^�E��$�L�-���_s,
-߫��㕔Ņ�&��
-�_�,�������#F�}����&���.��<4�� �g���O��rdh9�����M7L(5꓂.���?M(�����stզ��-?�:��[ڧC�r�]�'��YB�2�l�C|l�eXS��pG��0KcI��~�u�L0/��y�Lt�r�I�?�R�%�����-�w�Ƿ�h���$L �J� V���Ϳ�Ӣ,�����g�x�_7��l��4�*��u�M+�@�x�<}��ã��q>��<�#��`�i�
-:=��*��ۿ�{��)��_��8hs���������p�CWғ�K�`B]H��"}���_P�N���t�Q�l��1Y�Q�h+����&?��x�5:�	֘aY�ҭ���=\��En��������.�Yʸ��J���E%uTj5�����F�' �����b;[��v�ט4�u��6]�lkw�3�÷���,: ��%&���[|��|��|Yi�q`:�����qXc�2+u|~/�wrz�[j-�I>#���,�9�Q:�#,2�����5@�@%��S@@6ÅJ�{��6��{��)h���W�~q]����t��<�+|�'�0O�a����6���3�U��HW������l;�����'�Z9�Z\�o��O�嵁���e�e�Ƣ[o��da�����rEm&�ʧ�������3m���6��=�g�^S��x
-Hj���mi�(v��ۈ�{.�h�_���%�8��nF�7y{�����O���FS5�:�����/��ա���W�P�H+b�����Gx��/9��I�Yy�.����M�t��T�eە,�ѿ�-�R����e�d��
-��;�Ә:�9k��T�5��m������ ���E�G��|\Wu����ǣ��@^L�� E�� ��4�� �g���y��;
-J'U��䐎N׷�<�p2m���ӫ��.Z������Z5<� V
-,��p�3��w�=~�3j��ǿě�#����ʭ�|�S��f�yk��=C�n1]�C�'I_O��*,�J՞�D\\I���}�E�\�$�M�(�E��\�߮�?ƫw
-�����Ǌ��E�b�6��t�z�:<��u��d��k��vs!��PfM��7dT����3	��*S,�AZl+N����l�R�&{�I��T�G�O�*�M~�;������XFS��j����^�Q���N�n3�Z���0Ne�R�]�3�8��<�$@�˜c.�t�=�.{e��'�TI�s��u����>-?B��p���?�� X�J	$�x�QJ }�!#��Ո2�Ht!VɽV�\'� �Y�3�6����6Yu��JOAa�[5e���]p9=7����t���_�y��?�OS���<V��q.��Ի���;�8�~��YE����KSȀ��Xjq@M ����/�p�X� ۴�[�S��c7�'S6	�E� ������_Ձ'�_��)^3�b�h���+Z	��"rLz�ZA��#��[��' ?�Z7{mZl�Ӭ�Q�De+^��o�*D��g��r؈;/�."��HF�Ƴ5��)F	���2�c.�W�~�`����VEl����6�R����8ظ�ky�k�.����`��Fp7pps"�"��KR{(us�[�%6u�s�ͻ���,BD�����/�ȷ�_Pt?�Y�Vy�.s���Y�3����3������\�V*#��y�f2j��g����A��Ѣ�
-�g�-�5����Fh�-1�9�v��<�s	�����m�� =/�_f�WX�M�&�לi�RvٗQt��_���"������Q<�(�1[��_~��b"T z3��sxh8��������p�`Z�/�NΧ���F��{�"p�i`��
-�gsO��s�.�G}��t<��9�ug����g�R`���&��X�t�岇�}�	������7�� �2J�X�e\��	08j=�XJ�Ql�l����x�6z(\5Q��I��=�l
-8�7Ɏ���E�a4�O�;�-��M�1Iy�vV�y^�b�EN��sQ���Cw[�2	��V�Ǽ�	o�yw�7J����K'�Tu�l�>_�i���T��<͛<�iM
-�p������7�YMW���=�ӡl(����u�+���^j��>3��2N 묳}��j H� QRT�Ȣ�� ���n�fݮ�~�+��c�iQ��<����Ma=��|�*����
-�$@'��Ԍ��ǕqUO;�5~@��eI�2��9�w��"��O�~��s��s��k{��$�m��>����v�z��^2���v�ow�`a������4c��M C�����b�>����q:��o�=�-�p`_2�ng:6K��XV,����2�Ǿ��6�� �g���3@�� ��ś�s a�� �R��WWB
-g-N�;F[��Ւa�A� V�L�F�<-m
-VbMC����7���K)�X����P�y��s�~��=�����<�ܒ�{�x!�=����Ãq�R��l�]���/���� 0�l)'�}�#�^tX��孋�t�8FC�Y�$)�PUBE�(~��Ҟ��V�2^��*SL�H�l��S��'IA[�������Z���x-V�"ȥ�J�+���\�|�5u�W��nLJ�k �ܟ���(0�0����JyꞄ���a���f��g����6�� �g���3@Ñg ��[�}��Z����Q�k?ҳ=��z�I$Т�:�9FW��m�x��:\(�W���+��e���F�9��,��*�!Gh�D��L��8�[v��o�����)�A�a�K�5�S/�)^c����(��W�H�N�W8T�r=op��p]MC�O?���*��
-D΢O  b/�hs�0�ڜb�9�1C�9-����o�ۿ���ԗ��u���Q��Fc���|W�%@�HB�2�9�������/Dx�D`�U:�Ƈ�gi����"`�%��ᄽ
-������t�E`t���6�2k�)P�E�ѿO,��?�k��_�yh(/����=@��u�g���3@������v@]��<����]���~��WD�`��.��f���~�o��ʈ�N�VA� ߈�ե�M������^��y��M�Q|��ߛ^-{o�~��>��w���Ѓ
-��(��g��X���ץ�i��&�X
-u��D�U���͕l� ��ғޥ�ߞ���k� �����PH�H�C �J�~��S�@O�� �׋�ѓy7����k {��25���of����ϫ�o���{� �'!�'���Z%��q�*)�g���C\���#��\���'��0���P_���WL��7��&AlJ���\��� Z��p��,���Y�x��j�c�����O�(6z��I�V�� u�:ג���T��D��O��9�ׄ�Q<��*y=���2��~����/?Ｊ,����WJ�Q�W�>����W��u�?��#G��/����4�"�K���{㧏�',I��ҟ综E;���|R�ݠ��~��W�7i8�6����pxh8<4�� ��r�<}8� kG�o;��u�C��P��v�)��A�<$��ց;��{l��� ����� � #`��F���C�!f�	Ӆ/`7��(��0R!9�9�z���@%!/m�]���Ad �hv�G�����3@������pxh8<4{����P/ 3@�}��	B&�^�16�{.�� ��ߠa�Q�o���2l���mt���!\%@�X���?5��ճa��~��ʠM65wk��a�)T���F��_�
-2�$�x�5�_9!�VxRd�1!}����'�`�$����Uԇ��r�?�	�Q
-�`7`�.���k����_V����zԄ��p�]]�GO���LXCk�3�   %tEXtdate:create 2016-07-13T10:21:59+00:00��   %tEXtdate:modify 2016-07-13T09:26:54+00:00�͠   tEXtSoftware Adobe ImageReadyq�e<    IEND�B`�
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2020
-</footer>
--->
-<script src="../../../../../_/js/site.js"></script>
-<script async src="../../../../../_/js/vendor/highlight.js"></script>
-  </body>
-</html>
