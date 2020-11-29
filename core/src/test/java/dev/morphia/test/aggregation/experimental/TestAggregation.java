@@ -28,6 +28,7 @@ import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
 import dev.morphia.query.Type;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.test.TestBase;
@@ -77,7 +78,6 @@ import static org.testng.Assert.assertNotNull;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class TestAggregation extends TestBase {
-
     @Test
     public void testAdd() {
         getMapper().map(Sales.class);
@@ -435,32 +435,6 @@ public class TestAggregation extends TestBase {
         assertDocumentEquals(actual, expected);
     }
 
-/*
-    @Test
-    public void testLookupWithPipeline() {
-        insert("orders", List.of(
-            parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
-            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
-            parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
-
-        insert("warehouses", List.of(
-            parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
-            parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
-            parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
-            parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
-            parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
-
-        getDs().aggregate("orders")
-               .lookup(Lookup.from("warehouses")
-                             .let("order_item", field("item"))
-                             .let("order_qty", field("ordered"))
-                             .pipeline(
-                          Match.on(getDs().find()
-                                       .expr())
-                               ))
-    }
-*/
-
     @Test
     public void testNullGroupId() {
         getDs().save(asList(new User("John", LocalDate.now()),
@@ -535,6 +509,32 @@ public class TestAggregation extends TestBase {
 
         assertNotNull(stats);
     }
+
+/*
+    @Test
+    public void testLookupWithPipeline() {
+        insert("orders", List.of(
+            parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
+            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
+            parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
+
+        insert("warehouses", List.of(
+            parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
+            parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
+            parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
+            parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
+            parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
+
+        getDs().aggregate("orders")
+               .lookup(Lookup.from("warehouses")
+                             .let("order_item", field("item"))
+                             .let("order_qty", field("ordered"))
+                             .pipeline(
+                          Match.on(getDs().find()
+                                       .expr())
+                               ))
+    }
+*/
 
     @Test
     public void testProjection() {
@@ -705,6 +705,23 @@ public class TestAggregation extends TestBase {
                          .append("first", "")
                          .append("last", ""));
         assertDocumentEquals(actual, expected);
+    }
+
+    @Test
+    public void testResultTypes() {
+        getMapper().map(Martian.class);
+
+        Martian martian = new Martian();
+        martian.name = "Marvin";
+        getDs().save(martian);
+
+        List<Human> execute = getDs().aggregate(Martian.class)
+                                     .limit(1)
+                                     .execute(Human.class)
+                                     .toList();
+        Human human = execute.get(0);
+        assertEquals(human.id, martian.id);
+        assertEquals(human.name, martian.name);
     }
 
     @Test
@@ -885,6 +902,20 @@ public class TestAggregation extends TestBase {
     private static class Employee {
         @Id
         private ObjectId id;
+    }
+
+    @Embedded
+    private static class Human {
+        @Property("_id")
+        public ObjectId id;
+        public String name;
+    }
+
+    @Entity
+    private static class Martian {
+        @Id
+        public ObjectId id;
+        public String name;
     }
 
     @Embedded

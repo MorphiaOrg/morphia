@@ -1,6 +1,10 @@
 package dev.morphia.aggregation.experimental;
 
+import com.mongodb.ServerAddress;
+import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
@@ -34,10 +38,13 @@ import dev.morphia.aggregation.experimental.stages.UnionWith;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.Document;
 import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
@@ -104,7 +111,17 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType) {
-        return new MorphiaCursor<>(collection.aggregate(getDocuments(), resultType).iterator());
+        MongoCursor<R> cursor;
+        EntityModel resultModel = datastore.getMapper().getEntityModel(resultType);
+        if (resultModel != null && !resultType.equals(this.collection.getDocumentClass())) {
+            MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
+            MongoCursor<Document> results = collection.aggregate(getDocuments()).iterator();
+            String discriminator = datastore.getMapper().getEntityModel(this.collection.getDocumentClass()).getDiscriminatorKey();
+            cursor = new MappingCursor<>(results, datastore.getMapper().getCodecRegistry().get(resultType), discriminator);
+        } else {
+            cursor = collection.aggregate(getDocuments(), resultType).iterator();
+        }
+        return new MorphiaCursor<>(cursor);
     }
 
     @Override
@@ -280,4 +297,54 @@ public class AggregationImpl<T> implements Aggregation<T> {
                      })
                      .collect(Collectors.toList());
     }
+
+    private static class MappingCursor<R> implements MongoCursor<R> {
+        private final MongoCursor<Document> results;
+        private final Codec<R> codec;
+        private final String discriminator;
+
+        public <T> MappingCursor(MongoCursor<Document> results, Codec<R> codec, String discriminator) {
+            this.results = results;
+            this.codec = codec;
+            this.discriminator = discriminator;
+        }
+
+        @Override
+        public void close() {
+            results.close();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return results.hasNext();
+        }
+
+        @Override
+        public R next() {
+            return map(results.next());
+        }
+
+        @Override
+        @Nullable
+        public R tryNext() {
+            return map(results.tryNext());
+        }
+
+        @Override
+        @Nullable
+        public ServerCursor getServerCursor() {
+            return results.getServerCursor();
+        }
+
+        @Override
+        public ServerAddress getServerAddress() {
+            return results.getServerAddress();
+        }
+
+        private R map(Document next) {
+            next.remove(discriminator);
+            return codec.decode(new DocumentReader(next), DecoderContext.builder().build());
+        }
+    }
+
 }

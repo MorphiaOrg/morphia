@@ -7,7 +7,6 @@ import com.mongodb.client.MongoCursor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 /**
@@ -49,34 +48,22 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      * Closes the underlying cursor.
      */
     public void close() {
-        if (wrapped != null) {
-            wrapped.close();
-        }
+        wrapped.close();
     }
 
     @Override
     public boolean hasNext() {
-        if (wrapped == null) {
-            return false;
-        }
         return wrapped.hasNext();
     }
 
     @Override
     public T next() {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
         return wrapped.next();
     }
 
     @Override
     public T tryNext() {
-        if (hasNext()) {
-            return next();
-        } else {
-            return null;
-        }
+        return wrapped.tryNext();
     }
 
     @Override
