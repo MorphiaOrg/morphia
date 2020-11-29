@@ -5,7 +5,7 @@ name: MorphiaCI
 
 on:
   push:
-    branches: [ master, github-actions-test ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
