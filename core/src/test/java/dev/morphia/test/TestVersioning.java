@@ -13,6 +13,7 @@ import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,6 +31,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertThrows;
 
 public class TestVersioning extends TestBase {
 
@@ -145,31 +147,6 @@ public class TestVersioning extends TestBase {
     }
 
     @Test
-    public void testUpdatesToVersionedFileAreReflectedInTheDatastore() {
-        final Versioned version1 = new Versioned();
-        version1.setName("foo");
-
-        this.getDs().save(version1);
-
-        final Versioned version1Updated = getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
-        version1Updated.setName("bar");
-
-        this.getDs().merge(version1Updated);
-
-        final Versioned versionedEntityFromDs = this.getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
-        assertEquals(version1Updated.getName(), versionedEntityFromDs.getName());
-    }
-
-    @Test
-    public void testVersionedInserts() {
-        List<Versioned> list = asList(new Versioned(), new Versioned(), new Versioned(), new Versioned(), new Versioned());
-        getDs().insert(list);
-        for (Versioned versioned : list) {
-            assertNotNull(versioned.getVersion());
-        }
-    }
-
-    @Test
     public void testInittedWrapper() {
         getMapper().map(InittedWrapper.class);
         InittedWrapper wrapper = new InittedWrapper();
@@ -179,6 +156,12 @@ public class TestVersioning extends TestBase {
                                       .first();
 
         assertEquals(first.hubba, wrapper.hubba);
+
+        assertThrows(ConcurrentModificationException.class, () -> {
+            InittedWrapper hasId = new InittedWrapper();
+            hasId.id = new ObjectId();
+            getDs().save(hasId);
+        });
     }
 
     @Test
@@ -207,6 +190,22 @@ public class TestVersioning extends TestBase {
     }
 
     @Test
+    public void testUpdatesToVersionedFileAreReflectedInTheDatastore() {
+        final Versioned version1 = new Versioned();
+        version1.setName("foo");
+
+        this.getDs().save(version1);
+
+        final Versioned version1Updated = getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
+        version1Updated.setName("bar");
+
+        this.getDs().merge(version1Updated);
+
+        final Versioned versionedEntityFromDs = this.getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
+        assertEquals(version1Updated.getName(), versionedEntityFromDs.getName());
+    }
+
+    @Test
     public void testVersionNumbersIncrementWithEachSave() {
         final Versioned version1 = new Versioned();
         getDs().save(version1);
@@ -215,6 +214,15 @@ public class TestVersioning extends TestBase {
         final Versioned version2 = getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
         getDs().save(version2);
         Assert.assertEquals(Long.valueOf(2), version2.getVersion());
+    }
+
+    @Test
+    public void testVersionedInserts() {
+        List<Versioned> list = asList(new Versioned(), new Versioned(), new Versioned(), new Versioned(), new Versioned());
+        getDs().insert(list);
+        for (Versioned versioned : list) {
+            assertNotNull(versioned.getVersion());
+        }
     }
 
     @Test

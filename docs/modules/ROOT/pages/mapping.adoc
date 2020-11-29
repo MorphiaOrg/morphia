@@ -61,11 +61,17 @@ This API is experimental and is likely to shift a bit as it sees usage and feedb
 === Versioning
 
 Entities can be versioned to ensure that changes are applied serially and that no other processes are modifying an object in between the time it's fetched, modified, and written back to the database.
-To achieve this, simply add a field to a type, it can be a `long` or a
-`Long`, and annotate that field with xref:javadoc:dev/morphia/annotations/Version.html#[@Version].
-This field must not be initialized to anything other than zero or null, however.
+To achieve this, simply add a field to a type, it can be a `long` or a `Long`, and annotate that field with
+xref:javadoc:dev/morphia/annotations/Version.html#[@Version].
 Morphia will take care of the rest.
 If an object is fetched and another process updates the corresponding document in the database before it can be persisted back, an exception will be thrown when the write is attempted.
+
+[NOTE]
+====
+This field must not be initialized to anything other than zero or null or the ID field must be null.
+Morphia checks the value of the version field or that the ID is null in order properly save the first version.
+If neither of these conditions are true, the entity will not be persisted.
+====
 
 === Fields
 
