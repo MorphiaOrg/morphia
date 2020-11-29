@@ -551,7 +551,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         long newVersion = oldVersion == null ? 1L : oldVersion + 1;
         ClientSession session = findSession(options);
 
-        if (newVersion == 1) {
+        if (idValue == null) {
             try {
                 updateVersion(entity, versionField, newVersion);
                 if (session == null) {
@@ -563,7 +563,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 updateVersion(entity, versionField, oldVersion);
                 throw new ConcurrentModificationException(Sofia.concurrentModification(entity.getClass().getName(), idValue));
             }
-        } else if (idValue != null) {
+        } else {
             final UpdateResult res = find(collection.getNamespace().getCollectionName())
                                          .filter(eq("_id", idValue),
                                              eq(versionField.getMappedName(), oldVersion))

@@ -33,25 +33,7 @@ public class VersionMisuse extends FieldConstraint {
     protected void check(Mapper mapper, EntityModel entityModel, FieldModel mf, Set<ConstraintViolation> ve) {
         if (mf.hasAnnotation(Version.class) && !entityModel.isAbstract()) {
             final Class<?> type = mf.getField().getType();
-            if (Long.class.equals(type) || long.class.equals(type)) {
-
-                final Object testInstance = creator.getInstance();
-
-                // check initial value
-                if (Long.class.equals(type)) {
-                    if (mf.getValue(testInstance) != null) {
-                        ve.add(new ConstraintViolation(Level.FATAL, entityModel, mf, getClass(),
-                            format("When using @%s on a Long field, it must be initialized to null.",
-                                Version.class.getSimpleName())));
-                    }
-                } else {
-                    if ((Long) mf.getValue(testInstance) != 0L) {
-                        ve.add(new ConstraintViolation(Level.FATAL, entityModel, mf, getClass(),
-                            format("When using @%s on a long field, it must be initialized to 0.",
-                                Version.class.getSimpleName())));
-                    }
-                }
-            } else {
+            if (!Long.class.equals(type) && !long.class.equals(type)) {
                 ve.add(new ConstraintViolation(Level.FATAL, entityModel, mf, getClass(),
                     format("@%s can only be used on a Long/long field.", Version.class.getSimpleName())));
             }

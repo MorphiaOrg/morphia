@@ -1,4 +1,4 @@
-package dev.morphia.entities.version;
+package dev.morphia.test.models.versioned;
 
 import dev.morphia.annotations.Entity;
 

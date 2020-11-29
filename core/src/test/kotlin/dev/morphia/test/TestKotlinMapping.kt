@@ -2,6 +2,7 @@ package dev.morphia.test
 
 import dev.morphia.annotations.Entity
 import dev.morphia.annotations.Id
+import dev.morphia.annotations.Version
 import org.bson.types.ObjectId
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertFalse
@@ -19,7 +20,21 @@ class TestKotlinMapping : TestBase() {
 
         assertEquals(loaded, myClass)
     }
+
+    @Test
+    fun versioning() {
+        ds.mapper.map(VersionedDataClass::class.java)
+        val versioned = VersionedDataClass(null, "temp")
+        ds.save(versioned)
+        val loaded = ds.find(VersionedDataClass::class.java)
+            .first()
+
+        assertEquals(loaded, versioned)
+    }
 }
 
 @Entity
-data class MyClass(@Id val id: ObjectId, val value: Int = 0)
+private data class MyClass(@Id val id: ObjectId, val value: Int = 0)
+
+@Entity
+private data class VersionedDataClass(@Id val id: ObjectId?, val name: String, @Version var version: Long = 0)
