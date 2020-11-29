@@ -10,7 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  ${NAME}:
+  Morphia:
     runs-on: ubuntu-latest
     strategy:
       matrix:
