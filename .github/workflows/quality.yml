@@ -1,36 +1,28 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: MorphiaCI
+name: Morphia Quality Checks
 
 on:
   push:
-    branches: [ master, 1.6.*, 2.* ]
+    branches: [ master, 2.* ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  Morphia:
+  Quality Checks:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ 11, 15 ]
-        mongo: [ 4.4.2, 4.2.11, 4.0.21, 3.6.21 ]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK ${{ matrix.java }}
+      - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ matrix.java }}
+          java-version: 11
       - name: Cache Maven packages
         uses: actions/cache@v1
         with:
           path: ~/.m2
           key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
           restore-keys: \${{ runner.os }}-m2
-      - name: Build with Maven
-        env:
-          MONGODB: ${{ matrix.mongo }}
-        run: mvn -B verify --file pom.xml
       - name: Quality Checks
         run: mvn -Pquality --file core/pom.xml
