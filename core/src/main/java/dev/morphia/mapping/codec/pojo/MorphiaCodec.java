@@ -106,6 +106,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return decoder;
     }
 
+    /**
+     * Sets the decoder
+     *
+     * @param decoder the decoder
+     */
     public void setDecoder(EntityDecoder decoder) {
         this.decoder = decoder;
     }

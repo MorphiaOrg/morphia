@@ -17,6 +17,7 @@ public class LifecycleEncoder extends EntityEncoder {
      * Creates a new encoder
      *
      * @param morphiaCodec the codec
+     * @param <T>          the type
      */
     public <T> LifecycleEncoder(MorphiaCodec<T> morphiaCodec) {
         super(morphiaCodec);
