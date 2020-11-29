@@ -32,5 +32,3 @@ jobs:
         env:
           MONGODB: ${{ matrix.mongo }}
         run: mvn -B verify --file pom.xml
-      - name: Quality Checks
-        run: mvn -Pquality --file core/pom.xml
