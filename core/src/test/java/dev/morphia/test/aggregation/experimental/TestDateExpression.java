@@ -44,7 +44,7 @@ import static dev.morphia.aggregation.experimental.stages.Projection.of;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 
-public class DateExpressionTest extends ExpressionsTestBase {
+public class TestDateExpression extends ExpressionsTestBase {
     @Test
     public void testDateAggregation() {
         insert("sales", List.of(

@@ -1,10 +1,16 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
+import dev.morphia.mapping.codec.pojo.LifecycleEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -42,11 +48,17 @@ public class MorphiaCodecProvider implements CodecProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> MorphiaCodec get(Class<T> type, CodecRegistry registry) {
-        MorphiaCodec codec = (MorphiaCodec) codecs.get(type);
+    public <T> Codec<T> get(Class<T> type, CodecRegistry registry) {
+        MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && mapper.isMappable(type)) {
-            codec = new MorphiaCodec(datastore, mapper.getEntityModel(type), propertyCodecProviders,
-                mapper.getDiscriminatorLookup(), registry);
+            EntityModel model = mapper.getEntityModel(type);
+            codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry);
+            if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasInterceptors()) {
+                codec.setEncoder(new LifecycleEncoder(codec));
+            }
+            if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasInterceptors()) {
+                codec.setDecoder(new LifecycleDecoder(codec));
+            }
             codecs.put(type, codec);
         }
 
@@ -68,7 +80,7 @@ public class MorphiaCodecProvider implements CodecProvider {
             protected EntityDecoder getDecoder() {
                 return new EntityDecoder(this) {
                     @Override
-                    protected MorphiaInstanceCreator getInstanceCreator(EntityModel classModel) {
+                    protected MorphiaInstanceCreator getInstanceCreator() {
                         return new MorphiaInstanceCreator() {
                             @Override
                             public T getInstance() {
@@ -77,7 +89,7 @@ public class MorphiaCodecProvider implements CodecProvider {
 
                             @Override
                             public void set(Object value, FieldModel model) {
-                                model.getAccessor().set(getInstance(), value);
+                                model.getAccessor().set(entity, value);
                             }
                         };
                     }

@@ -1,15 +1,11 @@
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PreLoad;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonType;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
@@ -23,35 +19,33 @@ import static dev.morphia.mapping.codec.Conversions.convert;
  */
 public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     private final MorphiaCodec<?> morphiaCodec;
+    private final EntityModel classModel;
 
     protected EntityDecoder(MorphiaCodec<?> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
+        classModel = morphiaCodec.getEntityModel();
     }
 
     @Override
     public Object decode(BsonReader reader, DecoderContext decoderContext) {
         Object entity;
-        if (morphiaCodec.getEntityModel().hasLifecycle(PreLoad.class)
-            || morphiaCodec.getEntityModel().hasLifecycle(PostLoad.class)
-            || morphiaCodec.getMapper().hasInterceptors()) {
-            entity = decodeWithLifecycle(reader, decoderContext);
+        if (decoderContext.hasCheckedDiscriminator()) {
+            MorphiaInstanceCreator instanceCreator = getInstanceCreator();
+            decodeProperties(reader, decoderContext, instanceCreator);
+            return instanceCreator.getInstance();
         } else {
-            EntityModel classModel = morphiaCodec.getEntityModel();
-            if (decoderContext.hasCheckedDiscriminator()) {
-                MorphiaInstanceCreator instanceCreator = getInstanceCreator(classModel);
-                decodeProperties(reader, decoderContext, instanceCreator);
-                return instanceCreator.getInstance();
-            } else {
-                entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
-                    morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
-                             .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
-            }
+            entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
+                morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
+                         .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
         }
 
         return entity;
     }
 
-    @SuppressWarnings("unchecked")
+    protected MorphiaInstanceCreator getInstanceCreator() {
+        return classModel.getInstanceCreator();
+    }
+
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
                                MorphiaInstanceCreator instanceCreator, FieldModel model) {
 
@@ -90,7 +84,6 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
         reader.readEndDocument();
     }
 
-    @SuppressWarnings("unchecked")
     protected Codec<?> getCodecFromDocument(BsonReader reader, boolean useDiscriminator, String discriminatorKey,
                                             CodecRegistry registry, DiscriminatorLookup discriminatorLookup,
                                             Codec<?> defaultCodec) {
@@ -116,22 +109,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
         return codec != null ? codec : defaultCodec;
     }
 
-    protected MorphiaInstanceCreator getInstanceCreator(EntityModel classModel) {
-        return classModel.getInstanceCreator();
+    protected MorphiaCodec<?> getMorphiaCodec() {
+        return morphiaCodec;
     }
-
-    private Object decodeWithLifecycle(BsonReader reader, DecoderContext decoderContext) {
-        final Object entity;
-        final MorphiaInstanceCreator instanceCreator = getInstanceCreator(morphiaCodec.getEntityModel());
-        entity = instanceCreator.getInstance();
-
-        Document document = morphiaCodec.getRegistry().get(Document.class).decode(reader, decoderContext);
-        morphiaCodec.getEntityModel().callLifecycleMethods(PreLoad.class, entity, document, morphiaCodec.getMapper());
-
-        decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
-
-        morphiaCodec.getEntityModel().callLifecycleMethods(PostLoad.class, entity, document, morphiaCodec.getMapper());
-        return entity;
-    }
-
 }

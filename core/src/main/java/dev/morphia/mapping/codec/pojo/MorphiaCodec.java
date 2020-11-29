@@ -37,7 +37,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
-    private final EntityEncoder encoder = new EntityEncoder(this);
+    private EntityEncoder encoder;
+    private EntityDecoder decoder;
 
     /**
      * Creates a new codec
@@ -59,6 +60,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         this.propertyCodecRegistry = new PropertyCodecRegistryImpl(this, registry, propertyCodecProviders);
         idField = model.getIdField();
         specializePropertyCodecs();
+        encoder = new EntityEncoder(this);
+        decoder = new EntityDecoder(this);
     }
 
     @Override
@@ -78,8 +81,33 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return entityModel;
     }
 
+    /**
+     * @return the encoder
+     */
+    public EntityEncoder getEncoder() {
+        return encoder;
+    }
+
+    /**
+     * Sets the encoder
+     *
+     * @param encoder the encoder
+     * @return this
+     */
+    public MorphiaCodec<T> setEncoder(EntityEncoder encoder) {
+        this.encoder = encoder;
+        return this;
+    }
+
+    /**
+     * @return the decoder
+     */
     protected EntityDecoder getDecoder() {
-        return new EntityDecoder(this);
+        return decoder;
+    }
+
+    public void setDecoder(EntityDecoder decoder) {
+        this.decoder = decoder;
     }
 
     @Override

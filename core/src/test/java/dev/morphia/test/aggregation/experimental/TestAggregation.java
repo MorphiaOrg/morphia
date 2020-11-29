@@ -76,7 +76,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
-public class AggregationTest extends TestBase {
+public class TestAggregation extends TestBase {
 
     @Test
     public void testAdd() {

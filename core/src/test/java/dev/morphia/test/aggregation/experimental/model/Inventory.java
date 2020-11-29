@@ -3,6 +3,8 @@ package dev.morphia.test.aggregation.experimental.model;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
+import java.util.StringJoiner;
+
 @Entity(value = "inventory", useDiscriminator = false)
 public class Inventory {
     @Id
@@ -93,6 +95,15 @@ public class Inventory {
             return false;
         }
         return description != null ? description.equals(inventory.description) : inventory.description == null;
+    }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Inventory.class.getSimpleName() + "[", "]")
+                   .add("id=" + id)
+                   .add("sku='" + sku + "'")
+                   .add("description='" + description + "'")
+                   .add("instock=" + instock)
+                   .toString();
     }
 }

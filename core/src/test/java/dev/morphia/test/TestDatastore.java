@@ -4,9 +4,18 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.EntityListeners;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -14,7 +23,11 @@ import dev.morphia.query.Update;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.CurrentStatus;
 import dev.morphia.test.models.FacebookUser;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static com.mongodb.client.model.ReturnDocument.AFTER;
 import static com.mongodb.client.model.ReturnDocument.BEFORE;
@@ -27,7 +40,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-class TestDatastore extends TestBase {
+public class TestDatastore extends TestBase {
     @Test
     public void testCappedEntity() {
         // given
@@ -241,6 +254,164 @@ class TestDatastore extends TestBase {
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator(new FindOptions().limit(1))
                             .next()
                          .loginCount, 2);
+    }
+
+    @Test
+    public void testLifecycle() {
+        final LifecycleTestObj life1 = new LifecycleTestObj();
+        getMapper().map(List.of(LifecycleTestObj.class));
+        getDs().save(life1);
+        assertTrue(LifecycleListener.foundDatastore);
+        assertTrue(life1.prePersist);
+        assertTrue(life1.prePersistWithParam);
+        assertTrue(life1.prePersistWithParamAndReturn);
+        assertTrue(life1.postPersist);
+        assertTrue(life1.postPersistWithParam);
+
+        final Datastore datastore = getDs();
+
+        final LifecycleTestObj loaded = datastore.find(LifecycleTestObj.class)
+                                                 .filter(eq("_id", life1.id))
+                                                 .first();
+        assertTrue(loaded.preLoad);
+        assertTrue(loaded.preLoadWithParam);
+        assertTrue(loaded.postLoad);
+        assertTrue(loaded.postLoadWithParam);
+    }
+
+    @Test
+    public void testLifecycleListeners() {
+        final LifecycleTestObj life1 = new LifecycleTestObj();
+        getMapper().map(List.of(LifecycleTestObj.class));
+        getDs().save(life1);
+        assertTrue(LifecycleListener.prePersist);
+        assertTrue(LifecycleListener.prePersistWithEntity);
+    }
+
+    private static class LifecycleListener {
+        private static boolean prePersist;
+        private static boolean prePersistWithEntity;
+        private static boolean foundDatastore;
+
+        @PrePersist
+        void prePersist(Datastore datastore) {
+            foundDatastore = datastore != null;
+            prePersist = true;
+        }
+
+        @PrePersist
+        void prePersist(LifecycleTestObj obj) {
+            if (obj == null) {
+                throw new RuntimeException();
+            }
+            prePersistWithEntity = true;
+
+        }
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @Entity
+    @EntityListeners(LifecycleListener.class)
+    private static class LifecycleTestObj {
+        @Id
+        private ObjectId id;
+        @Transient
+        private boolean prePersist;
+        @Transient
+        private boolean postPersist;
+        @Transient
+        private boolean preLoad;
+        @Transient
+        private boolean postLoad;
+        @Transient
+        private boolean postLoadWithParam;
+        private boolean prePersistWithParamAndReturn;
+        private boolean prePersistWithParam;
+        private boolean postPersistWithParam;
+        private boolean preLoadWithParamAndReturn;
+        private boolean preLoadWithParam;
+
+        @PrePersist
+        public Document prePersistWithParamAndReturn(Document document) {
+            if (prePersistWithParamAndReturn) {
+                throw new RuntimeException("already called");
+            }
+            prePersistWithParamAndReturn = true;
+            return null;
+        }
+
+        @PrePersist
+        protected void prePersistWithParam(Document document) {
+            if (prePersistWithParam) {
+                throw new RuntimeException("already called");
+            }
+            prePersistWithParam = true;
+        }
+
+        @PostPersist
+        private void postPersistPersist() {
+            if (postPersist) {
+                throw new RuntimeException("already called");
+            }
+            postPersist = true;
+
+        }
+
+        @PostLoad
+        void postLoad() {
+            if (postLoad) {
+                throw new RuntimeException("already called");
+            }
+
+            postLoad = true;
+        }
+
+        @PostLoad
+        void postLoadWithParam(Document document) {
+            if (postLoadWithParam) {
+                throw new RuntimeException("already called");
+            }
+            postLoadWithParam = true;
+        }
+
+        @PostPersist
+        void postPersistWithParam(Document document) {
+            postPersistWithParam = true;
+            if (!document.containsKey("_id")) {
+                throw new RuntimeException("missing " + "_id");
+            }
+        }
+
+        @PreLoad
+        void preLoad() {
+            if (preLoad) {
+                throw new RuntimeException("already called");
+            }
+
+            preLoad = true;
+        }
+
+        @PreLoad
+        void preLoadWithParam(Document document) {
+            document.put("preLoadWithParam", true);
+        }
+
+        @PreLoad
+        Document preLoadWithParamAndReturn(Document document) {
+            final Document retObj = new Document();
+            retObj.putAll(document);
+            retObj.put("preLoadWithParamAndReturn", true);
+            return retObj;
+        }
+
+        @PrePersist
+        void prePersist() {
+            if (prePersist) {
+                throw new RuntimeException("already called");
+            }
+
+            prePersist = true;
+        }
     }
 
 }

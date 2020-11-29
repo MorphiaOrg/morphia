@@ -4,6 +4,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 @Entity("orders")
 public class Order {
@@ -101,4 +102,14 @@ public class Order {
 
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Order.class.getSimpleName() + "[", "]")
+                   .add("id=" + id)
+                   .add("item='" + item + "'")
+                   .add("price=" + price)
+                   .add("quantity=" + quantity)
+                   .add("inventoryDocs=" + inventoryDocs)
+                   .toString();
+    }
 }

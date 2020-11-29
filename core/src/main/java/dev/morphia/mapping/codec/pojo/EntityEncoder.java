@@ -1,10 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PrePersist;
-import dev.morphia.mapping.codec.DocumentWriter;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.IdGenerator;
@@ -17,6 +13,7 @@ import java.util.Map;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 /**
+ * @morphia.internal
  * @since 2.0
  */
 class EntityEncoder implements org.bson.codecs.Encoder<Object> {
@@ -24,20 +21,40 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
     private final MorphiaCodec morphiaCodec;
     private IdGenerator idGenerator;
 
-    EntityEncoder(MorphiaCodec morphiaCodec) {
+    protected EntityEncoder(MorphiaCodec morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
     }
 
     @Override
     public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
-        EntityModel model = morphiaCodec.getEntityModel();
-        if (model.hasLifecycle(PostPersist.class)
-            || model.hasLifecycle(PrePersist.class)
-            || morphiaCodec.getMapper().hasInterceptors()) {
+        encodeEntity(writer, value, encoderContext);
+    }
 
-            encodeWithLifecycle(writer, value, encoderContext);
+    @SuppressWarnings("unchecked")
+    protected void encodeEntity(BsonWriter writer, Object value, EncoderContext encoderContext) {
+        EntityModel model = morphiaCodec.getEntityModel();
+        if (areEquivalentTypes(value.getClass(), model.getType())) {
+            document(writer, () -> {
+
+                FieldModel idModel = model.getIdField();
+                encodeIdProperty(writer, value, encoderContext, idModel);
+
+                if (model.useDiscriminator()) {
+                    writer.writeString(model.getDiscriminatorKey(),
+                        model.getDiscriminator());
+                }
+
+                for (FieldModel fieldModel : model.getFields()) {
+                    if (fieldModel.equals(idModel)) {
+                        continue;
+                    }
+                    encodeProperty(writer, value, encoderContext, fieldModel);
+                }
+            });
         } else {
-            encodeEntity(writer, value, encoderContext);
+            morphiaCodec.getRegistry()
+                        .get((Class<? super Object>) value.getClass())
+                        .encode(writer, value, encoderContext);
         }
     }
 
@@ -52,30 +69,8 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
     }
 
-    @SuppressWarnings("unchecked")
-    private void encodeEntity(BsonWriter writer, Object value, EncoderContext encoderContext) {
-        if (areEquivalentTypes(value.getClass(), morphiaCodec.getEntityModel().getType())) {
-            document(writer, () -> {
-
-                FieldModel idModel = morphiaCodec.getEntityModel().getIdField();
-                encodeIdProperty(writer, value, encoderContext, idModel);
-
-                if (morphiaCodec.getEntityModel().useDiscriminator()) {
-                    writer.writeString(morphiaCodec.getEntityModel().getDiscriminatorKey(),
-                        morphiaCodec.getEntityModel().getDiscriminator());
-                }
-
-                for (FieldModel fieldModel : morphiaCodec.getEntityModel().getFields()) {
-                    if (fieldModel.equals(idModel)) {
-                        continue;
-                    }
-                    encodeProperty(writer, value, encoderContext, fieldModel);
-                }
-            });
-        } else {
-            morphiaCodec.getRegistry().get((Class<? super Object>) value.getClass())
-                        .encode(writer, value, encoderContext);
-        }
+    protected MorphiaCodec getMorphiaCodec() {
+        return morphiaCodec;
     }
 
     private void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext,
@@ -114,18 +109,6 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
                 encoderContext.encodeWithChildContext(cachedCodec, writer, propertyValue);
             }
         }
-    }
-
-    private void encodeWithLifecycle(BsonWriter writer, Object value, EncoderContext encoderContext) {
-        Document document = new Document();
-        morphiaCodec.getEntityModel().callLifecycleMethods(PrePersist.class, value, document, morphiaCodec.getMapper());
-
-        final DocumentWriter documentWriter = new DocumentWriter(document);
-        encodeEntity(documentWriter, value, encoderContext);
-        document = documentWriter.getDocument();
-        morphiaCodec.getEntityModel().callLifecycleMethods(PostPersist.class, value, document, morphiaCodec.getMapper());
-
-        morphiaCodec.getRegistry().get(Document.class).encode(writer, document, encoderContext);
     }
 
     private IdGenerator getIdGenerator() {

@@ -6,6 +6,7 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,9 @@ public class ClassMethodPair {
 
     private Object getOrCreateInstance(Class<?> type) {
         try {
-            return type.getDeclaredConstructor(new Class[0]).newInstance();
+            Constructor<?> declaredConstructor = type.getDeclaredConstructor();
+            declaredConstructor.setAccessible(true);
+            return declaredConstructor.newInstance();
         } catch (ReflectiveOperationException e) {
             throw new MappingException(Sofia.cannotInstantiate(type, e.getMessage()));
         }
