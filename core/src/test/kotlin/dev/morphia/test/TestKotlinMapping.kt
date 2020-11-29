@@ -30,6 +30,7 @@ class TestKotlinMapping : TestBase() {
             .first()
 
         assertEquals(loaded, versioned)
+        assertEquals(loaded.version, 1)
     }
 }
 
@@ -37,4 +38,4 @@ class TestKotlinMapping : TestBase() {
 private data class MyClass(@Id val id: ObjectId, val value: Int = 0)
 
 @Entity
-private data class VersionedDataClass(@Id val id: ObjectId?, val name: String, @Version var version: Long = 0)
+private data class VersionedDataClass(@Id val id: ObjectId?, val name: String, @Version val version: Long = 0)
