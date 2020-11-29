@@ -10,11 +10,10 @@ on:
     branches: [ master ]
 
 jobs:
-  build-11_4-1-1_4-4-2:
+  Java-11-MongoDB-4_4_2:
     runs-on: ubuntu-latest
     env:
       MONGODB: 4.4.2
-      DRIVER: 4.1.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -29,11 +28,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
-  build-11_4-1-1_4-2-11:
+  Java-11-MongoDB-4_2_11:
     runs-on: ubuntu-latest
     env:
       MONGODB: 4.2.11
-      DRIVER: 4.1.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -48,11 +46,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
-  build-11_4-1-1_4-0-21:
+  Java-11-MongoDB-4_0_21:
     runs-on: ubuntu-latest
     env:
       MONGODB: 4.0.21
-      DRIVER: 4.1.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -67,11 +64,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
-  build-11_4-1-1_3-6-21:
+  Java-11-MongoDB-3_6_21:
     runs-on: ubuntu-latest
     env:
       MONGODB: 3.6.21
-      DRIVER: 4.1.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -86,11 +82,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
-  build-15_4-1-1_4-4-2:
+  Java-15-MongoDB-4_4_2:
     runs-on: ubuntu-latest
     env:
       MONGODB: 4.4.2
-      DRIVER: 4.1.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 15
@@ -105,11 +100,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
-  build-15_4-1-1_4-2-11:
+  Java-15-MongoDB-4_2_11:
     runs-on: ubuntu-latest
     env:
       MONGODB: 4.2.11
-      DRIVER: 4.1.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 15
@@ -124,11 +118,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
-  build-15_4-1-1_4-0-21:
+  Java-15-MongoDB-4_0_21:
     runs-on: ubuntu-latest
     env:
       MONGODB: 4.0.21
-      DRIVER: 4.1.1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 15
@@ -143,315 +136,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
-  build-15_4-1-1_3-6-21:
+  Java-15-MongoDB-3_6_21:
     runs-on: ubuntu-latest
     env:
       MONGODB: 3.6.21
-      DRIVER: 4.1.1
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_4-0-5_4-4-2:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.4.2
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_4-0-5_4-2-11:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.2.11
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_4-0-5_4-0-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.0.21
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_4-0-5_3-6-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 3.6.21
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_4-0-5_4-4-2:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.4.2
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_4-0-5_4-2-11:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.2.11
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_4-0-5_4-0-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.0.21
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_4-0-5_3-6-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 3.6.21
-      DRIVER: 4.0.5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_3-12-7_4-4-2:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.4.2
-      DRIVER: 3.12.7
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_3-12-7_4-2-11:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.2.11
-      DRIVER: 3.12.7
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_3-12-7_4-0-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.0.21
-      DRIVER: 3.12.7
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-11_3-12-7_3-6-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 3.6.21
-      DRIVER: 3.12.7
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_3-12-7_4-4-2:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.4.2
-      DRIVER: 3.12.7
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_3-12-7_4-2-11:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.2.11
-      DRIVER: 3.12.7
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_3-12-7_4-0-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 4.0.21
-      DRIVER: 3.12.7
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 15
-        uses: actions/setup-java@v1
-        with:
-          java-version: 15
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B verify --file pom.xml
-  build-15_3-12-7_3-6-21:
-    runs-on: ubuntu-latest
-    env:
-      MONGODB: 3.6.21
-      DRIVER: 3.12.7
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 15
