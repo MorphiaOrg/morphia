@@ -265,9 +265,41 @@ A null can be passed in to simply accept the default values.</p>
 <p>Entities can be versioned to ensure that changes are applied serially and that no other processes are modifying an object in between the time it&#8217;s fetched, modified, and written back to the database.
 To achieve this, simply add a field to a type, it can be a <code>long</code> or a
 <code>Long</code>, and annotate that field with <a href="javadoc/dev/morphia/annotations/Version.html" class="page">@Version</a>.
-This field must not be initialized to anything other than zero or null, however.
 Morphia will take care of the rest.
 If an object is fetched and another process updates the corresponding document in the database before it can be persisted back, an exception will be thrown when the write is attempted.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Versioned entities currently do not support prepopulated ID values.
+To version an entity you must allow Morphia and the driver to automatically assign ID values.
+If the ID type is <code>ObjectID</code>, this likely already the case.
+With custom ID types, however, this is currently not possible.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Kotlin users must declare ID fields as nullable.
+Generally speaking this is likely already the case.
+However, with data classes where property types tend to nonnullable and immutable, this is a constraint to keep in mind when designing your class structures.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
