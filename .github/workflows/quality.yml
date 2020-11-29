@@ -10,7 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  Quality Checks:
+  Quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
