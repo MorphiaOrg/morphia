@@ -303,7 +303,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         private final Codec<R> codec;
         private final String discriminator;
 
-        public <T> MappingCursor(MongoCursor<Document> results, Codec<R> codec, String discriminator) {
+        <T> MappingCursor(MongoCursor<Document> results, Codec<R> codec, String discriminator) {
             this.results = results;
             this.codec = codec;
             this.discriminator = discriminator;
