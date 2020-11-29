@@ -18,18 +18,18 @@ jobs:
         java: [ 11, 15 ]
         mongo: [ 4.4.2, 4.2.11, 4.0.21, 3.6.21 ]
     steps:
-      env:
-        MONGODB: ${{ matrix.mongo }}
-        - uses: actions/checkout@v2
-        - name: Set up JDK ${JVM}
-          uses: actions/setup-java@v1
-          with:
-            java-version: ${{ matrix.java }}
-        - name: Cache Maven packages
-          uses: actions/cache@v1
-          with:
-            path: ~/.m2
-            key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
-            restore-keys: \${{ runner.os }}-m2
-        - name: Build with Maven
-          run: mvn -B verify --file pom.xml
+      - uses: actions/checkout@v2
+      - name: Set up JDK ${JVM}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
+          restore-keys: \${{ runner.os }}-m2
+      - name: Build with Maven
+        env:
+          MONGODB: ${{ matrix.mongo }}
+        run: mvn -B verify --file pom.xml
