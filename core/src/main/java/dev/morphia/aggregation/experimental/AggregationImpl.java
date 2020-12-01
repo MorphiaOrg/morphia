@@ -342,8 +342,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
         }
 
         private R map(Document next) {
-            next.remove(discriminator);
-            return codec.decode(new DocumentReader(next), DecoderContext.builder().build());
+            if (next != null) {
+                next.remove(discriminator);
+                return codec.decode(new DocumentReader(next), DecoderContext.builder().build());
+            } else {
+                return null;
+            }
         }
     }
 
