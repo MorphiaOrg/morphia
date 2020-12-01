@@ -62,10 +62,11 @@ jobs:
           restore-keys: \${{ runner.os }}-m2
       - name: Install Plugins
         run: mvn install -DskipTests --file pom.xml
-      - name: Changes
+      - name: Generate Changes
+        run: mvn issues:generate --file core/pom.xml
+      - name: Upload Changes
         uses: actions/upload-artifact@v2
         with:
           name: changes
           path: core/Changes*
-        run: mvn issues:generate --file core/pom.xml
 
