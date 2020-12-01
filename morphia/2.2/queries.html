@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+<link rel="stylesheet" href="../../_/css/site.css">
+<link rel="stylesheet" href="../../_/css/morphia.css">
+
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="2.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="reference.html">Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">2.2-SNAPSHOT</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../critter/4.1/index.html">4.1-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../critter/4.0/index.html">4.0</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">2.2-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../2.1/index.html">2.1</a>
+        </li>
+        <li class="version">
+          <a href="../2.0/index.html">2.0</a>
+        </li>
+        <li class="version">
+          <a href="../1.6/index.html">1.6</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
+  <div class="version-menu">
+    <a class="version is-current" href="queries.html">2.2-SNAPSHOT</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../2.0/index.html">2.0</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/queries.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<div class="sect1">
+<h2 id="_queries"><a class="anchor" href="#_queries"></a>Queries</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Morphia provides <a href="javadoc/dev/morphia/query/Query.html" class="page"><code>Query&lt;T&gt;</code></a> class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible.
+To create the <code>Query</code>, we invoke the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Query&lt;Product&gt; query = datastore.find(Product.class);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>find()</code> returns an instance of <code>Query</code> which we can use to build a query.</p>
+</div>
+<div class="sect2">
+<h3 id="_filter"><a class="anchor" href="#_filter"></a><code>filter()</code></h3>
+<div class="paragraph">
+<p>The most significant method <code>filter(Filter&#8230;&#8203;)</code>.
+This method takes a number of filters to apply to the query being built.
+The filters are added to any existing, previously defined filters so you needn&#8217;t add them all at once.
+There are dozens of filters predefined in Morphia and can be found in the <code>dev.morphia.query.experimental.filters</code> package.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The package is currently <code>experimental</code>.
+This done to signify that this API is a new one and might change based on user feedback prior to a final release.
+It is expected that the API will be largely the same in the final release and you are highly encouraged to try it out before then.
+If you encounter and bugs or usability issues, please file an
+<a href="https://github.com/MorphiaOrg/morphia/issues">issue</a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The filters can be accessed via the <a href="javadoc/dev/morphia/query/experimental/filters/Filters.html" class="page">Filters</a> class.
+The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia&#8217;s API. For example, to query for products whose prices is greater than or equal to 1000, you would write this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">query.filter(Filters.gte("price", 1000));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will append the new criteria to any existing criteria already defined.
+You can define as many filters in one call as you&#8217;d like or you may choose to append them in smaller groups based on whatever query building logic your application might have.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_complex_queries"><a class="anchor" href="#_complex_queries"></a>Complex Queries</h3>
+<div class="paragraph">
+<p>Of course, queries are usually more complex than single field comparisons.
+Morphia offers both <code>and()</code> and <code>or()</code> to build up more complex queries.
+An <code>and</code> query might look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">q.filter(and(
+    eq("width", 10),
+    eq("height", 1)));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.
+The default is to "and" filter criteria together so if all you need is an <code>and</code> clause, you don&#8217;t need an explicit call to <code>and()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.find(UserLocation.class)
+    .filter(
+        lt("x", 5),
+        gt("y", 4),
+        gt("z", 10));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This generates an implicit <code>and</code> across the field comparisons.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_query_options"><a class="anchor" href="#_other_query_options"></a>Other Query Options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There is more to querying than simply filtering against different document values.
+Listed below are some of the options for modifying the query results in different ways.</p>
+</div>
+<div class="sect2">
+<h3 id="_projections"><a class="anchor" href="#_projections"></a>Projections</h3>
+<div class="paragraph">
+<p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/">Projections</a> allow you to return only a subset of the fields in a document.
+This is useful when you need to only return a smaller view of a larger object.
+Borrowing from the
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ContainsRenamedFields user = new ContainsRenamedFields("Frank", "Zappa");
+datastore.save(user);
+
+ContainsRenamedFields found = datastore
+                                  .find(ContainsRenamedFields.class)
+                                  .iterator(new FindOptions()
+                                               .projection().include("first_name")
+                                               .limit(1))
+                                  .tryNext();
+assertNotNull(found.firstName);
+assertNull(found.lastName);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see here, we&#8217;re saving this entity with a first and last name but our query only returns the first name (and the <code>_id</code> value) in the returned instance of our type.
+It&#8217;s also worth noting that this projection works with both the mapped document field name
+<code>"first_name"</code> and the Java field name <code>"firstName"</code>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>While projections can be a nice performance win in some cases, it&#8217;s important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
+For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database for this entity will be removed.
+To save such instances back consider using
+<a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page"><code>Datastore#merge(T)</code></a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_limiting_and_skipping"><a class="anchor" href="#_limiting_and_skipping"></a>Limiting and Skipping</h3>
+<div class="paragraph">
+<p>Pagination of query results is often done as a combination of skips and limits.
+Morphia offers <code>FindOptions.limit(int)</code> and
+<code>FindOptions.offset(int)</code> for these cases.
+An example of these methods in action would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.find(Person.class)
+    .iterator(new FindOptions()
+	    .offset(1)
+	    .limit(10))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This query will skip the first element and take up to the next 10 items found by the query.
+There&#8217;s a caveat to using skip/limit for pagination, however.
+See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip">skip</a> documentation for more detail.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ordering"><a class="anchor" href="#_ordering"></a>Ordering</h3>
+<div class="paragraph">
+<p>Ordering the results of a query is done via
+<a href="javadoc/dev/morphia/query/FindOptions.html#sort(dev.morphia.query.Sort&#8230;&#8203;)#" class="page"><code>FindOptions.sort(Sort&#8230;&#8203;)</code></a>, etc.
+For example, to sort by <code>age</code> (youngest to oldest) and then <code>income</code> (highest to lowest), you would use this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">getDs().find(User.class)
+       .iterator(new FindOptions()
+                    .sort(ascending("age"), descending("income"))
+                    .limit(1))
+       .tryNext();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tailable_cursors"><a class="anchor" href="#_tailable_cursors"></a>Tailable Cursors</h3>
+<div class="paragraph">
+<p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/">capped collection</a> it&#8217;s possible to "tail" a query so that when new documents are added to the collection that match your query, they&#8217;ll be returned by the
+<a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor">tailable cursor</a>.
+An example of this feature in action can be found in the
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.getMapper().map(CappedPic.class);
+getDs().ensureCaps();                                                          <i class="conum" data-value="1"></i><b>(1)</b>
+final Query&lt;CappedPic&gt; query = getDs().find(CappedPic.class);
+final List&lt;CappedPic&gt; found = new ArrayList&lt;&gt;();
+
+final MorphiaCursor&lt;CappedPic&gt; tail =
+    query.iterator(new FindOptions()
+        .cursorType(CursorType.Tailable));
+while(found.size() &lt; 10) {
+	found.add(tail.next());                                                    <i class="conum" data-value="2"></i><b>(2)</b>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are two things to note about this code sample:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>This tells Morphia to make sure that any entity configured to use a capped collection has its collection created correctly.
+If the collection already exists and is not capped, you will have to manually
+<a href="http://docs.mongodb.org/manual/core/capped-collections/#convert-a-collection-to-capped">update</a> your collection to be a capped collection.</p>
+</li>
+<li>
+<p>Since this <code>Iterator</code> is backed by a tailable cursor, <code>hasNext()</code> and <code>next()</code> will block until a new item is found.
+In this version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the application.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2020
+</footer>
+-->
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
