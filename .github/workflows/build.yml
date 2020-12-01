@@ -3,11 +3,7 @@
 
 name: Tests
 
-on:
-  push:
-    branches: [ master, 1.6.*, 2.* ]
-  pull_request:
-    branches: [ master ]
+on: [ push, pull_request ]
 
 jobs:
   Morphia:
