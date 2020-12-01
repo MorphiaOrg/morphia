@@ -171,18 +171,56 @@
 <div class="sect2">
 <h3 id="_classes"><a class="anchor" href="#_classes"></a>Classes</h3>
 <div class="paragraph">
-<p>Mapping is achieved through one of two annotations to start:  <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> and
-<a href="javadoc/dev/morphia/annotations/Embedded.html" class="page">@Embedded</a>.
-In order for Morphia to consider any type for mapping, it must have one of these two annotation.  <code>@Entity</code> is used to denote a "top level" type.
-These types tend to have their own collections whose names can be mapped via the <code>value</code> parameter.
-Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in <a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">@MapperOptions</a>.
-That default is currently the camel case value of the class&#8217;s simple name.
-For example, to map a <code>UserProfile</code> entity under this strategy, the collection name would be mapped to <code>userProfile</code>.</p>
+<p>Mapping is triggered by annotating your type with the <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> annotation.  This
+instructs Morphia to inspect your type compute various metadata items about it.  If you wish use a particular type as "top level" type,
+you will need to annotate one field with the <a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a> annotation.  Not every type will need to
+serve as a top level type (read: be mapped to a collection) and so this ID field is optional with the caveat mentioned in the call out
+note below.  Top level types have their own collections whose names can be mapped via the <code>value</code> parameter. Leaving this value
+blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in
+<a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">@MapperOptions</a>.  That default is currently the camel case value of the class&#8217;s
+simple name.  For example, to map a <code>UserProfile</code> entity under this strategy, the collection name would be mapped to <code>userProfile</code>.</p>
 </div>
 <div class="paragraph">
-<p>Any type annotated with <code>@Entity</code> must have a field annotated with <a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a>.
-The type of the field can be any type so long as Morphia or the driver have codecs that can map the data to and from mongodb.
-When mapping an entity, one can also define <a href="#_indexing">indexes</a> and <a href="#_schema_validation">schema validations</a> as part of the entity declaration as well.</p>
+<p>Any type annotated with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> may optionally have a field annotated with
+<a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a>. The type of the field can be any type so long as Morphia, or the driver, has a codec
+that can map the data to and from mongodb.  When mapping an entity, one can also define <a href="#_indexing">indexes</a> and
+<a href="#_schema_validation">schema validations</a> as part of the entity declaration as well.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As of 2.2, <a href="javadoc/dev/morphia/annotations/Embedded.html" class="page">@Embedded</a> has been deprecated in favor of
+<a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a>.  The distinction between the two annotations has been, historically, much
+more significant than it is at present.  Due to the confusion about when to use which annotation and the meaning of "embedded" in
+general, it is being decommissioned.  The two annotations have grown to mean essentially the same thing and so have become increasingly
+redundant.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Entities annotated with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> that lack an
+<a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a> are not eligible to serve as "top level" types.  This means they will not be mapped to
+a collection nor can they serve as the basis for querying or be saved directly (only as fields on top level types).  ID fields are used to
+perform proper updates on previously persisted entities.  Without that ID Morphia, can not properly restrict the update to the correct
+document in the database.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_constructors"><a class="anchor" href="#_constructors"></a>Constructors</h4>
