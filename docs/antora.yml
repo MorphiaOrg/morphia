@@ -9,5 +9,4 @@ nav:
 asciidoc:
   attributes:
     version: 2.2.0-SNAPSHOT
-    docsRef: http://docs.mongodb.org/manual
     srcRef: https://github.com/MorphiaOrg/morphia/blob/master
