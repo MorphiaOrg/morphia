@@ -265,15 +265,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="EmbeddedAndId.html" title="class in dev.morphia.mapping.validation.classrules">EmbeddedAndId</a></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="EmbeddedAndValue.html" title="class in dev.morphia.mapping.validation.classrules">EmbeddedAndValue</a></th>
 <td class="colLast">
 <div class="block">Ensures value() isn&apos;t used on @Embedded</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="EntityAndEmbed.html" title="class in dev.morphia.mapping.validation.classrules">EntityAndEmbed</a></th>
 <td class="colLast">
 <div class="block">Checks that @Entity and @Embed aren&apos;t both used on a type.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="EntityCannotBeMapOrIterable.html" title="class in dev.morphia.mapping.validation.classrules">EntityCannotBeMapOrIterable</a></th>
+<td class="colLast">
+<div class="block">Checks that a type is not a Map or Iterable subtype</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -296,6 +306,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colFirst" scope="row"><a href="MultipleVersions.html" title="class in dev.morphia.mapping.validation.classrules">MultipleVersions</a></th>
 <td class="colLast">
 <div class="block">Checks the multiple fields aren&apos;t annotated with @Version</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="NoId.html" title="class in dev.morphia.mapping.validation.classrules">NoId</a></th>
+<td class="colLast">
+<div class="block">Validates that classes marked with @Entity have a field annotated with @Id.</div>
 </td>
 </tr>
 </tbody>
