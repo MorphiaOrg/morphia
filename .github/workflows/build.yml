@@ -62,3 +62,12 @@ jobs:
           restore-keys: \${{ runner.os }}-m2
       - name: Install Plugins
         run: mvn install -DskipTests --file pom.xml
+  Docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke antora build
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Docs
+          repo: MorphiaOrg/morphia-docs
+          token: ${{ secrets.PUSH_TOKEN }}
