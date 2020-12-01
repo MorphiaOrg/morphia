@@ -1,6 +1,6 @@
 name: morphia
 title: Morphia
-version: 2.1.1
+version: 2.1
 display_version: "2.1"
 
 nav:
@@ -8,5 +8,5 @@ nav:
 
 asciidoc:
   attributes:
-    docsRef: http://docs.mongodb.org/manual
+    version: 2.1.1
     srcRef: https://github.com/MorphiaOrg/morphia/blob/2.1.x

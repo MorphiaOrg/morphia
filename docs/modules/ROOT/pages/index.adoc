@@ -10,7 +10,7 @@ To use Morphia using either build tool, you will need to update your build confi
     <dependency>
         <groupId>dev.morphia.morphia</groupId>
         <artifactId>morphia-core</artifactId>
-        <version>{page-version}</version>
+        <version>{version}</version>
     </dependency>
 </dependencies>
 ----
@@ -36,7 +36,7 @@ Gradle users can use the following dependency declaration:
 [source,groovy,subs="verbatim,attributes"]
 ----
 dependencies {
-    compile 'dev.morphia.morphia:morphia-core:{page-version}'
+    compile 'dev.morphia.morphia:morphia-core:{version}'
 }
 ----
 

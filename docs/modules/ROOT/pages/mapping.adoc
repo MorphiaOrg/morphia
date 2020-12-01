@@ -6,7 +6,7 @@ Mapping is achieved through one of two annotations to start:  xref:javadoc:dev/m
 xref:javadoc:dev/morphia/annotations/Embedded.html#[@Embedded].
 In order for Morphia to consider any type for mapping, it must have one of these two annotation.  `@Entity` is used to denote a "top level" type.
 These types tend to have their own collections whose names can be mapped via the `value` parameter.
-Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in xref:javadoc:dev/morphia/mapping/MapperOptions.html#[@MapperOptions].
+Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in xref:javadoc:dev/morphia/mapping/MapperOptions.html#[MapperOptions].
 That default is currently the camel case value of the class's simple name.
 For example, to map a `UserProfile` entity under this strategy, the collection name would be mapped to `userProfile`.
 
@@ -88,6 +88,6 @@ Similarly, if data is only intended to be loaded from the database but never wri
 If you do not specify a name via `@Property`, the default field naming strategy will be used.
 The default strategy is to use the field's name as defined in the source.
 This strategy can be changed globally via the field naming strategy option on
-xref:javadoc:dev/morphia/mapping/MapperOptions.html#[@MapperOptions].
+xref:javadoc:dev/morphia/mapping/MapperOptions.html#[MapperOptions].
 Simple indexes can be defined on a field if all that is needed for the index is a single field.
 This can be done via the xref:javadoc:dev/morphia/annotations/Indexed.html#[@Indexed] annotation.
