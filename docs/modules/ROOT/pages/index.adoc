@@ -8,8 +8,8 @@ To use Morphia using either build tool, you will need to update your build confi
 ----
 <dependencies>
     <dependency>
-        <groupId>{groupId}</groupId>
-        <artifactId>{artifactId}</artifactId>
+        <groupId>dev.morphia.morphia</groupId>
+        <artifactId>morphia-core</artifactId>
         <version>{version}</version>
     </dependency>
 </dependencies>
@@ -36,7 +36,7 @@ Gradle users can use the following dependency declaration:
 [source,groovy,subs="verbatim,attributes"]
 ----
 dependencies {
-    compile '{groupId}:{artifactId}:{version}'
+    compile 'dev.morphia.morphia:morphia-core:{version}'
 }
 ----
 
