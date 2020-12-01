@@ -3,7 +3,6 @@ package dev.morphia.mapping;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
@@ -200,7 +199,7 @@ public class EnumMappingTest extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     public static class WebTemplate {
         private final ObjectId id = new ObjectId();
         private String templateName;

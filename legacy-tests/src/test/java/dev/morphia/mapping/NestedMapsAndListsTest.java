@@ -2,7 +2,6 @@ package dev.morphia.mapping;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -300,7 +299,7 @@ public class NestedMapsAndListsTest extends TestBase {
         }
 
     }
-    @Embedded
+    @Entity
     private static class Person {
 
         private String name;

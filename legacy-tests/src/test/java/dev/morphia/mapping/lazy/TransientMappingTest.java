@@ -17,7 +17,6 @@
 package dev.morphia.mapping.lazy;
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Transient;
@@ -72,7 +71,7 @@ public class TransientMappingTest extends TestBase {
 
     }
 
-    @Embedded
+    @Entity
     private static class SerializableClass implements Serializable {
         private String value;
     }

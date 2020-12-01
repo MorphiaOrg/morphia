@@ -1,4 +1,4 @@
-package dev.morphia.query;
+package dev.morphia.test.query;
 
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.CursorType;
@@ -9,13 +9,7 @@ import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
-import dev.morphia.TestBase;
-import dev.morphia.TestDatastore.FacebookUser;
-import dev.morphia.TestDatastore.Keys;
-import dev.morphia.TestMapper.CustomId;
-import dev.morphia.TestMapper.UsesCustomIdObject;
 import dev.morphia.annotations.CappedAt;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IndexOptions;
@@ -23,16 +17,25 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.ReferenceTest.ChildId;
-import dev.morphia.mapping.ReferenceTest.Complex;
+import dev.morphia.query.ArraySlice;
+import dev.morphia.query.CountOptions;
+import dev.morphia.query.DefaultQueryFactory;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.LegacyQueryFactory;
+import dev.morphia.query.Query;
+import dev.morphia.query.QueryFactory;
+import dev.morphia.query.ValidationException;
 import dev.morphia.query.internal.MorphiaCursor;
-import dev.morphia.testmodel.Hotel;
-import dev.morphia.testmodel.Rectangle;
+import dev.morphia.test.TestBase;
+import dev.morphia.test.models.CustomId;
+import dev.morphia.test.models.FacebookUser;
+import dev.morphia.test.models.Keys;
+import dev.morphia.test.models.Rectangle;
+import dev.morphia.test.models.Student;
+import dev.morphia.test.models.UsesCustomIdObject;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,14 +73,13 @@ import static java.util.regex.Pattern.quote;
 import static org.bson.Document.parse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
@@ -99,7 +101,7 @@ public class TestQuery extends TestBase {
         final GenericKeyValue<String> found = query.iterator(options)
                                                    .tryNext();
         String loggedQuery = getDs().getLoggedQuery(options);
-        Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
+        assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
         assertEquals(found.id, value.id);
     }
 
@@ -117,14 +119,13 @@ public class TestQuery extends TestBase {
                                              .filter(in("key", keys));
         query.iterator(options);
         String loggedQuery = getDs().getLoggedQuery(options);
-        Assert.assertTrue(loggedQuery, loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"));
+        assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
         assertEquals(query.iterator(new FindOptions().limit(1))
                           .tryNext()
                          .id, value.id);
     }
 
     @Test
-    @Category(Reference.class)
     public void referenceKeys() {
         final ReferenceKey key1 = new ReferenceKey("key1");
 
@@ -150,14 +151,14 @@ public class TestQuery extends TestBase {
                                                                   .limit(1))
                               .tryNext();
         assertNotNull(r1);
-        assertEquals(1, r1.getWidth(), 0);
+        assertEquals(r1.getWidth(), 1, 0);
 
         r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
                                                         .sort(descending("w"))
                                                         .limit(1))
                     .tryNext();
         assertNotNull(r1);
-        assertEquals(10, r1.getWidth(), 0);
+        assertEquals(r1.getWidth(), 10, 0);
     }
 
     @Test
@@ -166,54 +167,54 @@ public class TestQuery extends TestBase {
 
         getDs().getMapper().getCollection(Photo.class)
                .renameCollection(new MongoNamespace(getDatabase().getName(), "alternate"));
-        assertEquals(0, getDs().find(Photo.class).count());
+        assertEquals(getDs().find(Photo.class).count(), 0);
 
-        assertEquals(1, getDs().find("alternate", Photo.class).count());
+        assertEquals(getDs().find("alternate", Photo.class).count(), 1);
     }
 
     @Test
     public void testCaseVariants() {
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("PIC"))
-                               .count());
-        assertEquals(4, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("PIC")
                                            .options("i"))
-                               .count());
+                            .count(), 4);
 
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("PIC1"))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("PIC1")
                                            .options("i"))
-                               .count());
+                            .count(), 1);
 
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("C1$"))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("C1$")
                                            .options("i"))
-                               .count());
+                            .count(), 1);
 
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("^PIC"))
-                               .count());
-        assertEquals(4, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("^PIC")
                                            .options("i"))
-                               .count());
+                            .count(), 4);
     }
 
     @Test
@@ -223,77 +224,77 @@ public class TestQuery extends TestBase {
             new Pic(">++('>   fish bones"),
             new Pic("hacksaw [|^^^^^^^")));
 
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile(quote("^"))))
-                               .count());
+                            .count(), 1);
 
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile(quote("aw [|^^"))))
-                               .count());
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 1);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile(quote("AW [|^^"))))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile(quote("aw [|^^")))
                                            .options("i"))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 1);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile(quote("AW [|^^")))
                                            .options("i"))
-                               .count());
+                            .count(), 1);
 
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile("^" + quote(">++('>   fish"))))
-                               .count());
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 1);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile("^" + quote(">++('>   FIsh"))))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(compile("^" + quote(">++('>   FISH")))
                                            .options("i"))
-                               .count());
+                            .count(), 1);
 
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(eq("name", ">++('>   fish bones"))
-                               .count());
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(eq("name", ">++('>   FISH BONES"))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name").pattern(quote(">++('>   fish bones")))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(eq("name", ">++('>   fish bones"))
+                            .count(), 1);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(eq("name", ">++('>   FISH BONES"))
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name").pattern(quote(">++('>   fish bones")))
+                            .count(), 1);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern("^" + quote(">++('>   FISH BONES") + "$")
                                            .options("i"))
-                               .count());
+                            .count(), 1);
 
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(quote(">++('>   fish bones") + "$"))
-                               .count());
-        assertEquals(0, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 1);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(quote("'>   FISH BONES") + "$"))
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 0);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(quote("'>   fish bones") + "$")
                                            .caseInsensitive())
-                               .count());
-        assertEquals(1, getDs().find(Pic.class)
-                               .filter(regex("name")
+                            .count(), 1);
+        assertEquals(getDs().find(Pic.class)
+                            .filter(regex("name")
                                            .pattern(quote("'>   FISH BONES") + "$")
                                            .caseInsensitive())
-                               .count());
+                            .count(), 1);
     }
 
     @Test
@@ -304,20 +305,20 @@ public class TestQuery extends TestBase {
 
         Query query = getDs().find(ContainsRenamedFields.class)
                              .filter(eq("last_name", "last"));
-        assertEquals(1, query.iterator().toList().size());
-        assertEquals(2, query.iterator(new FindOptions()
+        assertEquals(query.iterator().toList().size(), 1);
+        assertEquals(query.iterator(new FindOptions()
                                            .collation(builder()
                                                           .locale("en")
                                                           .collationStrength(CollationStrength.SECONDARY)
                                                           .build()))
-                             .toList()
-                             .size());
-        assertEquals(1, query.count());
-        assertEquals(2, query.count(new CountOptions()
+                          .toList()
+                          .size(), 2);
+        assertEquals(query.count(), 1);
+        assertEquals(query.count(new CountOptions()
                                         .collation(builder()
                                                        .locale("en")
                                                        .collationStrength(CollationStrength.SECONDARY)
-                                                       .build())));
+                                                       .build())), 2);
     }
 
     @Test
@@ -334,19 +335,19 @@ public class TestQuery extends TestBase {
         List<Rectangle> list = q.iterator(options)
                                 .toList();
         String loggedQuery = getDs().getLoggedQuery(options);
-        assertEquals(1, q.count());
+        assertEquals(q.count(), 1);
 
         q = getDs().find(Rectangle.class);
         q.filter(
             or(eq("width", 10), eq("height", 10)));
-        assertEquals(3, q.count());
+        assertEquals(q.count(), 3);
 
         q = getDs().find(Rectangle.class);
         q.filter(
             or(eq("width", 10),
                 and(eq("width", 5),
                     eq("height", 8))));
-        assertEquals(3, q.count());
+        assertEquals(q.count(), 3);
     }
 
     @Test
@@ -361,15 +362,15 @@ public class TestQuery extends TestBase {
                .toList();
 
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
-        assertNotEquals(0, profileCollection.countDocuments());
+        assertNotEquals(profileCollection.countDocuments(), 0);
 
         Document query = new Document("op", "query")
                              .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName())
                              .append("command.comment", new Document("$exists", true));
         Document profileRecord = profileCollection.find(query).first();
 
-        assertEquals(profileRecord.toJson(getMapper().getCodecRegistry().get(Document.class)), expectedComment,
-            getCommentFromProfileRecord(profileRecord));
+        assertEquals(getCommentFromProfileRecord(profileRecord), expectedComment,
+            profileRecord.toJson(getMapper().getCodecRegistry().get(Document.class)));
     }
 
     @Test
@@ -386,7 +387,7 @@ public class TestQuery extends TestBase {
                                                   .filter(elemMatch("keywords",
                                                       gt("score", 20),
                                                       lt("score", 100))).iterator().toList();
-        assertEquals(1, keywords.size());
+        assertEquals(keywords.size(), 1);
         assertEquals(oscar, keywords.get(0).keywords.get(0));
     }
 
@@ -430,15 +431,15 @@ public class TestQuery extends TestBase {
     public void testComplexRangeQuery() {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
 
-        assertEquals(2, getDs().find(Rectangle.class)
-                               .filter(gt("height", 3),
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(gt("height", 3),
                                    lt("height", 8))
-                               .count());
-        assertEquals(1, getDs().find(Rectangle.class)
-                               .filter(gt("height", 3),
+                            .count(), 2);
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(gt("height", 3),
                                    lt("height", 8),
                                    eq("width", 10))
-                               .count());
+                            .count(), 1);
     }
 
     @Test
@@ -450,16 +451,16 @@ public class TestQuery extends TestBase {
                                                                   .limit(1))
                               .tryNext();
         assertNotNull(r1);
-        assertEquals(1, r1.getWidth(), 0);
-        assertEquals(10, r1.getHeight(), 0);
+        assertEquals(r1.getWidth(), 1, 0);
+        assertEquals(r1.getHeight(), 10, 0);
 
         r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
                                                         .sort(descending("height"), descending("width"))
                                                         .limit(1))
                     .tryNext();
         assertNotNull(r1);
-        assertEquals(10, r1.getWidth(), 0);
-        assertEquals(10, r1.getHeight(), 0);
+        assertEquals(r1.getWidth(), 10, 0);
+        assertEquals(r1.getHeight(), 10, 0);
     }
 
     @Test
@@ -517,12 +518,12 @@ public class TestQuery extends TestBase {
             new Rectangle(10, 10),
             new Rectangle(10, 10)));
 
-        assertEquals(5, getDs().find(Rectangle.class).count());
+        assertEquals(getDs().find(Rectangle.class).count(), 5);
         getDs().find(Rectangle.class)
                .filter(eq("height", 1))
                .delete(new DeleteOptions()
                            .multi(true));
-        assertEquals(2, getDs().find(Rectangle.class).count());
+        assertEquals(getDs().find(Rectangle.class).count(), 2);
     }
 
     @Test
@@ -565,9 +566,9 @@ public class TestQuery extends TestBase {
 
         MongoCursor<Key<PhotoWithKeywords>> keys = getDs().find(PhotoWithKeywords.class).keys();
         assertTrue(keys.hasNext());
-        assertEquals(pwk1.id, keys.next().getId());
-        assertEquals(pwk2.id, keys.next().getId());
-        assertEquals(pwk3.id, keys.next().getId());
+        assertEquals(keys.next().getId(), pwk1.id);
+        assertEquals(keys.next().getId(), pwk2.id);
+        assertEquals(keys.next().getId(), pwk3.id);
     }
 
     @Test
@@ -580,7 +581,7 @@ public class TestQuery extends TestBase {
                 or(eq("keywords.keyword", "scott")),
                 or(eq("keywords.keyword", "hernandez"))));
 
-        assertEquals(1, q.count());
+        assertEquals(q.count(), 1);
     }
 
     @Test
@@ -595,7 +596,7 @@ public class TestQuery extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
         query.iterator();
-        assertEquals(1, query.count());
+        assertEquals(query.count(), 1);
     }
 
     @Test
@@ -609,7 +610,7 @@ public class TestQuery extends TestBase {
                        eq("keywords.keyword", "scott"),
                        eq("keywords.keyword", "ralph")));
 
-        assertEquals(1, q.count());
+        assertEquals(q.count(), 1);
     }
 
     @Test
@@ -632,12 +633,12 @@ public class TestQuery extends TestBase {
         FindOptions options = new FindOptions().logQuery();
         MorphiaCursor<HasIntId> list = filter.iterator(options);
         String loggedQuery = getDs().getLoggedQuery(options);
-        assertEquals(2, filter
-                            .count());
-        assertEquals(1, getDs().find(HasIntId.class)
-                               .filter(gt("_id", 0),
+        assertEquals(filter
+                            .count(), 2);
+        assertEquals(getDs().find(HasIntId.class)
+                            .filter(gt("_id", 0),
                                    lt("_id", 11))
-                               .count());
+                            .count(), 1);
     }
 
     @Test
@@ -671,17 +672,17 @@ public class TestQuery extends TestBase {
         final FacebookUser fbUser3 = new FacebookUser(3, "oli");
         final FacebookUser fbUser4 = new FacebookUser(4, "frank");
         final List<FacebookUser> users = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
-        assertEquals(1, fbUser1.getId());
+        assertEquals(fbUser1.getId(), 1);
 
         final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
         for (FacebookUser user : users) {
             fbUserKeys.add(getMapper().getKey(user));
         }
 
-        assertEquals(fbUser1.getId(), fbUserKeys.get(0).getId());
-        assertEquals(fbUser2.getId(), fbUserKeys.get(1).getId());
-        assertEquals(fbUser3.getId(), fbUserKeys.get(2).getId());
-        assertEquals(fbUser4.getId(), fbUserKeys.get(3).getId());
+        assertEquals(fbUserKeys.get(0).getId(), fbUser1.getId());
+        assertEquals(fbUserKeys.get(1).getId(), fbUser2.getId());
+        assertEquals(fbUserKeys.get(2).getId(), fbUser3.getId());
+        assertEquals(fbUserKeys.get(3).getId(), fbUser4.getId());
 
         final Keys k1 = new Keys(getMapper().getKey(rectangle), fbUserKeys);
         final Keys keys = getDs().save(k1);
@@ -714,12 +715,12 @@ public class TestQuery extends TestBase {
         assertEquals(pwk2.id, keys.next().getId());
         assertEquals(pwk3.id, keys.next().getId());
 
-        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-            new Complex(new ChildId("JD", 26), "Dorian"),
-            new Complex(new ChildId("Carla", 29), "Espinosa"));
+        List<UsesCustomIdObject> list = asList(new UsesCustomIdObject(new CustomId("Turk"), "Turk"),
+            new UsesCustomIdObject(new CustomId("JD"), "Dorian"),
+            new UsesCustomIdObject(new CustomId("Carla"), "Espinosa"));
         getDs().save(list);
 
-        Iterator<Key<Complex>> complexKeys = getDs().find(Complex.class).keys();
+        Iterator<Key<UsesCustomIdObject>> complexKeys = getDs().find(UsesCustomIdObject.class).keys();
         assertTrue(complexKeys.hasNext());
         assertEquals(list.get(0).getId(), complexKeys.next().getId());
         assertEquals(list.get(1).getId(), complexKeys.next().getId());
@@ -783,7 +784,7 @@ public class TestQuery extends TestBase {
         Map<String, Object> queryPlanner = (Map<String, Object>) explain.get("queryPlanner");
         Map<String, Object> winningPlan = (Map<String, Object>) queryPlanner.get("winningPlan");
         Map<String, Object> inputStage = (Map<String, Object>) winningPlan.get("inputStage");
-        assertEquals("IXSCAN", inputStage.get("stage"));
+        assertEquals(inputStage.get("stage"), "IXSCAN");
     }
 
     @Test
@@ -794,24 +795,24 @@ public class TestQuery extends TestBase {
                                                                              .sort(naturalAscending()))
                                          .toList();
 
-        assertEquals(4, results.size());
+        assertEquals(results.size(), 4);
 
         Rectangle r;
 
         r = results.get(0);
         assertNotNull(r);
-        assertEquals(6, r.getHeight(), 0);
-        assertEquals(10, r.getWidth(), 0);
+        assertEquals(r.getHeight(), 6, 0);
+        assertEquals(r.getWidth(), 10, 0);
 
         r = results.get(1);
         assertNotNull(r);
-        assertEquals(3, r.getHeight(), 0);
-        assertEquals(8, r.getWidth(), 0);
+        assertEquals(r.getHeight(), 3, 0);
+        assertEquals(r.getWidth(), 8, 0);
 
         r = results.get(2);
         assertNotNull(r);
-        assertEquals(10, r.getHeight(), 0);
-        assertEquals(10, r.getWidth(), 0);
+        assertEquals(r.getHeight(), 10, 0);
+        assertEquals(r.getWidth(), 10, 0);
     }
 
     @Test
@@ -822,24 +823,24 @@ public class TestQuery extends TestBase {
                                                                              .sort(naturalDescending()))
                                          .toList();
 
-        assertEquals(4, results.size());
+        assertEquals(results.size(), 4);
 
         Rectangle r;
 
         r = results.get(0);
         assertNotNull(r);
-        assertEquals(10, r.getHeight(), 0);
-        assertEquals(1, r.getWidth(), 0);
+        assertEquals(r.getHeight(), 10, 0);
+        assertEquals(r.getWidth(), 1, 0);
 
         r = results.get(1);
         assertNotNull(r);
-        assertEquals(10, r.getHeight(), 0);
-        assertEquals(10, r.getWidth(), 0);
+        assertEquals(r.getHeight(), 10, 0);
+        assertEquals(r.getWidth(), 10, 0);
 
         r = results.get(2);
         assertNotNull(r);
-        assertEquals(3, r.getHeight(), 0);
-        assertEquals(8, r.getWidth(), 0);
+        assertEquals(r.getHeight(), 3, 0);
+        assertEquals(r.getWidth(), 8, 0);
     }
 
     @Test
@@ -851,9 +852,9 @@ public class TestQuery extends TestBase {
             new PhotoWithKeywords("1", "2"),
             new PhotoWithKeywords("3", "4"),
             new PhotoWithKeywords("5", "6")));
-        assertEquals(2, getDs().find(PhotoWithKeywords.class).iterator(new FindOptions()
+        assertEquals(getDs().find(PhotoWithKeywords.class).iterator(new FindOptions()
                                                                            .batchSize(-2)).toList()
-                               .size());
+                            .size(), 2);
     }
 
     @Test
@@ -879,13 +880,13 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNonexistentFindGet() {
-        assertNull(getDs().find(Hotel.class).filter(eq("_id", -1)).iterator(new FindOptions().limit(1))
+        assertNull(getDs().find(Student.class).filter(eq("_id", -1)).iterator(new FindOptions().limit(1))
                           .tryNext());
     }
 
     @Test
     public void testNonexistentGet() {
-        assertNull(getDs().find(Hotel.class)
+        assertNull(getDs().find(Student.class)
                           .filter(eq("_id", -1))
                           .first());
     }
@@ -928,24 +929,25 @@ public class TestQuery extends TestBase {
         IntVector vector = new IntVector(ints);
         getDs().save(vector);
 
-        assertArrayEquals(copy(ints, 0, 4), getDs().find(IntVector.class).iterator(new FindOptions()
-                                                                                       .projection().project("scalars", new ArraySlice(4))
-                                                                                       .limit(1))
-                                                   .next()
-                                                .scalars);
-        assertArrayEquals(copy(ints, 5, 4), getDs().find(IntVector.class).iterator(new FindOptions()
+        assertEquals(copy(ints, 0, 4),
+            getDs().find(IntVector.class).iterator(new FindOptions()
+                                                       .projection().project("scalars", new ArraySlice(4))
+                                                       .limit(1))
+                   .next()
+                .scalars);
+        assertEquals(copy(ints, 5, 4), getDs().find(IntVector.class).iterator(new FindOptions()
                                                                                        .projection()
                                                                                        .project("scalars", new ArraySlice(5, 4))
                                                                                        .limit(1))
-                                                   .next()
+                                                          .next()
                                                 .scalars);
-        assertArrayEquals(copy(ints, ints.length - 10, 6),
+        assertEquals(copy(ints, ints.length - 10, 6),
             getDs().find(IntVector.class).iterator(new FindOptions()
                                                        .projection().project("scalars", new ArraySlice(-10, 6))
                                                        .limit(1))
                    .next()
                 .scalars);
-        assertArrayEquals(copy(ints, ints.length - 12, 12),
+        assertEquals(copy(ints, ints.length - 12, 12),
             getDs().find(IntVector.class).iterator(new FindOptions()
                                                        .projection().project("scalars", new ArraySlice(-12))
                                                        .limit(1))
@@ -986,15 +988,15 @@ public class TestQuery extends TestBase {
             new Rectangle(10, 10),
             new Rectangle(10, 10)));
 
-        assertEquals(3, getDs().find(Rectangle.class)
-                               .filter(eq("height", 1D))
-                               .count());
-        assertEquals(2, getDs().find(Rectangle.class)
-                               .filter(eq("height", 10D))
-                               .count());
-        assertEquals(5, getDs().find(Rectangle.class)
-                               .filter(eq("width", 10D))
-                               .count());
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(eq("height", 1D))
+                            .count(), 3);
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(eq("height", 10D))
+                            .count(), 2);
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(eq("width", 10D))
+                            .count(), 5);
 
     }
 
@@ -1007,12 +1009,12 @@ public class TestQuery extends TestBase {
 
         getDs().save(cpk);
 
-        assertEquals(1, getDs().find(ContainsPic.class)
-                               .filter(eq("lazyPic", p))
-                               .count());
+        assertEquals(getDs().find(ContainsPic.class)
+                            .filter(eq("lazyPic", p))
+                            .count(), 1);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expectedExceptions = ValidationException.class)
     public void testQueryOverReference() {
 
         final ContainsPic cpk = new ContainsPic();
@@ -1025,10 +1027,11 @@ public class TestQuery extends TestBase {
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
 
         Query<ContainsPic> pic = query.filter(eq("pic", p));
-        assertEquals(1, pic.count());
+        assertEquals(pic.count(), 1);
 
-        getDs().find(ContainsPic.class).filter(eq("pic.name", "foo")).iterator(new FindOptions().limit(1))
-               .next();
+        getDs().find(ContainsPic.class)
+               .filter(eq("pic.name", "foo"))
+               .first();
     }
 
     @Test
@@ -1045,32 +1048,31 @@ public class TestQuery extends TestBase {
         Query<Class1> query = getDs().find(Class1.class);
         query.disableValidation().filter(eq("someMap.someKey", "value"));
         Class1 retrievedValue = query.iterator(new FindOptions().limit(1)).next();
-        Assert.assertNotNull(retrievedValue);
-        Assert.assertEquals("foo", retrievedValue.value1);
+        assertNotNull(retrievedValue);
+        assertEquals(retrievedValue.value1, "foo");
     }
 
     @Test
     public void testRangeQuery() {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
 
-        assertEquals(4, getDs().find(Rectangle.class)
-                               .filter(gt("height", 3))
-                               .count());
-        assertEquals(3, getDs().find(Rectangle.class)
-                               .filter(gt("height", 3),
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(gt("height", 3))
+                            .count(), 4);
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(gt("height", 3),
                                    lt("height", 10))
-                               .count());
-        assertEquals(1, getDs().find(Rectangle.class)
-                               .filter(gt("height", 9),
+                            .count(), 3);
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(gt("height", 9),
                                    lt("width", 5))
-                               .count());
-        assertEquals(3, getDs().find(Rectangle.class)
-                               .filter(lt("height", 7))
-                               .count());
+                            .count(), 1);
+        assertEquals(getDs().find(Rectangle.class)
+                            .filter(lt("height", 7))
+                            .count(), 3);
     }
 
-    @Test(expected = ValidationException.class)
-    @Category(Reference.class)
+    @Test(expectedExceptions = ValidationException.class)
     public void testReferenceQuery() {
         final Photo p = new Photo();
         final HasPhotoReference cpk = new HasPhotoReference();
@@ -1085,7 +1087,7 @@ public class TestQuery extends TestBase {
         HasPhotoReference photoKey = query.iterator(options)
                                           .tryNext();
 
-        assertNotNull(getDs().getLoggedQuery(options), photoKey);
+        assertNotNull(photoKey, getDs().getLoggedQuery(options));
 
         assertNotNull(getDs().find(HasPhotoReference.class)
                              .filter(eq("photo", cpk.photo)).iterator(new FindOptions()
@@ -1159,7 +1161,7 @@ public class TestQuery extends TestBase {
                                           .returnKey(true));
         assertNotNull(foundItem);
         assertThat("Name should be populated", foundItem.getName(), is("pic2"));
-        assertNull("ID should not be populated", foundItem.getId());
+        assertNull(foundItem.getId(), "ID should not be populated");
     }
 
     @Test
@@ -1173,14 +1175,14 @@ public class TestQuery extends TestBase {
                                                                   .limit(1))
                               .next();
         assertNotNull(r1);
-        assertEquals(1, r1.getWidth(), 0);
+        assertEquals(r1.getWidth(), 1, 0);
 
         r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
                                                         .sort(descending("width"))
                                                         .limit(1))
                     .next();
         assertNotNull(r1);
-        assertEquals(10, r1.getWidth(), 0);
+        assertEquals(r1.getWidth(), 10, 0);
     }
 
     @Test
@@ -1197,7 +1199,7 @@ public class TestQuery extends TestBase {
 
         final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
-        assertEquals(0, query.count());
+        assertEquals(query.count(), 0);
 
         ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(
             () -> ds.save(new CappedPic()), 0, 100, TimeUnit.MILLISECONDS);
@@ -1220,8 +1222,8 @@ public class TestQuery extends TestBase {
                 return found.size() >= 10;
             });
         executorService.shutdownNow();
-        Assert.assertTrue(found.size() >= 10);
-        Assert.assertTrue(query.count() >= 10);
+        assertTrue(found.size() >= 10);
+        assertTrue(query.count() >= 10);
     }
 
     @Test
@@ -1251,7 +1253,7 @@ public class TestQuery extends TestBase {
 
     private <T> void assertListEquals(List<T> list, MongoCursor<T> cursor) {
         for (T t : list) {
-            assertEquals(list.toString(), t, cursor.next());
+            assertEquals(cursor.next(), t, list.toString());
         }
     }
 
@@ -1278,7 +1280,7 @@ public class TestQuery extends TestBase {
             + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\","
             + "\"_t\": { \"$in\" : [ \"User\"]}}");
 
-        Assert.assertEquals(parse, queryObject);
+        assertEquals(parse, queryObject);
     }
 
     private int[] copy(int[] array, int start, int count) {
@@ -1321,8 +1323,7 @@ public class TestQuery extends TestBase {
     }
 
     @Entity
-    public
-    interface User {
+    public interface User {
     }
 
     @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))
@@ -1495,7 +1496,7 @@ public class TestQuery extends TestBase {
         private ObjectId value;
     }
 
-    @Embedded
+    @Entity
     public static class Keyword {
         private String keyword;
         private int score;

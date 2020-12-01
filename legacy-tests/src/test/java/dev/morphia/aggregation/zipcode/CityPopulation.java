@@ -16,10 +16,10 @@
 
 package dev.morphia.aggregation.zipcode;
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 
-@Embedded
+@Entity
 public class CityPopulation {
     @Property("name")
     private String name;

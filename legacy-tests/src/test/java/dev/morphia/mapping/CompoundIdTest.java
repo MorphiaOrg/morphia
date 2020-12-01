@@ -2,7 +2,6 @@ package dev.morphia.mapping;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
@@ -70,7 +69,7 @@ public class CompoundIdTest extends TestBase {
         Assert.assertEquals(entity, getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first());
     }
 
-    @Embedded
+    @Entity
     private static class CompoundId {
         private final ObjectId id = new ObjectId();
         private String name;
@@ -138,7 +137,7 @@ public class CompoundIdTest extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     public static class ConfigKey {
         private String env;
         private String subenv;

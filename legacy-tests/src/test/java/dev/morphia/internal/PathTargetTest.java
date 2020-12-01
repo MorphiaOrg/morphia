@@ -17,7 +17,6 @@
 package dev.morphia.internal;
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -138,7 +137,7 @@ public class PathTargetTest extends TestBase {
         Assert.assertNull(pathTarget.getTarget());
     }
 
-    @Embedded
+    @Entity
     private static class Grade {
         private int marks;
 

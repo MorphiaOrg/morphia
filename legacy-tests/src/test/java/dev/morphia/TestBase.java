@@ -50,8 +50,8 @@ public abstract class TestBase {
     private final Datastore ds;
 
     protected TestBase() {
+        this.ds = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
-        this.ds = Morphia.createDatastore(getMongoClient(), database.getName());
     }
 
     static void startMongo() {

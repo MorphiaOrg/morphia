@@ -2,7 +2,6 @@ package dev.morphia.issue172;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.entities.SimpleEnum;
@@ -30,7 +29,7 @@ public class NameValuePairTest extends TestBase {
                .first();
     }
 
-    @Embedded
+    @Entity
     private static class NameValuePair<T1 extends Enum<?>, T2> implements Serializable {
         private T2 value;
         private T1 name;

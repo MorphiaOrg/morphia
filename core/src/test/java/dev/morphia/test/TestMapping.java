@@ -3,7 +3,6 @@ package dev.morphia.test;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
@@ -33,8 +32,6 @@ import dev.morphia.test.models.User;
 import dev.morphia.test.models.errors.ContainsDocument;
 import dev.morphia.test.models.errors.ContainsMapLike;
 import dev.morphia.test.models.errors.ContainsXKeyMap;
-import dev.morphia.test.models.errors.IdOnEmbedded;
-import dev.morphia.test.models.errors.MissingId;
 import dev.morphia.test.models.errors.OuterClass.NonStaticInnerClass;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -176,16 +173,6 @@ public class TestMapping extends TestBase {
         assertThrows(MappingException.class, () -> {
             getMapper().map(UnannotatedEmbedded.class);
             fail("Missing @Entity and @Embedded should have been caught");
-        });
-
-        assertThrows(MappingException.class, () -> {
-            getMapper().map(MissingId.class);
-            fail("Validation: Missing @Id field not caught");
-        });
-
-        assertThrows(MappingException.class, () -> {
-            getMapper().map(IdOnEmbedded.class);
-            fail("Validation: @Id field on @Embedded not caught");
         });
 
         assertThrows(MappingException.class, () -> {
@@ -715,7 +702,7 @@ public class TestMapping extends TestBase {
         B
     }
 
-    @Embedded
+    @Entity
     private interface Foo {
     }
 
@@ -967,7 +954,7 @@ public class TestMapping extends TestBase {
         private final String name = "never";
     }
 
-    @Embedded(useDiscriminator = false)
+    @Entity(useDiscriminator = false)
     private static class RenamedEmbedded {
         private String name;
     }

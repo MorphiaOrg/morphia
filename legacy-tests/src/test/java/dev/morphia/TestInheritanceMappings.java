@@ -18,8 +18,6 @@ package dev.morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.MappingException;
-import dev.morphia.query.FindOptions;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +49,7 @@ public class TestInheritanceMappings extends TestBase {
         getMapper().map(FlyingCar.class);
     }
 
-    @Test(expected = MappingException.class)
+    @Test
     public void testMapEntity() {
         getMapper().map(MapLike.class);
         MapLike m = new MapLike();
@@ -60,8 +58,7 @@ public class TestInheritanceMappings extends TestBase {
         assertNotNull(m.id);
         assertEquals(1, getDs().find(MapLike.class).count());
 
-        m = getDs().find(MapLike.class).iterator(new FindOptions().limit(1))
-                   .next();
+        m = getDs().find(MapLike.class).first();
         assertNotNull(m.id);
         assertTrue(m.containsKey("Name"));
         assertEquals("Scott", m.get("Name"));

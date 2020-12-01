@@ -27,11 +27,13 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a type as eligible for mapping and embedding in entity types.
+ * @deprecated It is now possible to use @Entity everywhere.  If a type is only for use as an embedded value, no @Id field is necessary.
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
+@Deprecated(since = "2.2")
 public @interface Embedded {
     /**
      * @return unused

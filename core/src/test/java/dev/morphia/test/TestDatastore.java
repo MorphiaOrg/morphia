@@ -16,6 +16,7 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -23,6 +24,7 @@ import dev.morphia.query.Update;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.CurrentStatus;
 import dev.morphia.test.models.FacebookUser;
+import dev.morphia.test.models.Grade;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
@@ -38,9 +40,26 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
 public class TestDatastore extends TestBase {
+    @Test
+    public void testSaveWityNoID() {
+        getMapper().map(Grade.class);
+        Grade grade = new Grade();
+        grade.marks = 80;
+
+        assertThrows(MappingException.class, () -> {
+            getDs().save(grade);
+        });
+
+        assertThrows(MappingException.class, () -> {
+            getDs().save(List.of(grade, grade));
+        });
+
+    }
+
     @Test
     public void testCappedEntity() {
         // given

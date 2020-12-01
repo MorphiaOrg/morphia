@@ -14,7 +14,6 @@
 package dev.morphia.indexes;
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -60,7 +59,7 @@ public class TestEmbeddedArrayIndexes extends TestBase {
         private String foo;
     }
 
-    @Embedded
+    @Entity
     private static class B {
         private String bar;
         private String car;

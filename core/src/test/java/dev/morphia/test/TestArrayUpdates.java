@@ -2,7 +2,6 @@ package dev.morphia.test;
 
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
@@ -151,7 +150,7 @@ public class TestArrayUpdates extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     private static class Files {
         private int position;
         private String fileName = "";

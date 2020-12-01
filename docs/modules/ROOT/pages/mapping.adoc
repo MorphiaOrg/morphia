@@ -2,17 +2,37 @@
 
 === Classes
 
-Mapping is achieved through one of two annotations to start:  xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] and
-xref:javadoc:dev/morphia/annotations/Embedded.html#[@Embedded].
-In order for Morphia to consider any type for mapping, it must have one of these two annotation.  `@Entity` is used to denote a "top level" type.
-These types tend to have their own collections whose names can be mapped via the `value` parameter.
-Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in xref:javadoc:dev/morphia/mapping/MapperOptions.html#[@MapperOptions].
-That default is currently the camel case value of the class's simple name.
-For example, to map a `UserProfile` entity under this strategy, the collection name would be mapped to `userProfile`.
+Mapping is triggered by annotating your type with the xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] annotation.  This
+instructs Morphia to inspect your type compute various metadata items about it.  If you wish use a particular type as "top level" type,
+you will need to annotate one field with the xref:javadoc:dev/morphia/annotations/Id.html#[@Id] annotation.  Not every type will need to
+serve as a top level type (read: be mapped to a collection) and so this ID field is optional with the caveat mentioned in the call out
+note below.  Top level types have their own collections whose names can be mapped via the `value` parameter. Leaving this value
+blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in
+xref:javadoc:dev/morphia/mapping/MapperOptions.html#[@MapperOptions].  That default is currently the camel case value of the class's
+simple name.  For example, to map a `UserProfile` entity under this strategy, the collection name would be mapped to `userProfile`.
 
-Any type annotated with `@Entity` must have a field annotated with xref:javadoc:dev/morphia/annotations/Id.html#[@Id].
-The type of the field can be any type so long as Morphia or the driver have codecs that can map the data to and from mongodb.
-When mapping an entity, one can also define <<_indexing, indexes>> and <<_schema_validation,schema validations>> as part of the entity declaration as well.
+Any type annotated with xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] may optionally have a field annotated with
+xref:javadoc:dev/morphia/annotations/Id.html#[@Id]. The type of the field can be any type so long as Morphia, or the driver, has a codec
+that can map the data to and from mongodb.  When mapping an entity, one can also define <<_indexing, indexes>> and
+<<_schema_validation,schema validations>> as part of the entity declaration as well.
+
+[NOTE]
+====
+As of 2.2, xref:javadoc:dev/morphia/annotations/Embedded.html#[@Embedded] has been deprecated in favor of
+xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity].  The distinction between the two annotations has been, historically, much
+more significant than it is at present.  Due to the confusion about when to use which annotation and the meaning of "embedded" in
+general, it is being decommissioned.  The two annotations have grown to mean essentially the same thing and so have become increasingly
+redundant.
+====
+
+[WARNING]
+====
+Entities annotated with xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] that lack an
+xref:javadoc:dev/morphia/annotations/Id.html#[@Id] are not eligible to serve as "top level" types.  This means they will not be mapped to
+a collection nor can they serve as the basis for querying or be saved directly (only as fields on top level types).  ID fields are used to
+perform proper updates on previously persisted entities.  Without that ID Morphia, can not properly restrict the update to the correct
+document in the database.
+====
 
 ==== Constructors
 

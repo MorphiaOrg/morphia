@@ -1,8 +1,8 @@
 package dev.morphia.generics.model;
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 
-@Embedded
+@Entity
 public abstract class EmbeddedType {
     public EmbeddedType() {
     }

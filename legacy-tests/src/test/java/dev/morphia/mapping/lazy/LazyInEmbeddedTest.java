@@ -2,7 +2,6 @@ package dev.morphia.mapping.lazy;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -206,7 +205,7 @@ public class LazyInEmbeddedTest extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     public static class EmbedWithRef implements Serializable {
 
         @Reference(lazy = true)

@@ -10,10 +10,6 @@ import org.junit.Test;
 
 import java.util.Map;
 
-
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class DuplicatePropertyNameTest extends TestBase {
     @Test(expected = ConstraintViolationException.class)
     public void testDuplicatedPropertyNameDifferentType() {
@@ -23,11 +19,6 @@ public class DuplicatePropertyNameTest extends TestBase {
     @Test(expected = ConstraintViolationException.class)
     public void testDuplicatedPropertyNameSameType() {
         getMapper().map(DuplicatedPropertyName.class);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testDuplicatedPropertyNameShadowedFields() {
-        getMapper().map(Extends.class);
     }
 
     @Entity
@@ -50,15 +41,6 @@ public class DuplicatePropertyNameTest extends TestBase {
         private Map<String, Integer> content1;
         @Property(value = "value")
         private String content2;
-    }
-
-    @Entity
-    public static class Super {
-        private String foo;
-    }
-
-    public static class Extends extends Super {
-        private String foo;
     }
 
 }

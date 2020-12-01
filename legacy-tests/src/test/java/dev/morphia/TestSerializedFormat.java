@@ -16,7 +16,6 @@
 
 package dev.morphia;
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
@@ -456,7 +455,7 @@ class ClassNameReferenceType extends ReferenceType {
     }
 }
 
-@Embedded
+@Entity
 @SuppressWarnings({"unused", "WeakerAccess"})
 class EmbeddedReferenceType {
     private Integer number;

@@ -16,7 +16,6 @@ package dev.morphia.indexes;
 import com.mongodb.MongoWriteException;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Collation;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -223,7 +222,7 @@ public class TestIndexed extends TestBase {
         private boolean active;
     }
 
-    @Embedded
+    @Entity
     private static class IndexedEmbed {
         @Indexed(IndexDirection.DESC)
         private String name;

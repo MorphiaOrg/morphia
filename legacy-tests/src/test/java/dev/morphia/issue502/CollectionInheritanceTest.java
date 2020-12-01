@@ -1,7 +1,6 @@
 package dev.morphia.issue502;
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.Document;
@@ -47,7 +46,7 @@ public class CollectionInheritanceTest extends TestBase {
         assertEquals(1, getMapper().getCollection(Book.class).countDocuments());
     }
 
-    @Embedded
+    @Entity
     private static class Author {
         private String name;
 
@@ -60,7 +59,7 @@ public class CollectionInheritanceTest extends TestBase {
 
     }
 
-    @Embedded
+    @Entity
     private static class Authors extends HashSet<Author> {
     }
 

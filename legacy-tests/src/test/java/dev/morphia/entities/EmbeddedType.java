@@ -16,9 +16,9 @@
 
 package dev.morphia.entities;
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 
-@Embedded
+@Entity
 public class EmbeddedType {
     private Long number;
     private String text;

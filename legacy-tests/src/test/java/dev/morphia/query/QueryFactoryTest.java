@@ -1,12 +1,8 @@
 package dev.morphia.query;
 
-import dev.morphia.Datastore;
 import dev.morphia.TestBase;
-import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class QueryFactoryTest extends TestBase {
 
@@ -21,27 +17,4 @@ public class QueryFactoryTest extends TestBase {
         Assert.assertSame(custom, getDs().getQueryFactory());
     }
 
-    @Test
-    public void createQuery() {
-
-        final AtomicInteger counter = new AtomicInteger();
-
-        final QueryFactory queryFactory = new DefaultQueryFactory() {
-            @Override
-            public <T> Query<T> createQuery(Datastore datastore, Class<T> type,
-                                            Document query) {
-
-                counter.incrementAndGet();
-                return super.createQuery(datastore, type, query);
-            }
-        };
-
-        getDs().setQueryFactory(queryFactory);
-
-        final Query<String> query = getDs().find(String.class);
-        final Query<String> other = getDs().find(String.class);
-
-        Assert.assertNotSame(other, query);
-        Assert.assertEquals(2, counter.get());
-    }
 }

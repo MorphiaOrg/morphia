@@ -1,12 +1,12 @@
 package dev.morphia.testmodel;
 
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 
 import java.io.Serializable;
 
 
-@Embedded
+@Entity
 public class Translation implements Serializable {
     private String title;
     private String body;

@@ -41,7 +41,7 @@ import static java.lang.String.format;
 public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final Datastore datastore;
-    private final Class<T> clazz;
+    private final Class<T> type;
     private final Mapper mapper;
     private final String collectionName;
     private final MongoCollection<T> collection;
@@ -52,22 +52,22 @@ public class MorphiaQuery<T> implements Query<T> {
     protected MorphiaQuery(Datastore datastore) {
         this.datastore = datastore;
         mapper = this.datastore.getMapper();
-        clazz = null;
+        type = null;
         seedQuery = null;
         collection = null;
         collectionName = null;
     }
 
-    protected MorphiaQuery(Datastore datastore, String collectionName, Class<T> clazz) {
-        this.clazz = clazz;
+    protected MorphiaQuery(Datastore datastore, String collectionName, Class<T> type) {
+        this.type = type;
         this.datastore = datastore;
         mapper = this.datastore.getMapper();
         seedQuery = null;
         if (collectionName != null) {
-            this.collection = datastore.getDatabase().getCollection(collectionName, clazz);
+            this.collection = datastore.getDatabase().getCollection(collectionName, type);
             this.collectionName = collectionName;
-        } else if (mapper.isMappable(clazz)) {
-            this.collection = mapper.getCollection(clazz);
+        } else if (mapper.isMappable(type)) {
+            this.collection = mapper.getCollection(type);
             this.collectionName = this.collection.getNamespace().getCollectionName();
         } else {
             this.collection = null;
@@ -75,12 +75,12 @@ public class MorphiaQuery<T> implements Query<T> {
         }
     }
 
-    protected MorphiaQuery(Datastore datastore, Class<T> clazz, Document query) {
-        this.clazz = clazz;
+    protected MorphiaQuery(Datastore datastore, Class<T> type, Document query) {
+        this.type = type;
         this.datastore = datastore;
         this.seedQuery = query;
         mapper = this.datastore.getMapper();
-        collection = mapper.getCollection(clazz);
+        collection = mapper.getCollection(type);
         collectionName = collection.getNamespace().getCollectionName();
     }
 
@@ -188,7 +188,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Class<T> getEntityClass() {
-        return clazz;
+        return type;
     }
 
     @Override
@@ -214,7 +214,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
         return new MorphiaKeyCursor<>(prepareCursor(includeId,
             datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            clazz, getCollectionName());
+            type, getCollectionName());
     }
 
     @Override
@@ -247,12 +247,12 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
+        return new Update<>(datastore, mapper, getCollection(), this, type, first, updates);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clazz, validate, getCollectionName());
+        return Objects.hash(type, validate, getCollectionName());
     }
 
     @Override
@@ -265,14 +265,14 @@ public class MorphiaQuery<T> implements Query<T> {
         }
         final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
         return validate == query20.validate
-               && Objects.equals(clazz, query20.clazz)
+               && Objects.equals(type, query20.type)
                && Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
-                   .add("clazz=" + clazz.getSimpleName())
+                   .add("clazz=" + type.getSimpleName())
                    .add("query=" + getQueryDocument())
                    .toString();
     }
@@ -316,7 +316,7 @@ public class MorphiaQuery<T> implements Query<T> {
         }
         try {
             return findOptions
-                       .apply(iterable, mapper, clazz)
+                       .apply(iterable, mapper, type)
                        .iterator();
         } finally {
             if (findOptions.isLogQuery()) {

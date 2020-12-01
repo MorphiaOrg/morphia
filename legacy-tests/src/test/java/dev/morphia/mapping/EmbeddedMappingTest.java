@@ -17,7 +17,6 @@
 package dev.morphia.mapping;
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -114,7 +113,7 @@ public class EmbeddedMappingTest extends TestBase {
         Assert.assertFalse("Should not find the nested field index", indexFound);
     }
 
-    @Embedded
+    @Entity
     public interface Nested {
     }
 
@@ -152,7 +151,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     }
 
-    @Embedded
+    @Entity
     public static class Delta {
         private Map<String, Object> before;
         private Map<String, Object> after;

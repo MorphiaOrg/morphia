@@ -63,11 +63,12 @@ public class DatastoreImpl implements AdvancedDatastore {
     private QueryFactory queryFactory;
 
     protected DatastoreImpl(MongoClient mongoClient, MapperOptions options, String dbName) {
-        this.mongoClient = mongoClient;
         MongoDatabase database = mongoClient.getDatabase(dbName);
         this.mapper = new Mapper(this, database.getCodecRegistry(), options);
-
         this.database = database.withCodecRegistry(mapper.getCodecRegistry());
+        MongoCollection<Document> dummy = this.database.getCollection("dummy");
+        this.mongoClient = mongoClient;
+
         this.queryFactory = options.getQueryFactory();
     }
 
@@ -186,16 +187,19 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         final IndexHelper indexHelper = new IndexHelper(mapper);
         for (EntityModel model : mapper.getMappedEntities()) {
-            if (model.getEntityAnnotation() != null) {
+            if (model.getIdField() != null) {
                 indexHelper.createIndex(mapper.getCollection(model.getType()), model);
             }
         }
     }
 
     @Override
-    public <T> void ensureIndexes(Class<T> clazz) {
-        final IndexHelper indexHelper = new IndexHelper(mapper);
-        indexHelper.createIndex(mapper.getCollection(clazz), mapper.getEntityModel(clazz));
+    public <T> void ensureIndexes(Class<T> type) {
+        EntityModel model = mapper.getEntityModel(type);
+        if (model.getIdField() != null) {
+            final IndexHelper indexHelper = new IndexHelper(mapper);
+            indexHelper.createIndex(mapper.getCollection(type), model);
+        }
     }
 
     @Override
@@ -362,7 +366,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         for (Entry<MongoCollection, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = entry.getKey(); // options.prepare(mapper.getCollection(entry.getKey()));
+            MongoCollection<T> collection = entry.getKey();
             if (options.clientSession() == null) {
                 collection.insertMany(entry.getValue(), options.getOptions());
             } else {
@@ -455,7 +459,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected <T> void saveDocument(T entity, MongoCollection<T> collection, InsertOneOptions options) {
-        Object id = mapper.getEntityModel(entity.getClass()).getIdField().getValue(entity);
+        FieldModel idField = mapper.getEntityModel(entity.getClass()).getIdField();
+
+        if(idField == null) {
+            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
+        }
+
+        Object id = idField.getValue(entity);
         ClientSession clientSession = findSession(options);
 
         if (id == null) {

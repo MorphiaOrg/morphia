@@ -2,7 +2,6 @@ package dev.morphia.mapping;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Reference;
 import dev.morphia.testutil.TestEntity;
@@ -61,7 +60,7 @@ public class ReferencesInEmbeddedTest extends TestBase {
         private EmbedContainingReference embed;
     }
 
-    @Embedded
+    @Entity
     private static class EmbedContainingReference {
         private String name;
         @Reference

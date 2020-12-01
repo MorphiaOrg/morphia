@@ -2,7 +2,6 @@ package dev.morphia;
 
 
 import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
@@ -55,7 +54,7 @@ public class TestSingleToMultipleConversion extends TestBase {
         Assert.assertEquals(1, has2.hss.size());
     }
 
-    @Embedded
+    @Entity
     private static class HasString {
         private final String s = "foo";
     }

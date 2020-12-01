@@ -2,7 +2,6 @@ package dev.morphia.callbacks;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -116,7 +115,7 @@ public class TestCallbackEscalation extends TestBase {
         private B b;
     }
 
-    @Embedded
+    @Entity
     static class B extends Callbacks {
         // minor issue: i realized, that if B does not bring anything to map,
         // morphia behaves significantly different, is this wanted ?

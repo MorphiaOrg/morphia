@@ -25,7 +25,6 @@ import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -904,7 +903,7 @@ public class TestAggregation extends TestBase {
         private ObjectId id;
     }
 
-    @Embedded
+    @Entity
     private static class Human {
         @Property("_id")
         public ObjectId id;
@@ -918,7 +917,7 @@ public class TestAggregation extends TestBase {
         public String name;
     }
 
-    @Embedded
+    @Entity
     static class ProjectedAuthor {
         private String last;
         private String first;

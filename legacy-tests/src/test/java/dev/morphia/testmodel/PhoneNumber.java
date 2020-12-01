@@ -15,13 +15,13 @@
 package dev.morphia.testmodel;
 
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 
 import java.io.Serializable;
 
 
-@Embedded(useDiscriminator = false)
+@Entity(useDiscriminator = false)
 public class PhoneNumber implements Serializable {
 
     @Property

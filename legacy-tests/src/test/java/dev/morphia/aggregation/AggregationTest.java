@@ -31,7 +31,6 @@ import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.geo.PlaceWithLegacyCoords;
@@ -714,7 +713,7 @@ public class AggregationTest extends TestBase {
                    + '}';
         }
 
-        @Embedded
+        @Entity
         public static class MinMax {
             private int min;
             private int max;

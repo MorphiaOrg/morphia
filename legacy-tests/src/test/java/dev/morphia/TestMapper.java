@@ -1,7 +1,6 @@
 package dev.morphia;
 
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -142,7 +141,7 @@ public class TestMapper extends TestBase {
         private A a3;
     }
 
-    @Embedded
+    @Entity
     public static class CustomId implements Serializable {
 
         @Property("v")

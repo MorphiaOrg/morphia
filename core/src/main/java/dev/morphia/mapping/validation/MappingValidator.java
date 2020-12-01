@@ -7,14 +7,11 @@ import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
-import dev.morphia.mapping.validation.classrules.EmbeddedAndId;
 import dev.morphia.mapping.validation.classrules.EmbeddedAndValue;
 import dev.morphia.mapping.validation.classrules.EntityAndEmbed;
-import dev.morphia.mapping.validation.classrules.EntityCannotBeMapOrIterable;
 import dev.morphia.mapping.validation.classrules.EntityOrEmbed;
 import dev.morphia.mapping.validation.classrules.MultipleId;
 import dev.morphia.mapping.validation.classrules.MultipleVersions;
-import dev.morphia.mapping.validation.classrules.NoId;
 import dev.morphia.mapping.validation.fieldrules.ContradictingFieldAnnotation;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceMissingDependencies;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
@@ -85,21 +82,14 @@ public class MappingValidator {
     private List<ClassConstraint> getConstraints() {
         final List<ClassConstraint> constraints = new ArrayList<>(32);
 
-        // normally, i do this with scanning the classpath, but that´d bring
-        // another dependency ;)
-
         // class-level
         constraints.add(new MultipleId());
         constraints.add(new MultipleVersions());
-        constraints.add(new NoId());
-        constraints.add(new EmbeddedAndId());
         constraints.add(new EntityAndEmbed());
         constraints.add(new EntityOrEmbed());
         constraints.add(new EmbeddedAndValue());
-        constraints.add(new EntityCannotBeMapOrIterable());
         constraints.add(new DuplicatedAttributeNames());
         constraints.add(new ConstructorParameterNameConstraint());
-        // constraints.add(new ContainsEmbeddedWithId());
         // field-level
         constraints.add(new ReferenceToUnidentifiable());
         constraints.add(new LazyReferenceMissingDependencies());

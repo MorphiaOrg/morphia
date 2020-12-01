@@ -14,7 +14,6 @@ import dev.morphia.TestDatastore.Keys;
 import dev.morphia.TestMapper.CustomId;
 import dev.morphia.TestMapper.UsesCustomIdObject;
 import dev.morphia.annotations.CappedAt;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IndexOptions;
@@ -32,11 +31,11 @@ import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.TestQuery.User;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
+import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -1487,7 +1486,7 @@ public class TestLegacyQuery extends LegacyTestBase {
         private ObjectId value;
     }
 
-    @Embedded
+    @Entity
     public static class Keyword {
         private String keyword;
         private Integer score;

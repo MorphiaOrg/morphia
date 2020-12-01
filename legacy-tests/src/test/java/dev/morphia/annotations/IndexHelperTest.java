@@ -382,7 +382,7 @@ public class IndexHelperTest extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     private interface NestedClass {
     }
 

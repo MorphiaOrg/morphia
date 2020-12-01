@@ -4,7 +4,6 @@ package dev.morphia.mapping;
 import com.mongodb.client.MongoCollection;
 import dev.morphia.Datastore;
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.Document;
@@ -151,10 +150,10 @@ public class MapImplTest extends TestBase {
         private final Map<String, Goo> values = new HashMap<>();
     }
 
-    @Embedded
+    @Entity
     private interface Goober {}
 
-    @Embedded
+    @Entity
     private static class Goo implements Goober {
         private String name;
 
@@ -173,7 +172,7 @@ public class MapImplTest extends TestBase {
         private final MyMap mymap = new MyMap();
     }
 
-    @Embedded
+    @Entity
     private static class MyMap extends HashMap<String, String> {
     }
 }

@@ -9,10 +9,10 @@ import java.util.List;
 
 @Entity("facebook_users")
 public class FacebookUser {
-    @Reference
-    public final List<FacebookUser> friends = new ArrayList<>();
     @Id
     public long id;
+    @Reference
+    public final List<FacebookUser> friends = new ArrayList<>();
     public int loginCount;
     public String username;
 

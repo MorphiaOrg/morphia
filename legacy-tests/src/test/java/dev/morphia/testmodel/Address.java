@@ -15,14 +15,14 @@
 package dev.morphia.testmodel;
 
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 
 import java.io.Serializable;
 
 
-@Embedded
+@Entity
 public class Address implements Serializable {
 
     @Property("address_street")

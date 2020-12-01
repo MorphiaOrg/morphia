@@ -1,7 +1,6 @@
 package dev.morphia.mapping;
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -128,7 +127,7 @@ public class FieldModelTest extends TestBase {
         private List<Embed> listOfEmbeds;
     }
 
-    @Embedded
+    @Entity
     private static class Embed {
         private String embedName;
         private List<Embed> embeddeds;

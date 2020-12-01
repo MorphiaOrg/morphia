@@ -2,7 +2,6 @@ package dev.morphia.issue155;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
@@ -35,7 +34,7 @@ public class EnumBehindAnInterfaceTest extends TestBase {
         B
     }
 
-    @Embedded
+    @Entity
     interface Bar {
 
     }

@@ -2,7 +2,6 @@ package dev.morphia.mapping.codec;
 
 import com.mongodb.client.MongoCollection;
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
@@ -210,7 +209,7 @@ public class DocumentReaderTest extends TestBase {
         function.accept(reader);
     }
 
-    @Embedded
+    @Entity
     private static class Child {
         @Override
         public int hashCode() {

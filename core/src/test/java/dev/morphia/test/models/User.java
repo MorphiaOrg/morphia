@@ -14,11 +14,11 @@ import static java.util.Arrays.asList;
 @Entity("users")
 @Validation("{ age : { $gte : 13 } }")
 public class User {
+    @Id
+    private ObjectId id;
     public String name;
     public List<String> likes;
     public int age;
-    @Id
-    private ObjectId id;
     private LocalDate joined;
 
     private User() {

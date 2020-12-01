@@ -1,16 +1,16 @@
 package dev.morphia.test.models;
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 
 import java.util.Map;
 
-@Embedded
+@Entity
 public class Grade {
-    private int marks;
+    public int marks;
 
     @Property("d")
-    private Map<String, String> data;
+    public Map<String, String> data;
 
     public Grade() {
     }

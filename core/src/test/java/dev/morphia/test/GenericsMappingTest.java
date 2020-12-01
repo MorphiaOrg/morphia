@@ -14,7 +14,6 @@
 package dev.morphia.test;
 
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -95,7 +94,7 @@ public class GenericsMappingTest extends TestBase {
         assertNotNull(getDs().find(EmailStatus.class).first());
     }
 
-    @Embedded
+    @Entity
     static class GenericHolder<T> {
         @Property
         private T thing;
@@ -142,10 +141,10 @@ public class GenericsMappingTest extends TestBase {
 
     }
 
-    @Embedded
+    @Entity
     private interface Item {}
 
-    @Embedded
+    @Entity
     private static class EmailItem implements Item {
         private String to;
 

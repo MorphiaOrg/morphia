@@ -2,7 +2,6 @@ package dev.morphia.callbacks;
 
 
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostPersist;
@@ -54,7 +53,7 @@ public class TestPostPersist extends TestBase {
         private final Inner i = new Inner();
         private boolean called;
 
-        @Embedded
+        @Entity
         static class Inner {
             private boolean innerCalled;
 

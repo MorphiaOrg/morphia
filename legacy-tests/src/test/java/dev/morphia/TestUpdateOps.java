@@ -14,7 +14,6 @@
 package dev.morphia;
 
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
@@ -25,13 +24,13 @@ import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
-import dev.morphia.query.TestQuery.ContainsPic;
-import dev.morphia.query.TestQuery.Pic;
 import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.query.legacy.TestLegacyQuery.ContainsPic;
+import dev.morphia.query.legacy.TestLegacyQuery.Pic;
 import dev.morphia.testmodel.Article;
 import dev.morphia.testmodel.Circle;
 import dev.morphia.testmodel.Rectangle;
@@ -941,7 +940,7 @@ public class TestUpdateOps extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     private static final class Child {
         private String first;
         private String last;
@@ -1002,7 +1001,7 @@ public class TestUpdateOps extends TestBase {
         private MorphiaReference<List<Pic>> keys;
     }
 
-    @Embedded
+    @Entity
     private static final class DumbArrayElement {
         private String whereId;
 
@@ -1030,7 +1029,7 @@ public class TestUpdateOps extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     public static class Log {
         private long receivedTs;
         private String value;

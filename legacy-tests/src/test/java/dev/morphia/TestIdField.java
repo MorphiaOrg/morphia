@@ -15,7 +15,6 @@
 package dev.morphia;
 
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.testmodel.Rectangle;
@@ -132,7 +131,7 @@ public class TestIdField extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     public static class MyId {
         private String myIdPart1;
         private String myIdPart2;

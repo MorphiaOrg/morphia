@@ -4,9 +4,9 @@ package dev.morphia;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.TestQuery.ContainsPic;
-import dev.morphia.query.TestQuery.Pic;
-import dev.morphia.query.TestQuery.PicWithObjectId;
+import dev.morphia.query.legacy.TestLegacyQuery.ContainsPic;
+import dev.morphia.query.legacy.TestLegacyQuery.Pic;
+import dev.morphia.query.legacy.TestLegacyQuery.PicWithObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -48,7 +48,6 @@ import java.util.stream.Collectors;
 
 import static dev.morphia.sofia.Sofia.entityOrEmbedded;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 /**
@@ -90,14 +89,12 @@ public class Mapper {
         this.datastore = datastore;
         this.options = options;
         morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
-        this.codecRegistry = fromRegistries(
-            fromProviders(new MorphiaTypesCodecProvider(this)),
+        this.codecRegistry = fromProviders(new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),
-            codecRegistry,
-            fromProviders(
-                new EnumCodecProvider(),
-                new AggregationCodecProvider(this),
-                morphiaCodecProvider));
+            new EnumCodecProvider(),
+            new AggregationCodecProvider(this),
+            morphiaCodecProvider,
+            codecRegistry);
     }
 
     /**
@@ -527,10 +524,13 @@ public class Mapper {
         Codec<T> refreshCodec = morphiaCodecProvider.getRefreshCodec(entity, getCodecRegistry());
 
         MongoCollection<?> collection = getCollection(entity.getClass());
-        Document id = collection.find(new Document("_id", getEntityModel(entity.getClass())
-                                                              .getIdField()
-                                                              .getValue(entity)), Document.class)
-                                .first();
+        FieldModel idField = getEntityModel(entity.getClass())
+                                 .getIdField();
+        if(idField == null) {
+            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
+        }
+
+        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class).first();
 
         refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
     }
@@ -641,7 +641,7 @@ public class Mapper {
     private EntityModel register(EntityModel entityModel) {
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
-        if (entityModel.getEntityAnnotation() != null) {
+        if (entityModel.getCollectionName() != null) {
             mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                                       .add(entityModel);
         }

@@ -4,7 +4,6 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Morphia;
 import dev.morphia.TestBase;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -96,7 +95,7 @@ public class TestJavaMaps extends TestBase {
         private String text;
         private Wrapped wrapped;
 
-        @Embedded
+        @Entity
         private static class Wrapped {
             private Map<String, Wrapped> others;
             private String text;

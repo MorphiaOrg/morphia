@@ -1,10 +1,10 @@
 package dev.morphia.test.models.errors;
 
-import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
-@Embedded
+@Entity
 public class IdOnEmbedded {
     @Id
     private ObjectId id;

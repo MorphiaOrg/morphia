@@ -3,7 +3,9 @@ package dev.morphia.mapping.codec.pojo;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
@@ -71,7 +73,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
     @Override
     public boolean documentHasId(Object entity) {
-        return entityModel.getIdField().getValue(entity) != null;
+        FieldModel idField = entityModel.getIdField();
+        if(idField == null) {
+            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
+        }
+        return idField.getValue(entity) != null;
     }
 
     /**
