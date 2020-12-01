@@ -425,7 +425,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&#xA0;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.Class)">ensureIndexes</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.Class)">ensureIndexes</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type)</code></th>
 <td class="colLast">
 <div class="block">Ensures (creating if necessary) the indexes found during class mapping</div>
 </td>
@@ -894,7 +894,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <ul class="blockList">
 <li class="blockList">
 <h4>ensureIndexes</h4>
-<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;void&#xA0;ensureIndexes&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;clazz)</pre>
+<pre class="methodSignature">public&#xA0;&lt;T&gt;&#xA0;void&#xA0;ensureIndexes&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&#xA0;<code><a href="Datastore.html#ensureIndexes(java.lang.Class)">Datastore</a></code></span></div>
 <div class="block">Ensures (creating if necessary) the indexes found during class mapping</div>
 <dl>
@@ -903,7 +903,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the type to index</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>clazz</code> - the class from which to get the index definitions</dd>
+<dd><code>type</code> - the class from which to get the index definitions</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="annotations/Indexes.html" title="annotation in dev.morphia.annotations"><code>Indexes</code></a>, 
 <a href="annotations/Indexed.html" title="annotation in dev.morphia.annotations"><code>Indexed</code></a>, 

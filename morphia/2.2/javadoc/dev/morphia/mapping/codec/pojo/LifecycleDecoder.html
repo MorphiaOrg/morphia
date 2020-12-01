@@ -161,10 +161,10 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="NoId.html">2.2-SNAPSHOT</a>
-    <a class="version" href="../../../../../../../2.1/javadoc/dev/morphia/mapping/validation/classrules/NoId.html">2.1</a>
-    <a class="version" href="../../../../../../../2.0/javadoc/dev/morphia/mapping/validation/classrules/NoId.html">2.0</a>
-    <a class="version" href="../../../../../../../1.6/javadoc/dev/morphia/mapping/validation/classrules/NoId.html">1.6</a>
+    <a class="version is-current" href="LifecycleDecoder.html">2.2-SNAPSHOT</a>
+    <a class="version is-missing" href="../../../../../../../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../../../../../../../2.0/index.html">2.0</a>
+    <a class="version is-missing" href="../../../../../../../1.6/index.html">1.6</a>
   </div>
 </div>
 </div>
@@ -173,7 +173,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="NoId (Morphia)";
+            parent.document.title="LifecycleDecoder (Morphia)";
         }
     }
     catch(err) {
@@ -206,7 +206,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/NoId.html">Use</a></li>
+<li><a href="class-use/LifecycleDecoder.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
@@ -268,15 +268,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&#xA0;<a href="package-summary.html">dev.morphia.mapping.validation.classrules</a></div>
-<h2 title="Class NoId" class="title">Class NoId</h2>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&#xA0;<a href="package-summary.html">dev.morphia.mapping.codec.pojo</a></div>
+<h2 title="Class LifecycleDecoder" class="title">Class LifecycleDecoder</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.mapping.validation.classrules.NoId</li>
+<li><a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">dev.morphia.mapping.codec.pojo.EntityDecoder</a></li>
+<li>
+<ul class="inheritance">
+<li>dev.morphia.mapping.codec.pojo.LifecycleDecoder</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -285,13 +290,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../ClassConstraint.html" title="interface in dev.morphia.mapping.validation">ClassConstraint</a></code></dd>
+<dd><code>org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">NoId</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements <a href="../ClassConstraint.html" title="interface in dev.morphia.mapping.validation">ClassConstraint</a></pre>
-<div class="block">Validates that classes marked with @Entity have a field annotated with @Id.</div>
+<pre>public class <span class="typeNameLabel">LifecycleDecoder</span>
+extends <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></pre>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </div>
@@ -312,8 +319,10 @@ implements <a href="../ClassConstraint.html" title="interface in dev.morphia.map
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">NoId</a></span>()</code></th>
-<td class="colLast">&#xA0;</td>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">LifecycleDecoder</a></span>&#x200B;(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&#xA0;codec)</code></th>
+<td class="colLast">
+<div class="block">creates the decoder</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -334,15 +343,19 @@ implements <a href="../ClassConstraint.html" title="interface in dev.morphia.map
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
-     <a href="../../codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
-     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
-<td class="colLast">
-<div class="block">Check that an EntityModel meets the constraint</div>
-</td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode</a></span>&#x200B;(org.bson.BsonReader&#xA0;reader,
+      org.bson.codecs.DecoderContext&#xA0;decoderContext)</code></th>
+<td class="colLast">&#xA0;</td>
 </tr>
 </tbody></table>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.dev.morphia.mapping.codec.pojo.EntityDecoder">
+<!--   -->
+</a>
+<h3>Methods inherited from class&#xA0;dev.morphia.mapping.codec.pojo.<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></h3>
+<code><a href="EntityDecoder.html#decodeModel(org.bson.BsonReader,org.bson.codecs.DecoderContext,dev.morphia.mapping.codec.MorphiaInstanceCreator,dev.morphia.mapping.codec.pojo.FieldModel)">decodeModel</a>, <a href="EntityDecoder.html#decodeProperties(org.bson.BsonReader,org.bson.codecs.DecoderContext,dev.morphia.mapping.codec.MorphiaInstanceCreator)">decodeProperties</a>, <a href="EntityDecoder.html#getCodecFromDocument(org.bson.BsonReader,boolean,java.lang.String,org.bson.codecs.configuration.CodecRegistry,dev.morphia.mapping.DiscriminatorLookup,org.bson.codecs.Codec)">getCodecFromDocument</a>, <a href="EntityDecoder.html#getInstanceCreator()">getInstanceCreator</a>, <a href="EntityDecoder.html#getMorphiaCodec()">getMorphiaCodec</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -366,13 +379,20 @@ implements <a href="../ClassConstraint.html" title="interface in dev.morphia.map
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;()">
+<a id="&lt;init&gt;(dev.morphia.mapping.codec.pojo.MorphiaCodec)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>NoId</h4>
-<pre>public&#xA0;NoId()</pre>
+<h4>LifecycleDecoder</h4>
+<pre>public&#xA0;LifecycleDecoder&#x200B;(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&#xA0;codec)</pre>
+<div class="block">creates the decoder</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>codec</code> - the codec</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -385,24 +405,19 @@ implements <a href="../ClassConstraint.html" title="interface in dev.morphia.map
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">
+<a id="decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>check</h4>
-<pre class="methodSignature">public&#xA0;void&#xA0;check&#x200B;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
-                  <a href="../../codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
-                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&#xA0;<code><a href="../ClassConstraint.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">ClassConstraint</a></code></span></div>
-<div class="block">Check that an EntityModel meets the constraint</div>
+<h4>decode</h4>
+<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;decode&#x200B;(org.bson.BsonReader&#xA0;reader,
+                     org.bson.codecs.DecoderContext&#xA0;decoderContext)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../ClassConstraint.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></code>&#xA0;in interface&#xA0;<code><a href="../ClassConstraint.html" title="interface in dev.morphia.mapping.validation">ClassConstraint</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mapper</code> - the Mapper to use for validation</dd>
-<dd><code>entityModel</code> - the model to check</dd>
-<dd><code>ve</code> - the set of violations</dd>
+<dd><code>decode</code>&#xA0;in interface&#xA0;<code>org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="EntityDecoder.html#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode</a></code>&#xA0;in class&#xA0;<code><a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -429,7 +444,7 @@ implements <a href="../ClassConstraint.html" title="interface in dev.morphia.map
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/NoId.html">Use</a></li>
+<li><a href="class-use/LifecycleDecoder.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
