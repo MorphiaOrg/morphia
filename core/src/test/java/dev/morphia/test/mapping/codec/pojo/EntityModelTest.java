@@ -1,13 +1,12 @@
 package dev.morphia.test.mapping.codec.pojo;
 
-import com.mongodb.BasicDBObject;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
-import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.test.TestBase;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
@@ -52,24 +51,19 @@ public class EntityModelTest extends TestBase {
         EntityModel model = getDs().getMapper().map(MoreSpecificEntity.class).get(0);
         MoreSpecificEntity beforeDB = new MoreSpecificEntity();
         beforeDB.setId(UUID.randomUUID());
-        beforeDB.setTest(UUID.randomUUID());
+        beforeDB.setTest("a string");
         beforeDB.setTest2(UUID.randomUUID());
         beforeDB.setNumber(13);
         beforeDB.setNumber2(14);
         getDs().save(beforeDB);
 
-        MoreSpecificEntity fromDB = getDs().find(MoreSpecificEntity.class)
-                                           .filter(Filters.eq("_id", beforeDB.getId()))
-                                           .first();
-
         assertEquals(model.getField("id").getType(), UUID.class);
-        assertEquals(model.getField("test").getType(), UUID.class);
+        assertEquals(model.getField("test").getType(), String.class);
         assertEquals(model.getField("test2").getType(), UUID.class);
-
 
         getDs().getDatabase()
                .getCollection("specificEntity")
-               .deleteMany(new BasicDBObject());
+               .deleteMany(new Document());
     }
 
     @Entity
@@ -85,10 +79,10 @@ public class EntityModelTest extends TestBase {
     }
 
     @Entity
-    private static class GenericEntity<T> {
+    private static class GenericEntity<T, U> {
         @Id
         protected T id;
-        protected T test;
+        protected U test;
         protected UUID test2;
 
         public T getId() {
@@ -99,11 +93,11 @@ public class EntityModelTest extends TestBase {
             this.id = id;
         }
 
-        public T getTest() {
+        public U getTest() {
             return test;
         }
 
-        public void setTest(T test) {
+        public void setTest(U test) {
             this.test = test;
         }
 
@@ -117,7 +111,7 @@ public class EntityModelTest extends TestBase {
     }
 
     @Entity
-    private static class MoreSpecificEntity extends SpecificEntity<UUID> {
+    private static class MoreSpecificEntity extends SpecificEntity<UUID, String> {
         private long number2;
 
         public long getNumber2() {
@@ -134,7 +128,7 @@ public class EntityModelTest extends TestBase {
     }
 
     @Entity
-    private static class SpecificEntity<ID> extends GenericEntity<ID> {
+    private static class SpecificEntity<ID, TEST> extends GenericEntity<ID, TEST> {
         private long number;
 
         public long getNumber() {

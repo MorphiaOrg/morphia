@@ -19,6 +19,7 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,9 @@ public class EntityModelBuilder {
         List<Class<?>> list = new ArrayList<>(List.of(type));
         list.addAll(classes);
         for (Class<?> klass : list) {
-            processFields(klass, parameterization);
+            if (!klass.getPackageName().startsWith("java")) {
+                processFields(klass, parameterization);
+            }
         }
     }
 
@@ -99,7 +102,7 @@ public class EntityModelBuilder {
 
     private Map<String, Map<String, Type>> findParameterization(Class<?> type) {
         if (type.getSuperclass() == null) {
-            return new HashMap<>();
+            return new LinkedHashMap<>();
         }
         Map<String, Map<String, Type>> parentMap = findParameterization(type.getSuperclass());
         Map<String, Type> typeMap = mapArguments(type.getSuperclass(), type.getGenericSuperclass());
@@ -125,7 +128,7 @@ public class EntityModelBuilder {
 
     private Set<Class<?>> findParentClasses(Class<?> type) {
         Set<Class<?>> classes = new LinkedHashSet<>();
-        while (type != null && !type.isEnum() && !type.equals(Object.class) && !type.getPackageName().startsWith("java")) {
+        while (type != null && !type.isEnum() && !type.equals(Object.class)) {
             classes.add(type);
             annotations.addAll(Set.of(type.getAnnotations()));
             type = type.getSuperclass();
@@ -394,16 +397,17 @@ public class EntityModelBuilder {
     }
 
     private void propagateTypes(Map<String, Map<String, Type>> parameterization) {
-        List<Map<String, Type>> maps = new ArrayList<>(parameterization.values());
+        List<Map<String, Type>> parameters = new ArrayList<>(parameterization.values());
 
-        for (int index = 0; index < maps.size(); index++) {
-            Map<String, Type> current = maps.get(index);
-            if (index + 1 < maps.size()) {
+        for (int index = 0; index < parameters.size(); index++) {
+            Map<String, Type> current = parameters.get(index);
+            if (index + 1 < parameters.size()) {
                 for (Entry<String, Type> entry : current.entrySet()) {
                     int peek = index + 1;
                     while (entry.getValue() instanceof TypeVariable) {
-                        Map<String, Type> next = maps.get(peek++);
-                        entry.setValue(next.get(((TypeVariable<?>) entry.getValue()).getName()));
+                        TypeVariable<?> typeVariable = (TypeVariable<?>) entry.getValue();
+                        Map<String, Type> next = parameters.get(peek++);
+                        entry.setValue(next.get(typeVariable.getName()));
                     }
                 }
             }
