@@ -215,7 +215,7 @@
 <a href="javadoc/dev/morphia/annotations/Embedded.html" class="page">@Embedded</a>.
 In order for Morphia to consider any type for mapping, it must have one of these two annotation.  <code>@Entity</code> is used to denote a "top level" type.
 These types tend to have their own collections whose names can be mapped via the <code>value</code> parameter.
-Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in <a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">@MapperOptions</a>.
+Leaving this value blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in <a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">MapperOptions</a>.
 That default is currently the camel case value of the class&#8217;s simple name.
 For example, to map a <code>UserProfile</code> entity under this strategy, the collection name would be mapped to <code>userProfile</code>.</p>
 </div>
@@ -336,7 +336,7 @@ Similarly, if data is only intended to be loaded from the database but never wri
 <p>If you do not specify a name via <code>@Property</code>, the default field naming strategy will be used.
 The default strategy is to use the field&#8217;s name as defined in the source.
 This strategy can be changed globally via the field naming strategy option on
-<a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">@MapperOptions</a>.
+<a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">MapperOptions</a>.
 Simple indexes can be defined on a field if all that is needed for the index is a single field.
 This can be done via the <a href="javadoc/dev/morphia/annotations/Indexed.html" class="page">@Indexed</a> annotation.</p>
 </div>
