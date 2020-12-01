@@ -179,7 +179,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -287,10 +287,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt>All Implemented Interfaces:</dt>
 <dd><code>org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
 </dl>
-<dl>
-<dt>Direct Known Subclasses:</dt>
-<dd><code><a href="LifecycleDecoder.html" title="class in dev.morphia.mapping.codec.pojo">LifecycleDecoder</a></code></dd>
-</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">EntityDecoder</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
@@ -375,12 +371,7 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>protected <a href="../MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstanceCreator()">getInstanceCreator</a></span>()</code></th>
-<td class="colLast">&#xA0;</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>protected <a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMorphiaCodec()">getMorphiaCodec</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstanceCreator(dev.morphia.mapping.codec.pojo.EntityModel)">getInstanceCreator</a></span>&#x200B;(<a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;classModel)</code></th>
 <td class="colLast">&#xA0;</td>
 </tr>
 </tbody></table>
@@ -440,15 +431,6 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 </dl>
 </li>
 </ul>
-<a id="getInstanceCreator()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getInstanceCreator</h4>
-<pre class="methodSignature">protected&#xA0;<a href="../MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a>&#xA0;getInstanceCreator()</pre>
-</li>
-</ul>
 <a id="decodeModel(org.bson.BsonReader,org.bson.codecs.DecoderContext,dev.morphia.mapping.codec.MorphiaInstanceCreator,dev.morphia.mapping.codec.pojo.FieldModel)">
 <!--   -->
 </a>
@@ -486,13 +468,13 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
                                                         org.bson.codecs.Codec&lt;?&gt;&#xA0;defaultCodec)</pre>
 </li>
 </ul>
-<a id="getMorphiaCodec()">
+<a id="getInstanceCreator(dev.morphia.mapping.codec.pojo.EntityModel)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getMorphiaCodec</h4>
-<pre class="methodSignature">protected&#xA0;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;&#xA0;getMorphiaCodec()</pre>
+<h4>getInstanceCreator</h4>
+<pre class="methodSignature">protected&#xA0;<a href="../MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a>&#xA0;getInstanceCreator&#x200B;(<a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;classModel)</pre>
 </li>
 </ul>
 </li>

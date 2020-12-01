@@ -349,16 +349,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&#xA0;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../classrules/EmbeddedAndId.html" title="class in dev.morphia.mapping.validation.classrules">EmbeddedAndId</a></span></code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&#xA0;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../classrules/EmbeddedAndValue.html" title="class in dev.morphia.mapping.validation.classrules">EmbeddedAndValue</a></span></code></th>
 <td class="colLast">
 <div class="block">Ensures value() isn&apos;t used on @Embedded</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&#xA0;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../classrules/EntityAndEmbed.html" title="class in dev.morphia.mapping.validation.classrules">EntityAndEmbed</a></span></code></th>
 <td class="colLast">
 <div class="block">Checks that @Entity and @Embed aren&apos;t both used on a type.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&#xA0;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../classrules/EntityCannotBeMapOrIterable.html" title="class in dev.morphia.mapping.validation.classrules">EntityCannotBeMapOrIterable</a></span></code></th>
+<td class="colLast">
+<div class="block">Checks that a type is not a Map or Iterable subtype</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -380,6 +392,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../classrules/MultipleVersions.html" title="class in dev.morphia.mapping.validation.classrules">MultipleVersions</a></span></code></th>
 <td class="colLast">
 <div class="block">Checks the multiple fields aren&apos;t annotated with @Version</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&#xA0;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../classrules/NoId.html" title="class in dev.morphia.mapping.validation.classrules">NoId</a></span></code></th>
+<td class="colLast">
+<div class="block">Validates that classes marked with @Entity have a field annotated with @Id.</div>
 </td>
 </tr>
 </tbody>
