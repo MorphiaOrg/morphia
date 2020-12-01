@@ -1,15 +1,12 @@
 name: morphia
 title: Morphia
-version: 2.1
+version: 2.1.1
+display_version: "2.1"
 
 nav:
   - modules/ROOT/nav.adoc
 
 asciidoc:
   attributes:
-    branch: 2.1.x
-    groupId: dev.morphia.morphia
-    artifactId: morphia-core
-    version: 2.1.1
     docsRef: http://docs.mongodb.org/manual
     srcRef: https://github.com/MorphiaOrg/morphia/blob/2.1.x
