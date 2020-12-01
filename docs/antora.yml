@@ -10,6 +10,6 @@ asciidoc:
     branch: 2.1.x
     groupId: dev.morphia.morphia
     artifactId: morphia-core
-    version: 2.1.0
+    version: 2.1.1
     docsRef: http://docs.mongodb.org/manual
     srcRef: https://github.com/MorphiaOrg/morphia/blob/2.1.x
