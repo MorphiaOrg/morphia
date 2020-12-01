@@ -583,6 +583,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Sets the entity model owner</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../../MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EntityDecoder.</span><code><span class="memberNameLink"><a href="../EntityDecoder.html#getInstanceCreator(dev.morphia.mapping.codec.pojo.EntityModel)">getInstanceCreator</a></span>&#x200B;(<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;classModel)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
 </tbody>
 </table>
 <table class="useSummary">
@@ -789,14 +794,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">EmbeddedAndValue.</span><code><span class="memberNameLink"><a href="../../../validation/classrules/EmbeddedAndValue.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
+<th class="colSecond" scope="row"><span class="typeNameLabel">EmbeddedAndId.</span><code><span class="memberNameLink"><a href="../../../validation/classrules/EmbeddedAndId.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
      <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../validation/ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
 <td class="colLast">&#xA0;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EmbeddedAndValue.</span><code><span class="memberNameLink"><a href="../../../validation/classrules/EmbeddedAndValue.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
+     <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../validation/ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EntityAndEmbed.</span><code><span class="memberNameLink"><a href="../../../validation/classrules/EntityAndEmbed.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
+     <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../validation/ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EntityCannotBeMapOrIterable.</span><code><span class="memberNameLink"><a href="../../../validation/classrules/EntityCannotBeMapOrIterable.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
      <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../validation/ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
 <td class="colLast">&#xA0;</td>
@@ -818,6 +837,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MultipleVersions.</span><code><span class="memberNameLink"><a href="../../../validation/classrules/MultipleVersions.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
+     <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../validation/ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
+<td class="colLast">&#xA0;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">NoId.</span><code><span class="memberNameLink"><a href="../../../validation/classrules/NoId.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
      <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../validation/ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
 <td class="colLast">&#xA0;</td>
