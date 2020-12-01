@@ -74,7 +74,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     @Override
     public boolean documentHasId(Object entity) {
         FieldModel idField = entityModel.getIdField();
-        if(idField == null) {
+        if (idField == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
         return idField.getValue(entity) != null;

@@ -526,7 +526,7 @@ public class Mapper {
         MongoCollection<?> collection = getCollection(entity.getClass());
         FieldModel idField = getEntityModel(entity.getClass())
                                  .getIdField();
-        if(idField == null) {
+        if (idField == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
 

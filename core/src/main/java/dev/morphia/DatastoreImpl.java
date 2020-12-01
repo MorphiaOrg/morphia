@@ -461,7 +461,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     protected <T> void saveDocument(T entity, MongoCollection<T> collection, InsertOneOptions options) {
         FieldModel idField = mapper.getEntityModel(entity.getClass()).getIdField();
 
-        if(idField == null) {
+        if (idField == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
 
