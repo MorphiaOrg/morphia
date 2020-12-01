@@ -161,10 +161,10 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="LifecycleEncoder.html">2.2-SNAPSHOT</a>
-    <a class="version is-missing" href="../../../../../../../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../../../../../../../2.0/index.html">2.0</a>
-    <a class="version is-missing" href="../../../../../../../1.6/index.html">1.6</a>
+    <a class="version is-current" href="EntityCannotBeMapOrIterable.html">2.2-SNAPSHOT</a>
+    <a class="version" href="../../../../../../../2.1/javadoc/dev/morphia/mapping/validation/classrules/EntityCannotBeMapOrIterable.html">2.1</a>
+    <a class="version" href="../../../../../../../2.0/javadoc/dev/morphia/mapping/validation/classrules/EntityCannotBeMapOrIterable.html">2.0</a>
+    <a class="version" href="../../../../../../../1.6/javadoc/dev/morphia/mapping/validation/classrules/EntityCannotBeMapOrIterable.html">1.6</a>
   </div>
 </div>
 </div>
@@ -173,13 +173,13 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="LifecycleEncoder (Morphia)";
+            parent.document.title="EntityCannotBeMapOrIterable (Morphia)";
         }
     }
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -206,7 +206,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/LifecycleEncoder.html">Use</a></li>
+<li><a href="class-use/EntityCannotBeMapOrIterable.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
@@ -242,13 +242,13 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&#xA0;</li>
 <li>Nested&#xA0;|&#xA0;</li>
-<li><a href="#field.summary">Field</a>&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
 <li><a href="#constructor.summary">Constr</a>&#xA0;|&#xA0;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&#xA0;</li>
-<li><a href="#field.detail">Field</a>&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
 <li><a href="#constructor.detail">Constr</a>&#xA0;|&#xA0;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -268,15 +268,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&#xA0;<a href="package-summary.html">dev.morphia.mapping.codec.pojo</a></div>
-<h2 title="Class LifecycleEncoder" class="title">Class LifecycleEncoder</h2>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&#xA0;<a href="package-summary.html">dev.morphia.mapping.validation.classrules</a></div>
+<h2 title="Class EntityCannotBeMapOrIterable" class="title">Class EntityCannotBeMapOrIterable</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.mapping.codec.pojo.LifecycleEncoder</li>
+<li>dev.morphia.mapping.validation.classrules.EntityCannotBeMapOrIterable</li>
 </ul>
 </li>
 </ul>
@@ -285,44 +285,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>org.bson.codecs.Encoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
+<dd><code><a href="../ClassConstraint.html" title="interface in dev.morphia.mapping.validation">ClassConstraint</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">LifecycleEncoder</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<dl>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.2</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+<pre>public class <span class="typeNameLabel">EntityCannotBeMapOrIterable</span>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
+implements <a href="../ClassConstraint.html" title="interface in dev.morphia.mapping.validation">ClassConstraint</a></pre>
+<div class="block">Checks that a type is not a Map or Iterable subtype</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== FIELD SUMMARY =========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="field.summary">
-<!--   -->
-</a>
-<h3>Field Summary</h3>
-<table class="memberSummary">
-<caption><span>Fields</span><span class="tabEnd">&#xA0;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Field</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static org.bson.codecs.ObjectIdGenerator</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#OBJECT_ID_GENERATOR">OBJECT_ID_GENERATOR</a></span></code></th>
-<td class="colLast">&#xA0;</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-</section>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <section role="region">
 <ul class="blockList">
@@ -337,10 +312,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">LifecycleEncoder</a></span>&#x200B;(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&#xA0;morphiaCodec)</code></th>
-<td class="colLast">
-<div class="block">Creates a new encoder</div>
-</td>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">EntityCannotBeMapOrIterable</a></span>()</code></th>
+<td class="colLast">&#xA0;</td>
 </tr>
 </tbody></table>
 </li>
@@ -362,27 +335,12 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">encode</a></span>&#x200B;(org.bson.BsonWriter&#xA0;writer,
-      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;value,
-      org.bson.codecs.EncoderContext&#xA0;encoderContext)</code></th>
-<td class="colLast">&#xA0;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encodeEntity(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">encodeEntity</a></span>&#x200B;(org.bson.BsonWriter&#xA0;writer,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;value,
-            org.bson.codecs.EncoderContext&#xA0;encoderContext)</code></th>
-<td class="colLast">&#xA0;</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
-<td class="colLast">&#xA0;</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>protected <a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMorphiaCodec()">getMorphiaCodec</a></span>()</code></th>
-<td class="colLast">&#xA0;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></span>&#x200B;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
+     <a href="../../codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</code></th>
+<td class="colLast">
+<div class="block">Check that an EntityModel meets the constraint</div>
+</td>
 </tr>
 </tbody></table>
 <ul class="blockList">
@@ -401,25 +359,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="field.detail">
-<!--   -->
-</a>
-<h3>Field Detail</h3>
-<a id="OBJECT_ID_GENERATOR">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>OBJECT_ID_GENERATOR</h4>
-<pre>public static final&#xA0;org.bson.codecs.ObjectIdGenerator OBJECT_ID_GENERATOR</pre>
-</li>
-</ul>
-</li>
-</ul>
-</section>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <section role="region">
 <ul class="blockList">
@@ -427,20 +366,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(dev.morphia.mapping.codec.pojo.MorphiaCodec)">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>LifecycleEncoder</h4>
-<pre>public&#xA0;LifecycleEncoder&#x200B;(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&#xA0;morphiaCodec)</pre>
-<div class="block">Creates a new encoder</div>
-<dl>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>morphiaCodec</code> - the codec</dd>
-</dl>
+<h4>EntityCannotBeMapOrIterable</h4>
+<pre>public&#xA0;EntityCannotBeMapOrIterable()</pre>
 </li>
 </ul>
 </li>
@@ -453,52 +385,25 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>encode</h4>
-<pre class="methodSignature">public&#xA0;void&#xA0;encode&#x200B;(org.bson.BsonWriter&#xA0;writer,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;value,
-                   org.bson.codecs.EncoderContext&#xA0;encoderContext)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>encode</code>&#xA0;in interface&#xA0;<code>org.bson.codecs.Encoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a id="encodeEntity(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>encodeEntity</h4>
-<pre class="methodSignature">protected&#xA0;void&#xA0;encodeEntity&#x200B;(org.bson.BsonWriter&#xA0;writer,
-                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&#xA0;value,
-                            org.bson.codecs.EncoderContext&#xA0;encoderContext)</pre>
-</li>
-</ul>
-<a id="getEncoderClass()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getEncoderClass</h4>
-<pre class="methodSignature">public&#xA0;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&#xA0;getEncoderClass()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getEncoderClass</code>&#xA0;in interface&#xA0;<code>org.bson.codecs.Encoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a id="getMorphiaCodec()">
+<a id="check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getMorphiaCodec</h4>
-<pre class="methodSignature">protected&#xA0;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&#xA0;getMorphiaCodec()</pre>
+<h4>check</h4>
+<pre class="methodSignature">public&#xA0;void&#xA0;check&#x200B;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&#xA0;mapper,
+                  <a href="../../codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&#xA0;entityModel,
+                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../ConstraintViolation.html" title="class in dev.morphia.mapping.validation">ConstraintViolation</a>&gt;&#xA0;ve)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&#xA0;<code><a href="../ClassConstraint.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">ClassConstraint</a></code></span></div>
+<div class="block">Check that an EntityModel meets the constraint</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../ClassConstraint.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,java.util.Set)">check</a></code>&#xA0;in interface&#xA0;<code><a href="../ClassConstraint.html" title="interface in dev.morphia.mapping.validation">ClassConstraint</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapper</code> - the Mapper to use for validation</dd>
+<dd><code>entityModel</code> - the model to check</dd>
+<dd><code>ve</code> - the set of violations</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -524,7 +429,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/LifecycleEncoder.html">Use</a></li>
+<li><a href="class-use/EntityCannotBeMapOrIterable.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
@@ -554,13 +459,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="subNavList">
 <li>Summary:&#xA0;</li>
 <li>Nested&#xA0;|&#xA0;</li>
-<li><a href="#field.summary">Field</a>&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
 <li><a href="#constructor.summary">Constr</a>&#xA0;|&#xA0;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&#xA0;</li>
-<li><a href="#field.detail">Field</a>&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
 <li><a href="#constructor.detail">Constr</a>&#xA0;|&#xA0;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
