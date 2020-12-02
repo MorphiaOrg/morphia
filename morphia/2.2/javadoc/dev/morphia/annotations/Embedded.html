@@ -272,7 +272,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Inherited</a>
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation" class="externalLink">TYPE</a>)
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>=&quot;2.2&quot;)
 public @interface <span class="memberNameLabel">Embedded</span></pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">It is now possible to use @Entity everywhere.  If a type is only for use as an embedded value, no @Id field is necessary.</div>
+</div>
 <div class="block">Marks a type as eligible for mapping and embedding in entity types.</div>
 </li>
 </ul>
@@ -297,17 +301,23 @@ public @interface <span class="memberNameLabel">Embedded</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discriminator()">discriminator</a></span></code></th>
-<td class="colLast">&#xA0;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discriminatorKey()">discriminatorKey</a></span></code></th>
-<td class="colLast">&#xA0;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#useDiscriminator()">useDiscriminator</a></span></code></th>
-<td class="colLast">&#xA0;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&#xA0;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
@@ -365,6 +375,7 @@ public @interface <span class="memberNameLabel">Embedded</span></pre>
 <li class="blockList">
 <h4>useDiscriminator</h4>
 <pre>boolean&#xA0;useDiscriminator</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the discriminator for this type should be stored</dd>
@@ -387,6 +398,7 @@ public @interface <span class="memberNameLabel">Embedded</span></pre>
 <li class="blockList">
 <h4>discriminatorKey</h4>
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;discriminatorKey</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the discriminator key to use for this type.</dd>
@@ -409,6 +421,7 @@ public @interface <span class="memberNameLabel">Embedded</span></pre>
 <li class="blockList">
 <h4>discriminator</h4>
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&#xA0;discriminator</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the discriminator value to use for this type.</dd>

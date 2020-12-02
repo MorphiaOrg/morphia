@@ -259,10 +259,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.mapping.codec">dev.morphia.mapping.codec</a></th>
-<td class="colLast">&#xA0;</td>
-</tr>
-<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia.mapping.codec.pojo">dev.morphia.mapping.codec.pojo</a></th>
 <td class="colLast">&#xA0;</td>
 </tr>
@@ -272,12 +268,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <ul class="blockList">
 <li class="blockList">
-<section role="region"><a id="dev.morphia.mapping.codec">
+<section role="region"><a id="dev.morphia.mapping.codec.pojo">
 <!--   -->
 </a>
-<h3>Uses of <a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a> in <a href="../../package-summary.html">dev.morphia.mapping.codec</a></h3>
+<h3>Uses of <a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a> in <a href="../package-summary.html">dev.morphia.mapping.codec.pojo</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../package-summary.html">dev.morphia.mapping.codec</a> that return <a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a></span><span class="tabEnd">&#xA0;</span></caption>
+<caption><span>Methods in <a href="../package-summary.html">dev.morphia.mapping.codec.pojo</a> that return <a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a></span><span class="tabEnd">&#xA0;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -285,20 +281,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&#xA0;<a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaCodecProvider.</span><code><span class="memberNameLink"><a href="../../MorphiaCodecProvider.html#get(java.lang.Class,org.bson.codecs.configuration.CodecRegistry)">get</a></span>&#x200B;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&#xA0;type,
-   org.bson.codecs.configuration.CodecRegistry&#xA0;registry)</code></th>
+<td class="colFirst"><code>protected <a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EntityDecoder.</span><code><span class="memberNameLink"><a href="../EntityDecoder.html#getMorphiaCodec()">getMorphiaCodec</a></span>()</code></th>
 <td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="../MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaCodec.</span><code><span class="memberNameLink"><a href="../MorphiaCodec.html#setEncoder(dev.morphia.mapping.codec.pojo.EntityEncoder)">setEncoder</a></span>&#x200B;(dev.morphia.mapping.codec.pojo.EntityEncoder&#xA0;encoder)</code></th>
+<td class="colLast">
+<div class="block">Sets the encoder</div>
+</td>
 </tr>
 </tbody>
 </table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="dev.morphia.mapping.codec.pojo">
-<!--   -->
-</a>
-<h3>Uses of <a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a> in <a href="../package-summary.html">dev.morphia.mapping.codec.pojo</a></h3>
 <table class="useSummary">
 <caption><span>Constructors in <a href="../package-summary.html">dev.morphia.mapping.codec.pojo</a> with parameters of type <a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a></span><span class="tabEnd">&#xA0;</span></caption>
 <tbody><tr>
@@ -309,6 +304,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../EntityDecoder.html#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">EntityDecoder</a></span>&#x200B;(<a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;&#xA0;morphiaCodec)</code></th>
 <td class="colLast">&#xA0;</td>
+</tr>
+<tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../LifecycleDecoder.html#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">LifecycleDecoder</a></span>&#x200B;(<a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&#xA0;codec)</code></th>
+<td class="colLast">
+<div class="block">creates the decoder</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../LifecycleEncoder.html#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">LifecycleEncoder</a></span>&#x200B;(<a href="../MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&#xA0;morphiaCodec)</code></th>
+<td class="colLast">
+<div class="block">Creates a new encoder</div>
+</td>
 </tr>
 </tbody>
 </table>
