@@ -1,6 +1,7 @@
-package dev.morphia;
+package dev.morphia.test;
 
 import com.github.zafarkhaja.semver.Version;
+import dev.morphia.MorphiaVersion22;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.testng.annotations.Test;

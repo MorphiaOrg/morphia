@@ -71,3 +71,12 @@ jobs:
           workflow: Docs
           repo: MorphiaOrg/morphia-docs
           token: ${{ secrets.PUSH_TOKEN }}
+  Audits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke audits
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Audits
+          repo: MorphiaOrg/morphia-audit
+          token: ${{ secrets.PUSH_TOKEN }}
