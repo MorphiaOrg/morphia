@@ -71,6 +71,7 @@ jobs:
           workflow: Docs
           repo: MorphiaOrg/morphia-docs
           token: ${{ secrets.PUSH_TOKEN }}
+          ref: refs/heads/master
   Audits:
     runs-on: ubuntu-latest
     steps:
