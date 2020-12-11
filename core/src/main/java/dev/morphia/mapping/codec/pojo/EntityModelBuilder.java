@@ -77,7 +77,8 @@ public class EntityModelBuilder {
         List<Class<?>> list = new ArrayList<>(List.of(type));
         list.addAll(classes);
         for (Class<?> klass : list) {
-            if (!klass.getPackageName().startsWith("java")) {
+            String packageName = klass.getPackageName();
+            if (!(packageName.startsWith("java.") || packageName.startsWith("javax."))) {
                 processFields(klass, parameterization);
             }
         }
