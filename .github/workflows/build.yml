@@ -62,6 +62,8 @@ jobs:
           restore-keys: \${{ runner.os }}-m2
       - name: Install Plugins
         run: mvn install -DskipTests --file pom.xml
+      - name: Configure Credentials
+        run: echo "${{ secrets.CREDENTIALS }}" > ~/.github
       - name: Generate Changes
         run: mvn issues:generate -DskipTests --file core/pom.xml
       - name: Archive Changes
