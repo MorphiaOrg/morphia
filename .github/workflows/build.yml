@@ -32,6 +32,7 @@ jobs:
         run: mvn -B verify --file pom.xml -Ddriver.version=${{ matrix.driver }}
   Quality:
     name: Run code quality checks
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,6 +52,7 @@ jobs:
         run: mvn -Pquality --file core/pom.xml
   Changes:
     name: "Generate changes for this version"
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -77,6 +79,7 @@ jobs:
           path: Changes-*.md
   Docs:
     name: Trigger the docs build
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
@@ -88,6 +91,7 @@ jobs:
           ref: refs/heads/master
   Audits:
     name: Trigger the audit job
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - name: Invoke audits
