@@ -13,7 +13,6 @@ jobs:
       matrix:
         java: [ 11, 15 ]
         mongo: [ 4.4.2, 4.2.11, 4.0.21, 3.6.21 ]
-        driver: [ 4.1.1, 4.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.java }}
@@ -29,7 +28,7 @@ jobs:
       - name: Build with Maven
         env:
           MONGODB: ${{ matrix.mongo }}
-        run: mvn -B verify --file pom.xml -Ddriver.version=${{ matrix.driver }}
+        run: mvn -B verify --file pom.xml
   Quality:
     name: Run code quality checks
     needs: Morphia
