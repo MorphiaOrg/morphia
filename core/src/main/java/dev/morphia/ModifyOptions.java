@@ -35,6 +35,8 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     }
 
     /**
+     * @param hint the hint to apply
+     * @return this
      * @see #hint(Bson)
      * @since 2.2
      */
@@ -94,6 +96,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override
@@ -105,6 +108,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override

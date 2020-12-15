@@ -76,6 +76,8 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     /**
+     * @param hint the hint to apply
+     * @return this
      * @see #hint(Bson)
      * @since 2.2
      */
@@ -129,6 +131,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override
@@ -140,6 +143,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override

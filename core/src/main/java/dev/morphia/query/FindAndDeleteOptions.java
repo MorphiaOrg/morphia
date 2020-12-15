@@ -31,6 +31,8 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     }
 
     /**
+     * @param hint the hint to apply
+     * @return this
      * @see #hint(Bson)
      * @since 2.2
      */
@@ -66,6 +68,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override
@@ -77,6 +80,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override

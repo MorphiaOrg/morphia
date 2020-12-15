@@ -73,6 +73,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override
@@ -84,6 +85,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     /**
      * {@inheritDoc}
      *
+     * @return this
      * @since 2.2
      */
     @Override
@@ -93,6 +95,8 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     }
 
     /**
+     * @param hint the hint to apply
+     * @return this
      * @see #hint(Bson)
      * @since 2.2
      */
