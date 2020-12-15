@@ -62,7 +62,7 @@ jobs:
         run: mvn -B verify --file core/pom.xml -Ddriver.version=${{ matrix.driver }}
   Quality:
     name: Run code quality checks
-    needs: Morphia
+    needs: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -82,7 +82,7 @@ jobs:
         run: mvn -Pquality --file core/pom.xml
   Changes:
     name: "Generate changes for this version"
-    needs: Morphia
+    needs: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -121,7 +121,7 @@ jobs:
           ref: refs/heads/master
   Audits:
     name: Trigger the audit job
-    needs: Morphia
+    needs: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Invoke audits
