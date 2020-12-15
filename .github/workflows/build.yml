@@ -6,33 +6,8 @@ name: Tests
 on: [ push, pull_request ]
 
 jobs:
-  Build:
-    name: "Build Morphia"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
-          restore-keys: \${{ runner.os }}-m2
-      - name: Build with Maven
-        env:
-          MONGODB: ${{ matrix.mongo }}
-        run: mvn -B install --file pom.xml -DskipTests
-      - name: Archive workspace
-        uses: actions/upload-artifact@v2
-        with:
-          name: workspace
-          path: .
-  Tests:
+  Morphia:
     name: "Test Morphia"
-    needs: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -40,12 +15,7 @@ jobs:
         mongo: [ 4.4.2, 4.2.11, 4.0.21, 3.6.21 ]
         driver: [ 4.1.1, 4.0.5 ]
     steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v2
-        with:
-          name: workspace
-      - name: Remove src tree
-        run: rm -rf core/src/main
+      - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v1
         with:
@@ -59,10 +29,10 @@ jobs:
       - name: Build with Maven
         env:
           MONGODB: ${{ matrix.mongo }}
-        run: mvn -B verify --file core/pom.xml -Ddriver.version=${{ matrix.driver }}
+        run: mvn -B verify --file pom.xml -Ddriver.version=${{ matrix.driver }}
   Quality:
     name: Run code quality checks
-    needs: Tests
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -82,7 +52,7 @@ jobs:
         run: mvn -Pquality --file core/pom.xml
   Changes:
     name: "Generate changes for this version"
-    needs: Tests
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -121,7 +91,7 @@ jobs:
           ref: refs/heads/master
   Audits:
     name: Trigger the audit job
-    needs: Tests
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - name: Invoke audits
