@@ -44,7 +44,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: workspace
-          path: *
       - name: Remove src tree
         run: rm -rf core/src/java
       - name: Set up JDK ${{ matrix.java }}
