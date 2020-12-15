@@ -71,7 +71,6 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
      * @return this
      * @since 2.2
      */
-    @Override
     public FindAndDeleteOptions hint(Bson hint) {
         super.hint(hint);
         return this;
@@ -83,7 +82,6 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
      * @return this
      * @since 2.2
      */
-    @Override
     public FindAndDeleteOptions hintString(String hint) {
         super.hintString(hint);
         return this;

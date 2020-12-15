@@ -134,7 +134,6 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * @return this
      * @since 2.2
      */
-    @Override
     public UpdateOptions hint(Bson hint) {
         super.hint(hint);
         return this;
@@ -146,7 +145,6 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * @return this
      * @since 2.2
      */
-    @Override
     public UpdateOptions hintString(String hint) {
         super.hintString(hint);
         return this;

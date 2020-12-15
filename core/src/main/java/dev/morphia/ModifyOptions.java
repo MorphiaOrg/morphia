@@ -99,7 +99,6 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
      * @return this
      * @since 2.2
      */
-    @Override
     public ModifyOptions hint(Bson hint) {
         super.hint(hint);
         return this;
@@ -111,7 +110,6 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
      * @return this
      * @since 2.2
      */
-    @Override
     public ModifyOptions hintString(String hint) {
         super.hintString(hint);
         return this;

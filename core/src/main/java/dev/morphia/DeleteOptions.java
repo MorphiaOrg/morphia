@@ -76,7 +76,6 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @return this
      * @since 2.2
      */
-    @Override
     public DeleteOptions hint(Bson hint) {
         super.hint(hint);
         return this;
@@ -88,7 +87,6 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @return this
      * @since 2.2
      */
-    @Override
     public DeleteOptions hintString(String hint) {
         super.hintString(hint);
         return this;
