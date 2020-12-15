@@ -40,12 +40,12 @@ jobs:
         mongo: [ 4.4.2, 4.2.11, 4.0.21, 3.6.21 ]
         driver: [ 4.1.1, 4.0.5 ]
     steps:
-      - name: Archive workspace
+      - name: Download workspace
         uses: actions/download-artifact@v2
         with:
           name: workspace
       - name: Remove src tree
-        run: rm -rf core/src/java
+        run: rm -rf core/src/main
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v1
         with:
