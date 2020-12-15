@@ -79,7 +79,7 @@ jobs:
           path: Changes-*.md
   Docs:
     name: Trigger the docs build
-    needs: Morphia
+    needs: Quality
     runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
