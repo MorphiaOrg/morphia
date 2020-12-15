@@ -7,6 +7,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.List;
@@ -31,6 +32,15 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     @Override
     public ClientSession clientSession() {
         return clientSession;
+    }
+
+    /**
+     * @see #hint(Bson)
+     * @since 2.2
+     */
+    public ModifyOptions hint(Document hint) {
+        super.hint(hint);
+        return this;
     }
 
     @Override
@@ -78,6 +88,28 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     @Override
     public ModifyOptions arrayFilters(List<? extends Bson> arrayFilters) {
         super.arrayFilters(arrayFilters);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    @Override
+    public ModifyOptions hint(Bson hint) {
+        super.hint(hint);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    @Override
+    public ModifyOptions hintString(String hint) {
+        super.hintString(hint);
         return this;
     }
 

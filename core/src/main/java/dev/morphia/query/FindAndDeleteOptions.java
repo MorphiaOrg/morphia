@@ -30,6 +30,15 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
         return clientSession;
     }
 
+    /**
+     * @see #hint(Bson)
+     * @since 2.2
+     */
+    public FindAndDeleteOptions hint(Document hint) {
+        super.hint(hint);
+        return this;
+    }
+
     @Override
     public FindAndDeleteOptions projection(Bson projection) {
         super.projection(projection);
@@ -55,19 +64,34 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    @Override
+    public FindAndDeleteOptions hint(Bson hint) {
+        super.hint(hint);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    @Override
+    public FindAndDeleteOptions hintString(String hint) {
+        super.hintString(hint);
+        return this;
+    }
+
+    /**
      * @param sort the sort to apply
      * @return this
      */
     public FindAndDeleteOptions sort(Document sort) {
         super.sort(sort);
         return this;
-    }
-
-    /**
-     * @return the write concern to use
-     */
-    public WriteConcern writeConcern() {
-        return writeConcern;
     }
 
     /**
@@ -79,5 +103,12 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     public FindAndDeleteOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
+    }
+
+    /**
+     * @return the write concern to use
+     */
+    public WriteConcern writeConcern() {
+        return writeConcern;
     }
 }

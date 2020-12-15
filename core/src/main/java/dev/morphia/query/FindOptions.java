@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.3
  */
 public final class FindOptions implements SessionConfigurable<FindOptions>, ReadConfigurable<FindOptions> {
+    private Boolean allowDiskUse;
     private int batchSize;
     private int limit;
     private long maxTimeMS;
@@ -76,6 +77,19 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     }
 
     /**
+     * Enables writing to temporary files on the server. When set to true, the server
+     * can write temporary data to disk while executing the find operation.
+     *
+     * @param allowDiskUse true to allow disk use
+     * @return this
+     * @since 2.2
+     */
+    public FindOptions allowDiskUse(Boolean allowDiskUse) {
+        this.allowDiskUse = allowDiskUse;
+        return this;
+    }
+
+    /**
      * @param iterable the iterable to use
      * @param mapper   the mapper to use
      * @param type     the result type
@@ -88,6 +102,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
             iterable.projection(projection.map(mapper, type));
         }
 
+        iterable.allowDiskUse(allowDiskUse);
         iterable.batchSize(batchSize);
         iterable.collation(collation);
         iterable.comment(comment);
@@ -190,6 +205,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @morphia.internal
      */
     public FindOptions copy(FindOptions original) {
+        this.allowDiskUse = original.allowDiskUse;
         this.batchSize = original.batchSize;
         this.limit = original.limit;
         this.maxTimeMS = original.maxTimeMS;
@@ -226,6 +242,13 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     public FindOptions cursorType(CursorType cursorType) {
         this.cursorType = Assertions.notNull("cursorType", cursorType);
         return this;
+    }
+
+    /**
+     * @return true is disk use is allowed
+     */
+    public Boolean getAllowDiskUse() {
+        return allowDiskUse;
     }
 
     /**
@@ -346,264 +369,11 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
         return this.skip;
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")
-                   .add("batchSize=" + batchSize)
-                   .add("limit=" + limit)
-                   .add("maxTimeMS=" + maxTimeMS)
-                   .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
-                   .add("skip=" + skip)
-                   .add("sort=" + sort)
-                   .add("cursorType=" + cursorType)
-                   .add("noCursorTimeout=" + noCursorTimeout)
-                   .add("oplogReplay=" + oplogReplay)
-                   .add("partial=" + partial)
-                   .add("collation=" + collation)
-                   .add("comment='" + comment + "'")
-                   .add("hint=" + hint)
-                   .add("max=" + max)
-                   .add("min=" + min)
-                   .add("returnKey=" + returnKey)
-                   .add("showRecordId=" + showRecordId)
-                   .add("readPreference=" + readPreference)
-                   .add("projection=" + projection)
-                   .add("queryLogId='" + queryLogId + "'")
-                   .toString();
-    }
-
-    /**
-     * Sets the index hint
-     *
-     * @param hint the hint
-     * @return this
-     */
-    public FindOptions hint(Document hint) {
-        this.hint = hint;
-        return this;
-    }
-
-    /**
-     * Defines the index hint value
-     *
-     * @param hint the hint
-     * @return this
-     */
-    public FindOptions hint(String hint) {
-        hintString(hint);
-        return this;
-    }
-
     /**
      * @return the sort criteria
      */
     public Document getSort() {
         return this.sort;
-    }
-
-    /**
-     * Defines the index hint value
-     *
-     * @param hint the hint
-     * @return this
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions hint(DBObject hint) {
-        return hint(new Document(hint.toMap()));
-    }
-
-    /**
-     * This is an experimental method.  It's implementation and presence are subject to change.
-     *
-     * @return this
-     * @morphia.internal
-     */
-    public boolean isLogQuery() {
-        return queryLogId != null;
-    }
-
-    /**
-     * @return is the cursor timeout enabled
-     */
-    public boolean isNoCursorTimeout() {
-        return this.noCursorTimeout;
-    }
-
-    /**
-     * @return is oplog replay enabled
-     */
-    public boolean isOplogReplay() {
-        return this.oplogReplay;
-    }
-
-    /**
-     * @return are partial results enabled
-     */
-    public boolean isPartial() {
-        return this.partial;
-    }
-
-    /**
-     * @return is return key only enabled
-     */
-    public boolean isReturnKey() {
-        return this.returnKey;
-    }
-
-    /**
-     * @return is showing the record id enabled
-     */
-    public boolean isShowRecordId() {
-        return this.showRecordId;
-    }
-
-    /**
-     * Sets the limit
-     *
-     * @param limit the limit
-     * @return this
-     */
-    public FindOptions limit(int limit) {
-        this.limit = limit;
-        return this;
-    }
-
-    /**
-     * This is an experimental method.  It's implementation and presence are subject to change.
-     *
-     * @return this
-     * @morphia.internal
-     */
-    public FindOptions logQuery() {
-        queryLogId = new ObjectId().toString();
-        comment(Sofia.loggedQuery(queryLogId));
-        return this;
-    }
-
-    /**
-     * Sets the max index value
-     *
-     * @param max the max
-     * @return this
-     */
-    public FindOptions max(Document max) {
-        this.max = max;
-        return this;
-    }
-
-    /**
-     * Defines the index hint value
-     *
-     * @param hint the hint
-     * @return this
-     */
-    public FindOptions hintString(String hint) {
-        this.hintString = hint;
-        return this;
-    }
-
-    /**
-     * Sets the max await time
-     *
-     * @param maxAwaitTime the max
-     * @param timeUnit     the unit
-     * @return this
-     */
-    public FindOptions maxAwaitTime(long maxAwaitTime, TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        Assertions.isTrueArgument("maxAwaitTime > = 0", maxAwaitTime >= 0L);
-        this.maxAwaitTimeMS = TimeUnit.MILLISECONDS.convert(maxAwaitTime, timeUnit);
-        return this;
-    }
-
-    /**
-     * Sets the max time
-     *
-     * @param maxTime  the max
-     * @param timeUnit the unit
-     * @return this
-     */
-    public FindOptions maxTime(long maxTime, TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        Assertions.isTrueArgument("maxTime > = 0", maxTime >= 0L);
-        this.maxTimeMS = TimeUnit.MILLISECONDS.convert(maxTime, timeUnit);
-        return this;
-    }
-
-    /**
-     * Sets the min index value
-     *
-     * @param min the min
-     * @return this
-     */
-    public FindOptions min(Document min) {
-        this.min = min;
-        return this;
-    }
-
-    /**
-     * Defines the max value
-     *
-     * @param max the max
-     * @return this
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions max(DBObject max) {
-        return hint(new Document(max.toMap()));
-    }
-
-    /**
-     * Sets whether to disable cursor time out
-     *
-     * @param noCursorTimeout true if the time should be disabled
-     * @return this
-     */
-    public FindOptions noCursorTimeout(boolean noCursorTimeout) {
-        this.noCursorTimeout = noCursorTimeout;
-        return this;
-    }
-
-    /**
-     * Users should not set this under normal circumstances.
-     *
-     * @param oplogReplay if oplog replay is enabled
-     * @return this
-     */
-    public FindOptions oplogReplay(boolean oplogReplay) {
-        this.oplogReplay = oplogReplay;
-        return this;
-    }
-
-    /**
-     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
-     *
-     * @param partial if partial results for sharded clusters is enabled
-     * @return this
-     */
-    public FindOptions partial(boolean partial) {
-        this.partial = partial;
-        return this;
-    }
-
-    /**
-     * @return the projection
-     */
-    public Projection projection() {
-        if (projection == null) {
-            projection = new Projection(this);
-        }
-        return projection;
-    }
-
-    /**
-     * Defines the min value
-     *
-     * @param min the min
-     * @return this
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions min(DBObject min) {
-        return hint(new Document(min.toMap()));
     }
 
     @Override
@@ -699,6 +469,260 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
             return false;
         }
         return getProjection() != null ? getProjection().equals(that.getProjection()) : that.getProjection() == null;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")
+                   .add("allowDiskUse=" + allowDiskUse)
+                   .add("batchSize=" + batchSize)
+                   .add("limit=" + limit)
+                   .add("maxTimeMS=" + maxTimeMS)
+                   .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
+                   .add("skip=" + skip)
+                   .add("sort=" + sort)
+                   .add("cursorType=" + cursorType)
+                   .add("noCursorTimeout=" + noCursorTimeout)
+                   .add("oplogReplay=" + oplogReplay)
+                   .add("partial=" + partial)
+                   .add("collation=" + collation)
+                   .add("comment='" + comment + "'")
+                   .add("hint=" + hint)
+                   .add("max=" + max)
+                   .add("min=" + min)
+                   .add("returnKey=" + returnKey)
+                   .add("showRecordId=" + showRecordId)
+                   .add("readPreference=" + readPreference)
+                   .add("projection=" + projection)
+                   .add("queryLogId='" + queryLogId + "'")
+                   .toString();
+    }
+
+    /**
+     * Sets the index hint
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hint(Document hint) {
+        this.hint = hint;
+        return this;
+    }
+
+    /**
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hint(String hint) {
+        hintString(hint);
+        return this;
+    }
+
+    /**
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public FindOptions hint(DBObject hint) {
+        return hint(new Document(hint.toMap()));
+    }
+
+    /**
+     * Defines the index hint value
+     *
+     * @param hint the hint
+     * @return this
+     */
+    public FindOptions hintString(String hint) {
+        this.hintString = hint;
+        return this;
+    }
+
+    /**
+     * This is an experimental method.  It's implementation and presence are subject to change.
+     *
+     * @return this
+     * @morphia.internal
+     */
+    public boolean isLogQuery() {
+        return queryLogId != null;
+    }
+
+    /**
+     * @return is the cursor timeout enabled
+     */
+    public boolean isNoCursorTimeout() {
+        return this.noCursorTimeout;
+    }
+
+    /**
+     * @return is oplog replay enabled
+     */
+    public boolean isOplogReplay() {
+        return this.oplogReplay;
+    }
+
+    /**
+     * @return are partial results enabled
+     */
+    public boolean isPartial() {
+        return this.partial;
+    }
+
+    /**
+     * @return is return key only enabled
+     */
+    public boolean isReturnKey() {
+        return this.returnKey;
+    }
+
+    /**
+     * @return is showing the record id enabled
+     */
+    public boolean isShowRecordId() {
+        return this.showRecordId;
+    }
+
+    /**
+     * Sets the limit
+     *
+     * @param limit the limit
+     * @return this
+     */
+    public FindOptions limit(int limit) {
+        this.limit = limit;
+        return this;
+    }
+
+    /**
+     * This is an experimental method.  It's implementation and presence are subject to change.
+     *
+     * @return this
+     * @morphia.internal
+     */
+    public FindOptions logQuery() {
+        queryLogId = new ObjectId().toString();
+        comment(Sofia.loggedQuery(queryLogId));
+        return this;
+    }
+
+    /**
+     * Sets the max index value
+     *
+     * @param max the max
+     * @return this
+     */
+    public FindOptions max(Document max) {
+        this.max = max;
+        return this;
+    }
+
+    /**
+     * Defines the max value
+     *
+     * @param max the max
+     * @return this
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public FindOptions max(DBObject max) {
+        return hint(new Document(max.toMap()));
+    }
+
+    /**
+     * Sets the max await time
+     *
+     * @param maxAwaitTime the max
+     * @param timeUnit     the unit
+     * @return this
+     */
+    public FindOptions maxAwaitTime(long maxAwaitTime, TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        Assertions.isTrueArgument("maxAwaitTime > = 0", maxAwaitTime >= 0L);
+        this.maxAwaitTimeMS = TimeUnit.MILLISECONDS.convert(maxAwaitTime, timeUnit);
+        return this;
+    }
+
+    /**
+     * Sets the max time
+     *
+     * @param maxTime  the max
+     * @param timeUnit the unit
+     * @return this
+     */
+    public FindOptions maxTime(long maxTime, TimeUnit timeUnit) {
+        Assertions.notNull("timeUnit", timeUnit);
+        Assertions.isTrueArgument("maxTime > = 0", maxTime >= 0L);
+        this.maxTimeMS = TimeUnit.MILLISECONDS.convert(maxTime, timeUnit);
+        return this;
+    }
+
+    /**
+     * Sets the min index value
+     *
+     * @param min the min
+     * @return this
+     */
+    public FindOptions min(Document min) {
+        this.min = min;
+        return this;
+    }
+
+    /**
+     * Defines the min value
+     *
+     * @param min the min
+     * @return this
+     */
+    @Deprecated(since = "2.0", forRemoval = true)
+    public FindOptions min(DBObject min) {
+        return hint(new Document(min.toMap()));
+    }
+
+    /**
+     * Sets whether to disable cursor time out
+     *
+     * @param noCursorTimeout true if the time should be disabled
+     * @return this
+     */
+    public FindOptions noCursorTimeout(boolean noCursorTimeout) {
+        this.noCursorTimeout = noCursorTimeout;
+        return this;
+    }
+
+    /**
+     * Users should not set this under normal circumstances.
+     *
+     * @param oplogReplay if oplog replay is enabled
+     * @return this
+     */
+    public FindOptions oplogReplay(boolean oplogReplay) {
+        this.oplogReplay = oplogReplay;
+        return this;
+    }
+
+    /**
+     * Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).
+     *
+     * @param partial if partial results for sharded clusters is enabled
+     * @return this
+     */
+    public FindOptions partial(boolean partial) {
+        this.partial = partial;
+        return this;
+    }
+
+    /**
+     * @return the projection
+     */
+    public Projection projection() {
+        if (projection == null) {
+            projection = new Projection(this);
+        }
+        return projection;
     }
 
     /**

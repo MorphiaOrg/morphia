@@ -76,6 +76,15 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     /**
+     * @see #hint(Bson)
+     * @since 2.2
+     */
+    public UpdateOptions hint(Document hint) {
+        super.hint(hint);
+        return this;
+    }
+
+    /**
      * @return true if the update should affect all entities
      */
     public boolean isMulti() {
@@ -118,12 +127,25 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
+     * {@inheritDoc}
      *
-     * @return the write concern, or null if the default will be used.
+     * @since 2.2
      */
-    public WriteConcern writeConcern() {
-        return writeConcern;
+    @Override
+    public UpdateOptions hint(Bson hint) {
+        super.hint(hint);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    @Override
+    public UpdateOptions hintString(String hint) {
+        super.hintString(hint);
+        return this;
     }
 
     /**
@@ -135,5 +157,14 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     public UpdateOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
+    }
+
+    /**
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
+     *
+     * @return the write concern, or null if the default will be used.
+     */
+    public WriteConcern writeConcern() {
+        return writeConcern;
     }
 }

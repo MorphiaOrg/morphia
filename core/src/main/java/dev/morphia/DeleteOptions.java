@@ -21,6 +21,8 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 /**
  * The options to apply when removing documents from the MongoCollection
@@ -69,6 +71,37 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    @Override
+    public DeleteOptions hint(Bson hint) {
+        super.hint(hint);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.2
+     */
+    @Override
+    public DeleteOptions hintString(String hint) {
+        super.hintString(hint);
+        return this;
+    }
+
+    /**
+     * @see #hint(Bson)
+     * @since 2.2
+     */
+    public DeleteOptions hint(Document hint) {
+        super.hint(hint);
+        return this;
+    }
+
+    /**
      * @return is this delete for multiple documents
      */
     public boolean isMulti() {
@@ -85,15 +118,6 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     }
 
     /**
-     * The write concern to use for the delete.
-     *
-     * @return the write concern, or null if the default will be used.
-     */
-    public WriteConcern writeConcern() {
-        return writeConcern;
-    }
-
-    /**
      * Sets the write concern
      *
      * @param writeConcern the write concern
@@ -102,5 +126,14 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     public DeleteOptions writeConcern(WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
+    }
+
+    /**
+     * The write concern to use for the delete.
+     *
+     * @return the write concern, or null if the default will be used.
+     */
+    public WriteConcern writeConcern() {
+        return writeConcern;
     }
 }
