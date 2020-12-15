@@ -7,6 +7,7 @@ on: [ push, pull_request ]
 
 jobs:
   Morphia:
+    name: "Test Morphia"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,6 +30,7 @@ jobs:
           MONGODB: ${{ matrix.mongo }}
         run: mvn -B verify --file pom.xml
   Quality:
+    name: Run code quality checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -47,6 +49,7 @@ jobs:
       - name: Quality Checks
         run: mvn -Pquality --file core/pom.xml
   Changes:
+    name: "Generate changes for this version"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -72,6 +75,7 @@ jobs:
           name: changes
           path: Changes-*.md
   Docs:
+    name: Trigger the docs build
     runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
@@ -82,6 +86,7 @@ jobs:
           token: ${{ secrets.PUSH_TOKEN }}
           ref: refs/heads/master
   Audits:
+    name: Trigger the audit job
     runs-on: ubuntu-latest
     steps:
       - name: Invoke audits
