@@ -64,14 +64,14 @@ public abstract class TestBase {
 
     public MongoDatabase getDatabase() {
         if (database == null) {
-            database = getMongoClient().getDatabase(TEST_DB_NAME);
+            database = getDs().getDatabase();
         }
         return database;
     }
 
     public Datastore getDs() {
         if (datastore == null) {
-            datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName());
+            datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
         }
         return datastore;
     }

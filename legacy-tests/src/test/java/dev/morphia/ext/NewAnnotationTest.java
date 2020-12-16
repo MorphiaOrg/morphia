@@ -19,14 +19,10 @@ import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
-/**
- * @author Scott Hernandez
- */
 public class NewAnnotationTest extends TestBase {
 
     @Test
     public void testIt() {
-        //        MappedField.addInterestingAnnotation(Lowercase.class);
         getMapper().addInterceptor(new ToLowercaseHelper());
         getMapper().map(User.class);
         final User u = new User();
