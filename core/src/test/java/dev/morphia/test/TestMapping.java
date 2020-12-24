@@ -294,23 +294,19 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testExternalClass() {
-        Datastore datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
-        assertNotNull(datastore.getMapper().mapExternal(EmbeddedBuilder.builder(), UnannotatedEmbedded.class),
-            "Should be able to map explicitly passed class references");
+        getDs().getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
 
-        datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
-        datastore.getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
-        assertTrue(datastore.getMapper().isMapped(HoldsUnannotated.class));
-        assertFalse(datastore.getMapper().isMapped(UnannotatedEmbedded.class),
+        assertTrue(getDs().getMapper().isMapped(HoldsUnannotated.class));
+        assertFalse(getDs().getMapper().isMapped(UnannotatedEmbedded.class),
             "Should not be able to map unannotated classes with mapPackage");
-        assertNotNull(datastore.getMapper().mapExternal(EmbeddedBuilder.builder(), UnannotatedEmbedded.class),
+        assertNotNull(getDs().getMapper().mapExternal(EmbeddedBuilder.builder(), UnannotatedEmbedded.class),
             "Should be able to map explicitly passed class references");
         HoldsUnannotated holdsUnannotated = new HoldsUnannotated();
         holdsUnannotated.embedded = new UnannotatedEmbedded();
         holdsUnannotated.embedded.number = 42L;
         holdsUnannotated.embedded.field = "Left";
-        datastore.save(holdsUnannotated);
-        HoldsUnannotated first = datastore.find(HoldsUnannotated.class).first();
+        getDs().save(holdsUnannotated);
+        HoldsUnannotated first = getDs().find(HoldsUnannotated.class).first();
         assertEquals(first, holdsUnannotated);
     }
 
