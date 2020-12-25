@@ -44,7 +44,7 @@ public class MorphiaCodecProvider implements CodecProvider {
     @SuppressWarnings("unchecked")
     public <T> MorphiaCodec get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec codec = (MorphiaCodec) codecs.get(type);
-        if (codec == null && mapper.isMappable(type)) {
+        if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
             codec = new MorphiaCodec(datastore, mapper.getEntityModel(type), propertyCodecProviders,
                 mapper.getDiscriminatorLookup(), registry);
             codecs.put(type, codec);

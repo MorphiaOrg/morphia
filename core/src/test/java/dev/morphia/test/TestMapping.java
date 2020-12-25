@@ -36,6 +36,8 @@ import dev.morphia.test.models.errors.ContainsXKeyMap;
 import dev.morphia.test.models.errors.IdOnEmbedded;
 import dev.morphia.test.models.errors.MissingId;
 import dev.morphia.test.models.errors.OuterClass.NonStaticInnerClass;
+import dev.morphia.test.models.external.HoldsUnannotated;
+import dev.morphia.test.models.external.UnannotatedEmbedded;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Ignore;
@@ -140,7 +142,7 @@ public class TestMapping extends TestBase {
 
     }
 
-    @org.junit.Test
+    @Test
     public void shouldSupportGenericArrays() {
         getMapper().map(MyEntity.class);
     }
@@ -306,14 +308,20 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testExternalClass() {
-        Datastore datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
-        assertNotNull(datastore.getMapper().mapExternal(EmbeddedBuilder.builder(), UnannotatedEmbedded.class),
-            "Should be able to map explicitly passed class references");
+        getDs().getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
 
-        datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME);
-        datastore.getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
-        assertFalse(datastore.getMapper().isMapped(UnannotatedEmbedded.class),
+        assertTrue(getDs().getMapper().isMapped(HoldsUnannotated.class));
+        assertFalse(getDs().getMapper().isMapped(UnannotatedEmbedded.class),
             "Should not be able to map unannotated classes with mapPackage");
+        assertNotNull(getDs().getMapper().mapExternal(EmbeddedBuilder.builder(), UnannotatedEmbedded.class),
+            "Should be able to map explicitly passed class references");
+        HoldsUnannotated holdsUnannotated = new HoldsUnannotated();
+        holdsUnannotated.embedded = new UnannotatedEmbedded();
+        holdsUnannotated.embedded.number = 42L;
+        holdsUnannotated.embedded.field = "Left";
+        getDs().save(holdsUnannotated);
+        HoldsUnannotated first = getDs().find(HoldsUnannotated.class).first();
+        assertEquals(first, holdsUnannotated);
     }
 
     @Test(dataProvider = "queryFactories")
@@ -989,8 +997,4 @@ public class TestMapping extends TestBase {
         private Long number;
     }
 
-    private static class UnannotatedEmbedded {
-        private String field;
-        private Long number;
-    }
 }
