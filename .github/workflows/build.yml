@@ -48,7 +48,7 @@ jobs:
           mkdir -p ~/.m2
           curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
       - name: Publish
-        run: mvn deploy
+        run: mvn deploy -DskipTests
   Quality:
     runs-on: ubuntu-latest
     steps:
