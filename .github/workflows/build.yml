@@ -29,7 +29,7 @@ jobs:
           MONGODB: ${{ matrix.mongo }}
         run: mvn -B verify --file pom.xml
   Snapshots:
-    name: Publish Snaphot artifacts
+    name: Publish Snapshot Artifacts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
