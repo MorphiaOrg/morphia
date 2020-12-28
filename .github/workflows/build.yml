@@ -46,8 +46,8 @@ jobs:
       - name: Configure the job
         run: |
           mkdir -p ~/.m2
-          curl -o ~/.github https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/.github
           curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
+          curl -o github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/github.properties
       - name: Publish
         run: mvn deploy -DskipTests
   Quality:
