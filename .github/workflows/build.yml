@@ -7,7 +7,6 @@ on: [ push, pull_request ]
 
 jobs:
   Morphia:
-    name: "Test Morphia"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,10 +28,33 @@ jobs:
         env:
           MONGODB: ${{ matrix.mongo }}
         run: mvn -B verify --file pom.xml
-  Quality:
-    name: Run code quality checks
+  Snapshots:
+    name: Publish Snapshot Artifacts
     needs: Morphia
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
+          restore-keys: \${{ runner.os }}-m2
+      - name: Configure the job
+        run: |
+          mkdir -p ~/.m2
+          curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
+          curl -o github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/github.properties
+      - name: Publish
+        run: mvn deploy -DskipTests
+  Quality:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    needs: Morphia
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -49,36 +71,9 @@ jobs:
         run: mvn install -DskipTests --file pom.xml
       - name: Quality Checks
         run: mvn -Pquality --file core/pom.xml
-  Changes:
-    name: "Generate changes for this version"
-    needs: Morphia
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
-          restore-keys: \${{ runner.os }}-m2
-      - name: Install Plugins
-        run: mvn install -DskipTests --file pom.xml
-      - name: Configure Credentials
-        run: echo "${{ secrets.CREDENTIALS }}" > ~/.github
-      - name: Generate Changes
-        run: mvn issues:generate -DskipTests --file core/pom.xml
-      - name: Archive Changes
-        uses: actions/upload-artifact@v2
-        with:
-          name: changes
-          path: Changes-*.md
   Docs:
-    name: Trigger the docs build
-    needs: Quality
+    name: Update Documentation
+    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
