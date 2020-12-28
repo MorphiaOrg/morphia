@@ -333,7 +333,6 @@ public class DocumentReader implements BsonReader {
     }
 
     protected void verifyName(String expectedName) {
-        readBsonType();
         String actualName = readName();
         if (!actualName.equals(expectedName)) {
             throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
