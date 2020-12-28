@@ -29,7 +29,7 @@
             <plugin>
                 <groupId>com.antwerkz.github</groupId>
                 <artifactId>issues-maven-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>1.1.2</version>
                 <executions>
                     <execution>
                         <id>issues</id>
