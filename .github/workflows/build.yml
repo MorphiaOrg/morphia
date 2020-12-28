@@ -30,7 +30,9 @@ jobs:
         run: mvn -B verify --file pom.xml
   Snapshots:
     name: Publish Snapshot Artifacts
-    needs: Morphia
+    needs:
+      - Morphia
+      - Quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -72,7 +74,9 @@ jobs:
         run: mvn -Pquality --file core/pom.xml
   Docs:
     name: Update Documentation
-    needs: Morphia
+    needs:
+      - Morphia
+      - Quality
     runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
@@ -84,7 +88,6 @@ jobs:
           ref: refs/heads/master
   Audits:
     name: Trigger the audit job
-    needs: Morphia
     runs-on: ubuntu-latest
     steps:
       - name: Invoke audits
