@@ -3,7 +3,6 @@ package dev.morphia.mapping.codec.reader;
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.reader.ReaderState.InitialReaderState;
-import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonJavaScript;
@@ -19,6 +18,7 @@ import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -50,12 +50,28 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public BsonBinary readBinaryData() {
-        return stage().value();
+        Object value = stage().value();
+        if (value instanceof UUID) {
+            return new BsonBinary((UUID) value);
+        } else {
+            return (BsonBinary) value;
+        }
     }
 
     @Override
     public byte peekBinarySubType() {
-        return stage().<BsonBinary>value().getType();
+        BsonReaderMark mark = getMark();
+        try {
+            Object binary = stage().value();
+            if (binary instanceof UUID) {
+                return (byte) ((UUID) binary).version();
+            } else {
+                return ((BsonBinary) binary).getType();
+            }
+        } finally {
+            mark.reset();
+        }
+
     }
 
     @Override
@@ -317,7 +333,6 @@ public class DocumentReader implements BsonReader {
     }
 
     protected void verifyName(String expectedName) {
-        readBsonType();
         String actualName = readName();
         if (!actualName.equals(expectedName)) {
             throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
@@ -344,7 +359,7 @@ public class DocumentReader implements BsonReader {
             if (o instanceof List) {
                 bsonType = BsonType.ARRAY;
             } else {
-                throw new IllegalStateException(Sofia.unknownBsonType(o.getClass()));
+                bsonType = BsonType.UNDEFINED;
             }
         }
         return bsonType;
