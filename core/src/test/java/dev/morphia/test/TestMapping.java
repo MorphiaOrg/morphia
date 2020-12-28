@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
@@ -680,32 +679,6 @@ public class TestMapping extends TestBase {
         });
     }
 
-    @Test
-    public void testUUID() {
-        getMapper().map(ContainsUUID.class);
-        final ContainsUUID uuid = new ContainsUUID();
-        final UUID before = uuid.uuid;
-        getDs().save(uuid);
-        final ContainsUUID loaded = getDs().find(ContainsUUID.class).iterator(new FindOptions().limit(1))
-                                           .next();
-        assertNotNull(loaded);
-        assertNotNull(loaded.id);
-        assertNotNull(loaded.uuid);
-        assertEquals(before, loaded.uuid);
-    }
-
-    @Test
-    public void testUuidId() {
-        getMapper().map(List.of(ContainsUuidId.class));
-        final ContainsUuidId uuidId = new ContainsUuidId();
-        final UUID before = uuidId.id;
-        getDs().save(uuidId);
-        final ContainsUuidId loaded = getDs().find(ContainsUuidId.class).filter(eq("_id", before)).first();
-        assertNotNull(loaded);
-        assertNotNull(loaded.id);
-        assertEquals(before, loaded.id);
-    }
-
     protected void findFirst(Datastore datastore, Class<?> type, BlogImage expected) {
         Query<?> query = datastore.find(type);
         assertEquals(query.count(), 1, query.toString());
@@ -907,19 +880,6 @@ public class TestMapping extends TestBase {
         private final Map<String, Long> values = new HashMap<>();
         @Id
         private ObjectId id;
-    }
-
-    @Entity(useDiscriminator = false)
-    private static class ContainsUUID {
-        private final UUID uuid = UUID.randomUUID();
-        @Id
-        private ObjectId id;
-    }
-
-    @Entity(useDiscriminator = false)
-    private static class ContainsUuidId {
-        @Id
-        private final UUID id = UUID.randomUUID();
     }
 
     private static class Foo1 implements Foo {
