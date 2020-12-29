@@ -30,7 +30,9 @@ jobs:
         run: mvn -B verify --file pom.xml
   Snapshots:
     name: Publish Snapshot Artifacts
-    needs: Morphia
+    needs:
+      - Morphia
+      - Quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -54,7 +56,6 @@ jobs:
   Quality:
     name: Quality Checks
     runs-on: ubuntu-latest
-    needs: Morphia
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -73,7 +74,9 @@ jobs:
         run: mvn -Pquality --file core/pom.xml
   Docs:
     name: Update Documentation
-    needs: Morphia
+    needs:
+      - Morphia
+      - Quality
     runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
