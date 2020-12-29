@@ -31,7 +31,6 @@ public class PullOperator extends UpdateOperator {
             @Override
             public Object encode(Mapper mapper) {
                 DocumentWriter writer = new DocumentWriter();
-                String field = field();
                 document(writer, () -> {
                     ((Filter) getValue())
                         .encode(mapper, writer, EncoderContext.builder().build());
