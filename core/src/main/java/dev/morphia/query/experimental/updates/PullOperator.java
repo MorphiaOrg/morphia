@@ -5,6 +5,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.experimental.filters.Filter;
+import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
@@ -30,9 +31,12 @@ public class PullOperator extends UpdateOperator {
             @Override
             public Object encode(Mapper mapper) {
                 DocumentWriter writer = new DocumentWriter();
-                document(writer, () -> ((Filter) getValue()).encode(mapper, writer, EncoderContext.builder().build()));
+                document(writer, () -> {
+                    ((Filter) getValue())
+                        .encode(mapper, writer, EncoderContext.builder().build());
+                });
 
-                return writer.getDocument();
+                return new Document(field(), writer.getDocument());
             }
         };
     }

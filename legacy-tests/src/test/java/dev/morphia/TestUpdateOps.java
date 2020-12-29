@@ -582,7 +582,26 @@ public class TestUpdateOps extends TestBase {
     }
 
     @Test
-    public void testRemoveWithNoData() {
+    public void testPull() {
+        DumbColl dumbColl = new DumbColl("ID");
+        dumbColl.fromArray = List.of(new DumbArrayElement("something"), new DumbArrayElement("something else"));
+        DumbColl dumbColl2 = new DumbColl("ID2");
+        dumbColl2.fromArray = singletonList(new DumbArrayElement("something"));
+        getDs().save(asList(dumbColl, dumbColl2));
+
+        Query<DumbColl> query = getDs().find(DumbColl.class)
+                                       .filter(regex("opaqueId")
+                                                   .pattern("ID")
+                                                   .caseInsensitive());
+
+        assertEquals(2, query.first().fromArray.size());
+        query.update(pull("fromArray", Filters.eq("name", "something else")))
+             .execute();
+        assertEquals(1, query.first().fromArray.size());
+    }
+
+    @Test
+    public void testPullsWithNoData() {
         DumbColl dumbColl = new DumbColl("ID");
         dumbColl.fromArray = singletonList(new DumbArrayElement("something"));
         DumbColl dumbColl2 = new DumbColl("ID2");
@@ -796,7 +815,7 @@ public class TestUpdateOps extends TestBase {
                                           .filter(eq("name", cp.getName()));
         UpdateResult result = query.update(set("pic", pic))
                                    .execute();
-        assertEquals(result.getModifiedCount(), 1);
+        assertEquals(1, result.getModifiedCount());
 
         //test reading the object.
         final ContainsPic cp2 = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
@@ -1003,13 +1022,13 @@ public class TestUpdateOps extends TestBase {
 
     @Entity
     private static final class DumbArrayElement {
-        private String whereId;
+        private String name;
 
         public DumbArrayElement() {
         }
 
-        private DumbArrayElement(String whereId) {
-            this.whereId = whereId;
+        private DumbArrayElement(String name) {
+            this.name = name;
         }
     }
 
