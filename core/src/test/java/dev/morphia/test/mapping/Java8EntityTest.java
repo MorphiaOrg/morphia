@@ -23,8 +23,8 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -88,10 +88,10 @@ public class Java8EntityTest extends TestBase {
                 localDateTime.plus(i, DAYS),
                 localTime.plus(i, ChronoUnit.HOURS));
         }
-        Assert.assertEquals(2L, getDs().find(Java8Entity.class).filter(lte("instant", instant.plus(1, DAYS))).count());
-        Assert.assertEquals(1L, getDs().find(Java8Entity.class).filter(eq("localDate", localDate.plus(1, DAYS))).count());
-        Assert.assertEquals(0L, getDs().find(Java8Entity.class).filter(eq("localDate", localDate.minus(1, DAYS))).count());
-        Assert.assertEquals(9L, getDs().find(Java8Entity.class).filter(ne("localDateTime", localDateTime.plus(6, DAYS))).count());
+        Assert.assertEquals(getDs().find(Java8Entity.class).filter(lte("instant", instant.plus(1, DAYS))).count(), 2L);
+        Assert.assertEquals(getDs().find(Java8Entity.class).filter(eq("localDate", localDate.plus(1, DAYS))).count(), 1L);
+        Assert.assertEquals(getDs().find(Java8Entity.class).filter(eq("localDate", localDate.minus(1, DAYS))).count(), 0L);
+        Assert.assertEquals(getDs().find(Java8Entity.class).filter(ne("localDateTime", localDateTime.plus(6, DAYS))).count(), 9L);
     }
 
     private void compare(Datastore datastore, Java8Entity entity, String field, Object value) {
@@ -101,7 +101,7 @@ public class Java8EntityTest extends TestBase {
                                                .limit(1);
         Java8Entity actual = query.iterator(options)
                                   .tryNext();
-        Assert.assertEquals(getDs().getLoggedQuery(options), entity, actual);
+        Assert.assertEquals(actual, entity, getDs().getLoggedQuery(options));
     }
 
     private Java8Entity createEntity(Datastore ds, Instant instant, LocalDate localDate,

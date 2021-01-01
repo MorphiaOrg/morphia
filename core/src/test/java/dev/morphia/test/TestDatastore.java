@@ -1,7 +1,6 @@
 package dev.morphia.test;
 
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.DeleteOptions;
@@ -9,6 +8,7 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
 import dev.morphia.test.models.City;
@@ -16,6 +16,7 @@ import dev.morphia.test.models.CurrentStatus;
 import dev.morphia.test.models.FacebookUser;
 import org.testng.annotations.Test;
 
+import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static com.mongodb.client.model.ReturnDocument.AFTER;
 import static com.mongodb.client.model.ReturnDocument.BEFORE;
 import static dev.morphia.query.experimental.filters.Filters.eq;
@@ -27,7 +28,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-class TestDatastore extends TestBase {
+public class TestDatastore extends TestBase {
     @Test
     public void testCappedEntity() {
         // given
@@ -59,7 +60,6 @@ class TestDatastore extends TestBase {
         assertEquals(query.count(), 1);
     }
 
-
     @Test
     public void testDeleteWithCollation() {
         getDs().save(asList(new FacebookUser(1, "John Doe"),
@@ -72,7 +72,7 @@ class TestDatastore extends TestBase {
         assertEquals(query.delete(new DeleteOptions()
                                       .collation(Collation.builder()
                                                           .locale("en")
-                                                          .collationStrength(CollationStrength.SECONDARY)
+                                                          .collationStrength(SECONDARY)
                                                           .build()))
                           .getDeletedCount(), 1);
     }
@@ -110,10 +110,54 @@ class TestDatastore extends TestBase {
         FindAndDeleteOptions options = new FindAndDeleteOptions()
                                            .collation(Collation.builder()
                                                                .locale("en")
-                                                               .collationStrength(CollationStrength.SECONDARY)
+                                                               .collationStrength(SECONDARY)
                                                                .build());
         assertNotNull(query.findAndDelete(options));
         assertNull(query.iterator().tryNext());
+    }
+
+    @Test
+    public void testFindAndModify() {
+        getDs().save(asList(new FacebookUser(1, "John Doe"),
+            new FacebookUser(2, "john doe")));
+
+        Query<FacebookUser> query = getDs().find(FacebookUser.class)
+                                           .filter(eq("username", "john doe"));
+        Modify<FacebookUser> modify = query.modify(inc("loginCount"));
+
+        assertEquals(modify.execute().loginCount, 0);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 1);
+
+        assertEquals(modify.execute(new ModifyOptions().returnDocument(AFTER)).loginCount, 2);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 2);
+
+        assertNull(getDs().find(FacebookUser.class)
+                          .filter(eq("id", 3L),
+                              eq("username", "Jon Snow"))
+                          .modify(inc("loginCount", 4))
+                          .execute(new ModifyOptions()
+                                       .returnDocument(BEFORE)
+                                       .upsert(true)));
+
+        FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).first();
+        assertEquals(user.loginCount, 4);
+        assertEquals(user.username, "Jon Snow");
+
+        FacebookUser results = getDs().find(FacebookUser.class)
+                                      .filter(eq("id", 4L),
+                                          eq("username", "Ron Swanson"))
+                                      .modify(inc("loginCount"))
+                                      .execute(new ModifyOptions()
+                                                   .returnDocument(AFTER)
+                                                   .upsert(true));
+        assertEquals(results.loginCount, 1);
+        assertEquals(results.username, "Ron Swanson");
+
+        user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator(new FindOptions().limit(1)).next();
+        assertEquals(user.loginCount, 1);
+        assertEquals(user.username, "Ron Swanson");
     }
 
     @Test
@@ -141,7 +185,7 @@ class TestDatastore extends TestBase {
                                      .returnDocument(BEFORE)
                                      .collation(Collation.builder()
                                                          .locale("en")
-                                                         .collationStrength(CollationStrength.SECONDARY)
+                                                         .collationStrength(SECONDARY)
                                                          .build()));
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                             .next()
@@ -232,7 +276,7 @@ class TestDatastore extends TestBase {
                                      .multi(true)
                                      .collation(Collation.builder()
                                                          .locale("en")
-                                                         .collationStrength(CollationStrength.SECONDARY)
+                                                         .collationStrength(SECONDARY)
                                                          .build()));
         assertEquals(results.getModifiedCount(), 2);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))

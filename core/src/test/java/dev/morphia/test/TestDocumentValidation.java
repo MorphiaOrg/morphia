@@ -53,10 +53,10 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class TestDocumentValidation extends TestBase {
     @Test
@@ -137,7 +137,7 @@ public class TestDocumentValidation extends TestBase {
         getDs().insert(list, new InsertManyOptions()
                                  .bypassDocumentValidation(true));
 
-        Assert.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
+        assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
 
     @Test
@@ -227,7 +227,7 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(list, new InsertManyOptions().bypassDocumentValidation(true));
 
-        Assert.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
+        assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
 
     @Test
@@ -246,7 +246,7 @@ public class TestDocumentValidation extends TestBase {
 
         getDs().save(user, new InsertOneOptions().bypassDocumentValidation(true));
 
-        Assert.assertEquals(getDs().find(User.class).count(), 1);
+        assertEquals(getDs().find(User.class).count(), 1);
     }
 
     @Test
