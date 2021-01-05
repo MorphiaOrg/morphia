@@ -30,6 +30,7 @@ jobs:
         run: mvn -B verify --file pom.xml
   Snapshots:
     name: Publish Snapshot Artifacts
+    if: "github.repository == 'MorphiaOrg/morphia'"
     needs:
       - Morphia
       - Quality
