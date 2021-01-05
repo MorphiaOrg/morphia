@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -97,9 +98,16 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
 
     @Override
     public List<Object> getIds() {
-        return new ArrayList<>(ids.values());
-    }
+        List<Object> ids = new ArrayList<>(this.ids.values());
+        if (!ids.isEmpty() && ids.get(0) instanceof DBRef) {
+            ListIterator iterator = ids.listIterator();
+            while (iterator.hasNext()) {
+                iterator.set(((DBRef) iterator.next()).getId());
+            }
+        }
 
+        return ids;
+    }
     /**
      * {@inheritDoc}
      */

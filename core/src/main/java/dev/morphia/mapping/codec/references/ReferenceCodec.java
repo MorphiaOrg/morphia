@@ -11,6 +11,7 @@ import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.reader.DocumentReader;
@@ -39,10 +40,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
@@ -67,44 +70,39 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     }
 
     /**
-     * Decodes an ID value
+     * Encodes a value
      *
-     * @param decode         the value to decode
-     * @param mapper         the mapper to use
-     * @param decoderContext the decoder context
-     * @return the decoded value
+     * @param mapper    the mapper to use
+     * @param datastore the datastore to use
+     * @param value     the value to encode
+     * @param model     the mapped class of the field type
+     * @return the encoded value
+     * @morphia.internal
      */
-    public static Object processId(Object decode, Mapper mapper, DecoderContext decoderContext) {
-        Object processed = decode;
-        if (processed instanceof Iterable) {
-            Iterable iterable = (Iterable) processed;
-            List ids = new ArrayList();
-            for (Object o : iterable) {
-                ids.add(processId(o, mapper, decoderContext));
+    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, FieldModel model) {
+        Object idValue;
+        MongoCollection<?> collection = null;
+        if (value instanceof Key) {
+            idValue = ((Key) value).getId();
+            collection = datastore.getDatabase().getCollection(((Key<?>) value).getCollection(), ((Key<?>) value).getType());
+        } else {
+            idValue = mapper.getId(value);
+            if (idValue == null) {
+                return !mapper.isMappable(value.getClass()) ? value : null;
             }
-            processed = ids;
-        } else if (processed instanceof Document) {
-            Document document = (Document) processed;
-            if (document.containsKey("$ref")) {
-                Object id = document.get("$id");
-                if (id instanceof Document) {
-                    id = mapper.getCodecRegistry()
-                               .get(Object.class)
-                               .decode(new DocumentReader((Document) id), decoderContext);
-                }
-                processed = new DBRef((String) document.get("$ref"), id);
-            } else if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
-                try {
-                    processed = mapper.getCodecRegistry()
-                                      .get(mapper.getClass(document))
-                                      .decode(new DocumentReader(document), decoderContext);
-                } catch (CodecConfigurationException e) {
-                    throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
-                }
-
-            }
+            collection = mapper.getCollection(value.getClass());
         }
-        return processed;
+
+        String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;
+
+        Reference annotation = model.getAnnotation(Reference.class);
+        if (annotation != null && !annotation.idOnly()) {
+            if (idValue == null) {
+                throw new MappingException("The ID value can not be null");
+            }
+            idValue = new DBRef(valueCollectionName, idValue);
+        }
+        return idValue;
     }
 
     /**
@@ -142,6 +140,51 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             idValue = new DBRef(valueCollectionName, idValue);
         }
         return idValue;
+    }
+
+    /**
+     * Decodes an ID value
+     *
+     * @param decode         the value to decode
+     * @param mapper         the mapper to use
+     * @param decoderContext the decoder context
+     * @return the decoded value
+     */
+    public static Object processId(Object decode, Mapper mapper, DecoderContext decoderContext) {
+        Object id = decode;
+        if (id instanceof Iterable) {
+            Iterable iterable = (Iterable) id;
+            List ids = new ArrayList();
+            for (Object o : iterable) {
+                ids.add(processId(o, mapper, decoderContext));
+            }
+            id = ids;
+        } else if (id instanceof Document) {
+            Document document = (Document) id;
+            if (document.containsKey("$ref")) {
+                id = processId(new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
+                    mapper, decoderContext);
+            } else if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
+                try {
+                    id = mapper.getCodecRegistry()
+                               .get(mapper.getClass(document))
+                               .decode(new DocumentReader(document), decoderContext);
+                } catch (CodecConfigurationException e) {
+                    throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
+                }
+
+            }
+        } else if (id instanceof DBRef) {
+            DBRef ref = (DBRef) id;
+            Object refId = ref.getId();
+            if (refId instanceof Document) {
+                refId = mapper.getCodecRegistry()
+                              .get(Object.class)
+                              .decode(new DocumentReader((Document) refId), decoderContext);
+            }
+            id = new DBRef(ref.getDatabaseName(), ref.getCollectionName(), refId);
+        }
+        return id;
     }
 
     @Override
@@ -210,7 +253,15 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             }
             return ids;
         } else {
-            return encodeId(getDatastore().getMapper(), getDatastore(), value, getEntityModelForField());
+            //
+            //
+            //            clean up before commit
+            //
+            //
+            //
+            Object id = encodeId(getDatastore().getMapper(), getDatastore(), value, getEntityModelForField());
+            Object id1 = encodeId(getDatastore().getMapper(), getDatastore(), value, getFieldModel());
+            return id1;
         }
     }
 
@@ -268,8 +319,27 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         return readSingle(id);
     }
 
+    private List mapToEntitiesIfNecessary(List value) {
+        Mapper mapper = getDatastore().getMapper();
+        Codec<?> codec = mapper.getCodecRegistry().get(getEntityModelForField().getType());
+        return (List) value.stream()
+                           .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
+                           .map(d -> codec.decode(new DocumentReader((Document) d), DecoderContext.builder().build()))
+                           .collect(Collectors.toList());
+    }
+
     MorphiaReference readList(List value) {
-        return new ListReference(getDatastore(), getEntityModelForField(), value);
+        List mapped = mapToEntitiesIfNecessary(value);
+        return mapped.isEmpty()
+               ? new ListReference(getDatastore(), getEntityModelForField(), value)
+               : new ListReference(mapped);
+    }
+
+    MorphiaReference readSet(List value) {
+        List mapped = mapToEntitiesIfNecessary(value);
+        return mapped.isEmpty()
+               ? new SetReference(getDatastore(), getEntityModelForField(), value)
+               : new SetReference(new LinkedHashSet(mapped));
     }
 
     MorphiaReference readMap(Map<Object, Object> value) {
@@ -280,10 +350,6 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         }
 
         return new MapReference(getDatastore(), (Map<String, Object>) ids, getEntityModelForField());
-    }
-
-    MorphiaReference readSet(List value) {
-        return new SetReference(getDatastore(), getEntityModelForField(), value);
     }
 
     MorphiaReference readSingle(Object value) {

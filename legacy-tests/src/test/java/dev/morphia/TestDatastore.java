@@ -11,6 +11,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.generics.model.Child;
 import dev.morphia.generics.model.ChildEntity;
+import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateException;
 import dev.morphia.testmodel.Address;
