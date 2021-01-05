@@ -93,7 +93,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             collection = mapper.getCollection(value.getClass());
         }
 
-        String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;
+        String valueCollectionName = collection.getNamespace().getCollectionName();
 
         Reference annotation = model.getAnnotation(Reference.class);
         if (annotation != null && !annotation.idOnly()) {
