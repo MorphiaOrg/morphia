@@ -53,7 +53,7 @@ jobs:
           curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
           curl -o github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/github.properties
       - name: Publish
-        run: mvn deploy -DskipTests
+        run: mvn source:jar javadoc:jar deploy -DskipTests
   Quality:
     name: Quality Checks
     runs-on: ubuntu-latest
@@ -75,6 +75,7 @@ jobs:
         run: mvn -Pquality --file core/pom.xml
   Docs:
     name: Update Documentation
+    if: "github.repository == 'MorphiaOrg/morphia'"
     needs:
       - Morphia
       - Quality
