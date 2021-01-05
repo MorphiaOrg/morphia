@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -111,7 +112,7 @@ public abstract class TestBase {
         assertDocumentEquals("", expected, actual);
     }
 
-    protected void assertListEquals(List<?> actual, List<?> expected) {
+    protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
         assertEquals(actual.size(), expected.size());
         expected.forEach(
             d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));

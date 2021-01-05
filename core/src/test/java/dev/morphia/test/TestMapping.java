@@ -674,7 +674,7 @@ public class TestMapping extends TestBase {
         assertThrows(ReferenceException.class, () -> {
             getMapper().map(Book.class, Author.class);
             final Book book = new Book();
-            book.author = new Author();
+            book.setAuthor(new Author());
             getDs().save(book);
         });
     }

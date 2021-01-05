@@ -67,6 +67,16 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
+    public Object encode(Mapper mapper, Object value, FieldModel optionalExtraInfo) {
+        if (isResolved()) {
+            return wrapId(mapper, optionalExtraInfo, get());
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
     public T get() {
         if (!isResolved() && value == null && id != null) {
             value = (T) buildQuery().iterator().tryNext();
@@ -85,6 +95,11 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
+    public List<Object> getIds() {
+        return List.of(getId());
+    }
+
+    @Override
     Object getId(Mapper mapper, Datastore datastore, EntityModel fieldClass) {
         if (id == null) {
             EntityModel entityModel = getEntityModel(mapper);
@@ -96,25 +111,20 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return id;
     }
 
+    private Object getId() {
+        return id instanceof DBRef ? ((DBRef) id).getId() : id;
+    }
+
     Query<?> buildQuery() {
         final Query<?> query;
         if (id instanceof DBRef) {
-            final Class<?> clazz = getDatastore()
-                                       .getMapper()
-                                       .getClassFromCollection(((DBRef) id).getCollectionName());
-            query = getDatastore().find(clazz)
-                                  .filter(eq("_id", ((DBRef) id).getId()));
+            query = getDatastore().find(getDatastore()
+                                            .getMapper()
+                                            .getClassFromCollection(((DBRef) this.id).getCollectionName()));
         } else {
-            query = getDatastore().find(entityModel.getType())
-                                  .filter(eq("_id", id));
+            query = getDatastore().find(entityModel.getType());
         }
-        return query;
-    }
-
-
-    @Override
-    public List<Object> getIds() {
-        return List.of(id);
+        return query.filter(eq("_id", getId()));
     }
 
     EntityModel getEntityModel(Mapper mapper) {
@@ -123,16 +133,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
         }
 
         return entityModel;
-    }
-
-    @Override
-    public Object encode(Mapper mapper, Object value, FieldModel optionalExtraInfo) {
-        if (isResolved()) {
-            return wrapId(mapper, optionalExtraInfo, get());
-        } else {
-            return null;
-        }
-
     }
 
 }

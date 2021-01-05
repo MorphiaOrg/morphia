@@ -48,7 +48,6 @@ import java.util.stream.Collectors;
 
 import static dev.morphia.sofia.Sofia.entityOrEmbedded;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 /**
@@ -90,14 +89,12 @@ public class Mapper {
         this.datastore = datastore;
         this.options = options;
         morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
-        this.codecRegistry = fromRegistries(
-            fromProviders(new MorphiaTypesCodecProvider(this)),
+        this.codecRegistry = fromProviders(new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),
-            codecRegistry,
-            fromProviders(
-                new EnumCodecProvider(),
-                new AggregationCodecProvider(this),
-                morphiaCodecProvider));
+            new EnumCodecProvider(),
+            new AggregationCodecProvider(this),
+            morphiaCodecProvider,
+            codecRegistry);
     }
 
     /**

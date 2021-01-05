@@ -17,6 +17,7 @@ public abstract class PropertyCodec<T> implements Codec<T> {
     private final Field field;
     private final TypeData typeData;
     private EntityModel entityModel;
+    private FieldModel fieldModel;
     private final Datastore datastore;
 
     /**
@@ -58,6 +59,13 @@ public abstract class PropertyCodec<T> implements Codec<T> {
             entityModel = datastore.getMapper().getEntityModel(FieldModel.normalize(typeData));
         }
         return entityModel;
+    }
+
+    protected FieldModel getFieldModel() {
+        if (fieldModel == null) {
+            fieldModel = datastore.getMapper().getEntityModel(field.getDeclaringClass()).getField(field.getName());
+        }
+        return fieldModel;
     }
 
 }

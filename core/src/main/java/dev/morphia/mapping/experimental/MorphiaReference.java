@@ -10,6 +10,7 @@ import dev.morphia.mapping.codec.pojo.FieldModel;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * Wrapper type for references to entities in other collections
@@ -29,17 +30,6 @@ public abstract class MorphiaReference<T> {
 
     MorphiaReference(Datastore datastore) {
         this.datastore = datastore;
-    }
-
-    static Object wrapId(Mapper mapper, FieldModel field, Object entity) {
-        Object id = mapper.getId(entity);
-        mapper.getEntityModel(entity.getClass());
-        Object encoded = id;
-        if (!entity.getClass().equals(field.getType())) {
-            encoded = new DBRef(mapper.getEntityModel(entity.getClass()).getCollectionName(), encoded);
-        }
-
-        return encoded;
     }
 
     /**
@@ -62,45 +52,15 @@ public abstract class MorphiaReference<T> {
         }
     }
 
-    /**
-     * @return true if Morphia will ignore missing referenced entities.
-     */
-    public boolean ignoreMissing() {
-        return ignoreMissing;
-    }
+    static Object wrapId(Mapper mapper, FieldModel field, Object entity) {
+        Object id = mapper.getId(entity);
+        mapper.getEntityModel(entity.getClass());
+        Object encoded = id;
+        if (!entity.getClass().equals(field.getType())) {
+            encoded = new DBRef(mapper.getEntityModel(entity.getClass()).getCollectionName(), encoded);
+        }
 
-    /**
-     * Instructs Morphia to ignore missing referenced entities.  The default is to throw an exception on missing entities.
-     *
-     * @param ignoreMissing ignore any missing referenced documents
-     * @return this
-     */
-    public MorphiaReference ignoreMissing(boolean ignoreMissing) {
-        this.ignoreMissing = ignoreMissing;
-        return this;
-    }
-
-    /**
-     * @return returns the referenced entity if it exists.  May return null.
-     */
-    public abstract T get();
-
-    /**
-     * @return the referenced type
-     */
-    public abstract Class<T> getType();
-
-    /**
-     * @return the referenced IDs
-     */
-    public abstract List<Object> getIds();
-
-    /**
-     * @return true if this reference has already been resolved
-     * @morphia.internal
-     */
-    public final boolean isResolved() {
-        return resolved;
+        return encoded;
     }
 
     /**
@@ -112,18 +72,24 @@ public abstract class MorphiaReference<T> {
      */
     public abstract Object encode(Mapper mapper, Object value, FieldModel optionalExtraInfo);
 
-    protected void resolve() {
-        resolved = true;
-    }
-
-    abstract Object getId(Mapper mapper, Datastore datastore, EntityModel entityModel);
+    /**
+     * @return returns the referenced entity if it exists.  May return null.
+     */
+    public abstract T get();
 
     /**
-     * @return the datastore
-     * @morphia.internal
+     * @return the referenced IDs
      */
-    Datastore getDatastore() {
-        return datastore;
+    public abstract List<Object> getIds();
+
+    /**
+     * @return the referenced type
+     */
+    public abstract Class<T> getType();
+
+    @Override
+    public int hashCode() {
+        return (isResolved() ? 1 : 0);
     }
 
     @Override
@@ -141,7 +107,49 @@ public abstract class MorphiaReference<T> {
     }
 
     @Override
-    public int hashCode() {
-        return (isResolved() ? 1 : 0);
+    public String toString() {
+        return new StringJoiner(", ", getClass().getSimpleName() + "<<", ">>")
+                   .add(getIds().toString())
+                   .toString();
     }
+
+    /**
+     * Instructs Morphia to ignore missing referenced entities.  The default is to throw an exception on missing entities.
+     *
+     * @param ignoreMissing ignore any missing referenced documents
+     * @return this
+     */
+    public MorphiaReference ignoreMissing(boolean ignoreMissing) {
+        this.ignoreMissing = ignoreMissing;
+        return this;
+    }
+
+    /**
+     * @return true if Morphia will ignore missing referenced entities.
+     */
+    public boolean ignoreMissing() {
+        return ignoreMissing;
+    }
+
+    /**
+     * @return true if this reference has already been resolved
+     * @morphia.internal
+     */
+    public final boolean isResolved() {
+        return resolved;
+    }
+
+    protected void resolve() {
+        resolved = true;
+    }
+
+    /**
+     * @return the datastore
+     * @morphia.internal
+     */
+    Datastore getDatastore() {
+        return datastore;
+    }
+
+    abstract Object getId(Mapper mapper, Datastore datastore, EntityModel entityModel);
 }

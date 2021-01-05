@@ -6,6 +6,8 @@ import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonTypeClassMap;
@@ -80,6 +82,12 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
     @Override
     public void encode(BsonWriter writer, MorphiaReference value, EncoderContext encoderContext) {
         Object ids = value.getId(mapper, getDatastore(), getEntityModelForField());
+        if (ids == null
+            || (ids instanceof Collection && ((Collection<?>) ids).isEmpty())
+            || (ids instanceof Map && ((Map<?, ?>) ids).isEmpty())) {
+            throw new ReferenceException(Sofia.noIdForReference());
+        }
+
         Codec codec = mapper.getCodecRegistry().get(ids.getClass());
         codec.encode(writer, ids, encoderContext);
     }

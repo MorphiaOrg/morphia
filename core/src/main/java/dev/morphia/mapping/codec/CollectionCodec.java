@@ -65,7 +65,7 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
         return encoderClass;
     }
 
-    private Collection<T> getInstance() {
+    protected Collection<T> getInstance() {
         if (encoderClass.isInterface()) {
             if (encoderClass.isAssignableFrom(ArrayList.class)) {
                 return new ArrayList<T>();

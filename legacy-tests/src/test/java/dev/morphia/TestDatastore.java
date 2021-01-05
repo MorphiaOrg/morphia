@@ -12,7 +12,6 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.generics.model.Child;
 import dev.morphia.generics.model.ChildEntity;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateException;
 import dev.morphia.testmodel.Address;
@@ -22,17 +21,13 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.mongodb.client.model.ReturnDocument.AFTER;
-import static com.mongodb.client.model.ReturnDocument.BEFORE;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.in;
-import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -113,105 +108,6 @@ public class TestDatastore extends TestBase {
         assertNull(getDs().find(FacebookUser.class)
                           .filter(eq("username", "David S. Pumpkins"))
                           .findAndDelete());
-    }
-
-    @Test
-    public void testFindAndModify() {
-        getDs().save(asList(new FacebookUser(1, "John Doe"),
-            new FacebookUser(2, "john doe")));
-
-        Query<FacebookUser> query = getDs().find(FacebookUser.class)
-                                           .filter(eq("username", "john doe"));
-        Modify<FacebookUser> modify = query.modify(inc("loginCount"));
-        FacebookUser results = modify.execute();
-
-        assertEquals(0, getDs().find(FacebookUser.class)
-                               .filter(eq("id", 1)).iterator(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(1, getDs().find(FacebookUser.class)
-                               .filter(eq("id", 2)).iterator(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(0, results.loginCount);
-
-        results = modify.execute(new ModifyOptions().returnDocument(AFTER));
-        assertEquals(0, getDs().find(FacebookUser.class)
-                               .filter(eq("id", 1)).iterator(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(2, getDs().find(FacebookUser.class)
-                               .filter(eq("id", 2)).iterator(new FindOptions().limit(1))
-                               .next()
-                            .loginCount);
-        assertEquals(2, results.loginCount);
-
-        query = getDs().find(FacebookUser.class)
-                       .filter(eq("id", 3L),
-                           eq("username", "Jon Snow"));
-        results = query.modify(inc("loginCount"))
-                       .execute(new ModifyOptions()
-                                    .returnDocument(BEFORE)
-                                    .upsert(true));
-
-        assertNull(results);
-        FacebookUser user = getDs().find(FacebookUser.class)
-                                   .filter(eq("id", 3)).iterator(new FindOptions().limit(1))
-                                   .next();
-        assertEquals(1, user.loginCount);
-        assertEquals("Jon Snow", user.username);
-
-
-        query = getDs().find(FacebookUser.class)
-                       .filter(eq("id", 4L),
-                           eq("username", "Ron Swanson"));
-        results = query.modify(inc("loginCount")).execute(new ModifyOptions().returnDocument(AFTER).upsert(true));
-
-        assertNotNull(results);
-        user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator(new FindOptions().limit(1))
-                      .next();
-        assertEquals(1, results.loginCount);
-        assertEquals("Ron Swanson", results.username);
-        assertEquals(1, user.loginCount);
-        assertEquals("Ron Swanson", user.username);
-    }
-
-    @Test
-    @Category(Reference.class)
-    public void testGet() {
-        getMapper().map(FacebookUser.class);
-        List<FacebookUser> fbUsers = new ArrayList<>();
-        fbUsers.add(new FacebookUser(1, "user 1"));
-        fbUsers.add(new FacebookUser(2, "user 2"));
-        fbUsers.add(new FacebookUser(3, "user 3"));
-        fbUsers.add(new FacebookUser(4, "user 4"));
-
-        getDs().save(fbUsers);
-        assertEquals(4, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().find(FacebookUser.class)
-                             .filter(eq("_id", 1))
-                             .first());
-        List<FacebookUser> res = getDs().find(FacebookUser.class)
-                                        .filter(in("_id", asList(1L, 2L))).iterator()
-                                        .toList();
-        assertEquals(2, res.size());
-        assertNotNull(res.get(0));
-        assertNotNull(res.get(1));
-        assertNotNull(res.get(1).username);
-
-        getDs().find(FacebookUser.class).delete(new DeleteOptions().multi(true));
-        getDs().insert(fbUsers);
-        assertEquals(4, getDs().find(FacebookUser.class).count());
-        assertNotNull(getDs().find(FacebookUser.class)
-                             .filter(eq("_id", 1))
-                             .first());
-        res = getDs().find(FacebookUser.class)
-                     .filter(in("_id", asList(1L, 2L))).iterator()
-                     .toList();
-        assertEquals(2, res.size());
-        assertNotNull(res.get(0));
-        assertNotNull(res.get(1));
-        assertNotNull(res.get(1).username);
     }
 
     @Test
