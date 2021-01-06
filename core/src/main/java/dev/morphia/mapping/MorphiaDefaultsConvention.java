@@ -1,20 +1,28 @@
 package dev.morphia.mapping;
 
-import static java.lang.reflect.Modifier.*;
-
-import java.lang.annotation.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.*;
-import java.util.*;
-
-import dev.morphia.*;
-import dev.morphia.annotations.*;
-import dev.morphia.annotations.experimental.*;
-import dev.morphia.mapping.codec.*;
+import dev.morphia.Datastore;
+import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Handler;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
+import dev.morphia.annotations.experimental.IdField;
+import dev.morphia.mapping.codec.ArrayFieldAccessor;
+import dev.morphia.mapping.codec.FieldAccessor;
+import dev.morphia.mapping.codec.MorphiaPropertySerialization;
+import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
-import dev.morphia.mapping.codec.pojo.*;
-import org.bson.codecs.pojo.*;
+import org.bson.codecs.pojo.PropertyAccessor;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Iterator;
+
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isStatic;
 /**
  * A set of conventions to apply to Morphia entities
  */

@@ -1,31 +1,25 @@
 package dev.morphia.test.mapping;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
-import static org.junit.Assert.*;
+import com.mongodb.client.MongoCollection;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Reference;
+import dev.morphia.test.TestBase;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.bson.Document;
+import org.testng.annotations.Test;
 
-import java.lang.annotation.*;
-import java.util.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
-import com.mongodb.client.*;
-import dev.morphia.annotations.*;
-import dev.morphia.test.*;
-import org.bson.*;
-import org.testng.annotations.*;
-
-@Target({FIELD})
-@Retention(RUNTIME)
-@interface AnAnnotation {
-
-}
+import static org.testng.Assert.assertEquals;
 
 public class TestReferenceAnnotationPosition extends TestBase {
-
-	@BeforeMethod
-	public void setUp() {
-		getDs().getMapper().getCollection(Box.class).deleteMany(new Document());
-		getDs().getMapper().getCollection(Item.class).deleteMany(new Document());
-	}
 
 	@Test
 	public void testReferenceAnnotationShouldNeverEmbedDocuments() {
@@ -47,7 +41,7 @@ public class TestReferenceAnnotationPosition extends TestBase {
 		Object items = firstDoc.get("items");
 		Object moreItems = firstDoc.get("moreItems");
 
-		assertEquals("Items should be stored as the same documents", items, moreItems);
+		assertEquals(items, moreItems, "Items should be stored as the same documents");
 	}
 
 }
@@ -133,4 +127,11 @@ class Item {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+}
+
+//this is a random annotation which doesn't play any role beside separating @Reference and field
+@Target({FIELD})
+@Retention(RUNTIME)
+@interface AnAnnotation {
+
 }
