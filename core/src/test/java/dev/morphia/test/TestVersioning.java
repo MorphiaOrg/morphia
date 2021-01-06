@@ -4,8 +4,10 @@ import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
+import dev.morphia.Morphia;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Version;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -14,8 +16,7 @@ import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -28,10 +29,10 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.assertTrue;
 
 public class TestVersioning extends TestBase {
 
@@ -45,15 +46,15 @@ public class TestVersioning extends TestBase {
         datastore.save(entity);
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        Assert.assertEquals("Value 1", entity.getName());
-        Assert.assertEquals(1, entity.getVersion().longValue());
+        assertEquals(entity.getName(), "Value 1");
+        assertEquals(entity.getVersion().longValue(), 1);
 
         entity.setName("Value 2");
         datastore.save(entity);
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        Assert.assertEquals("Value 2", entity.getName());
-        Assert.assertEquals(2, entity.getVersion().longValue());
+        assertEquals(entity.getName(), "Value 2");
+        assertEquals(entity.getVersion().longValue(), 2);
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("id", entity.getId()));
@@ -61,8 +62,8 @@ public class TestVersioning extends TestBase {
              .execute();
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        Assert.assertEquals("Value 3", entity.getName());
-        Assert.assertEquals(3, entity.getVersion().longValue());
+        assertEquals(entity.getName(), "Value 3");
+        assertEquals(entity.getVersion().longValue(), 3);
     }
 
     @Test
@@ -81,10 +82,12 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        getMapper().map(VersionedChildEntity.class);
+        Datastore datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
+        Mapper mapper = datastore.getMapper();
+        mapper.map(VersionedChildEntity.class);
 
-        List<EntityModel> mappedEntities = getMapper().getMappedEntities();
-        assertThat(mappedEntities.size(), is(2));
+        List<EntityModel> mappedEntities = mapper.getMappedEntities();
+        assertEquals(mappedEntities.size(), 2, mappedEntities.toString());
         List<Class<?>> list = new ArrayList<>();
         for (EntityModel entityModel : mappedEntities) {
             list.add(entityModel.getType());
@@ -107,9 +110,9 @@ public class TestVersioning extends TestBase {
                                    .returnDocument(ReturnDocument.AFTER)
                                    .upsert(true));
 
-        Assert.assertEquals("Value 3", entity.getName());
-        Assert.assertEquals(1, entity.getVersion().longValue());
-        Assert.assertNotNull(entity.getId());
+        assertEquals(entity.getName(), "Value 3");
+        assertEquals(entity.getVersion().longValue(), 1);
+        assertNotNull(entity.getId());
     }
 
     @Test
@@ -118,8 +121,8 @@ public class TestVersioning extends TestBase {
         version1.setCount(0);
         getDs().save(version1);
 
-        Assert.assertEquals(Long.valueOf(1), version1.getVersion());
-        Assert.assertEquals(0, version1.getCount());
+        assertEquals(version1.getVersion(), Long.valueOf(1));
+        assertEquals(version1.getCount(), 0);
 
         Query<Versioned> query = getDs().find(Versioned.class);
         query.filter(eq("_id", version1.getId()));
@@ -130,8 +133,8 @@ public class TestVersioning extends TestBase {
                                           .filter(eq("_id", version1.getId()))
                                           .first();
 
-        Assert.assertEquals(Long.valueOf(2), version2.getVersion());
-        Assert.assertEquals(1, version2.getCount());
+        assertEquals(version2.getVersion(), Long.valueOf(2));
+        assertEquals(version2.getCount(), 1);
     }
 
     @Test
@@ -176,17 +179,19 @@ public class TestVersioning extends TestBase {
         assertEquals(first.hubba, Primitive.hubba);
     }
 
-    @Test(expected = ConcurrentModificationException.class)
+    @Test
     public void testThrowsExceptionWhenTryingToSaveAnOldVersion() {
-        getDs().find(Versioned.class).delete(new DeleteOptions().multi(true));
-        // given
-        final Versioned version1 = new Versioned();
-        getDs().save(version1);
-        final Versioned version2 = getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
-        getDs().save(version2);
+        assertThrows(ConcurrentModificationException.class, () -> {
+            getDs().find(Versioned.class).delete(new DeleteOptions().multi(true));
+            // given
+            final Versioned version1 = new Versioned();
+            getDs().save(version1);
+            final Versioned version2 = getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
+            getDs().save(version2);
 
-        // when
-        getDs().save(version1);
+            // when
+            getDs().save(version1);
+        });
     }
 
     @Test
@@ -209,11 +214,11 @@ public class TestVersioning extends TestBase {
     public void testVersionNumbersIncrementWithEachSave() {
         final Versioned version1 = new Versioned();
         getDs().save(version1);
-        Assert.assertEquals(Long.valueOf(1), version1.getVersion());
+        assertEquals(version1.getVersion(), Long.valueOf(1));
 
         final Versioned version2 = getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
         getDs().save(version2);
-        Assert.assertEquals(Long.valueOf(2), version2.getVersion());
+        assertEquals(version2.getVersion(), Long.valueOf(2));
     }
 
     @Test
@@ -239,8 +244,8 @@ public class TestVersioning extends TestBase {
              .execute(new UpdateOptions().upsert(true));
 
         entity = datastore.find(Versioned.class).iterator(new FindOptions().limit(1)).tryNext();
-        Assert.assertEquals("Value 3", entity.getName());
-        Assert.assertEquals(1, entity.getVersion().longValue());
+        assertEquals(entity.getName(), "Value 3");
+        assertEquals(entity.getVersion().longValue(), 1);
     }
 
     @Test
