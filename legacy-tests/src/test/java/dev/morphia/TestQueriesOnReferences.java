@@ -94,7 +94,7 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class)
-                                          .filter(eq("pic", new Key<>(Pic.class, "Pic", p.getId())));
+                                          .filter(eq("pic", new Key<>(Pic.class, "pic", p.getId())));
         FindOptions options = new FindOptions()
                                   .logQuery()
                                   .limit(1);

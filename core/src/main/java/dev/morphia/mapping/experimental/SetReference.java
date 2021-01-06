@@ -25,7 +25,12 @@ public class SetReference<T> extends CollectionReference<Set<T>> {
         super(datastore, entityModel, ids);
     }
 
-    SetReference(Set<T> values) {
+    /**
+     * Creates an instance with prepopulated values.
+     *
+     * @param values the values to use
+     */
+    public SetReference(Set<T> values) {
         this.values = values;
     }
 

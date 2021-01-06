@@ -1,12 +1,15 @@
 package dev.morphia.mapping.codec.reader;
 
+import com.mongodb.DBRef;
 import dev.morphia.sofia.Sofia;
+import org.bson.BsonBinary;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonType;
 import org.bson.Document;
 
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.UUID;
 
 class ReaderState {
     private final String name;
@@ -56,7 +59,23 @@ class ReaderState {
     ReaderState(DocumentReader reader, String name, Object value) {
         this.reader = reader;
         this.name = name;
-        this.value = value;
+        this.value = unwind(value);
+    }
+
+    private Object unwind(Object value) {
+        Object unwind = value;
+        if (value instanceof DBRef) {
+            DBRef dbRef = (DBRef) value;
+            Document document = new Document("$ref", dbRef.getCollectionName())
+                                    .append("$id", dbRef.getId());
+            if (dbRef.getDatabaseName() != null) {
+                document.append("$db", dbRef.getDatabaseName());
+            }
+            unwind = document;
+        } else if (value instanceof UUID) {
+            unwind = new BsonBinary((UUID) value);
+        }
+        return unwind;
     }
 
     @Override

@@ -1,14 +1,13 @@
-package dev.morphia.mapping.experimental;
+package dev.morphia.test.mapping.experimental;
 
-import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,10 +18,9 @@ import java.util.Set;
 
 import static dev.morphia.aggregation.experimental.stages.Unwind.on;
 import static dev.morphia.query.experimental.filters.Filters.eq;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
-@Category(Reference.class)
 public class MorphiaReferenceTest extends TestBase {
     @Test
     public void basicReference() {
@@ -33,7 +31,7 @@ public class MorphiaReferenceTest extends TestBase {
 
         final Book loaded = getDs().find(Book.class).filter(eq("_id", book.id)).first();
         Assert.assertFalse(loaded.author.isResolved());
-        Assert.assertEquals(author, loaded.author.get());
+        assertEquals(author, loaded.author.get());
         assertTrue(loaded.author.isResolved());
     }
 
@@ -73,7 +71,7 @@ public class MorphiaReferenceTest extends TestBase {
         Assert.assertFalse(loaded.set.isResolved());
         final Set<Book> set1 = loaded.getSet();
 
-        assertEquals(set.size(), set1.size());
+        assertEquals(set1.size(), set.size());
 
         for (Book book : set) {
             assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
@@ -120,7 +118,7 @@ public class MorphiaReferenceTest extends TestBase {
                                 .execute(Book.class)
                                 .next();
         Assert.assertTrue(foundBook.author.isResolved());
-        Assert.assertEquals(author, foundBook.author.get());
+        assertEquals(author, foundBook.author.get());
 
         Assert.assertTrue(loaded.set.isResolved());
         final Set<Book> set1 = loaded.getSet();
@@ -130,7 +128,7 @@ public class MorphiaReferenceTest extends TestBase {
         }
 
         Assert.assertTrue(loaded.list.isResolved());
-        Assert.assertEquals(list, loaded.getList());
+        assertEquals(list, loaded.getList());
         for (Book book1 : list) {
             assertTrue("Looking for " + book1 + " in " + list, list.contains(book1));
         }
@@ -192,13 +190,13 @@ public class MorphiaReferenceTest extends TestBase {
 
     protected void validateList(List<Book> list, Author loaded) {
         Assert.assertFalse(loaded.list.isResolved());
-        Assert.assertEquals(list, loaded.getList());
+        assertEquals(list, loaded.getList());
         assertTrue(loaded.list.isResolved());
     }
 
     protected void validateMap(Map<String, Book> books, Author loaded) {
         Assert.assertFalse(loaded.map.isResolved());
-        Assert.assertEquals(books, loaded.getMap());
+        assertEquals(books, loaded.getMap());
         assertTrue(loaded.map.isResolved());
     }
 

@@ -5,7 +5,6 @@ import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.Morphia;
-import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;

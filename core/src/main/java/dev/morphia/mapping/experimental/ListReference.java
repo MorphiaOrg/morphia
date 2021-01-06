@@ -23,7 +23,12 @@ public class ListReference<T> extends CollectionReference<List<T>> {
         super(datastore, model, ids);
     }
 
-    ListReference(List<T> values) {
+    /**
+     * Creates an instance with prepopulated values.
+     *
+     * @param values the values to use
+     */
+    public ListReference(List<T> values) {
         this.values = values;
     }
 
