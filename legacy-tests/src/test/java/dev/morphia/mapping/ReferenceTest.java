@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static dev.morphia.aggregation.experimental.stages.Unwind.on;
 import static dev.morphia.mapping.lazy.LazyFeatureDependencies.assertProxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
@@ -82,24 +81,6 @@ public class ReferenceTest extends ProxyTestBase {
     }
 
     @Test
-    public void testComplexIds() {
-        ComplexParent parent = new ComplexParent();
-        parent.complex = new Complex(new ChildId("Bob", 67), "Kelso");
-        parent.list = List.of(new Complex(new ChildId("Turk", 27), "Turk"));
-        parent.lazyList = List.of(new Complex(new ChildId("Bippity", 67), "Boppity"));
-
-        getDs().save(parent.complex);
-        getDs().save(parent.list);
-        getDs().save(parent.lazyList);
-        getDs().save(parent);
-
-        ComplexParent loaded = getDs().find(ComplexParent.class)
-                                      .filter(eq("_id", parent.id))
-                                      .first();
-        assertEquals(parent, loaded);
-    }
-
-    @Test
     public void testFetchKeys() {
         List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
             new Complex(new ChildId("JD", 26), "Dorian"),
@@ -114,58 +95,6 @@ public class ReferenceTest extends ProxyTestBase {
         assertFalse(keys.hasNext());
     }
 
-    @Test
-    public void testAggregationLookups() {
-        final Author author = new Author("Jane Austen");
-        getDs().save(author);
-
-        Book book = addBook(author);
-        Set<Book> set = addSetOfBooks(author);
-        List<Book> list = addListOfBooks(author);
-        //        Map<String, Book> map = addBookMap(author);
-
-        getDs().save(author);
-        Object document = getDs().aggregate(Author.class)
-                                 .lookup(Lookup.from(Book.class)
-                                               .as("set")
-                                               .foreignField("_id")
-                                               .localField("set"))
-                                 .lookup(Lookup.from(Book.class)
-                                               .as("list")
-                                               .foreignField("_id")
-                                               .localField("list"))
-                                 //  TODO how to fetch the values from a nested document for cross-referencing?
-                                 //                                   .lookup(Lookup.from(Book.class)
-                                 //                                                 .as("map")
-                                 //                                                 .foreignField("_id")
-                                 //                                                 .localField("map.$"))
-                                 .execute(Author.class)
-                                 .tryNext();
-
-        final Author loaded = (Author) document;
-        Book foundBook = getDs().aggregate(Book.class)
-                                .lookup(Lookup.from(Author.class)
-                                              .as("author")
-                                              .foreignField("_id")
-                                              .localField("author"))
-                                .unwind(on("author"))
-                                .execute(Book.class)
-                                .next();
-        Assert.assertTrue(foundBook.author.isResolved());
-        Assert.assertEquals(author, foundBook.author.get());
-
-        final Set<Book> set1 = loaded.getSet();
-        assertEquals(set.size(), set1.size());
-        for (Book book1 : set) {
-            assertTrue("Looking for " + book1 + " in " + set1, set1.contains(book1));
-        }
-
-        Assert.assertEquals(list, loaded.getList());
-        for (Book book1 : list) {
-            assertTrue("Looking for " + book1 + " in " + list, list.contains(book1));
-        }
-        //        validateMap(map, loaded);
-    }
 
     @Test
     public void testIdOnlyReferences() {
@@ -313,41 +242,6 @@ public class ReferenceTest extends ProxyTestBase {
         Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).next());
     }
 
-    protected Book addBook(Author author) {
-        final Book book = new Book("Pride and Prejudice");
-        book.setAuthor(author);
-        return getDs().save(book);
-    }
-
-    protected List<Book> addListOfBooks(Author author) {
-        List<Book> list = new ArrayList<>();
-        list.add(new Book("Sense and Sensibility"));
-        list.add(new Book("Pride and Prejudice"));
-        list.add(new Book("Mansfield Park"));
-        list.add(new Book("Emma"));
-        list.add(new Book("Northanger Abbey"));
-        for (Book book : list) {
-            book.setAuthor(author);
-            getDs().save(book);
-        }
-        author.setList(list);
-        return list;
-    }
-
-    protected Set<Book> addSetOfBooks(Author author) {
-        Set<Book> set = new HashSet<>(5);
-        set.add(new Book("Sense and Sensibility"));
-        set.add(new Book("Pride and Prejudice"));
-        set.add(new Book("Mansfield Park"));
-        set.add(new Book("Emma"));
-        set.add(new Book("Northanger Abbey"));
-        for (Book book : set) {
-            book.setAuthor(author);
-            getDs().save(book);
-        }
-        author.setSet(set);
-        return set;
-    }
 
     private void allNull(Container container) {
         Assert.assertNull(container.lazyMapRef);
