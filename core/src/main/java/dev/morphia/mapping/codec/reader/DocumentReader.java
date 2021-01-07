@@ -14,6 +14,7 @@ import org.bson.BsonSerializationException;
 import org.bson.BsonTimestamp;
 import org.bson.BsonType;
 import org.bson.Document;
+import org.bson.types.Binary;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
@@ -53,6 +54,8 @@ public class DocumentReader implements BsonReader {
         Object value = stage().value();
         if (value instanceof UUID) {
             return new BsonBinary((UUID) value);
+        } else if (value instanceof Binary) {
+            return new BsonBinary(((Binary) value).getType(), ((Binary) value).getData());
         } else {
             return (BsonBinary) value;
         }
