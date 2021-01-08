@@ -42,7 +42,7 @@ jobs:
       - name: Install Plugins
         run: mvn install -DskipTests --file pom.xml
       - name: Quality Checks
-        run: mvn -Pquality --file core/pom.xml
+        run: mvn -Pquality --file morphia/pom.xml
   Snapshots:
     name: Publish Snapshot Artifacts
     if: "github.repository == 'MorphiaOrg/morphia'"
