@@ -169,7 +169,6 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
         <!-- Too many failures with this while we work on the new API -->
         <!--<module name="TodoComment"/>-->
         <module name="UpperEll"/>
