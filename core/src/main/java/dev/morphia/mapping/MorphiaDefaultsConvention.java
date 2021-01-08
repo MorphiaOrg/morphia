@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;
-
 /**
  * A set of conventions to apply to Morphia entities
  */
@@ -147,8 +146,9 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
                                     .stream().filter(a -> a.getClass().equals(Handler.class))
                                     .findFirst().orElse(null);
             if (handler == null) {
-                for (Annotation annotation : builder.annotations()) {
-                    handler = annotation.annotationType().getAnnotation(Handler.class);
+                Iterator<Annotation> iterator = builder.annotations().iterator();
+                while (handler == null && iterator.hasNext()) {
+                    handler = iterator.next().annotationType().getAnnotation(Handler.class);
                 }
             }
         }
