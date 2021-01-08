@@ -1,0 +1,96 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Project Management Tasks
+
+on: [ push ]
+
+jobs:
+  Morphia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
+          restore-keys: \${{ runner.os }}-m2
+      - name: Build with Maven
+        env:
+          MONGODB: 4.4.2
+        run: mvn -B verify --file pom.xml
+  Quality:
+    name: Style Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
+          restore-keys: \${{ runner.os }}-m2
+      - name: Install Plugins
+        run: mvn install -DskipTests --file pom.xml
+      - name: Quality Checks
+        run: mvn -Pquality --file core/pom.xml
+  Snapshots:
+    name: Publish Snapshot Artifacts
+    if: "github.repository == 'MorphiaOrg/morphia'"
+    needs:
+      - Morphia
+      - Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
+          restore-keys: \${{ runner.os }}-m2
+      - name: Configure the job
+        run: |
+          mkdir -p ~/.m2
+          curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
+          curl -o github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/github.properties
+      - name: Publish
+        run: mvn source:jar javadoc:jar deploy -DskipTests
+  Docs:
+    name: Update Documentation
+    if: "github.repository == 'MorphiaOrg/morphia'"
+    needs:
+      - Morphia
+      - Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke antora build
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Docs
+          repo: MorphiaOrg/morphia-docs
+          token: ${{ secrets.PUSH_TOKEN }}
+          ref: refs/heads/master
+  Audits:
+    name: Trigger the audit job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke audits
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Audits
+          repo: MorphiaOrg/morphia-audit
+          token: ${{ secrets.PUSH_TOKEN }}
