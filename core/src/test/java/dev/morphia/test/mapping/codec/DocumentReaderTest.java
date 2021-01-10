@@ -6,6 +6,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.mapping.codec.reader.DocumentReader;
+import dev.morphia.mapping.codec.reader.NameState;
+import dev.morphia.mapping.codec.reader.ValueState;
 import dev.morphia.test.TestBase;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
@@ -22,6 +24,7 @@ import java.util.function.Consumer;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class DocumentReaderTest extends TestBase {
 
@@ -101,7 +104,7 @@ public class DocumentReaderTest extends TestBase {
                   .append("another", "entry"));
 
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.STRING));
         step(r -> assertEquals(r.readName(), "key"));
         step(r -> assertEquals(r.readString(), "value"));
         step(r -> assertEquals(r.readName(), "numbers"));
@@ -118,9 +121,13 @@ public class DocumentReaderTest extends TestBase {
 
     @Test
     public void testByteArray() {
-        Document document = parse("{ '_id': { '$oid': '59580ebf36218c7edf155044' }, " +
-                                  "'data': { '$binary': { 'base64': '', 'subType': '00' } } }");
-        getDs().getMapper().fromDocument(HasByteArray.class, document);
+        HasByteArray hasByteArray = new HasByteArray();
+        hasByteArray.data = new byte[]{1, 2, 3};
+        getDs().save(hasByteArray);
+        Document first = getDs().getMapper().getCollection(HasByteArray.class)
+                                .withDocumentClass(Document.class)
+                                .find().first();
+        getDs().getMapper().fromDocument(HasByteArray.class, first);
     }
 
     @Test
@@ -131,6 +138,91 @@ public class DocumentReaderTest extends TestBase {
         final TimeEntity find = getDs().find(TimeEntity.class)
                                        .filter(eq("_id", save.id))
                                        .first();
+    }
+
+    @Test
+    public void testBookmarkingAndSkips() {
+        setup(Document.parse("{ key: { subKey: 3 }, second: 2 }"));
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(BsonReader::readStartDocument);
+        step(r -> assertEquals(r.readName(), "key"));
+        BsonReaderMark mark = reader.getMark();
+        step(BsonReader::readStartDocument);
+        step(r -> assertEquals(r.readName(), "subKey"));
+        step(r -> assertEquals(r.readInt32(), 3));
+        step(BsonReader::readEndDocument);
+        mark.reset();
+        reader.skipValue();
+        step(r -> assertEquals(r.readName(), "second"));
+        step(r -> assertEquals(r.readInt32(), 2));
+        step(BsonReader::readEndDocument);
+
+        setup(Document.parse("{ key: [ 1, 2, 3 ], second: 8 }"));
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(BsonReader::readStartDocument);
+        step(r -> assertEquals(r.readName(), "key"));
+        mark = reader.getMark();
+        step(BsonReader::readStartArray);
+        step(r -> assertEquals(r.readInt32(), 1));
+        step(r -> assertEquals(r.readInt32(), 2));
+        mark.reset();
+        reader.skipValue();
+        step(r -> assertEquals(r.readName(), "second"));
+        step(r -> assertEquals(r.readInt32(), 8));
+        step(BsonReader::readEndDocument);
+    }
+
+    @Test
+    public void testNestedArrays() {
+        setup(parse("{ coordinates : [ [ [ 0, 1 ], [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ] ] ] }"));
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(BsonReader::readStartDocument);
+        step(r -> assertEquals(r.readName(), "coordinates"));
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(BsonReader::readStartArray);
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(BsonReader::readStartArray);
+
+        for (int i = 0; i < 5; i++) {
+            testArray(i);
+        }
+        step(BsonReader::readEndArray);
+        step(BsonReader::readEndArray);
+
+
+        step(BsonReader::readEndDocument);
+    }
+
+    @Test
+    public void testSkips() {
+        setup(Document.parse("{ key: 'value', second: 2 }"));
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(BsonReader::readStartDocument);
+        assertTrue(reader.currentState() instanceof NameState);
+        step(r -> {
+            r.skipName();
+            assertTrue(reader.currentState() instanceof ValueState);
+        });
+        step(r -> {
+            r.skipValue();
+            assertTrue(reader.currentState() instanceof NameState);
+        });
+    }
+
+    private void testArray(int i) {
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(BsonReader::readStartArray);
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.INT32));
+        int expected = i;
+        step(r -> assertEquals(r.readInt32(), expected));
+        step(r -> assertEquals(r.readInt32(), expected + 1));
+        step(BsonReader::readEndArray);
     }
 
     private void readDocument(int count) {

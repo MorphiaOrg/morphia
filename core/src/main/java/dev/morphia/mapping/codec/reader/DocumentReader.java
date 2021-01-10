@@ -2,7 +2,6 @@ package dev.morphia.mapping.codec.reader;
 
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
-import dev.morphia.mapping.codec.reader.ReaderState.InitialReaderState;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonJavaScript;
@@ -19,6 +18,7 @@ import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -28,7 +28,8 @@ import static java.lang.String.format;
  */
 public class DocumentReader implements BsonReader {
     private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
-    private ReaderState readerState;
+    private final ReaderState start;
+    private ReaderState current;
 
     /**
      * Construct a new instance.
@@ -36,7 +37,12 @@ public class DocumentReader implements BsonReader {
      * @param document the document to read from
      */
     public DocumentReader(Document document) {
-        readerState = new InitialReaderState(this, new DocumentIterator(this, document.entrySet().iterator()));
+        current = new DocumentState(this, document);
+        start = current;
+    }
+
+    public ReaderState currentState() {
+        return current;
     }
 
     @Override
@@ -319,11 +325,12 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public void skipName() {
+        stage().skipName();
     }
 
     @Override
     public void skipValue() {
-        stage().advance();
+        stage().skipValue();
     }
 
     @Override
@@ -343,17 +350,28 @@ public class DocumentReader implements BsonReader {
         }
     }
 
-    ReaderState stage() {
-        return this.readerState;
-    }
-
-    ReaderState nextStage(ReaderState nextReaderState) {
-        readerState = nextReaderState;
-        return readerState;
+    @Override
+    public String toString() {
+        StringJoiner joiner = new StringJoiner(", ", DocumentReader.class.getSimpleName() + "[", "]");
+        ReaderState location = start;
+        while (location != null) {
+            if (location == current) {
+                joiner.add("<<" + location + ">>");
+            } else {
+                joiner.add(location.toString());
+            }
+            location = location.nextState;
+        }
+        return joiner
+                   .toString();
     }
 
     void reset(ReaderState bookmark) {
-        readerState = bookmark;
+        current = bookmark;
+    }
+
+    ReaderState stage() {
+        return this.current;
     }
 
     BsonType getBsonType(Object o) {
@@ -368,4 +386,7 @@ public class DocumentReader implements BsonReader {
         return bsonType;
     }
 
+    void state(ReaderState next) {
+        current = next;
+    }
 }
