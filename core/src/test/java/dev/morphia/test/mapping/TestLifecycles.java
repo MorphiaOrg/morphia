@@ -19,7 +19,9 @@ public class TestLifecycles extends TestBase {
             List.of(new Position(0d, 0d), new Position(1d, 1d), new Position(2d, 2d), new Position(3d, 3d), new Position(0d, 0d)));
         getDs().save(new HoldsPolygon(ObjectId.get(), polygon));
 
+        Assert.assertFalse(HoldsPolygon.lifecycle);
         Assert.assertNotNull(getDs().find(HoldsPolygon.class).first());
+        Assert.assertTrue(HoldsPolygon.lifecycle);
     }
 
     @Entity(value = "polygon", useDiscriminator = false)
@@ -27,6 +29,7 @@ public class TestLifecycles extends TestBase {
         @Id
         private final ObjectId id;
         private final Polygon polygon;
+        private static boolean lifecycle = false;
 
         protected HoldsPolygon() {
             id = null;
@@ -48,7 +51,7 @@ public class TestLifecycles extends TestBase {
 
         @PostLoad
         void somePostLoadMethod() {
-            //do nothing
+            lifecycle = true;
         }
     }
 }
