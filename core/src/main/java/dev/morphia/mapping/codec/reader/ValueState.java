@@ -15,7 +15,7 @@ public class ValueState extends ReaderState {
     }
 
     BsonType getCurrentBsonType() {
-        return value == null ? null : reader.getBsonType(value);
+        return value == null ? null : reader().getBsonType(value);
     }
 
     @Override

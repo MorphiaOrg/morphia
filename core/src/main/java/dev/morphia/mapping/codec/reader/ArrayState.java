@@ -26,6 +26,11 @@ class ArrayState extends ReaderState {
         return BsonType.ARRAY;
     }
 
+    @Override
+    void skipValue() {
+        reader().state(endState != null ? endState.nextState() : nextState());
+    }
+
     void startArray() {
         if (endState == null) {
             List<ReaderState> states = values.stream()
@@ -41,7 +46,7 @@ class ArrayState extends ReaderState {
                 docState = state;
             }
 
-            endState = new ArrayEndState(reader);
+            endState = new ArrayEndState(reader());
             if (docState != null) {
                 docState.next(endState);
             } else {
@@ -50,11 +55,6 @@ class ArrayState extends ReaderState {
 
         }
         advance();
-    }
-
-    @Override
-    void skipValue() {
-        reader.state(endState != null ? endState.nextState : nextState);
     }
 
 }

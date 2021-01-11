@@ -41,6 +41,9 @@ public class DocumentReader implements BsonReader {
         start = current;
     }
 
+    /**
+     * @return the current state of the reader
+     */
     public ReaderState currentState() {
         return current;
     }
@@ -360,7 +363,7 @@ public class DocumentReader implements BsonReader {
             } else {
                 joiner.add(location.toString());
             }
-            location = location.nextState;
+            location = location.nextState();
         }
         return joiner
                    .toString();

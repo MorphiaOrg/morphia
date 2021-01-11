@@ -10,11 +10,19 @@ import java.util.List;
 import java.util.UUID;
 
 abstract class ReaderState {
-    protected final DocumentReader reader;
-    protected ReaderState nextState;
+    private final DocumentReader reader;
+    private ReaderState nextState;
 
     ReaderState(DocumentReader reader) {
         this.reader = reader;
+    }
+
+    public ReaderState nextState() {
+        return nextState;
+    }
+
+    public DocumentReader reader() {
+        return reader;
     }
 
     void skipName() {

@@ -28,8 +28,8 @@ public class NameState extends ReaderState {
 
     @Override
     BsonType getCurrentBsonType() {
-        return nextState != null
-               ? nextState.getCurrentBsonType()
+        return nextState() != null
+               ? nextState().getCurrentBsonType()
                : BsonType.UNDEFINED;
     }
 

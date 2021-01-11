@@ -29,12 +29,17 @@ class DocumentState extends ReaderState {
     }
 
     @Override
+    void skipValue() {
+        reader().state(endState != null ? endState.nextState() : nextState());
+    }
+
+    @Override
     void startDocument() {
         if (endState == null) {
             List<ReaderState> states = document.entrySet().stream()
                                                .flatMap(e -> {
                                                    List<ReaderState> nameStates =
-                                                       List.of(new NameState(reader, e.getKey()), valueState(e.getValue()));
+                                                       List.of(new NameState(reader(), e.getKey()), valueState(e.getValue()));
                                                    return nameStates.stream();
                                                })
                                                .collect(toList());
@@ -48,7 +53,7 @@ class DocumentState extends ReaderState {
                 docState = state;
             }
 
-            endState = new DocumentEndState(reader);
+            endState = new DocumentEndState(reader());
             if (docState != null) {
                 docState.next(endState);
             } else {
@@ -56,10 +61,5 @@ class DocumentState extends ReaderState {
             }
         }
         advance();
-    }
-
-    @Override
-    void skipValue() {
-        reader.state(endState != null ? endState.nextState : nextState);
     }
 }
