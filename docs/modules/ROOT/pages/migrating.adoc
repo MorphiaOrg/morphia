@@ -1,0 +1,7 @@
+= Migration
+
+* Versioned updates now throw `VersionMismatchException` instead of `ConcurrentModification` exception.  This allows for more targeted
+catches.  For historical reasons, this new exception extends `ConcurrentModification` so that any existing catch clauses will continue
+to work.  However, applications should be updated to catch the new exception.  A future release will change the parent type of
+`VersionMismatchException` to `RuntimeException` instead.  See https://github.com/MorphiaOrg/morphia/issues/982[this discussion] for more
+details.

@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -570,7 +569,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             } catch (MongoWriteException e) {
                 updateVersion(entity, versionField, oldVersion);
-                throw new ConcurrentModificationException(Sofia.concurrentModification(entity.getClass().getName(), idValue));
+                throw new VersionMismatchException(entity.getClass(), idValue);
             }
         } else {
             final UpdateResult res = find(collection.getNamespace().getCollectionName())
@@ -583,7 +582,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                                                       .writeConcern(options.writeConcern()));
 
             if (res.getModifiedCount() != 1) {
-                throw new ConcurrentModificationException(Sofia.concurrentModification(entity.getClass().getName(), idValue));
+                throw new VersionMismatchException(entity.getClass(), idValue);
             }
             updateVersion(entity, versionField, newVersion);
         }

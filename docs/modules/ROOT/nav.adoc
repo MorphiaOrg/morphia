@@ -1,4 +1,5 @@
 * xref:index.adoc[Getting Started]
+* xref:migrating.adoc[Migrating]
 * xref:quicktour.adoc[Quick Tour]
 * xref:reference.adoc[Reference]
 
