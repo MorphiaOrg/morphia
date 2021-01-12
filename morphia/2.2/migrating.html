@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Migration :: Morphia Docs</title>
     <meta name="generator" content="Antora 2.3.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -78,7 +78,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Getting Started</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="migrating.html">Migrating</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -154,54 +154,35 @@
 <button class="nav-toggle"></button>
   <a href="../../landing/index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Morphia</a></li>
+    <li><a href="migrating.html">Migrating</a></li>
+  </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="schemaValidation.html">2.2-SNAPSHOT</a>
-    <a class="version" href="../2.1/schemaValidation.html">2.1</a>
-    <a class="version" href="../2.0/schemaValidation.html">2.0</a>
-    <a class="version" href="../1.6/schemaValidation.html">1.6</a>
+    <a class="version is-current" href="migrating.html">2.2-SNAPSHOT</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../2.0/index.html">2.0</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/schemaValidation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/migrating.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<div class="sect1">
-<h2 id="_schema_validation"><a class="anchor" href="#_schema_validation"></a>Schema Validation</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&#8217;s source.  <a href="http://docs.mongodb.org/manual/core/schema-validation/">Schema validation</a>provides the capability to perform schema validation during updates and insertions.
-Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.</p>
-</div>
-<div class="paragraph">
-<p>Below we have a basic entity definition.
-Note the new annotation <a href="#javadoc:dev/morphia/annotations/Validation.html" class="page unresolved">@Validation</a>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity("validation")
-@Validation("{ number : { $gt : 10 } }")
-public class DocumentValidation {
-    @Id
-    private ObjectId id;
-    private String string;
-    private int number;
-    private Date date;
-
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In this case, only one value is supplied to the annotation.
-This string value is the query that will be used to match against any new documents or updated documents.
-Should this query fail to match the new document, validation will fail on the document and it will be rejected.
-In addition to the required query, there are two other values that can be configured based on your needs:  <code>level</code> with a default of <code>STRICT</code> and <code>action</code> with a default of <code>ERROR</code>.
-A <code>MODERATE</code> validation level does not apply rules to updates on existing invalid documents.
-An <code>action</code> setting of <code>WARN</code> will merely log any validation violations.</p>
-</div>
-</div>
+<h1 class="page">Migration</h1>
+<div class="ulist">
+<ul>
+<li>
+<p>Versioned updates now throw <code>VersionMismatchException</code> instead of <code>ConcurrentModification</code> exception.  This allows for more targeted
+catches.  For historical reasons, this new exception extends <code>ConcurrentModification</code> so that any existing catch clauses will continue
+to work.  However, applications should be updated to catch the new exception.  A future release will change the parent type of
+<code>VersionMismatchException</code> to <code>RuntimeException</code> instead.  See <a href="https://github.com/MorphiaOrg/morphia/issues/982">this discussion</a> for more
+details.</p>
+</li>
+</ul>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
