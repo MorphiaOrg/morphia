@@ -47,7 +47,7 @@ public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
     private static MongoClient mongoClient;
-    private final MapperOptions mapperOptions = MapperOptions.DEFAULT;
+    private MapperOptions mapperOptions = MapperOptions.DEFAULT;
 
     private MongoDatabase database;
     private Datastore datastore;
@@ -72,9 +72,15 @@ public abstract class TestBase {
 
     public Datastore getDs() {
         if (datastore == null) {
-            datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
+            datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME, mapperOptions);
         }
         return datastore;
+    }
+
+    protected void reconfigure(MapperOptions options) {
+        mapperOptions = options;
+        database = null;
+        datastore = null;
     }
 
     public Mapper getMapper() {

@@ -14,11 +14,11 @@ import static java.util.Arrays.asList;
 @Entity("users")
 @Validation("{ age : { $gte : 13 } }")
 public class User {
-    @Id
-    private ObjectId id;
     public String name;
     public List<String> likes;
     public int age;
+    @Id
+    private ObjectId id;
     private LocalDate joined;
 
     private User() {
@@ -28,6 +28,46 @@ public class User {
         this.name = name;
         this.joined = joined;
         this.likes = asList(likes);
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    public LocalDate getJoined() {
+        return joined;
+    }
+
+    public void setJoined(LocalDate joined) {
+        this.joined = joined;
+    }
+
+    public List<String> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<String> likes) {
+        this.likes = likes;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

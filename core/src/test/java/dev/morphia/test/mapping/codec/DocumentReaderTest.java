@@ -201,9 +201,11 @@ public class DocumentReaderTest extends TestBase {
     public void testSkips() {
         setup(Document.parse("{ key: 'value', second: 2 }"));
 
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
-        step(BsonReader::readStartDocument);
-        assertTrue(reader.currentState() instanceof NameState);
+        step(r -> {
+            assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT);
+            r.readStartDocument();
+            assertTrue(reader.currentState() instanceof NameState);
+        });
         step(r -> {
             r.skipName();
             assertTrue(reader.currentState() instanceof ValueState);
@@ -212,16 +214,6 @@ public class DocumentReaderTest extends TestBase {
             r.skipValue();
             assertTrue(reader.currentState() instanceof NameState);
         });
-    }
-
-    private void testArray(int i) {
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
-        step(BsonReader::readStartArray);
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.INT32));
-        int expected = i;
-        step(r -> assertEquals(r.readInt32(), expected));
-        step(r -> assertEquals(r.readInt32(), expected + 1));
-        step(BsonReader::readEndArray);
     }
 
     private void readDocument(int count) {
@@ -237,6 +229,16 @@ public class DocumentReaderTest extends TestBase {
 
     private void step(Consumer<BsonReader> function) {
         function.accept(reader);
+    }
+
+    private void testArray(int i) {
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(BsonReader::readStartArray);
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.INT32));
+        int expected = i;
+        step(r -> assertEquals(r.readInt32(), expected));
+        step(r -> assertEquals(r.readInt32(), expected + 1));
+        step(BsonReader::readEndArray);
     }
 
     @Entity

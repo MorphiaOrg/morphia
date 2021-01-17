@@ -5,7 +5,7 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import org.bson.Document;
 import org.junit.Assert;
@@ -67,8 +67,8 @@ public class NewAnnotationTest extends TestBase {
 
         @Override
         public void prePersist(Object ent, Document document, Mapper mapper) {
-            final List<FieldModel> toLowercase = mapper.getEntityModel(ent.getClass()).getFields(Lowercase.class);
-            for (FieldModel mf : toLowercase) {
+            final List<PropertyModel> toLowercase = mapper.getEntityModel(ent.getClass()).getProperties(Lowercase.class);
+            for (PropertyModel mf : toLowercase) {
                 try {
                     final Object fieldValue = mf.getValue(ent);
                     document.put(mf.getMappedName() + "_lowercase", fieldValue.toString().toLowerCase());

@@ -86,6 +86,7 @@ jobs:
           ref: refs/heads/master
   Audits:
     name: Trigger the audit job
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Invoke audits

@@ -1,4 +1,4 @@
-package dev.morphia.mapping;
+package dev.morphia.mapping.conventions;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;

@@ -1,7 +1,7 @@
 package dev.morphia.mapping.validation.classrules;
 
 
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,7 @@ public class FieldEnumString {
      *
      * @param fields the fields to use
      */
-    public FieldEnumString(FieldModel... fields) {
+    public FieldEnumString(PropertyModel... fields) {
         this(Arrays.asList(fields));
     }
 
@@ -27,9 +27,9 @@ public class FieldEnumString {
      *
      * @param fields the fields to use
      */
-    public FieldEnumString(List<FieldModel> fields) {
+    public FieldEnumString(List<PropertyModel> fields) {
         final StringBuilder sb = new StringBuilder(128);
-        for (FieldModel mappedField : fields) {
+        for (PropertyModel mappedField : fields) {
             if (sb.length() > 0) {
                 sb.append(", ");
             }

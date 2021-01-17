@@ -2,8 +2,8 @@ package dev.morphia.query.experimental.filters;
 
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.OperationTarget;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -115,7 +115,7 @@ public class Filter {
             if (target != null) {
                 OperationTarget operationTarget = new OperationTarget(pathTarget, value);
                 this.value = operationTarget.getValue();
-                FieldModel mappedField = target.getTarget();
+                PropertyModel mappedField = target.getTarget();
                 if (mappedField != null && mappedField.getCodec() instanceof PropertyHandler) {
                     this.value = ((Document) operationTarget.encode(mapper)).get(field);
                 }

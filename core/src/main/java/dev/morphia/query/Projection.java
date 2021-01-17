@@ -114,7 +114,7 @@ public class Projection {
 
     private Document knownFields(Mapper mapper, Class<?> clazz) {
         Document projection = new Document();
-        mapper.getEntityModel(clazz).getFields()
+        mapper.getEntityModel(clazz).getProperties()
               .stream()
               .map(mf -> new PathTarget(mapper, mapper.getEntityModel(clazz), mf.getMappedName()).translatedPath())
               .forEach(name -> projection.put(name, 1));

@@ -2,11 +2,9 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import org.bson.codecs.Codec;
-
-import java.lang.reflect.Field;
 
 /**
  * Defines codecs for properties
@@ -14,23 +12,19 @@ import java.lang.reflect.Field;
  * @morphia.internal
  */
 public abstract class PropertyCodec<T> implements Codec<T> {
-    private final Field field;
-    private final TypeData typeData;
+    private final PropertyModel property;
     private EntityModel entityModel;
-    private FieldModel fieldModel;
     private final Datastore datastore;
 
     /**
      * Creates a codec
      *
-     * @param datastore    the datastore
-     * @param field        the reference field
-     * @param typeData     the field type data
+     * @param datastore the datastore
+     * @param property  the property
      */
-    public PropertyCodec(Datastore datastore, Field field, TypeData typeData) {
+    public PropertyCodec(Datastore datastore, PropertyModel property) {
         this.datastore = datastore;
-        this.field = field;
-        this.typeData = typeData;
+        this.property = property;
     }
 
     /**
@@ -43,29 +37,21 @@ public abstract class PropertyCodec<T> implements Codec<T> {
     /**
      * @return the field
      */
-    public Field getField() {
-        return field;
+    public PropertyModel getPropertyModel() {
+        return property;
     }
 
     /**
      * @return the type data
      */
     public TypeData getTypeData() {
-        return typeData;
+        return property.getTypeData();
     }
 
     protected EntityModel getEntityModelForField() {
         if (entityModel == null) {
-            entityModel = datastore.getMapper().getEntityModel(FieldModel.normalize(typeData));
+            entityModel = datastore.getMapper().getEntityModel(PropertyModel.normalize(getTypeData()));
         }
         return entityModel;
     }
-
-    protected FieldModel getFieldModel() {
-        if (fieldModel == null) {
-            fieldModel = datastore.getMapper().getEntityModel(field.getDeclaringClass()).getField(field.getName());
-        }
-        return fieldModel;
-    }
-
 }

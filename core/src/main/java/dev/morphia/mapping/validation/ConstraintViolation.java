@@ -2,7 +2,7 @@ package dev.morphia.mapping.validation;
 
 
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 
 /**
@@ -13,21 +13,21 @@ public class ConstraintViolation {
     private final Class<? extends ClassConstraint> validator;
     private final String message;
     private final Level level;
-    private FieldModel field;
+    private PropertyModel property;
 
     /**
      * Creates a violation instance to record invalid mapping metadata
      *
      * @param level       the severity of the violation
      * @param entityModel the errant class
-     * @param field       the errant field
+     * @param property    the errant property
      * @param validator   the constraint failed
      * @param message     the message for the failure
      */
-    public ConstraintViolation(Level level, EntityModel entityModel, FieldModel field,
+    public ConstraintViolation(Level level, EntityModel entityModel, PropertyModel property,
                                Class<? extends ClassConstraint> validator, String message) {
         this(level, entityModel, validator, message);
-        this.field = field;
+        this.property = property;
     }
 
     /**
@@ -57,7 +57,7 @@ public class ConstraintViolation {
      * @return the qualified name of the failing mapping
      */
     public String getPrefix() {
-        final String fn = (field != null) ? field.getName() : "";
+        final String fn = (property != null) ? property.getName() : "";
         return type.getType().getName() + "." + fn;
     }
 

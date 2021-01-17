@@ -1,7 +1,7 @@
 package dev.morphia;
 
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import org.bson.Document;
 
 import java.util.List;
@@ -36,12 +36,12 @@ public interface ObjectFactory {
      * Creates an instance of the class defined in the discriminator field in the document passed in.  If that field
      * is missing, morphia attempts to the MappedField to determine which concrete class to instantiate.
      *
-     * @param mapper the Mapper to use
-     * @param mf     the MappedField to consult when creating the instance
-     * @param document  the state to populate the new instance with
+     * @param mapper   the Mapper to use
+     * @param mf       the MappedField to consult when creating the instance
+     * @param document the state to populate the new instance with
      * @return the new instance
      */
-    Object createInstance(Mapper mapper, FieldModel mf, Document document);
+    Object createInstance(Mapper mapper, PropertyModel mf, Document document);
 
     /**
      * Defines how morphia creates a List object.
@@ -49,7 +49,7 @@ public interface ObjectFactory {
      * @param mf the MappedField containing any metadata that might define the type of the List to create
      * @return the List
      */
-    List createList(FieldModel mf);
+    List createList(PropertyModel mf);
 
     /**
      * Defines how morphia creates a Map object.
@@ -57,7 +57,7 @@ public interface ObjectFactory {
      * @param mf the MappedField containing any metadata that might define the type of the Map to create
      * @return the Map
      */
-    Map createMap(FieldModel mf);
+    Map createMap(PropertyModel mf);
 
     /**
      * Defines how morphia creates a Set object.
@@ -65,5 +65,5 @@ public interface ObjectFactory {
      * @param mf the MappedField containing any metadata that might define the type of the Set to create
      * @return the Set
      */
-    Set createSet(FieldModel mf);
+    Set createSet(PropertyModel mf);
 }

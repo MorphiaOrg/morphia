@@ -5,7 +5,7 @@ import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import org.bson.Document;
 
@@ -67,7 +67,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * @param document    the Document to decode
      * @return the entities
      */
-    public static MapReference decode(Datastore datastore, Mapper mapper, FieldModel mappedField,
+    public static MapReference decode(Datastore datastore, Mapper mapper, PropertyModel mappedField,
                                       Document document) {
         final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
 
@@ -108,15 +108,16 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
 
         return ids;
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object encode(Mapper mapper, Object value, FieldModel field) {
+    public Object encode(Mapper mapper, Object value, PropertyModel property) {
         if (isResolved()) {
             Map<String, Object> ids = new LinkedHashMap<>();
             for (Entry<Object, T> entry : get().entrySet()) {
-                ids.put(entry.getKey().toString(), wrapId(mapper, field, entry.getValue()));
+                ids.put(entry.getKey().toString(), wrapId(mapper, property, entry.getValue()));
             }
             return ids;
         } else {
@@ -130,7 +131,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
                   .forEach(e -> ids.put(e.getKey().toString(),
-                      ReferenceCodec.encodeId(mapper, datastore, e.getValue(), field)));
+                      ReferenceCodec.encodeId(mapper, e.getValue(), field)));
         }
         return ids;
     }

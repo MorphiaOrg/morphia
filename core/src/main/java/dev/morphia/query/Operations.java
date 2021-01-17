@@ -4,7 +4,7 @@ import dev.morphia.UpdateDocument;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
@@ -47,7 +47,7 @@ class Operations {
     }
 
     protected void versionUpdate() {
-        FieldModel versionField = entityModel.getVersionField();
+        PropertyModel versionField = entityModel.getVersionProperty();
         if (versionField != null) {
             List<OperationTarget> operationTargets = ops.get("$inc");
             String version = versionField.getMappedName();

@@ -5,7 +5,7 @@ import dev.morphia.Datastore;
 import dev.morphia.annotations.Handler;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 import java.util.List;
 import java.util.Map;
@@ -52,11 +52,11 @@ public abstract class MorphiaReference<T> {
         }
     }
 
-    static Object wrapId(Mapper mapper, FieldModel field, Object entity) {
+    static Object wrapId(Mapper mapper, PropertyModel property, Object entity) {
         Object id = mapper.getId(entity);
         mapper.getEntityModel(entity.getClass());
         Object encoded = id;
-        if (!entity.getClass().equals(field.getType())) {
+        if (!entity.getClass().equals(property.getType())) {
             encoded = new DBRef(mapper.getEntityModel(entity.getClass()).getCollectionName(), encoded);
         }
 
@@ -66,11 +66,11 @@ public abstract class MorphiaReference<T> {
     /**
      * @param mapper            the mapper
      * @param value             the value
-     * @param optionalExtraInfo the MappedField
+     * @param optionalExtraInfo the PropertyModel
      * @return the encoded vale
      * @morphia.internal
      */
-    public abstract Object encode(Mapper mapper, Object value, FieldModel optionalExtraInfo);
+    public abstract Object encode(Mapper mapper, Object value, PropertyModel optionalExtraInfo);
 
     /**
      * @return returns the referenced entity if it exists.  May return null.
@@ -119,7 +119,7 @@ public abstract class MorphiaReference<T> {
      * @param ignoreMissing ignore any missing referenced documents
      * @return this
      */
-    public MorphiaReference ignoreMissing(boolean ignoreMissing) {
+    public MorphiaReference<T> ignoreMissing(boolean ignoreMissing) {
         this.ignoreMissing = ignoreMissing;
         return this;
     }

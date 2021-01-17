@@ -24,7 +24,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
@@ -185,7 +185,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         final IndexHelper indexHelper = new IndexHelper(mapper);
         for (EntityModel model : mapper.getMappedEntities()) {
-            if (model.getIdField() != null) {
+            if (model.getIdProperty() != null) {
                 indexHelper.createIndex(mapper.getCollection(model.getType()), model);
             }
         }
@@ -194,7 +194,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void ensureIndexes(Class<T> type) {
         EntityModel model = mapper.getEntityModel(type);
-        if (model.getIdField() != null) {
+        if (model.getIdProperty() != null) {
             final IndexHelper indexHelper = new IndexHelper(mapper);
             indexHelper.createIndex(mapper.getCollection(type), model);
         }
@@ -323,7 +323,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             Class<?> type = entities.get(0).getClass();
             EntityModel model = mapper.getEntityModel(type);
             final MongoCollection collection = mapper.getCollection(type);
-            FieldModel versionField = model.getVersionField();
+            PropertyModel versionField = model.getVersionProperty();
             if (versionField != null) {
                 for (T entity : entities) {
                     setInitialVersion(versionField, entity);
@@ -355,7 +355,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         List<T> list = new ArrayList<>();
         for (T entity : entities) {
             EntityModel model = getMapper().getEntityModel(entity.getClass());
-            if (getMapper().getId(entity) != null || model.getVersionField() != null) {
+            if (getMapper().getId(entity) != null || model.getVersionProperty() != null) {
                 list.add(entity);
             } else {
                 grouped.computeIfAbsent(mapper.getCollection(entity.getClass()), c -> new ArrayList<>())
@@ -446,7 +446,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected <T> void insert(MongoCollection collection, T entity, InsertOneOptions options) {
-        setInitialVersion(mapper.getEntityModel(entity.getClass()).getVersionField(), entity);
+        setInitialVersion(mapper.getEntityModel(entity.getClass()).getVersionProperty(), entity);
         MongoCollection mongoCollection = mapper.enforceWriteConcern(collection, entity.getClass());
         ClientSession clientSession = findSession(options);
         if (clientSession == null) {
@@ -457,7 +457,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     protected <T> void saveDocument(T entity, MongoCollection<T> collection, InsertOneOptions options) {
-        FieldModel idField = mapper.getEntityModel(entity.getClass()).getIdField();
+        PropertyModel idField = mapper.getEntityModel(entity.getClass()).getIdProperty();
 
         if (idField == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
@@ -534,7 +534,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> void setInitialVersion(FieldModel versionField, T entity) {
+    private <T> void setInitialVersion(PropertyModel versionField, T entity) {
         if (versionField != null) {
             Object value = versionField.getValue(entity);
             if (value != null && !value.equals(0)) {
@@ -547,13 +547,13 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private <T> boolean tryVersionedUpdate(T entity, MongoCollection collection, InsertOneOptions options) {
         final EntityModel model = mapper.getEntityModel(entity.getClass());
-        if (model.getVersionField() == null) {
+        if (model.getVersionProperty() == null) {
             return false;
         }
 
-        FieldModel idField = model.getIdField();
+        PropertyModel idField = model.getIdProperty();
         final Object idValue = idField.getValue(entity);
-        final FieldModel versionField = model.getVersionField();
+        final PropertyModel versionField = model.getVersionProperty();
 
         Long oldVersion = (Long) versionField.getValue(entity);
         long newVersion = oldVersion == null ? 1L : oldVersion + 1;
@@ -590,7 +590,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return true;
     }
 
-    private <T> void updateVersion(T entity, FieldModel field, Long newVersion) {
-        field.setValue(entity, newVersion);
+    private <T> void updateVersion(T entity, PropertyModel property, Long newVersion) {
+        property.setValue(entity, newVersion);
     }
 }

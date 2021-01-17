@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 public @interface Version {
     /**
      * @return the field name to use in the document.  Defaults to the java field name.

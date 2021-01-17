@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * useful in concert with {@code @PostLoad} and {@code @PrePersist} to transform your data.</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 public @interface LoadOnly {
 
 }

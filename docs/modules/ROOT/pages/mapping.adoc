@@ -115,3 +115,40 @@ This strategy can be changed globally via the field naming strategy option on
 xref:javadoc:dev/morphia/mapping/MapperOptions.html#[MapperOptions].
 Simple indexes can be defined on a field if all that is needed for the index is a single field.
 This can be done via the xref:javadoc:dev/morphia/annotations/Indexed.html#[@Indexed] annotation.
+
+=== Methods
+
+[WARN]
+====
+Method-based mapping is new in 2.2.  While testing has been done to ensure everything works the same as with fields, there may some
+esoteric combinations of features that reveal a gap in functionality.  Please file an https://github.com/MorphiaOrg/morphia/issues[issue]
+ifyou encounter such a case.
+====
+
+As of 2.2, mapping information can be defined on methods instead of fields.  All the same rules apply, simply the location of the
+annotations are moved to the getters and/or setters.  Annotations can live on either the `get` or the `set` method and Morphia will
+detect them.  If the same annotation is applied to both the `get` and the `set` behavior is unpredictable so care should be taken to
+avoid such a scenario.  Customs in other libraries tend to favor annotating the `get` methods and this is also recommended here for
+consistency.
+
+In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.  This has some
+very basic rules for your methods:
+
+1. `get` methods take no parameters
+2. `set` methods take one parameter and the type of that parameter should generally match the return type of the getter.  These setter
+methods also return void.
+3. If a property is a boolean type, the getter often uses `is` rather than `get` yielding a method named, e.g., `isEnabled() rather than
+`getEnabled()`.
+4. The type of the property is determined by the return value of the getter.
+5. The name of the property is determined by stripping the `get` prefix (or `is` for boolean types) and lower casing the first letter.
+This is the default name of the property subject to property naming rules as defined in
+xref:javadoc:dev/morphia/mapping/MapperOptions.html#[MapperOptions]
+
+To enable method mapping, a method has been added to xref:javadoc:dev/morphia/mapping/MapperOptions.Builder.html#[MapperOptions.Builder]
+allowing for the configuration of either field or method mapping.
+
+[NOTE]
+====
+Mapping is currently done via either fields or by methods.  It is not currently allowed to map using both schemes simultaneously.  This will
+likely change in the future but for now is not allowed.
+====

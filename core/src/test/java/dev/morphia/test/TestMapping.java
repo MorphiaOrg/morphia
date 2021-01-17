@@ -1,7 +1,6 @@
 package dev.morphia.test;
 
 import dev.morphia.Datastore;
-import dev.morphia.Morphia;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -10,10 +9,11 @@ import dev.morphia.annotations.experimental.EmbeddedBuilder;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
@@ -34,6 +34,7 @@ import dev.morphia.test.models.errors.ContainsXKeyMap;
 import dev.morphia.test.models.errors.OuterClass.NonStaticInnerClass;
 import dev.morphia.test.models.external.HoldsUnannotated;
 import dev.morphia.test.models.external.UnannotatedEmbedded;
+import dev.morphia.test.models.methods.MethodMappedUser;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Ignore;
@@ -49,6 +50,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
 import static java.util.stream.Collectors.toList;
@@ -75,7 +77,7 @@ public class TestMapping extends TestBase {
         MapperOptions options = MapperOptions.builder()
                                              .collectionNaming(NamingStrategy.lowerCase())
                                              .build();
-        Datastore datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        Datastore datastore = createDatastore(TestBase.TEST_DB_NAME, options);
         List<EntityModel> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         assertEquals(map.get(0).getCollectionName(), "containsmapwithembeddedinterface");
@@ -84,7 +86,7 @@ public class TestMapping extends TestBase {
         options = MapperOptions.builder()
                                .collectionNaming(NamingStrategy.kebabCase())
                                .build();
-        datastore = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        datastore = createDatastore(TestBase.TEST_DB_NAME, options);
         map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
         assertEquals(map.get(0).getCollectionName(), "contains-map-with-embedded-interface");
@@ -110,28 +112,28 @@ public class TestMapping extends TestBase {
         MapperOptions options = MapperOptions.builder()
                                              .fieldNaming(NamingStrategy.snakeCase())
                                              .build();
-        Datastore datastore1 = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        Datastore datastore1 = createDatastore(TestBase.TEST_DB_NAME, options);
         List<EntityModel> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
-        List<FieldModel> fields = map.get(0).getFields();
+        List<PropertyModel> fields = map.get(0).getProperties();
         validateField(fields, "_id", "id");
         validateField(fields, "embedded_values", "embeddedValues");
 
-        fields = map.get(1).getFields();
+        fields = map.get(1).getProperties();
         validateField(fields, "_id", "id");
         validateField(fields, "int_list", "intList");
 
         options = MapperOptions.builder()
                                .fieldNaming(NamingStrategy.kebabCase())
                                .build();
-        final Datastore datastore2 = Morphia.createDatastore(TestBase.TEST_DB_NAME, options);
+        final Datastore datastore2 = createDatastore(TestBase.TEST_DB_NAME, options);
         map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
-        fields = map.get(0).getFields();
+        fields = map.get(0).getProperties();
         validateField(fields, "_id", "id");
         validateField(fields, "embedded-values", "embeddedValues");
 
-        fields = map.get(1).getFields();
+        fields = map.get(1).getProperties();
         validateField(fields, "_id", "id");
         validateField(fields, "int-list", "intList");
 
@@ -200,8 +202,8 @@ public class TestMapping extends TestBase {
         assertEquals(loaded, state);
 
         assertEquals(mapper.getEntityModel(State.class)
-                           .getFields().stream()
-                           .map(FieldModel::getMappedName)
+                           .getProperties().stream()
+                           .map(PropertyModel::getMappedName)
                            .collect(toList()), List.of("_id", "state", "biggestCity", "smallestCity"));
     }
 
@@ -311,7 +313,7 @@ public class TestMapping extends TestBase {
 
     @Test(dataProvider = "queryFactories")
     public void testFieldAsDiscriminator(QueryFactory queryFactory) {
-        Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
+        Datastore datastore = createDatastore(getMongoClient(), getDatabase().getName(),
             MapperOptions.builder()
                          .queryFactory(queryFactory)
                          .enablePolymorphicQueries(true)
@@ -351,7 +353,7 @@ public class TestMapping extends TestBase {
         MapperOptions options = MapperOptions.builder(getMapper().getOptions())
                                              .ignoreFinals(true)
                                              .build();
-        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+        final Datastore datastore = createDatastore(getMongoClient(), getDatabase().getName(), options);
 
         getMapper().map(ContainsFinalField.class);
         final ObjectId savedKey = datastore.save(new ContainsFinalField("blah")).id;
@@ -560,6 +562,24 @@ public class TestMapping extends TestBase {
     }
 
     @Test
+
+    public void testMethodMapping() {
+        Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
+            MapperOptions.builder()
+                         .propertyDiscovery(
+                             PropertyDiscovery.METHODS)
+                         .build());
+
+        EntityModel model = datastore.getMapper().map(MethodMappedUser.class).get(0);
+        assertTrue(model.getProperties().size() > 0);
+        assertNotNull(model.getVersionProperty(), model.getProperties().toString());
+        assertNotNull(model.getProperty("dateJoined"));
+        assertNotNull(model.getProperty("joined"));
+        assertNotNull(model.getProperty("friend_reference"));
+        assertNotNull(model.getProperty("morphia_reference"));
+    }
+
+    @Test
     public void testObjectIdKeyedMap() {
         getMapper().map(ContainsObjectIdKeyMap.class);
         final ContainsObjectIdKeyMap map = new ContainsObjectIdKeyMap();
@@ -671,7 +691,7 @@ public class TestMapping extends TestBase {
         assertEquals(query.first(), expected, query.toString());
     }
 
-    private void validateField(List<FieldModel> fields, String mapped, String java) {
+    private void validateField(List<PropertyModel> fields, String mapped, String java) {
         assertNotNull(fields.stream().filter(f -> f.getMappedName().equals(mapped)
                                                   && f.getName().equals(java)),
             mapped);
@@ -687,7 +707,7 @@ public class TestMapping extends TestBase {
     }
 
     @Entity
-    public abstract static class BaseEntity {
+    private abstract static class BaseEntity {
         @Id
         private ObjectId id;
 
@@ -701,7 +721,7 @@ public class TestMapping extends TestBase {
     }
 
     @Entity
-    public static class ConstructorBased {
+    private static class ConstructorBased {
         @Id
         private final ObjectId id;
         private final String name;
@@ -891,7 +911,7 @@ public class TestMapping extends TestBase {
     }
 
     @Entity("generic_arrays")
-    static class MyEntity {
+    private static class MyEntity {
         @Id
         private String id;
         private Integer[] integers;
@@ -899,7 +919,7 @@ public class TestMapping extends TestBase {
     }
 
     @Entity(value = "Normal", useDiscriminator = false)
-    static class Normal {
+    private static class Normal {
         @Id
         private final ObjectId id = new ObjectId();
         private String name;

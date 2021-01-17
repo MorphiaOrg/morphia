@@ -3,10 +3,11 @@ package dev.morphia.mapping.validation.classrules;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ClassConstraint;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
+import dev.morphia.sofia.Sofia;
 
 import java.util.List;
 import java.util.Set;
@@ -18,11 +19,11 @@ public class MultipleId implements ClassConstraint {
 
     @Override
     public void check(Mapper mapper, EntityModel entityModel, Set<ConstraintViolation> ve) {
-        final List<FieldModel> idFields = entityModel.getFields(Id.class);
+        final List<PropertyModel> properties = entityModel.getProperties(Id.class);
 
-        if (idFields.size() > 1) {
+        if (properties.size() > 1) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, getClass(),
-                String.format("More than one @Id field found (%s).", new FieldEnumString(idFields))));
+                Sofia.multipleIdPropertiesFound(new FieldEnumString(properties))));
         }
     }
 

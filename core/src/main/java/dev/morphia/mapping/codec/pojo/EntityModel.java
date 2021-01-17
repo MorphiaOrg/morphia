@@ -5,12 +5,10 @@ import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
-import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.annotations.Version;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.Mapper;
@@ -47,8 +45,8 @@ public class EntityModel {
         PostLoad.class);
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
-    private final Map<String, FieldModel> fieldModelsByField;
-    private final Map<String, FieldModel> fieldModelsByMappedName;
+    private final Map<String, PropertyModel> propertyModelsByName;
+    private final Map<String, PropertyModel> propertyModelsByMappedName;
     private final Datastore datastore;
     private final InstanceCreatorFactory creatorFactory;
     private final boolean discriminatorEnabled;
@@ -58,8 +56,8 @@ public class EntityModel {
     private final String collectionName;
     private final List<EntityModel> subtypes = new ArrayList<>();
     private final EntityModel superClass;
-    private final FieldModel idField;
-    private final FieldModel versionField;
+    private final PropertyModel idProperty;
+    private final PropertyModel versionProperty;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
 
     /**
@@ -79,19 +77,19 @@ public class EntityModel {
         discriminator = builder.discriminator();
 
         this.annotations = builder.annotationsMap();
-        this.fieldModelsByField = new LinkedHashMap<>();
-        this.fieldModelsByMappedName = new LinkedHashMap<>();
-        builder.fieldModels().forEach(modelBuilder -> {
-            FieldModel model = modelBuilder
-                                   .entityModel(this)
-                                   .build();
-            fieldModelsByMappedName.put(model.getMappedName(), model);
+        this.propertyModelsByName = new LinkedHashMap<>();
+        this.propertyModelsByMappedName = new LinkedHashMap<>();
+        builder.propertyModels().forEach(modelBuilder -> {
+            PropertyModel model = modelBuilder
+                                      .owner(this)
+                                      .build();
+            propertyModelsByMappedName.put(model.getMappedName(), model);
             for (String name : modelBuilder.alternateNames()) {
-                if (fieldModelsByMappedName.put(name, model) != null) {
+                if (propertyModelsByMappedName.put(name, model) != null) {
                     throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
                 }
             }
-            fieldModelsByField.putIfAbsent(model.getName(), model);
+            propertyModelsByName.putIfAbsent(model.getName(), model);
         });
 
         this.datastore = builder.getDatastore();
@@ -101,12 +99,11 @@ public class EntityModel {
         if (superClass != null) {
             superClass.addSubtype(this);
         }
+        idProperty = getProperty(builder.idPropertyName());
+        versionProperty = getProperty(builder.versionPropertyName());
+
         builder.interfaces().forEach(i -> i.addSubtype(this));
-
-        idField = getFields(Id.class).stream().findFirst().orElse(null);
-        versionField = getFields(Version.class).stream().findFirst().orElse(null);
     }
-
     /**
      * Invokes any lifecycle methods
      *
@@ -190,39 +187,39 @@ public class EntityModel {
     }
 
     /**
-     * @param name the property name
-     * @return the named FieldModel or null if it does not exist
+     * @return the model for the id property
      */
-    public FieldModel getField(String name) {
-        return fieldModelsByMappedName.getOrDefault(name, fieldModelsByField.get(name));
+    public PropertyModel getIdProperty() {
+        return idProperty;
     }
 
     /**
-     * Returns all the fields on this model
-     *
-     * @return the list of fields
-     */
-    public List<FieldModel> getFields() {
-        return new ArrayList<>(fieldModelsByField.values());
-    }
-
-    /**
-     * Returns all the fields on this model annotated by the given type
+     * Returns all the properties on this model annotated by the given type
      *
      * @param type the annotation type
-     * @return the list of fields
+     * @return the list of properties
      */
-    public List<FieldModel> getFields(Class<? extends Annotation> type) {
-        return fieldModelsByField.values().stream()
-                                 .filter(model -> model.hasAnnotation(type))
-                                 .collect(Collectors.toList());
+    public List<PropertyModel> getProperties(Class<? extends Annotation> type) {
+        return propertyModelsByName.values().stream()
+                                   .filter(model -> model.hasAnnotation(type))
+                                   .collect(Collectors.toList());
     }
 
     /**
-     * @return the model for the id field
+     * Returns all the properties on this model
+     *
+     * @return the list of properties
      */
-    public FieldModel getIdField() {
-        return idField;
+    public List<PropertyModel> getProperties() {
+        return new ArrayList<>(propertyModelsByName.values());
+    }
+
+    /**
+     * @param name the property name
+     * @return the named PropertyModel or null if it does not exist
+     */
+    public PropertyModel getProperty(String name) {
+        return propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name));
     }
 
     /**
@@ -290,10 +287,10 @@ public class EntityModel {
     }
 
     /**
-     * @return the ID field for the class
+     * @return the version property for the class
      */
-    public FieldModel getVersionField() {
-        return versionField;
+    public PropertyModel getVersionProperty() {
+        return versionProperty;
     }
 
     /**
@@ -306,7 +303,8 @@ public class EntityModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAnnotations(), fieldModelsByField, fieldModelsByMappedName, datastore, creatorFactory, discriminatorEnabled,
+        return Objects.hash(getAnnotations(), propertyModelsByName, propertyModelsByMappedName, datastore, creatorFactory,
+            discriminatorEnabled,
             getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), getLifecycleMethods());
     }
 
@@ -321,8 +319,8 @@ public class EntityModel {
         final EntityModel that = (EntityModel) o;
         return discriminatorEnabled == that.discriminatorEnabled
                && Objects.equals(getAnnotations(), that.getAnnotations())
-               && Objects.equals(fieldModelsByField, that.fieldModelsByField)
-               && Objects.equals(fieldModelsByMappedName, that.fieldModelsByMappedName)
+               && Objects.equals(propertyModelsByName, that.propertyModelsByName)
+               && Objects.equals(propertyModelsByMappedName, that.propertyModelsByMappedName)
                && Objects.equals(datastore, that.datastore)
                && Objects.equals(creatorFactory, that.creatorFactory)
                && Objects.equals(getDiscriminatorKey(), that.getDiscriminatorKey())
@@ -334,10 +332,10 @@ public class EntityModel {
 
     @Override
     public String toString() {
-        String fields = fieldModelsByField.values().stream()
-                                          .map(FieldModel::toString)
-                                          .collect(Collectors.joining(", "));
-        return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), type.getSimpleName(), fields);
+        String properties = propertyModelsByName.values().stream()
+                                                .map(PropertyModel::toString)
+                                                .collect(Collectors.joining(", "));
+        return format("%s<%s> { %s } ", EntityModel.class.getSimpleName(), type.getSimpleName(), properties);
     }
 
     /**

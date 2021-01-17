@@ -47,7 +47,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
-                               MorphiaInstanceCreator instanceCreator, FieldModel model) {
+                               MorphiaInstanceCreator instanceCreator, PropertyModel model) {
 
         if (model != null) {
             final BsonReaderMark mark = reader.getMark();
@@ -78,7 +78,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
             if (classModel.useDiscriminator() && classModel.getDiscriminatorKey().equals(name)) {
                 reader.readString();
             } else {
-                decodeModel(reader, decoderContext, instanceCreator, classModel.getField(name));
+                decodeModel(reader, decoderContext, instanceCreator, classModel.getProperty(name));
             }
         }
         reader.readEndDocument();

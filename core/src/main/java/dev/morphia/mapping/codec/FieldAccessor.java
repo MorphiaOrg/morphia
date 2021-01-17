@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 /**
  * @morphia.internal
  */
-public class FieldAccessor implements PropertyAccessor {
+public class FieldAccessor implements PropertyAccessor<Object> {
     private final Field field;
 
     /**
@@ -18,6 +18,7 @@ public class FieldAccessor implements PropertyAccessor {
      */
     public FieldAccessor(Field field) {
         this.field = field;
+        field.setAccessible(true);
     }
 
     protected Field getField() {
@@ -37,9 +38,7 @@ public class FieldAccessor implements PropertyAccessor {
     public void set(Object instance, Object value) {
         try {
             field.set(instance, value);
-        } catch (IllegalArgumentException e) {
-            throw new MappingException(e.getMessage(), e);
-        } catch (IllegalAccessException e) {
+        } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }
     }

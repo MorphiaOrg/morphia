@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * for more than one of the names, an exception will be thrown.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 public @interface AlsoLoad {
     /**
      * @return An array of alternative fields to load should the primary field name be missing in a document.

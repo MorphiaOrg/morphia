@@ -36,7 +36,7 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
         if (areEquivalentTypes(value.getClass(), model.getType())) {
             document(writer, () -> {
 
-                FieldModel idModel = model.getIdField();
+                PropertyModel idModel = model.getIdProperty();
                 encodeIdProperty(writer, value, encoderContext, idModel);
 
                 if (model.useDiscriminator()) {
@@ -44,11 +44,11 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
                         model.getDiscriminator());
                 }
 
-                for (FieldModel fieldModel : model.getFields()) {
-                    if (fieldModel.equals(idModel)) {
+                for (PropertyModel propertyModel : model.getProperties()) {
+                    if (propertyModel.equals(idModel)) {
                         continue;
                     }
-                    encodeProperty(writer, value, encoderContext, fieldModel);
+                    encodeProperty(writer, value, encoderContext, propertyModel);
                 }
             });
         } else {
@@ -74,7 +74,7 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
     }
 
     private void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext,
-                                  FieldModel idModel) {
+                                  PropertyModel idModel) {
         if (idModel != null) {
             IdGenerator generator = getIdGenerator();
             if (generator == null) {
@@ -91,14 +91,14 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
     }
 
     private void encodeProperty(BsonWriter writer, Object instance, EncoderContext encoderContext,
-                                FieldModel model) {
+                                PropertyModel model) {
         if (model != null) {
             Object value = model.getAccessor().get(instance);
             encodeValue(writer, encoderContext, model, value);
         }
     }
 
-    private void encodeValue(BsonWriter writer, EncoderContext encoderContext, FieldModel model,
+    private void encodeValue(BsonWriter writer, EncoderContext encoderContext, PropertyModel model,
                              Object propertyValue) {
         if (model.shouldSerialize(propertyValue)) {
             writer.writeName(model.getMappedName());
@@ -113,7 +113,7 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
 
     private IdGenerator getIdGenerator() {
         if (idGenerator == null) {
-            FieldModel idModel = morphiaCodec.getEntityModel().getIdField();
+            PropertyModel idModel = morphiaCodec.getEntityModel().getIdProperty();
             if (idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
                 idGenerator = OBJECT_ID_GENERATOR;
             }

@@ -3,7 +3,7 @@ package dev.morphia.mapping.codec;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.NotSaved;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.codec.pojo.FieldModelBuilder;
+import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
 import org.bson.codecs.pojo.PropertySerialization;
 
 import java.lang.annotation.Annotation;
@@ -22,13 +22,13 @@ public class MorphiaPropertySerialization implements PropertySerialization {
     private final int modifiers;
 
     /**
-     * @param options the options to apply
-     * @param field   the field in question
+     * @param options  the options to apply
+     * @param property the property in question
      */
-    public MorphiaPropertySerialization(MapperOptions options, FieldModelBuilder field) {
+    public MorphiaPropertySerialization(MapperOptions options, PropertyModelBuilder property) {
         this.options = options;
-        annotations = field.annotations();
-        modifiers = field.field().getModifiers();
+        annotations = property.annotations();
+        modifiers = property.modifiers();
     }
 
     @Override

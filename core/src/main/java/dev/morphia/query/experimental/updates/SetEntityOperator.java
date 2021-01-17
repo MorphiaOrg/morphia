@@ -30,7 +30,7 @@ public class SetEntityOperator extends UpdateOperator {
             @SuppressWarnings("unchecked")
             public Object encode(Mapper mapper) {
                 EntityModel entityModel = mapper.getEntityModel(getValue().getClass());
-                if (entityModel.getVersionField() == null) {
+                if (entityModel.getVersionProperty() == null) {
                     return super.encode(mapper);
                 }
 
@@ -40,7 +40,7 @@ public class SetEntityOperator extends UpdateOperator {
                 codec.encode(writer, getValue(), EncoderContext.builder().build());
 
                 Document document = writer.getDocument();
-                document.remove(entityModel.getVersionField().getMappedName());
+                document.remove(entityModel.getVersionProperty().getMappedName());
                 return document;
             }
         };

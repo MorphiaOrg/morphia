@@ -4,7 +4,7 @@ import com.mongodb.DBRef;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.Query;
 import dev.morphia.sofia.Sofia;
@@ -36,7 +36,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
         this.id = id;
         if (entityModel.getType().isInstance(id)) {
             value = (T) id;
-            this.id = entityModel.getIdField().getValue(value);
+            this.id = entityModel.getIdProperty().getValue(value);
             resolve();
         }
 
@@ -58,7 +58,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
      */
     public static MorphiaReference<?> decode(Datastore datastore,
                                              Mapper mapper,
-                                             FieldModel mappedField,
+                                             PropertyModel mappedField,
                                              Class<?> paramType, Document document) {
         final EntityModel entityModel = mapper.getEntityModel(paramType);
         Object id = document.get(mappedField.getMappedName());
@@ -67,7 +67,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    public Object encode(Mapper mapper, Object value, FieldModel optionalExtraInfo) {
+    public Object encode(Mapper mapper, Object value, PropertyModel optionalExtraInfo) {
         if (isResolved()) {
             return wrapId(mapper, optionalExtraInfo, get());
         } else {
@@ -103,7 +103,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     Object getId(Mapper mapper, Datastore datastore, EntityModel fieldClass) {
         if (id == null) {
             EntityModel entityModel = getEntityModel(mapper);
-            id = entityModel.getIdField().getValue(get());
+            id = entityModel.getIdProperty().getValue(get());
             if (!entityModel.equals(fieldClass)) {
                 id = new DBRef(entityModel.getCollectionName(), id);
             }

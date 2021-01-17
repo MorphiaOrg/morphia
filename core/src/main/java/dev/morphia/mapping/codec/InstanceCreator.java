@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 /**
  * Creates instances of types.
@@ -18,6 +18,6 @@ public interface InstanceCreator {
      * @param value the value
      * @param model the model
      */
-    void set(Object value, FieldModel model);
+    void set(Object value, PropertyModel model);
 
 }

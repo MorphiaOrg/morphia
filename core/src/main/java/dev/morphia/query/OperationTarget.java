@@ -3,8 +3,8 @@ package dev.morphia.query;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DocumentWriter;
-import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -55,12 +55,12 @@ public class OperationTarget {
         if (target == null) {
             return value;
         }
-        FieldModel mappedField = this.target.getTarget();
+        PropertyModel mappedField = this.target.getTarget();
         Object mappedValue = value;
 
-        FieldModel model = mappedField != null
+        PropertyModel model = mappedField != null
                               ? mappedField.getEntityModel()
-                                           .getField(mappedField.getName())
+                                           .getProperty(mappedField.getName())
                               : null;
 
         Codec cachedCodec = model != null && !(mappedValue instanceof LegacyQuery)

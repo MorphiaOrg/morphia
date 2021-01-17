@@ -1,7 +1,7 @@
 package dev.morphia.mapping;
 
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
 
 import java.lang.reflect.Constructor;
@@ -24,7 +24,7 @@ public class NoArgCreator implements MorphiaInstanceCreator {
     }
 
     @Override
-    public void set(Object value, FieldModel model) {
+    public void set(Object value, PropertyModel model) {
         model.getAccessor().set(instance(), value);
     }
 

@@ -19,7 +19,7 @@ package dev.morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.Query;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -143,8 +143,8 @@ public class TestSerializedFormat extends TestBase {
     }
 
     private void verifyCoverage(Document document) {
-        for (FieldModel field : getMapper().getEntityModel(ReferenceType.class).getFields()) {
-            String name = field.getMappedName();
+        for (PropertyModel property : getMapper().getEntityModel(ReferenceType.class).getProperties()) {
+            String name = property.getMappedName();
             boolean found = document.containsKey(name);
             if (!found) {
                 for (String s : document.keySet()) {

@@ -72,11 +72,11 @@ public final class IndexHelper {
     }
 
     private List<Index> collectFieldIndexes(EntityModel entityModel) {
-        List<Index> list = entityModel.getFields(Indexed.class).stream()
+        List<Index> list = entityModel.getProperties(Indexed.class).stream()
                                       .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
                                       .collect(Collectors.toList());
 
-        list.addAll(entityModel.getFields(Text.class).stream()
+        list.addAll(entityModel.getProperties(Text.class).stream()
                                .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
                                .collect(Collectors.toList()));
 

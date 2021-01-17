@@ -52,7 +52,7 @@ public class PathTargetTest extends TestBase {
 
         PathTarget pathTarget = new PathTarget(mapper, entityModel, "listEmbeddedType.1.number");
         Assert.assertEquals("listEmbeddedType.1.number", pathTarget.translatedPath());
-        Assert.assertEquals(mapper.getEntityModel(EmbeddedType.class).getField("number"), pathTarget.getTarget());
+        Assert.assertEquals(mapper.getEntityModel(EmbeddedType.class).getProperty("number"), pathTarget.getTarget());
 
         assertEquals("listEmbeddedType.$", new PathTarget(mapper, entityModel, "listEmbeddedType.$").translatedPath());
         assertEquals("listEmbeddedType.1", new PathTarget(mapper, entityModel, "listEmbeddedType.1").translatedPath());
@@ -65,7 +65,7 @@ public class PathTargetTest extends TestBase {
 
         PathTarget pathTarget = new PathTarget(mapper, ParentType.class, "embedded.number");
         Assert.assertEquals("embedded.number", pathTarget.translatedPath());
-        Assert.assertEquals(mapper.getEntityModel(EmbeddedType.class).getField("number"), pathTarget.getTarget());
+        Assert.assertEquals(mapper.getEntityModel(EmbeddedType.class).getProperty("number"), pathTarget.getTarget());
     }
 
     @Test
@@ -76,11 +76,11 @@ public class PathTargetTest extends TestBase {
 
         PathTarget pathTarget = new PathTarget(mapper, entityModel, "nested.value");
         Assert.assertEquals("nested.value", pathTarget.translatedPath());
-        Assert.assertEquals(mapper.getEntityModel(AnotherNested.class).getField("value"), pathTarget.getTarget());
+        Assert.assertEquals(mapper.getEntityModel(AnotherNested.class).getProperty("value"), pathTarget.getTarget());
 
         pathTarget = new PathTarget(mapper, entityModel, "nested.field");
         Assert.assertEquals("nested.field", pathTarget.translatedPath());
-        Assert.assertEquals(mapper.getEntityModel(NestedImpl.class).getField("field"), pathTarget.getTarget());
+        Assert.assertEquals(mapper.getEntityModel(NestedImpl.class).getProperty("field"), pathTarget.getTarget());
     }
 
     @Test
@@ -92,11 +92,11 @@ public class PathTargetTest extends TestBase {
 
         PathTarget pathTarget = new PathTarget(mapper, entityModel, "grades.$.data.name");
         Assert.assertEquals("grades.$.d.name", pathTarget.translatedPath());
-        Assert.assertEquals(mapper.getEntityModel(Grade.class).getField("data"), pathTarget.getTarget());
+        Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("data"), pathTarget.getTarget());
 
         pathTarget = new PathTarget(mapper, entityModel, "grades.$.d.name");
         Assert.assertEquals("grades.$.d.name", pathTarget.translatedPath());
-        Assert.assertEquals(mapper.getEntityModel(Grade.class).getField("d"), pathTarget.getTarget());
+        Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("d"), pathTarget.getTarget());
 
         pathTarget = new PathTarget(mapper, Article.class, "translations");
         Assert.assertEquals("translations", pathTarget.translatedPath());
@@ -110,11 +110,11 @@ public class PathTargetTest extends TestBase {
 
         PathTarget pathTarget = new PathTarget(mapper, entityModel, "name");
         Assert.assertEquals("n", pathTarget.translatedPath());
-        Assert.assertEquals(entityModel.getField("name"), pathTarget.getTarget());
+        Assert.assertEquals(entityModel.getProperty("name"), pathTarget.getTarget());
 
         pathTarget = new PathTarget(mapper, entityModel, "n");
         Assert.assertEquals("n", pathTarget.translatedPath());
-        Assert.assertEquals(entityModel.getField("n"), pathTarget.getTarget());
+        Assert.assertEquals(entityModel.getProperty("n"), pathTarget.getTarget());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class PathTargetTest extends TestBase {
 
         PathTarget pathTarget = new PathTarget(mapper, ParentType.class, "embedded.flag");
         Assert.assertEquals("embedded.flag", pathTarget.translatedPath());
-        Assert.assertEquals(mapper.getEntityModel(EmbeddedSubtype.class).getField("flag"), pathTarget.getTarget());
+        Assert.assertEquals(mapper.getEntityModel(EmbeddedSubtype.class).getProperty("flag"), pathTarget.getTarget());
     }
 
     @Test

@@ -17,8 +17,10 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.DBRef;
+import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.MappingException;
@@ -31,12 +33,12 @@ import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,12 +53,11 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  * @since 2.0
  */
-public final class FieldModel {
-    private final Field field;
+public final class PropertyModel {
     private final String name;
     private final TypeData<?> typeData;
     private final String mappedName;
-    private final Codec<? super Object> codec;
+    private Codec<? super Object> codec;
     private final PropertyAccessor<? super Object> accessor;
     private final PropertySerialization<? super Object> serialization;
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
@@ -65,19 +66,15 @@ public final class FieldModel {
     private volatile Codec<? super Object> cachedCodec;
     private Class<?> normalizedType;
 
-    FieldModel(FieldModelBuilder builder) {
-        entityModel = builder.entityModel();
-        field = Objects.requireNonNull(builder.field(), Sofia.notNull("field"));
+    PropertyModel(PropertyModelBuilder builder) {
+        entityModel = builder.owner();
         name = Objects.requireNonNull(builder.name(), Sofia.notNull("name"));
         mappedName = Objects.requireNonNull(builder.mappedName(), Sofia.notNull("name"));
         typeData = Objects.requireNonNull(builder.typeData(), Sofia.notNull("typeData"));
-        codec = builder.codec();
-        cachedCodec = codec;
         accessor = builder.accessor();
         serialization = builder.serialization();
-
-        field.setAccessible(true);
         builder.annotations().forEach(ann -> annotationMap.put(ann.annotationType(), ann));
+        configureCodec(builder.datastore());
 
         List<String> result;
         final AlsoLoad al = getAnnotation(AlsoLoad.class);
@@ -93,12 +90,34 @@ public final class FieldModel {
     }
 
     /**
-     * Create a new {@link FieldModelBuilder}
+     * Create a new {@link PropertyModelBuilder}
      *
+     * @param datastore
      * @return the builder
      */
-    public static FieldModelBuilder builder() {
-        return new FieldModelBuilder();
+    static PropertyModelBuilder builder(Datastore datastore) {
+        return new PropertyModelBuilder(datastore);
+    }
+
+    /**
+     * @return the full name of the class plus java field name
+     */
+    public String getFullName() {
+        return String.format("%s#%s", entityModel.getType().getName(), name);
+    }
+
+    /**
+     * Gets the value of the property mapped on the instance given.
+     *
+     * @param instance the instance to use
+     * @return the value stored in the property
+     */
+    public Object getValue(Object instance) {
+        Object target = instance;
+        if (target instanceof MorphiaProxy) {
+            target = ((MorphiaProxy) instance).unwrap();
+        }
+        return accessor.get(target);
     }
 
     /**
@@ -170,19 +189,10 @@ public final class FieldModel {
         return entityModel;
     }
 
-    /**
-     * @return the field
-     */
-    public Field getField() {
-        return field;
-    }
-
-    /**
-     * @return the full name of the class plus java field name
-     */
-    public String getFullName() {
-        Field field = getField();
-        return String.format("%s#%s", field.getDeclaringClass().getName(), field.getName());
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
+            annotationMap.values(), getCachedCodec(), getNormalizedType());
     }
 
     /**
@@ -220,23 +230,6 @@ public final class FieldModel {
     }
 
     /**
-     * If the java field is a list/array/map then the sub-type T is returned (ex. List&lt;T&gt;, T[], Map&lt;?,T&gt;)
-     *
-     * @return the parameterized type of the field
-     */
-    public Class<?> getSpecializedType() {
-        Class<?> specializedType;
-        if (getType().isArray()) {
-            specializedType = getType().getComponentType();
-        } else {
-            final List<TypeData<?>> typeParameters = getTypeData().getTypeParameters();
-            specializedType = !typeParameters.isEmpty() ? typeParameters.get(0).getType() : null;
-        }
-
-        return specializedType;
-    }
-
-    /**
      * @return the type of this field
      */
     public Class<?> getType() {
@@ -250,22 +243,23 @@ public final class FieldModel {
         return typeData;
     }
 
-    /**
-     * Gets the value of the field mapped on the instance given.
-     *
-     * @param instance the instance to use
-     * @return the value stored in the java field
-     */
-    public Object getValue(Object instance) {
-        try {
-            Object target = instance;
-            if (target instanceof MorphiaProxy) {
-                target = ((MorphiaProxy) instance).unwrap();
-            }
-            return getField().get(target);
-        } catch (ReflectiveOperationException e) {
-            throw new MappingException(e.getMessage(), e);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
+        if (!(o instanceof PropertyModel)) {
+            return false;
+        }
+        final PropertyModel that = (PropertyModel) o;
+        return getName().equals(that.getName())
+               && getTypeData().equals(that.getTypeData())
+               && getMappedName().equals(that.getMappedName())
+               && Objects.equals(getCodec(), that.getCodec())
+               && getAccessor().equals(that.getAccessor())
+               && serialization.equals(that.serialization)
+               && Objects.equals(getCachedCodec(), that.getCachedCodec())
+               && Objects.equals(getNormalizedType(), that.getNormalizedType());
     }
 
     /**
@@ -279,39 +273,36 @@ public final class FieldModel {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getField(), getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
-            annotationMap.values(), getCachedCodec(), getNormalizedType());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof FieldModel)) {
-            return false;
-        }
-        final FieldModel that = (FieldModel) o;
-        return getField().equals(that.getField())
-               && getName().equals(that.getName())
-               && getTypeData().equals(that.getTypeData())
-               && getMappedName().equals(that.getMappedName())
-               && Objects.equals(getCodec(), that.getCodec())
-               && getAccessor().equals(that.getAccessor())
-               && serialization.equals(that.serialization)
-               && Objects.equals(getCachedCodec(), that.getCachedCodec())
-               && Objects.equals(getNormalizedType(), that.getNormalizedType());
-    }
-
-    @Override
     public String toString() {
-        return new StringJoiner(", ", FieldModel.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", PropertyModel.class.getSimpleName() + "[", "]")
                    .add("name='" + name + "'")
                    .add("mappedName='" + mappedName + "'")
                    .add("typeData=" + typeData)
                    .add("annotations=" + annotationMap.values())
                    .toString();
+    }
+
+    /**
+     * Sets the value for the java field
+     *
+     * @param instance the instance to update
+     * @param value    the value to set
+     */
+    public void setValue(Object instance, Object value) {
+        accessor.set(instance, Conversions.convert(value, getType()));
+    }
+
+    private void configureCodec(Datastore datastore) {
+        Handler handler = getHandler();
+        if (handler != null) {
+            try {
+                codec = handler.value()
+                               .getDeclaredConstructor(Datastore.class, PropertyModel.class)
+                               .newInstance(datastore, this);
+            } catch (ReflectiveOperationException e) {
+                throw new MappingException(e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -368,19 +359,22 @@ public final class FieldModel {
                && Modifier.isTransient(getType().getModifiers());
     }
 
-    /**
-     * Sets the value for the java field
-     *
-     * @param instance the instance to update
-     * @param value    the value to set
-     */
-    public void setValue(Object instance, Object value) {
-        try {
-            final Field field = getField();
-            field.set(instance, Conversions.convert(value, field.getType()));
-        } catch (IllegalAccessException e) {
-            throw new MappingException(e.getMessage(), e);
+    private Handler getHandler() {
+        Handler handler = typeData.getType().getAnnotation(Handler.class);
+
+        if (handler == null) {
+            handler = (Handler) annotationMap.values()
+                                             .stream().filter(a -> a.getClass().equals(Handler.class))
+                                             .findFirst().orElse(null);
+            if (handler == null) {
+                Iterator<Annotation> iterator = annotationMap.values().iterator();
+                while (handler == null && iterator.hasNext()) {
+                    handler = iterator.next().annotationType().getAnnotation(Handler.class);
+                }
+            }
         }
+
+        return handler;
     }
 
     /**

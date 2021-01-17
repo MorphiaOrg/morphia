@@ -8,10 +8,10 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
 import dev.morphia.mapping.codec.pojo.LifecycleEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -88,7 +88,7 @@ public class MorphiaCodecProvider implements CodecProvider {
                             }
 
                             @Override
-                            public void set(Object value, FieldModel model) {
+                            public void set(Object value, PropertyModel model) {
                                 model.getAccessor().set(entity, value);
                             }
                         };

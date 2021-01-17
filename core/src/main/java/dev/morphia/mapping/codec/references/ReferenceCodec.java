@@ -11,8 +11,8 @@ import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.experimental.ListReference;
@@ -36,7 +36,6 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -52,7 +51,7 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 /**
  * @morphia.internal
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "removal"})
 public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHandler {
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
@@ -60,13 +59,12 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     /**
      * Creates a codec
      *
-     * @param datastore the datastore to use
-     * @param field     the reference field
-     * @param typeData  the field type data
+     * @param datastore     the datastore to use
+     * @param propertyModel the reference property
      */
-    public ReferenceCodec(Datastore datastore, Field field, TypeData typeData) {
-        super(datastore, field, typeData);
-        annotation = field.getAnnotation(Reference.class);
+    public ReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
+        super(datastore, propertyModel);
+        annotation = propertyModel.getAnnotation(Reference.class);
     }
 
     /**
@@ -79,9 +77,9 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
      * @return the encoded value
      * @morphia.internal
      */
-    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, FieldModel model) {
+    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, PropertyModel model) {
         Object idValue;
-        MongoCollection<?> collection = null;
+        MongoCollection<?> collection;
         if (value instanceof Key) {
             idValue = ((Key) value).getId();
             collection = datastore.getDatabase().getCollection(((Key<?>) value).getCollection(), ((Key<?>) value).getType());
@@ -108,14 +106,13 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
     /**
      * Encodes a value
      *
-     * @param mapper    the mapper to use
-     * @param datastore the datastore to use
-     * @param value     the value to encode
-     * @param model     the mapped class of the field type
+     * @param mapper the mapper to use
+     * @param value  the value to encode
+     * @param model  the mapped class of the field type
      * @return the encoded value
      * @morphia.internal
      */
-    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, EntityModel model) {
+    public static Object encodeId(Mapper mapper, Object value, EntityModel model) {
         Object idValue;
         MongoCollection<?> collection = null;
         if (value instanceof Key) {
@@ -253,22 +250,14 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
             }
             return ids;
         } else {
-            //
-            //
-            //            clean up before commit
-            //
-            //
-            //
-            Object id = encodeId(getDatastore().getMapper(), getDatastore(), value, getEntityModelForField());
-            Object id1 = encodeId(getDatastore().getMapper(), getDatastore(), value, getFieldModel());
-            return id1;
+            return encodeId(getDatastore().getMapper(), getDatastore(), value, getPropertyModel());
         }
     }
 
     private <T> T createProxy(MorphiaReference reference) {
         ReferenceProxy referenceProxy = new ReferenceProxy(reference);
         try {
-            Class<?> type = getField().getType();
+            Class<?> type = getPropertyModel().getType();
             String name = (type.getPackageName().startsWith("java") ? type.getSimpleName() : type.getName()) + "$$Proxy";
             return ((Loaded<T>) new ByteBuddy()
                                     .subclass(type)
@@ -293,7 +282,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
 
     private Object fetch(Object value) {
         MorphiaReference reference;
-        final Class<?> type = getField().getType();
+        final Class<?> type = getPropertyModel().getType();
         if (List.class.isAssignableFrom(type)) {
             reference = readList((List) value);
         } else if (Map.class.isAssignableFrom(type)) {

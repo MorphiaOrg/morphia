@@ -1,37 +1,28 @@
-/*
-  Copyright (C) 2010 Olafur Gauti Gudmundsson
-  <p/>
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
-  obtain a copy of the License at
-  <p/>
-  http://www.apache.org/licenses/LICENSE-2.0
-  <p/>
-  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
- */
-
 package dev.morphia.test;
 
-
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
+import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.SpecializedEntity;
+import dev.morphia.test.models.methods.MethodMappedSpecializedEntity;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.UUID;
 
+import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class GenericsMappingTest extends TestBase {
+public class TestGenerics extends TestBase {
 
     @Test
     public void testBoundGenerics() {
@@ -42,7 +33,7 @@ public class GenericsMappingTest extends TestBase {
     public void testGenericEntities() {
         EntityModel entityModel = getMapper().map(SpecializedEntity.class).get(0);
 
-        FieldModel test = entityModel.getField("test");
+        PropertyModel test = entityModel.getProperty("test");
         assertEquals(test.getType(), UUID.class);
 
 
@@ -54,6 +45,33 @@ public class GenericsMappingTest extends TestBase {
         SpecializedEntity loaded = getDs().find(SpecializedEntity.class)
                                           .filter(eq("_id", beforeDB.getId()))
                                           .first();
+
+        assertEquals(loaded.getId(), beforeDB.getId());
+
+        assertEquals(loaded.getTest(), beforeDB.getTest());
+    }
+
+    @Test
+    public void testMethodMappedGenericEntities() {
+        Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
+            MapperOptions.builder()
+                         .propertyDiscovery(PropertyDiscovery.METHODS)
+                         .build());
+
+        EntityModel entityModel = datastore.getMapper().map(MethodMappedSpecializedEntity.class).get(0);
+
+        PropertyModel test = entityModel.getProperty("test");
+        assertEquals(test.getType(), UUID.class);
+
+
+        MethodMappedSpecializedEntity beforeDB = new MethodMappedSpecializedEntity();
+        beforeDB.setId(UUID.randomUUID());
+        beforeDB.setTest(UUID.randomUUID());
+        datastore.save(beforeDB);
+
+        MethodMappedSpecializedEntity loaded = datastore.find(MethodMappedSpecializedEntity.class)
+                                                        .filter(eq("_id", beforeDB.getId()))
+                                                        .first();
 
         assertEquals(loaded.getId(), beforeDB.getId());
 
@@ -94,8 +112,31 @@ public class GenericsMappingTest extends TestBase {
         assertNotNull(getDs().find(EmailStatus.class).first());
     }
 
+    private static class AudioElement extends Element<Long> {
+    }
+
     @Entity
-    static class GenericHolder<T> {
+    private static class ContainsThings {
+        @Id
+        private String id;
+        private HoldsAString stringThing;
+        private HoldsAnInteger integerThing;
+    }
+
+    @Entity
+    private abstract static class Element<T extends Number> {
+        @Id
+        private ObjectId id;
+        private T[] resources;
+    }
+
+    @Entity
+    private static class EmailStatus extends Status<EmailItem> {
+
+    }
+
+    @Entity
+    private static class GenericHolder<T> {
         @Property
         private T thing;
 
@@ -108,41 +149,15 @@ public class GenericsMappingTest extends TestBase {
         }
     }
 
-    static class HoldsAString extends GenericHolder<String> {
+    private static class HoldsAString extends GenericHolder<String> {
     }
 
-    static class HoldsAnInteger extends GenericHolder<Integer> {
-    }
-
-    @Entity
-    static class ContainsThings {
-        @Id
-        private String id;
-        private HoldsAString stringThing;
-        private HoldsAnInteger integerThing;
+    private static class HoldsAnInteger extends GenericHolder<Integer> {
     }
 
     @Entity
-    public abstract static class Element<T extends Number> {
-        @Id
-        private ObjectId id;
-        private T[] resources;
+    private interface Item {
     }
-
-    public static class AudioElement extends Element<Long> {
-    }
-
-    @Entity
-    public abstract static class Status<T extends Item> {
-        @Id
-        private ObjectId id;
-        @Property
-        private List<T> items;
-
-    }
-
-    @Entity
-    private interface Item {}
 
     @Entity
     private static class EmailItem implements Item {
@@ -157,7 +172,11 @@ public class GenericsMappingTest extends TestBase {
     }
 
     @Entity
-    public static class EmailStatus extends Status<EmailItem> {
+    private abstract static class Status<T extends Item> {
+        @Id
+        private ObjectId id;
+        @Property
+        private List<T> items;
 
     }
 }

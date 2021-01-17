@@ -33,7 +33,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  */
 @SuppressWarnings("unchecked")
 public class MorphiaCodec<T> implements CollectibleCodec<T> {
-    private final FieldModel idField;
+    private final PropertyModel idProperty;
     private final Mapper mapper;
     private final EntityModel entityModel;
     private final CodecRegistry registry;
@@ -60,7 +60,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         this.entityModel = model;
         this.registry = fromRegistries(fromCodecs(this), registry);
         this.propertyCodecRegistry = new PropertyCodecRegistryImpl(this, registry, propertyCodecProviders);
-        idField = model.getIdField();
+        idProperty = model.getIdProperty();
         specializePropertyCodecs();
         encoder = new EntityEncoder(this);
         decoder = new EntityDecoder(this);
@@ -73,7 +73,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
     @Override
     public boolean documentHasId(Object entity) {
-        FieldModel idField = entityModel.getIdField();
+        PropertyModel idField = entityModel.getIdProperty();
         if (idField == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
@@ -135,7 +135,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     @Override
     public Object generateIdIfAbsentFromDocument(Object entity) {
         if (!documentHasId(entity)) {
-            idField.setValue(entity, convert(new ObjectId(), idField.getType()));
+            idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
         }
         return entity;
     }
@@ -143,10 +143,10 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void specializePropertyCodecs() {
         EntityModel entityModel = getEntityModel();
-        for (FieldModel fieldModel : entityModel.getFields()) {
-            Codec codec = fieldModel.getCodec() != null ? fieldModel.getCodec()
-                                                        : propertyCodecRegistry.get(fieldModel.getTypeData());
-            fieldModel.cachedCodec(codec);
+        for (PropertyModel propertyModel : entityModel.getProperties()) {
+            Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
+                                                           : propertyCodecRegistry.get(propertyModel.getTypeData());
+            propertyModel.cachedCodec(codec);
         }
     }
 

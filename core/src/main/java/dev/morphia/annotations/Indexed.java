@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 public @interface Indexed {
     /**
      * @return Options to apply to the index. Use of this field will ignore any of the deprecated options defined on {@link Index} directly.

@@ -4,6 +4,11 @@ package dev.morphia.mapping;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.conventions.ConfigureProperties;
+import dev.morphia.mapping.conventions.FieldDiscovery;
+import dev.morphia.mapping.conventions.MethodDiscovery;
+import dev.morphia.mapping.conventions.MorphiaConvention;
+import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.QueryFactory;
@@ -15,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
 import static org.bson.UuidRepresentation.STANDARD;
 
 /**
@@ -35,29 +41,29 @@ public class MapperOptions {
     private final DiscriminatorFunction discriminator;
     private final List<MorphiaConvention> conventions;
     private final NamingStrategy collectionNaming;
-    private final NamingStrategy fieldNaming;
+    private final NamingStrategy propertyNaming;
     private final UuidRepresentation uuidRepresentation;
     private final QueryFactory queryFactory;
     private final boolean enablePolymorphicQueries;
     private ClassLoader classLoader;
 
     private MapperOptions(Builder builder) {
-        ignoreFinals = builder.ignoreFinals;
-        storeNulls = builder.storeNulls;
-        storeEmpties = builder.storeEmpties;
-        cacheClassLookups = builder.cacheClassLookups;
-        mapSubPackages = builder.mapSubPackages;
-        creator = builder.creator;
-        classLoader = builder.classLoader;
-        discriminatorKey = builder.discriminatorKey;
-        discriminator = builder.discriminator;
-        conventions = builder.conventions;
-        collectionNaming = builder.collectionNaming;
-        fieldNaming = builder.fieldNaming;
-        uuidRepresentation = builder.uuidRepresentation;
-        queryFactory = builder.queryFactory;
-        enablePolymorphicQueries = builder.enablePolymorphicQueries;
-        dateStorage = builder.dateStorage;
+        cacheClassLookups = builder.cacheClassLookups();
+        classLoader = builder.classLoader();
+        collectionNaming = builder.collectionNaming();
+        conventions = builder.conventions();
+        creator = builder.creator();
+        dateStorage = builder.dateStorage();
+        discriminator = builder.discriminator();
+        discriminatorKey = builder.discriminatorKey();
+        enablePolymorphicQueries = builder.enablePolymorphicQueries();
+        propertyNaming = builder.propertyNaming();
+        ignoreFinals = builder.ignoreFinals();
+        mapSubPackages = builder.mapSubPackages();
+        queryFactory = builder.queryFactory();
+        storeEmpties = builder.storeEmpties();
+        storeNulls = builder.storeNulls();
+        uuidRepresentation = builder.uuidRepresentation();
     }
 
     /**
@@ -93,7 +99,7 @@ public class MapperOptions {
                    .discriminatorKey("className")
                    .discriminator(DiscriminatorFunction.className())
                    .collectionNaming(NamingStrategy.identity())
-                   .fieldNaming(NamingStrategy.identity())
+                   .propertyNaming(NamingStrategy.identity())
                    .queryFactory(new LegacyQueryFactory());
     }
 
@@ -147,18 +153,29 @@ public class MapperOptions {
     }
 
     /**
-     * @return the discriminator field name
+     * @return the discriminator property name
      */
     public String getDiscriminatorKey() {
         return discriminatorKey;
     }
 
     /**
-     * @return the naming strategy for fields unless explicitly set via @Property
+     * @return the naming strategy for properties unless explicitly set via @Property
      * @see Property
+     * @deprecated use {@link #getPropertyNaming()} instead
      */
+    @Deprecated(forRemoval = true)
     public NamingStrategy getFieldNaming() {
-        return fieldNaming;
+        return getPropertyNaming();
+    }
+
+    /**
+     * @return the naming strategy for properties unless explicitly set via @Property
+     * @see Property
+     * @since 2.2
+     */
+    public NamingStrategy getPropertyNaming() {
+        return propertyNaming;
     }
 
     /**
@@ -218,13 +235,18 @@ public class MapperOptions {
         return storeNulls;
     }
 
+    public enum PropertyDiscovery {
+        FIELDS,
+        METHODS
+    }
+
     /**
      * A builder class for setting mapping options
      */
     @SuppressWarnings("unused")
     public static final class Builder {
 
-        private final List<MorphiaConvention> conventions = new ArrayList<>(List.of(new MorphiaDefaultsConvention()));
+        private final List<MorphiaConvention> conventions = new ArrayList<>();
         private boolean ignoreFinals;
         private boolean storeNulls;
         private boolean storeEmpties;
@@ -237,9 +259,10 @@ public class MapperOptions {
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName();
         private NamingStrategy collectionNaming = NamingStrategy.camelCase();
-        private NamingStrategy fieldNaming = NamingStrategy.identity();
+        private NamingStrategy propertyNaming = NamingStrategy.identity();
         private UuidRepresentation uuidRepresentation = STANDARD;
         private QueryFactory queryFactory = new DefaultQueryFactory();
+        private PropertyDiscovery propertyDiscovery = FIELDS;
 
         private Builder() {
         }
@@ -317,9 +340,11 @@ public class MapperOptions {
         }
 
         /**
-         * @param disableEmbeddedIndexes if true scanning @Embedded fields for indexing is disabled
+         * @param disableEmbeddedIndexes if true scanning @Embedded properties for indexing is disabled
          * @return this
+         * @deprecated unused
          */
+        @Deprecated(forRemoval = false)
         public Builder disableEmbeddedIndexes(boolean disableEmbeddedIndexes) {
             LOG.warn("this option is no longer used");
             return this;
@@ -363,10 +388,11 @@ public class MapperOptions {
          * @param strategy the strategy to use
          * @return this
          * @see Property
+         * @deprecated use {@link #propertyNaming(NamingStrategy)} instead
          */
+        @Deprecated(forRemoval = true)
         public Builder fieldNaming(NamingStrategy strategy) {
-            this.fieldNaming = strategy;
-            return this;
+            return propertyNaming(strategy);
         }
 
         /**
@@ -393,6 +419,31 @@ public class MapperOptions {
          */
         public Builder objectFactory(MorphiaInstanceCreator creator) {
             this.creator = creator;
+            return this;
+        }
+
+        /**
+         * Determines how properties are discovered on mapped entities
+         *
+         * @param discovery
+         * @return this
+         * @since 2.2
+         */
+        public Builder propertyDiscovery(PropertyDiscovery discovery) {
+            this.propertyDiscovery = discovery;
+            return this;
+        }
+
+        /**
+         * Sets the naming strategy to use for propertys unless expliclity set via @Property
+         *
+         * @param strategy the strategy to use
+         * @return this
+         * @see Property
+         * @since 2.2
+         */
+        public Builder propertyNaming(NamingStrategy strategy) {
+            this.propertyNaming = strategy;
             return this;
         }
 
@@ -445,6 +496,80 @@ public class MapperOptions {
         public Builder uuidRepresentation(UuidRepresentation uuidRepresentation) {
             this.uuidRepresentation = uuidRepresentation;
             return this;
+        }
+
+        private boolean cacheClassLookups() {
+            return cacheClassLookups;
+        }
+
+        private ClassLoader classLoader() {
+            return classLoader;
+        }
+
+        private NamingStrategy collectionNaming() {
+            return collectionNaming;
+        }
+
+        private List<MorphiaConvention> conventions() {
+            if (conventions.isEmpty()) {
+                return List.of(
+                    new MorphiaDefaultsConvention(),
+                    propertyDiscovery == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
+                    new ConfigureProperties());
+            }
+            return conventions;
+        }
+
+        private MorphiaInstanceCreator creator() {
+            return creator;
+        }
+
+        private DateStorage dateStorage() {
+            return dateStorage;
+        }
+
+        private DiscriminatorFunction discriminator() {
+            return discriminator;
+        }
+
+        private String discriminatorKey() {
+            return discriminatorKey;
+        }
+
+        private boolean enablePolymorphicQueries() {
+            return enablePolymorphicQueries;
+        }
+
+        private boolean ignoreFinals() {
+            return ignoreFinals;
+        }
+
+        private boolean mapSubPackages() {
+            return mapSubPackages;
+        }
+
+        private PropertyDiscovery propertyDiscovery() {
+            return propertyDiscovery;
+        }
+
+        private NamingStrategy propertyNaming() {
+            return propertyNaming;
+        }
+
+        private QueryFactory queryFactory() {
+            return queryFactory;
+        }
+
+        private boolean storeEmpties() {
+            return storeEmpties;
+        }
+
+        private boolean storeNulls() {
+            return storeNulls;
+        }
+
+        private UuidRepresentation uuidRepresentation() {
+            return uuidRepresentation;
         }
     }
 }

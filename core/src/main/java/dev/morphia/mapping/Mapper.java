@@ -17,7 +17,7 @@ import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
-import dev.morphia.mapping.codec.pojo.FieldModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.validation.MappingValidator;
@@ -314,7 +314,7 @@ public class Mapper {
         }
         final EntityModel model = getEntityModel(entity.getClass());
         if (model != null) {
-            final FieldModel idField = model.getIdField();
+            final PropertyModel idField = model.getIdProperty();
             if (idField != null) {
                 return idField.getValue(entity);
             }
@@ -524,8 +524,8 @@ public class Mapper {
         Codec<T> refreshCodec = morphiaCodecProvider.getRefreshCodec(entity, getCodecRegistry());
 
         MongoCollection<?> collection = getCollection(entity.getClass());
-        FieldModel idField = getEntityModel(entity.getClass())
-                                 .getIdField();
+        PropertyModel idField = getEntityModel(entity.getClass())
+                                    .getIdProperty();
         if (idField == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
