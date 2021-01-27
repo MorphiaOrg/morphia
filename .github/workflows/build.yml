@@ -12,7 +12,6 @@ jobs:
       matrix:
         java: [ 11, 15 ]
         mongo: [ 4.4.2, 4.2.11, 4.0.21, 3.6.21 ]
-        driver: [ 4.2.0, 4.1.1, 4.0.5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.java }}
@@ -25,10 +24,10 @@ jobs:
           path: ~/.m2
           key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
           restore-keys: \${{ runner.os }}-m2
-      - name: Build with driver ${{ matrix.driver }}
+      - name: Build with Maven
         env:
           MONGODB: ${{ matrix.mongo }}
-        run: mvn -B verify --file pom.xml -Ddriver.version=${{ matrix.driver }}
+        run: mvn -B verify --file pom.xml
   Quality:
     name: Style Checks
     runs-on: ubuntu-latest
