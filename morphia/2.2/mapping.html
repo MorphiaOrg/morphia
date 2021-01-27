@@ -353,6 +353,71 @@ Simple indexes can be defined on a field if all that is needed for the index is 
 This can be done via the <a href="#javadoc:dev/morphia/annotations/Indexed.html" class="page unresolved">@Indexed</a> annotation.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_methods"><a class="anchor" href="#_methods"></a>Methods</h3>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Method-based mapping is new in 2.2.  While testing has been done to ensure everything works the same as with fields, there may some
+esoteric combinations of features that reveal a gap in functionality.  Please file an <a href="https://github.com/MorphiaOrg/morphia/issues">issue</a>
+ifyou encounter such a case.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>As of 2.2, mapping information can be defined on methods instead of fields.  All the same rules apply, simply the location of the
+annotations are moved to the getters and/or setters.  Annotations can live on either the <code>get</code> or the <code>set</code> method and Morphia will
+detect them.  If the same annotation is applied to both the <code>get</code> and the <code>set</code> behavior is unpredictable so care should be taken to
+avoid such a scenario.  Customs in other libraries tend to favor annotating the <code>get</code> methods and this is also recommended here for
+consistency.</p>
+</div>
+<div class="paragraph">
+<p>In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.  This has some
+very basic rules for your methods:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>get</code> methods take no parameters</p>
+</li>
+<li>
+<p><code>set</code> methods take one parameter and the type of that parameter should generally match the return type of the getter.  These setter
+methods also return void.</p>
+</li>
+<li>
+<p>If a property is a boolean type, the getter often uses <code>is</code> rather than <code>get</code> yielding a method named, e.g., <code>isEnabled() rather than
+`getEnabled()</code>.</p>
+</li>
+<li>
+<p>The type of the property is determined by the return value of the getter.</p>
+</li>
+<li>
+<p>The name of the property is determined by stripping the <code>get</code> prefix (or <code>is</code> for boolean types) and lower casing the first letter.
+This is the default name of the property subject to property naming rules as defined in
+<a href="#javadoc:dev/morphia/mapping/MapperOptions.html" class="page unresolved">MapperOptions</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>To enable method mapping, a method has been added to <a href="#javadoc:dev/morphia/mapping/MapperOptions.Builder.html" class="page unresolved">MapperOptions.Builder</a>
+allowing for the configuration of either field or method mapping.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Mapping is currently done via either fields or by methods.  It is not currently allowed to map using both schemes simultaneously.  This will
+likely change in the future but for now is not allowed.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 </article>
