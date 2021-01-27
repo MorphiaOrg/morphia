@@ -122,7 +122,7 @@ This can be done via the xref:javadoc:dev/morphia/annotations/Indexed.html#[@Ind
 ====
 Method-based mapping is new in 2.2.  While testing has been done to ensure everything works the same as with fields, there may some
 esoteric combinations of features that reveal a gap in functionality.  Please file an https://github.com/MorphiaOrg/morphia/issues[issue]
-ifyou encounter such a case.
+if you encounter such a case.
 ====
 
 As of 2.2, mapping information can be defined on methods instead of fields.  All the same rules apply, simply the location of the
