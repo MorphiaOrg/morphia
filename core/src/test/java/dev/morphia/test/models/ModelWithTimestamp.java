@@ -1,19 +1,14 @@
 package dev.morphia.test.models;
 
-import dev.morphia.annotations.*;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
 import org.bson.types.ObjectId;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
-@Entity(value = "TestModelWithTimestamp", useDiscriminator = false)
-@Indexes({
-        @Index(fields = @Field(value = "ts"), options = @IndexOptions(expireAfterSeconds = ModelWithTimestamp.SESSION_LINGER_SECONDS)),
-})
-
+@Entity
 public class ModelWithTimestamp {
-
-    public static final int SESSION_LINGER_SECONDS = 60 * 60 * 24;
 
     @Id
     private ObjectId id;
