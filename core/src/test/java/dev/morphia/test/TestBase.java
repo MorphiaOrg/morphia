@@ -211,11 +211,11 @@ public abstract class TestBase {
     }
 
     /**
-     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
+     * @param version the minimum version allowed
      * @return true if server is at least specified version
      */
     protected boolean serverIsAtLeastVersion(Version version) {
-        return getServerVersion().lessThanOrEqualTo(version);
+        return getServerVersion().greaterThanOrEqualTo(version);
     }
 
     protected String toString(Document document) {
