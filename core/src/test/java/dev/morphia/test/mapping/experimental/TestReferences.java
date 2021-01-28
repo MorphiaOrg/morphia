@@ -17,7 +17,6 @@ import dev.morphia.test.models.Book;
 import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.methods.MethodMappedFriend;
 import dev.morphia.test.models.methods.MethodMappedUser;
-import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
@@ -66,12 +65,6 @@ public class TestReferences extends TestBase {
                                                                .as("list")
                                                                .foreignField("_id")
                                                                .localField("list"));
-
-        System.out.println(getDs().getMapper().getCollection(Author.class).withDocumentClass(BsonDocument.class).find().first().toJson());
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println(getDs().getMapper().getCollection(Book.class).withDocumentClass(BsonDocument.class).find().first().toJson());
 
         final Author loaded = aggregation
                                   //  TODO how to fetch the values from a nested document for cross-referencing?

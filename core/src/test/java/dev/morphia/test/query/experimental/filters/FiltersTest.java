@@ -4,8 +4,8 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.result.InsertManyResult;
+import dev.morphia.aggregation.experimental.expressions.Miscellaneous;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
@@ -248,7 +248,7 @@ public class FiltersTest extends TestBase {
             getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
         assertEquals(bulk.getInsertedIds().size(), count);
         Document matches = getDs().aggregate(collectionName)
-                                  .match(Filters.sampleRate(0.33))
+                                  .match(Miscellaneous.sampleRate(0.33))
                                   .count("numMatches")
                                   .execute(Document.class)
                                   .next();
