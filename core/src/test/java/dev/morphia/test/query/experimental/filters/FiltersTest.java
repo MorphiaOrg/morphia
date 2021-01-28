@@ -1,7 +1,11 @@
 package dev.morphia.test.query.experimental.filters;
 
+import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.InsertManyOptions;
+import com.mongodb.client.result.InsertManyResult;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
@@ -10,6 +14,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
@@ -34,8 +39,10 @@ import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 public class FiltersTest extends TestBase {
+
     @Test
     public void testAnd() {
         getDs().find(Budget.class)
@@ -230,22 +237,22 @@ public class FiltersTest extends TestBase {
 
     @Test
     public void testSampleRate() {
-/*
+        checkMinServerVersion(Version.valueOf("4.4.3"));
         int count = 100;
         List<Document> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             list.add(new Document("_id", i).append("r", 0));
         }
+        String collectionName = "sampleRate";
         InsertManyResult bulk =
-            getDatabase().getCollection("sampleRate").insertMany(list, new InsertManyOptions().ordered(false));
+            getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
         assertEquals(bulk.getInsertedIds().size(), count);
-        Document matches = getDs().aggregate("sampleRate")
-                               .match(Filters.sampleRate(0.33))
-                               .count("numMatches")
-                               .execute(Document.class)
-                               .next();
-        assertNotNull(matches.getDouble("numMatches"));
-*/
+        Document matches = getDs().aggregate(collectionName)
+                                  .match(Filters.sampleRate(0.33))
+                                  .count("numMatches")
+                                  .execute(Document.class)
+                                  .next();
+        assertTrue(matches.getInteger("numMatches") < 100);
     }
 
     @Test
