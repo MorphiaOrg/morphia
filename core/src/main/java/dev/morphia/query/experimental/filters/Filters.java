@@ -550,6 +550,23 @@ public final class Filters {
     }
 
     /**
+     * Matches a random selection of input documents. The number of documents selected approximates the sample rate expressed as a
+     * percentage of the total number of documents.
+     *
+     * @param rate the rate to check against
+     * @return the filter
+     * @query.filter $sampleRate
+     */
+    public static Filter sampleRate(double rate) {
+        return new Filter("$sampleRate", null, rate) {
+            @Override
+            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+                writeNamedValue(getName(), getValue(), mapper, writer, context);
+            }
+        };
+    }
+
+    /**
      * Selects documents if the array field is a specified size.
      *
      * @param field the field to check

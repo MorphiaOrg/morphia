@@ -131,7 +131,12 @@ public abstract class TestBase {
     }
 
     protected void checkMinServerVersion(double version) {
-        assumeTrue(serverIsAtLeastVersion(version), "Server should be at least " + version + " but found " + getServerVersion());
+        checkMinServerVersion(Version.valueOf(version + ".0"));
+    }
+
+    protected void checkMinServerVersion(Version version) {
+        assumeTrue(serverIsAtLeastVersion(version),
+            String.format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
     protected int count(MongoCursor<?> cursor) {
@@ -191,12 +196,12 @@ public abstract class TestBase {
                                 .get("options");
     }
 
-    protected double getServerVersion() {
+    protected Version getServerVersion() {
         String version = (String) getMongoClient()
                                       .getDatabase("admin")
                                       .runCommand(new Document("serverStatus", 1))
                                       .get("version");
-        return Double.parseDouble(version.substring(0, 3));
+        return Version.valueOf(version);
     }
 
     protected void insert(String collectionName, List<Document> list) {
@@ -206,11 +211,11 @@ public abstract class TestBase {
     }
 
     /**
-     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
+     * @param version the minimum version allowed
      * @return true if server is at least specified version
      */
-    protected boolean serverIsAtLeastVersion(double version) {
-        return getServerVersion() >= version;
+    protected boolean serverIsAtLeastVersion(Version version) {
+        return getServerVersion().greaterThanOrEqualTo(version);
     }
 
     protected String toString(Document document) {

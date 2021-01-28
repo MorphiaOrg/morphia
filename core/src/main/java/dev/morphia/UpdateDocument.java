@@ -1,8 +1,8 @@
 package dev.morphia;
 
-import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;

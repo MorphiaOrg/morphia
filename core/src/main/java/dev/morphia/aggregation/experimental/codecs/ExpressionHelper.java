@@ -2,7 +2,7 @@ package dev.morphia.aggregation.experimental.codecs;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
