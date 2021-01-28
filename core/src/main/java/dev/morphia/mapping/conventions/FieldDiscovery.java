@@ -2,6 +2,7 @@ package dev.morphia.mapping.conventions;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
+import dev.morphia.mapping.codec.DateFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
@@ -10,6 +11,7 @@ import org.bson.codecs.pojo.PropertyAccessor;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FieldDiscovery implements MorphiaConvention {
@@ -35,8 +37,17 @@ public class FieldDiscovery implements MorphiaConvention {
     }
 
     private PropertyAccessor<? super Object> getAccessor(Field field, PropertyModelBuilder property) {
-        return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-               ? new ArrayFieldAccessor(property.typeData(), field)
-               : new FieldAccessor(field);
+        return isArrayField(field) ? new ArrayFieldAccessor(property.typeData(), field) :
+               isDateField(field) ? new DateFieldAccessor(field) :
+               new FieldAccessor(field);
     }
+
+    private boolean isArrayField(Field field) {
+        return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class);
+    }
+
+    private boolean isDateField(Field field) {
+        return Date.class.isAssignableFrom(field.getType());
+    }
+
 }

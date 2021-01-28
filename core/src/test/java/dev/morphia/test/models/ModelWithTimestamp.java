@@ -3,6 +3,7 @@ package dev.morphia.test.models;
 import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity(value = "TestModelWithTimestamp", useDiscriminator = false)
@@ -17,7 +18,7 @@ public class ModelWithTimestamp {
     @Id
     private ObjectId id;
 
-    @Property
+    @Property(concreteClass = Timestamp.class)
     private Timestamp timestamp;
 
     public ObjectId getId() {
