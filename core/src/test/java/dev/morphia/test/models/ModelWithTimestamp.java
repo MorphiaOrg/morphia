@@ -18,7 +18,7 @@ public class ModelWithTimestamp {
     @Id
     private ObjectId id;
 
-    @Property(concreteClass = Timestamp.class)
+    @Property
     private Timestamp timestamp;
 
     public ObjectId getId() {
