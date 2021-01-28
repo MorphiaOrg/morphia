@@ -229,6 +229,26 @@ public class FiltersTest extends TestBase {
     }
 
     @Test
+    public void testSampleRate() {
+/*
+        int count = 100;
+        List<Document> list = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            list.add(new Document("_id", i).append("r", 0));
+        }
+        InsertManyResult bulk =
+            getDatabase().getCollection("sampleRate").insertMany(list, new InsertManyOptions().ordered(false));
+        assertEquals(bulk.getInsertedIds().size(), count);
+        Document matches = getDs().aggregate("sampleRate")
+                               .match(Filters.sampleRate(0.33))
+                               .count("numMatches")
+                               .execute(Document.class)
+                               .next();
+        assertNotNull(matches.getDouble("numMatches"));
+*/
+    }
+
+    @Test
     public void testSize() {
         getDs().save(List.of(new User("John", LocalDate.now(), "puppies", "kittens", "heavy metal"),
             new User("Janice", LocalDate.now(), "Chandler", "NYC")));

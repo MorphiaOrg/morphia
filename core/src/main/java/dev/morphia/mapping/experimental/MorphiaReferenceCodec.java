@@ -2,11 +2,11 @@ package dev.morphia.mapping.experimental;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;

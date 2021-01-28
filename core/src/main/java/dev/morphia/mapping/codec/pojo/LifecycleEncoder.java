@@ -3,7 +3,7 @@ package dev.morphia.mapping.codec.pojo;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
