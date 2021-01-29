@@ -240,7 +240,7 @@ public class FiltersTest extends TestBase {
 
     @Test
     public void testRand() {
-        checkMinServerVersion(Version.valueOf("4.4.3"));
+        checkMinServerVersion(Version.valueOf("4.4.2"));
         int count = 100;
         List<Document> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
