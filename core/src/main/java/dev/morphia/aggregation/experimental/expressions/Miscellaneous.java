@@ -20,7 +20,7 @@ public final class Miscellaneous {
      *
      * @param rate the rate to check against
      * @return the filter
-     * @query.filter $sampleRate
+     * @aggregation.expression $sampleRate
      */
     public static Filter sampleRate(double rate) {
         return new Filter("$sampleRate", null, rate) {
