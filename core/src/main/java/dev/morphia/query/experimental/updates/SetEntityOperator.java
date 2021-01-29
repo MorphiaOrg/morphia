@@ -2,8 +2,8 @@ package dev.morphia.query.experimental.updates;
 
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import org.bson.Document;
 import org.bson.codecs.Codec;

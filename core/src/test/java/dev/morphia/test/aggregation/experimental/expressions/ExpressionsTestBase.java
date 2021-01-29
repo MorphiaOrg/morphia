@@ -3,7 +3,7 @@ package dev.morphia.test.aggregation.experimental.expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
 import dev.morphia.aggregation.experimental.stages.Projection;
-import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
 import org.bson.Document;

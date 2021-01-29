@@ -9,7 +9,7 @@ import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.filters.NearFilter;

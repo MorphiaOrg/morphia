@@ -1,4 +1,4 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.writer;
 
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
@@ -29,6 +29,7 @@ import java.time.ZoneOffset;
  */
 @SuppressWarnings("unchecked")
 public class DocumentWriter implements BsonWriter {
+    private final RootState root;
     private WriteState state;
     private int arraysLevel;
     private int docsLevel;
@@ -37,7 +38,8 @@ public class DocumentWriter implements BsonWriter {
      * Creates a new Writer
      */
     public DocumentWriter() {
-        state = new RootState(this);
+        root = new RootState(this);
+        state = root;
     }
 
     /**
@@ -46,7 +48,8 @@ public class DocumentWriter implements BsonWriter {
      * @param seed the seed Document
      */
     public DocumentWriter(Document seed) {
-        state = new RootState(this, seed);
+        root = new RootState(this, seed);
+        state = root;
     }
 
     /**
@@ -91,12 +94,18 @@ public class DocumentWriter implements BsonWriter {
         if (arraysLevel != 0 || docsLevel != 0) {
             throw new IllegalStateException(Sofia.unbalancedOpens(arraysLevel, docsLevel, state));
         }
-        return ((DocumentState) state).getDocument();
+        return root.getDocument();
     }
 
-    @Override
-    public String toString() {
-        return state.toString();
+    public void previous() {
+        state(state.previous());
+        if (state() instanceof NameState) {
+            previous();
+        }
+    }
+
+    public WriteState state() {
+        return state;
     }
 
     @Override
@@ -339,6 +348,11 @@ public class DocumentWriter implements BsonWriter {
     @Override
     public void writeUndefined() {
         state.value(new BsonUndefined());
+    }
+
+    @Override
+    public String toString() {
+        return root.toString();
     }
 
     WriteState state(WriteState state) {

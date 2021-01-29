@@ -22,7 +22,7 @@ import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
-import dev.morphia.mapping.codec.DocumentWriter;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.TestBase;
 import org.bson.Document;
 import org.bson.codecs.Codec;

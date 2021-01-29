@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
+import com.github.zafarkhaja.semver.Version;
 import dev.morphia.aggregation.experimental.expressions.MathExpressions;
 import org.testng.annotations.Test;
 
@@ -89,7 +90,7 @@ public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testTrunc() {
-        if (getServerVersion() >= 4.2) {
+        if (getServerVersion().greaterThanOrEqualTo(Version.forIntegers(4, 2))) {
             assertAndCheckDocShape("{ $trunc: [ 7.85, 1 ] }", trunc(value(7.85), value(1)), 7.8);
         } else {
             assertAndCheckDocShape("{ $trunc: 7.85 }", trunc(value(7.85), null), 7.0);
