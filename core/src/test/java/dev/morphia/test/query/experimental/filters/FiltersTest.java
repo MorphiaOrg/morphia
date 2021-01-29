@@ -4,6 +4,7 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.result.InsertManyResult;
+import dev.morphia.aggregation.experimental.expressions.ComparisonExpressions;
 import dev.morphia.aggregation.experimental.expressions.Miscellaneous;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
@@ -19,6 +20,8 @@ import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.experimental.expressions.Miscellaneous.rand;
 import static dev.morphia.query.experimental.filters.Filters.and;
 import static dev.morphia.query.experimental.filters.Filters.bitsAllClear;
 import static dev.morphia.query.experimental.filters.Filters.bitsAllSet;
@@ -233,6 +236,24 @@ public class FiltersTest extends TestBase {
         getDs().find(Budget.class)
                .filter(or(lt("budget", 10000), gt("budget", 12)))
                .iterator();
+    }
+
+    @Test
+    public void testRand() {
+        checkMinServerVersion(Version.valueOf("4.4.3"));
+        int count = 100;
+        List<Document> list = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            list.add(new Document("_id", i).append("r", 0));
+        }
+        String collectionName = "rand";
+        InsertManyResult bulk =
+            getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
+        assertEquals(bulk.getInsertedIds().size(), count);
+        long matches = getDs().find(collectionName, Document.class)
+                              .filter(expr(ComparisonExpressions.lt(value(0.5), rand())))
+                              .count();
+        assertTrue(matches < 100);
     }
 
     @Test
