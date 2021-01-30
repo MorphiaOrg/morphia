@@ -104,6 +104,18 @@ public final class TrigonometryExpressions {
     }
 
     /**
+     * Returns the hyperbolic cosine of a value that is measured in radians.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $cosh
+     * @since 2.2
+     */
+    public static Expression cosh(Expression value) {
+        return new Expression("$cosh", value);
+    }
+
+    /**
      * Converts a value from degrees to radians.
      *
      * @param value the value
@@ -137,6 +149,18 @@ public final class TrigonometryExpressions {
     }
 
     /**
+     * Returns the hyperbolic sine of a value that is measured in radians.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $sinh
+     * @since 2.2
+     */
+    public static Expression sinh(Expression value) {
+        return new Expression("$sinh", value);
+    }
+
+    /**
      * Returns the tangent of a value that is measured in radians.
      *
      * @param value the value
@@ -145,6 +169,18 @@ public final class TrigonometryExpressions {
      */
     public static Expression tan(Expression value) {
         return new Expression("$tan", value);
+    }
+
+    /**
+     * Returns the hyperbolic tangent of a value that is measured in radians.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $tanh
+     * @since 2.2
+     */
+    public static Expression tanh(Expression value) {
+        return new Expression("$tanh", value);
     }
 
 }

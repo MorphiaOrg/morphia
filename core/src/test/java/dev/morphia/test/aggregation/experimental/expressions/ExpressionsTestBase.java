@@ -40,6 +40,6 @@ public class ExpressionsTestBase extends TestBase {
                                                   .include("test", value))
                                .execute(Document.class)
                                .next();
-        assertEquals(expectedValue, test.get("test"));
+        assertEquals(test.get("test"), expectedValue);
     }
 }

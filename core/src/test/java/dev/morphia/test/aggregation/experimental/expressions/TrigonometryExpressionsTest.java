@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
+import com.github.zafarkhaja.semver.Version;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -12,10 +13,13 @@ import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpre
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.atan2;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.atanh;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.cos;
+import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.cosh;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.degreesToRadians;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.radiansToDegrees;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.sin;
+import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.sinh;
 import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.tan;
+import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.tanh;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
     @BeforeMethod
@@ -64,6 +68,12 @@ public class TrigonometryExpressionsTest extends ExpressionsTestBase {
     }
 
     @Test
+    public void testCosh() {
+        checkMinServerVersion(Version.valueOf("4.2.0"));
+        assertAndCheckDocShape("{ $cosh: 0}", cosh(value(0)), 1.0);
+    }
+
+    @Test
     public void testDegreesToRadians() {
         assertAndCheckDocShape("{ $degreesToRadians: 90 }", degreesToRadians(value(90)), Math.PI / 2);
     }
@@ -75,11 +85,23 @@ public class TrigonometryExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testSin() {
-        assertAndCheckDocShape("{}", sin(value(Math.PI / 2)), 1.0);
+        assertAndCheckDocShape("{ $sin: 3}", sin(value(3)), 0.1411200080598672D);
+    }
+
+    @Test
+    public void testSinh() {
+        checkMinServerVersion(Version.valueOf("4.2.0"));
+        assertAndCheckDocShape("{ $sinh: 3}", sinh(value(3)), 10.017874927409903D);
     }
 
     @Test
     public void testTan() {
         assertAndCheckDocShape("{ $tan: 0 }", tan(value(0)), 0.0);
+    }
+
+    @Test
+    public void testTanh() {
+        checkMinServerVersion(Version.valueOf("4.2.0"));
+        assertAndCheckDocShape("{ $tanh: 0.5 }", tanh(value(0.5)), 0.46211715726000974D);
     }
 }

@@ -115,7 +115,7 @@ public abstract class TestBase {
     }
 
     protected void assertDocumentEquals(Object actual, Object expected) {
-        assertDocumentEquals("", expected, actual);
+        assertDocumentEquals("", actual, expected);
     }
 
     protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
@@ -223,19 +223,19 @@ public abstract class TestBase {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void assertDocumentEquals(String path, Object expected, Object actual) {
+    private void assertDocumentEquals(String path, Object actual, Object expected) {
         assertSameNullity(path, expected, actual);
         if (expected == null) {
             return;
         }
-        assertSameType(path, expected, actual);
+        assertSameType(path, actual, expected);
 
         if (expected instanceof Document) {
             for (Entry<String, Object> entry : ((Document) expected).entrySet()) {
                 final String key = entry.getKey();
                 Object expectedValue = entry.getValue();
                 Object actualValue = ((Document) actual).get(key);
-                assertDocumentEquals(path + "." + key, expectedValue, actualValue);
+                assertDocumentEquals(path + "." + key, actualValue, expectedValue);
             }
         } else if (expected instanceof List) {
             List list = (List) expected;
@@ -249,7 +249,7 @@ public abstract class TestBase {
                 while (!found && other.hasNext()) {
                     try {
                         String newPath = format("%s[%d]", path, i);
-                        assertDocumentEquals(newPath, o, other.next());
+                        assertDocumentEquals(newPath, other.next(), o);
                         other.remove();
                         found = true;
                     } catch (AssertionError ignore) {
@@ -271,7 +271,7 @@ public abstract class TestBase {
         }
     }
 
-    private void assertSameType(String path, Object expected, Object actual) {
+    private void assertSameType(String path, Object actual, Object expected) {
         if (expected instanceof List && actual instanceof List) {
             return;
         }
