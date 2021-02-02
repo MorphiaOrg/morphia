@@ -1,6 +1,8 @@
 package dev.morphia.aggregation;
 
 
+import com.mongodb.lang.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +17,11 @@ import java.util.List;
 public final class Projection {
 
     private final String target;
+    @Nullable
     private final String source;
+    @Nullable
     private List<Projection> projections;
+    @Nullable
     private List<Object> arguments;
     private boolean suppressed = false;
 
@@ -27,7 +32,7 @@ public final class Projection {
 
     private Projection(String field, Projection projection, Projection... subsequent) {
         this(field);
-        this.projections = new ArrayList<Projection>();
+        this.projections = new ArrayList<>();
         projections.add(projection);
         projections.addAll(Arrays.asList(subsequent));
     }
@@ -37,7 +42,7 @@ public final class Projection {
         source = null;
     }
 
-    private Projection(String expression, Object... args) {
+    private Projection(@Nullable String expression, Object... args) {
         this(expression);
         this.arguments = Arrays.asList(args);
     }
@@ -168,6 +173,7 @@ public final class Projection {
     /**
      * @return the arguments for the projection
      */
+    @Nullable
     public List<Object> getArguments() {
         return arguments;
     }
@@ -175,6 +181,7 @@ public final class Projection {
     /**
      * @return any projections applied to this field
      */
+    @Nullable
     public List<Projection> getProjections() {
         return projections;
     }
@@ -182,6 +189,7 @@ public final class Projection {
     /**
      * @return the projected field name
      */
+    @Nullable
     public String getSource() {
         return source;
     }

@@ -1,5 +1,6 @@
 package dev.morphia.ext;
 
+import com.mongodb.lang.NonNull;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -54,19 +55,19 @@ public class NewAnnotationTest extends TestBase {
 
     private static class ToLowercaseHelper implements EntityInterceptor {
         @Override
-        public void postLoad(Object ent, Document document, Mapper mapper) {
+        public void postLoad(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
         }
 
         @Override
-        public void postPersist(Object ent, Document document, Mapper mapper) {
+        public void postPersist(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
         }
 
         @Override
-        public void preLoad(Object ent, Document document, Mapper mapper) {
+        public void preLoad(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
         }
 
         @Override
-        public void prePersist(Object ent, Document document, Mapper mapper) {
+        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
             final List<PropertyModel> toLowercase = mapper.getEntityModel(ent.getClass()).getProperties(Lowercase.class);
             for (PropertyModel mf : toLowercase) {
                 try {

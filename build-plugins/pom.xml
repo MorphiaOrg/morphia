@@ -47,6 +47,23 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.puppycrawl.tools.checkstyle.gui.Main</mainClass>
+                            <commandlineArgs>${project.basedir}</commandlineArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -79,6 +96,11 @@
             <artifactId>revapi-maven-plugin</artifactId>
             <version>${revapi.maven.plugin.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>8.40</version>
         </dependency>
     </dependencies>
 </project>

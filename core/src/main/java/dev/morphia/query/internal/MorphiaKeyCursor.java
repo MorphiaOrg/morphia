@@ -3,6 +3,7 @@ package dev.morphia.query.internal;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.lang.NonNull;
 import dev.morphia.Key;
 import dev.morphia.mapping.Mapper;
 import org.bson.Document;
@@ -60,6 +61,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     }
 
     @Override
+    @NonNull
     public Key<T> next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
@@ -82,6 +84,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     }
 
     @Override
+    @NonNull
     public ServerAddress getServerAddress() {
         return wrapped.getServerAddress();
     }

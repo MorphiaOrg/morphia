@@ -19,6 +19,7 @@ package dev.morphia;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
@@ -65,7 +66,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     }
 
     @Override
-    public DeleteOptions collation(Collation collation) {
+    public DeleteOptions collation(@Nullable Collation collation) {
         super.collation(collation);
         return this;
     }
@@ -76,7 +77,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @return this
      * @since 2.2
      */
-    public DeleteOptions hint(Bson hint) {
+    public DeleteOptions hint(@Nullable Bson hint) {
         super.hint(hint);
         return this;
     }
@@ -87,7 +88,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @return this
      * @since 2.2
      */
-    public DeleteOptions hintString(String hint) {
+    public DeleteOptions hintString(@Nullable String hint) {
         super.hintString(hint);
         return this;
     }

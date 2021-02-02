@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Embedded;
@@ -218,6 +219,7 @@ public class EntityModel {
      * @param name the property name
      * @return the named PropertyModel or null if it does not exist
      */
+    @Nullable
     public PropertyModel getProperty(String name) {
         return propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name));
     }

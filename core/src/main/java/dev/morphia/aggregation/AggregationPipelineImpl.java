@@ -5,6 +5,7 @@ import com.mongodb.ReadPreference;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UnwindOptions;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -125,7 +126,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     }
 
     @Override
-    public AggregationPipeline group(String id, Group... groupings) {
+    public AggregationPipeline group(@Nullable String id, Group... groupings) {
         Document group = new Document();
         group.put("_id", id != null ? "$" + id : null);
         for (Group grouping : groupings) {
@@ -138,17 +139,15 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline group(List<Group> id, Group... groupings) {
-        if (id != null) {
-            Document idGroup = new Document();
-            for (Group group : id) {
-                idGroup.putAll(toDocument(group));
-            }
-            Document group = new Document("_id", idGroup);
-            for (Group grouping : groupings) {
-                group.putAll(toDocument(grouping));
-            }
-            stages.add(new Document("$group", group));
+        Document idGroup = new Document();
+        for (Group group : id) {
+            idGroup.putAll(toDocument(group));
         }
+        Document group = new Document("_id", idGroup);
+        for (Group grouping : groupings) {
+            group.putAll(toDocument(grouping));
+        }
+        stages.add(new Document("$group", group));
 
         return this;
     }
@@ -268,7 +267,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         return stages.toString();
     }
 
-    private void putIfNull(Document document, String name, Object value) {
+    private void putIfNull(Document document, String name, @Nullable Object value) {
         if (value != null) {
             document.put(name, value);
         }

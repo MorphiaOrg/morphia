@@ -4,6 +4,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
@@ -42,13 +43,13 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     }
 
     @Override
-    public FindAndDeleteOptions projection(Bson projection) {
+    public FindAndDeleteOptions projection(@Nullable Bson projection) {
         super.projection(projection);
         return this;
     }
 
     @Override
-    public FindAndDeleteOptions sort(Bson sort) {
+    public FindAndDeleteOptions sort(@Nullable Bson sort) {
         super.sort(sort);
         return this;
     }
@@ -60,7 +61,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     }
 
     @Override
-    public FindAndDeleteOptions collation(Collation collation) {
+    public FindAndDeleteOptions collation(@Nullable Collation collation) {
         super.collation(collation);
         return this;
     }
@@ -71,7 +72,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
      * @return this
      * @since 2.2
      */
-    public FindAndDeleteOptions hint(Bson hint) {
+    public FindAndDeleteOptions hint(@Nullable Bson hint) {
         super.hint(hint);
         return this;
     }
@@ -82,7 +83,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
      * @return this
      * @since 2.2
      */
-    public FindAndDeleteOptions hintString(String hint) {
+    public FindAndDeleteOptions hintString(@Nullable String hint) {
         super.hintString(hint);
         return this;
     }

@@ -1,5 +1,7 @@
 package dev.morphia.aggregation;
 
+import com.mongodb.lang.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,11 @@ import static java.util.Arrays.asList;
 @Deprecated(since = "2.0", forRemoval = true)
 public final class Group {
     private final String name;
+    @Nullable
     private Group nested;
+    @Nullable
     private List<Projection> projections;
+    @Nullable
     private Accumulator accumulator;
     private String sourceField;
 
@@ -217,6 +222,7 @@ public final class Group {
     /**
      * @return the accumulator for this Group
      */
+    @Nullable
     public Accumulator getAccumulator() {
         return accumulator;
     }
@@ -231,6 +237,7 @@ public final class Group {
     /**
      * @return the nested group
      */
+    @Nullable
     public Group getNested() {
         return nested;
     }
@@ -238,8 +245,9 @@ public final class Group {
     /**
      * @return the projections for the group
      */
+    @Nullable
     public List<Projection> getProjections() {
-        return projections != null ? new ArrayList<Projection>(projections) : null;
+        return projections != null ? new ArrayList<>(projections) : null;
     }
 
     /**

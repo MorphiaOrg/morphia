@@ -1,6 +1,7 @@
 package dev.morphia.callbacks;
 
 
+import com.mongodb.lang.NonNull;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -14,10 +15,6 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Date;
 import java.util.List;
 
@@ -48,11 +45,6 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
 
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface NonNull {
-    }
-
     @Entity
     static class E {
         @Id
@@ -78,7 +70,7 @@ public class TestSimpleValidationViaInterceptor extends TestBase {
 
     public static class NonNullValidation implements EntityInterceptor {
         @Override
-        public void prePersist(Object ent, Document document, Mapper mapper) {
+        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
             final List<PropertyModel> fieldsToTest = mapper.getEntityModel(ent.getClass())
                                                            .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {

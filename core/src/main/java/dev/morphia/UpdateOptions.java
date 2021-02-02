@@ -19,6 +19,7 @@ package dev.morphia;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.query.experimental.filters.Filter;
@@ -111,19 +112,19 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     @Override
-    public UpdateOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
+    public UpdateOptions bypassDocumentValidation(@Nullable Boolean bypassDocumentValidation) {
         super.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
     @Override
-    public UpdateOptions collation(Collation collation) {
+    public UpdateOptions collation(@Nullable Collation collation) {
         super.collation(collation);
         return this;
     }
 
     @Override
-    public UpdateOptions arrayFilters(List<? extends Bson> arrayFilters) {
+    public UpdateOptions arrayFilters(@Nullable List<? extends Bson> arrayFilters) {
         super.arrayFilters(arrayFilters);
         return this;
     }
@@ -134,7 +135,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * @return this
      * @since 2.2
      */
-    public UpdateOptions hint(Bson hint) {
+    public UpdateOptions hint(@Nullable Bson hint) {
         super.hint(hint);
         return this;
     }
@@ -145,7 +146,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * @return this
      * @since 2.2
      */
-    public UpdateOptions hintString(String hint) {
+    public UpdateOptions hintString(@Nullable String hint) {
         super.hintString(hint);
         return this;
     }

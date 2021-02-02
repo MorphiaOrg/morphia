@@ -5,6 +5,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
@@ -46,13 +47,13 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     }
 
     @Override
-    public ModifyOptions projection(Bson projection) {
+    public ModifyOptions projection(@Nullable Bson projection) {
         super.projection(projection);
         return this;
     }
 
     @Override
-    public ModifyOptions sort(Bson sort) {
+    public ModifyOptions sort(@Nullable Bson sort) {
         super.sort(sort);
         return this;
     }
@@ -76,19 +77,19 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     }
 
     @Override
-    public ModifyOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
+    public ModifyOptions bypassDocumentValidation(@Nullable Boolean bypassDocumentValidation) {
         super.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
     @Override
-    public ModifyOptions collation(Collation collation) {
+    public ModifyOptions collation(@Nullable Collation collation) {
         super.collation(collation);
         return this;
     }
 
     @Override
-    public ModifyOptions arrayFilters(List<? extends Bson> arrayFilters) {
+    public ModifyOptions arrayFilters(@Nullable List<? extends Bson> arrayFilters) {
         super.arrayFilters(arrayFilters);
         return this;
     }
@@ -99,7 +100,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
      * @return this
      * @since 2.2
      */
-    public ModifyOptions hint(Bson hint) {
+    public ModifyOptions hint(@Nullable Bson hint) {
         super.hint(hint);
         return this;
     }
@@ -110,7 +111,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
      * @return this
      * @since 2.2
      */
-    public ModifyOptions hintString(String hint) {
+    public ModifyOptions hintString(@Nullable String hint) {
         super.hintString(hint);
         return this;
     }

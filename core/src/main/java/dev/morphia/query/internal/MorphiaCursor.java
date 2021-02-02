@@ -4,6 +4,7 @@ package dev.morphia.query.internal;
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
     }
 
     @Override
+    @NonNull
     public T next() {
         return wrapped.next();
     }
@@ -72,6 +74,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
     }
 
     @Override
+    @NonNull
     public ServerAddress getServerAddress() {
         return wrapped.getServerAddress();
     }

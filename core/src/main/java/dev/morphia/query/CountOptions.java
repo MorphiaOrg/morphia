@@ -20,6 +20,7 @@ import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.SessionConfigurable;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -71,7 +72,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
     }
 
     @Override
-    public CountOptions hint(Bson hint) {
+    public CountOptions hint(@Nullable Bson hint) {
         super.hint(hint);
         return this;
     }
@@ -83,7 +84,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
     }
 
     @Override
-    public CountOptions hintString(String hint) {
+    public CountOptions hintString(@Nullable String hint) {
         super.hintString(hint);
         return this;
     }
@@ -106,7 +107,7 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
     }
 
     @Override
-    public CountOptions collation(Collation collation) {
+    public CountOptions collation(@Nullable Collation collation) {
         super.collation(collation);
         return this;
     }

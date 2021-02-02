@@ -75,7 +75,7 @@ public class MappingValidator {
             sort(l);
 
             for (LogLine line : l) {
-                line.log(LOG);
+                line.log();
             }
         }
     }
@@ -136,19 +136,19 @@ public class MappingValidator {
 
         }
 
-        void log(Logger logger) {
+        void log() {
             switch (v.getLevel()) {
                 case SEVERE:
-                    logger.error(v.render());
+                    LOG.error(v.render());
                     break;
                 case WARNING:
-                    logger.warn(v.render());
+                    LOG.warn(v.render());
                     break;
                 case INFO:
-                    logger.info(v.render());
+                    LOG.info(v.render());
                     break;
                 case MINOR:
-                    logger.debug(v.render());
+                    LOG.debug(v.render());
                     break;
                 default:
                     throw new IllegalStateException(format("Cannot log %s of Level %s", ConstraintViolation.class.getSimpleName(),

@@ -44,18 +44,6 @@ public final class Assert {
     }
 
     /**
-     * Validates that the parameter is not null
-     *
-     * @param name      the parameter name
-     * @param reference the proposed parameter value
-     */
-    public static void parameterNotNull(String name, Object reference) {
-        if (reference == null) {
-            raiseError(format("Parameter '%s' is not expected to be null.", name));
-        }
-    }
-
-    /**
      * Validates that the Iterable is not empty
      *
      * @param name the parameter name

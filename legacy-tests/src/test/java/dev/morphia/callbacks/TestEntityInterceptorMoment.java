@@ -1,6 +1,7 @@
 package dev.morphia.callbacks;
 
 
+import com.mongodb.lang.NonNull;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
@@ -38,7 +39,7 @@ public class TestEntityInterceptorMoment extends TestBase {
 
     public static class Interceptor implements EntityInterceptor {
         @Override
-        public void prePersist(Object ent, Document document, Mapper mapper) {
+        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
             Assert.assertTrue(((E) ent).called);
         }
     }

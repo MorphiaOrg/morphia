@@ -38,7 +38,7 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public void setPinnedServerAddress(ServerAddress address) {
+    public void setPinnedServerAddress(@Nullable ServerAddress address) {
         session.setPinnedServerAddress(address);
     }
 

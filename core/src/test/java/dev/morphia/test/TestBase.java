@@ -12,6 +12,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.lang.NonNull;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
@@ -19,7 +20,6 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -183,7 +183,7 @@ public abstract class TestBase {
         return mongoClient;
     }
 
-    @NotNull
+    @NonNull
     protected Document getOptions(Class<?> type) {
         MongoCollection<?> collection = getMapper().getCollection(type);
         Document result = getDatabase().runCommand(new Document("listCollections", 1.0)

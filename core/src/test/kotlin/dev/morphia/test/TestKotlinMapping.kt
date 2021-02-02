@@ -23,7 +23,7 @@ class TestKotlinMapping : TestBase() {
 
     @Test
     fun versioning() {
-        ds.mapper.map(VersionedDataClass::class.java)
+        val map = ds.mapper.map(VersionedDataClass::class.java)
         val versioned = VersionedDataClass(null, "temp")
         ds.save(versioned)
         val loaded = ds.find(VersionedDataClass::class.java)

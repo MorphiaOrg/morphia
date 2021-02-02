@@ -24,6 +24,8 @@
 -->
 
 <module name="Checker">
+    <module name="SuppressWarningsFilter"/>
+
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
     <module name="NewlineAtEndOfFile"/>
@@ -55,6 +57,8 @@
         <property name="severity" value="error"/>
     </module>
 
+    <module name="JavadocPackage"/>
+
     <!-- Checks for Headers                                -->
     <!-- See http://checkstyle.sf.net/config_header.html   -->
     <!-- <module name="Header"> -->
@@ -63,6 +67,8 @@
     <!-- </module> -->
 
     <module name="TreeWalker">
+
+        <!--        <module name="util.Nullability"/>-->
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
