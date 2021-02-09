@@ -18,6 +18,6 @@ public class UnsetOperator extends UpdateOperator {
 
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
-        return new OperationTarget(pathTarget, null);
+        return new OperationTarget(pathTarget, "");
     }
 }

@@ -45,12 +45,9 @@ public class TestEmbeddedValidation extends TestBase {
         getMapper().map(TestEntity.class);
         TestEntity entity = new TestEntity();
 
-        Map<String, Object> map = mapOf("type", "text");
-        map.put("data", mapOf("text", "sometext"));
-
-        Map<String, Object> map1 = mapOf("data", mapOf("id", "123"));
-        map1.put("type", "image");
-        List<Map<String, Object>> data = asList(map, map1);
+        List<Map<String, Object>> data = List.of(
+            mapOf("data", mapOf("text", "sometext")),
+            mapOf("data", mapOf("id", "123")));
 
         entity.setData(data);
         getDs().save(entity);

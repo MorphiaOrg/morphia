@@ -18,6 +18,7 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 
@@ -48,9 +49,15 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
         this.clientSession = that.clientSession;
     }
 
-    @Override
-    public InsertOneOptions clientSession(ClientSession clientSession) {
-        this.clientSession = clientSession;
+    /**
+     * Sets whether to bypass document validation.
+     *
+     * @param bypassDocumentValidation whether to bypass document validation, or null if unspecified
+     * @return this
+     * @mongodb.server.release 3.2
+     */
+    public InsertOneOptions bypassDocumentValidation(@Nullable Boolean bypassDocumentValidation) {
+        options.bypassDocumentValidation(bypassDocumentValidation);
         return this;
     }
 
@@ -59,13 +66,29 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
         return clientSession;
     }
 
+    @Override
+    public InsertOneOptions clientSession(@Nullable ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    /**
+     * Gets the the bypass document level validation flag
+     *
+     * @return the bypass document level validation flag
+     */
+    @Nullable
+    public Boolean getBypassDocumentValidation() {
+        return options.getBypassDocumentValidation();
+    }
+
     /**
      * Set the write concern to use for the insert.
      *
      * @param writeConcern the write concern
      * @return this
      */
-    public InsertOneOptions writeConcern(WriteConcern writeConcern) {
+    public InsertOneOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -75,29 +98,9 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
      *
      * @return the write concern, or null if the default will be used.
      */
+    @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
-    }
-
-    /**
-     * Gets the the bypass document level validation flag
-     *
-     * @return the bypass document level validation flag
-     */
-    public Boolean getBypassDocumentValidation() {
-        return options.getBypassDocumentValidation();
-    }
-
-    /**
-     * Sets whether to bypass document validation.
-     *
-     * @param bypassDocumentValidation whether to bypass document validation, or null if unspecified
-     * @return this
-     * @mongodb.server.release 3.2
-     */
-    public InsertOneOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
-        options.bypassDocumentValidation(bypassDocumentValidation);
-        return this;
     }
 
     /**

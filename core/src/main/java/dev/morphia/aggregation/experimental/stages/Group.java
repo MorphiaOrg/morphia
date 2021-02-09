@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.AggregationException;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
@@ -113,6 +114,7 @@ public class Group extends Stage {
      * @return the ID
      * @morphia.internal
      */
+    @Nullable
     public GroupId getId() {
         return id;
     }
@@ -168,6 +170,7 @@ public class Group extends Stage {
          * @return the document
          * @morphia.internal
          */
+        @Nullable
         public DocumentExpression getDocument() {
             return document;
         }
@@ -176,6 +179,7 @@ public class Group extends Stage {
          * @return the field
          * @morphia.internal
          */
+        @Nullable
         public Expression getField() {
             return field;
         }

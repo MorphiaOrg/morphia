@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.query.experimental.filters.Filter;
 
@@ -115,6 +116,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getAs() {
         return as;
     }
@@ -123,6 +125,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getConnectFromField() {
         return connectFromField;
     }
@@ -131,6 +134,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getConnectToField() {
         return connectToField;
     }
@@ -139,6 +143,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getDepthField() {
         return depthField;
     }
@@ -147,6 +152,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getFrom() {
         return from;
     }
@@ -155,6 +161,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public Class getFromType() {
         return fromType;
     }
@@ -163,6 +170,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public Integer getMaxDepth() {
         return maxDepth;
     }
@@ -171,6 +179,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public Filter[] getRestriction() {
         return restriction;
     }
@@ -179,6 +188,7 @@ public class GraphLookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public Expression getStartWith() {
         return startWith;
     }

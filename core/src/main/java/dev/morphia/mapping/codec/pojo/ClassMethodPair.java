@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
@@ -20,7 +21,7 @@ public class ClassMethodPair {
     private final Datastore datastore;
     private final Class<? extends Annotation> event;
 
-    ClassMethodPair(Datastore datastore, Method method, Class<?> type, Class<? extends Annotation> event) {
+    ClassMethodPair(Datastore datastore, Method method, @Nullable Class<?> type, Class<? extends Annotation> event) {
         this.event = event;
         this.type = type;
         this.method = method;

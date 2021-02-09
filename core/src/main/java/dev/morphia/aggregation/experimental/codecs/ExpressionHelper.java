@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -59,7 +60,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void expression(Mapper mapper, BsonWriter writer, String name, Expression expression,
+    public static void expression(Mapper mapper, BsonWriter writer, String name, @Nullable Expression expression,
                                   EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
@@ -74,7 +75,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void expression(Mapper mapper, BsonWriter writer, Expression expression, EncoderContext encoderContext) {
+    public static void expression(Mapper mapper, BsonWriter writer, @Nullable Expression expression, EncoderContext encoderContext) {
         if (expression != null) {
             expression.encode(mapper, writer, encoderContext);
         }
@@ -88,7 +89,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void value(Mapper mapper, BsonWriter writer, String name, Object value, EncoderContext encoderContext) {
+    public static void value(Mapper mapper, BsonWriter writer, String name, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
             writer.writeName(name);
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
@@ -103,7 +104,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
-    public static void value(Mapper mapper, BsonWriter writer, Object value, EncoderContext encoderContext) {
+    public static void value(Mapper mapper, BsonWriter writer, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);

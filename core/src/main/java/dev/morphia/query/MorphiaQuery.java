@@ -160,7 +160,7 @@ public class MorphiaQuery<T> implements Query<T> {
         for (Filter filter : additional) {
             filters.add(filter
                             .entityType(getEntityClass())
-                            .isValidating(validate && getEntityClass() != null));
+                            .isValidating(validate));
         }
         return this;
     }
@@ -240,9 +240,7 @@ public class MorphiaQuery<T> implements Query<T> {
      */
     @Override
     public Document toDocument() {
-        final Document query = getQueryDocument();
-
-        return query;
+        return getQueryDocument();
     }
 
     @Override
@@ -338,7 +336,9 @@ public class MorphiaQuery<T> implements Query<T> {
         });
 
         Document query = writer.getDocument();
-        mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), query);
+        if (mapper.isMappable(getEntityClass())) {
+            mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), query);
+        }
 
         return query;
     }

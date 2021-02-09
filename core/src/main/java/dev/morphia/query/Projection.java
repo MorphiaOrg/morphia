@@ -1,5 +1,6 @@
 package dev.morphia.query;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
@@ -89,6 +90,7 @@ public class Projection {
      * @param type   the entity type
      * @return this
      */
+    @Nullable
     public Document map(Mapper mapper, Class<?> type) {
         if (includes != null || excludes != null) {
             return project(mapper, type);
@@ -103,7 +105,7 @@ public class Projection {
         return null;
     }
 
-    private void iterate(Mapper mapper, Document projection, Class<?> clazz, List<String> fields,
+    private void iterate(Mapper mapper, Document projection, Class<?> clazz, @Nullable List<String> fields,
                          int include) {
         if (fields != null) {
             for (String field : fields) {

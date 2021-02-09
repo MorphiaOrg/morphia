@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.AggregationException;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
@@ -68,6 +69,7 @@ public class ReplaceRoot extends Stage {
      * @return the expression
      * @morphia.internal
      */
+    @Nullable
     public DocumentExpression getDocument() {
         return document;
     }
@@ -76,6 +78,7 @@ public class ReplaceRoot extends Stage {
      * @return the expression
      * @morphia.internal
      */
+    @Nullable
     public Expression getValue() {
         return value;
     }

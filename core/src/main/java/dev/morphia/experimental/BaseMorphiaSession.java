@@ -7,6 +7,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.TransactionBody;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
 import dev.morphia.DatastoreImpl;
@@ -146,6 +147,7 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     /**
      * @return the session
      */
+    @NonNull
     public ClientSession getSession() {
         return session;
     }

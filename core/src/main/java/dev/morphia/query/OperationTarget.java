@@ -1,5 +1,6 @@
 package dev.morphia.query;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
@@ -23,10 +24,10 @@ public class OperationTarget {
 
     /**
      * @param target the target
-     * @param value the value
+     * @param value  the value
      * @morphia.internal
      */
-    public OperationTarget(PathTarget target, Object value) {
+    public OperationTarget(PathTarget target, @Nullable Object value) {
         this.target = target;
         this.value = value;
     }
@@ -36,13 +37,6 @@ public class OperationTarget {
      */
     public PathTarget getTarget() {
         return target;
-    }
-
-    /**
-     * @return the value
-     */
-    public Object getValue() {
-        return value;
     }
 
     /**
@@ -68,13 +62,21 @@ public class OperationTarget {
                             : null;
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
-        } else if (mappedValue != null) {
+        } else {
             DocumentWriter writer = new DocumentWriter();
             Object finalMappedValue = mappedValue;
             document(writer, () -> value(mapper, writer, "mapped", finalMappedValue, EncoderContext.builder().build()));
             mappedValue = writer.getDocument().get("mapped");
         }
         return new Document(target.translatedPath(), mappedValue);
+    }
+
+    /**
+     * @return the value
+     */
+    @Nullable
+    public Object getValue() {
+        return value;
     }
 
     @Override

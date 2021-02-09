@@ -37,11 +37,13 @@ import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.UnionWith;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -112,12 +114,15 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType) {
         MongoCursor<R> cursor;
-        EntityModel resultModel = datastore.getMapper().getEntityModel(resultType);
-        if (resultModel != null && !resultType.equals(this.collection.getDocumentClass())) {
+        if (datastore.getMapper().isMappable(resultType) && !resultType.equals(this.collection.getDocumentClass())) {
             MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
             MongoCursor<Document> results = collection.aggregate(getDocuments()).iterator();
-            String discriminator = datastore.getMapper().getEntityModel(this.collection.getDocumentClass()).getDiscriminatorKey();
-            cursor = new MappingCursor<>(results, datastore.getMapper().getCodecRegistry().get(resultType), discriminator);
+            EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
+            if (entityModel == null) {
+                throw new MappingException(Sofia.unmappedType(this.collection.getDocumentClass()));
+            }
+            String discriminator = entityModel.getDiscriminatorKey();
+            cursor = new MappingCursor(results, datastore.getMapper().getCodecRegistry().get(resultType), discriminator);
         } else {
             cursor = collection.aggregate(getDocuments(), resultType).iterator();
         }
@@ -188,7 +193,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <M> void merge(Merge<M> merge, AggregationOptions options) {
         stages.add(merge);
-        Class<?> type = merge.getType() != null ? merge.getType() : Document.class;
+        Class<?> type = merge.getType();
+        type = type != null ? type : Document.class;
         options.apply(getDocuments(), collection, type)
                .toCollection();
     }
@@ -203,9 +209,9 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <O> void out(Out<O> out, AggregationOptions options) {
         stages.add(out);
-        Class<?> type = out.getType() != null ? out.getType() : Document.class;
-        options.apply(getDocuments(), collection, type)
-               .toCollection();
+        Class<?> type = out.getType();
+        type = type != null ? type : Document.class;
+        options.apply(getDocuments(), collection, type).toCollection();
     }
 
     @Override
@@ -303,7 +309,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         private final Codec<R> codec;
         private final String discriminator;
 
-        <T> MappingCursor(MongoCursor<Document> results, Codec<R> codec, String discriminator) {
+        MappingCursor(MongoCursor<Document> results, Codec<R> codec, String discriminator) {
             this.results = results;
             this.codec = codec;
             this.discriminator = discriminator;
@@ -321,7 +327,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
         @Override
         public R next() {
-            return map(results.next());
+            R map = map(results.next());
+
+            if (map == null) {
+                throw new NullPointerException();
+            }
+            return map;
         }
 
         @Override
@@ -341,7 +352,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
             return results.getServerAddress();
         }
 
-        private R map(Document next) {
+        @Nullable
+        private R map(@Nullable Document next) {
             if (next != null) {
                 next.remove(discriminator);
                 return codec.decode(new DocumentReader(next), DecoderContext.builder().build());

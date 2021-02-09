@@ -36,9 +36,6 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
         if (it instanceof List) {
             return (List<T>) it;
         }
-        if (it == null) {
-            return null;
-        }
 
         final List<T> ar = new ArrayList<>();
         for (T o : it) {

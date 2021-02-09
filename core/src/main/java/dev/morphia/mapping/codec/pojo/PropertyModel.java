@@ -17,6 +17,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.DBRef;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
@@ -107,17 +108,15 @@ public final class PropertyModel {
     }
 
     /**
-     * Gets the value of the property mapped on the instance given.
+     * Find an annotation of a specific type or null if not found.
      *
-     * @param instance the instance to use
-     * @return the value stored in the property
+     * @param type the annotation type to find
+     * @param <A>  the class type
+     * @return the annotation instance or null
      */
-    public Object getValue(Object instance) {
-        Object target = instance;
-        if (target instanceof MorphiaProxy) {
-            target = ((MorphiaProxy) instance).unwrap();
-        }
-        return accessor.get(target);
+    @Nullable
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
+        return type.cast(annotationMap.get(type));
     }
 
     /**
@@ -149,14 +148,18 @@ public final class PropertyModel {
     }
 
     /**
-     * Find an annotation of a specific type or null if not found.
+     * Gets the value of the property mapped on the instance given.
      *
-     * @param type the annotation type to find
-     * @param <A>  the class type
-     * @return the annotation instance or null
+     * @param instance the instance to use
+     * @return the value stored in the property
      */
-    public <A extends Annotation> A getAnnotation(Class<A> type) {
-        return type.cast(annotationMap.get(type));
+    @Nullable
+    public Object getValue(Object instance) {
+        Object target = instance;
+        if (target instanceof MorphiaProxy) {
+            target = ((MorphiaProxy) instance).unwrap();
+        }
+        return accessor.get(target);
     }
 
     /**
@@ -288,7 +291,7 @@ public final class PropertyModel {
      * @param instance the instance to update
      * @param value    the value to set
      */
-    public void setValue(Object instance, Object value) {
+    public void setValue(Object instance, @Nullable Object value) {
         accessor.set(instance, Conversions.convert(value, getType()));
     }
 
@@ -359,6 +362,7 @@ public final class PropertyModel {
                && Modifier.isTransient(getType().getModifiers());
     }
 
+    @Nullable
     private Handler getHandler() {
         Handler handler = typeData.getType().getAnnotation(Handler.class);
 
@@ -391,10 +395,11 @@ public final class PropertyModel {
         return Collection.class.isAssignableFrom(getTypeData().getType());
     }
 
+    @Nullable
     private String loadFromDocument(Document document) {
-        String mappedFieldName = getMappedName();
-        if (document.containsKey(mappedFieldName)) {
-            return mappedFieldName;
+        String propertyName = getMappedName();
+        if (document.containsKey(propertyName)) {
+            return propertyName;
         }
         for (String name : getLoadNames()) {
             if (document.containsKey(name)) {

@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.MappingException;
 import org.bson.types.Binary;
 import org.bson.types.ObjectId;
@@ -35,8 +36,9 @@ public final class Conversions {
         register(Binary.class, byte[].class, Binary::getData);
 
         register(Date.class, Long.class, Date::getTime);
-        register(Instant.class, Long.class, Instant::toEpochMilli);
         register(Date.class, long.class, Date::getTime);
+
+        register(Instant.class, Long.class, Instant::toEpochMilli);
         register(Instant.class, long.class, Instant::toEpochMilli);
 
         register(Double.class, Long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
@@ -52,6 +54,11 @@ public final class Conversions {
         register(Float.class, Integer.class, Float::intValue, "Converting a float value to an int.  Possible loss of precision.");
 
         register(String.class, BigDecimal.class, BigDecimal::new);
+        register(String.class, Byte.class, Byte::valueOf);
+        register(String.class, Integer.class, Integer::valueOf);
+        register(String.class, Float.class, Float::valueOf);
+        register(String.class, Double.class, Double::valueOf);
+        register(String.class, Long.class, Long::valueOf);
 
         register(URI.class, String.class, u -> {
             try {
@@ -113,7 +120,8 @@ public final class Conversions {
      * @return the potentially converted value
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> T convert(Object value, Class<T> target) {
+    @Nullable
+    public static <T> T convert(@Nullable Object value, Class<T> target) {
         if (value == null) {
             return (T) convertNull(target);
         }
@@ -138,6 +146,16 @@ public final class Conversions {
         return (T) function.apply(value);
     }
 
+    @Nullable
+    private static Object convertNull(Class<?> toType) {
+        if (isNumber(toType)) {
+            return 0;
+        } else if (isBoolean(toType)) {
+            return FALSE;
+        }
+        return null;
+    }
+
     /**
      * Register a conversion between two types.  For example, to register the conversion of {@link Date} to a {@link Long}, this method
      * could be invoked as follows:
@@ -154,7 +172,7 @@ public final class Conversions {
      * @param <T>      the target type.
      */
     public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function,
-                                       String warning) {
+                                       @Nullable String warning) {
         final Function<S, T> conversion = warning == null
                                           ? function
                                           : s -> {
@@ -165,15 +183,6 @@ public final class Conversions {
                                           };
         CONVERSIONS.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
                    .put(target, conversion);
-    }
-
-    private static Object convertNull(Class<?> toType) {
-        if (isNumber(toType)) {
-            return 0;
-        } else if (isBoolean(toType)) {
-            return FALSE;
-        }
-        return null;
     }
 
     private static boolean isNumber(Class<?> type) {

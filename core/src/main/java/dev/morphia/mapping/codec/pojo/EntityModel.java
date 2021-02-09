@@ -130,6 +130,7 @@ public class EntityModel {
      * @param <A>   the annotation type
      * @return the annotation instance or null if not found
      */
+    @Nullable
     public <A extends Annotation> A getAnnotation(Class<A> clazz) {
         return (A) annotations.get(clazz);
     }
@@ -139,6 +140,7 @@ public class EntityModel {
      * @param clazz the annotation class
      * @return the annotation instance of the given type
      */
+    @Nullable
     public <A extends Annotation> A getAnnotations(Class<A> clazz) {
         return (A) annotations.get(clazz);
     }
@@ -155,6 +157,7 @@ public class EntityModel {
     /**
      * @return the mapped collection name for the type
      */
+    @Nullable
     public String getCollectionName() {
         return collectionName;
     }
@@ -176,6 +179,7 @@ public class EntityModel {
     /**
      * @return the embeddedAn
      */
+    @Nullable
     public Embedded getEmbeddedAnnotation() {
         return getAnnotation(Embedded.class);
     }
@@ -183,6 +187,7 @@ public class EntityModel {
     /**
      * @return the entityAn
      */
+    @Nullable
     public Entity getEntityAnnotation() {
         return getAnnotation(Entity.class);
     }
@@ -190,6 +195,7 @@ public class EntityModel {
     /**
      * @return the model for the id property
      */
+    @Nullable
     public PropertyModel getIdProperty() {
         return idProperty;
     }
@@ -277,6 +283,7 @@ public class EntityModel {
     /**
      * @return the model of the superclass of this type or null
      */
+    @Nullable
     public EntityModel getSuperClass() {
         return superClass;
     }
@@ -291,6 +298,7 @@ public class EntityModel {
     /**
      * @return the version property for the class
      */
+    @Nullable
     public PropertyModel getVersionProperty() {
         return versionProperty;
     }
@@ -387,12 +395,14 @@ public class EntityModel {
 
     private List<Method> getDeclaredAndInheritedMethods(Class<?> type) {
         final List<Method> methods = new ArrayList<>();
-        if ((type == null) || (type == Object.class)) {
+        if (type == Object.class) {
             return methods;
         }
 
         final Class<?> parent = type.getSuperclass();
-        methods.addAll(getDeclaredAndInheritedMethods(parent));
+        if (parent != null) {
+            methods.addAll(getDeclaredAndInheritedMethods(parent));
+        }
 
         for (Method m : type.getDeclaredMethods()) {
             if (!Modifier.isStatic(m.getModifiers())) {

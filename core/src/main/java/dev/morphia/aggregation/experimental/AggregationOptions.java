@@ -7,6 +7,7 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
@@ -241,14 +242,17 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     @Override
     public <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
         MongoCollection<C> updated = collection;
-        if (writeConcern() != null) {
-            updated = updated.withWriteConcern(writeConcern());
+        WriteConcern writeConcern = writeConcern();
+        if (writeConcern != null) {
+            updated = updated.withWriteConcern(writeConcern);
         }
-        if (getReadConcern() != null) {
-            updated = updated.withReadConcern(getReadConcern());
+        ReadConcern readConcern = getReadConcern();
+        if (readConcern != null) {
+            updated = updated.withReadConcern(readConcern);
         }
-        if (getReadPreference() != null) {
-            updated = updated.withReadPreference(getReadPreference());
+        ReadPreference readPreference = getReadPreference();
+        if (readPreference != null) {
+            updated = updated.withReadPreference(readPreference);
         }
 
         return updated;
@@ -315,7 +319,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @param writeConcern the write concern
      * @return this
      */
-    public AggregationOptions writeConcern(WriteConcern writeConcern) {
+    public AggregationOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -323,6 +327,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     /**
      * @return the configuration value
      */
+    @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
     }

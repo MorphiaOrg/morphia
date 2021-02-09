@@ -29,7 +29,9 @@ public class GroupCodec extends StageCodec<Group> {
                 if (id.getDocument() != null) {
                     id.getDocument().encode(getMapper(), writer, encoderContext);
                 } else {
-                    id.getField().encode(getMapper(), writer, encoderContext);
+                    if (id.getField() != null) {
+                        id.getField().encode(getMapper(), writer, encoderContext);
+                    }
                 }
             } else {
                 writer.writeNull("_id");

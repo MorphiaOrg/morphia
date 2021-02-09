@@ -103,7 +103,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
      * @param writeConcern the write concern
      * @return this
      */
-    public FindAndDeleteOptions writeConcern(WriteConcern writeConcern) {
+    public FindAndDeleteOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -111,6 +111,7 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     /**
      * @return the write concern to use
      */
+    @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
     }

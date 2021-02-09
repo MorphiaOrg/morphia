@@ -45,13 +45,22 @@ public class MapKeyTypeConstraint extends PropertyConstraint {
     }
 
     private boolean isPrimitiveLike(Class<?> type) {
-        return type != null && (type == String.class || type == char.class
-                                || type == Character.class || type == short.class || type == Short.class
-                                || type == Integer.class || type == int.class || type == Long.class || type == long.class
-                                || type == Double.class || type == double.class || type == float.class || type == Float.class
-                                || type == Boolean.class || type == boolean.class || type == Byte.class || type == byte.class
-                                || type == Date.class || type == Locale.class || type == Class.class || type == UUID.class
-                                || type == URI.class || type.isEnum());
+        return List.of(
+            Character.class, char.class,
+            Short.class, short.class,
+            Integer.class, int.class,
+            Long.class, long.class,
+            Double.class, double.class,
+            Float.class, float.class,
+            Boolean.class, boolean.class,
+            Byte.class, byte.class,
+            String.class,
+            Date.class,
+            Locale.class,
+            Class.class,
+            UUID.class,
+            URI.class)
+                   .contains(type) || type.isEnum();
 
     }
 }

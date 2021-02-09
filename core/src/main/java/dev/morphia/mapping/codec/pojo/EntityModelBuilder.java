@@ -1,8 +1,10 @@
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.sofia.Sofia;
 
@@ -60,12 +62,21 @@ public class EntityModelBuilder {
         parameterization = findParameterization(type);
         propagateTypes();
 
-        if (!Object.class.equals(type.getSuperclass())) {
-            this.superclass = datastore.getMapper().getEntityModel(type.getSuperclass());
+        if (type.getSuperclass() != null) {
+            try {
+                this.superclass = datastore.getMapper().getEntityModel(type.getSuperclass());
+            } catch (NotMappableException ignored) {
+            }
         }
 
         this.interfaceModels = interfaces.stream()
-                                         .map(i -> datastore.getMapper().getEntityModel(i))
+                                         .map(i -> {
+                                             try {
+                                                 return datastore.getMapper().getEntityModel(i);
+                                             } catch (NotMappableException ignored) {
+                                                 return null;
+                                             }
+                                         })
                                          .filter(Objects::nonNull)
                                          .collect(Collectors.toList());
 
@@ -118,19 +129,15 @@ public class EntityModelBuilder {
         return parentMap;
     }
 
-    private Map<String, Type> mapArguments(Class<?> type, Type typeSignature) {
-        Map<String, Type> map = new HashMap<>();
-        if (type != null && typeSignature instanceof ParameterizedType) {
-            TypeVariable<?>[] typeParameters = type.getTypeParameters();
-            if (typeParameters.length != 0) {
-                Type[] arguments = ((ParameterizedType) typeSignature).getActualTypeArguments();
-                for (int i = 0; i < typeParameters.length; i++) {
-                    TypeVariable<?> typeParameter = typeParameters[i];
-                    map.put(typeParameter.getName(), arguments[i]);
-                }
-            }
-        }
-        return map;
+    /**
+     * @param type the annotation class
+     * @param <A>  the annotation type
+     * @return the annotation or null if it doesn't exist
+     */
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
+        return (A) annotationsMap.get(type);
     }
 
     private Set<Class<?>> findParentClasses(Class<?> type) {
@@ -220,6 +227,7 @@ public class EntityModelBuilder {
     /**
      * @return the name of the id property
      */
+    @Nullable
     public String idPropertyName() {
         return idPropertyName;
     }
@@ -236,13 +244,11 @@ public class EntityModelBuilder {
     }
 
     /**
-     * @param type the annotation class
-     * @param <A>  the annotation type
-     * @return the annotation or null if it doesn't exist
+     * @return the super class of this type or null
      */
-    @SuppressWarnings("unchecked")
-    public <A extends Annotation> A getAnnotation(Class<A> type) {
-        return (A) annotationsMap.get(type);
+    @Nullable
+    public EntityModel superclass() {
+        return superclass;
     }
 
     /**
@@ -319,11 +325,19 @@ public class EntityModelBuilder {
         return discriminatorEnabled;
     }
 
-    /**
-     * @return the super class of this type or null
-     */
-    public EntityModel superclass() {
-        return superclass;
+    private Map<String, Type> mapArguments(@Nullable Class<?> type, Type typeSignature) {
+        Map<String, Type> map = new HashMap<>();
+        if (type != null && typeSignature instanceof ParameterizedType) {
+            TypeVariable<?>[] typeParameters = type.getTypeParameters();
+            if (typeParameters.length != 0) {
+                Type[] arguments = ((ParameterizedType) typeSignature).getActualTypeArguments();
+                for (int i = 0; i < typeParameters.length; i++) {
+                    TypeVariable<?> typeParameter = typeParameters[i];
+                    map.put(typeParameter.getName(), arguments[i]);
+                }
+            }
+        }
+        return map;
     }
 
     protected Map<Class<? extends Annotation>, Annotation> annotationsMap() {

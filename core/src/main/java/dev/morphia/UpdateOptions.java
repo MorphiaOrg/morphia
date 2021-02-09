@@ -66,12 +66,13 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     @Override
-    public UpdateOptions clientSession(ClientSession clientSession) {
+    public UpdateOptions clientSession(@Nullable ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }
 
     @Override
+    @Nullable
     public ClientSession clientSession() {
         return clientSession;
     }
@@ -157,7 +158,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * @param writeConcern the write concern
      * @return this
      */
-    public UpdateOptions writeConcern(WriteConcern writeConcern) {
+    public UpdateOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }

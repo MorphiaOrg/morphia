@@ -16,7 +16,9 @@
 
 package dev.morphia.internal;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.ValidationException;
@@ -61,7 +63,7 @@ public class PathTarget {
      * @param path          path
      * @param validateNames true if names should be validated
      */
-    public PathTarget(Mapper mapper, EntityModel root, String path, boolean validateNames) {
+    public PathTarget(Mapper mapper, @Nullable EntityModel root, String path, boolean validateNames) {
         segments = asList(path.split("\\."));
         this.root = root;
         this.mapper = mapper;
@@ -77,8 +79,8 @@ public class PathTarget {
      * @param path   the path
      * @param <T>    the root type
      */
-    public <T> PathTarget(Mapper mapper, Class<T> type, String path) {
-        this(mapper, mapper.getEntityModel(type), path, true);
+    public <T> PathTarget(Mapper mapper, @Nullable Class<T> type, String path) {
+        this(mapper, type != null && mapper.isMappable(type) ? mapper.getEntityModel(type) : null, path, true);
     }
 
     /**
@@ -90,8 +92,8 @@ public class PathTarget {
      * @param validateNames true if names should be validated
      * @param <T>           the root type
      */
-    public <T> PathTarget(Mapper mapper, Class<T> type, String path, boolean validateNames) {
-        this(mapper, mapper.getEntityModel(type), path, validateNames);
+    public <T> PathTarget(Mapper mapper, @Nullable Class<T> type, String path, boolean validateNames) {
+        this(mapper, type != null && mapper.isMappable(type) ? mapper.getEntityModel(type) : null, path, validateNames);
     }
 
     /**
@@ -109,10 +111,11 @@ public class PathTarget {
     }
 
     /**
-     * Returns the MappedField found at the end of a path.  May be null if the path is invalid and validation is disabled.
+     * Returns the PropertyModel found at the end of a path.  May be null if the path is invalid and validation is disabled.
      *
      * @return the field
      */
+    @Nullable
     public PropertyModel getTarget() {
         if (!resolved) {
             resolve();
@@ -172,6 +175,7 @@ public class PathTarget {
         segments.set(position - 1, nameToStore);
     }
 
+    @Nullable
     private PropertyModel resolveProperty(String segment) {
         if (context != null) {
             PropertyModel mf = context.getProperty(segment);
@@ -184,7 +188,11 @@ public class PathTarget {
             }
 
             if (mf != null) {
-                context = mapper.getEntityModel(mf.getNormalizedType());
+                try {
+                    context = mapper.getEntityModel(mf.getNormalizedType());
+                } catch (NotMappableException ignored) {
+                    context = null;
+                }
             }
             return mf;
         } else {

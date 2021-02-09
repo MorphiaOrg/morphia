@@ -6,6 +6,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
@@ -75,7 +76,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @param datastore the Datastore to use
      * @param clazz     the type to return
      */
-    protected LegacyQuery(Datastore datastore, String collectionName, Class<T> clazz) {
+    protected LegacyQuery(Datastore datastore, @Nullable String collectionName, Class<T> clazz) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
         mapper = this.datastore.getMapper();

@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
@@ -107,26 +108,20 @@ public class Mapper {
     }
 
     /**
-     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
-     *
-     * @param type the type to process
-     * @return the EntityModel for the object given
+     * @param type the class
+     * @param <T>  the type
+     * @return the id property model
+     * @morphia.internal
+     * @since 2.2
      */
-    public EntityModel getEntityModel(Class type) {
-        if (type == null) {
-            return null;
-        }
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        EntityModel model = mappedEntities.get(actual);
+    public <T> PropertyModel findIdProperty(Class<?> type) {
+        EntityModel entityModel = getEntityModel(type);
+        PropertyModel idField = entityModel != null ? entityModel.getIdProperty() : null;
 
-        if (model == null) {
-            if (!isMappable(actual)) {
-                return null;
-            }
-            model = register(createEntityModel(type));
+        if (idField == null) {
+            throw new MappingException(Sofia.idRequired(type.getName()));
         }
-
-        return model;
+        return idField;
     }
 
     /**
@@ -163,10 +158,6 @@ public class Mapper {
      * @morphia.internal
      */
     public <T> T fromDocument(Class<T> type, Document document) {
-        if (document == null) {
-            return null;
-        }
-
         Class<T> aClass = type;
         if (document.containsKey(options.getDiscriminatorKey())) {
             aClass = getClass(document);
@@ -204,12 +195,7 @@ public class Mapper {
      * @return the class mapped to this discrimiator value
      */
     public Class getClass(String discriminator) {
-        final Class c;
-        c = discriminatorLookup.lookup(discriminator);
-        if (c == null) {
-            throw new MappingException(Sofia.cannotFindTypeInDocument());
-        }
-        return c;
+        return discriminatorLookup.lookup(discriminator);
     }
 
     /**
@@ -303,25 +289,48 @@ public class Mapper {
     }
 
     /**
+     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
+     *
+     * @param type the type to process
+     * @return the EntityModel for the object given
+     */
+    public EntityModel getEntityModel(Class type) {
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        EntityModel model = mappedEntities.get(actual);
+
+        if (model == null) {
+            if (!isMappable(actual)) {
+                throw new NotMappableException(type);
+            }
+            model = register(createEntityModel(type));
+        }
+
+        return model;
+    }
+
+    /**
      * Gets the ID value for an entity
      *
      * @param entity the entity to process
      * @return the ID value
      */
-    public Object getId(Object entity) {
+    @Nullable
+    public Object getId(@Nullable Object entity) {
         if (entity == null) {
             return null;
         }
-        final EntityModel model = getEntityModel(entity.getClass());
-        if (model != null) {
+        try {
+            final EntityModel model = getEntityModel(entity.getClass());
             final PropertyModel idField = model.getIdProperty();
             if (idField != null) {
                 return idField.getValue(entity);
             }
+        } catch (NotMappableException ignored) {
         }
 
         return null;
     }
+
 
     /**
      * Gets list of {@link EntityInterceptor}s
@@ -339,6 +348,7 @@ public class Mapper {
      * @param <T>    the type of the entity
      * @return the Key
      */
+    @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     public <T> Key<T> getKey(T entity) {
         if (entity instanceof Key) {
@@ -358,6 +368,7 @@ public class Mapper {
      * @param <T>        the type of the entity
      * @return the Key
      */
+    @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     public <T> Key<T> getKey(T entity, String collection) {
         if (entity instanceof Key) {
@@ -401,10 +412,12 @@ public class Mapper {
      * @return the write concern for the type
      * @morphia.internal
      */
+    @Nullable
     public WriteConcern getWriteConcern(Class clazz) {
         WriteConcern wc = null;
-        if (clazz != null) {
-            final Entity entityAnn = getEntityModel(clazz).getEntityAnnotation();
+        EntityModel entityModel = getEntityModel(clazz);
+        if (entityModel != null) {
+            final Entity entityAnn = entityModel.getEntityAnnotation();
             if (entityAnn != null && !entityAnn.concern().isEmpty()) {
                 wc = WriteConcern.valueOf(entityAnn.concern());
             }
@@ -446,7 +459,7 @@ public class Mapper {
      * Maps an external class.  This is intended for use on types needed in a system but come from an external source where the more
      * traditional approach of decorating the type in source with Morphia annotations is not possible.
      *
-     * @param annotation the annotation to apply.  might be null.
+     * @param annotation the annotation to apply.  pass null to apply the defaults.
      * @param type       the type to map
      * @param <A>        the annotation to apply.  Currently only {@code @Embedded} is supported
      * @return the list of mapped classes
@@ -454,10 +467,7 @@ public class Mapper {
      * @see EmbeddedBuilder
      * @since 2.1
      */
-    public <A extends Annotation> EntityModel mapExternal(A annotation, Class type) {
-        if (type == null) {
-            return null;
-        }
+    public <A extends Annotation> EntityModel mapExternal(@Nullable A annotation, Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
         EntityModel model = mappedEntities.get(actual);
 
@@ -481,7 +491,13 @@ public class Mapper {
         try {
             getClasses(getClass().getClassLoader(), packageName, getOptions().isMapSubPackages())
                 .stream()
-                .map(this::getEntityModel)
+                .map(type -> {
+                    try {
+                        return getEntityModel(type);
+                    } catch (NotMappableException e) {
+                        return null;
+                    }
+                })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         } catch (ClassNotFoundException e) {
@@ -530,7 +546,9 @@ public class Mapper {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
 
-        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class).first();
+        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class)
+                                .iterator()
+                                .next();
 
         refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
     }
@@ -543,8 +561,10 @@ public class Mapper {
      * @morphia.internal
      */
     public Document toDocument(Object entity) {
-
         final EntityModel entityModel = getEntityModel(entity.getClass());
+        if (entityModel == null) {
+            throw new MappingException(Sofia.notMappable(entity.getClass().getName()));
+        }
 
         DocumentWriter writer = new DocumentWriter();
         ((Codec) getCodecRegistry().get(entityModel.getType()))
@@ -563,7 +583,7 @@ public class Mapper {
     public String updateCollection(Key key) {
         if (key.getCollection() == null && key.getType() == null) {
             throw new IllegalStateException("Key is invalid! " + key);
-        } else if (key.getCollection() == null) {
+        } else if (key.getCollection() == null && key.getType() != null) {
             key.setCollection(getEntityModel(key.getType()).getCollectionName());
         }
 
@@ -577,7 +597,7 @@ public class Mapper {
      * @param query the query document
      */
     public void updateQueryWithDiscriminators(EntityModel model, Document query) {
-        Entity annotation = model != null ? model.getEntityAnnotation() : null;
+        Entity annotation = model.getEntityAnnotation();
         if (annotation != null && annotation.useDiscriminator()
             && !query.containsKey("_id")
             && !query.containsKey(model.getDiscriminatorKey())) {
@@ -623,16 +643,13 @@ public class Mapper {
     }
 
     private <T> boolean hasAnnotation(Class<T> clazz, List<Class<? extends Annotation>> annotations) {
-        if (clazz == null) {
-            return false;
-        }
         for (Class<? extends Annotation> annotation : annotations) {
             if (clazz.getAnnotation(annotation) != null) {
                 return true;
             }
         }
 
-        return hasAnnotation(clazz.getSuperclass(), annotations)
+        return clazz.getSuperclass() != null && hasAnnotation(clazz.getSuperclass(), annotations)
                || Arrays.stream(clazz.getInterfaces())
                         .map(i -> hasAnnotation(i, annotations))
                         .reduce(false, (l, r) -> l || r);

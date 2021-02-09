@@ -8,6 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Datastore interface to get/delete/save objects
  */
-@SuppressWarnings({"unchecked", "UnusedReturnValue", "unused", "removal"})
+@SuppressWarnings({"UnusedReturnValue", "unused", "removal"})
 public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -275,6 +276,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 2.0
      */
+    @Nullable
     ClientSession findSession(SessionConfigurable<?> configurable);
 
     /**
@@ -290,6 +292,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 2.0
      */
+    @Nullable
     String getLoggedQuery(FindOptions options);
 
     /**
@@ -322,6 +325,7 @@ public interface Datastore {
      * @morphia.experimental
      * @since 2.0
      */
+    @Nullable
     default ClientSession getSession() {
         return null;
     }

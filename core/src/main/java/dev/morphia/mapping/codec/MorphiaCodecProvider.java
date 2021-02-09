@@ -6,6 +6,7 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
@@ -51,15 +52,19 @@ public class MorphiaCodecProvider implements CodecProvider {
     public <T> Codec<T> get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
-            EntityModel model = mapper.getEntityModel(type);
-            codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry);
-            if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasInterceptors()) {
-                codec.setEncoder(new LifecycleEncoder(codec));
+            try {
+                EntityModel model = mapper.getEntityModel(type);
+                codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry);
+                if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasInterceptors()) {
+                    codec.setEncoder(new LifecycleEncoder(codec));
+                }
+                if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasInterceptors()) {
+                    codec.setDecoder(new LifecycleDecoder(codec));
+                }
+                codecs.put(type, codec);
+            } catch (NotMappableException e) {
+                e.printStackTrace();
             }
-            if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasInterceptors()) {
-                codec.setDecoder(new LifecycleDecoder(codec));
-            }
-            codecs.put(type, codec);
         }
 
         return codec;

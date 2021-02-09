@@ -120,7 +120,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
      * @param writeConcern the write concern
      * @return this
      */
-    public ModifyOptions writeConcern(WriteConcern writeConcern) {
+    public ModifyOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -128,6 +128,7 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     /**
      * @return the write concern to use
      */
+    @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
     }

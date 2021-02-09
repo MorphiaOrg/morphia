@@ -8,6 +8,7 @@ import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
@@ -36,7 +37,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     private final Class source;
     private final List<Document> stages = new ArrayList<>();
     private final Mapper mapper;
-    private final Datastore datastore;
     private boolean firstStage;
 
     /**
@@ -47,7 +47,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @param source     the source type to aggregate
      */
     public AggregationPipelineImpl(Datastore datastore, MongoCollection collection, Class source) {
-        this.datastore = datastore;
         this.collection = collection;
         mapper = datastore.getMapper();
         this.source = source;
@@ -87,7 +86,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline bucket(String field, List<?> boundaries, BucketOptions options) {
-        if (boundaries == null || boundaries.size() < 2) {
+        if (boundaries.size() < 2) {
             throw new RuntimeException("Boundaries list should be present and has at least 2 elements");
         }
         Document document = options.toDocument();
@@ -276,18 +275,25 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     private Document toDocument(Group group) {
         Document document = new Document();
 
-        if (group.getAccumulator() != null) {
-            document.put(group.getName(), group.getAccumulator().toDocument());
-        } else if (group.getProjections() != null) {
-            final Document projection = new Document();
-            for (Projection p : group.getProjections()) {
-                projection.putAll(toDocument(p));
-            }
-            document.put(group.getName(), projection);
-        } else if (group.getNested() != null) {
-            document.put(group.getName(), toDocument(group.getNested()));
+        Accumulator accumulator = group.getAccumulator();
+        if (accumulator != null) {
+            document.put(group.getName(), accumulator.toDocument());
         } else {
-            document.put(group.getName(), group.getSourceField());
+            List<Projection> projections = group.getProjections();
+            if (projections != null) {
+                final Document projection = new Document();
+                for (Projection p : projections) {
+                    projection.putAll(toDocument(p));
+                }
+                document.put(group.getName(), projection);
+            } else {
+                Group nested = group.getNested();
+                if (nested != null) {
+                    document.put(group.getName(), toDocument(nested));
+                } else {
+                    document.put(group.getName(), group.getSourceField());
+                }
+            }
         }
 
         return document;
@@ -300,16 +306,15 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @return the Document
      */
     private Document toDocument(Projection projection) {
-        String target;
+        String target = projection.getTarget();
         if (firstStage) {
-            PropertyModel property = mapper.getEntityModel(source).getProperty(projection.getTarget());
-            target = property != null ? property.getMappedName() : projection.getTarget();
-        } else {
-            target = projection.getTarget();
+            EntityModel entityModel = mapper.getEntityModel(source);
+            PropertyModel property = entityModel != null && target != null ? entityModel.getProperty(target) : null;
+            target = property != null ? property.getMappedName() : target;
         }
 
-        if (projection.getProjections() != null) {
-            List<Projection> list = projection.getProjections();
+        List<Projection> list = projection.getProjections();
+        if (list != null) {
             Document projections = new Document();
             for (Projection subProjection : list) {
                 projections.putAll(toDocument(subProjection));
@@ -341,19 +346,21 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         }
     }
 
-    private List<Object> toExpressionArgs(List<Object> args) {
+    private List<Object> toExpressionArgs(@Nullable List<Object> args) {
         List<Object> result = new ArrayList<>();
-        for (Object arg : args) {
-            if (arg instanceof Projection) {
-                Projection projection = (Projection) arg;
-                if (projection.getArguments() != null || projection.getProjections() != null
-                    || projection.getSource() != null) {
-                    result.add(toDocument(projection));
+        if (args != null) {
+            for (Object arg : args) {
+                if (arg instanceof Projection) {
+                    Projection projection = (Projection) arg;
+                    if (projection.getArguments() != null || projection.getProjections() != null
+                        || projection.getSource() != null) {
+                        result.add(toDocument(projection));
+                    } else {
+                        result.add("$" + projection.getTarget());
+                    }
                 } else {
-                    result.add("$" + projection.getTarget());
+                    result.add(arg);
                 }
-            } else {
-                result.add(arg);
             }
         }
         return result;

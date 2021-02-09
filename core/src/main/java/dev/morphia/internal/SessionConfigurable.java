@@ -1,6 +1,7 @@
 package dev.morphia.internal;
 
 import com.mongodb.client.ClientSession;
+import com.mongodb.lang.Nullable;
 
 /**
  * Marks an options class as having a configurable ClientSession
@@ -24,5 +25,6 @@ public interface SessionConfigurable<T extends SessionConfigurable<T>> {
      * @return the client session
      * @since 2.0
      */
+    @Nullable
     ClientSession clientSession();
 }

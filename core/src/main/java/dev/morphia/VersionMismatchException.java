@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ConcurrentModificationException;
@@ -18,7 +19,7 @@ public class VersionMismatchException extends ConcurrentModificationException {
      * @param type    the versioned type
      * @param idValue the ID value
      */
-    public VersionMismatchException(Class<?> type, Object idValue) {
+    public VersionMismatchException(Class<?> type, @Nullable Object idValue) {
         super(Sofia.concurrentModification(type.getName(), idValue));
     }
 }

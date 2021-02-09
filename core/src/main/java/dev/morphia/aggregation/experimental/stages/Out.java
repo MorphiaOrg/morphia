@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import com.mongodb.lang.Nullable;
 import org.bson.Document;
 
 /**
@@ -52,6 +53,7 @@ public class Out<O> extends Stage {
      * @return the type representing the collection
      * @morphia.internal
      */
+    @Nullable
     public Class<?> getType() {
         return type;
     }

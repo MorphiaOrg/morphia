@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -11,7 +12,7 @@ import org.bson.codecs.EncoderContext;
  */
 public class ArrayExpression extends Expression {
 
-    public ArrayExpression(String operation, Object value) {
+    public ArrayExpression(@Nullable String operation, @Nullable Object value) {
         super(operation, value);
     }
 

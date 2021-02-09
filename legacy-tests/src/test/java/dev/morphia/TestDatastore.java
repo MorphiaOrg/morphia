@@ -6,7 +6,6 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.generics.model.Child;
 import dev.morphia.generics.model.ChildEntity;
 import dev.morphia.query.Query;
-import dev.morphia.query.UpdateException;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
@@ -26,12 +25,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class TestDatastore extends TestBase {
-
-    @Test(expected = UpdateException.class)
-    public void saveNull() {
-        getDs().save((Hotel) null);
-    }
-
     @Test
     public void shouldSaveGenericTypeVariables() {
         // given

@@ -2,6 +2,7 @@ package dev.morphia.internal;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 
 public interface WriteConfigurable<T> {
     /**
@@ -11,6 +12,7 @@ public interface WriteConfigurable<T> {
      * @deprecated use {@link #writeConcern()} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
+    @Nullable
     default WriteConcern getWriteConcern() {
         return writeConcern();
     }
@@ -24,9 +26,10 @@ public interface WriteConfigurable<T> {
      * @since 2.0
      */
     default <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
-        return writeConcern() == null
+        WriteConcern writeConcern = writeConcern();
+        return writeConcern == null
                ? collection
-               : collection.withWriteConcern(writeConcern());
+               : collection.withWriteConcern(writeConcern);
     }
 
     /**
@@ -35,12 +38,13 @@ public interface WriteConfigurable<T> {
      * @param writeConcern the write concern
      * @return this
      */
-    T writeConcern(WriteConcern writeConcern);
+    T writeConcern(@Nullable WriteConcern writeConcern);
 
     /**
      * The write concern to use.  By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      */
+    @Nullable
     WriteConcern writeConcern();
 }

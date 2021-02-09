@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -29,7 +30,7 @@ public class Expression {
      * @param value
      * @morphia.internal
      */
-    public Expression(String operation, Object value) {
+    public Expression(String operation, @Nullable Object value) {
         this.operation = operation;
         this.value = value;
     }

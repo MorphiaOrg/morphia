@@ -1,5 +1,6 @@
 package dev.morphia.query.experimental.filters;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
@@ -22,6 +23,7 @@ import static java.lang.String.format;
 public class Filter {
     private final String name;
     private String field;
+    @Nullable
     private Object value;
     private boolean not;
     private boolean validate;
@@ -33,9 +35,9 @@ public class Filter {
         this.name = name;
     }
 
-    protected Filter(String name, String field, Object value) {
+    protected Filter(String name, @Nullable String field, @Nullable Object value) {
         this.name = name;
-        this.field = field;
+        this.field = field != null ? field : "";
         this.value = value;
     }
 
@@ -55,15 +57,18 @@ public class Filter {
      * @morphia.internal
      */
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        document(writer, path(mapper), () -> {
-            if (not) {
-                document(writer, "$not", () -> {
+        String path = path(mapper);
+        if (path != null) {
+            document(writer, path, () -> {
+                if (not) {
+                    document(writer, "$not", () -> {
+                        writeNamedValue(name, getValue(mapper), mapper, writer, context);
+                    });
+                } else {
                     writeNamedValue(name, getValue(mapper), mapper, writer, context);
-                });
-            } else {
-                writeNamedValue(name, getValue(mapper), mapper, writer, context);
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
@@ -79,15 +84,12 @@ public class Filter {
     }
 
     /**
-     * Sets whether to validate field names or not
-     *
-     * @param validate true to validate
-     * @return this
+     * @return the filter field
      * @morphia.internal
      */
-    public Filter isValidating(boolean validate) {
-        this.validate = validate;
-        return this;
+    @Nullable
+    public String getField() {
+        return field;
     }
 
     /**
@@ -102,33 +104,10 @@ public class Filter {
     }
 
     /**
-     * @return the filter field
-     * @morphia.internal
-     */
-    public String getField() {
-        return field;
-    }
-
-    protected Object getValue(Mapper mapper) {
-        if (!mapped) {
-            PathTarget target = pathTarget(mapper);
-            if (target != null) {
-                OperationTarget operationTarget = new OperationTarget(pathTarget, value);
-                this.value = operationTarget.getValue();
-                PropertyModel mappedField = target.getTarget();
-                if (mappedField != null && mappedField.getCodec() instanceof PropertyHandler) {
-                    this.value = ((Document) operationTarget.encode(mapper)).get(field);
-                }
-            }
-            mapped = true;
-        }
-        return value;
-    }
-
-    /**
      * @return the filter name
      * @morphia.internal
      */
+    @Nullable
     public String getName() {
         return name;
     }
@@ -137,7 +116,37 @@ public class Filter {
      * @return the filter value
      * @morphia.internal
      */
+    @Nullable
     public Object getValue() {
+        return value;
+    }
+
+    /**
+     * Sets whether to validate field names or not
+     *
+     * @param validate true to validate
+     * @return this
+     * @morphia.internal
+     */
+    public Filter isValidating(boolean validate) {
+        this.validate = validate;
+        pathTarget = null;
+        mapped = false;
+        return this;
+    }
+
+    @Nullable
+    protected Object getValue(Mapper mapper) {
+        if (!mapped) {
+            PathTarget target = pathTarget(mapper);
+            OperationTarget operationTarget = new OperationTarget(pathTarget, value);
+            this.value = operationTarget.getValue();
+            PropertyModel property = target.getTarget();
+            if (property != null && property.getCodec() instanceof PropertyHandler) {
+                this.value = ((Document) operationTarget.encode(mapper)).get(field);
+            }
+            mapped = true;
+        }
         return value;
     }
 
@@ -146,13 +155,9 @@ public class Filter {
         return format("%s %s %s", field, name, value);
     }
 
+    @Nullable
     protected String path(Mapper mapper) {
-        if (field != null && pathTarget == null) {
-            pathTarget = new PathTarget(mapper, entityClass, field, validate);
-            field = pathTarget.translatedPath();
-        }
-
-        return field;
+        return pathTarget(mapper).translatedPath();
     }
 
     private PathTarget pathTarget(Mapper mapper) {
@@ -163,7 +168,7 @@ public class Filter {
         return pathTarget;
     }
 
-    protected void writeNamedValue(String name, Object named, Mapper mapper, BsonWriter writer,
+    protected void writeNamedValue(@Nullable String name, @Nullable Object named, Mapper mapper, BsonWriter writer,
                                    EncoderContext encoderContext) {
         writer.writeName(name);
         if (named != null) {
@@ -174,8 +179,7 @@ public class Filter {
         }
     }
 
-    protected void writeUnnamedValue(Object value, Mapper mapper, BsonWriter writer,
-                                     EncoderContext encoderContext) {
+    protected void writeUnnamedValue(@Nullable Object value, Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = mapper.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);

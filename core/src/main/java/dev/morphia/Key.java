@@ -1,6 +1,7 @@
 package dev.morphia;
 
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 
 import java.io.Serializable;
@@ -13,10 +14,12 @@ import java.io.Serializable;
  *
  * @param <T> The type of the entity
  */
-@SuppressWarnings({"unchecked", "rawtypes", "NullableProblems"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 @Deprecated(since = "2.0", forRemoval = true)
 public class Key<T> implements Serializable, Comparable<Key<T>> {
+    @Nullable
     private String collection;
+    @Nullable
     private Class<? extends T> type;
 
     /**
@@ -37,7 +40,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      * @param collection the collection in which the entity lives
      * @param id         the value of the entity's ID
      */
-    public Key(Class<? extends T> type, String collection, Object id) {
+    public Key(Class<? extends T> type, @Nullable String collection, Object id) {
         this.type = MorphiaProxy.class.isAssignableFrom(type) ? (Class<? extends T>) type.getSuperclass() : type;
         this.collection = collection;
         this.id = id;
@@ -54,9 +57,11 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
         this.collection = collection;
     }
 
-    /** */
+    /**
+     *
+     */
     @SuppressWarnings("unchecked")
-    private static int compareNullable(Comparable o1, Comparable o2) {
+    private static int compareNullable(@Nullable Comparable o1, @Nullable Comparable o2) {
         if (o1 == null && o2 == null) {
             return 0;
         }
@@ -106,6 +111,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
     /**
      * @return the collection name.
      */
+    @Nullable
     public String getCollection() {
         return collection;
     }
@@ -115,8 +121,8 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
      *
      * @param collection the collection to use
      */
-    public void setCollection(String collection) {
-        this.collection = collection.intern();
+    public void setCollection(@Nullable String collection) {
+        this.collection = collection;
     }
 
     /**
@@ -129,6 +135,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
     /**
      * @return type of the entity
      */
+    @Nullable
     public Class<? extends T> getType() {
         return type;
     }
@@ -161,7 +168,7 @@ public class Key<T> implements Serializable, Comparable<Key<T>> {
         if (collection != null) {
             bld.append("collection=");
             bld.append(collection);
-        } else {
+        } else if (type != null) {
             bld.append("type=");
             bld.append(type.getName());
         }

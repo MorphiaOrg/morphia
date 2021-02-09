@@ -3,6 +3,7 @@ package dev.morphia.internal;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 
 /**
  * @param <T> the type being defined
@@ -15,11 +16,13 @@ public interface ReadConfigurable<T> {
      *
      * @return the read concern
      */
+    @Nullable
     ReadConcern getReadConcern();
 
     /**
      * @return the read preference
      */
+    @Nullable
     ReadPreference getReadPreference();
 
     default <C> MongoCollection<C> prepare(MongoCollection<C> collection) {

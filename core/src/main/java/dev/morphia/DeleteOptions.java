@@ -126,7 +126,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      * @param writeConcern the write concern
      * @return this
      */
-    public DeleteOptions writeConcern(WriteConcern writeConcern) {
+    public DeleteOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
@@ -136,6 +136,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
      *
      * @return the write concern, or null if the default will be used.
      */
+    @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
     }

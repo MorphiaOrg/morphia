@@ -16,6 +16,7 @@
 
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -179,6 +180,7 @@ public final class PropertyModelBuilder {
      * @param <A>  the annotation type
      * @return the annotation instance or null if this annotation is on the field
      */
+    @Nullable
     public <A extends Annotation> A getAnnotation(Class<A> type) {
         for (Annotation annotation : annotations) {
             if (type.equals(annotation.annotationType())) {

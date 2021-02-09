@@ -37,7 +37,7 @@ public final class Projection {
         projections.addAll(Arrays.asList(subsequent));
     }
 
-    private Projection(String field) {
+    private Projection(@Nullable String field) {
         this.target = field;
         source = null;
     }
@@ -197,6 +197,7 @@ public final class Projection {
     /**
      * @return the source field of the projection
      */
+    @Nullable
     public String getTarget() {
         return target;
     }

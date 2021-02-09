@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
@@ -77,6 +78,7 @@ public class Lookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getAs() {
         return as;
     }
@@ -85,6 +87,7 @@ public class Lookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getForeignField() {
         return foreignField;
     }
@@ -93,6 +96,7 @@ public class Lookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getFrom() {
         return from;
     }
@@ -101,6 +105,7 @@ public class Lookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public Class<?> getFromType() {
         return fromType;
     }
@@ -109,6 +114,7 @@ public class Lookup extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getLocalField() {
         return localField;
     }

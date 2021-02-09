@@ -18,6 +18,7 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 
@@ -86,6 +87,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @return whether to bypass document validation, or null if unspecified.
      * @mongodb.server.release 3.2
      */
+    @Nullable
     public Boolean getBypassDocumentValidation() {
         return options.getBypassDocumentValidation();
     }
@@ -125,12 +127,13 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
     }
 
     @Override
-    public InsertManyOptions writeConcern(WriteConcern writeConcern) {
+    public InsertManyOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
 
     @Override
+    @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
     }

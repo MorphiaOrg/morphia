@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.MergeOptions.WhenMatched;
 import com.mongodb.client.model.MergeOptions.WhenNotMatched;
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 import java.util.ArrayList;
@@ -107,6 +108,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public Class<M> getType() {
         return type;
     }

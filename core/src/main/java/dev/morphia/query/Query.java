@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.lang.Nullable;
 import dev.morphia.DeleteOptions;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.updates.UpdateOperator;
@@ -211,6 +212,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      *
      * @return the deleted entity
      */
+    @Nullable
     default T findAndDelete() {
         return findAndDelete(new FindAndDeleteOptions());
     }
@@ -229,20 +231,12 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Create a modify operation based on this query
-     *
-     * @param first   the first and required update operator
-     * @param updates lists the set of updates to apply
-     * @return the modify operation
-     */
-    Modify<T> modify(UpdateOperator first, UpdateOperator... updates);
-
-    /**
      * Deletes an entity from the database and returns it.
      *
      * @param options the options to apply
      * @return the deleted entity
      */
+    @Nullable
     T findAndDelete(FindAndDeleteOptions options);
 
     /**
@@ -251,6 +245,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the only instance in the result, or null if the result set is empty.
      * @since 1.5
      */
+    @Nullable
     T first();
 
     /**
@@ -260,7 +255,17 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the only instance in the result, or null if the result set is empty.
      * @since 1.5
      */
+    @Nullable
     T first(FindOptions options);
+
+    /**
+     * Create a modify operation based on this query
+     *
+     * @param first   the first and required update operator
+     * @param updates lists the set of updates to apply
+     * @return the modify operation
+     */
+    Modify<T> modify(UpdateOperator first, UpdateOperator... updates);
 
     /**
      * @return the entity {@link Class}.
