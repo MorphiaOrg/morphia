@@ -32,9 +32,9 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
 
     @Override
     protected void encodeStage(BsonWriter writer, UnionWith unionWith, EncoderContext encoderContext) {
-        String collectionName = unionWith.getCollectionName() != null
-                                ? unionWith.getCollectionName()
-                                : getMapper().getCollection(unionWith.getCollectionType()).getNamespace().getCollectionName();
+        String name = unionWith.getCollectionName();
+        String collectionName = name != null ? name
+                                             : getMapper().getCollection(unionWith.getCollectionType()).getNamespace().getCollectionName();
 
         document(writer, () -> {
             value(getMapper(), writer, "coll", collectionName, encoderContext);

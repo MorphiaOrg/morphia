@@ -2,7 +2,7 @@ package dev.morphia.mapping.experimental;
 
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.PropertyCodec;
+import dev.morphia.mapping.codec.BaseReferenceCodec;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -28,7 +28,7 @@ import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
  * Defines a codec for MorphiaReference values
  */
 @SuppressWarnings("unchecked")
-public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> implements PropertyHandler {
+public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> implements PropertyHandler {
 
     private final Mapper mapper;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
@@ -51,7 +51,7 @@ public class MorphiaReferenceCodec extends PropertyCodec<MorphiaReference> imple
                              .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
                              .decode(reader, decoderContext);
         value = processId(value, mapper, decoderContext);
-        TypeData typeData = (TypeData) getTypeData().getTypeParameters().get(0);
+        TypeData typeData = getTypeData().getTypeParameters().get(0);
         if (Set.class.isAssignableFrom(typeData.getType())) {
             return new SetReference<>(getDatastore(), getEntityModelForField(), (List) value);
         } else if (Collection.class.isAssignableFrom(typeData.getType())) {

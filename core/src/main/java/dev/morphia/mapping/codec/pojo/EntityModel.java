@@ -136,16 +136,6 @@ public class EntityModel {
     }
 
     /**
-     * @param <A>   the annotation type
-     * @param clazz the annotation class
-     * @return the annotation instance of the given type
-     */
-    @Nullable
-    public <A extends Annotation> A getAnnotations(Class<A> clazz) {
-        return (A) annotations.get(clazz);
-    }
-
-    /**
      * Returns all the annotations on this model
      *
      * @return the list of annotations
@@ -157,8 +147,10 @@ public class EntityModel {
     /**
      * @return the mapped collection name for the type
      */
-    @Nullable
     public String getCollectionName() {
+        if (collectionName == null) {
+            throw new MappingException(Sofia.noMappedCollection(getType().getName()));
+        }
         return collectionName;
     }
 
@@ -226,8 +218,8 @@ public class EntityModel {
      * @return the named PropertyModel or null if it does not exist
      */
     @Nullable
-    public PropertyModel getProperty(String name) {
-        return propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name));
+    public PropertyModel getProperty(@Nullable String name) {
+        return name != null ? propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name)) : null;
     }
 
     /**

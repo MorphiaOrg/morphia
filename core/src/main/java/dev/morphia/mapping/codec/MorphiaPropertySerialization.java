@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.NotSaved;
 import dev.morphia.mapping.MapperOptions;
@@ -32,7 +33,7 @@ public class MorphiaPropertySerialization implements PropertySerialization {
     }
 
     @Override
-    public boolean shouldSerialize(Object value) {
+    public boolean shouldSerialize(@Nullable Object value) {
         if (!options.isStoreNulls() && value == null) {
             return false;
         }

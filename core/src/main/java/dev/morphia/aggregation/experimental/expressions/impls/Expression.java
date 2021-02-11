@@ -26,8 +26,8 @@ public class Expression {
     }
 
     /**
-     * @param operation
-     * @param value
+     * @param operation the expression name
+     * @param value     the value
      * @morphia.internal
      */
     public Expression(String operation, @Nullable Object value) {
@@ -41,7 +41,6 @@ public class Expression {
      * @param encoderContext the context
      * @morphia.internal
      */
-    @SuppressWarnings("rawtypes")
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> value(mapper, writer, operation, value, encoderContext));
     }
@@ -58,6 +57,7 @@ public class Expression {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public Object getValue() {
         return value;
     }

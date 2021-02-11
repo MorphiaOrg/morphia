@@ -1,5 +1,6 @@
 package dev.morphia.geo;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
@@ -26,7 +27,7 @@ public class LineString implements Geometry {
 
     @SuppressWarnings("UnusedDeclaration") // used by Morphia
     private LineString() {
-        coordinates = new ArrayList<Point>();
+        coordinates = new ArrayList<>();
     }
 
     LineString(Point... points) {
@@ -75,7 +76,7 @@ public class LineString implements Geometry {
     }
 
     @Override
-    public com.mongodb.client.model.geojson.LineString convert(CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.LineString convert(@Nullable CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.LineString(crs != null ? crs.convert() : null, GeoJson.convertPoints(coordinates));
     }
 }

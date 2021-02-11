@@ -67,7 +67,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @param clientSession the client session
      * @return this
      */
-    public InsertManyOptions clientSession(ClientSession clientSession) {
+    public InsertManyOptions clientSession(@Nullable ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }

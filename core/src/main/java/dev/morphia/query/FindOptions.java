@@ -24,6 +24,7 @@ import com.mongodb.assertions.Assertions;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
@@ -261,6 +262,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the collation
      */
+    @Nullable
     public Collation getCollation() {
         return this.collation;
     }
@@ -268,6 +270,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the comment
      */
+    @Nullable
     public String getComment() {
         return this.comment;
     }
@@ -275,6 +278,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the cursor type
      */
+    @Nullable
     public CursorType getCursorType() {
         return this.cursorType;
     }
@@ -282,6 +286,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the index hint
      */
+    @Nullable
     public Document getHint() {
         return this.hint;
     }
@@ -296,6 +301,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the max value
      */
+    @Nullable
     public Document getMax() {
         return this.max;
     }
@@ -321,6 +327,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the min value
      */
+    @Nullable
     public Document getMin() {
         return this.min;
     }
@@ -328,6 +335,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the projection
      */
+    @Nullable
     public Projection getProjection() {
         return this.projection;
     }
@@ -372,6 +380,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     /**
      * @return the sort criteria
      */
+    @Nullable
     public Document getSort() {
         return this.sort;
     }

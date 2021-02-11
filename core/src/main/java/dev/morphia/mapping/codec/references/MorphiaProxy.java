@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec.references;
 
+import com.mongodb.lang.Nullable;
+
 /**
  * @morphia.internal
  */
@@ -13,5 +15,6 @@ public interface MorphiaProxy {
      * @param <T> the reference type
      * @return the bare reference
      */
+    @Nullable
     <T> T unwrap();
 }

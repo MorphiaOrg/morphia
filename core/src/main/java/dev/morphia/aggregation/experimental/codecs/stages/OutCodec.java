@@ -18,8 +18,9 @@ public class OutCodec extends StageCodec<Out> {
     @Override
     @SuppressWarnings("unchecked")
     protected void encodeStage(BsonWriter writer, Out value, EncoderContext encoderContext) {
-        if (value.getType() != null) {
-            writer.writeString(getMapper().getCollection(value.getType()).getNamespace().getCollectionName());
+        Class<?> type = value.getType();
+        if (type != null) {
+            writer.writeString(getMapper().getCollection(type).getNamespace().getCollectionName());
         } else {
             writer.writeString(value.getCollection());
         }

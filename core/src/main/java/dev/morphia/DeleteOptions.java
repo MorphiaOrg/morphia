@@ -55,7 +55,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     }
 
     @Override
-    public DeleteOptions clientSession(ClientSession clientSession) {
+    public DeleteOptions clientSession(@Nullable ClientSession clientSession) {
         this.clientSession = clientSession;
         return this;
     }

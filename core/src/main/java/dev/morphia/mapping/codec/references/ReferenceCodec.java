@@ -2,13 +2,14 @@ package dev.morphia.mapping.codec.references;
 
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.BaseReferenceCodec;
 import dev.morphia.mapping.codec.Conversions;
-import dev.morphia.mapping.codec.PropertyCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -21,6 +22,7 @@ import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.experimental.SetReference;
 import dev.morphia.mapping.experimental.SingleReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.query.QueryException;
 import dev.morphia.sofia.Sofia;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType.Loaded;
@@ -52,7 +54,7 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
  * @morphia.internal
  */
 @SuppressWarnings({"unchecked", "removal"})
-public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHandler {
+public class ReferenceCodec extends BaseReferenceCodec<Object> implements PropertyHandler {
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
 
@@ -81,12 +83,21 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         Object idValue;
         MongoCollection<?> collection;
         if (value instanceof Key) {
-            idValue = ((Key) value).getId();
-            collection = datastore.getDatabase().getCollection(((Key<?>) value).getCollection(), ((Key<?>) value).getType());
+            idValue = ((Key<?>) value).getId();
+            String collectionName = ((Key<?>) value).getCollection();
+            Class<?> type = ((Key<?>) value).getType();
+            if (collectionName == null || type == null) {
+                throw new QueryException("Missing type or collection information in key");
+            }
+            collection = datastore.getDatabase().getCollection(collectionName, type);
         } else {
             idValue = mapper.getId(value);
             if (idValue == null) {
-                return !mapper.isMappable(value.getClass()) ? value : null;
+                if (!mapper.isMappable(value.getClass())) {
+                    return value;
+                }
+                throw new QueryException("No ID value found on referenced entity.  Save referenced entities before defining references to"
+                                         + " them.");
             }
             collection = mapper.getCollection(value.getClass());
         }
@@ -95,9 +106,6 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
 
         Reference annotation = model.getAnnotation(Reference.class);
         if (annotation != null && !annotation.idOnly()) {
-            if (idValue == null) {
-                throw new MappingException("The ID value can not be null");
-            }
             idValue = new DBRef(valueCollectionName, idValue);
         }
         return idValue;
@@ -112,28 +120,29 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
      * @return the encoded value
      * @morphia.internal
      */
+    @Nullable
     public static Object encodeId(Mapper mapper, Object value, EntityModel model) {
         Object idValue;
-        MongoCollection<?> collection = null;
+        MongoCollection<?> collection;
+        Class<?> type;
         if (value instanceof Key) {
             idValue = ((Key) value).getId();
+            type = mapper.getClassFromCollection(((Key<?>) value).getCollection());
         } else {
             idValue = mapper.getId(value);
             if (idValue == null) {
                 return !mapper.isMappable(value.getClass()) ? value : null;
             }
-            collection = mapper.getCollection(value.getClass());
+            type = value.getClass();
         }
+        collection = mapper.getCollection(type);
 
-        String valueCollectionName = collection != null ? collection.getNamespace().getCollectionName() : null;
+        String valueCollectionName = collection.getNamespace().getCollectionName();
         String fieldCollectionName = model.getCollectionName();
 
         Reference annotation = model.getAnnotation(Reference.class);
         if (annotation != null && !annotation.idOnly()
             || valueCollectionName != null && !valueCollectionName.equals(fieldCollectionName)) {
-            if (idValue == null) {
-                throw new MappingException("The ID value can not be null");
-            }
             idValue = new DBRef(valueCollectionName, idValue);
         }
         return idValue;
@@ -231,20 +240,20 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
 
     private Object collectIdValues(Object value) {
         if (value instanceof Collection) {
-            List ids = new ArrayList(((Collection) value).size());
-            for (Object o : (Collection) value) {
+            List<Object> ids = new ArrayList<>(((Collection<?>) value).size());
+            for (Object o : (Collection<?>) value) {
                 ids.add(collectIdValues(o));
             }
             return ids;
         } else if (value instanceof Map) {
-            final LinkedHashMap ids = new LinkedHashMap();
+            final Map<Object, Object> ids = new LinkedHashMap<>();
             Map<Object, Object> map = (Map<Object, Object>) value;
             for (Map.Entry<Object, Object> o : map.entrySet()) {
                 ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
             }
             return ids;
         } else if (value.getClass().isArray()) {
-            List ids = new ArrayList(((Object[]) value).length);
+            List<Object> ids = new ArrayList<>(((Object[]) value).length);
             for (Object o : (Object[]) value) {
                 ids.add(collectIdValues(o));
             }
@@ -254,7 +263,7 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         }
     }
 
-    private <T> T createProxy(MorphiaReference reference) {
+    private <T> T createProxy(MorphiaReference<?> reference) {
         ReferenceProxy referenceProxy = new ReferenceProxy(reference);
         try {
             Class<?> type = getPropertyModel().getType();
@@ -280,17 +289,18 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         }
     }
 
+    @Nullable
     private Object fetch(Object value) {
-        MorphiaReference reference;
+        MorphiaReference<?> reference;
         final Class<?> type = getPropertyModel().getType();
         if (List.class.isAssignableFrom(type)) {
-            reference = readList((List) value);
+            reference = readList((List<?>) value);
         } else if (Map.class.isAssignableFrom(type)) {
             reference = readMap((Map<Object, Object>) value);
         } else if (Set.class.isAssignableFrom(type)) {
-            reference = readSet((List) value);
+            reference = readSet((List<?>) value);
         } else if (type.isArray()) {
-            reference = readList((List) value);
+            reference = readList((List<?>) value);
         } else if (value instanceof Document) {
             reference = readDocument((Document) value);
         } else {
@@ -301,48 +311,48 @@ public class ReferenceCodec extends PropertyCodec<Object> implements PropertyHan
         return !annotation.lazy() ? reference.get() : createProxy(reference);
     }
 
-    MorphiaReference readDocument(Document value) {
+    private List<?> mapToEntitiesIfNecessary(List<?> value) {
+        Mapper mapper = getDatastore().getMapper();
+        Codec<?> codec = mapper.getCodecRegistry().get(getEntityModelForField().getType());
+        return value.stream()
+                    .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
+                    .map(d -> codec.decode(new DocumentReader((Document) d), DecoderContext.builder().build()))
+                    .collect(Collectors.toList());
+    }
+
+    MorphiaReference<?> readDocument(Document value) {
         Mapper mapper = getDatastore().getMapper();
         final Object id = mapper.getCodecRegistry().get(Object.class)
                                 .decode(new DocumentReader(value), DecoderContext.builder().build());
         return readSingle(id);
     }
 
-    private List mapToEntitiesIfNecessary(List value) {
-        Mapper mapper = getDatastore().getMapper();
-        Codec<?> codec = mapper.getCodecRegistry().get(getEntityModelForField().getType());
-        return (List) value.stream()
-                           .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
-                           .map(d -> codec.decode(new DocumentReader((Document) d), DecoderContext.builder().build()))
-                           .collect(Collectors.toList());
-    }
-
-    MorphiaReference readList(List value) {
-        List mapped = mapToEntitiesIfNecessary(value);
+    MorphiaReference<?> readList(List<?> value) {
+        List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-               ? new ListReference(getDatastore(), getEntityModelForField(), value)
-               : new ListReference(mapped);
+               ? new ListReference<>(getDatastore(), getEntityModelForField(), value)
+               : new ListReference<>(mapped);
     }
 
-    MorphiaReference readSet(List value) {
-        List mapped = mapToEntitiesIfNecessary(value);
-        return mapped.isEmpty()
-               ? new SetReference(getDatastore(), getEntityModelForField(), value)
-               : new SetReference(new LinkedHashSet(mapped));
-    }
-
-    MorphiaReference readMap(Map<Object, Object> value) {
-        final Object ids = new LinkedHashMap<>();
-        Class keyType = ((TypeData) getTypeData().getTypeParameters().get(0)).getType();
-        for (Entry entry : value.entrySet()) {
-            ((Map) ids).put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
+    MorphiaReference<?> readMap(Map<Object, Object> value) {
+        final Map<Object, Object> ids = new LinkedHashMap<>();
+        Class<?> keyType = getTypeData().getTypeParameters().get(0).getType();
+        for (Entry<Object, Object> entry : value.entrySet()) {
+            ids.put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
         }
 
-        return new MapReference(getDatastore(), (Map<String, Object>) ids, getEntityModelForField());
+        return new MapReference(getDatastore(), ids, getEntityModelForField());
     }
 
-    MorphiaReference readSingle(Object value) {
-        return new SingleReference(getDatastore(), getEntityModelForField(), value);
+    MorphiaReference<?> readSet(List<?> value) {
+        List<?> mapped = mapToEntitiesIfNecessary(value);
+        return mapped.isEmpty()
+               ? new SetReference<>(getDatastore(), getEntityModelForField(), value)
+               : new SetReference<>(new LinkedHashSet<>(mapped));
+    }
+
+    MorphiaReference<?> readSingle(Object value) {
+        return new SingleReference<>(getDatastore(), getEntityModelForField(), value);
     }
 }
 

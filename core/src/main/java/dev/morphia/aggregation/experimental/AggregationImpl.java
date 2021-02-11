@@ -37,13 +37,11 @@ import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.UnionWith;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
-import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -118,11 +116,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
             MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
             MongoCursor<Document> results = collection.aggregate(getDocuments()).iterator();
             EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
-            if (entityModel == null) {
-                throw new MappingException(Sofia.unmappedType(this.collection.getDocumentClass()));
-            }
-            String discriminator = entityModel.getDiscriminatorKey();
-            cursor = new MappingCursor(results, datastore.getMapper().getCodecRegistry().get(resultType), discriminator);
+            cursor = new MappingCursor<>(results, datastore.getMapper().getCodecRegistry().get(resultType),
+                entityModel.getDiscriminatorKey());
         } else {
             cursor = collection.aggregate(getDocuments(), resultType).iterator();
         }
@@ -327,18 +322,13 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
         @Override
         public R next() {
-            R map = map(results.next());
-
-            if (map == null) {
-                throw new NullPointerException();
-            }
-            return map;
+            return map(results.next());
         }
 
         @Override
         @Nullable
         public R tryNext() {
-            return map(results.tryNext());
+            return hasNext() ? next() : null;
         }
 
         @Override
@@ -352,14 +342,9 @@ public class AggregationImpl<T> implements Aggregation<T> {
             return results.getServerAddress();
         }
 
-        @Nullable
-        private R map(@Nullable Document next) {
-            if (next != null) {
-                next.remove(discriminator);
-                return codec.decode(new DocumentReader(next), DecoderContext.builder().build());
-            } else {
-                return null;
-            }
+        private R map(Document next) {
+            next.remove(discriminator);
+            return codec.decode(new DocumentReader(next), DecoderContext.builder().build());
         }
     }
 

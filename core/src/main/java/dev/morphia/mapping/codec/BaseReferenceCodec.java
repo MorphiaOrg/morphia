@@ -8,10 +8,11 @@ import org.bson.codecs.Codec;
 
 /**
  * Defines codecs for properties
+ *
  * @param <T> the property type
  * @morphia.internal
  */
-public abstract class PropertyCodec<T> implements Codec<T> {
+public abstract class BaseReferenceCodec<T> implements Codec<T> {
     private final PropertyModel property;
     private EntityModel entityModel;
     private final Datastore datastore;
@@ -22,7 +23,7 @@ public abstract class PropertyCodec<T> implements Codec<T> {
      * @param datastore the datastore
      * @param property  the property
      */
-    public PropertyCodec(Datastore datastore, PropertyModel property) {
+    public BaseReferenceCodec(Datastore datastore, PropertyModel property) {
         this.datastore = datastore;
         this.property = property;
     }
@@ -44,7 +45,7 @@ public abstract class PropertyCodec<T> implements Codec<T> {
     /**
      * @return the type data
      */
-    public TypeData getTypeData() {
+    public TypeData<?> getTypeData() {
         return property.getTypeData();
     }
 

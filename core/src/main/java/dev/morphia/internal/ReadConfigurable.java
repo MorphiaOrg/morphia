@@ -27,11 +27,13 @@ public interface ReadConfigurable<T> {
 
     default <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
         MongoCollection<C> updated = collection;
-        if (getReadConcern() != null) {
-            updated = updated.withReadConcern(getReadConcern());
+        ReadConcern readConcern = getReadConcern();
+        if (readConcern != null) {
+            updated = updated.withReadConcern(readConcern);
         }
-        if (getReadPreference() != null) {
-            updated = updated.withReadPreference(getReadPreference());
+        ReadPreference readPreference = getReadPreference();
+        if (readPreference != null) {
+            updated = updated.withReadPreference(readPreference);
         }
 
         return updated;

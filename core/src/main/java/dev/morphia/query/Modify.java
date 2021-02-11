@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.ModifyOptions;
 import dev.morphia.mapping.Mapper;
@@ -32,6 +33,7 @@ public class Modify<T> extends UpdateBase<T> {
      *
      * @return the operation result
      */
+    @Nullable
     public T execute() {
         return execute(new ModifyOptions());
     }
@@ -42,6 +44,7 @@ public class Modify<T> extends UpdateBase<T> {
      * @param options the options to apply
      * @return the operation result
      */
+    @Nullable
     public T execute(ModifyOptions options) {
         ClientSession session = getDatastore().findSession(options);
         Document update = toDocument();

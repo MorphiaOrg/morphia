@@ -1,6 +1,7 @@
 package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Handler;
 import dev.morphia.mapping.Mapper;
@@ -75,6 +76,7 @@ public abstract class MorphiaReference<T> {
     /**
      * @return returns the referenced entity if it exists.  May return null.
      */
+    @Nullable
     public abstract T get();
 
     /**

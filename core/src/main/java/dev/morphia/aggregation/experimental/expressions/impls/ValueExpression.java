@@ -7,14 +7,15 @@ import org.bson.codecs.EncoderContext;
 
 public class ValueExpression extends Expression {
     public ValueExpression(Object value) {
-        super(null, value);
+        super("unused", value);
     }
 
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        if (getValue() != null) {
-            Codec codec = mapper.getCodecRegistry().get(getValue().getClass());
-            encoderContext.encodeWithChildContext(codec, writer, getValue());
+        Object value = getValue();
+        if (value != null) {
+            Codec codec = mapper.getCodecRegistry().get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
         } else {
             writer.writeNull();
         }

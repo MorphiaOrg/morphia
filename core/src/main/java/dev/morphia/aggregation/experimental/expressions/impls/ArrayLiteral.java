@@ -13,7 +13,7 @@ public class ArrayLiteral extends ArrayExpression {
     private final List<Expression> values;
 
     public ArrayLiteral(Expression... values) {
-        super(null, null);
+        super("unused", null);
         this.values = asList(values);
     }
 

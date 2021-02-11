@@ -1,6 +1,7 @@
 package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -30,11 +31,11 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param id          the ID value
      * @morphia.internal
      */
-    public SingleReference(Datastore datastore, EntityModel entityModel, Object id) {
+    public SingleReference(Datastore datastore, @Nullable EntityModel entityModel, Object id) {
         super(datastore);
         this.entityModel = entityModel;
         this.id = id;
-        if (entityModel.getType().isInstance(id)) {
+        if (entityModel != null && entityModel.getType().isInstance(id)) {
             value = (T) id;
             this.id = entityModel.getIdProperty().getValue(value);
             resolve();

@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
 import java.lang.reflect.Array;
@@ -11,9 +12,10 @@ import static java.lang.String.format;
 /**
  * @morphia.internal
  */
+@SuppressWarnings("rawtypes")
 public class ArrayFieldAccessor extends FieldAccessor {
 
-    private final TypeData typeData;
+    private final TypeData<?> typeData;
     private final Class<?> componentType;
 
     /**
@@ -22,7 +24,7 @@ public class ArrayFieldAccessor extends FieldAccessor {
      * @param typeData the type data
      * @param field    the field
      */
-    public ArrayFieldAccessor(TypeData typeData, Field field) {
+    public ArrayFieldAccessor(TypeData<?> typeData, Field field) {
         super(field);
         this.typeData = typeData;
         componentType = field.getType().getComponentType();
@@ -50,17 +52,22 @@ public class ArrayFieldAccessor extends FieldAccessor {
         final Object newArray = Array.newInstance(componentType, value.size());
         for (int i = 0; i < value.size(); i++) {
             Object converted = convert(value.get(i), componentType);
-            try {
-                Array.set(newArray, i, converted);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(format("Can't set %s with a value type of %s", getField(), converted.getClass()));
+            if (converted != null) {
+                try {
+                    Array.set(newArray, i, converted);
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException(format("Can't set %s with a value type of %s", getField(), converted.getClass()));
+                }
+            } else {
+                throw new IllegalArgumentException(format("Can not convert '%s' to type '%s' ", value.get(i), componentType.getName()));
             }
         }
         return newArray;
     }
 
 
-    private Object convert(Object o, Class type) {
+    @Nullable
+    private Object convert(Object o, Class<?> type) {
         if (o instanceof List) {
             List list = (List) o;
             final Object newArray = Array.newInstance(type.getComponentType(), list.size());

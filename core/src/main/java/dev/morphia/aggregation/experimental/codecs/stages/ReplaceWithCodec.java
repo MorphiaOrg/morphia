@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
@@ -17,8 +18,9 @@ public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
 
     @Override
     protected void encodeStage(BsonWriter writer, ReplaceWith replace, EncoderContext encoderContext) {
-        if (replace.getValue() != null) {
-            replace.getValue().encode(getMapper(), writer, encoderContext);
+        Expression value = replace.getValue();
+        if (value != null) {
+            value.encode(getMapper(), writer, encoderContext);
         } else {
             replace.getDocument().encode(getMapper(), writer, encoderContext);
         }

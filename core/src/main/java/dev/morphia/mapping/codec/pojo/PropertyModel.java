@@ -26,12 +26,12 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
-import org.bson.codecs.pojo.PropertySerialization;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
@@ -60,7 +60,7 @@ public final class PropertyModel {
     private final String mappedName;
     private Codec<? super Object> codec;
     private final PropertyAccessor<? super Object> accessor;
-    private final PropertySerialization<? super Object> serialization;
+    private final MorphiaPropertySerialization serialization;
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
     private final List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
     private final EntityModel entityModel;
@@ -172,6 +172,7 @@ public final class PropertyModel {
     /**
      * @return the custom codec to use if set or null
      */
+    @Nullable
     public Codec<?> getCodec() {
         return codec;
     }
@@ -387,7 +388,7 @@ public final class PropertyModel {
      * @param value the value to check
      * @return true if the given value should be serialized
      */
-    public boolean shouldSerialize(Object value) {
+    public boolean shouldSerialize(@Nullable Object value) {
         return serialization.shouldSerialize(value);
     }
 

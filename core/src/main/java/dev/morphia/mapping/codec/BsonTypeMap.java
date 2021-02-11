@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import org.bson.BsonDbPointer;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonTimestamp;
@@ -58,6 +59,7 @@ public class BsonTypeMap {
      * @param type the BSON type
      * @return the Class that is mapped to the BSON type
      */
+    @Nullable
     public BsonType get(Class<?> type) {
         return map.get(type);
     }

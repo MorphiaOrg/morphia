@@ -16,6 +16,7 @@
 
 package dev.morphia.mapping;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
@@ -31,7 +32,7 @@ import static java.lang.String.format;
  * @morphia.internal
  */
 public final class DiscriminatorLookup {
-    private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<String, Class<?>>();
+    private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
     private final Set<String> packages;
 
     /**
@@ -42,9 +43,7 @@ public final class DiscriminatorLookup {
      */
     public DiscriminatorLookup(Map<Class<?>, EntityModel> entityModels, Set<String> packages) {
         for (EntityModel entityModel : entityModels.values()) {
-            if (entityModel.getDiscriminator() != null) {
-                discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
-            }
+            discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
         }
         this.packages = packages;
     }
@@ -55,9 +54,7 @@ public final class DiscriminatorLookup {
      * @param entityModel the model
      */
     public void addModel(EntityModel entityModel) {
-        if (entityModel.getDiscriminator() != null) {
-            discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
-        }
+        discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
     }
 
     /**
@@ -84,6 +81,7 @@ public final class DiscriminatorLookup {
         return clazz;
     }
 
+    @Nullable
     private Class<?> getClassForName(String discriminator) {
         Class<?> clazz = null;
         try {
@@ -94,6 +92,7 @@ public final class DiscriminatorLookup {
         return clazz;
     }
 
+    @Nullable
     private Class<?> searchPackages(String discriminator) {
         Class<?> clazz = null;
         for (String packageName : packages) {

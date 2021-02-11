@@ -1,6 +1,6 @@
 package dev.morphia.annotations;
 
-import dev.morphia.mapping.codec.PropertyCodec;
+import dev.morphia.mapping.codec.BaseReferenceCodec;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -20,5 +20,5 @@ public @interface Handler {
     /**
      * @return the handler Class
      */
-    Class<? extends PropertyCodec> value();
+    Class<? extends BaseReferenceCodec> value();
 }

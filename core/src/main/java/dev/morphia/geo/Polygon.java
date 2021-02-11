@@ -2,6 +2,7 @@ package dev.morphia.geo;
 
 import com.mongodb.client.model.geojson.PolygonCoordinates;
 import com.mongodb.client.model.geojson.Position;
+import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
@@ -117,7 +118,7 @@ public class Polygon implements Geometry {
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public com.mongodb.client.model.geojson.Polygon convert(CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.Polygon convert(@Nullable CoordinateReferenceSystem crs) {
         final List<List<Position>> lists = GeoJson.convertLineStrings(interiorBoundaries);
         final List[] holeArray = lists.toArray(new List[0]);
         return new com.mongodb.client.model.geojson.Polygon(crs != null ? crs.convert() : null,

@@ -1,6 +1,7 @@
 package dev.morphia.geo;
 
 import com.mongodb.client.model.geojson.Position;
+import com.mongodb.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,11 +96,11 @@ public class Point implements Geometry {
     }
 
     /**
-     * @morphia.internal
      * @return this Point converted to a driver Point
+     * @morphia.internal
      */
     @Override
-    public com.mongodb.client.model.geojson.Point convert(CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.Point convert(@Nullable CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.Point(crs != null ? crs.convert() : null, new Position(getLongitude(), getLatitude()));
     }
 }

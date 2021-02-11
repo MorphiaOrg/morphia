@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.Nullable;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -30,6 +31,11 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
         encodeEntity(writer, value, encoderContext);
     }
 
+    @Override
+    public Class<Object> getEncoderClass() {
+        return morphiaCodec.getEncoderClass();
+    }
+
     @SuppressWarnings("unchecked")
     protected void encodeEntity(BsonWriter writer, Object value, EncoderContext encoderContext) {
         EntityModel model = morphiaCodec.getEntityModel();
@@ -58,19 +64,14 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
         }
     }
 
-    @Override
-    public Class<Object> getEncoderClass() {
-        return morphiaCodec.getEncoderClass();
+    protected MorphiaCodec getMorphiaCodec() {
+        return morphiaCodec;
     }
 
     private <S, V> boolean areEquivalentTypes(Class<S> t1, Class<V> t2) {
         return t1.equals(t2)
                || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
-    }
-
-    protected MorphiaCodec getMorphiaCodec() {
-        return morphiaCodec;
     }
 
     private void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext,
@@ -90,16 +91,13 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
         }
     }
 
-    private void encodeProperty(BsonWriter writer, Object instance, EncoderContext encoderContext,
-                                PropertyModel model) {
-        if (model != null) {
-            Object value = model.getAccessor().get(instance);
-            encodeValue(writer, encoderContext, model, value);
-        }
+    private void encodeProperty(BsonWriter writer, Object instance, EncoderContext encoderContext, PropertyModel model) {
+        Object value = model.getAccessor().get(instance);
+        encodeValue(writer, encoderContext, model, value);
     }
 
     private void encodeValue(BsonWriter writer, EncoderContext encoderContext, PropertyModel model,
-                             Object propertyValue) {
+                             @Nullable Object propertyValue) {
         if (model.shouldSerialize(propertyValue)) {
             writer.writeName(model.getMappedName());
             if (propertyValue == null) {
@@ -111,15 +109,15 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
         }
     }
 
+    @Nullable
     private IdGenerator getIdGenerator() {
         if (idGenerator == null) {
             PropertyModel idModel = morphiaCodec.getEntityModel().getIdProperty();
-            if (idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
+            if (idModel != null && idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
                 idGenerator = OBJECT_ID_GENERATOR;
             }
         }
 
         return idGenerator;
     }
-
 }

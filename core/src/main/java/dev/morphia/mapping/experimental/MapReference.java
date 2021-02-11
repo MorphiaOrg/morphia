@@ -37,17 +37,10 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      */
     public MapReference(Datastore datastore, Map<String, Object> ids, EntityModel entityModel) {
         super(datastore);
-        if (ids != null) {
-            //            if (ids.entrySet().stream().allMatch(entityModel.getType()::isInstance)) {
-            //                setValues(ids);
-            //            } else {
-            for (Entry<String, Object> entry : ids.entrySet()) {
-                CollectionReference.collate(entityModel, collections, entry.getValue());
-            }
-            this.ids = ids;
-            //            }
+        for (Entry<String, Object> entry : ids.entrySet()) {
+            CollectionReference.collate(entityModel, collections, entry.getValue());
         }
-
+        this.ids = ids;
     }
 
     private void setValues(Map<String, Object> values) {
@@ -61,17 +54,17 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     /**
      * Decodes a document in to entities
      *
-     * @param datastore   the datastore
-     * @param mapper      the mapper
-     * @param mappedField the MappedField
-     * @param document    the Document to decode
+     * @param datastore the datastore
+     * @param mapper    the mapper
+     * @param property  the property model
+     * @param document  the Document to decode
      * @return the entities
      */
-    public static MapReference decode(Datastore datastore, Mapper mapper, PropertyModel mappedField,
+    public static MapReference decode(Datastore datastore, Mapper mapper, PropertyModel property,
                                       Document document) {
-        final Class subType = mappedField.getTypeData().getTypeParameters().get(0).getType();
+        final Class subType = property.getTypeData().getTypeParameters().get(0).getType();
 
-        final Map<String, Object> ids = (Map<String, Object>) mappedField.getDocumentValue(document);
+        final Map<String, Object> ids = (Map<String, Object>) property.getDocumentValue(document);
         MapReference reference = null;
         if (ids != null) {
             reference = new MapReference(datastore, ids, mapper.getEntityModel(subType));

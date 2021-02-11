@@ -323,6 +323,34 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     /**
+     * @return the Mongo fields {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getFieldsObject() {
+        Projection projection = getOptions().getProjection();
+
+        return projection != null ? projection.map(mapper, clazz) : null;
+    }
+
+    /**
+     * @return the collection this query targets
+     * @morphia.internal
+     */
+    public MongoCollection<T> getCollection() {
+        return collection;
+    }
+
+    /**
+     * @return the Mongo sort {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getSort() {
+        return options != null ? options.getSort() : null;
+    }
+
+    /**
      * Converts the query to a Document and updates for any discriminator values as my be necessary
      *
      * @return the query
@@ -332,7 +360,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     public Document toDocument() {
         final Document query = getQueryDocument();
         EntityModel model = mapper.getEntityModel(getEntityClass());
-        Entity entityAnnotation = model != null ? model.getEntityAnnotation() : null;
+        Entity entityAnnotation = model.getEntityAnnotation();
         if (entityAnnotation != null && entityAnnotation.useDiscriminator()
             && !query.containsKey("_id")
             && !query.containsKey(model.getDiscriminatorKey())) {
@@ -347,32 +375,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 new Document("$in", values));
         }
         return query;
-    }
-
-    /**
-     * @return the collection this query targets
-     * @morphia.internal
-     */
-    public MongoCollection<T> getCollection() {
-        return collection;
-    }
-
-    /**
-     * @return the Mongo fields {@link Document}.
-     * @morphia.internal
-     */
-    public Document getFieldsObject() {
-        Projection projection = getOptions().getProjection();
-
-        return projection != null ? projection.map(mapper, clazz) : null;
-    }
-
-    /**
-     * @return the Mongo sort {@link Document}.
-     * @morphia.internal
-     */
-    public Document getSort() {
-        return options != null ? options.getSort() : null;
     }
 
     @Override

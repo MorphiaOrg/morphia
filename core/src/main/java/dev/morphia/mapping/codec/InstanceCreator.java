@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 /**
@@ -18,6 +19,6 @@ public interface InstanceCreator {
      * @param value the value
      * @param model the model
      */
-    void set(Object value, PropertyModel model);
+    void set(@Nullable Object value, PropertyModel model);
 
 }

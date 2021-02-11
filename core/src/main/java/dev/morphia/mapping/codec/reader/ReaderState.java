@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.reader;
 
 import com.mongodb.DBRef;
+import com.mongodb.lang.Nullable;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonType;
@@ -17,6 +18,7 @@ abstract class ReaderState {
         this.reader = reader;
     }
 
+    @Nullable
     public ReaderState nextState() {
         return nextState;
     }

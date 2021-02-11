@@ -24,6 +24,8 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.codec.MorphiaPropertySerialization;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
 
@@ -53,13 +55,14 @@ public final class PropertyModelBuilder {
     private int modifiers;
     private String name;
     private TypeData<?> typeData;
-    private PropertySerialization<? super Object> serialization;
+    private MorphiaPropertySerialization serialization;
 
     PropertyModelBuilder(Datastore datastore) {
         this.datastore = datastore;
     }
 
     @SuppressWarnings("ConstantConditions")
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public String discoverMappedName(MapperOptions options) {
         if (hasAnnotation(Id.class)) {
             return "_id";
@@ -270,7 +273,7 @@ public final class PropertyModelBuilder {
      * @param propertySerialization checks if a property should be serialized
      * @return this
      */
-    public PropertyModelBuilder serialization(PropertySerialization<? super Object> propertySerialization) {
+    public PropertyModelBuilder serialization(MorphiaPropertySerialization propertySerialization) {
         this.serialization = notNull("propertySerialization", propertySerialization);
         return this;
     }
@@ -278,7 +281,7 @@ public final class PropertyModelBuilder {
     /**
      * @return the PropertySerialization for this property
      */
-    public PropertySerialization<? super Object> serialization() {
+    public MorphiaPropertySerialization serialization() {
         return serialization;
     }
 

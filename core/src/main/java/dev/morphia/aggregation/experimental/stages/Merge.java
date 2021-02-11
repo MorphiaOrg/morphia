@@ -92,6 +92,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     public String getDatabase() {
         return database;
     }

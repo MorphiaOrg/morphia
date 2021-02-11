@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import org.bson.BsonInvalidOperationException;
@@ -47,18 +48,17 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
-                               MorphiaInstanceCreator instanceCreator, PropertyModel model) {
+                               MorphiaInstanceCreator instanceCreator, @Nullable PropertyModel model) {
 
         if (model != null) {
             final BsonReaderMark mark = reader.getMark();
             try {
-                Object value = null;
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
                 } else {
-                    value = decoderContext.decodeWithChildContext(model.getCachedCodec(), reader);
+                    Object value = decoderContext.decodeWithChildContext(model.getCachedCodec(), reader);
+                    instanceCreator.set(value, model);
                 }
-                instanceCreator.set(value, model);
             } catch (BsonInvalidOperationException e) {
                 mark.reset();
                 final Object value = morphiaCodec.getMapper().getCodecRegistry().get(Object.class).decode(reader, decoderContext);

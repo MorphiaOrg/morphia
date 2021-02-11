@@ -140,28 +140,21 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return entity;
     }
 
+    @Override
+    public BsonValue getDocumentId(Object document) {
+        throw new UnsupportedOperationException();
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void specializePropertyCodecs() {
         EntityModel entityModel = getEntityModel();
         for (PropertyModel propertyModel : entityModel.getProperties()) {
             Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
                                                            : propertyCodecRegistry.get(propertyModel.getTypeData());
-            propertyModel.cachedCodec(codec);
+            if (codec != null) {
+                propertyModel.cachedCodec(codec);
+            }
         }
-    }
-
-    @Override
-    public BsonValue getDocumentId(Object document) {
-        throw new UnsupportedOperationException("is this even necessary?");
-/*
-        final Object id = mappedClass.getIdField().getFieldValue(document);
-        final DocumentWriter writer = new DocumentWriter();
-        ((Codec) registry.get(id.getClass()))
-            .encode(writer, id, EncoderContext.builder().build());
-        Document doc = writer.getDocument();
-
-        return null;
-*/
     }
 
     /**

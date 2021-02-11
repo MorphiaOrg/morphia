@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import com.mongodb.lang.Nullable;
+
 import java.util.List;
 
 /**
@@ -44,6 +46,7 @@ public class UnionWith extends Stage {
      * @return the collection name
      * @morphia.internal
      */
+    @Nullable
     public String getCollectionName() {
         return collectionName;
     }

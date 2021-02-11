@@ -296,6 +296,7 @@ public class EntityModelBuilder {
     /**
      * @return the name of the version property
      */
+    @Nullable
     public String versionPropertyName() {
         return versionPropertyName;
     }

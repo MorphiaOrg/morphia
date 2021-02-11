@@ -12,7 +12,7 @@ import org.bson.codecs.EncoderContext;
  */
 public class ArrayExpression extends Expression {
 
-    public ArrayExpression(@Nullable String operation, @Nullable Object value) {
+    public ArrayExpression(String operation, @Nullable Object value) {
         super(operation, value);
     }
 

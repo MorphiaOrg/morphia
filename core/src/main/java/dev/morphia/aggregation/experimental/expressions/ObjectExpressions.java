@@ -45,7 +45,10 @@ public final class ObjectExpressions {
          */
         @SuppressWarnings("unchecked")
         public MergeObjects add(Expression expression) {
-            ((List<Expression>) getValue()).add(expression);
+            List<Expression> value = (List<Expression>) getValue();
+            if (value != null) {
+                value.add(expression);
+            }
             return this;
         }
 

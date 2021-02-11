@@ -10,7 +10,7 @@ public class DocumentExpression extends Expression implements FieldHolder<Docume
     private final Fields<DocumentExpression> fields = Fields.on(this);
 
     public DocumentExpression() {
-        super(null);
+        super("unused");
     }
 
     public void encode(String name, Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {

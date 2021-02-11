@@ -52,11 +52,7 @@ public class ClassMethodPair {
                     args.add(entity);
                 }
             }
-            if (instance == null) {
-                method.invoke(args.toArray());
-            } else {
-                method.invoke(instance, args.toArray());
-            }
+            method.invoke(instance, args.toArray());
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }

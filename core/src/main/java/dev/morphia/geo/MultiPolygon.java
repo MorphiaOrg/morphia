@@ -1,6 +1,7 @@
 package dev.morphia.geo;
 
 import com.mongodb.client.model.geojson.PolygonCoordinates;
+import com.mongodb.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class MultiPolygon implements Geometry {
 
     @SuppressWarnings("UnusedDeclaration") // used by Morphia
     private MultiPolygon() {
-        coordinates = new ArrayList<Polygon>();
+        coordinates = new ArrayList<>();
     }
 
     MultiPolygon(Polygon... polygons) {
@@ -72,7 +73,7 @@ public class MultiPolygon implements Geometry {
     }
 
     @Override
-    public com.mongodb.client.model.geojson.MultiPolygon convert(CoordinateReferenceSystem crs) {
+    public com.mongodb.client.model.geojson.MultiPolygon convert(@Nullable CoordinateReferenceSystem crs) {
         List<PolygonCoordinates> coords = new ArrayList<PolygonCoordinates>();
         for (Polygon list : coordinates) {
             coords.add(list.convert(crs).getCoordinates());

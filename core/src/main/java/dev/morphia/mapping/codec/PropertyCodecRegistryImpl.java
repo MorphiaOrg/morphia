@@ -44,9 +44,7 @@ public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
     public PropertyCodecRegistryImpl(Codec<?> pojoCodec, CodecRegistry codecRegistry,
                                      List<PropertyCodecProvider> propertyCodecProviders) {
         List<PropertyCodecProvider> augmentedProviders = new ArrayList<PropertyCodecProvider>();
-        if (propertyCodecProviders != null) {
-            augmentedProviders.addAll(propertyCodecProviders);
-        }
+        augmentedProviders.addAll(propertyCodecProviders);
         augmentedProviders.add(new CollectionPropertyCodecProvider());
         augmentedProviders.add(new MorphiaCollectionPropertyCodecProvider());
         augmentedProviders.add(new EnumPropertyCodecProvider(codecRegistry));

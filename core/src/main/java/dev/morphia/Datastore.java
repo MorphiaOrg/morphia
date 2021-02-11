@@ -212,6 +212,7 @@ public interface Datastore {
      * @return the deleted Entity
      * @deprecated use {@link Query#findAndDelete()} instead
      */
+    @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query) {
         return query.findAndDelete();
@@ -228,6 +229,7 @@ public interface Datastore {
      * @deprecated use {@link Query#findAndDelete(FindAndDeleteOptions)} instead
      */
     @SuppressWarnings("removal")
+    @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
         return query.findAndDelete(new FindAndDeleteOptions()
@@ -249,6 +251,7 @@ public interface Datastore {
      * @deprecated use {@link Query#modify(UpdateOperations)} instead
      */
     @SuppressWarnings("removal")
+    @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations, FindAndModifyOptions options) {
         return query.modify(operations).execute(options);
@@ -264,6 +267,7 @@ public interface Datastore {
      * @deprecated use {@link Query#modify(UpdateOperations)} instead
      */
     @SuppressWarnings("removal")
+    @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.modify(operations).execute(new ModifyOptions()

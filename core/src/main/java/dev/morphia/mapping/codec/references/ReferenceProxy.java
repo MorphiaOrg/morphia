@@ -45,6 +45,7 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T unwrap() {
         return (T) reference.get();
     }

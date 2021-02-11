@@ -1,7 +1,9 @@
 package dev.morphia.mapping.codec.reader;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonJavaScript;
@@ -115,7 +117,11 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public long readDateTime() {
-        return Conversions.convert(stage().value(), long.class);
+        Long value = Conversions.convert(stage().value(), long.class);
+        if (value != null) {
+            return value;
+        }
+        throw new IllegalStateException(Sofia.valueCannotBeNull());
     }
 
     @Override
@@ -345,14 +351,6 @@ public class DocumentReader implements BsonReader {
     public void close() {
     }
 
-    protected void verifyName(String expectedName) {
-        String actualName = readName();
-        if (!actualName.equals(expectedName)) {
-            throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
-                expectedName, actualName));
-        }
-    }
-
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", DocumentReader.class.getSimpleName() + "[", "]");
@@ -369,15 +367,19 @@ public class DocumentReader implements BsonReader {
                    .toString();
     }
 
-    void reset(ReaderState bookmark) {
-        current = bookmark;
+    protected void verifyName(String expectedName) {
+        String actualName = readName();
+        if (!actualName.equals(expectedName)) {
+            throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
+                expectedName, actualName));
+        }
     }
 
-    ReaderState stage() {
-        return this.current;
-    }
+    BsonType getBsonType(@Nullable Object o) {
+        if (o == null) {
+            return BsonType.NULL;
+        }
 
-    BsonType getBsonType(Object o) {
         BsonType bsonType = TYPE_MAP.get(o.getClass());
         if (bsonType == null) {
             if (o instanceof List) {
@@ -389,7 +391,15 @@ public class DocumentReader implements BsonReader {
         return bsonType;
     }
 
-    void state(ReaderState next) {
+    void reset(ReaderState bookmark) {
+        current = bookmark;
+    }
+
+    ReaderState stage() {
+        return this.current;
+    }
+
+    void state(@Nullable ReaderState next) {
         current = next;
     }
 }

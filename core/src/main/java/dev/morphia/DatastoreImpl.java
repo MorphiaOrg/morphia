@@ -314,7 +314,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
 
-        return query.first();
+        return query.iterator().next();
     }
 
     @Override
@@ -568,7 +568,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private <T> boolean tryVersionedUpdate(T entity, MongoCollection collection, InsertOneOptions options) {
         final EntityModel model = mapper.getEntityModel(entity.getClass());
-        final PropertyModel versionField = model != null ? model.getVersionProperty() : null;
+        final PropertyModel versionField = model.getVersionProperty();
         if (versionField == null) {
             return false;
         }

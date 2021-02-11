@@ -17,6 +17,7 @@
 package dev.morphia.annotations;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -96,22 +97,23 @@ public final class IndexHelper {
 
     private List<Index> collectTopLevelIndexes(EntityModel entityModel) {
         List<Index> list = new ArrayList<>();
-        if (entityModel != null) {
-            final Indexes indexes = entityModel.getAnnotation(Indexes.class);
-            if (indexes != null) {
-                for (Index index : indexes.value()) {
-                    List<Field> fields = new ArrayList<>();
-                    for (Field field : index.fields()) {
-                        fields.add(new FieldBuilder()
-                                       .value(findField(entityModel, index.options(), field.value()))
-                                       .type(field.type())
-                                       .weight(field.weight()));
-                    }
-
-                    list.add(replaceFields(index, fields));
+        final Indexes indexes = entityModel.getAnnotation(Indexes.class);
+        if (indexes != null) {
+            for (Index index : indexes.value()) {
+                List<Field> fields = new ArrayList<>();
+                for (Field field : index.fields()) {
+                    fields.add(new FieldBuilder()
+                                   .value(findField(entityModel, index.options(), field.value()))
+                                   .type(field.type())
+                                   .weight(field.weight()));
                 }
+
+                list.add(replaceFields(index, fields));
             }
-            list.addAll(collectTopLevelIndexes(entityModel.getSuperClass()));
+        }
+        EntityModel superClass = entityModel.getSuperClass();
+        if (superClass != null) {
+            list.addAll(collectTopLevelIndexes(superClass));
         }
 
         return list;
@@ -140,7 +142,8 @@ public final class IndexHelper {
         return keys;
     }
 
-    Index convert(Indexed indexed, String nameToStore) {
+    @Nullable
+    Index convert(@Nullable Indexed indexed, String nameToStore) {
         return indexed == null
                ? null
                : new IndexBuilder()
@@ -150,7 +153,8 @@ public final class IndexHelper {
                                                .type(fromValue(indexed.value().toIndexValue()))));
     }
 
-    Index convert(Text text, String nameToStore) {
+    @Nullable
+    Index convert(@Nullable Text text, String nameToStore) {
         return text == null
                ? null
                : new IndexBuilder()

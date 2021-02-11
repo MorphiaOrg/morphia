@@ -53,13 +53,6 @@ public final class Conversions {
         register(Float.class, Long.class, Float::longValue, "Converting a float value to a long.  Possible loss of precision.");
         register(Float.class, Integer.class, Float::intValue, "Converting a float value to an int.  Possible loss of precision.");
 
-        register(String.class, BigDecimal.class, BigDecimal::new);
-        register(String.class, Byte.class, Byte::valueOf);
-        register(String.class, Integer.class, Integer::valueOf);
-        register(String.class, Float.class, Float::valueOf);
-        register(String.class, Double.class, Double::valueOf);
-        register(String.class, Long.class, Long::valueOf);
-
         register(URI.class, String.class, u -> {
             try {
                 return u.toURL().toExternalForm().replace(".", "%46");
@@ -73,6 +66,7 @@ public final class Conversions {
     }
 
     private static void registerStringConversions() {
+        register(String.class, BigDecimal.class, BigDecimal::new);
         register(String.class, ObjectId.class, ObjectId::new);
         register(String.class, Character.class, s -> {
             if (s.length() == 1) {

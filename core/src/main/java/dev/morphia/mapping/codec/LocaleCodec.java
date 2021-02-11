@@ -13,11 +13,6 @@ import java.util.Locale;
  */
 public class LocaleCodec implements Codec<Locale> {
     @Override
-    public Class<Locale> getEncoderClass() {
-        return Locale.class;
-    }
-
-    @Override
     public Locale decode(BsonReader reader, DecoderContext decoderContext) {
         return parseLocale(reader.readString());
     }
@@ -31,25 +26,26 @@ public class LocaleCodec implements Codec<Locale> {
         }
     }
 
+    @Override
+    public Class<Locale> getEncoderClass() {
+        return Locale.class;
+    }
+
     Locale parseLocale(String localeString) {
-        if ((localeString != null) && (!localeString.isEmpty())) {
-            final int index = localeString.indexOf("_");
-            final int index2 = localeString.indexOf("_", index + 1);
-            Locale resultLocale;
-            if (index == -1) {
-                resultLocale = new Locale(localeString);
-            } else if (index2 == -1) {
-                resultLocale = new Locale(localeString.substring(0, index), localeString.substring(index + 1));
-            } else {
-                resultLocale = new Locale(
-                                             localeString.substring(0, index),
-                                             localeString.substring(index + 1, index2),
-                                             localeString.substring(index2 + 1));
+        final int index = localeString.indexOf("_");
+        final int index2 = localeString.indexOf("_", index + 1);
+        Locale resultLocale;
+        if (index == -1) {
+            resultLocale = new Locale(localeString);
+        } else if (index2 == -1) {
+            resultLocale = new Locale(localeString.substring(0, index), localeString.substring(index + 1));
+        } else {
+            resultLocale = new Locale(
+                localeString.substring(0, index),
+                localeString.substring(index + 1, index2),
+                localeString.substring(index2 + 1));
 
-            }
-            return resultLocale;
         }
-
-        return null;
+        return resultLocale;
     }
 }

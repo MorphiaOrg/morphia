@@ -116,7 +116,7 @@ public class Mapper {
      */
     public <T> PropertyModel findIdProperty(Class<?> type) {
         EntityModel entityModel = getEntityModel(type);
-        PropertyModel idField = entityModel != null ? entityModel.getIdProperty() : null;
+        PropertyModel idField = entityModel.getIdProperty();
 
         if (idField == null) {
             throw new MappingException(Sofia.idRequired(type.getName()));
@@ -180,6 +180,7 @@ public class Mapper {
      * @return the class reference.  might be null
      */
     @SuppressWarnings("unchecked")
+    @Nullable
     public <T> Class<T> getClass(Document document) {
         // see if there is a className value
         Class c = null;
@@ -247,14 +248,9 @@ public class Mapper {
      */
     public <T> MongoCollection<T> getCollection(Class<T> type) {
         EntityModel entityModel = getEntityModel(type);
-        if (entityModel == null) {
-            throw new MappingException(Sofia.notMappable(type.getName()));
-        }
-        if (entityModel.getCollectionName() == null) {
-            throw new MappingException(Sofia.noMappedCollection(type.getName()));
-        }
+        String collectionName = entityModel.getCollectionName();
 
-        MongoCollection<T> collection = datastore.getDatabase().getCollection(entityModel.getCollectionName(), type);
+        MongoCollection<T> collection = datastore.getDatabase().getCollection(collectionName, type);
 
         Entity annotation = entityModel.getEntityAnnotation();
         if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
@@ -562,9 +558,6 @@ public class Mapper {
      */
     public Document toDocument(Object entity) {
         final EntityModel entityModel = getEntityModel(entity.getClass());
-        if (entityModel == null) {
-            throw new MappingException(Sofia.notMappable(entity.getClass().getName()));
-        }
 
         DocumentWriter writer = new DocumentWriter();
         ((Codec) getCodecRegistry().get(entityModel.getType()))
@@ -581,13 +574,16 @@ public class Mapper {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     public String updateCollection(Key key) {
-        if (key.getCollection() == null && key.getType() == null) {
+        String collection = key.getCollection();
+        Class type = key.getType();
+        if (collection == null && type == null) {
             throw new IllegalStateException("Key is invalid! " + key);
-        } else if (key.getCollection() == null && key.getType() != null) {
-            key.setCollection(getEntityModel(key.getType()).getCollectionName());
+        } else if (collection == null) {
+            collection = getEntityModel(type).getCollectionName();
+            key.setCollection(collection);
         }
 
-        return key.getCollection();
+        return collection;
     }
 
     /**
