@@ -26,7 +26,7 @@ public class ReferenceToUnidentifiable extends PropertyConstraint {
                 ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(), Sofia.keyNotAllowedAsProperty()));
             } else {
                 try {
-                    EntityModel model = mapper.getEntityModel(realType);
+                    mapper.getEntityModel(realType);
                 } catch (NotMappableException ignored) {
                     ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
                         Sofia.referredTypeMissingId(propertyModel.getFullName(), propertyModel.getType().getName())));

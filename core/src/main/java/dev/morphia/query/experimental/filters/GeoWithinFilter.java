@@ -42,8 +42,10 @@ public class GeoWithinFilter extends Filter {
         writer.writeName("$geometry");
 
         Object shape = getValue();
-        Codec codec = mapper.getCodecRegistry().get(shape.getClass());
-        codec.encode(writer, shape, context);
+        if (shape != null) {
+            Codec codec = mapper.getCodecRegistry().get(shape.getClass());
+            codec.encode(writer, shape, context);
+        }
 
         writer.writeEndDocument();
         writer.writeEndDocument();

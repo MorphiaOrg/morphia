@@ -155,7 +155,6 @@ public class Filter {
         return format("%s %s %s", field, name, value);
     }
 
-    @Nullable
     protected String path(Mapper mapper) {
         return pathTarget(mapper).translatedPath();
     }

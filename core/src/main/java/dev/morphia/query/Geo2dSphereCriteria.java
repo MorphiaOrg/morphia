@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Geometry;
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -62,11 +63,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         return this;
     }
 
-    Geo2dSphereCriteria maxDistance(Double maxDistance) {
-        return manageOption("$maxDistance", maxDistance);
-    }
-
-    private Geo2dSphereCriteria manageOption(String key, Object value) {
+    private Geo2dSphereCriteria manageOption(String key, @Nullable Object value) {
         if (options == null) {
             options = new Document();
         }
@@ -79,7 +76,11 @@ final class Geo2dSphereCriteria extends FieldCriteria {
         return this;
     }
 
-    Geo2dSphereCriteria minDistance(Double minDistance) {
+    Geo2dSphereCriteria maxDistance(@Nullable Double maxDistance) {
+        return manageOption("$maxDistance", maxDistance);
+    }
+
+    Geo2dSphereCriteria minDistance(@Nullable Double minDistance) {
         return manageOption("$minDistance", minDistance);
     }
 }

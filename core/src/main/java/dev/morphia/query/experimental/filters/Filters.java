@@ -247,7 +247,12 @@ public final class Filters {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeName("$expr");
-                getValue().encode(mapper, writer, context);
+                Expression value = getValue();
+                if (value != null) {
+                    value.encode(mapper, writer, context);
+                } else {
+                    writer.writeNull();
+                }
             }
 
             @Override
@@ -367,7 +372,7 @@ public final class Filters {
         return new Filter("$jsonSchema", null, schema) {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                value(mapper, writer, getName(), schema, context);
+                value(mapper, writer, "$jsonSchema", schema, context);
             }
         };
     }
@@ -609,11 +614,16 @@ public final class Filters {
             @Override
             public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
                 writer.writeName(getName());
-                String value = getValue(mapper).toString().trim();
-                if (!value.startsWith("function()")) {
-                    value = format("function() { %s }", value);
+                Object where = getValue(mapper);
+                if (where != null) {
+                    String value = where.toString().trim();
+                    if (!value.startsWith("function()")) {
+                        value = format("function() { %s }", value);
+                    }
+                    writer.writeString(value);
+                } else {
+                    writer.writeNull();
                 }
-                writer.writeString(value);
             }
         };
     }

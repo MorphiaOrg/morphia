@@ -4,6 +4,7 @@ package dev.morphia.query;
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.utils.Assert;
@@ -219,7 +220,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     @Override
-    public T nearSphere(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance) {
+    public T nearSphere(com.mongodb.client.model.geojson.Point point, @Nullable Double maxDistance, @Nullable Double minDistance) {
         target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR_SPHERE, point, model, validating)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));

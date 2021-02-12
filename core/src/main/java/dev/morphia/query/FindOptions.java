@@ -35,6 +35,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
@@ -387,26 +388,9 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
 
     @Override
     public int hashCode() {
-        int result = getBatchSize();
-        result = 31 * result + getLimit();
-        result = 31 * result + (int) (maxTimeMS ^ (maxTimeMS >>> 32));
-        result = 31 * result + (int) (maxAwaitTimeMS ^ (maxAwaitTimeMS >>> 32));
-        result = 31 * result + getSkip();
-        result = 31 * result + (getSort() != null ? getSort().hashCode() : 0);
-        result = 31 * result + (getCursorType() != null ? getCursorType().hashCode() : 0);
-        result = 31 * result + (isNoCursorTimeout() ? 1 : 0);
-        result = 31 * result + (isOplogReplay() ? 1 : 0);
-        result = 31 * result + (isPartial() ? 1 : 0);
-        result = 31 * result + (getCollation() != null ? getCollation().hashCode() : 0);
-        result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
-        result = 31 * result + (getHint() != null ? getHint().hashCode() : 0);
-        result = 31 * result + (getMax() != null ? getMax().hashCode() : 0);
-        result = 31 * result + (getMin() != null ? getMin().hashCode() : 0);
-        result = 31 * result + (isReturnKey() ? 1 : 0);
-        result = 31 * result + (isShowRecordId() ? 1 : 0);
-        result = 31 * result + (getReadPreference() != null ? getReadPreference().hashCode() : 0);
-        result = 31 * result + (getProjection() != null ? getProjection().hashCode() : 0);
-        return result;
+        return Objects.hash(allowDiskUse, batchSize, limit, maxTimeMS, maxAwaitTimeMS, skip, sort, cursorType, noCursorTimeout, oplogReplay,
+            partial, collation, comment, hint, hintString, max, min, returnKey, showRecordId, readConcern, readPreference, projection,
+            queryLogId, clientSession);
     }
 
     @Override
@@ -417,67 +401,15 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
         if (!(o instanceof FindOptions)) {
             return false;
         }
-
-        final FindOptions that = (FindOptions) o;
-
-        if (getBatchSize() != that.getBatchSize()) {
-            return false;
-        }
-        if (getLimit() != that.getLimit()) {
-            return false;
-        }
-        if (maxTimeMS != that.maxTimeMS) {
-            return false;
-        }
-        if (maxAwaitTimeMS != that.maxAwaitTimeMS) {
-            return false;
-        }
-        if (getSkip() != that.getSkip()) {
-            return false;
-        }
-        if (isNoCursorTimeout() != that.isNoCursorTimeout()) {
-            return false;
-        }
-        if (isOplogReplay() != that.isOplogReplay()) {
-            return false;
-        }
-        if (isPartial() != that.isPartial()) {
-            return false;
-        }
-        if (isReturnKey() != that.isReturnKey()) {
-            return false;
-        }
-        if (isShowRecordId() != that.isShowRecordId()) {
-            return false;
-        }
-        if (getSort() != null ? !getSort().equals(that.getSort()) : that.getSort() != null) {
-            return false;
-        }
-        if (getCursorType() != that.getCursorType()) {
-            return false;
-        }
-        if (getCollation() != null ? !getCollation().equals(that.getCollation()) : that.getCollation() != null) {
-            return false;
-        }
-        if (getComment() != null ? !getComment().equals(that.getComment()) : that.getComment() != null) {
-            return false;
-        }
-        if (getHint() != null ? !getHint().equals(that.getHint()) : that.getHint() != null) {
-            return false;
-        }
-        if (getMax() != null ? !getMax().equals(that.getMax()) : that.getMax() != null) {
-            return false;
-        }
-        if (getMin() != null ? !getMin().equals(that.getMin()) : that.getMin() != null) {
-            return false;
-        }
-        if (getReadPreference() != null ? !getReadPreference().equals(that.getReadPreference()) : that.getReadPreference() != null) {
-            return false;
-        }
-        if (getReadConcern() != null ? !getReadConcern().equals(that.getReadConcern()) : that.getReadConcern() != null) {
-            return false;
-        }
-        return getProjection() != null ? getProjection().equals(that.getProjection()) : that.getProjection() == null;
+        FindOptions that = (FindOptions) o;
+        return batchSize == that.batchSize && limit == that.limit && maxTimeMS == that.maxTimeMS && maxAwaitTimeMS == that.maxAwaitTimeMS
+               && skip == that.skip && noCursorTimeout == that.noCursorTimeout && oplogReplay == that.oplogReplay && partial == that.partial
+               && returnKey == that.returnKey && showRecordId == that.showRecordId && Objects.equals(allowDiskUse, that.allowDiskUse)
+               && Objects.equals(sort, that.sort) && cursorType == that.cursorType && Objects.equals(collation, that.collation)
+               && Objects.equals(comment, that.comment) && Objects.equals(hint, that.hint) && Objects.equals(hintString, that.hintString)
+               && Objects.equals(max, that.max) && Objects.equals(min, that.min) && Objects.equals(readConcern, that.readConcern)
+               && Objects.equals(readPreference, that.readPreference) && Objects.equals(projection, that.projection)
+               && Objects.equals(queryLogId, that.queryLogId) && Objects.equals(clientSession, that.clientSession);
     }
 
     @Override

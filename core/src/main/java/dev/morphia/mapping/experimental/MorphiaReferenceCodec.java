@@ -1,8 +1,10 @@
 package dev.morphia.mapping.experimental;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseReferenceCodec;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -52,31 +54,36 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
                              .decode(reader, decoderContext);
         value = processId(value, mapper, decoderContext);
         TypeData typeData = getTypeData().getTypeParameters().get(0);
+        EntityModel fieldEntityModel = getEntityModelForField();
         if (Set.class.isAssignableFrom(typeData.getType())) {
-            return new SetReference<>(getDatastore(), getEntityModelForField(), (List) value);
+            return new SetReference<>(getDatastore(), fieldEntityModel, (List) value);
         } else if (Collection.class.isAssignableFrom(typeData.getType())) {
-            return new ListReference<>(getDatastore(), getEntityModelForField(), (List) value);
+            return new ListReference<>(getDatastore(), fieldEntityModel, (List) value);
         } else if (Map.class.isAssignableFrom(typeData.getType())) {
-            return new MapReference<>(getDatastore(), (Map) value, getEntityModelForField());
+            return new MapReference<>(getDatastore(), (Map) value, fieldEntityModel);
         } else {
-            return new SingleReference<>(getDatastore(), getEntityModelForField(), value);
+            return new SingleReference<>(getDatastore(), fieldEntityModel, value);
         }
     }
 
     @Override
-    public Object encode(Object value) {
-        MorphiaReference<Object> wrap;
-        if (value instanceof MorphiaReference) {
-            wrap = (MorphiaReference<Object>) value;
+    public Object encode(@Nullable Object value) {
+        if (value != null) {
+            MorphiaReference<Object> wrap;
+            if (value instanceof MorphiaReference) {
+                wrap = (MorphiaReference<Object>) value;
+            } else {
+                wrap = MorphiaReference.wrap(value);
+            }
+            DocumentWriter writer = new DocumentWriter();
+            document(writer, () -> {
+                writer.writeName("ref");
+                encode(writer, wrap, EncoderContext.builder().build());
+            });
+            return writer.getDocument().get("ref");
         } else {
-            wrap = MorphiaReference.wrap(value);
+            throw new NullPointerException();
         }
-        DocumentWriter writer = new DocumentWriter();
-        document(writer, () -> {
-            writer.writeName("ref");
-            encode(writer, wrap, EncoderContext.builder().build());
-        });
-        return writer.getDocument().get("ref");
     }
 
     @Override

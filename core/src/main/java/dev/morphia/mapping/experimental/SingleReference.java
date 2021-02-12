@@ -4,6 +4,7 @@ import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
@@ -31,16 +32,20 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param id          the ID value
      * @morphia.internal
      */
-    public SingleReference(Datastore datastore, @Nullable EntityModel entityModel, Object id) {
+    public SingleReference(Datastore datastore, EntityModel entityModel, Object id) {
         super(datastore);
         this.entityModel = entityModel;
         this.id = id;
-        if (entityModel != null && entityModel.getType().isInstance(id)) {
+        if (entityModel.getType().isInstance(id)) {
             value = (T) id;
-            this.id = entityModel.getIdProperty().getValue(value);
-            resolve();
+            PropertyModel idProperty = entityModel.getIdProperty();
+            if (idProperty != null) {
+                this.id = idProperty.getValue(value);
+                resolve();
+            } else {
+                throw new MappingException(Sofia.noIdPropertyFound(entityModel.getType().getName()));
+            }
         }
-
     }
 
     SingleReference(T value) {
@@ -81,23 +86,28 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    public Class<T> getType() {
-        return (Class<T>) entityModel.getType();
+    public List<Object> getIds() {
+        return List.of(getId());
     }
 
     @Override
-    public List<Object> getIds() {
-        return List.of(getId());
+    public Class<T> getType() {
+        return (Class<T>) entityModel.getType();
     }
 
     @Override
     Object getId(Mapper mapper, Datastore datastore, EntityModel fieldClass) {
         if (id == null) {
             EntityModel entityModel = getEntityModel(mapper);
-            id = entityModel.getIdProperty().getValue(get());
-            if (!entityModel.equals(fieldClass)) {
-                id = new DBRef(entityModel.getCollectionName(), id);
+            if (entityModel != null && entityModel.getIdProperty() != null) {
+                id = entityModel.getIdProperty().getValue(get());
+                if (!entityModel.equals(fieldClass)) {
+                    id = new DBRef(entityModel.getCollectionName(), id);
+                }
             }
+        }
+        if (id == null) {
+            throw new ReferenceException(Sofia.noIdForReference());
         }
         return id;
     }
@@ -118,9 +128,13 @@ public class SingleReference<T> extends MorphiaReference<T> {
         return query.filter(eq("_id", getId()));
     }
 
+    @Nullable
     EntityModel getEntityModel(Mapper mapper) {
         if (entityModel == null) {
-            entityModel = mapper.getEntityModel(get().getClass());
+            T t = get();
+            if (t != null) {
+                entityModel = mapper.getEntityModel(t.getClass());
+            }
         }
 
         return entityModel;

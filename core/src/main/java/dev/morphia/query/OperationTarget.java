@@ -27,16 +27,9 @@ public class OperationTarget {
      * @param value  the value
      * @morphia.internal
      */
-    public OperationTarget(PathTarget target, @Nullable Object value) {
+    public OperationTarget(@Nullable PathTarget target, @Nullable Object value) {
         this.target = target;
         this.value = value;
-    }
-
-    /**
-     * @return the PathTarget for this instance
-     */
-    public PathTarget getTarget() {
-        return target;
     }
 
     /**
@@ -47,6 +40,9 @@ public class OperationTarget {
      */
     public Object encode(Mapper mapper) {
         if (target == null) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
             return value;
         }
         PropertyModel mappedField = this.target.getTarget();
@@ -69,6 +65,14 @@ public class OperationTarget {
             mappedValue = writer.getDocument().get("mapped");
         }
         return new Document(target.translatedPath(), mappedValue);
+    }
+
+    /**
+     * @return the PathTarget for this instance
+     */
+    @Nullable
+    public PathTarget getTarget() {
+        return target;
     }
 
     /**

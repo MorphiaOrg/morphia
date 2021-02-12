@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
@@ -27,8 +28,8 @@ public abstract class UpdateBase<T> {
 
     UpdateBase(Datastore datastore,
                Mapper mapper,
-               MongoCollection<T> collection,
-               Query<T> query,
+               @Nullable MongoCollection<T> collection,
+               @Nullable Query<T> query,
                Class<T> type) {
         this.datastore = datastore;
         this.mapper = mapper;

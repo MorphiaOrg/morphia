@@ -1,6 +1,7 @@
 package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.Point;
+import com.mongodb.lang.NonNull;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -33,7 +34,13 @@ class CenterFilter extends Filter {
     }
 
     @Override
+    @NonNull
     public Point getValue() {
-        return (Point) super.getValue();
+        Object value = super.getValue();
+        if (value != null) {
+            return (Point) value;
+        }
+        throw new NullPointerException();
+
     }
 }

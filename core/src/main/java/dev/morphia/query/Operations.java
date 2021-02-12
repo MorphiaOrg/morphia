@@ -1,11 +1,9 @@
 package dev.morphia.query;
 
-import dev.morphia.UpdateDocument;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -35,17 +33,6 @@ class Operations {
                    .toString();
     }
 
-    public void replaceEntity(Object entity) {
-        if (entity == null) {
-            throw new UpdateException(Sofia.nullUpdateEntity());
-        }
-        if (!ops.isEmpty()) {
-            throw new UpdateException(Sofia.mixedUpdateOperationsNotAllowed());
-        }
-
-        add("$set", new OperationTarget(null, new UpdateDocument(entity)));
-    }
-
     protected void versionUpdate() {
         PropertyModel versionField = entityModel.getVersionProperty();
         if (versionField != null) {
@@ -53,7 +40,10 @@ class Operations {
             String version = versionField.getMappedName();
             boolean already = operationTargets != null
                               && operationTargets.stream()
-                                                 .anyMatch(tv -> tv.getTarget().translatedPath().equals(version));
+                                                 .anyMatch(tv -> {
+                                                     PathTarget target = tv.getTarget();
+                                                     return target != null && target.translatedPath().equals(version);
+                                                 });
             if (!already) {
                 add("$inc", new OperationTarget(new PathTarget(mapper, entityModel, versionField.getName()), 1L));
             }

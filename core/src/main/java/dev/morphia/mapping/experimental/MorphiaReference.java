@@ -1,12 +1,10 @@
 package dev.morphia.mapping.experimental;
 
-import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Handler;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 import java.util.List;
 import java.util.Map;
@@ -51,17 +49,6 @@ public abstract class MorphiaReference<T> {
         } else {
             return new SingleReference<>(value);
         }
-    }
-
-    static Object wrapId(Mapper mapper, PropertyModel property, Object entity) {
-        Object id = mapper.getId(entity);
-        mapper.getEntityModel(entity.getClass());
-        Object encoded = id;
-        if (!entity.getClass().equals(property.getType())) {
-            encoded = new DBRef(mapper.getEntityModel(entity.getClass()).getCollectionName(), encoded);
-        }
-
-        return encoded;
     }
 
     /**

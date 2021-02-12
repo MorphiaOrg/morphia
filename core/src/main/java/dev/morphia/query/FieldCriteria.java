@@ -28,8 +28,7 @@ class FieldCriteria extends AbstractCriteria {
 
     FieldCriteria(Mapper mapper, String fieldName, FilterOperator op, Object value, boolean not, EntityModel model, boolean validating) {
         this.mapper = mapper;
-        final PathTarget pathTarget = new PathTarget(mapper, model,
-            fieldName, validating);
+        final PathTarget pathTarget = new PathTarget(mapper, model, fieldName, validating);
 
         this.field = pathTarget.translatedPath();
 

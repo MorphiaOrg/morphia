@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.mapping.Mapper;
@@ -49,16 +50,7 @@ public class MorphiaQuery<T> implements Query<T> {
     private final Document seedQuery;
     private boolean validate = true;
 
-    protected MorphiaQuery(Datastore datastore) {
-        this.datastore = datastore;
-        mapper = this.datastore.getMapper();
-        type = null;
-        seedQuery = null;
-        collection = null;
-        collectionName = null;
-    }
-
-    protected MorphiaQuery(Datastore datastore, String collectionName, Class<T> type) {
+    protected MorphiaQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
         this.type = type;
         this.datastore = datastore;
         mapper = this.datastore.getMapper();

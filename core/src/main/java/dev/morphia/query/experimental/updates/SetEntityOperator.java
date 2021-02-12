@@ -3,6 +3,7 @@ package dev.morphia.query.experimental.updates;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import org.bson.Document;
@@ -29,18 +30,20 @@ public class SetEntityOperator extends UpdateOperator {
             @Override
             @SuppressWarnings("unchecked")
             public Object encode(Mapper mapper) {
-                EntityModel entityModel = mapper.getEntityModel(getValue().getClass());
-                if (entityModel.getVersionProperty() == null) {
+                Object value = value();
+                EntityModel entityModel = mapper.getEntityModel(value.getClass());
+                PropertyModel versionProperty = entityModel.getVersionProperty();
+                if (versionProperty == null) {
                     return super.encode(mapper);
                 }
 
-                Codec<Object> codec = mapper.getCodecRegistry().get((Class<Object>) getValue().getClass());
+                Codec<Object> codec = mapper.getCodecRegistry().get((Class<Object>) value.getClass());
                 DocumentWriter writer = new DocumentWriter();
 
-                codec.encode(writer, getValue(), EncoderContext.builder().build());
+                codec.encode(writer, value, EncoderContext.builder().build());
 
                 Document document = writer.getDocument();
-                document.remove(entityModel.getVersionProperty().getMappedName());
+                document.remove(versionProperty.getMappedName());
                 return document;
             }
         };

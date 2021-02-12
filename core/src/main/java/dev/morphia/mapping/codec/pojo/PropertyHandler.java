@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.Nullable;
+
 /**
  * @morphia.internal
  * @since 2.0
@@ -11,5 +13,5 @@ public interface PropertyHandler {
      * @param value the value
      * @return the encoded value
      */
-    Object encode(Object value);
+    Object encode(@Nullable Object value);
 }

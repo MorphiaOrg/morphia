@@ -56,24 +56,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * Creates a Query for the given type and collection
      *
      * @param datastore the Datastore to use
-     */
-    protected LegacyQuery(Datastore datastore) {
-        this.datastore = (DatastoreImpl) datastore;
-        mapper = datastore.getMapper();
-        clazz = null;
-        collection = null;
-        collectionName = null;
-        model = null;
-        validateName = false;
-        validateType = false;
-
-        compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
-    }
-
-    /**
-     * Creates a Query for the given type and collection
-     *
-     * @param datastore the Datastore to use
      * @param clazz     the type to return
      */
     protected LegacyQuery(Datastore datastore, @Nullable String collectionName, Class<T> clazz) {

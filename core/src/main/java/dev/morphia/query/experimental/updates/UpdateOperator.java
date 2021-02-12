@@ -19,22 +19,13 @@ public class UpdateOperator {
     private Object value;
 
     protected UpdateOperator(String operator, String field, Object value) {
-        if (field == null) {
-            throw new UpdateException(Sofia.fieldCannotBeNull());
-        }
-        if (value == null) {
-            throw new UpdateException(Sofia.valueCannotBeNull());
-        }
         this.operator = operator;
         this.field = field;
         this.value = value;
     }
 
     protected UpdateOperator(String operator, String field, List<?> values) {
-        if (field == null) {
-            throw new UpdateException(Sofia.fieldCannotBeNull());
-        }
-        if (values == null || values.isEmpty()) {
+        if (values.isEmpty()) {
             throw new UpdateException(Sofia.valuesCannotBeNullOrEmpty());
         }
         this.operator = operator;
