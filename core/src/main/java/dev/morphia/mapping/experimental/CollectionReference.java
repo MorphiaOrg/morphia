@@ -2,11 +2,9 @@ package dev.morphia.mapping.experimental;
 
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
@@ -96,22 +94,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             }
         }
         return ids;
-    }
-
-    @Override
-    @Nullable
-    public Object encode(Mapper mapper, Object value, PropertyModel property) {
-        if (isResolved()) {
-            C c = get();
-            if (c != null) {
-                List ids = new ArrayList();
-                for (Object entity : c) {
-                    ids.add(wrapId(mapper, property, entity));
-                }
-                return ids;
-            }
-        }
-        return null;
     }
 
     @Override

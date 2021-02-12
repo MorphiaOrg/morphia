@@ -127,7 +127,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         Class<?> type;
         if (value instanceof Key) {
             idValue = ((Key) value).getId();
-            type = mapper.getClassFromCollection(((Key<?>) value).getCollection());
+            String collectionName = ((Key<?>) value).getCollection();
+            type = collectionName != null ? mapper.getClassFromCollection(collectionName) : ((Key<?>) value).getType();
+            if (type == null) {
+                throw new MappingException("The type for the reference could not be determined for the key " + value);
+            }
         } else {
             idValue = mapper.getId(value);
             if (idValue == null) {

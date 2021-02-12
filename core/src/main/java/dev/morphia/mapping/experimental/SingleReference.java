@@ -68,16 +68,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    public Object encode(Mapper mapper, Object value, PropertyModel optionalExtraInfo) {
-        if (isResolved()) {
-            return wrapId(mapper, optionalExtraInfo, get());
-        } else {
-            return null;
-        }
-
-    }
-
-    @Override
     public T get() {
         if (!isResolved() && value == null && id != null) {
             value = (T) buildQuery().iterator().tryNext();

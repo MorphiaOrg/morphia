@@ -65,15 +65,6 @@ public abstract class MorphiaReference<T> {
     }
 
     /**
-     * @param mapper            the mapper
-     * @param value             the value
-     * @param optionalExtraInfo the PropertyModel
-     * @return the encoded vale
-     * @morphia.internal
-     */
-    public abstract Object encode(Mapper mapper, Object value, PropertyModel optionalExtraInfo);
-
-    /**
      * @return returns the referenced entity if it exists.  May return null.
      */
     @Nullable

@@ -27,7 +27,7 @@ import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
 /**
  * Defines a codec for MorphiaReference values
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ALL")
 public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> implements PropertyHandler {
 
     private final Mapper mapper;

@@ -1,5 +1,6 @@
 package dev.morphia.mapping.experimental;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
@@ -62,6 +63,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      * @return the constructor taking all fields if it exists
      * @morphia.internal
      */
+    @Nullable
     public static Constructor<?> getFullConstructor(EntityModel model) {
         for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
             if (constructor.getParameterCount() == model.getProperties().size() && namesMatchProperties(model, constructor)) {
@@ -101,7 +103,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     }
 
     @Override
-    public void set(Object value, PropertyModel model) {
+    public void set(@Nullable Object value, PropertyModel model) {
         positions.get(model.getName()).apply(parameters, value);
     }
 }

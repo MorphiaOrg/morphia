@@ -102,22 +102,6 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         return ids;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object encode(Mapper mapper, Object value, PropertyModel property) {
-        if (isResolved()) {
-            Map<String, Object> ids = new LinkedHashMap<>();
-            for (Entry<Object, T> entry : get().entrySet()) {
-                ids.put(entry.getKey().toString(), wrapId(mapper, property, entry.getValue()));
-            }
-            return ids;
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public Map<String, Object> getId(Mapper mapper, Datastore datastore, EntityModel field) {
         if (ids == null) {
