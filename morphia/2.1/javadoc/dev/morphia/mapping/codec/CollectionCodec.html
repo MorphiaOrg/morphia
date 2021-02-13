@@ -216,7 +216,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -400,6 +400,11 @@ implements org.bson.codecs.Codec&lt;<a href="https://docs.oracle.com/en/java/jav
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="CollectionCodec.html" title="type parameter in CollectionCodec">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstance()">getInstance</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody></table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -485,7 +490,7 @@ implements org.bson.codecs.Codec&lt;<a href="https://docs.oracle.com/en/java/jav
 <a id="getEncoderClass()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getEncoderClass</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="CollectionCodec.html" title="type parameter in CollectionCodec">T</a>&gt;&gt;&nbsp;getEncoderClass()</pre>
@@ -493,6 +498,15 @@ implements org.bson.codecs.Codec&lt;<a href="https://docs.oracle.com/en/java/jav
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getEncoderClass</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Encoder&lt;<a href="CollectionCodec.html" title="type parameter in CollectionCodec">T</a>&gt;</code></dd>
 </dl>
+</li>
+</ul>
+<a id="getInstance()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getInstance</h4>
+<pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="CollectionCodec.html" title="type parameter in CollectionCodec">T</a>&gt;&nbsp;getInstance()</pre>
 </li>
 </ul>
 </li>
@@ -564,7 +578,7 @@ implements org.bson.codecs.Codec&lt;<a href="https://docs.oracle.com/en/java/jav
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
 </footer>
 
 

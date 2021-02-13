@@ -216,7 +216,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -399,6 +399,11 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>protected <a href="pojo/FieldModel.html" title="class in dev.morphia.mapping.codec.pojo">FieldModel</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFieldModel()">getFieldModel</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="pojo/TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTypeData()">getTypeData</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -511,10 +516,19 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <a id="getEntityModelForField()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getEntityModelForField</h4>
 <pre class="methodSignature">protected&nbsp;<a href="pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;getEntityModelForField()</pre>
+</li>
+</ul>
+<a id="getFieldModel()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getFieldModel</h4>
+<pre class="methodSignature">protected&nbsp;<a href="pojo/FieldModel.html" title="class in dev.morphia.mapping.codec.pojo">FieldModel</a>&nbsp;getFieldModel()</pre>
 </li>
 </ul>
 </li>
@@ -586,7 +600,7 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
 </footer>
 
 

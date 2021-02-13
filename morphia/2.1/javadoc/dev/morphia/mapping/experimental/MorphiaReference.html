@@ -216,7 +216,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":10,"i2":6,"i3":6,"i4":6,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":9};
+var data = {"i0":6,"i1":10,"i2":6,"i3":6,"i4":6,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -412,6 +412,11 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static &lt;V&gt;&nbsp;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;V&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#wrap(V)">wrap</a></span>​(V&nbsp;value)</code></th>
 <td class="colLast">
@@ -424,7 +429,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -462,87 +467,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="ignoreMissing()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>ignoreMissing</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;ignoreMissing()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if Morphia will ignore missing referenced entities.</dd>
-</dl>
-</li>
-</ul>
-<a id="ignoreMissing(boolean)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>ignoreMissing</h4>
-<pre class="methodSignature">public&nbsp;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&nbsp;ignoreMissing​(boolean&nbsp;ignoreMissing)</pre>
-<div class="block">Instructs Morphia to ignore missing referenced entities.  The default is to throw an exception on missing entities.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>ignoreMissing</code> - ignore any missing referenced documents</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-</dl>
-</li>
-</ul>
-<a id="get()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>get</h4>
-<pre class="methodSignature">public abstract&nbsp;<a href="MorphiaReference.html" title="type parameter in MorphiaReference">T</a>&nbsp;get()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>returns the referenced entity if it exists.  May return null.</dd>
-</dl>
-</li>
-</ul>
-<a id="getType()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getType</h4>
-<pre class="methodSignature">public abstract&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="MorphiaReference.html" title="type parameter in MorphiaReference">T</a>&gt;&nbsp;getType()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the referenced type</dd>
-</dl>
-</li>
-</ul>
-<a id="getIds()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getIds</h4>
-<pre class="methodSignature">public abstract&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;getIds()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the referenced IDs</dd>
-</dl>
-</li>
-</ul>
-<a id="isResolved()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isResolved</h4>
-<pre class="methodSignature">public final&nbsp;boolean&nbsp;isResolved()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if this reference has already been resolved</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
 <a id="encode(dev.morphia.mapping.Mapper,java.lang.Object,dev.morphia.mapping.codec.pojo.FieldModel)">
 <!--   -->
 </a>
@@ -562,13 +486,56 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
-<a id="resolve()">
+<a id="get()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>resolve</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;resolve()</pre>
+<h4>get</h4>
+<pre class="methodSignature">public abstract&nbsp;<a href="MorphiaReference.html" title="type parameter in MorphiaReference">T</a>&nbsp;get()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>returns the referenced entity if it exists.  May return null.</dd>
+</dl>
+</li>
+</ul>
+<a id="getIds()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getIds</h4>
+<pre class="methodSignature">public abstract&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;getIds()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the referenced IDs</dd>
+</dl>
+</li>
+</ul>
+<a id="getType()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getType</h4>
+<pre class="methodSignature">public abstract&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="MorphiaReference.html" title="type parameter in MorphiaReference">T</a>&gt;&nbsp;getType()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the referenced type</dd>
+</dl>
+</li>
+</ul>
+<a id="hashCode()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hashCode</h4>
+<pre class="methodSignature">public&nbsp;int&nbsp;hashCode()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang" class="externalLink">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></dd>
+</dl>
 </li>
 </ul>
 <a id="equals(java.lang.Object)">
@@ -584,17 +551,68 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="hashCode()">
+<a id="toString()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toString</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;toString()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="ignoreMissing(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ignoreMissing</h4>
+<pre class="methodSignature">public&nbsp;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&nbsp;ignoreMissing​(boolean&nbsp;ignoreMissing)</pre>
+<div class="block">Instructs Morphia to ignore missing referenced entities.  The default is to throw an exception on missing entities.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ignoreMissing</code> - ignore any missing referenced documents</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="ignoreMissing()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ignoreMissing</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;ignoreMissing()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if Morphia will ignore missing referenced entities.</dd>
+</dl>
+</li>
+</ul>
+<a id="isResolved()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isResolved</h4>
+<pre class="methodSignature">public final&nbsp;boolean&nbsp;isResolved()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if this reference has already been resolved</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="resolve()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>hashCode</h4>
-<pre class="methodSignature">public&nbsp;int&nbsp;hashCode()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang" class="externalLink">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></dd>
-</dl>
+<h4>resolve</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;resolve()</pre>
 </li>
 </ul>
 </li>
@@ -666,7 +684,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
 </footer>
 
 

@@ -415,14 +415,14 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;dev.morphia.mapping.experimental.<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a></h3>
-<code><a href="MorphiaReference.html#equals(java.lang.Object)">equals</a>, <a href="MorphiaReference.html#hashCode()">hashCode</a>, <a href="MorphiaReference.html#ignoreMissing()">ignoreMissing</a>, <a href="MorphiaReference.html#ignoreMissing(boolean)">ignoreMissing</a>, <a href="MorphiaReference.html#isResolved()">isResolved</a>, <a href="MorphiaReference.html#resolve()">resolve</a>, <a href="MorphiaReference.html#wrap(V)">wrap</a></code></li>
+<code><a href="MorphiaReference.html#equals(java.lang.Object)">equals</a>, <a href="MorphiaReference.html#hashCode()">hashCode</a>, <a href="MorphiaReference.html#ignoreMissing()">ignoreMissing</a>, <a href="MorphiaReference.html#ignoreMissing(boolean)">ignoreMissing</a>, <a href="MorphiaReference.html#isResolved()">isResolved</a>, <a href="MorphiaReference.html#resolve()">resolve</a>, <a href="MorphiaReference.html#toString()">toString</a>, <a href="MorphiaReference.html#wrap(V)">wrap</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -491,6 +491,27 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 </dl>
 </li>
 </ul>
+<a id="encode(dev.morphia.mapping.Mapper,java.lang.Object,dev.morphia.mapping.codec.pojo.FieldModel)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>encode</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encode​(<a href="../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
+                     <a href="../codec/pojo/FieldModel.html" title="class in dev.morphia.mapping.codec.pojo">FieldModel</a>&nbsp;optionalExtraInfo)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="MorphiaReference.html#encode(dev.morphia.mapping.Mapper,java.lang.Object,dev.morphia.mapping.codec.pojo.FieldModel)">encode</a></code>&nbsp;in class&nbsp;<code><a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapper</code> - the mapper</dd>
+<dd><code>value</code> - the value</dd>
+<dd><code>optionalExtraInfo</code> - the MappedField</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the encoded vale</dd>
+</dl>
+</li>
+</ul>
 <a id="get()">
 <!--   -->
 </a>
@@ -524,7 +545,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 <a id="getIds()">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getIds</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;getIds()</pre>
@@ -533,27 +554,6 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 <dd><code><a href="MorphiaReference.html#getIds()">getIds</a></code>&nbsp;in class&nbsp;<code><a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the referenced IDs</dd>
-</dl>
-</li>
-</ul>
-<a id="encode(dev.morphia.mapping.Mapper,java.lang.Object,dev.morphia.mapping.codec.pojo.FieldModel)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>encode</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encode​(<a href="../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
-                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
-                     <a href="../codec/pojo/FieldModel.html" title="class in dev.morphia.mapping.codec.pojo">FieldModel</a>&nbsp;optionalExtraInfo)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="MorphiaReference.html#encode(dev.morphia.mapping.Mapper,java.lang.Object,dev.morphia.mapping.codec.pojo.FieldModel)">encode</a></code>&nbsp;in class&nbsp;<code><a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;</code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mapper</code> - the mapper</dd>
-<dd><code>value</code> - the value</dd>
-<dd><code>optionalExtraInfo</code> - the MappedField</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the encoded vale</dd>
 </dl>
 </li>
 </ul>
@@ -626,7 +626,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
 </footer>
 
 
