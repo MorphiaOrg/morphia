@@ -120,27 +120,6 @@ public class DocumentReaderTest extends TestBase {
     }
 
     @Test
-    public void testByteArray() {
-        HasByteArray hasByteArray = new HasByteArray();
-        hasByteArray.data = new byte[]{1, 2, 3};
-        getDs().save(hasByteArray);
-        Document first = getDs().getMapper().getCollection(HasByteArray.class)
-                                .withDocumentClass(Document.class)
-                                .find().first();
-        getDs().getMapper().fromDocument(HasByteArray.class, first);
-    }
-
-    @Test
-    public void testDates() {
-        final TimeEntity entity = new TimeEntity();
-        entity.myInstant = Instant.now();
-        final TimeEntity save = getDs().save(entity);
-        final TimeEntity find = getDs().find(TimeEntity.class)
-                                       .filter(eq("_id", save.id))
-                                       .first();
-    }
-
-    @Test
     public void testBookmarkingAndSkips() {
         setup(Document.parse("{ key: { subKey: 3 }, second: 2 }"));
 
@@ -175,6 +154,27 @@ public class DocumentReaderTest extends TestBase {
     }
 
     @Test
+    public void testByteArray() {
+        HasByteArray hasByteArray = new HasByteArray();
+        hasByteArray.data = new byte[]{1, 2, 3};
+        getDs().save(hasByteArray);
+        Document first = getDs().getMapper().getCollection(HasByteArray.class)
+                                .withDocumentClass(Document.class)
+                                .find().first();
+        getDs().getMapper().fromDocument(HasByteArray.class, first);
+    }
+
+    @Test
+    public void testDates() {
+        final TimeEntity entity = new TimeEntity();
+        entity.myInstant = Instant.now();
+        final TimeEntity save = getDs().save(entity);
+        final TimeEntity find = getDs().find(TimeEntity.class)
+                                       .filter(eq("_id", save.id))
+                                       .first();
+    }
+
+    @Test
     public void testNestedArrays() {
         setup(parse("{ coordinates : [ [ [ 0, 1 ], [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ] ] ] }"));
 
@@ -199,6 +199,29 @@ public class DocumentReaderTest extends TestBase {
     }
 
     @Test
+    public void testNulls() {
+        setup(Document.parse("{ key: null, another: 'fun' }"));
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(BsonReader::readStartDocument);
+        assertTrue(reader.currentState() instanceof NameState);
+        step(r -> {
+            assertEquals(r.readName(), "key");
+            assertTrue(reader.currentState() instanceof ValueState);
+        });
+        step(r -> {
+            r.readNull();
+            assertTrue(reader.currentState() instanceof NameState);
+        });
+        step(r -> {
+            assertEquals(r.readName(), "another");
+            assertTrue(reader.currentState() instanceof ValueState);
+        });
+        step(r -> assertEquals(r.readString(), "fun"));
+        step(BsonReader::readEndDocument);
+    }
+
+    @Test
     public void testSkips() {
         setup(Document.parse("{ key: 'value', second: 2 }"));
 
@@ -215,16 +238,6 @@ public class DocumentReaderTest extends TestBase {
         });
     }
 
-    private void testArray(int i) {
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
-        step(BsonReader::readStartArray);
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.INT32));
-        int expected = i;
-        step(r -> assertEquals(r.readInt32(), expected));
-        step(r -> assertEquals(r.readInt32(), expected + 1));
-        step(BsonReader::readEndArray);
-    }
-
     private void readDocument(int count) {
         step(BsonReader::readStartDocument);
         step(r -> assertEquals("list" + count, r.readName()));
@@ -238,6 +251,16 @@ public class DocumentReaderTest extends TestBase {
 
     private void step(Consumer<BsonReader> function) {
         function.accept(reader);
+    }
+
+    private void testArray(int i) {
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(BsonReader::readStartArray);
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.INT32));
+        int expected = i;
+        step(r -> assertEquals(r.readInt32(), expected));
+        step(r -> assertEquals(r.readInt32(), expected + 1));
+        step(BsonReader::readEndArray);
     }
 
     @Embedded

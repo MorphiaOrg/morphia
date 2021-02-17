@@ -232,6 +232,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public void readNull() {
+        stage().advance();
     }
 
     @Override
@@ -378,7 +379,7 @@ public class DocumentReader implements BsonReader {
     }
 
     BsonType getBsonType(Object o) {
-        BsonType bsonType = TYPE_MAP.get(o.getClass());
+        BsonType bsonType = o == null ? BsonType.NULL : TYPE_MAP.get(o.getClass());
         if (bsonType == null) {
             if (o instanceof List) {
                 bsonType = BsonType.ARRAY;
