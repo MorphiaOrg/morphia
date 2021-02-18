@@ -189,16 +189,14 @@ public class TestDateExpression extends ExpressionsTestBase {
 
     @Test
     public void testIsoDayOfWeek() throws ParseException {
-        assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
-                                         .timezone(value("America/Chicago")), 6);
-        assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01"))), 5);
+        assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("MMM dd, yyyy zzz").parse("August 14, 2011 UTC"))), 7);
+        assertAndCheckDocShape("{}", isoDayOfWeek(value(new SimpleDateFormat("yyyy-MM-dd zzz").parse("2016-01-01 UTC"))), 5);
     }
 
     @Test
     public void testIsoWeek() throws ParseException {
-        assertAndCheckDocShape("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("August 14, 2011")))
-                           .timezone(value("America/Chicago")), 32);
-        assertAndCheckDocShape("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy").parse("Jan 4, 2016"))), 1);
+        assertAndCheckDocShape("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy zzz").parse("August 14, 2011 UTC"))), 32);
+        assertAndCheckDocShape("{}", isoWeek(value(new SimpleDateFormat("MMM dd, yyyy zzz").parse("Jan 4, 2016 UTC"))), 1);
     }
 
     @Test
