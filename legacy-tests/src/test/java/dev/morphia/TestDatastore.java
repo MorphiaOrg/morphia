@@ -3,8 +3,6 @@ package dev.morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.generics.model.Child;
-import dev.morphia.generics.model.ChildEntity;
 import dev.morphia.query.Query;
 import dev.morphia.testmodel.Address;
 import dev.morphia.testmodel.Hotel;
@@ -25,18 +23,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class TestDatastore extends TestBase {
-    @Test
-    public void shouldSaveGenericTypeVariables() {
-        // given
-        ChildEntity child = new ChildEntity();
-        child.setEmbeddedList(singletonList(new Child()));
-
-        // when
-        getDs().save(child);
-
-        // then
-        assertNotNull(child.getId());
-    }
 
     @Test
     public void testCollectionNames() {
@@ -164,15 +150,14 @@ public class TestDatastore extends TestBase {
     }
 
 
-
     @Entity("facebook_users")
     public static class FacebookUser {
+        @Reference
+        private final List<FacebookUser> friends = new ArrayList<>();
         public int loginCount;
         @Id
         private long id;
         private String username;
-        @Reference
-        private final List<FacebookUser> friends = new ArrayList<>();
 
         public FacebookUser(long id, String name) {
             this();

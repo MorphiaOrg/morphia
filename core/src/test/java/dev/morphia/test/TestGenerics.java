@@ -10,8 +10,12 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.SpecializedEntity;
+import dev.morphia.test.models.generics.Another;
+import dev.morphia.test.models.generics.Child;
+import dev.morphia.test.models.generics.ChildEntity;
 import dev.morphia.test.models.methods.MethodMappedSpecializedEntity;
 import org.bson.types.ObjectId;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -19,10 +23,24 @@ import java.util.UUID;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class TestGenerics extends TestBase {
+
+    @Test
+    public void example() {
+        ChildEntity entity = new ChildEntity();
+        entity.setEmbeddedList(asList(new Child("first"), new Child("second"), new Another("third")));
+        getDs().save(entity);
+
+        ChildEntity childEntity = getDs().find(ChildEntity.class)
+                                         .iterator(new FindOptions().limit(1))
+                                         .next();
+
+        Assert.assertEquals(childEntity, entity);
+    }
 
     @Test
     public void testBoundGenerics() {
@@ -49,6 +67,28 @@ public class TestGenerics extends TestBase {
         assertEquals(loaded.getId(), beforeDB.getId());
 
         assertEquals(loaded.getTest(), beforeDB.getTest());
+    }
+
+    @Test
+    public void testIt() {
+        getMapper().map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
+        final ContainsThings ct = new ContainsThings();
+        final HoldsAnInteger hai = new HoldsAnInteger();
+        hai.setThing(7);
+        final HoldsAString has = new HoldsAString();
+        has.setThing("tr");
+        ct.stringThing = has;
+        ct.integerThing = hai;
+
+        getDs().save(ct);
+        assertNotNull(ct.id);
+        assertEquals(getDs().find(ContainsThings.class).count(), 1);
+        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
+                                               .next();
+        assertNotNull(ctLoaded);
+        assertNotNull(ctLoaded.id);
+        assertNotNull(ctLoaded.stringThing);
+        assertNotNull(ctLoaded.integerThing);
     }
 
     @Test
@@ -79,28 +119,6 @@ public class TestGenerics extends TestBase {
     }
 
     @Test
-    public void testIt() {
-        getMapper().map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
-        final ContainsThings ct = new ContainsThings();
-        final HoldsAnInteger hai = new HoldsAnInteger();
-        hai.setThing(7);
-        final HoldsAString has = new HoldsAString();
-        has.setThing("tr");
-        ct.stringThing = has;
-        ct.integerThing = hai;
-
-        getDs().save(ct);
-        assertNotNull(ct.id);
-        assertEquals(getDs().find(ContainsThings.class).count(), 1);
-        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
-                                               .next();
-        assertNotNull(ctLoaded);
-        assertNotNull(ctLoaded.id);
-        assertNotNull(ctLoaded.stringThing);
-        assertNotNull(ctLoaded.integerThing);
-    }
-
-    @Test
     public void upperBounds() {
         getMapper().map(Status.class, EmailStatus.class);
 
@@ -110,6 +128,17 @@ public class TestGenerics extends TestBase {
         getDs().save(status);
 
         assertNotNull(getDs().find(EmailStatus.class).first());
+    }
+
+    @Test
+    public void testWildCards() {
+        List<EntityModel> list = getMapper().map(WildCards.class);
+        assertEquals(list.size(), 1);
+        assertEquals(list.get(0).getProperties().size(), 1);
+    }
+
+    @Entity
+    private interface Item {
     }
 
     private static class AudioElement extends Element<Long> {
@@ -128,6 +157,18 @@ public class TestGenerics extends TestBase {
         @Id
         private ObjectId id;
         private T[] resources;
+    }
+
+    @Entity
+    private static class EmailItem implements Item {
+        private String to;
+
+        public EmailItem() {
+        }
+
+        public EmailItem(String to) {
+            this.to = to;
+        }
     }
 
     @Entity
@@ -156,27 +197,19 @@ public class TestGenerics extends TestBase {
     }
 
     @Entity
-    private interface Item {
-    }
-
-    @Entity
-    private static class EmailItem implements Item {
-        private String to;
-
-        public EmailItem() {
-        }
-
-        public EmailItem(String to) {
-            this.to = to;
-        }
-    }
-
-    @Entity
     private abstract static class Status<T extends Item> {
         @Id
         private ObjectId id;
         @Property
         private List<T> items;
 
+    }
+
+    @Entity
+    private static class WildCards {
+        private static final Class<? extends Status<EmailItem>>
+            PROCEDURE_CLASS = EmailStatus.class;
+        @Id
+        private ObjectId id;
     }
 }
