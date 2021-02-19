@@ -9,9 +9,6 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
-import dev.morphia.generics.model.Child;
-import dev.morphia.generics.model.ChildEntity;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateException;
 import dev.morphia.testmodel.Address;
@@ -39,19 +36,6 @@ public class TestDatastore extends TestBase {
     @Test(expected = UpdateException.class)
     public void saveNull() {
         getDs().save((Hotel) null);
-    }
-
-    @Test
-    public void shouldSaveGenericTypeVariables() {
-        // given
-        ChildEntity child = new ChildEntity();
-        child.setEmbeddedList(singletonList(new Child()));
-
-        // when
-        getDs().save(child);
-
-        // then
-        assertNotNull(child.getId());
     }
 
     @Test

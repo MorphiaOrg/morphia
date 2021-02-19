@@ -22,13 +22,18 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.FieldModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.SpecializedEntity;
+import dev.morphia.test.models.generics.Another;
+import dev.morphia.test.models.generics.Child;
+import dev.morphia.test.models.generics.ChildEntity;
 import org.bson.types.ObjectId;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.UUID;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -37,6 +42,19 @@ public class GenericsMappingTest extends TestBase {
     @Test
     public void testBoundGenerics() {
         getMapper().map(Element.class, AudioElement.class);
+    }
+
+    @Test
+    public void example() {
+        ChildEntity entity = new ChildEntity();
+        entity.setEmbeddedList(asList(new Child("first"), new Child("second"), new Another("third")));
+        getDs().save(entity);
+
+        ChildEntity childEntity = getDs().find(ChildEntity.class)
+                                         .iterator(new FindOptions().limit(1))
+                                         .next();
+
+        Assert.assertEquals(childEntity, entity);
     }
 
     @Test
@@ -93,6 +111,13 @@ public class GenericsMappingTest extends TestBase {
         getDs().save(status);
 
         assertNotNull(getDs().find(EmailStatus.class).first());
+    }
+
+    @Test
+    public void testWildCards() {
+        List<EntityModel> list = getMapper().map(WildCards.class);
+        assertEquals(list.size(), 1);
+        assertEquals(list.get(0).getFields().size(), 1);
     }
 
     @Embedded
@@ -160,5 +185,13 @@ public class GenericsMappingTest extends TestBase {
     @Entity
     public static class EmailStatus extends Status<EmailItem> {
 
+    }
+
+    @Entity
+    private static class WildCards {
+        private static final Class<? extends Status<EmailItem>>
+            PROCEDURE_CLASS = EmailStatus.class;
+        @Id
+        private ObjectId id;
     }
 }

@@ -1,4 +1,4 @@
-package dev.morphia.generics.model;
+package dev.morphia.test.models.generics;
 
 public class Child extends EmbeddedType {
 
