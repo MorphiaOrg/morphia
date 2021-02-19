@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.reader;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.sofia.Sofia;
@@ -375,7 +376,7 @@ public class DocumentReader implements BsonReader {
                    .toString();
     }
 
-    BsonType getBsonType(Object o) {
+    BsonType getBsonType(@Nullable Object o) {
         BsonType bsonType = o == null ? BsonType.NULL : TYPE_MAP.get(o.getClass());
         if (bsonType == null) {
             if (o instanceof List) {
@@ -395,7 +396,7 @@ public class DocumentReader implements BsonReader {
         return this.current;
     }
 
-    void state(ReaderState next) {
+    void state(@Nullable ReaderState next) {
         current = next;
     }
 }
