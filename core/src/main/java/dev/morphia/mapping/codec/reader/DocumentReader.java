@@ -1,6 +1,5 @@
 package dev.morphia.mapping.codec.reader;
 
-import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.sofia.Sofia;
@@ -238,6 +237,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public void readNull() {
+        stage().advance();
     }
 
     @Override
@@ -351,6 +351,14 @@ public class DocumentReader implements BsonReader {
     public void close() {
     }
 
+    protected void verifyName(String expectedName) {
+        String actualName = readName();
+        if (!actualName.equals(expectedName)) {
+            throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
+                expectedName, actualName));
+        }
+    }
+
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", DocumentReader.class.getSimpleName() + "[", "]");
@@ -367,20 +375,8 @@ public class DocumentReader implements BsonReader {
                    .toString();
     }
 
-    protected void verifyName(String expectedName) {
-        String actualName = readName();
-        if (!actualName.equals(expectedName)) {
-            throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
-                expectedName, actualName));
-        }
-    }
-
-    BsonType getBsonType(@Nullable Object o) {
-        if (o == null) {
-            return BsonType.NULL;
-        }
-
-        BsonType bsonType = TYPE_MAP.get(o.getClass());
+    BsonType getBsonType(Object o) {
+        BsonType bsonType = o == null ? BsonType.NULL : TYPE_MAP.get(o.getClass());
         if (bsonType == null) {
             if (o instanceof List) {
                 bsonType = BsonType.ARRAY;
@@ -399,7 +395,7 @@ public class DocumentReader implements BsonReader {
         return this.current;
     }
 
-    void state(@Nullable ReaderState next) {
+    void state(ReaderState next) {
         current = next;
     }
 }

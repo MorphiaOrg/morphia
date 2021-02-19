@@ -198,6 +198,29 @@ public class DocumentReaderTest extends TestBase {
     }
 
     @Test
+    public void testNulls() {
+        setup(Document.parse("{ key: null, another: 'fun' }"));
+
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(BsonReader::readStartDocument);
+        assertTrue(reader.currentState() instanceof NameState);
+        step(r -> {
+            assertEquals(r.readName(), "key");
+            assertTrue(reader.currentState() instanceof ValueState);
+        });
+        step(r -> {
+            r.readNull();
+            assertTrue(reader.currentState() instanceof NameState);
+        });
+        step(r -> {
+            assertEquals(r.readName(), "another");
+            assertTrue(reader.currentState() instanceof ValueState);
+        });
+        step(r -> assertEquals(r.readString(), "fun"));
+        step(BsonReader::readEndDocument);
+    }
+
+    @Test
     public void testSkips() {
         setup(Document.parse("{ key: 'value', second: 2 }"));
 
