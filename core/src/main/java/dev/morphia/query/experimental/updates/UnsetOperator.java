@@ -1,7 +1,9 @@
 package dev.morphia.query.experimental.updates;
 
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.OperationTarget;
+import org.bson.Document;
 
 /**
  * @morphia.internal
@@ -18,6 +20,11 @@ public class UnsetOperator extends UpdateOperator {
 
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
-        return new OperationTarget(pathTarget, "");
+        return new OperationTarget(pathTarget, "") {
+            @Override
+            public Object encode(Mapper mapper) {
+                return new Document(field(), "");
+            }
+        };
     }
 }
