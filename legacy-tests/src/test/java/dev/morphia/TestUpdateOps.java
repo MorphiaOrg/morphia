@@ -696,8 +696,9 @@ public class TestUpdateOps extends TestBase {
 
         circle = ds.find(Circle.class)
                    .filter(eq("radius", 2D));
-        assertUpdated(circle.update(unset("radius"))
-                            .execute(new UpdateOptions().multi(false)), 1);
+        UpdateResult radius = circle.update(unset("radius"))
+                                    .execute(new UpdateOptions().multi(false));
+        assertUpdated(radius, 1);
 
         assertThat(idQuery.first().getRadius(), is(0D));
 
