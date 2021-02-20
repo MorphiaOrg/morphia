@@ -84,15 +84,3 @@ jobs:
           repo: MorphiaOrg/morphia-docs
           token: ${{ secrets.PUSH_TOKEN }}
           ref: refs/heads/master
-#  Audits:
-#    name: Trigger the audit job
-#    if: github.ref == 'refs/heads/master'
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Invoke audits
-#        uses: benc-uk/workflow-dispatch@v1
-#        with:
-#          workflow: Audits
-#          repo: MorphiaOrg/morphia-audit
-#          token: ${{ secrets.PUSH_TOKEN }}
-#
