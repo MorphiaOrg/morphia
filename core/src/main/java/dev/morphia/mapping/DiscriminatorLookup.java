@@ -34,14 +34,16 @@ import static java.lang.String.format;
 public final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
     private final Set<String> packages;
+    private final ClassLoader classLoader;
 
     /**
      * Creates a new lookup
-     *
-     * @param entityModels the models to map
+     *  @param entityModels the models to map
      * @param packages     the packages to search
+     * @param classLoader
      */
-    public DiscriminatorLookup(Map<Class<?>, EntityModel> entityModels, Set<String> packages) {
+    public DiscriminatorLookup(Map<Class<?>, EntityModel> entityModels, Set<String> packages, ClassLoader classLoader) {
+        this.classLoader = classLoader;
         for (EntityModel entityModel : entityModels.values()) {
             discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
         }
@@ -85,7 +87,7 @@ public final class DiscriminatorLookup {
     private Class<?> getClassForName(String discriminator) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName(discriminator);
+            clazz = Class.forName(discriminator, true, classLoader);
         } catch (ClassNotFoundException e) {
             // Ignore
         }
