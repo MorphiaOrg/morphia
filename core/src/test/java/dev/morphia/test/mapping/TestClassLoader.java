@@ -64,13 +64,12 @@ public class TestClassLoader extends TestBase {
     }
 
     private void storePreviousInstance() {
+        Document data = new Document("_t", "dev.morphia.test.mapping.ChildEmbed");
+        data.put("type", "one");
         getMapper()
                 .getCollection(BasicEntity.class)
                 .withDocumentClass(Document.class)
-                .insertOne(new Document("data", new Document(Map.of(
-                        "_t", "dev.morphia.test.mapping.ChildEmbed",
-                        "type", "one"
-                ))));
+                .insertOne(new Document("data", data));
     }
 
     private Class<?> loadDynamicClass(ClassLoader classLoader) {
