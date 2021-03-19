@@ -25,11 +25,17 @@ public class LifecycleDecoder extends EntityDecoder {
 
     @Override
     public Object decode(BsonReader reader, DecoderContext decoderContext) {
-        final MorphiaInstanceCreator instanceCreator = getInstanceCreator();
-        Object entity = instanceCreator.getInstance();
-        EntityModel model = getMorphiaCodec().getEntityModel();
         Document document = getMorphiaCodec().getRegistry().get(Document.class).decode(reader, decoderContext);
-
+        EntityModel model = getMorphiaCodec().getEntityModel();
+        if (model.useDiscriminator()) {
+            String discriminator = document.getString(model.getDiscriminatorKey());
+            if (discriminator != null) {
+                Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
+                model = getMorphiaCodec().getMapper().getEntityModel(discriminatorClass);
+            }
+        }
+        final MorphiaInstanceCreator instanceCreator = model.getInstanceCreator();
+        Object entity = instanceCreator.getInstance();
         model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getMapper());
         decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
         model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getMapper());
