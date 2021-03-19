@@ -7,6 +7,7 @@ import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
+import org.bson.codecs.configuration.CodecConfigurationException;
 
 /**
  * @morphia.internal
@@ -30,8 +31,12 @@ public class LifecycleDecoder extends EntityDecoder {
         if (model.useDiscriminator()) {
             String discriminator = document.getString(model.getDiscriminatorKey());
             if (discriminator != null) {
-                Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
-                model = getMorphiaCodec().getMapper().getEntityModel(discriminatorClass);
+                try {
+                    Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
+                    model = getMorphiaCodec().getMapper().getEntityModel(discriminatorClass);
+                } catch (CodecConfigurationException e) {
+                    // Ignore missing discriminator class, use default entity model
+                }
             }
         }
         final MorphiaInstanceCreator instanceCreator = model.getInstanceCreator();
