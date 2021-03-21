@@ -183,11 +183,55 @@ each model object.  To use it, you simply need to add a plugin to your maven pom
 </div>
 </div>
 <div class="paragraph">
-<p>This will generate your criteria classes in <code>target/generated-sources/critter</code> and add the directory as a source
-directory of your maven project.  If the <code>criteriaPackage</code> option is omitted, the code will be generated using the
-package of your entities with <code>.criteria</code> appended. (The options are shown here for documentation purposes using the
-default values.  They can be left out altogether if the defaults are acceptable.)</p>
+<p>This will generate your criteria classes in <code>target/generated-sources/critter</code> and add the directory as a source directory of your maven
+project.</p>
 </div>
+<div class="paragraph">
+<p>If you use gradle, you would configure your file like so (using the kotlin dsl):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">plugins {
+    id("dev.morphia.critter") version "4.1.0-SNAPSHOT"
+}
+
+
+tasks {
+    critter {
+        force = true
+        outputType = "java"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will generate your criteria classes in <code>build/generated-src/critter</code> and add the directory as a source directory of your gradle
+project.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">criteriaPackage</th>
+<th class="tableblock halign-left valign-top">If the <code>criteriaPackage</code> option is omitted, the code will be generated using the package of your entities with
+<code>.criteria</code> appended.  If a value is given, every criteria generated will live in the named package.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">force</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This defaults to false but if it&#8217;s set to true, critter will always regenerate your criteria classes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">outputType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This defaults to <code>kotlin</code> but also accepts <code>java</code> as well.  Setting this changes the language used in the generated
+criteria classes.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock note">
 <table>
 <tr>
