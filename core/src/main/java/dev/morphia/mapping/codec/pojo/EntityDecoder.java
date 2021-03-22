@@ -32,7 +32,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
         Object entity;
         if (decoderContext.hasCheckedDiscriminator()) {
             MorphiaInstanceCreator instanceCreator = getInstanceCreator();
-            decodeProperties(reader, decoderContext, instanceCreator);
+            decodeProperties(reader, decoderContext, instanceCreator, classModel);
             return instanceCreator.getInstance();
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
@@ -70,9 +70,8 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
-                                    MorphiaInstanceCreator instanceCreator) {
+                                    MorphiaInstanceCreator instanceCreator, EntityModel classModel) {
         reader.readStartDocument();
-        EntityModel classModel = morphiaCodec.getEntityModel();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
             if (classModel.useDiscriminator() && classModel.getDiscriminatorKey().equals(name)) {
