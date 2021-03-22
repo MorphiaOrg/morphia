@@ -34,6 +34,8 @@ public class LifecycleDecoder extends EntityDecoder {
                 try {
                     Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
                     model = getMorphiaCodec().getMapper().getEntityModel(discriminatorClass);
+                    // create morphia codec that corresponds to entity model
+                    getMorphiaCodec().getRegistry().get(discriminatorClass);
                 } catch (CodecConfigurationException e) {
                     // Ignore missing discriminator class, use default entity model
                 }
