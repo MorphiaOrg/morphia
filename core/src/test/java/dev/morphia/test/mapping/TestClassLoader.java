@@ -79,6 +79,8 @@ public class TestClassLoader extends TestBase {
 
     @Entity
     public abstract static class Base {
+        @Id
+        private ObjectId id;
     }
 
     @Entity(useDiscriminator = false)
