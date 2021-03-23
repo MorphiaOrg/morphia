@@ -36,7 +36,6 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,7 +91,7 @@ public class Mapper {
         this.datastore = datastore;
         this.options = options;
         morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
-        discriminatorLookup = new DiscriminatorLookup(Collections.emptyMap(), Collections.emptySet(), options.getClassLoader());
+        discriminatorLookup = new DiscriminatorLookup(options.getClassLoader());
 
         this.codecRegistry = fromProviders(new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),

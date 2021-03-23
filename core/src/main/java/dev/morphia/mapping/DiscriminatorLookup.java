@@ -23,6 +23,7 @@ import org.bson.codecs.configuration.CodecConfigurationException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import static java.lang.String.format;
 
@@ -33,21 +34,16 @@ import static java.lang.String.format;
  */
 public final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
-    private final Set<String> packages;
+    private final Set<String> packages = new ConcurrentSkipListSet<>();
     private final ClassLoader classLoader;
 
     /**
      * Creates a new lookup
-     *  @param entityModels the models to map
-     * @param packages     the packages to search
-     * @param classLoader
+     *
+     * @param classLoader the classloader to use for look ups
      */
-    public DiscriminatorLookup(Map<Class<?>, EntityModel> entityModels, Set<String> packages, ClassLoader classLoader) {
+    public DiscriminatorLookup(ClassLoader classLoader) {
         this.classLoader = classLoader;
-        for (EntityModel entityModel : entityModels.values()) {
-            discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
-        }
-        this.packages = packages;
     }
 
     /**
