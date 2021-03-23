@@ -72,7 +72,9 @@ public class Mapper {
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
     private final MapperOptions options;
-    private final DiscriminatorLookup discriminatorLookup = new DiscriminatorLookup(Collections.emptyMap(), Collections.emptySet());
+    private final DiscriminatorLookup discriminatorLookup;
+
+
     private final MorphiaCodecProvider morphiaCodecProvider;
     private final Datastore datastore;
     private final CodecRegistry codecRegistry;
@@ -89,6 +91,8 @@ public class Mapper {
         this.datastore = datastore;
         this.options = options;
         morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
+        discriminatorLookup = new DiscriminatorLookup(Collections.emptyMap(), Collections.emptySet(), options.getClassLoader());
+
         this.codecRegistry = fromProviders(new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),
             new EnumCodecProvider(),
@@ -479,7 +483,7 @@ public class Mapper {
      */
     public synchronized void mapPackage(String packageName) {
         try {
-            getClasses(getClass().getClassLoader(), packageName, getOptions().isMapSubPackages())
+            getClasses(options.getClassLoader(), packageName, getOptions().isMapSubPackages())
                 .stream()
                 .map(this::getEntityModel)
                 .filter(Objects::nonNull)
