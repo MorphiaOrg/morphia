@@ -1,13 +1,17 @@
 package dev.morphia.mapping.codec.pojo;
 
+import static java.lang.String.format;
+
+import org.bson.BsonReader;
+import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.configuration.CodecConfigurationException;
+
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.reader.DocumentReader;
-import org.bson.BsonReader;
-import org.bson.Document;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.configuration.CodecConfigurationException;
 
 /**
  * @morphia.internal
@@ -31,13 +35,13 @@ public class LifecycleDecoder extends EntityDecoder {
         if (model.useDiscriminator()) {
             String discriminator = document.getString(model.getDiscriminatorKey());
             if (discriminator != null) {
-                try {
-                    Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
-                    model = getMorphiaCodec().getMapper().getEntityModel(discriminatorClass);
-                    // create morphia codec that corresponds to entity model
-                    getMorphiaCodec().getRegistry().get(discriminatorClass);
-                } catch (CodecConfigurationException e) {
-                    // Ignore missing discriminator class, use default entity model
+                Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
+                // need to load the codec to initialize cachedCodecs in field models
+                Codec<?> codec = getMorphiaCodec().getRegistry().get(discriminatorClass);
+                if (codec instanceof MorphiaCodec) {
+                    model = ((MorphiaCodec<?>) codec).getEntityModel();
+                } else {
+                    throw new CodecConfigurationException(format("Non-entity class used as discriminator: '%s'.", discriminator));
                 }
             }
         }
