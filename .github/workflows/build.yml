@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         java: [ 11, 15 ]
-        mongo: [ 4.4.2, 4.2.11, 4.0.21, 3.6.21 ]
+        mongo: [ 4.4.4, 4.2.13, 4.0.23, 3.6.23 ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.java }}
