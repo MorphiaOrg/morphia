@@ -28,6 +28,9 @@ jobs:
         env:
           MONGODB: ${{ matrix.mongo }}
         run: mvn -B verify --file pom.xml
+      - name: List core/target/mongo contents
+        if: always()
+        run: ls core/target/mongo/*/
       - uses: actions/upload-artifact@v2
         if: always()
         with:
