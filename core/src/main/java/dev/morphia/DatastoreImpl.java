@@ -325,7 +325,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException("Nothing updated");
         }
 
-        return (T) find(entity.getClass()).filter(eq("_id", id)).first();
+        return (T) find(entity.getClass()).filter(eq("_id", id)).iterator(new FindOptions().limit(1)).next();
     }
 
     @Override
