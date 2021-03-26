@@ -33,8 +33,8 @@ jobs:
         with:
           name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}
           path: |
-            core/target/mongo.log
-            core/target/mongo.err
+            core/target/mongo/*/mongo.log
+            core/target/mongo/*/mongo.err
   Quality:
     name: Style Checks
     runs-on: ubuntu-latest
