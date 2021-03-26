@@ -3,7 +3,6 @@ package dev.morphia;
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
-import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -134,17 +133,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public dev.morphia.aggregation.AggregationPipeline createAggregation(String collection, Class<?> clazz) {
-        return new dev.morphia.aggregation.AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
-    }
-
-    @Override
-    @SuppressWarnings("removal")
-    public <T> Query<T> queryByExample(String collection, T ex) {
-        return queryByExample(ex);
-    }
-
-    @Override
     public void enableDocumentValidation() {
         for (EntityModel model : mapper.getMappedEntities()) {
             enableDocumentValidation(model);
@@ -201,12 +189,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> void ensureIndexes(Class<T> type) {
-        EntityModel model = mapper.getEntityModel(type);
-        if (model != null) {
-            final IndexHelper indexHelper = new IndexHelper(mapper);
-            indexHelper.createIndex(mapper.getCollection(type), model);
-        }
+    public dev.morphia.aggregation.AggregationPipeline createAggregation(String collection, Class<?> clazz) {
+        return new dev.morphia.aggregation.AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
     }
 
     @Override
@@ -226,11 +210,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public MongoDatabase getDatabase() {
-        return database;
-    }
-
-    @Override
     @Nullable
     public ClientSession findSession(SessionConfigurable<?> configurable) {
         return configurable.clientSession() != null
@@ -239,13 +218,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public QueryFactory getQueryFactory() {
-        return queryFactory;
-    }
-
-    @Override
-    public void setQueryFactory(QueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
+    @SuppressWarnings("removal")
+    public <T> Query<T> queryByExample(String collection, T ex) {
+        return queryByExample(ex);
     }
 
     /**
@@ -283,9 +258,31 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> void ensureIndexes(Class<T> type) {
+        EntityModel model = mapper.getEntityModel(type);
+        final IndexHelper indexHelper = new IndexHelper(mapper);
+        indexHelper.createIndex(mapper.getCollection(type), model);
+    }
+
+    @Override
+    public MongoDatabase getDatabase() {
+        return database;
+    }
+
+    @Override
     public <T> void insert(T entity) {
         insert(entity, new InsertOneOptions()
                            .writeConcern(mapper.getWriteConcern(entity.getClass())));
+    }
+
+    @Override
+    public QueryFactory getQueryFactory() {
+        return queryFactory;
+    }
+
+    @Override
+    public void setQueryFactory(QueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
     }
 
     @Override
@@ -321,30 +318,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     @SuppressWarnings("unchecked")
     public <T> Query<T> queryByExample(T example) {
         return getQueryFactory().createQuery(this, (Class<T>) example.getClass(), mapper.toDocument(example));
-    }
-
-    @Override
-    public <T> void insert(T entity, InsertOneOptions options) {
-        insert(mapper.getCollection(entity.getClass()), entity, options);
-    }
-
-    @Override
-    public <T> void insert(List<T> entities, InsertManyOptions options) {
-        if (!entities.isEmpty()) {
-            Class<?> type = entities.get(0).getClass();
-            EntityModel model = mapper.getEntityModel(type);
-            for (T entity : entities) {
-                setInitialVersion(model, entity);
-            }
-
-            MongoCollection mongoCollection = options.prepare(mapper.getCollection(type));
-            ClientSession session = options.clientSession();
-            if (session == null) {
-                mongoCollection.insertMany(entities, options.getOptions());
-            } else {
-                mongoCollection.insertMany(session, entities, options.getOptions());
-            }
-        }
     }
 
     @Override
@@ -424,6 +397,30 @@ public class DatastoreImpl implements AdvancedDatastore {
         return doTransaction(startSession(options), transaction);
     }
 
+    @Override
+    public <T> void insert(T entity, InsertOneOptions options) {
+        insert(mapper.getCollection(entity.getClass()), entity, options);
+    }
+
+    @Override
+    public <T> void insert(List<T> entities, InsertManyOptions options) {
+        if (!entities.isEmpty()) {
+            Class<?> type = entities.get(0).getClass();
+            EntityModel model = mapper.getEntityModel(type);
+            for (T entity : entities) {
+                setInitialVersion(model, entity);
+            }
+
+            MongoCollection mongoCollection = options.prepare(mapper.getCollection(type));
+            ClientSession session = options.clientSession();
+            if (session == null) {
+                mongoCollection.insertMany(entities, options.getOptions());
+            } else {
+                mongoCollection.insertMany(session, entities, options.getOptions());
+            }
+        }
+    }
+
     /**
      * @param model      internal
      * @param validation internal
@@ -461,35 +458,6 @@ public class DatastoreImpl implements AdvancedDatastore {
             mongoCollection.insertOne(entity, options.getOptions());
         } else {
             mongoCollection.insertOne(clientSession, entity, options.getOptions());
-        }
-    }
-
-    protected <T> void saveDocument(T entity, MongoCollection<T> collection, InsertOneOptions options) {
-        PropertyModel idField = mapper.findIdProperty(entity.getClass());
-
-        Object id = idField.getValue(entity);
-        ClientSession clientSession = findSession(options);
-
-        if (id == null) {
-            if (clientSession == null) {
-                options.prepare(collection).insertOne(entity, options.getOptions());
-            } else {
-                options.prepare(collection).insertOne(clientSession, entity, options.getOptions());
-            }
-        } else {
-            ReplaceOptions updateOptions = new ReplaceOptions()
-                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                               .upsert(true);
-            MongoCollection<T> updated = collection;
-            WriteConcern writeConcern = options.writeConcern();
-            if (writeConcern != null) {
-                updated = collection.withWriteConcern(writeConcern);
-            }
-            if (clientSession == null) {
-                updated.replaceOne(new Document("_id", id), entity, updateOptions);
-            } else {
-                updated.replaceOne(clientSession, new Document("_id", id), entity, updateOptions);
-            }
         }
     }
 
@@ -534,21 +502,61 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
-        if (entity == null) {
-            throw new UpdateException(Sofia.cannotPersistNullEntity());
+        ClientSession clientSession = findSession(options);
+
+        PropertyModel idField = mapper.findIdProperty(entity.getClass());
+        Object id = idField.getValue(entity);
+
+        final EntityModel model = mapper.getEntityModel(entity.getClass());
+        final PropertyModel versionProperty = model.getVersionProperty();
+        Long oldVersion = null;
+        long newVersion = -1;
+
+        if (versionProperty != null) {
+            oldVersion = (Long) versionProperty.getValue(entity);
+            newVersion = oldVersion == null ? 1L : oldVersion + 1;
         }
 
-        if (!tryVersionedUpdate(entity, collection, options)) {
-            saveDocument(entity, collection, options);
-        }
-    }
+        Runnable operation;
 
-    private <T> void setInitialVersion(PropertyModel versionField, T entity) {
-        Object value = versionField.getValue(entity);
-        if (value != null && !value.equals(0)) {
-            throw new ValidationException(Sofia.versionManuallySet());
+        if (id == null || newVersion == 1) {
+            operation = () -> {
+                if (clientSession == null) {
+                    options.prepare(collection).insertOne(entity, options.getOptions());
+                } else {
+                    options.prepare(collection).insertOne(clientSession, entity, options.getOptions());
+                }
+            };
         } else {
-            versionField.setValue(entity, 1L);
+            ReplaceOptions updateOptions = new ReplaceOptions()
+                                               .bypassDocumentValidation(options.getBypassDocumentValidation())
+                                               .upsert(true);
+            Document filter = new Document("_id", id);
+            if (versionProperty != null) {
+                filter.put(versionProperty.getMappedName(), oldVersion);
+            }
+            operation = () -> {
+                UpdateResult updateResult;
+                if (clientSession == null) {
+                    updateResult = options.prepare(collection).replaceOne(filter, entity, updateOptions);
+                } else {
+                    updateResult = options.prepare(collection).replaceOne(clientSession, filter, entity, updateOptions);
+                }
+                if (versionProperty != null && updateResult.getModifiedCount() != 1) {
+                    throw new VersionMismatchException(entity.getClass(), id);
+                }
+            };
+        }
+
+        try {
+            updateVersion(entity, versionProperty, newVersion);
+            operation.run();
+        } catch (MongoWriteException e) {
+            updateVersion(entity, versionProperty, oldVersion);
+            if (versionProperty != null) {
+                throw new VersionMismatchException(entity.getClass(), id);
+            }
+            throw e;
         }
     }
 
@@ -568,34 +576,34 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private <T> boolean tryVersionedUpdate(T entity, MongoCollection collection, InsertOneOptions options) {
         final EntityModel model = mapper.getEntityModel(entity.getClass());
-        final PropertyModel versionField = model.getVersionProperty();
-        if (versionField == null) {
+        final PropertyModel versionProperty = model.getVersionProperty();
+        if (versionProperty == null) {
             return false;
         }
 
         PropertyModel idField = mapper.findIdProperty(entity.getClass());
         final Object idValue = idField.getValue(entity);
 
-        Long oldVersion = (Long) versionField.getValue(entity);
+        Long oldVersion = (Long) versionProperty.getValue(entity);
         long newVersion = oldVersion == null ? 1L : oldVersion + 1;
         ClientSession session = findSession(options);
 
         if (idValue == null || newVersion == 1) {
             try {
-                updateVersion(entity, versionField, newVersion);
+                updateVersion(entity, versionProperty, newVersion);
                 if (session == null) {
                     options.prepare(collection).insertOne(entity, options.getOptions());
                 } else {
                     options.prepare(collection).insertOne(session, entity, options.getOptions());
                 }
             } catch (MongoWriteException e) {
-                updateVersion(entity, versionField, oldVersion);
+                updateVersion(entity, versionProperty, oldVersion);
                 throw new VersionMismatchException(entity.getClass(), idValue);
             }
         } else {
             final UpdateResult res = find(collection.getNamespace().getCollectionName())
                                          .filter(eq("_id", idValue),
-                                             eq(versionField.getMappedName(), oldVersion))
+                                             eq(versionProperty.getMappedName(), oldVersion))
                                          .update(UpdateOperators.set(entity))
                                          .execute(new UpdateOptions()
                                                       .bypassDocumentValidation(options.getBypassDocumentValidation())
@@ -605,14 +613,16 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (res.getModifiedCount() != 1) {
                 throw new VersionMismatchException(entity.getClass(), idValue);
             }
-            updateVersion(entity, versionField, newVersion);
+            updateVersion(entity, versionProperty, newVersion);
         }
 
         return true;
     }
 
-    private <T> void updateVersion(T entity, PropertyModel property, @Nullable Long newVersion) {
-        property.setValue(entity, newVersion);
+    private <T> void updateVersion(T entity, @Nullable PropertyModel versionProperty, @Nullable Long newVersion) {
+        if (versionProperty != null) {
+            versionProperty.setValue(entity, newVersion);
+        }
     }
 
     private static class NoDeleteResult extends DeleteResult {
