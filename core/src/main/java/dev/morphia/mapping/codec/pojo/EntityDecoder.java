@@ -16,6 +16,7 @@ import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
+import static java.lang.String.format;
 
 /**
  * @morphia.internal
@@ -39,7 +40,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
             EntityModel classModel = morphiaCodec.getEntityModel();
             if (decoderContext.hasCheckedDiscriminator()) {
                 MorphiaInstanceCreator instanceCreator = getInstanceCreator(classModel);
-                decodeProperties(reader, decoderContext, instanceCreator);
+                decodeProperties(reader, decoderContext, instanceCreator, classModel);
                 return instanceCreator.getInstance();
             } else {
                 entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
@@ -76,9 +77,8 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
-                                    MorphiaInstanceCreator instanceCreator) {
+                                    MorphiaInstanceCreator instanceCreator, EntityModel classModel) {
         reader.readStartDocument();
-        EntityModel classModel = morphiaCodec.getEntityModel();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
             if (classModel.useDiscriminator() && classModel.getDiscriminatorKey().equals(name)) {
@@ -121,14 +121,27 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     private Object decodeWithLifecycle(BsonReader reader, DecoderContext decoderContext) {
-        final Object entity;
-        final MorphiaInstanceCreator instanceCreator = getInstanceCreator(morphiaCodec.getEntityModel());
-        entity = instanceCreator.getInstance();
-
         Document document = morphiaCodec.getRegistry().get(Document.class).decode(reader, decoderContext);
+        EntityModel model = morphiaCodec.getEntityModel();
+        if (model.useDiscriminator()) {
+            String discriminator = document.getString(model.getDiscriminatorKey());
+            if (discriminator != null) {
+                Class<?> discriminatorClass = morphiaCodec.getDiscriminatorLookup().lookup(discriminator);
+                // need to load the codec to initialize cachedCodecs in field models
+                Codec<?> codec = morphiaCodec.getRegistry().get(discriminatorClass);
+                if (codec instanceof MorphiaCodec) {
+                    model = ((MorphiaCodec<?>) codec).getEntityModel();
+                } else {
+                    throw new CodecConfigurationException(format("Non-entity class used as discriminator: '%s'.", discriminator));
+                }
+            }
+        }
+        final MorphiaInstanceCreator instanceCreator = model.getInstanceCreator();
+        final Object entity = instanceCreator.getInstance();
+
         morphiaCodec.getEntityModel().callLifecycleMethods(PreLoad.class, entity, document, morphiaCodec.getMapper());
 
-        decodeProperties(new DocumentReader(document), decoderContext, instanceCreator);
+        decodeProperties(new DocumentReader(document), decoderContext, instanceCreator, model);
 
         morphiaCodec.getEntityModel().callLifecycleMethods(PostLoad.class, entity, document, morphiaCodec.getMapper());
         return entity;
