@@ -297,21 +297,35 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + entity.getClass().getName());
         }
 
-        final Document document = mapper.toDocument(entity);
-        document.remove("_id");
+        final EntityModel model = mapper.getEntityModel(entity.getClass());
+        final PropertyModel versionProperty = model.getVersionProperty();
+        Long oldVersion = null;
+        long newVersion = -1;
 
-        final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
-        if (!tryVersionedUpdate(entity, mapper.getCollection(entity.getClass()), options)) {
-            UpdateResult execute = query.update(UpdateOperators.set(entity))
-                                        .execute(new UpdateOptions()
-                                                     .clientSession(findSession(options))
-                                                     .writeConcern(options.writeConcern()));
-            if (execute.getModifiedCount() != 1) {
-                throw new UpdateException("Nothing updated");
-            }
+        if (versionProperty != null) {
+            oldVersion = (Long) versionProperty.getValue(entity);
+            newVersion = oldVersion == null ? 1L : oldVersion + 1;
         }
 
-        return query.iterator().next();
+        final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
+        if (newVersion != -1) {
+            updateVersion(entity, versionProperty, newVersion);
+            query.filter(eq(versionProperty.getMappedName(), oldVersion));
+        }
+
+        UpdateResult execute = query.update(UpdateOperators.set(entity))
+                                    .execute(new UpdateOptions()
+                                                 .clientSession(findSession(options))
+                                                 .writeConcern(options.writeConcern()));
+        if (execute.getModifiedCount() != 1) {
+            updateVersion(entity, versionProperty, oldVersion);
+            if (versionProperty != null) {
+                throw new VersionMismatchException(entity.getClass(), id);
+            }
+            throw new UpdateException("Nothing updated");
+        }
+
+        return (T) find(entity.getClass()).filter(eq("_id", id)).first();
     }
 
     @Override
@@ -572,51 +586,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             }
         }
-    }
-
-    private <T> boolean tryVersionedUpdate(T entity, MongoCollection collection, InsertOneOptions options) {
-        final EntityModel model = mapper.getEntityModel(entity.getClass());
-        final PropertyModel versionProperty = model.getVersionProperty();
-        if (versionProperty == null) {
-            return false;
-        }
-
-        PropertyModel idField = mapper.findIdProperty(entity.getClass());
-        final Object idValue = idField.getValue(entity);
-
-        Long oldVersion = (Long) versionProperty.getValue(entity);
-        long newVersion = oldVersion == null ? 1L : oldVersion + 1;
-        ClientSession session = findSession(options);
-
-        if (idValue == null || newVersion == 1) {
-            try {
-                updateVersion(entity, versionProperty, newVersion);
-                if (session == null) {
-                    options.prepare(collection).insertOne(entity, options.getOptions());
-                } else {
-                    options.prepare(collection).insertOne(session, entity, options.getOptions());
-                }
-            } catch (MongoWriteException e) {
-                updateVersion(entity, versionProperty, oldVersion);
-                throw new VersionMismatchException(entity.getClass(), idValue);
-            }
-        } else {
-            final UpdateResult res = find(collection.getNamespace().getCollectionName())
-                                         .filter(eq("_id", idValue),
-                                             eq(versionProperty.getMappedName(), oldVersion))
-                                         .update(UpdateOperators.set(entity))
-                                         .execute(new UpdateOptions()
-                                                      .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                      .clientSession(session)
-                                                      .writeConcern(options.writeConcern()));
-
-            if (res.getModifiedCount() != 1) {
-                throw new VersionMismatchException(entity.getClass(), idValue);
-            }
-            updateVersion(entity, versionProperty, newVersion);
-        }
-
-        return true;
     }
 
     private <T> void updateVersion(T entity, @Nullable PropertyModel versionProperty, @Nullable Long newVersion) {

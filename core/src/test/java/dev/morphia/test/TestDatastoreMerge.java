@@ -12,42 +12,20 @@
  */
 
 
-package dev.morphia;
+package dev.morphia.test;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class TestDatastoreMerge extends TestBase {
-
-    @Test
-    public void testMerge() {
-        final Merger te = new Merger();
-        te.name = "test1";
-        te.foo = "bar";
-        te.position = 1;
-        getDs().save(te);
-
-        assertEquals(1, getDs().find(te.getClass()).count());
-
-        //only update the position field with merge, normally save would override the whole object.
-        final Merger te2 = new Merger();
-        te2.id = te.id;
-        te2.position = 5;
-        Merger merge = getDs().merge(te2);
-
-        assertEquals(te.name, merge.name);
-        assertEquals(te.foo, merge.foo);
-        assertEquals(te2.position, merge.position);
-    }
 
     @Test
     public void merge() {
@@ -58,7 +36,7 @@ public class TestDatastoreMerge extends TestBase {
         ds.save(test1);
 
         Test2 test2 = ds.find(Test2.class).first();
-        assertNotNull(test2.id);
+        Assert.assertNotNull(test2.id);
         test2.blarg = "barfoo";
         long version = test2.version;
         ds.merge(test2);
@@ -66,7 +44,28 @@ public class TestDatastoreMerge extends TestBase {
         Assert.assertEquals(version + 1, test2.version);
         test1 = ds.find(Test1.class).filter(eq("_id", test1.id)).first();
 
-        assertNotNull(test1.name);//fails
+        Assert.assertNotNull(test1.name);//fails
+    }
+
+    @Test
+    public void testMerge() {
+        final Merger te = new Merger();
+        te.name = "test1";
+        te.foo = "bar";
+        te.position = 1;
+        getDs().save(te);
+
+        Assert.assertEquals(getDs().find(te.getClass()).count(), 1);
+
+        //only update the position field with merge, normally save would override the whole object.
+        final Merger te2 = new Merger();
+        te2.id = te.id;
+        te2.position = 5;
+        Merger merge = getDs().merge(te2);
+
+        Assert.assertEquals(te.name, merge.name);
+        Assert.assertEquals(te.foo, merge.foo);
+        Assert.assertEquals(te2.position, merge.position);
     }
 
     @Entity
