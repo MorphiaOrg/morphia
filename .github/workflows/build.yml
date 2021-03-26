@@ -29,6 +29,12 @@ jobs:
         env:
           MONGODB: ${{ matrix.mongo }}
         run: mvn -B verify --file pom.xml
+      - uses: actions/upload-artifact@v2
+        with:
+          name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}
+          path: |
+            core/target/mongo.log
+            core/target/mongo.err
   Quality:
     name: Style Checks
     runs-on: ubuntu-latest
