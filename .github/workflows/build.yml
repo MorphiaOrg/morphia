@@ -36,6 +36,9 @@ jobs:
         with:
           name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}
           path: |
+            core/target/mongo.log
+            core/target/mongo/mongo.log
+            core/target/mongo/mongo.err
             core/target/mongo/*/mongo.log
             core/target/mongo/*/mongo.err
           retention-days: 5
