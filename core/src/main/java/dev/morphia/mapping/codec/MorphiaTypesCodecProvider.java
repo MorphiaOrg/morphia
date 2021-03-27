@@ -39,15 +39,16 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new LegacyQueryCodec(mapper));
         addCodec(new MorphiaQueryCodec(mapper));
         addCodec(new URICodec());
+        addCodec(new ByteWrapperArrayCodec());
 
         List.of(boolean.class, Boolean.class,
-            byte.class, Byte.class,
             char.class, Character.class,
             double.class, Double.class,
             float.class, Float.class,
             int.class, Integer.class,
             long.class, Long.class,
             short.class, Short.class).forEach(c -> addCodec(new TypedArrayCodec(c, mapper)));
+
     }
 
     protected <T> void addCodec(Codec<T> codec) {
@@ -56,7 +57,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
 
     @Override
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
-        final Codec<T> codec = (Codec<T>) codecs.get(clazz);
+        Codec<T> codec = (Codec<T>) codecs.get(clazz);
         if (codec != null) {
             return codec;
         } else if (clazz.isArray() && !clazz.getComponentType().equals(byte.class)) {
