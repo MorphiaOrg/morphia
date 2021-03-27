@@ -7,6 +7,11 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
+/**
+ * Encodes a Byte[] to BinData like the driver's ByteArrayCodec does for byte[]
+ *
+ * @since 2.1.5
+ */
 public class ByteWrapperArrayCodec implements Codec<Byte[]> {
     @Override
     public Byte[] decode(BsonReader reader, DecoderContext decoderContext) {
