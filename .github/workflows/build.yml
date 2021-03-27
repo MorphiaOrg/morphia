@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         java: [ 11, 15 ]
-        mongo: [ 4.4.3, 4.2.12, 4.0.22, 3.6.22 ]
+        mongo: [ 4.4.4, 4.2.13, 4.0.23, 3.6.23 ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.java }}
@@ -28,6 +28,14 @@ jobs:
         env:
           MONGODB: ${{ matrix.mongo }}
         run: mvn -B verify --file pom.xml
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}
+          path: |
+            core/target/**/*.log
+            core/target/**/*.err
+          retention-days: 5
   Quality:
     name: Style Checks
     runs-on: ubuntu-latest
