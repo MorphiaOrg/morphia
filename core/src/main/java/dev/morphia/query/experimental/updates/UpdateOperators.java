@@ -4,6 +4,8 @@ import dev.morphia.query.Query;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.sofia.Sofia;
 
+import java.time.temporal.Temporal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -137,6 +139,32 @@ public final class UpdateOperators {
     }
 
     /**
+     * Only updates the field if the specified value is greater than the existing field value.
+     *
+     * @param field the field to update
+     * @param value the max value to apply
+     * @return the update operator
+     * @update.operator $max
+     * @since 2.2
+     */
+    public static UpdateOperator max(String field, Temporal value) {
+        return new UpdateOperator("$max", field, value);
+    }
+
+    /**
+     * Only updates the field if the specified value is greater than the existing field value.
+     *
+     * @param field the field to update
+     * @param value the max value to apply
+     * @return the update operator
+     * @update.operator $max
+     * @since 2.2
+     */
+    public static UpdateOperator max(String field, Date value) {
+        return new UpdateOperator("$max", field, value);
+    }
+
+    /**
      * Only updates the field if the specified value is less than the existing field value.
      *
      * @param field the field to update
@@ -145,6 +173,32 @@ public final class UpdateOperators {
      * @update.operator $min
      */
     public static UpdateOperator min(String field, Number value) {
+        return new UpdateOperator("$min", field, value);
+    }
+
+    /**
+     * Only updates the field if the specified value is less than the existing field value.
+     *
+     * @param field the field to update
+     * @param value the min value to apply
+     * @return the update operator
+     * @update.operator $min
+     * @since 2.2
+     */
+    public static UpdateOperator min(String field, Temporal value) {
+        return new UpdateOperator("$min", field, value);
+    }
+
+    /**
+     * Only updates the field if the specified value is less than the existing field value.
+     *
+     * @param field the field to update
+     * @param value the min value to apply
+     * @return the update operator
+     * @update.operator $min
+     * @since 2.2
+     */
+    public static UpdateOperator min(String field, Date value) {
         return new UpdateOperator("$min", field, value);
     }
 
