@@ -1,4 +1,4 @@
-# This workflow will build a Java project with Maven
+k# This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Project Management Tasks
@@ -68,13 +68,12 @@ jobs:
           curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
           curl -o github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/github.properties
       - name: Publish
-        run: mvn source:jar javadoc:jar deploy -DskipTests
+        run: mvn compile source:jar javadoc:jar deploy -DskipTests
   Docs:
     name: Update Documentation
     if: "github.repository == 'MorphiaOrg/morphia'"
     needs:
-      - Morphia
-      - Quality
+      - Snapshots
     runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
