@@ -95,7 +95,7 @@
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="#javadoc:index.html">Javadoc</a>
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
   </li>
 </ul>
   </li>
@@ -172,7 +172,7 @@
 <h2 id="_queries"><a class="anchor" href="#_queries"></a>Queries</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Morphia provides <a href="#javadoc:dev/morphia/query/Query.html" class="page unresolved"><code>Query&lt;T&gt;</code></a> class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible.
+<p>Morphia provides <a href="javadoc/dev/morphia/query/Query.html" class="page"><code>Query&lt;T&gt;</code></a> class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible.
 To create the <code>Query</code>, we invoke the following code:</p>
 </div>
 <div class="listingblock">
@@ -210,7 +210,7 @@ If you encounter and bugs or usability issues, please file an
 </table>
 </div>
 <div class="paragraph">
-<p>The filters can be accessed via the <a href="#javadoc:dev/morphia/query/experimental/filters/Filters.html" class="page unresolved">Filters</a> class.
+<p>The filters can be accessed via the <a href="javadoc/dev/morphia/query/experimental/filters/Filters.html" class="page">Filters</a> class.
 The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia&#8217;s API. For example, to query for products whose prices is greater than or equal to 1000, you would write this:</p>
 </div>
 <div class="listingblock">
@@ -302,7 +302,7 @@ It&#8217;s also worth noting that this projection works with both the mapped doc
 <p>While projections can be a nice performance win in some cases, it&#8217;s important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-<a href="#javadoc:dev/morphia/Datastore.html#merge(T)#" class="page unresolved"><code>Datastore#merge(T)</code></a></p>
+<a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page"><code>Datastore#merge(T)</code></a></p>
 </div>
 </td>
 </tr>
@@ -335,7 +335,7 @@ See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip">sk
 <h3 id="_ordering"><a class="anchor" href="#_ordering"></a>Ordering</h3>
 <div class="paragraph">
 <p>Ordering the results of a query is done via
-<a href="#javadoc:dev/morphia/query/FindOptions.html#sort(dev.morphia.query.Sort&#8230;&#8203;)#" class="page unresolved"><code>FindOptions.sort(Sort&#8230;&#8203;)</code></a>, etc.
+<a href="javadoc/dev/morphia/query/FindOptions.html#sort(dev.morphia.query.Sort&#8230;&#8203;)#" class="page"><code>FindOptions.sort(Sort&#8230;&#8203;)</code></a>, etc.
 For example, to sort by <code>age</code> (youngest to oldest) and then <code>income</code> (highest to lowest), you would use this:</p>
 </div>
 <div class="listingblock">
