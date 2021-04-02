@@ -1,3 +1,6 @@
+/**
+ * @morphia.internal
+ */
 @NonNullApi
 package dev.morphia.internal;
 

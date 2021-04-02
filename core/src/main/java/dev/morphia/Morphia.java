@@ -10,6 +10,7 @@ import dev.morphia.mapping.MapperOptions;
  * Entry point for working with Morphia
  */
 public final class Morphia {
+
     private Morphia() {
     }
 

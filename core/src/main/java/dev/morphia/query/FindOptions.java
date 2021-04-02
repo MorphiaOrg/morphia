@@ -39,6 +39,8 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
+import static dev.morphia.internal.Util.tryInvoke;
+
 /**
  * The options to apply to a find operation (also commonly referred to as a query).
  *
@@ -104,7 +106,9 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
             iterable.projection(projection.map(mapper, type));
         }
 
-        iterable.allowDiskUse(allowDiskUse);
+        tryInvoke(0, () -> {
+            iterable.allowDiskUse(allowDiskUse);
+        });
         iterable.batchSize(batchSize);
         iterable.collation(collation);
         iterable.comment(comment);
