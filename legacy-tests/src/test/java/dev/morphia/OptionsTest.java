@@ -49,7 +49,7 @@ public class OptionsTest {
 
     @Test
     public void findOptions() {
-        beanScan(FindIterable.class, FindOptions.class, List.of("filter", "projection"));
+        beanScan(FindIterable.class, FindOptions.class, List.of("explain", "filter", "projection"));
     }
 
     @Test
