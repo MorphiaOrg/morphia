@@ -182,7 +182,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -453,33 +453,26 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>dev.morphia.query.internal.MorphiaCursor&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator()">iterator</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Execute the query and get the results.</div>
-</td>
-</tr>
-<tr id="i16" class="altColor">
-<td class="colFirst"><code>dev.morphia.query.internal.MorphiaCursor&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator(dev.morphia.query.FindOptions)">iterator</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>dev.morphia.query.internal.MorphiaKeyCursor&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys()">keys</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>dev.morphia.query.internal.MorphiaKeyCursor&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys(dev.morphia.query.FindOptions)">keys</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
       <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
@@ -487,14 +480,14 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 <div class="block">Create a modify operation based on this query</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;searchText)</code></th>
 <td class="colLast">
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String,java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;searchText,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</code></th>
@@ -502,19 +495,19 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>org.bson.Document</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDocument()">toDocument</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Converts the query to a Document and updates for any discriminator values as my be necessary</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
       <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
@@ -556,7 +549,7 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;dev.morphia.query.<a href="Query.html" title="interface in dev.morphia.query">Query</a></h3>
-<code><a href="Query.html#and(dev.morphia.query.Criteria...)">and</a>, <a href="Query.html#criteria(java.lang.String)">criteria</a>, <a href="Query.html#delete()">delete</a>, <a href="Query.html#execute()">execute</a>, <a href="Query.html#execute(dev.morphia.query.FindOptions)">execute</a>, <a href="Query.html#explain()">explain</a>, <a href="Query.html#find()">find</a>, <a href="Query.html#find(dev.morphia.query.FindOptions)">find</a>, <a href="Query.html#findAndDelete()">findAndDelete</a>, <a href="Query.html#modify(dev.morphia.query.UpdateOperations)">modify</a>, <a href="Query.html#or(dev.morphia.query.Criteria...)">or</a>, <a href="Query.html#retrieveKnownFields()">retrieveKnownFields</a>, <a href="Query.html#update(dev.morphia.query.UpdateOperations)">update</a></code></li>
+<code><a href="Query.html#and(dev.morphia.query.Criteria...)">and</a>, <a href="Query.html#criteria(java.lang.String)">criteria</a>, <a href="Query.html#delete()">delete</a>, <a href="Query.html#execute()">execute</a>, <a href="Query.html#execute(dev.morphia.query.FindOptions)">execute</a>, <a href="Query.html#explain()">explain</a>, <a href="Query.html#find()">find</a>, <a href="Query.html#find(dev.morphia.query.FindOptions)">find</a>, <a href="Query.html#findAndDelete()">findAndDelete</a>, <a href="Query.html#iterator()">iterator</a>, <a href="Query.html#modify(dev.morphia.query.UpdateOperations)">modify</a>, <a href="Query.html#or(dev.morphia.query.Criteria...)">or</a>, <a href="Query.html#retrieveKnownFields()">retrieveKnownFields</a>, <a href="Query.html#stream()">stream</a>, <a href="Query.html#stream(dev.morphia.query.FindOptions)">stream</a>, <a href="Query.html#update(dev.morphia.query.UpdateOperations)">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -864,27 +857,6 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 <dd><code><a href="Query.html#getEntityClass()">getEntityClass</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the entity <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>.</dd>
-</dl>
-</li>
-</ul>
-<a id="iterator()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>iterator</h4>
-<pre class="methodSignature">public&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;&nbsp;iterator()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#iterator()">Query</a></code></span></div>
-<div class="block">Execute the query and get the results.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true#iterator()" title="class or interface in java.lang" class="externalLink">iterator</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></dd>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#iterator()">iterator</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a MorphiaCursor</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="Query.html#iterator(dev.morphia.query.FindOptions)"><code>Query.iterator(FindOptions)</code></a></dd>
 </dl>
 </li>
 </ul>

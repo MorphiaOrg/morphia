@@ -182,7 +182,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":6,"i12":50,"i13":18,"i14":50,"i15":50,"i16":50,"i17":18,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":38,"i25":38,"i26":6,"i27":50,"i28":50,"i29":50,"i30":38,"i31":38,"i32":6,"i33":6,"i34":50};
+var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":6,"i12":50,"i13":18,"i14":50,"i15":50,"i16":50,"i17":18,"i18":6,"i19":6,"i20":6,"i21":6,"i22":18,"i23":6,"i24":38,"i25":38,"i26":6,"i27":50,"i28":50,"i29":50,"i30":38,"i31":38,"i32":18,"i33":18,"i34":6,"i35":6,"i36":50};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -473,7 +473,7 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i22" class="altColor">
-<td class="colFirst"><code>dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<td class="colFirst"><code>default dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator()">iterator</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results.</div>
@@ -553,11 +553,25 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 </td>
 </tr>
 <tr id="i32" class="altColor">
+<td class="colFirst"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stream()">stream</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Provides a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a> representation of the results of this query.</div>
+</td>
+</tr>
+<tr id="i33" class="rowColor">
+<td class="colFirst"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stream(dev.morphia.query.FindOptions)">stream</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<td class="colLast">
+<div class="block">Provides a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a> representation of the results of this query.</div>
+</td>
+</tr>
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>org.bson.Document</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDocument()">toDocument</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
       <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
@@ -565,7 +579,7 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>default <a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
@@ -961,6 +975,26 @@ default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" ti
 </dl>
 </li>
 </ul>
+<a id="iterator()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>iterator</h4>
+<pre class="methodSignature">default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;iterator()</pre>
+<div class="block">Execute the query and get the results.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true#iterator()" title="class or interface in java.lang" class="externalLink">iterator</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a MorphiaCursor</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.0</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#iterator(dev.morphia.query.FindOptions)"><code>iterator(FindOptions)</code></a></dd>
+</dl>
+</li>
+</ul>
 <a id="findAndDelete(dev.morphia.query.FindAndDeleteOptions)">
 <!--   -->
 </a>
@@ -1014,6 +1048,19 @@ default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" ti
 </dl>
 </li>
 </ul>
+<a id="getEntityClass()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getEntityClass</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;getEntityClass()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the entity <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>.</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
 <a id="modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
 <!--   -->
 </a>
@@ -1029,39 +1076,6 @@ default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" ti
 <dd><code>updates</code> - lists the set of updates to apply</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the modify operation</dd>
-</dl>
-</li>
-</ul>
-<a id="getEntityClass()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getEntityClass</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;getEntityClass()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the entity <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>.</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
-<a id="iterator()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>iterator</h4>
-<pre class="methodSignature">dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;iterator()</pre>
-<div class="block">Execute the query and get the results.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true#iterator()" title="class or interface in java.lang" class="externalLink">iterator</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a MorphiaCursor</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.0</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#iterator(dev.morphia.query.FindOptions)"><code>iterator(FindOptions)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1227,6 +1241,40 @@ default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</
 <dd>the Query to enable chaining of commands</dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/text/">$text</a></dd></dl>
 </dl></li>
+</ul>
+<a id="stream()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>stream</h4>
+<pre class="methodSignature">default&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;stream()</pre>
+<div class="block">Provides a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a> representation of the results of this query.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the stream</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
+<a id="stream(dev.morphia.query.FindOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>stream</h4>
+<pre class="methodSignature">default&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;stream​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<div class="block">Provides a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a> representation of the results of this query.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>options</code> - the options to apply</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the stream</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
 </ul>
 <a id="toDocument()">
 <!--   -->
