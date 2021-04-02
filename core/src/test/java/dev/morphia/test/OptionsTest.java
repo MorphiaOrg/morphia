@@ -1,4 +1,4 @@
-package dev.morphia;
+package dev.morphia.test;
 
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
@@ -6,14 +6,19 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
+import dev.morphia.DeleteOptions;
+import dev.morphia.InsertManyOptions;
+import dev.morphia.InsertOneOptions;
+import dev.morphia.ModifyOptions;
+import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.experimental.AggregationOptions;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -83,13 +88,13 @@ public class OptionsTest {
     private void checkOverride(Class<?> driverType, Class<?> morphiaType, Method method) throws NoSuchMethodException {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
-        Assert.assertTrue(method.toString(), !method.getReturnType().equals(driverType)
-                                             || morphiaMethod.getReturnType().equals(morphiaType));
+        Assert.assertTrue(!method.getReturnType().equals(driverType)
+                          || morphiaMethod.getReturnType().equals(morphiaType), method.toString());
 
         if (parameterTypes.equals(new Class[]{Bson.class})) {
-            Assert.assertTrue(method.toString(), !method.getReturnType().equals(driverType)
-                                                 || morphiaType.getMethod(method.getName(), Document.class)
-                                                               .getReturnType().equals(morphiaType));
+            Assert.assertTrue(!method.getReturnType().equals(driverType)
+                              || morphiaType.getMethod(method.getName(), Document.class)
+                                            .getReturnType().equals(morphiaType), method.toString());
 
         }
     }
@@ -106,7 +111,7 @@ public class OptionsTest {
     private void scan(Class<?> driverType, Class<?> morphiaType, boolean subclass, List<Class<?>> localFields) {
         try {
             Method[] methods = driverType.getDeclaredMethods();
-            Assert.assertEquals("Options class should be a subclass", subclass, driverType.equals(morphiaType.getSuperclass()));
+            Assert.assertEquals(driverType.equals(morphiaType.getSuperclass()), subclass, "Options class should be a subclass");
             for (Method method : methods) {
                 if (method.getAnnotation(Deprecated.class) == null && !method.getName().equals("builder")) {
                     checkOverride(driverType, morphiaType, method);
@@ -118,13 +123,13 @@ public class OptionsTest {
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
 
                 Field field = morphiaType.getDeclaredField(name);
-                Assert.assertEquals(localField.getName(), field.getType(), localField);
+                Assert.assertEquals(localField, field.getType(), localField.getName());
 
                 Method declaredMethod = morphiaType.getDeclaredMethod(name);
-                Assert.assertEquals(declaredMethod.toString(), declaredMethod.getReturnType(), localField);
+                Assert.assertEquals(localField, declaredMethod.getReturnType(), declaredMethod.toString());
 
                 declaredMethod = morphiaType.getDeclaredMethod(name, localField);
-                Assert.assertEquals(declaredMethod.toString(), declaredMethod.getReturnType(), morphiaType);
+                Assert.assertEquals(morphiaType, declaredMethod.getReturnType(), declaredMethod.toString());
             }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getMessage(), e);
