@@ -34,7 +34,7 @@
 
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.15</bottlerocket.version>
-        <driver.version>4.1.1</driver.version>
+        <driver.version>4.2.2</driver.version>
         <json.assert.version>1.2.3</json.assert.version>
         <kotlin.version>1.4.10</kotlin.version>
         <maven.version>3.6.2</maven.version>

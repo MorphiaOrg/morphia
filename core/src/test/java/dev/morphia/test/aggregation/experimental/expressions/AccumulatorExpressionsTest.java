@@ -291,7 +291,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'item' : 'xyz', 'price' : 5, 'quantity' : 5, 'date' : ISODate('2014-02-03T09:05:00Z') }"),
             parse("{ '_id' : 4, 'item' : 'abc', 'price' : 10, 'quantity' : 10, 'date' : ISODate('2014-02-15T08:00:00Z') }"),
             parse("{ '_id' : 5, 'item' : 'xyz', 'price' : 5, 'quantity' : 10, 'date' : ISODate('2014-02-15T09:05:00Z') }"),
-            parse("{ '_id' : 6, 'item' : 'xyz', 'price' : 5, 'quantity' : 5, 'date' : ISODate('2014-02-15T012:05:10Z') }"),
+            parse("{ '_id' : 6, 'item' : 'xyz', 'price' : 5, 'quantity' : 5, 'date' : ISODate('2014-02-15T12:05:10Z') }"),
             parse("{ '_id' : 7, 'item' : 'xyz', 'price' : 5, 'quantity' : 10, 'date' : ISODate('2014-02-15T14:12:12Z') }")));
     }
 
