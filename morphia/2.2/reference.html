@@ -359,24 +359,31 @@ This can be done via the <a href="javadoc/dev/morphia/annotations/Indexed.html" 
 </div>
 <div class="sect2">
 <h3 id="_methods"><a class="anchor" href="#_methods"></a>Methods</h3>
-<div class="exampleblock">
-<div class="content">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>Method-based mapping is new in 2.2.  While testing has been done to ensure everything works the same as with fields, there may some
-esoteric combinations of features that reveal a gap in functionality.  Please file an <a href="https://github.com/MorphiaOrg/morphia/issues">issue</a>
+<p>Method-based mapping is new in 2.2. While testing has been done to ensure everything works the same as with fields, there may some
+esoteric combinations of features that reveal a gap in functionality.Please file an <a href="https://github.com/MorphiaOrg/morphia/issues">issue</a>
 if you encounter such a case.</p>
 </div>
-</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>As of 2.2, mapping information can be defined on methods instead of fields.  All the same rules apply, simply the location of the
-annotations are moved to the getters and/or setters.  Annotations can live on either the <code>get</code> or the <code>set</code> method and Morphia will
-detect them.  If the same annotation is applied to both the <code>get</code> and the <code>set</code> behavior is unpredictable so care should be taken to
-avoid such a scenario.  Customs in other libraries tend to favor annotating the <code>get</code> methods and this is also recommended here for
+<p>As of 2.2, mapping information can be defined on methods instead of fields.All the same rules apply, simply the location of the
+annotations are moved to the getters and/or setters.Annotations can live on either the <code>get</code> or the <code>set</code> method and Morphia will
+detect them.If the same annotation is applied to both the <code>get</code> and the <code>set</code> behavior is unpredictable so care should be taken to
+avoid such a scenario.Customs in other libraries tend to favor annotating the <code>get</code> methods and this is also recommended here for
 consistency.</p>
 </div>
 <div class="paragraph">
-<p>In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.  This has some
+<p>In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.This has some
 very basic rules for your methods:</p>
 </div>
 <div class="olist arabic">
@@ -385,7 +392,7 @@ very basic rules for your methods:</p>
 <p><code>get</code> methods take no parameters</p>
 </li>
 <li>
-<p><code>set</code> methods take one parameter and the type of that parameter should generally match the return type of the getter.  These setter
+<p><code>set</code> methods take one parameter and the type of that parameter should generally match the return type of the getter.These setter
 methods also return void.</p>
 </li>
 <li>
