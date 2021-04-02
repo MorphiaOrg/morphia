@@ -10,13 +10,13 @@ import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import static java.util.Arrays.asList;
 
 public class TestLifecycles extends TestBase {
     @Test
     public void testWithGeoJson() {
         final Polygon polygon = new Polygon(
-            List.of(new Position(0d, 0d), new Position(1d, 1d), new Position(2d, 2d), new Position(3d, 3d), new Position(0d, 0d)));
+            asList(new Position(0d, 0d), new Position(1d, 1d), new Position(2d, 2d), new Position(3d, 3d), new Position(0d, 0d)));
         getDs().save(new HoldsPolygon(ObjectId.get(), polygon));
 
         Assert.assertFalse(HoldsPolygon.lifecycle);
