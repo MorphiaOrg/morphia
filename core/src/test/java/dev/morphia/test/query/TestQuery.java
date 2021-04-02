@@ -27,6 +27,7 @@ import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.test.TestBase;
+import dev.morphia.test.models.City;
 import dev.morphia.test.models.CustomId;
 import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Keys;
@@ -49,6 +50,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Collation.builder;
 import static dev.morphia.query.Sort.ascending;
@@ -103,6 +105,24 @@ public class TestQuery extends TestBase {
         String loggedQuery = getDs().getLoggedQuery(options);
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
         assertEquals(found.id, value.id);
+    }
+
+    @Test
+    public void testStreams() {
+        getMapper().map(City.class);
+
+        List<String> list = getDs().find(City.class)
+                                   .stream(new FindOptions().limit(50))
+                                   .map(City::getName)
+                                   .collect(Collectors.toList());
+        assertEquals(list.size(), 50);
+
+        int sum = getDs().find(City.class)
+                         .stream()
+                         .mapToInt(c -> 1)
+                         .sum();
+
+        assertTrue(sum > 0, sum + "");
     }
 
     @Test

@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -75,6 +76,30 @@ public abstract class TestBase {
             datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME, mapperOptions);
         }
         return datastore;
+    }
+
+    @BeforeMethod
+    public void installData() {
+        File file = new File("zips.json");
+        try {
+            if (!file.exists()) {
+                file = new File("target/zips.json");
+                if (!file.exists()) {
+                    download(new URL("https://media.mongodb.org/zips.json"), file);
+                }
+            }
+            MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
+            if (zips.countDocuments() == 0) {
+                LOG.info("Count is 0.  (Re)installing sample data");
+                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
+                zipcodes.drop();
+                Files.lines(file.toPath())
+                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assumeTrue(file.exists(), "Failed to process media files");
     }
 
     protected void reconfigure(MapperOptions options) {

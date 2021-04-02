@@ -37,6 +37,14 @@ public final class City {
     @Property("state")
     private String state;
 
+    public String getName() {
+        return name;
+    }
+
+    public Double getPopulation() {
+        return population;
+    }
+
 
     @Override
     public String toString() {

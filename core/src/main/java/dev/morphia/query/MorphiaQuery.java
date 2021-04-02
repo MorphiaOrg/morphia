@@ -184,11 +184,6 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public MorphiaCursor<T> iterator() {
-        return this.iterator(new FindOptions());
-    }
-
-    @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }

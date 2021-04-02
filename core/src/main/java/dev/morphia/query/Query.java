@@ -12,6 +12,10 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import java.util.Map;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
 
@@ -231,6 +235,18 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
+     * Execute the query and get the results.
+     *
+     * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
+     * @since 2.0
+     */
+    @Override
+    default MorphiaCursor<T> iterator() {
+        return iterator(new FindOptions());
+    }
+
+    /**
      * Deletes an entity from the database and returns it.
      *
      * @param options the options to apply
@@ -259,6 +275,12 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     T first(FindOptions options);
 
     /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
+    Class<T> getEntityClass();
+
+    /**
      * Create a modify operation based on this query
      *
      * @param first   the first and required update operator
@@ -266,22 +288,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the modify operation
      */
     Modify<T> modify(UpdateOperator first, UpdateOperator... updates);
-
-    /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
-     */
-    Class<T> getEntityClass();
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @return a MorphiaCursor
-     * @see #iterator(FindOptions)
-     * @since 2.0
-     */
-    @Override
-    MorphiaCursor<T> iterator();
 
     /**
      * Execute the query and get the results.
@@ -371,6 +377,28 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     Query<T> search(String text, String language);
 
     /**
+     * Provides a {@link Stream} representation of the results of this query.
+     *
+     * @return the stream
+     * @since 2.2
+     */
+    default Stream<T> stream() {
+        return stream(new FindOptions());
+    }
+
+    /**
+     * Provides a {@link Stream} representation of the results of this query.
+     *
+     * @param options the options to apply
+     * @return the stream
+     * @since 2.2
+     */
+    default Stream<T> stream(FindOptions options) {
+        Spliterator<T> spliterator = Spliterators.spliteratorUnknownSize(iterator(options), 0);
+        return StreamSupport.stream(spliterator, false);
+    }
+
+    /**
      * @return the document form of this query
      * @morphia.internal
      */
@@ -396,5 +424,4 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     default Update<T> update(UpdateOperations<T> operations) {
         return legacyOperation();
     }
-
 }

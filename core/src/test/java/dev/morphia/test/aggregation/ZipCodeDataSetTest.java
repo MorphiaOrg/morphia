@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation;
 
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
@@ -11,16 +10,11 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.State;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,30 +38,6 @@ import static org.testng.Assert.assertTrue;
 @Ignore
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
-
-    @BeforeMethod
-    public void installData() {
-        File file = new File("zips.json");
-        try {
-            if (!file.exists()) {
-                file = new File("target/zips.json");
-                if (!file.exists()) {
-                    download(new URL("https://media.mongodb.org/zips.json"), file);
-                }
-            }
-            MongoCollection<Document> zips = getDatabase().getCollection("zipcodes");
-            if (zips.countDocuments() == 0) {
-                LOG.info("Count is 0.  (Re)installing sample data");
-                MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
-                zipcodes.drop();
-                Files.lines(file.toPath())
-                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assumeTrue(file.exists(), "Failed to process media files");
-    }
 
     @Test
     public void averageCitySizeByState() {
