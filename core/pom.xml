@@ -290,7 +290,7 @@
                 <maven.test.skip>true</maven.test.skip>
             </properties>
             <build>
-                <defaultGoal>compile</defaultGoal>
+                <defaultGoal>verify</defaultGoal>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -314,7 +314,7 @@
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
-                                <phase>generate-sources</phase>
+                                <phase>verify</phase>
                             </execution>
                         </executions>
                         <configuration>
@@ -342,7 +342,7 @@
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
-                                <phase>compile</phase>
+                                <phase>verify</phase>
                             </execution>
                         </executions>
                         <configuration>
@@ -367,7 +367,7 @@
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
-                                <phase>test-compile</phase>
+                                <phase>verify</phase>
                             </execution>
                         </executions>
                         <configuration>

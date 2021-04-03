@@ -38,8 +38,8 @@
         <json.assert.version>1.2.3</json.assert.version>
         <kotlin.version>1.4.10</kotlin.version>
         <maven.version>3.6.2</maven.version>
-        <revapi.maven.plugin.version>0.11.4</revapi.maven.plugin.version>
-        <revapi.java.version>0.22.0</revapi.java.version>
+        <revapi.maven.plugin.version>0.13.6</revapi.maven.plugin.version>
+        <revapi.java.version>0.23.2</revapi.java.version>
         <slf4j.version>1.7.30</slf4j.version>
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M5</surefire.version>

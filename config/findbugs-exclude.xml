@@ -51,7 +51,7 @@
     </Match>
     <Match>
         <!-- Ignore test entities as these will often have unused things -->
-        <Package name="~org\.mongodb\.morphia\.testmappackage.*"/>
+        <Package name="~dev\.morphia\.testmappackage.*"/>
     </Match>
     <Match>
         <Bug code="SQL,XSS,J2EE,SW,STI,DL,JLM,MWN,NN,RS,UL,HRS,PT,MTIA,XFB"/>
@@ -60,13 +60,16 @@
         <Bug category="I18N,MT_CORRECTNESS,SECURITY,PERFORMANCE"/>
     </Match>
     <Match>
-      <Class name="dev.morphia.query.LegacyQuery"/>
-      <!--<Method name="compare" params="FindOptions,FindOptions"/>-->
-      <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+        <Class name="dev.morphia.query.LegacyQuery"/>
+        <!--<Method name="compare" params="FindOptions,FindOptions"/>-->
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-      <Class name="~dev.morphia.query.internal.Morphia.*Cursor" />
-      <Method name="getServerAddress"/>
-      <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+        <Class name="~dev.morphia.query.internal.Morphia.*Cursor"/>
+        <Method name="getServerAddress"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.morphia.internal.Util"/>
     </Match>
 </FindBugsFilter>
