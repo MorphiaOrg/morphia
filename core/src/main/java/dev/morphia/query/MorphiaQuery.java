@@ -1,5 +1,6 @@
 package dev.morphia.query;
 
+import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -9,6 +10,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.internal.Util.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
@@ -20,6 +22,7 @@ import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +35,7 @@ import java.util.StringJoiner;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.internal.Util.tryInvoke;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
 
@@ -121,11 +125,19 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Map<String, Object> explain(FindOptions options) {
-        return new LinkedHashMap<>(datastore.getDatabase()
-                                            .runCommand(new Document("explain",
-                                                new Document("find", getCollection().getNamespace().getCollectionName())
-                                                    .append("filter", getQueryDocument()))));
+    public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
+        return tryInvoke(DriverVersion.v4_2_0,
+            () -> {
+                return verbosity == null
+                       ? iterable(options, collection).explain()
+                       : iterable(options, collection).explain(verbosity);
+            },
+            () -> {
+                return new LinkedHashMap<>(datastore.getDatabase()
+                                                    .runCommand(new Document("explain",
+                                                        new Document("find", getCollection().getNamespace().getCollectionName())
+                                                            .append("filter", getQueryDocument()))));
+            });
     }
 
     @Override
@@ -274,8 +286,8 @@ public class MorphiaQuery<T> implements Query<T> {
         return collectionName;
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private <E> MongoCursor<E> prepareCursor(FindOptions findOptions, MongoCollection<E> collection) {
+    @NotNull
+    private <E> FindIterable<E> iterable(FindOptions findOptions, MongoCollection<E> collection) {
         final Document query = toDocument();
 
         if (LOG.isTraceEnabled()) {
@@ -294,14 +306,18 @@ public class MorphiaQuery<T> implements Query<T> {
         FindIterable<E> iterable = clientSession != null
                                    ? updated.find(clientSession, query)
                                    : updated.find(query);
+        return iterable;
+    }
 
+    @SuppressWarnings("ConstantConditions")
+    private <E> MongoCursor<E> prepareCursor(FindOptions findOptions, MongoCollection<E> collection) {
         Document oldProfile = null;
         if (findOptions.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
             return findOptions
-                       .apply(iterable, mapper, type)
+                       .apply(iterable(findOptions, collection), mapper, type)
                        .iterator();
         } finally {
             if (findOptions.isLogQuery()) {

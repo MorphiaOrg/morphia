@@ -59,7 +59,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <seed>../config/revapi-seed.json</seed>
                     <input>../config/revapi-input.json</input>
                     <output>../config/revapi.json</output>
                 </configuration>

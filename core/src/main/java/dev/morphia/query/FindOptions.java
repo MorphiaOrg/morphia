@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
+import static dev.morphia.internal.Util.DriverVersion.v4_1_0;
 import static dev.morphia.internal.Util.tryInvoke;
 
 /**
@@ -106,8 +107,8 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
             iterable.projection(projection.map(mapper, type));
         }
 
-        tryInvoke(0, () -> {
-            iterable.allowDiskUse(allowDiskUse);
+        tryInvoke(v4_1_0, () -> {
+            return iterable.allowDiskUse(allowDiskUse);
         });
         iterable.batchSize(batchSize);
         iterable.collation(collation);

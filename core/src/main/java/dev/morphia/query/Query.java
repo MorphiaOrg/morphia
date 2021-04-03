@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 
+import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
 import dev.morphia.DeleteOptions;
@@ -153,7 +154,21 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @mongodb.driver.manual reference/operator/meta/explain/ explain
      * @since 1.3
      */
-    Map<String, Object> explain(FindOptions options);
+    default Map<String, Object> explain(FindOptions options) {
+        return explain(options, null);
+    }
+
+    /**
+     * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
+     * may be useful when optimizing a query.
+     *
+     * @param options   the options to apply to the explain operation
+     * @param verbosity the verbosity of the explanation
+     * @return Map describing the process used to return the query results.
+     * @mongodb.driver.manual reference/operator/meta/explain/ explain
+     * @since 2.2
+     */
+    Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity);
 
     /**
      * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}

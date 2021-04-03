@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 
+import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -11,12 +12,14 @@ import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
+import dev.morphia.internal.Util.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.mongodb.CursorType.NonTailable;
+import static dev.morphia.internal.Util.tryInvoke;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static java.lang.String.format;
 
@@ -190,11 +194,19 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Map<String, Object> explain(FindOptions options) {
-        return new LinkedHashMap<>(datastore.getDatabase()
-                                            .runCommand(new Document("explain",
-                                                new Document("find", getCollection().getNamespace().getCollectionName())
-                                                    .append("filter", getQueryDocument()))));
+    public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
+        return tryInvoke(DriverVersion.v4_2_0,
+            () -> {
+                return verbosity == null
+                       ? iterable(options, collection).explain()
+                       : iterable(options, collection).explain(verbosity);
+            },
+            () -> {
+                return new LinkedHashMap<>(datastore.getDatabase()
+                                                    .runCommand(new Document("explain",
+                                                        new Document("find", getCollection().getNamespace().getCollectionName())
+                                                            .append("filter", getQueryDocument()))));
+            });
     }
 
     @Override
@@ -419,35 +431,38 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return obj;
     }
 
-    private <E> MongoCursor<E> prepareCursor(FindOptions options, MongoCollection<E> collection) {
+    @NotNull
+    private <E> FindIterable<E> iterable(FindOptions options, MongoCollection<E> collection) {
         final Document query = this.toDocument();
 
-        FindOptions findOptions = getOptions().copy().copy(options);
         if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
+            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, options));
         }
 
-        if ((findOptions.getCursorType() != null && findOptions.getCursorType() != NonTailable)
-            && (findOptions.getSort() != null)) {
+        if ((options.getCursorType() != null && options.getCursorType() != NonTailable)
+            && (options.getSort() != null)) {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
-        ClientSession clientSession = datastore.findSession(findOptions);
+        ClientSession clientSession = datastore.findSession(options);
 
         FindIterable<E> iterable = clientSession != null
                                    ? collection.find(clientSession, query)
                                    : collection.find(query);
+        return iterable;
+    }
 
+    private <E> MongoCursor<E> prepareCursor(FindOptions options, MongoCollection<E> collection) {
         Document oldProfile = null;
-        if (findOptions.isLogQuery()) {
+        if (options.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
-            return findOptions
-                       .apply(iterable, mapper, clazz)
+            return options
+                       .apply(iterable(options, collection), mapper, clazz)
                        .iterator();
         } finally {
-            if (findOptions.isLogQuery()) {
+            if (options.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
                                                        .append("slowms", oldProfile.get("slowms"))
                                                        .append("sampleRate", oldProfile.get("sampleRate")));
