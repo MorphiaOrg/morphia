@@ -393,7 +393,8 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#explain(dev.morphia.query.FindOptions)">explain</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#explain(dev.morphia.query.FindOptions,com.mongodb.ExplainVerbosity)">explain</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
+       com.mongodb.ExplainVerbosity&nbsp;verbosity)</code></th>
 <td class="colLast">
 <div class="block">Provides information on the query plan.</div>
 </td>
@@ -549,7 +550,7 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;dev.morphia.query.<a href="Query.html" title="interface in dev.morphia.query">Query</a></h3>
-<code><a href="Query.html#and(dev.morphia.query.Criteria...)">and</a>, <a href="Query.html#criteria(java.lang.String)">criteria</a>, <a href="Query.html#delete()">delete</a>, <a href="Query.html#execute()">execute</a>, <a href="Query.html#execute(dev.morphia.query.FindOptions)">execute</a>, <a href="Query.html#explain()">explain</a>, <a href="Query.html#find()">find</a>, <a href="Query.html#find(dev.morphia.query.FindOptions)">find</a>, <a href="Query.html#findAndDelete()">findAndDelete</a>, <a href="Query.html#iterator()">iterator</a>, <a href="Query.html#modify(dev.morphia.query.UpdateOperations)">modify</a>, <a href="Query.html#or(dev.morphia.query.Criteria...)">or</a>, <a href="Query.html#retrieveKnownFields()">retrieveKnownFields</a>, <a href="Query.html#stream()">stream</a>, <a href="Query.html#stream(dev.morphia.query.FindOptions)">stream</a>, <a href="Query.html#update(dev.morphia.query.UpdateOperations)">update</a></code></li>
+<code><a href="Query.html#and(dev.morphia.query.Criteria...)">and</a>, <a href="Query.html#criteria(java.lang.String)">criteria</a>, <a href="Query.html#delete()">delete</a>, <a href="Query.html#execute()">execute</a>, <a href="Query.html#execute(dev.morphia.query.FindOptions)">execute</a>, <a href="Query.html#explain()">explain</a>, <a href="Query.html#explain(dev.morphia.query.FindOptions)">explain</a>, <a href="Query.html#find()">find</a>, <a href="Query.html#find(dev.morphia.query.FindOptions)">find</a>, <a href="Query.html#findAndDelete()">findAndDelete</a>, <a href="Query.html#iterator()">iterator</a>, <a href="Query.html#modify(dev.morphia.query.UpdateOperations)">modify</a>, <a href="Query.html#or(dev.morphia.query.Criteria...)">or</a>, <a href="Query.html#retrieveKnownFields()">retrieveKnownFields</a>, <a href="Query.html#stream()">stream</a>, <a href="Query.html#stream(dev.morphia.query.FindOptions)">stream</a>, <a href="Query.html#update(dev.morphia.query.UpdateOperations)">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -689,21 +690,24 @@ implements <a href="Query.html" title="interface in dev.morphia.query">Query</a>
 </dl>
 </li>
 </ul>
-<a id="explain(dev.morphia.query.FindOptions)">
+<a id="explain(dev.morphia.query.FindOptions,com.mongodb.ExplainVerbosity)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>explain</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;explain​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#explain(dev.morphia.query.FindOptions)">Query</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;explain​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
+                                        @Nullable
+                                        com.mongodb.ExplainVerbosity&nbsp;verbosity)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#explain(dev.morphia.query.FindOptions,com.mongodb.ExplainVerbosity)">Query</a></code></span></div>
 <div class="block">Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
  may be useful when optimizing a query.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#explain(dev.morphia.query.FindOptions)">explain</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></dd>
+<dd><code><a href="Query.html#explain(dev.morphia.query.FindOptions,com.mongodb.ExplainVerbosity)">explain</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>options</code> - the options to apply to the explain operation</dd>
+<dd><code>verbosity</code> - the verbosity of the explanation</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Map describing the process used to return the query results.</dd>
 </dl>
