@@ -4,6 +4,7 @@ import dev.morphia.Datastore
 import dev.morphia.mapping.MapperOptions.Builder
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder
 import dev.morphia.mapping.conventions.MorphiaConvention
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import org.bson.codecs.pojo.PropertyAccessor
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
@@ -13,6 +14,7 @@ import kotlin.reflect.jvm.javaSetter
 
 class KotlinPropertyDiscovery(private val optionsBuilder: Builder) : MorphiaConvention {
     @Suppress("UNCHECKED_CAST")
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     override fun apply(datastore: Datastore, builder: EntityModelBuilder) {
         val field = builder.type.declaredFields.firstOrNull { it.name == "\$\$delegatedProperties" }
         if (field != null) {
