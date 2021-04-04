@@ -32,7 +32,7 @@ class TestKotlinMapping : TestBase() {
             .first()
 
         assertEquals(loaded, versioned)
-        assertEquals(loaded?.version, 1)
+        assertEquals(loaded?.version, 1L)
     }
 
     @Test
