@@ -9,15 +9,11 @@ import dev.morphia.annotations.Version;
 import dev.morphia.annotations.experimental.IdField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.codec.ArrayFieldAccessor;
-import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
-import org.bson.codecs.pojo.PropertyAccessor;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
 
@@ -61,12 +57,6 @@ public class ConfigureProperties implements MorphiaConvention {
         if (isNotConcrete(builder.typeData())) {
             builder.discriminatorEnabled(true);
         }
-    }
-
-    private PropertyAccessor<? super Object> getAccessor(Field field, PropertyModelBuilder property) {
-        return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-               ? new ArrayFieldAccessor(property.typeData(), field)
-               : new FieldAccessor(field);
     }
 
     @SuppressWarnings("rawtypes")

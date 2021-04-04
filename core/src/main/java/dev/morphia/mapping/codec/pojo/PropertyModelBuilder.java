@@ -25,7 +25,6 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
 
@@ -61,29 +60,23 @@ public final class PropertyModelBuilder {
         this.datastore = datastore;
     }
 
-    @SuppressWarnings("ConstantConditions")
-    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-    public String discoverMappedName(MapperOptions options) {
-        if (hasAnnotation(Id.class)) {
-            return "_id";
-        } else if (hasAnnotation(Property.class)) {
-            final Property mv = getAnnotation(Property.class);
-            if (!mv.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mv.value();
-            }
-        } else if (hasAnnotation(Reference.class)) {
-            final Reference mr = getAnnotation(Reference.class);
-            if (!mr.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return mr.value();
-            }
-        } else if (hasAnnotation(Version.class)) {
-            final Version me = getAnnotation(Version.class);
-            if (!me.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return me.value();
-            }
-        }
+    public PropertyModelBuilder discoverMappedName(MapperOptions options) {
+        Property property = getAnnotation(Property.class);
+        Reference reference = getAnnotation(Reference.class);
+        Version version = getAnnotation(Version.class);
 
-        return options.getFieldNaming().apply(name());
+        if (hasAnnotation(Id.class)) {
+            mappedName("_id");
+        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(property.value());
+        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(reference.value());
+        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(version.value());
+        } else {
+            mappedName(options.getFieldNaming().apply(name()));
+        }
+        return this;
     }
 
     /**
@@ -146,7 +139,6 @@ public final class PropertyModelBuilder {
      *
      * @return the FieldModel
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public PropertyModel build() {
         return new PropertyModel(this);
     }

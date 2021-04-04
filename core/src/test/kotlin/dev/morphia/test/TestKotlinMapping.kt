@@ -25,14 +25,14 @@ class TestKotlinMapping : TestBase() {
 
     @Test
     fun versioning() {
-        val map = ds.mapper.map(VersionedDataClass::class.java)
+        ds.mapper.map(VersionedDataClass::class.java)
         val versioned = VersionedDataClass(null, "temp")
         ds.save(versioned)
         val loaded = ds.find(VersionedDataClass::class.java)
             .first()
 
         assertEquals(loaded, versioned)
-        assertEquals(loaded.version, 1)
+        assertEquals(loaded?.version, 1)
     }
 
     @Test
@@ -45,7 +45,7 @@ class TestKotlinMapping : TestBase() {
             .first()
 
         assertNotNull(first)
-        assertEquals(first.status, delegated.status)
+        assertEquals(first?.status, delegated.status)
     }
 }
 

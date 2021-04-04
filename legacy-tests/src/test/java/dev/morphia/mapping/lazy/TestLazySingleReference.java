@@ -11,6 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
@@ -19,7 +20,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testCallIdGetterWithoutFetching() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();
@@ -55,7 +56,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testGetKeyWithoutFetching() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();
@@ -83,7 +84,7 @@ public class TestLazySingleReference extends ProxyTestBase {
     @Test
     @Ignore("entity caching needs to be implemented")
     public final void testSameProxy() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();
@@ -103,7 +104,7 @@ public class TestLazySingleReference extends ProxyTestBase {
 
     @Test
     public final void testShortcutInterface() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();

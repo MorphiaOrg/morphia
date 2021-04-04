@@ -12,7 +12,7 @@ import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
-import dev.morphia.internal.Util.DriverVersion;
+import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.updates.UpdateOperator;
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.mongodb.CursorType.NonTailable;
-import static dev.morphia.internal.Util.tryInvoke;
+import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static java.lang.String.format;
 

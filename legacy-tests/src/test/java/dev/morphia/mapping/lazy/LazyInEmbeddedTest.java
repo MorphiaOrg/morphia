@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
@@ -25,7 +26,7 @@ import static java.util.Arrays.asList;
 public class LazyInEmbeddedTest extends TestBase {
     @Test
     public void testLoadingOfRefInField() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         getMapper().map(ContainerWithRefInField.class);
         getMapper().map(OtherEntity.class);
@@ -58,7 +59,7 @@ public class LazyInEmbeddedTest extends TestBase {
 
     @Test
     public void testLoadingOfRefInList() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         getMapper().map(ContainerWithRefList.class);
         getMapper().map(OtherEntity.class);
@@ -96,7 +97,7 @@ public class LazyInEmbeddedTest extends TestBase {
 
     @Test
     public void testLoadingOfRefThroughInheritanceInField() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         getMapper().map(ContainerWithRefInField.class);
         getMapper().map(OtherEntityChild.class);
@@ -132,7 +133,7 @@ public class LazyInEmbeddedTest extends TestBase {
 
     @Test
     public void testLoadingOfRefThroughInheritanceInList() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         getMapper().map(ContainerWithRefList.class);
         getMapper().map(OtherEntityChild.class);

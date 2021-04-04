@@ -39,8 +39,8 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
-import static dev.morphia.internal.Util.DriverVersion.v4_1_0;
-import static dev.morphia.internal.Util.tryInvoke;
+import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
+import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 
 /**
  * The options to apply to a find operation (also commonly referred to as a query).

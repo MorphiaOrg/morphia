@@ -70,6 +70,6 @@
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.morphia.internal.Util"/>
+        <Class name="dev.morphia.internal.MorphiaInternals"/>
     </Match>
 </FindBugsFilter>

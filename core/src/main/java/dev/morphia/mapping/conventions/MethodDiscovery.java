@@ -3,7 +3,6 @@ package dev.morphia.mapping.conventions;
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
-import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
 import java.lang.annotation.Annotation;
@@ -68,12 +67,12 @@ public class MethodDiscovery implements MorphiaConvention {
                 TypeData<?> typeData = entityModelBuilder.getTypeData(type, TypeData.newInstance(methods.getter),
                     methods.getter.getGenericReturnType());
 
-                PropertyModelBuilder builder = entityModelBuilder.addProperty();
-                builder.name(entry.getKey())
-                       .accessor(new MethodAccessor(methods.getter, methods.setter))
-                       .annotations(discoverAnnotations(methods.getter, methods.setter))
-                       .typeData(typeData)
-                       .mappedName(builder.discoverMappedName(datastore.getMapper().getOptions()));
+                entityModelBuilder.addProperty()
+                                  .name(entry.getKey())
+                                  .accessor(new MethodAccessor(methods.getter, methods.setter))
+                                  .annotations(discoverAnnotations(methods.getter, methods.setter))
+                                  .typeData(typeData)
+                                  .discoverMappedName(datastore.getMapper().getOptions());
             }
         }
     }

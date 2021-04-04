@@ -11,7 +11,6 @@ import dev.morphia.mapping.EmbeddedMappingTest.Nested;
 import dev.morphia.mapping.EmbeddedMappingTest.NestedImpl;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.testmodel.Rectangle;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -23,6 +22,7 @@ import org.junit.experimental.categories.Category;
 import java.io.Serializable;
 import java.util.List;
 
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
@@ -67,7 +67,7 @@ public class TestMapper extends TestBase {
     @Test
     @Category(Reference.class)
     public void singleProxy() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         A.loadCount = 0;
         final A a = new A();

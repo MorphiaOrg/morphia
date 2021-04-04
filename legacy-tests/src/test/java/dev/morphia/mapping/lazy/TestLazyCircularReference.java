@@ -12,6 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
@@ -42,7 +43,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
     @Test
     @Ignore("infinite loop in here somewhere")
     public final void testGetKeyWithoutFetching() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();

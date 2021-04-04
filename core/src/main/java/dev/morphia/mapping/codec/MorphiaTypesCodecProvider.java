@@ -48,7 +48,6 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
             int.class, Integer.class,
             long.class, Long.class,
             short.class, Short.class).forEach(c -> addCodec(new TypedArrayCodec(c, mapper)));
-
     }
 
     protected <T> void addCodec(Codec<T> codec) {

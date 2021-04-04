@@ -3,15 +3,18 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
+import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.conventions.ConfigureProperties;
 import dev.morphia.mapping.conventions.FieldDiscovery;
 import dev.morphia.mapping.conventions.MethodDiscovery;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
+import dev.morphia.mapping.conventions.kotlin.KotlinPropertyDiscovery;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.QueryFactory;
+import dev.morphia.sofia.Sofia;
 import org.bson.UuidRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
+import static java.util.List.of;
 import static org.bson.UuidRepresentation.STANDARD;
 
 /**
@@ -41,6 +45,7 @@ public class MapperOptions {
     private final DiscriminatorFunction discriminator;
     private final List<MorphiaConvention> conventions;
     private final NamingStrategy collectionNaming;
+    private final PropertyDiscovery propertyDiscovery;
     private final NamingStrategy propertyNaming;
     private final UuidRepresentation uuidRepresentation;
     private final QueryFactory queryFactory;
@@ -57,6 +62,7 @@ public class MapperOptions {
         discriminator = builder.discriminator();
         discriminatorKey = builder.discriminatorKey();
         enablePolymorphicQueries = builder.enablePolymorphicQueries();
+        propertyDiscovery = builder.propertyDiscovery();
         propertyNaming = builder.propertyNaming();
         ignoreFinals = builder.ignoreFinals();
         mapSubPackages = builder.mapSubPackages();
@@ -78,16 +84,7 @@ public class MapperOptions {
      * @return a builder to set mapping options
      */
     public static Builder builder(MapperOptions original) {
-        Builder builder = new Builder();
-        builder.ignoreFinals = original.isIgnoreFinals();
-        builder.storeNulls = original.isStoreNulls();
-        builder.storeEmpties = original.isStoreEmpties();
-        builder.cacheClassLookups = original.isCacheClassLookups();
-        builder.mapSubPackages = original.isMapSubPackages();
-        builder.creator = original.getCreator();
-        builder.classLoader = original.getClassLoader();
-        builder.dateStorage = original.getDateStorage();
-        return builder;
+        return new Builder(original);
     }
 
     /**
@@ -263,8 +260,29 @@ public class MapperOptions {
         private UuidRepresentation uuidRepresentation = STANDARD;
         private QueryFactory queryFactory = new DefaultQueryFactory();
         private PropertyDiscovery propertyDiscovery = FIELDS;
+        private MapperOptions options;
 
         private Builder() {
+        }
+
+        public Builder(MapperOptions original) {
+            cacheClassLookups = original.isCacheClassLookups();
+            creator = original.getCreator();
+            classLoader = original.getClassLoader();
+            dateStorage = original.getDateStorage();
+            ignoreFinals = original.isIgnoreFinals();
+            mapSubPackages = original.isMapSubPackages();
+            storeEmpties = original.isStoreEmpties();
+            storeNulls = original.isStoreNulls();
+
+            enablePolymorphicQueries = original.enablePolymorphicQueries;
+            discriminatorKey = original.discriminatorKey;
+            discriminator = original.discriminator;
+            collectionNaming = original.collectionNaming;
+            propertyNaming = original.propertyNaming;
+            uuidRepresentation = original.uuidRepresentation;
+            queryFactory = original.queryFactory;
+            propertyDiscovery = original.propertyDiscovery;
         }
 
         /**
@@ -275,6 +293,7 @@ public class MapperOptions {
          * @since 2.0
          */
         public Builder addConvention(MorphiaConvention convention) {
+            assertNotLocked();
             conventions.add(convention);
 
             return this;
@@ -284,7 +303,10 @@ public class MapperOptions {
          * @return the new options instance
          */
         public MapperOptions build() {
-            return new MapperOptions(this);
+            if (options == null) {
+                options = new MapperOptions(this);
+            }
+            return options;
         }
 
         /**
@@ -292,6 +314,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder cacheClassLookups(boolean cacheClassLookups) {
+            assertNotLocked();
             this.cacheClassLookups = cacheClassLookups;
             return this;
         }
@@ -301,6 +324,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder classLoader(ClassLoader classLoader) {
+            assertNotLocked();
             this.classLoader = classLoader;
             return this;
         }
@@ -312,6 +336,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder collectionNaming(NamingStrategy strategy) {
+            assertNotLocked();
             this.collectionNaming = strategy;
             return this;
         }
@@ -323,6 +348,7 @@ public class MapperOptions {
          */
         @Deprecated
         public Builder dateForm(DateStorage dateStorage) {
+            assertNotLocked();
             return dateStorage(dateStorage);
         }
 
@@ -335,6 +361,7 @@ public class MapperOptions {
          * @since 2.0
          */
         public Builder dateStorage(DateStorage dateStorage) {
+            assertNotLocked();
             this.dateStorage = dateStorage;
             return this;
         }
@@ -346,6 +373,7 @@ public class MapperOptions {
          */
         @Deprecated(forRemoval = false)
         public Builder disableEmbeddedIndexes(boolean disableEmbeddedIndexes) {
+            assertNotLocked();
             LOG.warn("this option is no longer used");
             return this;
         }
@@ -357,6 +385,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder discriminator(DiscriminatorFunction function) {
+            assertNotLocked();
             this.discriminator = function;
             return this;
         }
@@ -368,6 +397,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder discriminatorKey(String key) {
+            assertNotLocked();
             this.discriminatorKey = key;
             return this;
         }
@@ -378,6 +408,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder enablePolymorphicQueries(boolean enablePolymorphicQueries) {
+            assertNotLocked();
             this.enablePolymorphicQueries = enablePolymorphicQueries;
             return this;
         }
@@ -392,6 +423,7 @@ public class MapperOptions {
          */
         @Deprecated(forRemoval = true)
         public Builder fieldNaming(NamingStrategy strategy) {
+            assertNotLocked();
             return propertyNaming(strategy);
         }
 
@@ -400,6 +432,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder ignoreFinals(boolean ignoreFinals) {
+            assertNotLocked();
             this.ignoreFinals = ignoreFinals;
             return this;
         }
@@ -409,6 +442,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder mapSubPackages(boolean mapSubPackages) {
+            assertNotLocked();
             this.mapSubPackages = mapSubPackages;
             return this;
         }
@@ -418,6 +452,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder objectFactory(MorphiaInstanceCreator creator) {
+            assertNotLocked();
             this.creator = creator;
             return this;
         }
@@ -430,6 +465,7 @@ public class MapperOptions {
          * @since 2.2
          */
         public Builder propertyDiscovery(PropertyDiscovery discovery) {
+            assertNotLocked();
             this.propertyDiscovery = discovery;
             return this;
         }
@@ -443,6 +479,7 @@ public class MapperOptions {
          * @since 2.2
          */
         public Builder propertyNaming(NamingStrategy strategy) {
+            assertNotLocked();
             this.propertyNaming = strategy;
             return this;
         }
@@ -452,6 +489,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder queryFactory(QueryFactory queryFactory) {
+            assertNotLocked();
             this.queryFactory = queryFactory;
             return this;
         }
@@ -461,6 +499,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder storeEmpties(boolean storeEmpties) {
+            assertNotLocked();
             this.storeEmpties = storeEmpties;
             return this;
         }
@@ -470,6 +509,7 @@ public class MapperOptions {
          * @return this
          */
         public Builder storeNulls(boolean storeNulls) {
+            assertNotLocked();
             this.storeNulls = storeNulls;
             return this;
         }
@@ -481,6 +521,7 @@ public class MapperOptions {
          */
         @Deprecated(since = "2.0", forRemoval = true)
         public Builder useLowerCaseCollectionNames(boolean useLowerCaseCollectionNames) {
+            assertNotLocked();
             if (useLowerCaseCollectionNames) {
                 collectionNaming(NamingStrategy.lowerCase());
             }
@@ -494,8 +535,15 @@ public class MapperOptions {
          * @return this
          */
         public Builder uuidRepresentation(UuidRepresentation uuidRepresentation) {
+            assertNotLocked();
             this.uuidRepresentation = uuidRepresentation;
             return this;
+        }
+
+        private void assertNotLocked() {
+            if (options != null) {
+                throw new MappingException(Sofia.mapperOptionsLocked());
+            }
         }
 
         private boolean cacheClassLookups() {
@@ -512,10 +560,15 @@ public class MapperOptions {
 
         private List<MorphiaConvention> conventions() {
             if (conventions.isEmpty()) {
-                return List.of(
+                List<MorphiaConvention> list = new ArrayList<>(of(
                     new MorphiaDefaultsConvention(),
                     propertyDiscovery == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
-                    new ConfigureProperties());
+                    new ConfigureProperties()));
+
+                if (MorphiaInternals.kotlinAvailable()) {
+                    list.add(new KotlinPropertyDiscovery(this));
+                }
+                return list;
             }
             return conventions;
         }

@@ -5,6 +5,7 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -17,6 +18,7 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,7 @@ import java.util.Map;
 public class MorphiaCodecProvider implements CodecProvider {
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
     private final Mapper mapper;
-    private final List<PropertyCodecProvider> propertyCodecProviders;
+    private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
     private final Datastore datastore;
 
     /**
@@ -42,8 +44,13 @@ public class MorphiaCodecProvider implements CodecProvider {
         this.datastore = datastore;
         this.mapper = mapper;
 
-        propertyCodecProviders = List.of(new MorphiaMapPropertyCodecProvider(),
-            new MorphiaCollectionPropertyCodecProvider());
+        propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
+            new MorphiaCollectionPropertyCodecProvider()));
+
+        if (MorphiaInternals.kotlinAvailable()) {
+            propertyCodecProviders.add(new ReadWritePropertyCodecProvider());
+        }
+
     }
 
     @Override

@@ -2,7 +2,6 @@ package dev.morphia.mapping;
 
 
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.testutil.TestEntity;
 import org.junit.Assert;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
@@ -47,7 +47,7 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
 
     @Test
     public void testWithProxy() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         getMapper().map(ChildEntity.class, ParentEntity.class);
 

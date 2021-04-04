@@ -10,7 +10,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
-import dev.morphia.internal.Util.DriverVersion;
+import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
@@ -35,7 +35,7 @@ import java.util.StringJoiner;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.internal.Util.tryInvoke;
+import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
 

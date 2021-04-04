@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static dev.morphia.mapping.lazy.LazyFeatureDependencies.assertProxyClassesPresent;
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -131,7 +131,7 @@ public class ReferenceTest extends ProxyTestBase {
                                            .first();
 
         assertEquals(refs.get(0), retrieved.getSingleRef());
-        if (assertProxyClassesPresent()) {
+        if (proxyClassesPresent()) {
             assertIsProxy(retrieved.getLazySingleRef());
         }
         assertEquals(refs.get(0), retrieved.getLazySingleRef());

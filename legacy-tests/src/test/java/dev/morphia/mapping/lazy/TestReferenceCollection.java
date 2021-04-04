@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
@@ -21,7 +22,7 @@ public class TestReferenceCollection extends ProxyTestBase {
 
     @Test
     public void testOrderingPreserved() {
-        Assume.assumeTrue(LazyFeatureDependencies.assertProxyClassesPresent());
+        Assume.assumeTrue(proxyClassesPresent());
 
         final Origin origin = new Origin();
         final Endpoint endpoint1 = new Endpoint();
