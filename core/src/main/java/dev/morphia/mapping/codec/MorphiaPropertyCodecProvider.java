@@ -7,7 +7,7 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import java.util.List;
 
-abstract class MorphiaPropertyCodecProvider implements PropertyCodecProvider {
+public abstract class MorphiaPropertyCodecProvider implements PropertyCodecProvider {
 
     protected TypeWithTypeParameters<?> getType(List<? extends TypeWithTypeParameters<?>> typeParameters, int position) {
         return typeParameters.size() > position

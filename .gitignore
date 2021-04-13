@@ -68,3 +68,4 @@ fabric.properties
 .idea/httpRequests
 Changes-*.md
 /config/revapi.json
+github.properties

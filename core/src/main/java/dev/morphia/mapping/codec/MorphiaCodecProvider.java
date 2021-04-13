@@ -7,6 +7,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.kotlin.ReadWritePropertyCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.LifecycleDecoder;

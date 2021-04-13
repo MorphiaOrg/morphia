@@ -36,7 +36,7 @@
         <bottlerocket.version>0.15</bottlerocket.version>
         <driver.version>4.2.2</driver.version>
         <json.assert.version>1.2.3</json.assert.version>
-        <kotlin.version>1.4.10</kotlin.version>
+        <kotlin.version>1.4.32</kotlin.version>
         <maven.version>3.6.2</maven.version>
         <revapi.maven.plugin.version>0.13.6</revapi.maven.plugin.version>
         <revapi.java.version>0.23.2</revapi.java.version>
