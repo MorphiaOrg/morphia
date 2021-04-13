@@ -533,9 +533,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Adds a type parameter</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/TypeData.Builder.html#addTypeParameters(java.util.List)">addTypeParameters(List&lt;TypeData&lt;?&gt;&gt;)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/TypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">TypeData.Builder</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.Builder.html#addTypeParameter(dev.morphia.mapping.codec.pojo.TypeData)">addTypeParameter(TypeData&lt;S&gt;)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData.Builder</a></dt>
 <dd>
-<div class="block">Adds multiple type parameters</div>
+<div class="block">Adds a type parameter</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#advanceClusterTime(org.bson.BsonDocument)">advanceClusterTime(BsonDocument)</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
 <dd>&nbsp;</dd>
@@ -1137,6 +1137,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/TypeData.Builder.html#build()">build()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/TypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">TypeData.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.Builder.html#build()">build()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.Builder.html#build()">build()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/experimental/EmbeddedBuilder.html#builder()">builder()</a></span> - Static method in class dev.morphia.annotations.experimental.<a href="dev/morphia/annotations/experimental/EmbeddedBuilder.html" title="class in dev.morphia.annotations.experimental">EmbeddedBuilder</a></dt>
@@ -1149,6 +1151,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#builder()">builder()</a></span> - Static method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html#builder(boolean)">builder(boolean)</a></span> - Static method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></dt>
+<dd>
+<div class="block">Creates a builder</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#builder(dev.morphia.mapping.MapperOptions)">builder(MapperOptions)</a></span> - Static method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/TypeData.html#builder(java.lang.Class)">builder(Class&lt;T&gt;)</a></span> - Static method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a></dt>
@@ -1159,6 +1165,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a builder for a GeoNear pipeline stage</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.Builder.html#%3Cinit%3E(boolean)">Builder(boolean)</a></span> - Constructor for class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData.Builder</a></dt>
+<dd>
+<div class="block">Creates a builder</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/AggregationOptions.html#bypassDocumentValidation()">bypassDocumentValidation()</a></span> - Method in class dev.morphia.aggregation.experimental.<a href="dev/morphia/aggregation/experimental/AggregationOptions.html" title="class in dev.morphia.aggregation.experimental">AggregationOptions</a></dt>
 <dd>&nbsp;</dd>
@@ -1182,6 +1192,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation(Boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation(Boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html" title="class in dev.morphia.mapping.codec"><span class="typeNameLink">ByteWrapperArrayCodec</span></a> - Class in <a href="dev/morphia/mapping/codec/package-summary.html">dev.morphia.mapping.codec</a></dt>
+<dd>
+<div class="block">Encodes a Byte[] to BinData like the driver's ByteArrayCodec does for byte[]</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html#%3Cinit%3E()">ByteWrapperArrayCodec()</a></span> - Constructor for class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html" title="class in dev.morphia.mapping.codec">ByteWrapperArrayCodec</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:C">
@@ -2091,6 +2107,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/stages/StageCodec.html#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode(BsonReader, DecoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.codecs.stages.<a href="dev/morphia/aggregation/experimental/codecs/stages/StageCodec.html" title="class in dev.morphia.aggregation.experimental.codecs.stages">StageCodec</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode(BsonReader, DecoderContext)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html" title="class in dev.morphia.mapping.codec">ByteWrapperArrayCodec</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ClassCodec.html#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode(BsonReader, DecoderContext)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ClassCodec.html" title="class in dev.morphia.mapping.codec">ClassCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/CollectionCodec.html#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode(BsonReader, DecoderContext)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/CollectionCodec.html" title="class in dev.morphia.mapping.codec">CollectionCodec</a></dt>
@@ -2127,7 +2145,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html#decodeModel(org.bson.BsonReader,org.bson.codecs.DecoderContext,dev.morphia.mapping.codec.MorphiaInstanceCreator,dev.morphia.mapping.codec.pojo.FieldModel)">decodeModel(BsonReader, DecoderContext, MorphiaInstanceCreator, FieldModel)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html#decodeProperties(org.bson.BsonReader,org.bson.codecs.DecoderContext,dev.morphia.mapping.codec.MorphiaInstanceCreator)">decodeProperties(BsonReader, DecoderContext, MorphiaInstanceCreator)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html#decodeProperties(org.bson.BsonReader,org.bson.codecs.DecoderContext,dev.morphia.mapping.codec.MorphiaInstanceCreator,dev.morphia.mapping.codec.pojo.EntityModel)">decodeProperties(BsonReader, DecoderContext, MorphiaInstanceCreator, EntityModel)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#DEFAULT">DEFAULT</a></span> - Static variable in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
 <dd>&nbsp;</dd>
@@ -2365,7 +2383,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Provides lookup capabilities to find a type by its discriminator</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/mapping/DiscriminatorLookup.html#%3Cinit%3E(java.util.Map,java.util.Set)">DiscriminatorLookup(Map&lt;Class&lt;?&gt;, EntityModel&gt;, Set&lt;String&gt;)</a></span> - Constructor for class dev.morphia.mapping.<a href="dev/morphia/mapping/DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/DiscriminatorLookup.html#%3Cinit%3E(java.lang.ClassLoader)">DiscriminatorLookup(ClassLoader)</a></span> - Constructor for class dev.morphia.mapping.<a href="dev/morphia/mapping/DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a></dt>
 <dd>
 <div class="block">Creates a new lookup</div>
 </dd>
@@ -2659,6 +2677,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/LegacyQueryCodec.html#encode(org.bson.BsonWriter,dev.morphia.query.LegacyQuery,org.bson.codecs.EncoderContext)">encode(BsonWriter, LegacyQuery, EncoderContext)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/LegacyQueryCodec.html" title="class in dev.morphia.mapping.codec">LegacyQueryCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/MorphiaQueryCodec.html#encode(org.bson.BsonWriter,dev.morphia.query.MorphiaQuery,org.bson.codecs.EncoderContext)">encode(BsonWriter, MorphiaQuery, EncoderContext)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/MorphiaQueryCodec.html" title="class in dev.morphia.mapping.codec">MorphiaQueryCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html#encode(org.bson.BsonWriter,java.lang.Byte%5B%5D,org.bson.codecs.EncoderContext)">encode(BsonWriter, Byte[], EncoderContext)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html" title="class in dev.morphia.mapping.codec">ByteWrapperArrayCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ClassCodec.html#encode(org.bson.BsonWriter,java.lang.Class,org.bson.codecs.EncoderContext)">encode(BsonWriter, Class, EncoderContext)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ClassCodec.html" title="class in dev.morphia.mapping.codec">ClassCodec</a></dt>
 <dd>&nbsp;</dd>
@@ -2965,6 +2985,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/FieldModel.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/FieldModel.html" title="class in dev.morphia.mapping.codec.pojo">FieldModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/TypeData.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/MorphiaReference.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a></dt>
 <dd>&nbsp;</dd>
@@ -3933,6 +3955,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/stages/UnwindCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.experimental.codecs.stages.<a href="dev/morphia/aggregation/experimental/codecs/stages/UnwindCodec.html" title="class in dev.morphia.aggregation.experimental.codecs.stages">UnwindCodec</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html" title="class in dev.morphia.mapping.codec">ByteWrapperArrayCodec</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ClassCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ClassCodec.html" title="class in dev.morphia.mapping.codec">ClassCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/CollectionCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/CollectionCodec.html" title="class in dev.morphia.mapping.codec">CollectionCodec</a></dt>
@@ -4471,6 +4495,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/TypeData.html#getType()">getType()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html#getType()">getType()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/CollectionReference.html#getType()">getType()</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/CollectionReference.html" title="class in dev.morphia.mapping.experimental">CollectionReference</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/MapReference.html#getType()">getType()</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/MapReference.html" title="class in dev.morphia.mapping.experimental">MapReference</a></dt>
@@ -4802,6 +4828,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/FieldModel.html#hashCode()">hashCode()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/FieldModel.html" title="class in dev.morphia.mapping.codec.pojo">FieldModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/TypeData.html#hashCode()">hashCode()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html#hashCode()">hashCode()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/MorphiaReference.html#hashCode()">hashCode()</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a></dt>
 <dd>&nbsp;</dd>
@@ -5405,6 +5433,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/FieldModel.html#isTransient()">isTransient()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/FieldModel.html" title="class in dev.morphia.mapping.codec.pojo">FieldModel</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html#isUpperBound()">isUpperBound()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/experimental/filters/Filter.html#isValidating(boolean)">isValidating(boolean)</a></span> - Method in class dev.morphia.query.experimental.filters.<a href="dev/morphia/query/experimental/filters/Filter.html" title="class in dev.morphia.query.experimental.filters">Filter</a></dt>
 <dd>
@@ -9544,6 +9574,14 @@ the order they are declared.</div>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a WhereCriteria with the given javascript</div>
+</dd>
+<dt><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo"><span class="typeNameLink">WildCardTypeData</span></a> - Class in <a href="dev/morphia/mapping/codec/pojo/package-summary.html">dev.morphia.mapping.codec.pojo</a></dt>
+<dd>
+<div class="block">Represents a wild card type</div>
+</dd>
+<dt><a href="dev/morphia/mapping/codec/pojo/WildCardTypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo"><span class="typeNameLink">WildCardTypeData.Builder</span></a> - Class in <a href="dev/morphia/mapping/codec/pojo/package-summary.html">dev.morphia.mapping.codec.pojo</a></dt>
+<dd>
+<div class="block">A builder for WildCardTypeData</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/stages/CollectionStats.html#with()">with()</a></span> - Static method in class dev.morphia.aggregation.experimental.stages.<a href="dev/morphia/aggregation/experimental/stages/CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a></dt>
 <dd>

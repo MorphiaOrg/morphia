@@ -496,22 +496,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody>
 </table>
-<table class="useSummary">
-<caption><span>Constructor parameters in <a href="../../../package-summary.html">dev.morphia.mapping</a> with type arguments of type <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Constructor</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../DiscriminatorLookup.html#%3Cinit%3E(java.util.Map,java.util.Set)">DiscriminatorLookup</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,​<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;entityModels,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;packages)</code></th>
-<td class="colLast">
-<div class="block">Creates a new lookup</div>
-</td>
-</tr>
-</tbody>
-</table>
 </section>
 </li>
 <li class="blockList">
@@ -614,13 +598,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EntityDecoder.</span><code><span class="memberNameLink"><a href="../EntityDecoder.html#decodeProperties(org.bson.BsonReader,org.bson.codecs.DecoderContext,dev.morphia.mapping.codec.MorphiaInstanceCreator,dev.morphia.mapping.codec.pojo.EntityModel)">decodeProperties</a></span>​(org.bson.BsonReader&nbsp;reader,
+                org.bson.codecs.DecoderContext&nbsp;decoderContext,
+                <a href="../../MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a>&nbsp;instanceCreator,
+                <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;classModel)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../FieldModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">FieldModelBuilder</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">FieldModelBuilder.</span><code><span class="memberNameLink"><a href="../FieldModelBuilder.html#entityModel(dev.morphia.mapping.codec.pojo.EntityModel)">entityModel</a></span>​(<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;entityModel)</code></th>
 <td class="colLast">
 <div class="block">Sets the entity model owner</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../MorphiaInstanceCreator.html" title="interface in dev.morphia.mapping.codec">MorphiaInstanceCreator</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EntityDecoder.</span><code><span class="memberNameLink"><a href="../EntityDecoder.html#getInstanceCreator(dev.morphia.mapping.codec.pojo.EntityModel)">getInstanceCreator</a></span>​(<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;classModel)</code></th>
 <td class="colLast">&nbsp;</td>

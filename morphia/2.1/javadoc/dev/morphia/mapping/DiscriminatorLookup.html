@@ -345,8 +345,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.Map,java.util.Set)">DiscriminatorLookup</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,​<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;entityModels,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;packages)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.ClassLoader)">DiscriminatorLookup</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</code></th>
 <td class="colLast">
 <div class="block">Creates a new lookup</div>
 </td>
@@ -407,19 +406,17 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(java.util.Map,java.util.Set)">
+<a id="<init>(java.lang.ClassLoader)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DiscriminatorLookup</h4>
-<pre>public&nbsp;DiscriminatorLookup​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,​<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;entityModels,
-                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;packages)</pre>
+<pre>public&nbsp;DiscriminatorLookup​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</pre>
 <div class="block">Creates a new lookup</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entityModels</code> - the models to map</dd>
-<dd><code>packages</code> - the packages to search</dd>
+<dd><code>classLoader</code> - the class loader to use for look ups</dd>
 </dl>
 </li>
 </ul>
