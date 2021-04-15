@@ -244,7 +244,7 @@ If you need access to server session or the transaction, there are methods on <c
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">MorphiaSession session = datastore.startSession();
 session.startTransaction();
-User account = new User("jimbo", "jimhalpert@dundermifflin.com");
+User user = new User("jimbo", "jimhalpert@dundermifflin.com");
 user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
 session.save(user);
 session.commitTransaction();
@@ -259,7 +259,7 @@ session.close();</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try(MorphiaSession session = datastore.startSession()) {
     session.startTransaction();
-    User account = new User("jimbo", "jimhalpert@dundermifflin.com");
+    User user = new User("jimbo", "jimhalpert@dundermifflin.com");
     user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
     session.save(user);
     session.commitTransaction();
