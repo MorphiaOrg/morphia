@@ -53,6 +53,23 @@ public abstract class TestBase {
     private MongoDatabase database;
     private Datastore datastore;
 
+    static {
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+    }
+
+    public TestBase() {
+        System.out.println("*******************************************");
+        System.out.println("*******************************************");
+        System.out.println("*******************************************");
+        System.out.println("*******************************************");
+        System.out.println("*******************************************");
+    }
+
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
         if (!condition) {
             fail(messageSupplier.get());
@@ -125,11 +142,12 @@ public abstract class TestBase {
     }
 
     @DataProvider(name = "queryFactories")
-    public Object[] queryFactories() {
-        return new Object[]{
-            new DefaultQueryFactory(),
-            new LegacyQueryFactory()
-        };
+    public Object[][] queryFactories() {
+        return new Object[][]{
+            new Object[]{
+                new DefaultQueryFactory(),
+                new LegacyQueryFactory()
+            }};
     }
 
     protected void assertCapped(Class<?> type, Integer max, Integer size) {

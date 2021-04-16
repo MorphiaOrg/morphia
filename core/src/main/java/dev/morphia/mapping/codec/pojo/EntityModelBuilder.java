@@ -283,7 +283,8 @@ public class EntityModelBuilder {
     public PropertyModelBuilder propertyModelByName(String name) throws NoSuchElementException {
         return propertyModels.stream().filter(f -> f.name().equals(name))
                              .findFirst()
-                             .orElseThrow();
+                             .orElseThrow(() -> new NoSuchElementException(String.format("No property found named %s.  Valid names are: %s",
+                                 name, propertyModels.stream().map(p -> p.name()).collect(Collectors.toList()))));
     }
 
     /**

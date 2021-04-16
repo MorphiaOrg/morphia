@@ -3,14 +3,12 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
-import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.conventions.ConfigureProperties;
 import dev.morphia.mapping.conventions.FieldDiscovery;
 import dev.morphia.mapping.conventions.MethodDiscovery;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
-import dev.morphia.mapping.conventions.kotlin.KotlinPropertyDiscovery;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.QueryFactory;
@@ -22,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
 import static java.util.List.of;
@@ -565,9 +564,9 @@ public class MapperOptions {
                     propertyDiscovery == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
                     new ConfigureProperties()));
 
-                if (MorphiaInternals.kotlinAvailable()) {
-                    list.add(new KotlinPropertyDiscovery(this));
-                }
+                ServiceLoader<MorphiaConvention> conventions = ServiceLoader.load(MorphiaConvention.class);
+                conventions.forEach(list::add);
+
                 return list;
             }
             return conventions;

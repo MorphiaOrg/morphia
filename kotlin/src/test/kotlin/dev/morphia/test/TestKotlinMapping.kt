@@ -1,18 +1,18 @@
 package dev.morphia.test
 
-import dev.morphia.annotations.Entity
-import dev.morphia.annotations.Id
-import dev.morphia.annotations.Version
+import dev.morphia.test.models.DelegatedNull
+import dev.morphia.test.models.MyClass
+import dev.morphia.test.models.VersionedDataClass
 import org.bson.types.ObjectId
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertFalse
 import org.testng.Assert.assertNotNull
 import org.testng.annotations.Test
-import kotlin.properties.Delegates
 
-class TestKotlinMapping : TestBase() {
+@Test
+open class TestKotlinMapping : TestBase() {
     @Test
-    fun dataClasses() {
+    open fun dataClasses() {
         val list = ds.mapper.map(MyClass::class.java)
         assertFalse(list.isEmpty())
         val myClass = MyClass(ObjectId(), 42)
@@ -49,15 +49,3 @@ class TestKotlinMapping : TestBase() {
     }
 }
 
-@Entity
-private data class MyClass(@Id val id: ObjectId, val value: Int = 0)
-
-@Entity
-private data class VersionedDataClass(@Id val id: ObjectId?, val name: String, @Version val version: Long = 0)
-
-@Entity
-private class DelegatedNull {
-    @Id
-    lateinit var id: ObjectId
-    var status: String by Delegates.notNull()
-}

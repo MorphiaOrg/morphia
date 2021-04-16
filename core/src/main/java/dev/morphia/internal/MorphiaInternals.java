@@ -17,21 +17,8 @@ public final class MorphiaInternals {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaInternals.class);
     private static final Map<DriverVersion, Boolean> versions = new HashMap<>();
     private static Boolean proxyClassesPresent;
-    private static Boolean kotlinAvailable;
 
     private MorphiaInternals() {
-    }
-
-    public static boolean kotlinAvailable() {
-        if (kotlinAvailable == null) {
-            try {
-                Class.forName("kotlin.properties.ReadWriteProperty");
-                kotlinAvailable = true;
-            } catch (ClassNotFoundException e) {
-                kotlinAvailable = false;
-            }
-        }
-        return kotlinAvailable;
     }
 
     /**
