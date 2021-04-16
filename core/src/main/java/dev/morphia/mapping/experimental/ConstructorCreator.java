@@ -63,14 +63,13 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      * @return the constructor taking all fields if it exists
      * @morphia.internal
      */
-    @Nullable
     public static Constructor<?> getFullConstructor(EntityModel model) {
         for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
             if (constructor.getParameterCount() == model.getProperties().size() && namesMatchProperties(model, constructor)) {
                 return constructor;
             }
         }
-        return null;
+        throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
     }
 
     /**

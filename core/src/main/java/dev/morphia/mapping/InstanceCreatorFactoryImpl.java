@@ -5,15 +5,12 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.experimental.ConstructorCreator;
 import dev.morphia.sofia.Sofia;
 
-import java.lang.reflect.Constructor;
-
 /**
  * @morphia.internal
  */
 public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     private final EntityModel model;
-    private Constructor<?> noArgConstructor;
-    private Constructor<?> fullConstructor;
+    private MorphiaInstanceCreator creator;
 
     /**
      * Creates a factory for this type
@@ -26,21 +23,18 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
 
     @Override
     public MorphiaInstanceCreator create() {
-        if (!model.getType().isInterface()) {
-            try {
-                if (noArgConstructor == null) {
-                    noArgConstructor = model.getType().getDeclaredConstructor();
+        if (creator == null) {
+            if (!model.getType().isInterface()) {
+                try {
+                    creator = new NoArgCreator(model.getType().getDeclaredConstructor());
+                } catch (NoSuchMethodException e) {
+                    creator = new ConstructorCreator(model, ConstructorCreator.getFullConstructor(model));
                 }
-                return new NoArgCreator(noArgConstructor);
-            } catch (NoSuchMethodException e) {
-                if (fullConstructor == null) {
-                    fullConstructor = ConstructorCreator.getFullConstructor(model);
-                }
-                if (fullConstructor != null) {
-                    return new ConstructorCreator(model, fullConstructor);
-                }
+            } else {
+                throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
             }
         }
-        throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
+
+        return creator;
     }
 }

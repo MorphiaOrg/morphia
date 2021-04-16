@@ -53,23 +53,6 @@ public abstract class TestBase {
     private MongoDatabase database;
     private Datastore datastore;
 
-    static {
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-    }
-
-    public TestBase() {
-        System.out.println("*******************************************");
-        System.out.println("*******************************************");
-        System.out.println("*******************************************");
-        System.out.println("*******************************************");
-        System.out.println("*******************************************");
-    }
-
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
         if (!condition) {
             fail(messageSupplier.get());

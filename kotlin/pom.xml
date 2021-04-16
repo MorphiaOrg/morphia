@@ -23,6 +23,10 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
 
+                <configuration>
+                    <javaParameters>true</javaParameters>
+                </configuration>
+
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -45,15 +49,6 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <failIfNoTests>true</failIfNoTests>
-                    <includes>
-                        <include>**/*Test*.class</include>
-                    </includes>
-                    <properties>
-                        <property>
-                            <name>surefire.testng.verbose</name>
-                            <value>10</value>
-                        </property>
-                    </properties>
                 </configuration>
             </plugin>
             <plugin>
