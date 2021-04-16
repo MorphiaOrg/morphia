@@ -5,12 +5,15 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.experimental.ConstructorCreator;
 import dev.morphia.sofia.Sofia;
 
+import java.lang.reflect.Constructor;
+import java.util.function.Supplier;
+
 /**
  * @morphia.internal
  */
 public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     private final EntityModel model;
-    private MorphiaInstanceCreator creator;
+    private Supplier<MorphiaInstanceCreator> creator;
 
     /**
      * Creates a factory for this type
@@ -26,15 +29,21 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
         if (creator == null) {
             if (!model.getType().isInterface()) {
                 try {
-                    creator = new NoArgCreator(model.getType().getDeclaredConstructor());
+                    Constructor<?> constructor = model.getType().getDeclaredConstructor();
+                    creator = () -> {
+                        return new NoArgCreator(constructor);
+                    };
                 } catch (NoSuchMethodException e) {
-                    creator = new ConstructorCreator(model, ConstructorCreator.getFullConstructor(model));
+                    Constructor<?> constructor = ConstructorCreator.getFullConstructor(model);
+                    creator = () -> {
+                        return new ConstructorCreator(model, constructor);
+                    };
                 }
             } else {
                 throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
             }
         }
 
-        return creator;
+        return creator.get();
     }
 }

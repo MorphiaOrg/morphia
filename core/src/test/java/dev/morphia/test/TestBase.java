@@ -127,10 +127,9 @@ public abstract class TestBase {
     @DataProvider(name = "queryFactories")
     public Object[][] queryFactories() {
         return new Object[][]{
-            new Object[]{
-                new DefaultQueryFactory(),
-                new LegacyQueryFactory()
-            }};
+            new Object[]{new DefaultQueryFactory()},
+            new Object[]{new LegacyQueryFactory()}
+        };
     }
 
     protected void assertCapped(Class<?> type, Integer max, Integer size) {
