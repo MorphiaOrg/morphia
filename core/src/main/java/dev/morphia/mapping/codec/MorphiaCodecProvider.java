@@ -5,9 +5,7 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.kotlin.ReadWritePropertyCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
@@ -23,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 /**
  * Provider for codecs for Morphia entities
@@ -48,10 +47,8 @@ public class MorphiaCodecProvider implements CodecProvider {
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
             new MorphiaCollectionPropertyCodecProvider()));
 
-        if (MorphiaInternals.kotlinAvailable()) {
-            propertyCodecProviders.add(new ReadWritePropertyCodecProvider());
-        }
-
+        ServiceLoader<MorphiaPropertyCodecProvider> providers = ServiceLoader.load(MorphiaPropertyCodecProvider.class);
+        providers.forEach(propertyCodecProviders::add);
     }
 
     @Override

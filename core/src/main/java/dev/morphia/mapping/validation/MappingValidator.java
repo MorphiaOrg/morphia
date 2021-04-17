@@ -88,7 +88,6 @@ public class MappingValidator {
         constraints.add(new EntityAndEmbed());
         constraints.add(new EntityOrEmbed());
         constraints.add(new DuplicatedAttributeNames());
-        constraints.add(new ConstructorParameterNameConstraint());
         // field-level
         constraints.add(new IdDoesNotMix());
         constraints.add(new ReferenceToUnidentifiable());

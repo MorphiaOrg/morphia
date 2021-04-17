@@ -6,14 +6,14 @@ import dev.morphia.mapping.experimental.ConstructorCreator;
 import dev.morphia.sofia.Sofia;
 
 import java.lang.reflect.Constructor;
+import java.util.function.Supplier;
 
 /**
  * @morphia.internal
  */
 public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     private final EntityModel model;
-    private Constructor<?> noArgConstructor;
-    private Constructor<?> fullConstructor;
+    private Supplier<MorphiaInstanceCreator> creator;
 
     /**
      * Creates a factory for this type
@@ -26,21 +26,24 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
 
     @Override
     public MorphiaInstanceCreator create() {
-        if (!model.getType().isInterface()) {
-            try {
-                if (noArgConstructor == null) {
-                    noArgConstructor = model.getType().getDeclaredConstructor();
+        if (creator == null) {
+            if (!model.getType().isInterface()) {
+                try {
+                    Constructor<?> constructor = model.getType().getDeclaredConstructor();
+                    creator = () -> {
+                        return new NoArgCreator(constructor);
+                    };
+                } catch (NoSuchMethodException e) {
+                    Constructor<?> constructor = ConstructorCreator.getFullConstructor(model);
+                    creator = () -> {
+                        return new ConstructorCreator(model, constructor);
+                    };
                 }
-                return new NoArgCreator(noArgConstructor);
-            } catch (NoSuchMethodException e) {
-                if (fullConstructor == null) {
-                    fullConstructor = ConstructorCreator.getFullConstructor(model);
-                }
-                if (fullConstructor != null) {
-                    return new ConstructorCreator(model, fullConstructor);
-                }
+            } else {
+                throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
             }
         }
-        throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
+
+        return creator.get();
     }
 }

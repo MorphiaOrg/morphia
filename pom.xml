@@ -34,15 +34,17 @@
 
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.15</bottlerocket.version>
+        <dokka.version>1.4.30</dokka.version>
         <driver.version>4.2.2</driver.version>
         <json.assert.version>1.2.3</json.assert.version>
-        <kotlin.version>1.4.32</kotlin.version>
-        <maven.version>3.6.2</maven.version>
+        <kotlin.version>1.5.0-RC</kotlin.version>
+        <maven.version>3.8.1</maven.version>
         <revapi.maven.plugin.version>0.13.6</revapi.maven.plugin.version>
         <revapi.java.version>0.23.2</revapi.java.version>
         <slf4j.version>1.7.30</slf4j.version>
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M5</surefire.version>
+        <testng.version>7.4.0</testng.version>
         <zt.exec.version>1.11</zt.exec.version>
         <junit.version>4.13</junit.version>
     </properties>
@@ -108,6 +110,74 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>4.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-legacy</artifactId>
+                <version>4.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+                <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-reflect</artifactId>
+                <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${json.assert.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>2.11.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.jayway.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>${awaitility.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.antwerkz.bottlerocket</groupId>
+                <artifactId>bottlerocket</artifactId>
+                <version>${bottlerocket.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>zt-exec</artifactId>
+                <version>${zt.exec.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -138,6 +208,7 @@
         <module>build-plugins</module>
         <module>util</module>
         <module>core</module>
+        <module>kotlin</module>
         <module>legacy-tests</module>
         <!--        <module>no-proxy-deps-tests</module>-->
         <module>examples</module>

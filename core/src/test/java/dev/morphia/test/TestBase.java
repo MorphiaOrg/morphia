@@ -125,10 +125,10 @@ public abstract class TestBase {
     }
 
     @DataProvider(name = "queryFactories")
-    public Object[] queryFactories() {
-        return new Object[]{
-            new DefaultQueryFactory(),
-            new LegacyQueryFactory()
+    public Object[][] queryFactories() {
+        return new Object[][]{
+            new Object[]{new DefaultQueryFactory()},
+            new Object[]{new LegacyQueryFactory()}
         };
     }
 
