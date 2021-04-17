@@ -1,9 +1,9 @@
 == References
 
 Morphia supports two styles of defining references: the xref:javadoc:dev/morphia/annotations/Reference.html#[`@Reference`]
-annotation and the experimental xref:javadoc:dev/morphia/mapping/experimental/MorphiaReference.html#[`MorphiaReference`].
-The annotation based approach is discussed xref:reference.adoc#_references#[here].
-This guide will cover the wrapper based approach.
+annotation and an experimental wrapper type xref:javadoc:dev/morphia/mapping/experimental/MorphiaReference.html#[`MorphiaReference`].
+
+=== Using the wrapper type
 
 [NOTE]
 ====
@@ -162,5 +162,7 @@ References to single entities will follow the same pattern with regards to the `
 ====
 Currently there is no support for configuring the `ignoreMissing` parameter as there is via the annotation.
 The wrapper will silently drop missing ID values or return null depending on the type of the reference.
-Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.
+Depending on the response to this feature in general consideration can be given to adding such functionality in the future.
 ====
+
+=== Using the annotation

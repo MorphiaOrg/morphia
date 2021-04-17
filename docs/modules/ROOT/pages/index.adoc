@@ -2,7 +2,7 @@
 = Getting Started
 
 The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.
-To use Morphia using either build tool, you will need to update your build configurations with the following information.
+To use Morphia using either build tool, you will need to update your build configuration with the following information.
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -22,7 +22,6 @@ If you want to use a `-SNAPSHOT` build you will need to add the appropriate repo
 <repositories>
     <repository>
         <id>sonatype-snapshots</id>
-        <name>Sontatype Snapshots</name>
         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         <snapshots>
             <enabled>true</enabled>
@@ -40,7 +39,7 @@ dependencies {
 }
 ----
 
-And, of course, to use `-SNAPSHOT` builds, the additional repository will be needed:
+To use `-SNAPSHOT` builds, an additional repository will be needed:
 
 [source,groovy]
 ----

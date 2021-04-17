@@ -37,10 +37,11 @@ This method can be called multiple times to cover all your entities wherever the
 
 You can configure various mapping options via the `MappingOptions` class.
 There are a number of items to configure here but for now we 'll just cover two.
-For a discussion of the remainder, please see the :xref:reference.adoc#_configuration#[configuration guide].
+For a discussion of the remainder, please see the :xref:configuration.adoc[configuration guide].
 The two most common elements to configure are probably `storeEmpties` and `storeNulls`.
 By default Morphia will not store empty `List` or
-`Map` values nor will it store null values in to MongoDB. If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
+`Map` values nor will it store null values in to MongoDB.
+If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
 There are a few other options to configure on
 `MappingOptions`, but we'll not be covering them here.
 
@@ -92,7 +93,7 @@ There is a little more to this annotation but the xref:javadoc:dev/morphia/annot
 
 The xref:javadoc:dev/morphia/annotations/Indexes.html#[`@Indexes`] annotation lists which indexes Morphia should create.
 In this instance, we're defining an index named `salary` on the field salary with the default ordering of ascending.
-More information on indexing can found xref:reference.adoc#_indexing#[here].
+More information on indexing can found xref:indexing.adoc[here].
 
 We've marked the `id` field to be used as our primary key (the `_id` field in the document).
 In this instance we're using the Java driver type of `ObjectId` as the ID type.
@@ -115,7 +116,7 @@ These referenced entities must already be saved or at least have an ID assigned 
 
 [NOTE]
 ====
-There is a newer approach for defining references that is explained more fully xref:reference.adoc#_indexing#[here].
+There is a newer approach for defining references that is explained more fully xref:indexing.adoc[here].
 ====
 
 == Saving Data

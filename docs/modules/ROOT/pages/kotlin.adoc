@@ -1,0 +1,38 @@
+== Kotlin
+
+In general, your Kotlin types should work out of the box with Morphia.
+There are, however, a few interesting cases where they need a little extra help.
+Morphia 2.2 introduces a new module dependency for those who need that extra support.
+To import the new
+`morphia-kotlin` module in maven, simply add this to your `pom.xml`:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependencies>
+    <dependency>
+        <groupId>dev.morphia.morphia</groupId>
+        <artifactId>morphia-kotlin</artifactId>
+        <version>{version}</version>
+    </dependency>
+</dependencies>
+----
+
+And, of course, gradle users can use the following dependency declaration:
+
+[source,groovy,subs="verbatim,attributes"]
+----
+dependencies {
+    compile 'dev.morphia.morphia:morphia-kotlin:{version}'
+}
+----
+
+Explicit Kotlin support is relatively new so there are likely cases that haven't been discovered yet that might still need specific help but this new module will help cover those cases going forward.
+
+New to 2.2 is support for https://kotlinlang.org/docs/delegated-properties.html[delegated properties].
+If your project uses
+`Delegates.notNull()`, e.g., you will want to include this module to support that delegation.
+This module should support any
+`ReadWriteProperty` type but is only currently tested against the `notNull()` case.
+
+All that is needed to enable this more targeted support is to simply add the new dependency to your project as shown above and it should magically "Just Work&#8482;".
+If you find something that doesn't work in your Kotlin project, please file an xref:/issues-help.adoc[issue].

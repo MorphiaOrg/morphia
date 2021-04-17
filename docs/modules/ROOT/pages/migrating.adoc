@@ -1,7 +1,24 @@
 = Migration
 
-* Versioned updates now throw `VersionMismatchException` instead of `ConcurrentModification` exception.  This allows for more targeted
-catches.  For historical reasons, this new exception extends `ConcurrentModification` so that any existing catch clauses will continue
-to work.  However, applications should be updated to catch the new exception.  A future release will change the parent type of
-`VersionMismatchException` to `RuntimeException` instead.  See https://github.com/MorphiaOrg/morphia/issues/982[this discussion] for more
-details.
+== Versioning
+
+Versioned updates now throw `VersionMismatchException` instead of `ConcurrentModification` exception.
+This allows for more targeted catches.
+For historical reasons, this new exception extends `ConcurrentModification` so that any existing catch clauses will continue to work.
+However, applications should be updated to catch the new exception.
+A future release will change the parent type of
+`VersionMismatchException` to `RuntimeException` instead.
+See https://github.com/MorphiaOrg/morphia/issues/982[this discussion] for more details.
+
+== Kotlin Support
+
+Kotlin classes have worked with Morphia for years now but certain Kotlin features have started to cause problems as folks have started trying to use them in their applications.
+To this end a new module has been introduced, `morphia-kotlin`, to specifically focus on these cases.
+Chances are good that you won't need this module but in some cases this new module can help.
+See the
+xref:kotlin.adoc[reference guide] for more details.
+
+== Nullability
+
+The API is now explicitly decorated with `@NonNull` and `@Nullable` annotations to indicate which parameters and return values support null references.
+Your IDE should give you in place hints when you run afoul of these annotations and guide you to properly handling null values.

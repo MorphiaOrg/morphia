@@ -11,8 +11,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>kotlin</artifactId>
+    <artifactId>morphia-kotlin</artifactId>
 
+    <properties>
+        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
+    </properties>
     <pluginRepositories>
         <pluginRepository>
             <id>kotlinx</id>
