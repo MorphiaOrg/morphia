@@ -84,8 +84,48 @@
   <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="reference.html">Reference</a>
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="kotlin.html">Kotlin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="queries.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="updates.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="deletes.html">Deleting</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aggregations.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="textSearches.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -224,10 +264,11 @@ This method can be called multiple times to cover all your entities wherever the
 <div class="paragraph">
 <p>You can configure various mapping options via the <code>MappingOptions</code> class.
 There are a number of items to configure here but for now we 'll just cover two.
-For a discussion of the remainder, please see the :<a href="reference.html#_configuration#" class="page">configuration guide</a>.
+For a discussion of the remainder, please see the :<a href="configuration.html" class="page">configuration guide</a>.
 The two most common elements to configure are probably <code>storeEmpties</code> and <code>storeNulls</code>.
 By default Morphia will not store empty <code>List</code> or
-<code>Map</code> values nor will it store null values in to MongoDB. If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
+<code>Map</code> values nor will it store null values in to MongoDB.
+If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
 There are a few other options to configure on
 <code>MappingOptions</code>, but we&#8217;ll not be covering them here.</p>
 </div>
@@ -295,7 +336,7 @@ There is a little more to this annotation but the <a href="javadoc/dev/morphia/a
 <div class="paragraph">
 <p>The <a href="javadoc/dev/morphia/annotations/Indexes.html" class="page"><code>@Indexes</code></a> annotation lists which indexes Morphia should create.
 In this instance, we&#8217;re defining an index named <code>salary</code> on the field salary with the default ordering of ascending.
-More information on indexing can found <a href="reference.html#_indexing#" class="page">here</a>.</p>
+More information on indexing can found <a href="indexing.html" class="page">here</a>.</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ve marked the <code>id</code> field to be used as our primary key (the <code>_id</code> field in the document).
@@ -327,7 +368,7 @@ These referenced entities must already be saved or at least have an ID assigned 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>There is a newer approach for defining references that is explained more fully <a href="reference.html#_indexing#" class="page">here</a>.</p>
+<p>There is a newer approach for defining references that is explained more fully <a href="indexing.html" class="page">here</a>.</p>
 </div>
 </td>
 </tr>

@@ -91,7 +91,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="configuration.html">Configuration</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="kotlin.html">Kotlin</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -121,7 +121,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -196,118 +196,66 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li><a href="lifeCycleMethods.html">Life Cycle Methods</a></li>
+    <li><a href="kotlin.html">Kotlin</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="lifeCycleMethods.html">2.2-SNAPSHOT</a>
-    <a class="version" href="../2.1/lifeCycleMethods.html">2.1</a>
-    <a class="version" href="../2.0/lifeCycleMethods.html">2.0</a>
-    <a class="version" href="../1.6/lifeCycleMethods.html">1.6</a>
+    <a class="version is-current" href="kotlin.html">2.2-SNAPSHOT</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../2.0/index.html">2.0</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/lifeCycleMethods.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/kotlin.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_life_cycle_methods"><a class="anchor" href="#_life_cycle_methods"></a>Life Cycle Methods</h2>
+<h2 id="_kotlin"><a class="anchor" href="#_kotlin"></a>Kotlin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are various annotations which can be used to register callbacks on certain life cycle events.
-These include Pre/Post-Persist (Save), and Pre/Post-Load.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>@PrePersist</code> - Called before save, it can return a <code>Document</code> in place of an empty one.</p>
-</li>
-<li>
-<p><code>@PostPersist</code> - Called after the save call to the database</p>
-</li>
-<li>
-<p><code>@PreLoad</code> - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values)</p>
-</li>
-<li>
-<p><code>@PostLoad</code> - Called after populating the entity with the values from the document</p>
-</li>
-</ol>
-</div>
-<div class="sect2">
-<h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
-<div class="paragraph">
-<p><a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">Here</a> is a one of the test classes.</p>
-</div>
-<div class="paragraph">
-<p>All parameters and return values are options in your implemented methods.</p>
-</div>
-<div class="sect3">
-<h4 id="_example"><a class="anchor" href="#_example"></a>Example</h4>
-<div class="paragraph">
-<p>Here is a simple example of an entity that always saves the Date it was last updated.
-Alternatively, the resulting serialized form can be passed back in just prior to sending the document to the database.</p>
+<p>In general, your Kotlin types should work out of the box with Morphia.
+There are, however, a few interesting cases where they need a little extra help.
+Morphia 2.2 introduces a new module dependency for those who need that extra support.
+To import the new
+<code>morphia-kotlin</code> module in maven, simply add this to your <code>pom.xml</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class BankAccount {
-  @Id
-  String id;
-  Date lastUpdated = new Date();
-
-  @PrePersist
-  public void trackUpdate() {
-    lastUpdated = new Date();
-  }
-
-  @PrePersist
-  public void prePersist( Document document) {
-    // perform operations on serialized form of the entity
-  }
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
+        &lt;artifactId&gt;morphia-kotlin&lt;/artifactId&gt;
+        &lt;version&gt;2.2.0-SNAPSHOT&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_entitylisteners"><a class="anchor" href="#_entitylisteners"></a>EntityListeners</h3>
 <div class="paragraph">
-<p>If your application has more generalized life cycle events, these methods can be stored on classes external to your model.
-For example&#8217;s sake, let&#8217;s assume there&#8217;s a need to digitally sign all documents before storing it in the database.</p>
+<p>And, of course, gradle users can use the following dependency declaration:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@EntityListeners(DigitalSigner.class)
-public class BankAccount {
-  @Id
-  String id;
-  Date lastUpdated = new Date();
-}
-
-class DigitalSigner {
-  @PrePersist
-  void prePersist( Object entity, Document document) {
-     document.put("signature", sign(document));
-  }
-
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
+    compile 'dev.morphia.morphia:morphia-kotlin:2.2.0-SNAPSHOT'
 }</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p><strong>No Delete Support</strong> Because deletes are usually done with queries there is no way to support a Delete lifecycle event.</p>
+<p>Explicit Kotlin support is relatively new so there are likely cases that haven&#8217;t been discovered yet that might still need specific help but this new module will help cover those cases going forward.</p>
 </div>
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>New to 2.2 is support for <a href="https://kotlinlang.org/docs/delegated-properties.html">delegated properties</a>.
+If your project uses
+<code>Delegates.notNull()</code>, e.g., you will want to include this module to support that delegation.
+This module should support any
+<code>ReadWriteProperty</code> type but is only currently tested against the <code>notNull()</code> case.</p>
 </div>
+<div class="paragraph">
+<p>All that is needed to enable this more targeted support is to simply add the new dependency to your project as shown above and it should magically "Just Work&#8482;".
+If you find something that doesn&#8217;t work in your Kotlin project, please file an <a href="issues-help.html" class="page">issue</a>.</p>
 </div>
 </div>
 </div>

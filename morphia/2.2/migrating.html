@@ -84,8 +84,48 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="reference.html">Reference</a>
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="kotlin.html">Kotlin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="queries.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="updates.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="deletes.html">Deleting</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aggregations.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="textSearches.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -173,16 +213,40 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Migration</h1>
-<div class="ulist">
-<ul>
-<li>
-<p>Versioned updates now throw <code>VersionMismatchException</code> instead of <code>ConcurrentModification</code> exception.  This allows for more targeted
-catches.  For historical reasons, this new exception extends <code>ConcurrentModification</code> so that any existing catch clauses will continue
-to work.  However, applications should be updated to catch the new exception.  A future release will change the parent type of
-<code>VersionMismatchException</code> to <code>RuntimeException</code> instead.  See <a href="https://github.com/MorphiaOrg/morphia/issues/982">this discussion</a> for more
-details.</p>
-</li>
-</ul>
+<div class="sect1">
+<h2 id="_versioning"><a class="anchor" href="#_versioning"></a>Versioning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Versioned updates now throw <code>VersionMismatchException</code> instead of <code>ConcurrentModification</code> exception.
+This allows for more targeted catches.
+For historical reasons, this new exception extends <code>ConcurrentModification</code> so that any existing catch clauses will continue to work.
+However, applications should be updated to catch the new exception.
+A future release will change the parent type of
+<code>VersionMismatchException</code> to <code>RuntimeException</code> instead.
+See <a href="https://github.com/MorphiaOrg/morphia/issues/982">this discussion</a> for more details.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_kotlin_support"><a class="anchor" href="#_kotlin_support"></a>Kotlin Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Kotlin classes have worked with Morphia for years now but certain Kotlin features have started to cause problems as folks have started trying to use them in their applications.
+To this end a new module has been introduced, <code>morphia-kotlin</code>, to specifically focus on these cases.
+Chances are good that you won&#8217;t need this module but in some cases this new module can help.
+See the
+<a href="kotlin.html" class="page">reference guide</a> for more details.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nullability"><a class="anchor" href="#_nullability"></a>Nullability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The API is now explicitly decorated with <code>@NonNull</code> and <code>@Nullable</code> annotations to indicate which parameters and return values support null references.
+Your IDE should give you in place hints when you run afoul of these annotations and guide you to properly handling null values.</p>
+</div>
+</div>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

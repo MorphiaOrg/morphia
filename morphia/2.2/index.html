@@ -84,8 +84,48 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="reference.html">Reference</a>
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="kotlin.html">Kotlin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="queries.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="updates.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="deletes.html">Deleting</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aggregations.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="textSearches.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -175,7 +215,7 @@
 <h1 class="page">Getting Started</h1>
 <div class="paragraph">
 <p>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.
-To use Morphia using either build tool, you will need to update your build configurations with the following information.</p>
+To use Morphia using either build tool, you will need to update your build configuration with the following information.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -196,7 +236,6 @@ To use Morphia using either build tool, you will need to update your build confi
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;repositories&gt;
     &lt;repository&gt;
         &lt;id&gt;sonatype-snapshots&lt;/id&gt;
-        &lt;name&gt;Sontatype Snapshots&lt;/name&gt;
         &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
         &lt;snapshots&gt;
             &lt;enabled&gt;true&lt;/enabled&gt;
@@ -216,7 +255,7 @@ To use Morphia using either build tool, you will need to update your build confi
 </div>
 </div>
 <div class="paragraph">
-<p>And, of course, to use <code>-SNAPSHOT</code> builds, the additional repository will be needed:</p>
+<p>To use <code>-SNAPSHOT</code> builds, an additional repository will be needed:</p>
 </div>
 <div class="listingblock">
 <div class="content">

@@ -84,8 +84,48 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="reference.html">Reference</a>
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="kotlin.html">Kotlin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="queries.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="updates.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="deletes.html">Deleting</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="aggregations.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="textSearches.html">Text Search</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -154,6 +194,10 @@
 <button class="nav-toggle"></button>
   <a href="../../landing/index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Morphia</a></li>
+    <li><a href="references.html">References</a></li>
+  </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
@@ -173,10 +217,10 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Morphia supports two styles of defining references: the <a href="javadoc/dev/morphia/annotations/Reference.html" class="page"><code>@Reference</code></a>
-annotation and the experimental <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html" class="page"><code>MorphiaReference</code></a>.
-The annotation based approach is discussed <a href="reference.html#_references#" class="page">here</a>.
-This guide will cover the wrapper based approach.</p>
+annotation and an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html" class="page"><code>MorphiaReference</code></a>.</p>
 </div>
+<div class="sect2">
+<h3 id="_using_the_wrapper_type"><a class="anchor" href="#_using_the_wrapper_type"></a>Using the wrapper type</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -365,11 +409,16 @@ complicated.  A `Map</code> might look something like this:</p>
 <div class="paragraph">
 <p>Currently there is no support for configuring the <code>ignoreMissing</code> parameter as there is via the annotation.
 The wrapper will silently drop missing ID values or return null depending on the type of the reference.
-Depending on the response to this feature in generalconsideration can be given to adding such functionality in the future.</p>
+Depending on the response to this feature in general consideration can be given to adding such functionality in the future.</p>
 </div>
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
+
 </div>
 </div>
 </div>
