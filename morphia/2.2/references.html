@@ -216,8 +216,69 @@
 <h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Morphia supports two styles of defining references: the <a href="javadoc/dev/morphia/annotations/Reference.html" class="page"><code>@Reference</code></a>
-annotation and an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html" class="page"><code>MorphiaReference</code></a>.</p>
+<p>MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
+However not every data model or application can adhere to this philosophy in its entirety.
+As such, MongoDB supports
+<a href="http://docs.mongodb.org/manual/reference/database-references/">database references</a>.Morphia supports two styles of defining references:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>the <a href="javadoc/dev/morphia/annotations/Reference.html" class="page"><code>@Reference</code></a> annotation</p>
+</li>
+<li>
+<p>an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html" class="page"><code>MorphiaReference</code></a>.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
+<div class="paragraph">
+<p>The annotation based approach is the traditional approach.
+The <a href="javadoc/dev/morphia/annotations/Reference.html" class="page"><code>@Reference</code></a> can be applied to any property whose type is a mappable Entity type.
+When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
+The referenced types are stored according to the mapping information configured by their
+<a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> annotations.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It can be helpful to think of references as a foreign key like you would find in a relational database.
+It&#8217;s important to note, however, that MongoDB does not enforce any notion of referential integrity with these keys.
+Those remote documents may or may not actually exist and you will have to tailor your application (and configure Morphia as we&#8217;ll see in a moment) to deal with those missing documents.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The annotation provides a number of options to help tailor Morphia&#8217;s behavior to your liking.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>idOnly</code>&#8201;&#8212;&#8201;<em>defaults to false</em> When <code>true</code>, only the value of the ID field is stored in the enclosing documents.
+If the referenced entity type has no subclasses, setting this can help save disk space and network traffic.
+If there <strong>are</strong> subtypes, this setting may be overridden automatically so that type information can properly stored.</p>
+</li>
+<li>
+<p><code>ignoreMissing</code> <em>defaults to false</em> When <code>true</code>, references that can not be loaded are simply ignored.
+Otherwise an exception is thrown whenever the reference load is attempted.</p>
+</li>
+<li>
+<p><code>lazy</code> <em>defaults to false</em> When <code>true</code> the referenced entity will not be fetched until the property is explicitly referenced.
+Otherwise the referenced entity (or entities) are loaded as part of the query load cycle of the enclosing entity.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A <code>String</code> may be passed to the annotation to define the document field name to be stored in the database.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_using_the_wrapper_type"><a class="anchor" href="#_using_the_wrapper_type"></a>Using the wrapper type</h3>
@@ -366,7 +427,7 @@ This lets the wrapper properly reconstitute these references when you&#8217;re r
 <td class="content">
 <div class="paragraph">
 <p>Before we go too much further, it&#8217;s important to point that, regardless of the type of the references, they are fetched lazily.
-So if you multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.
+So if you have multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.
 If the type is a <code>Collection</code> or a <code>Map</code>, all the referenced entities are fetched and loaded via a single query if possible.
 This saves on server round trips but does raise the risk of potential <code>OutOfMemoryError</code> problems if you load too many objects in to memory this way.</p>
 </div>
@@ -376,8 +437,8 @@ This saves on server round trips but does raise the risk of potential <code>OutO
 </div>
 <div class="paragraph">
 <p>A <code>Set</code> of references will look no different in the database than the <code>List</code> does.
-However, <code>Map`s of references are slightly more
-complicated.  A `Map</code> might look something like this:</p>
+However, a <code>Map</code> of references are slightly more complicated.
+A <code>Map</code> might look something like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -415,10 +476,6 @@ Depending on the response to this feature in general consideration can be given 
 </tr>
 </table>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
-
 </div>
 </div>
 </div>
