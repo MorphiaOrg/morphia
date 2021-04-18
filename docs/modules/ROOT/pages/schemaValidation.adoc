@@ -1,6 +1,6 @@
 == Schema Validation
 
-Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity's source.  {docsRef}/core/schema-validation/[Schema validation]provides the capability to perform schema validation during updates and insertions.
+Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity's source.  {docsRef}/core/schema-validation/[Schema validation] provides the capability to perform schema validation during updates and insertions.
 Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
 
 Below we have a basic entity definition.
