@@ -162,7 +162,7 @@ This lets the wrapper properly reconstitute these references when you're ready t
 [TIP]
 ====
 Before we go too much further, it's important to point that, regardless of the type of the references, they are fetched lazily.
-So if you multiple fields with referenced entities, they will not be fetched until you call `get()` on the `MorphiaReference`.
+So if you have multiple fields with referenced entities, they will not be fetched until you call `get()` on the `MorphiaReference`.
 If the type is a `Collection` or a `Map`, all the referenced entities are fetched and loaded via a single query if possible.
 This saves on server round trips but does raise the risk of potential `OutOfMemoryError` problems if you load too many objects in to memory this way.
 ====
