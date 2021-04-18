@@ -168,8 +168,8 @@ This saves on server round trips but does raise the risk of potential `OutOfMemo
 ====
 
 A `Set` of references will look no different in the database than the `List` does.
-However, `Map`s of references are slightly more
-complicated.  A `Map` might look something like this:
+However, a `Map` of references are slightly more complicated.
+A `Map` might look something like this:
 
 [source,javascript]
 ----
