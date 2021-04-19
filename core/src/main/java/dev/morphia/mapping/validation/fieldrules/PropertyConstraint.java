@@ -20,5 +20,4 @@ public abstract class PropertyConstraint implements ClassConstraint {
     }
 
     protected abstract void check(Mapper mapper, EntityModel entityModel, PropertyModel propertyModel, Set<ConstraintViolation> ve);
-
 }

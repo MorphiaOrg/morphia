@@ -663,7 +663,7 @@ public class Mapper {
         }
 
         if (!entityModel.isInterface()) {
-            new MappingValidator(entityModel.getInstanceCreatorFactory().create())
+            new MappingValidator()
                 .validate(this, entityModel);
 
         }

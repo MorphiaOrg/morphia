@@ -3,7 +3,6 @@ package dev.morphia.mapping.validation;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
@@ -35,16 +34,6 @@ import static java.util.Collections.sort;
 public class MappingValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);
-    private final MorphiaInstanceCreator creator;
-
-    /**
-     * Creates a mapping validator
-     *
-     * @param objectFactory the object factory to be used when creating throw away instances to use in validation
-     */
-    public MappingValidator(MorphiaInstanceCreator objectFactory) {
-        creator = objectFactory;
-    }
 
     /**
      * @param entityModel the EntityModel to validate
@@ -94,7 +83,7 @@ public class MappingValidator {
         constraints.add(new LazyReferenceMissingDependencies());
         constraints.add(new LazyReferenceOnArray());
         constraints.add(new MapKeyTypeConstraint());
-        constraints.add(new VersionMisuse(creator));
+        constraints.add(new VersionMisuse());
 
         constraints.add(new ContradictingAnnotations(Reference.class, Property.class));
 

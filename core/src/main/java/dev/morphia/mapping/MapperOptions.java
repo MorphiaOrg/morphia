@@ -3,7 +3,6 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.conventions.ConfigureProperties;
 import dev.morphia.mapping.conventions.FieldDiscovery;
 import dev.morphia.mapping.conventions.MethodDiscovery;
@@ -39,7 +38,6 @@ public class MapperOptions {
     private final boolean cacheClassLookups;
     private final boolean mapSubPackages;
     private final DateStorage dateStorage;
-    private final MorphiaInstanceCreator creator;
     private final String discriminatorKey;
     private final DiscriminatorFunction discriminator;
     private final List<MorphiaConvention> conventions;
@@ -52,11 +50,10 @@ public class MapperOptions {
     private ClassLoader classLoader;
 
     private MapperOptions(Builder builder) {
-        cacheClassLookups = builder.cacheClassLookups();
-        classLoader = builder.classLoader();
-        collectionNaming = builder.collectionNaming();
+        cacheClassLookups = builder.cacheClassLookups;
+        classLoader = builder.classLoader;
+        collectionNaming = builder.collectionNaming;
         conventions = builder.conventions();
-        creator = builder.creator();
         dateStorage = builder.dateStorage();
         discriminator = builder.discriminator();
         discriminatorKey = builder.discriminatorKey();
@@ -125,13 +122,6 @@ public class MapperOptions {
      */
     public List<MorphiaConvention> getConventions() {
         return Collections.unmodifiableList(conventions);
-    }
-
-    /**
-     * @return the factory to use when creating new instances
-     */
-    public MorphiaInstanceCreator getCreator() {
-        return creator;
     }
 
     /**
@@ -249,7 +239,6 @@ public class MapperOptions {
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private boolean enablePolymorphicQueries;
-        private MorphiaInstanceCreator creator;
         private ClassLoader classLoader;
         private DateStorage dateStorage = DateStorage.UTC;
         private String discriminatorKey = "_t";
@@ -266,7 +255,6 @@ public class MapperOptions {
 
         public Builder(MapperOptions original) {
             cacheClassLookups = original.isCacheClassLookups();
-            creator = original.getCreator();
             classLoader = original.getClassLoader();
             dateStorage = original.getDateStorage();
             ignoreFinals = original.isIgnoreFinals();
@@ -370,7 +358,7 @@ public class MapperOptions {
          * @return this
          * @deprecated unused
          */
-        @Deprecated(forRemoval = false)
+        @Deprecated(forRemoval = true)
         public Builder disableEmbeddedIndexes(boolean disableEmbeddedIndexes) {
             assertNotLocked();
             LOG.warn("this option is no longer used");
@@ -443,16 +431,6 @@ public class MapperOptions {
         public Builder mapSubPackages(boolean mapSubPackages) {
             assertNotLocked();
             this.mapSubPackages = mapSubPackages;
-            return this;
-        }
-
-        /**
-         * @param creator the object factory to use when creating instances
-         * @return this
-         */
-        public Builder objectFactory(MorphiaInstanceCreator creator) {
-            assertNotLocked();
-            this.creator = creator;
             return this;
         }
 
@@ -545,18 +523,6 @@ public class MapperOptions {
             }
         }
 
-        private boolean cacheClassLookups() {
-            return cacheClassLookups;
-        }
-
-        private ClassLoader classLoader() {
-            return classLoader;
-        }
-
-        private NamingStrategy collectionNaming() {
-            return collectionNaming;
-        }
-
         private List<MorphiaConvention> conventions() {
             if (conventions.isEmpty()) {
                 List<MorphiaConvention> list = new ArrayList<>(of(
@@ -570,10 +536,6 @@ public class MapperOptions {
                 return list;
             }
             return conventions;
-        }
-
-        private MorphiaInstanceCreator creator() {
-            return creator;
         }
 
         private DateStorage dateStorage() {
