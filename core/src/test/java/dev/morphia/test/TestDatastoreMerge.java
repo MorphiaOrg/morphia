@@ -44,7 +44,7 @@ public class TestDatastoreMerge extends TestBase {
         Assert.assertEquals(version + 1, test2.version);
         test1 = ds.find(Test1.class).filter(eq("_id", test1.id)).first();
 
-        Assert.assertNotNull(test1.name);//fails
+        Assert.assertNotNull(test1.name);
     }
 
     @Test

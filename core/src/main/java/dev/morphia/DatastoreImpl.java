@@ -121,8 +121,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> DeleteResult delete(T entity, DeleteOptions options) {
         if (entity instanceof Class<?>) {
-            throw new MappingException(format("Did you mean to delete all documents? Try ds.find(%s.class).delete()",
-                entity.getClass().getName()));
+            throw new MappingException(format(Sofia.deleteWithClass(entity.getClass().getName())));
         }
         Object id = mapper.getId(entity);
         return id != null
