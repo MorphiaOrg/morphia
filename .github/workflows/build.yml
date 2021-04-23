@@ -34,7 +34,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}
+          name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}-${{matrix.driver}}
           path: |
             core/target/**/*.log
             core/target/**/*.err
