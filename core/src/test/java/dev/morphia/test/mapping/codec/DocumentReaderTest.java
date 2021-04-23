@@ -1,6 +1,7 @@
 package dev.morphia.test.mapping.codec;
 
 import com.mongodb.client.MongoCollection;
+import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
@@ -164,6 +165,39 @@ public class DocumentReaderTest extends TestBase {
     }
 
     @Test
+    public void testNestedByteArray() {
+        HasByteArray hasByteArray = new HasByteArray();
+        hasByteArray.data = new byte[]{1, 2, 3};
+        HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
+        hasNestedByteArray.nested = hasByteArray;
+        getDs().save(hasNestedByteArray);
+        Document first = getDs().getMapper().getCollection(HasNestedByteArray.class)
+                                .withDocumentClass(Document.class)
+                                .find().first();
+        getDs().getMapper().fromDocument(HasNestedByteArray.class, first);
+    }
+
+    @Test
+    public void testNestedByteArrayWithInterceptor() {
+        HasByteArray hasByteArray = new HasByteArray();
+        hasByteArray.data = new byte[]{1, 2, 3};
+        HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
+        hasNestedByteArray.nested = hasByteArray;
+        getDs().save(hasNestedByteArray);
+        EntityInterceptor interceptor = new EntityInterceptor() {
+        };
+        try {
+            getDs().getMapper().addInterceptor(interceptor);
+            Document first = getDs().getMapper().getCollection(HasNestedByteArray.class)
+                                    .withDocumentClass(Document.class)
+                                    .find().first();
+            getDs().getMapper().fromDocument(HasNestedByteArray.class, first);
+        } finally {
+            getDs().getMapper().getInterceptors().remove(interceptor);
+        }
+    }
+
+    @Test
     public void testDates() {
         final TimeEntity entity = new TimeEntity();
         entity.myInstant = Instant.now();
@@ -282,6 +316,13 @@ public class DocumentReaderTest extends TestBase {
         @Id
         private ObjectId id;
         private byte[] data;
+    }
+
+    @Entity
+    private static class HasNestedByteArray {
+        @Id
+        private ObjectId id;
+        private HasByteArray nested;
     }
 
     @Entity

@@ -79,18 +79,31 @@ public class DocumentReader implements BsonReader {
             Object binary = stage().value();
             if (binary instanceof UUID) {
                 return (byte) ((UUID) binary).version();
+            } else if (binary instanceof Binary) {
+                return ((Binary) binary).getType();
             } else {
                 return ((BsonBinary) binary).getType();
             }
         } finally {
             mark.reset();
         }
-
     }
 
     @Override
     public int peekBinarySize() {
-        return stage().<BsonBinary>value().getData().length;
+        BsonReaderMark mark = getMark();
+        try {
+            Object value = stage().value();
+            if (value instanceof UUID) {
+                return 16;
+            } else if (value instanceof Binary) {
+                return ((Binary) value).getData().length;
+            } else {
+                return ((BsonBinary) value).getData().length;
+            }
+        } finally {
+            mark.reset();
+        }
     }
 
     @Override
