@@ -1,0 +1,45 @@
+= Generated Code
+
+A lot of reflection is done every time a morphia application starts up.
+Quarkus has really highlighted how much can be gained by memoizing that work at build time.
+With that in mind here are a few places to consider generating code (initially via critter) in the 3 .x timeframe:
+
+. The codecs are the obvious place to start.
+So much reflection is done to read and write values from/to an entity.
+This work can be reduced by generating codecs where the work to read from a propert and write to the document is generated such that it calls the getter and writes to the doc with the precomputed mapped name and then vice versa for reading from the database.
+A common base should suffice for each entity's codec with methods needed to do the targeted reading and writing.
++
+Writing to the database would be a simple iteration of each property model and then subsequent writes to the `BsonWriter`.
+Reading from the database would likely need a switch statement since that process is driven by what's in the document.
+But a switch with generated call to the setter would be straight forward.
++
+It should be noted that this would likely be constrained *only* to those who use the getter/setter option for mapping.
+Accessing fields directly would be a nonstarter unless the fields were public.
+
+. The `EntityModel` and `PropertyModel` type could also be generated.
+Here, things like the property name and field name could be "inlined" such that those methods could just return constants since those values can be computed at build time.
+Subsequently, annotation "instances" could be generated to similarly return constant values without having to inspect the "live" annotation on the class/method at runtime.
+
+. Less obviously, the `Mapper` could be generated. in this scenario, it would need to subclass the current `Mapper` to preserve compatibility but could be generated with a prepopulated list of `EntityModel` as generated in the previous bullet.
+By subclassing the current `Mapper` we could still support dynamic mapping of, say, externally defined types.
+But such mapping is rare (and new) and would be a negligible cost compared to the savings of the generated models.
+Doing this would alleviate the problem of trying to share a mapping between two datastores without having to redo the mapping each time.
+
+. All of this would need to be facilitated by a maven plugin and probably a gradle plugin just for symmetry.
+Lessons learned from the critter plugins should make this much less painful than in times past.
+Potential configuration options to consider for the plugins
+* Mapper name -- The generated mapper needs to be called *something*.
+The default name could be `${artifactId}Mapper` which might suffice.
+But giving the option to configure would be more user friendly.
+* packages -- which packages to scan vs the default of just checking every class for `@Entity`.
+The savings aren't likely to be huge here but in a large project, this could shave some build time.
+* destination package -- give a 'global' package to generate the codecs in. without this each codec could end up in the entity's package + `.codec` by default
+* external entities -- this is ambitious, but perhaps the option to specify the external type and the `@Entity` values to generate codecs and models for those external types, too?
+** Perhaps leave this for a later version
+** What about the index annotations? validations? caps?
+* Support classes -- an option to toggle generating "support" classes like index and validation builders.
+Not every project will need or want them.
+
+. It's been on the issues list for a while but, perhaps in light of the last point, generate index builders, validation builders, etc.
+for each entity type.
+This would solve the configuration problem of trying to specify *all* of that in a pom file.
