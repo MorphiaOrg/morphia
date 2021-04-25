@@ -1,4 +1,4 @@
-= Querying (Legacy)"
+= Querying (Legacy)
 
 [WARNING]
 ====
