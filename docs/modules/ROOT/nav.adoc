@@ -6,10 +6,10 @@
 
 * xref:configuration.adoc[Configuration]
 * xref:querying.adoc[Querying]
-* xref:querying-old.adoc[Querying (Deprecated)]
+* xref:querying-old.adoc[Querying (Legacy)]
 * xref:textSearch.adoc[Text Search]
 * xref:updating.adoc[Updating]
-* xref:updating-old.adoc[Updating (Deprecated)]
+* xref:updating-old.adoc[Updating (Legacy)]
 * xref:aggregation.adoc[Aggregation]
 * xref:transactions.adoc[Transactions]
 * xref:annotations.adoc[Annotations]

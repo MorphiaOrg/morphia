@@ -1,4 +1,4 @@
-= Updating (Deprecated)
+= Updating (Legacy)
 
 There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.
 

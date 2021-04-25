@@ -1,5 +1,4 @@
-= Querying (Deprecated)"
-= Querying (Deprecated)"
+= Querying (Legacy)"
 
 [WARNING]
 ====
@@ -263,14 +262,14 @@ getDs().save(user);
 
 ContainsRenamedFields found = getDs()
     .find(ContainsRenamedFields.class)
-    .project("first_name", true)
+    .projection().include("first_name")
     .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
 
 found = getDs()
     .find(ContainsRenamedFields.class)
-    .project("firstName", true)
+    .projection().include("first_name")
     .get();
 Assert.assertNotNull(found.firstName);
 Assert.assertNull(found.lastName);
