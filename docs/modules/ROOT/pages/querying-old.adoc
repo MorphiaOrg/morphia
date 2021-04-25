@@ -1,5 +1,4 @@
-= Querying (Deprecated)"
-= Querying (Deprecated)"
+= Querying (Legacy)"
 
 [WARNING]
 ====
