@@ -30,8 +30,13 @@ public class LookupCodec extends StageCodec<Lookup> {
                 writer.writeString("from", collection.getNamespace().getCollectionName());
             }
 
-            writer.writeString("localField", value.getLocalField());
-            writer.writeString("foreignField", value.getForeignField());
+            if (value.getPipeline().size() == 0) {
+                writer.writeString("localField", value.getLocalField());
+                writer.writeString("foreignField", value.getForeignField());
+            } else {
+                value(getMapper(), writer, "let", value.getVariables(), encoderContext);
+                value(getMapper(), writer, "pipeline", value.getPipeline(), encoderContext);
+            }
             writer.writeString("as", value.getAs());
         });
     }
