@@ -5,6 +5,10 @@ import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
 /**
  * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for
  * processing. To each input document, the $lookup stage adds a new array field whose elements are the matching documents from the
@@ -20,6 +24,7 @@ public class Lookup extends Stage {
     private String foreignField;
     private String as;
     private DocumentExpression variables;
+    private List<Stage> pipeline;
 
     protected Lookup(Class<?> fromType) {
         super("$lookup");
@@ -150,6 +155,28 @@ public class Lookup extends Stage {
      */
     public Lookup localField(String localField) {
         this.localField = localField;
+        return this;
+    }
+
+    /**
+     * @return the embeded pipeline
+     * @morphia.internal
+     */
+    public List<Stage> getPipeline() {
+        return pipeline;
+    }
+
+    /**
+     * Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection.
+     * To return all documents, specify an empty pipeline.
+     * <p>
+     * The pipeline cannot include the $out stage or the $merge stage.
+     *
+     * @param stages the stages of the embedded pipeline
+     * @return this
+     */
+    public Lookup pipeline(Stage... stages) {
+        pipeline = asList(stages);
         return this;
     }
 }

@@ -69,6 +69,7 @@ import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
 import static dev.morphia.query.experimental.filters.Filters.gt;
 import static dev.morphia.query.experimental.filters.Filters.type;
+import static dev.morphia.query.experimental.filters.Filters.expr;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.bson.Document.parse;
@@ -397,6 +398,48 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
+    public void testLookupWithPipeline() {
+        // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
+        insert("orders", List.of(
+                parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
+                parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
+                parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
+
+        insert("warehouses", List.of(
+                parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
+                parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
+                parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
+                parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
+                parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
+
+        List<Document> actual = getDs().aggregate("orders")
+                .lookup(from("warehouses")
+                        .let("order_item", field("item"))
+                        .let("order_qty", field("ordered"))
+                        .as("stockdata")
+                        .pipeline(
+                                Match.on(
+                                        expr(
+                                                Expressions.of().field(
+                                                        "$and",
+                                                        array(Expressions.of().field("$eq", array(field("stock"), field("$order_item"))), Expressions.of().field("$gte", array(field("instock"), field("$order_qty"))))
+
+                                                ))),
+                                Projection.of()
+                                        .exclude("stock_item")
+                                        .exclude("_id")))
+                .execute(Document.class, new AggregationOptions().readConcern(ReadConcern.LOCAL))
+                .toList();
+
+        List<Document> expected = List.of(
+                parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 120 }, { 'warehouse' : 'B', 'instock' : 60 } ] }"),
+                parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }"),
+                parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }"));
+
+        assertDocumentEquals(actual, expected);
+    }
+
+    @Test
     public void testMerge() {
         checkMinServerVersion(4.2);
 
@@ -508,32 +551,6 @@ public class TestAggregation extends TestBase {
 
         assertNotNull(stats);
     }
-
-/*
-    @Test
-    public void testLookupWithPipeline() {
-        insert("orders", List.of(
-            parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
-            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
-            parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
-
-        insert("warehouses", List.of(
-            parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
-            parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
-            parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
-            parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
-            parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
-
-        getDs().aggregate("orders")
-               .lookup(Lookup.from("warehouses")
-                             .let("order_item", field("item"))
-                             .let("order_qty", field("ordered"))
-                             .pipeline(
-                          Match.on(getDs().find()
-                                       .expr())
-                               ))
-    }
-*/
 
     @Test
     public void testProjection() {
