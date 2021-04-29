@@ -15,6 +15,7 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
 
 /**
+ * @param <T> the entity type
  * @morphia.internal
  * @since 2.2
  */
@@ -23,6 +24,12 @@ public class MergingEncoder<T> extends EntityEncoder {
     private final DocumentWriter setOperations = new DocumentWriter();
     private Update<T> update;
 
+    /**
+     * @param query        the query
+     * @param morphiaCodec the codec
+     * @morphia.internal
+     * @since 2.2
+     */
     public MergingEncoder(Query<T> query, MorphiaCodec<T> morphiaCodec) {
         super(morphiaCodec);
         this.query = query;
@@ -47,7 +54,7 @@ public class MergingEncoder<T> extends EntityEncoder {
     }
 
     @Override
-    protected void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext, PropertyModel idModel) {
+    protected void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext, @Nullable PropertyModel idModel) {
     }
 
     @Override
