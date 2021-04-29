@@ -26,10 +26,13 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.MergingEncoder;
+import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
+import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.experimental.updates.UpdateOperators;
@@ -290,41 +293,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> T merge(T entity, InsertOneOptions options) {
-        final Object id = mapper.getId(entity);
-        if (id == null) {
-            throw new MappingException("Could not get id for " + entity.getClass().getName());
-        }
-
-        final EntityModel model = mapper.getEntityModel(entity.getClass());
-        final PropertyModel versionProperty = model.getVersionProperty();
-        Long oldVersion = null;
-        long newVersion = -1;
-
-        if (versionProperty != null) {
-            oldVersion = (Long) versionProperty.getValue(entity);
-            newVersion = oldVersion == null ? 1L : oldVersion + 1;
-        }
-
-        final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
-        if (newVersion != -1) {
-            updateVersion(entity, versionProperty, newVersion);
-            query.filter(eq(versionProperty.getMappedName(), oldVersion));
-        }
-
-        UpdateResult execute = query.update(UpdateOperators.set(entity))
-                                    .execute(new UpdateOptions()
-                                                 .clientSession(findSession(options))
-                                                 .writeConcern(options.writeConcern()));
-        if (execute.getModifiedCount() != 1) {
-            updateVersion(entity, versionProperty, oldVersion);
-            if (versionProperty != null) {
-                throw new VersionMismatchException(entity.getClass(), id);
-            }
-            throw new UpdateException("Nothing updated");
-        }
-
-        return (T) find(entity.getClass()).filter(eq("_id", id)).iterator(new FindOptions().limit(1)).next();
+    public <T> void insert(T entity, InsertOneOptions options) {
+        insert(mapper.getCollection(entity.getClass()), entity, options);
     }
 
     @Override
@@ -411,11 +381,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> void insert(T entity, InsertOneOptions options) {
-        insert(mapper.getCollection(entity.getClass()), entity, options);
-    }
-
-    @Override
     public <T> void insert(List<T> entities, InsertManyOptions options) {
         if (!entities.isEmpty()) {
             Class<?> type = entities.get(0).getClass();
@@ -432,6 +397,52 @@ public class DatastoreImpl implements AdvancedDatastore {
                 mongoCollection.insertMany(session, entities, options.getOptions());
             }
         }
+    }
+
+    @Override
+    public <T> T merge(T entity, InsertOneOptions options) {
+        final Object id = mapper.getId(entity);
+        if (id == null) {
+            throw new MappingException("Could not get id for " + entity.getClass().getName());
+        }
+
+        final EntityModel model = mapper.getEntityModel(entity.getClass());
+        final PropertyModel versionProperty = model.getVersionProperty();
+        Long oldVersion = null;
+        long newVersion = -1;
+
+        if (versionProperty != null) {
+            oldVersion = (Long) versionProperty.getValue(entity);
+            newVersion = oldVersion == null ? 1L : oldVersion + 1;
+        }
+
+        final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
+        if (newVersion != -1) {
+            updateVersion(entity, versionProperty, newVersion);
+            query.filter(eq(versionProperty.getMappedName(), oldVersion));
+        }
+
+        Update<T> update;
+        if (!options.unsetMissing()) {
+            update = query.update(UpdateOperators.set(entity));
+        } else {
+            update = ((MergingEncoder<T>) new MergingEncoder(query,
+                (MorphiaCodec) mapper.getCodecRegistry().get(entity.getClass())))
+                         .encode(entity);
+        }
+        UpdateResult execute = update
+                                   .execute(new UpdateOptions()
+                                                .clientSession(findSession(options))
+                                                .writeConcern(options.writeConcern()));
+        if (execute.getModifiedCount() != 1) {
+            updateVersion(entity, versionProperty, oldVersion);
+            if (versionProperty != null) {
+                throw new VersionMismatchException(entity.getClass(), id);
+            }
+            throw new UpdateException("Nothing updated");
+        }
+
+        return (T) find(entity.getClass()).filter(eq("_id", id)).iterator(new FindOptions().limit(1)).next();
     }
 
     /**

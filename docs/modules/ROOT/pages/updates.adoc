@@ -133,3 +133,24 @@ datastore
         .returnDocument(ReturnDocument.BEFORE));
 ----
 
+=== Merges
+
+A specialized form of an update is the xref:javadoc:dev/morphia/Datastore.html#merge(T)#[`merge()`] operation.
+A common case in scenarios where multiple subsystems or applications share a database is where one part of the system might only have part of a larger entity. e.g., a
+https://en.wikipedia.org/wiki/Data_transfer_object[DTO] might only have a subset of an entity necessary to perform the duties of that particular service.
+Updating the database with the partial entities can be problematic because it forces the application developer to inspect an entity's state and manually generate the correct set of update statements.
+Morphia 2.0 introduced the `merge()` method to help cover this case.
+Using `merge()`, a specific set of `$set` updates are issued to only save fields as defined on the DTO type itself (which, of course, must be annotated with `@Entity` like any other Morphia type).
+
+This is useful but limited.
+What happens to any null fields and empty Lists?
+Using `MapperOptions`, Morphia can be configured to not persist those fields such that they never end up in the database.
+In the above scenario, however, Morphia is only issuing a `$set` for the fields that should be persisted which leaves potentially outdated information in the database. (e.g., say a process removes the final item from a List in memory.  `merge()` would actually *leave* that last item in the database because an update would not be issued for that empty List.) In 2.2, a new value is added to the optional xref:javadoc:dev/morphia/InsertOneOptions.html#[InsertOneOptions] to account for this.
+
+Setting xref:javadoc:dev/morphia/InsertOneOptions.html#unsetMissing(boolean)#[unsetMissing] to true, any property defined on an entity that isn't getting updated via `$set` will have a `$unset` operator defined.
+This will result in null properties and empty Lists getting removed from documents in the database so that they will reflect the current state in memory.
+
+Regardless of whether this value is set, `merge()` will issue a `find()` for that entity and will return the updated form from the database.
+Without using `unsetMissing()`, this is useful for merging the in memory state with what's in the database.
+With this value set, the two should be identical, of course.
+

@@ -65,6 +65,16 @@ public abstract class UpdateBase<T> {
     }
 
     /**
+     * Adds a new operator to this update operation.
+     *
+     * @param operator the new operator
+     * @since 2.2
+     */
+    public void add(UpdateOperator operator) {
+        updates.add(operator);
+    }
+
+    /**
      * @return the operations listed
      */
     public Document toDocument() {
@@ -77,17 +87,13 @@ public abstract class UpdateBase<T> {
         return operations.toDocument();
     }
 
-    protected void add(UpdateOperator operator) {
-        updates.add(operator);
+    @Override
+    public String toString() {
+        return toDocument().toString();
     }
 
     protected MongoCollection<T> getCollection() {
         return collection;
-    }
-
-    @Override
-    public String toString() {
-        return toDocument().toString();
     }
 
     protected Datastore getDatastore() {

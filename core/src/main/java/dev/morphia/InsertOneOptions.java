@@ -31,6 +31,7 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
     private com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
+    private boolean unset;
 
     /**
      * Creates a new options wrapper
@@ -80,6 +81,28 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
     @Nullable
     public Boolean getBypassDocumentValidation() {
         return options.getBypassDocumentValidation();
+    }
+
+    /**
+     * Applies the rules for storing null/empty values for fields no present in the object to be merged.
+     *
+     * @param unset true if the rules should be applied
+     * @return this
+     * @since 2.2
+     */
+    public InsertOneOptions unsetMissing(boolean unset) {
+        this.unset = unset;
+        return this;
+    }
+
+    /**
+     * Applies the rules for storing null/empty values for fields not present in the object to be merged.
+     *
+     * @return this true if the rules for storing null/empty values should be applied
+     * @since 2.2
+     */
+    public boolean unsetMissing() {
+        return unset;
     }
 
     /**

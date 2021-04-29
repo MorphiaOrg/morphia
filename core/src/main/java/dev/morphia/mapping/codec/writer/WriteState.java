@@ -15,20 +15,7 @@ abstract class WriteState {
         this.previous = writer.state(this);
     }
 
-    //    @Override
-    //    public String toString() {
-    //        return stateToString("");
-    //    }
-
-    //    void apply(Object value) {
-    //        throw new UnsupportedOperationException();
-    //    }
-
     protected abstract String state();
-
-    //    protected String stateToString(String s) {
-    //        return s;
-    //    }
 
     protected String toString(Object value) {
         if (value instanceof Document) {
@@ -46,7 +33,7 @@ abstract class WriteState {
 
             return joiner.toString();
         } else {
-            return value.toString();
+            return String.valueOf(value);
         }
     }
 

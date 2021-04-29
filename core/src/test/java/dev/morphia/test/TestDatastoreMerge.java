@@ -16,6 +16,7 @@ package dev.morphia.test;
 
 
 import dev.morphia.Datastore;
+import dev.morphia.InsertOneOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
@@ -68,13 +69,35 @@ public class TestDatastoreMerge extends TestBase {
         Assert.assertEquals(te2.position, merge.position);
     }
 
+    @Test
+    public void testMergeWithUnset() {
+        final Merger te = new Merger();
+        te.name = "test1";
+        te.foo = "bar";
+        te.position = 1;
+        getDs().save(te);
+
+        Assert.assertEquals(getDs().find(te.getClass()).count(), 1);
+
+        //only update the position field with merge, normally save would override the whole object.
+        final Merger te2 = new Merger();
+        te2.id = te.id;
+        te2.position = 5;
+        Merger merge = getDs().merge(te2, new InsertOneOptions().unsetMissing(true));
+
+        Assert.assertNull(merge.name);
+        Assert.assertNull(merge.foo);
+        Assert.assertEquals(te2.id, merge.id);
+        Assert.assertEquals(te2.position, merge.position);
+    }
+
     @Entity
     private static class Merger {
         @Id
         private ObjectId id;
         private String name;
         private String foo;
-        private int position;
+        private Integer position;
     }
 
     @Entity(value = "test", useDiscriminator = false)
