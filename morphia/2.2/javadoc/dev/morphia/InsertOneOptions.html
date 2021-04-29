@@ -238,7 +238,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -436,13 +436,27 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="InsertOneOptions
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unsetMissing()">unsetMissing</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Applies the rules for storing null/empty values for fields not present in the object to be merged.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unsetMissing(boolean)">unsetMissing</a></span>​(boolean&nbsp;unset)</code></th>
+<td class="colLast">
+<div class="block">Applies the rules for storing null/empty values for fields no present in the object to be merged.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>com.mongodb.WriteConcern</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern()">writeConcern</a></span>()</code></th>
 <td class="colLast">
 <div class="block">The write concern to use for the insertion.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
 <td class="colLast">
@@ -581,6 +595,40 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the bypass document level validation flag</dd>
+</dl>
+</li>
+</ul>
+<a id="unsetMissing(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unsetMissing</h4>
+<pre class="methodSignature">public&nbsp;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;unsetMissing​(boolean&nbsp;unset)</pre>
+<div class="block">Applies the rules for storing null/empty values for fields no present in the object to be merged.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>unset</code> - true if the rules should be applied</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
+<a id="unsetMissing()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unsetMissing</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;unsetMissing()</pre>
+<div class="block">Applies the rules for storing null/empty values for fields not present in the object to be merged.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this true if the rules for storing null/empty values should be applied</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
 </dl>
 </li>
 </ul>

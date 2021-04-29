@@ -220,7 +220,7 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.2-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="LifecycleEncoder.html">2.2-SNAPSHOT</a>
+    <a class="version is-current" href="MergingEncoder.html">2.2-SNAPSHOT</a>
     <a class="version is-missing" href="../../../../../../../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../../../../../../../2.0/index.html">2.0</a>
     <a class="version is-missing" href="../../../../../../../1.6/index.html">1.6</a>
@@ -232,13 +232,13 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="LifecycleEncoder (Morphia)";
+            parent.document.title="MergingEncoder (Morphia)";
         }
     }
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -265,7 +265,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/LifecycleEncoder.html">Use</a></li>
+<li><a href="class-use/MergingEncoder.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
@@ -328,14 +328,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.mapping.codec.pojo</a></div>
-<h2 title="Class LifecycleEncoder" class="title">Class LifecycleEncoder</h2>
+<h2 title="Class MergingEncoder" class="title">Class MergingEncoder&lt;T&gt;</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.mapping.codec.pojo.LifecycleEncoder</li>
+<li>dev.morphia.mapping.codec.pojo.MergingEncoder&lt;T&gt;</li>
 </ul>
 </li>
 </ul>
@@ -343,11 +343,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the entity type</dd>
+</dl>
+<dl>
 <dt>All Implemented Interfaces:</dt>
 <dd><code>org.bson.codecs.Encoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">LifecycleEncoder</span>
+<pre>public class <span class="typeNameLabel">MergingEncoder&lt;T&gt;</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -396,10 +400,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">LifecycleEncoder</a></span>​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&nbsp;morphiaCodec)</code></th>
-<td class="colLast">
-<div class="block">Creates a new encoder</div>
-</td>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.query.Query,dev.morphia.mapping.codec.pojo.MorphiaCodec)">MergingEncoder</a></span>​(<a href="../../../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MergingEncoder.html" title="type parameter in MergingEncoder">T</a>&gt;&nbsp;query,
+              <a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="MergingEncoder.html" title="type parameter in MergingEncoder">T</a>&gt;&nbsp;morphiaCodec)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
 </li>
@@ -420,19 +423,24 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../../../query/Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="MergingEncoder.html" title="type parameter in MergingEncoder">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(java.lang.Object)">encode</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">encode</a></span>​(org.bson.BsonWriter&nbsp;writer,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encodeDiscriminator(org.bson.BsonWriter,dev.morphia.mapping.codec.pojo.EntityModel)">encodeDiscriminator</a></span>​(org.bson.BsonWriter&nbsp;writer,
                    <a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encodeIdProperty(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel)">encodeIdProperty</a></span>​(org.bson.BsonWriter&nbsp;writer,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance,
@@ -440,7 +448,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
                 <a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;idModel)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encodeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">encodeValue</a></span>​(org.bson.BsonWriter&nbsp;writer,
            org.bson.codecs.EncoderContext&nbsp;encoderContext,
@@ -448,17 +456,17 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected <a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMorphiaCodec()">getMorphiaCodec</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">writeValue</a></span>​(org.bson.BsonWriter&nbsp;writer,
           org.bson.codecs.EncoderContext&nbsp;encoderContext,
@@ -509,20 +517,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.mapping.codec.pojo.MorphiaCodec)">
+<a id="<init>(dev.morphia.query.Query,dev.morphia.mapping.codec.pojo.MorphiaCodec)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>LifecycleEncoder</h4>
-<pre>public&nbsp;LifecycleEncoder​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&nbsp;morphiaCodec)</pre>
-<div class="block">Creates a new encoder</div>
+<h4>MergingEncoder</h4>
+<pre>public&nbsp;MergingEncoder​(<a href="../../../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="MergingEncoder.html" title="type parameter in MergingEncoder">T</a>&gt;&nbsp;query,
+                      <a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="MergingEncoder.html" title="type parameter in MergingEncoder">T</a>&gt;&nbsp;morphiaCodec)</pre>
 <dl>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>query</code> - the query</dd>
 <dd><code>morphiaCodec</code> - the codec</dd>
-</dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </li>
@@ -535,6 +544,51 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="encode(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>encode</h4>
+<pre class="methodSignature">public&nbsp;<a href="../../../query/Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="MergingEncoder.html" title="type parameter in MergingEncoder">T</a>&gt;&nbsp;encode​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</pre>
+</li>
+</ul>
+<a id="encodeDiscriminator(org.bson.BsonWriter,dev.morphia.mapping.codec.pojo.EntityModel)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>encodeDiscriminator</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;encodeDiscriminator​(org.bson.BsonWriter&nbsp;writer,
+                                   <a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</pre>
+</li>
+</ul>
+<a id="encodeIdProperty(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>encodeIdProperty</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;encodeIdProperty​(org.bson.BsonWriter&nbsp;writer,
+                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance,
+                                org.bson.codecs.EncoderContext&nbsp;encoderContext,
+                                @Nullable
+                                <a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;idModel)</pre>
+</li>
+</ul>
+<a id="encodeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>encodeValue</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;encodeValue​(org.bson.BsonWriter&nbsp;writer,
+                           org.bson.codecs.EncoderContext&nbsp;encoderContext,
+                           <a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;model,
+                           @Nullable
+                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
+</li>
+</ul>
 <a id="encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
@@ -563,16 +617,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="encodeDiscriminator(org.bson.BsonWriter,dev.morphia.mapping.codec.pojo.EntityModel)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>encodeDiscriminator</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;encodeDiscriminator​(org.bson.BsonWriter&nbsp;writer,
-                                   <a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</pre>
-</li>
-</ul>
 <a id="getMorphiaCodec()">
 <!--   -->
 </a>
@@ -580,32 +624,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>getMorphiaCodec</h4>
 <pre class="methodSignature">protected&nbsp;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&nbsp;getMorphiaCodec()</pre>
-</li>
-</ul>
-<a id="encodeIdProperty(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>encodeIdProperty</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;encodeIdProperty​(org.bson.BsonWriter&nbsp;writer,
-                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance,
-                                org.bson.codecs.EncoderContext&nbsp;encoderContext,
-                                @Nullable
-                                <a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;idModel)</pre>
-</li>
-</ul>
-<a id="encodeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>encodeValue</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;encodeValue​(org.bson.BsonWriter&nbsp;writer,
-                           org.bson.codecs.EncoderContext&nbsp;encoderContext,
-                           <a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;model,
-                           @Nullable
-                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 </li>
 </ul>
 <a id="writeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">
@@ -644,7 +662,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/LifecycleEncoder.html">Use</a></li>
+<li><a href="class-use/MergingEncoder.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>

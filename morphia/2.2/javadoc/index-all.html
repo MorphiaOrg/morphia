@@ -421,7 +421,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#add(dev.morphia.query.Criteria...)">add(Criteria...)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/UpdateBase.html#add(dev.morphia.query.experimental.updates.UpdateOperator)">add(UpdateOperator)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/UpdateBase.html" title="class in dev.morphia.query">UpdateBase</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Adds a new operator to this update operation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/Projection.html#add(java.lang.Object...)">add(Object...)</a></span> - Static method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/Projection.html" title="class in dev.morphia.aggregation">Projection</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -2697,6 +2699,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/experimental/filters/TextSearchFilter.html#encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Mapper, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.query.experimental.filters.<a href="dev/morphia/query/experimental/filters/TextSearchFilter.html" title="class in dev.morphia.query.experimental.filters">TextSearchFilter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html#encode(java.lang.Object)">encode(Object)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html" title="class in dev.morphia.mapping.codec.pojo">MergingEncoder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyHandler.html#encode(java.lang.Object)">encode(Object)</a></span> - Method in interface dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyHandler.html" title="interface in dev.morphia.mapping.codec.pojo">PropertyHandler</a></dt>
 <dd>
 <div class="block">Encodes the value</div>
@@ -2753,6 +2757,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Encodes a value in to this Writer</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html#encodeDiscriminator(org.bson.BsonWriter,dev.morphia.mapping.codec.pojo.EntityModel)">encodeDiscriminator(BsonWriter, EntityModel)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html" title="class in dev.morphia.mapping.codec.pojo">MergingEncoder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/references/ReferenceCodec.html#encodeId(dev.morphia.mapping.Mapper,dev.morphia.Datastore,java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">encodeId(Mapper, Datastore, Object, PropertyModel)</a></span> - Static method in class dev.morphia.mapping.codec.references.<a href="dev/morphia/mapping/codec/references/ReferenceCodec.html" title="class in dev.morphia.mapping.codec.references">ReferenceCodec</a></dt>
 <dd>
 <div class="block">Encodes a value</div>
@@ -2761,6 +2767,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Encodes a value</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html#encodeIdProperty(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel)">encodeIdProperty(BsonWriter, Object, EncoderContext, PropertyModel)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html" title="class in dev.morphia.mapping.codec.pojo">MergingEncoder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/stages/AddFieldsCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.experimental.stages.AddFields,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, AddFields, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.codecs.stages.<a href="dev/morphia/aggregation/experimental/codecs/stages/AddFieldsCodec.html" title="class in dev.morphia.aggregation.experimental.codecs.stages">AddFieldsCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/stages/AutoBucketCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.experimental.stages.AutoBucket,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, AutoBucket, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.codecs.stages.<a href="dev/morphia/aggregation/experimental/codecs/stages/AutoBucketCodec.html" title="class in dev.morphia.aggregation.experimental.codecs.stages">AutoBucketCodec</a></dt>
@@ -2818,6 +2826,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/stages/UnwindCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.experimental.stages.Unwind,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, Unwind, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.codecs.stages.<a href="dev/morphia/aggregation/experimental/codecs/stages/UnwindCodec.html" title="class in dev.morphia.aggregation.experimental.codecs.stages">UnwindCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/stages/StageCodec.html#encodeStage(org.bson.BsonWriter,T,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, T, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.codecs.stages.<a href="dev/morphia/aggregation/experimental/codecs/stages/StageCodec.html" title="class in dev.morphia.aggregation.experimental.codecs.stages">StageCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html#encodeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">encodeValue(BsonWriter, EncoderContext, PropertyModel, Object)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html" title="class in dev.morphia.mapping.codec.pojo">MergingEncoder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/IndexExpression.html#end(int)">end(int)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/IndexExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IndexExpression</a></dt>
 <dd>
@@ -6188,6 +6198,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/ObjectExpressions.MergeObjects.html#%3Cinit%3E()">MergeObjects()</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/ObjectExpressions.MergeObjects.html" title="class in dev.morphia.aggregation.experimental.expressions">ObjectExpressions.MergeObjects</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html" title="class in dev.morphia.mapping.codec.pojo"><span class="typeNameLink">MergingEncoder</span></a>&lt;<a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html" title="type parameter in MergingEncoder">T</a>&gt; - Class in <a href="dev/morphia/mapping/codec/pojo/package-summary.html">dev.morphia.mapping.codec.pojo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html#%3Cinit%3E(dev.morphia.query.Query,dev.morphia.mapping.codec.pojo.MorphiaCodec)">MergingEncoder(Query&lt;T&gt;, MorphiaCodec&lt;T&gt;)</a></span> - Constructor for class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/MergingEncoder.html" title="class in dev.morphia.mapping.codec.pojo">MergingEncoder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/Expressions.html#meta()">meta()</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/Expressions.html" title="class in dev.morphia.aggregation.experimental.expressions">Expressions</a></dt>
 <dd>
 <div class="block">Returns the metadata associated with a document in a pipeline operations, e.g.</div>
@@ -9301,6 +9315,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/stages/UnsetCodec.html#%3Cinit%3E(dev.morphia.mapping.Mapper)">UnsetCodec(Mapper)</a></span> - Constructor for class dev.morphia.aggregation.experimental.codecs.stages.<a href="dev/morphia/aggregation/experimental/codecs/stages/UnsetCodec.html" title="class in dev.morphia.aggregation.experimental.codecs.stages">UnsetCodec</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#unsetMissing()">unsetMissing()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
+<dd>
+<div class="block">Applies the rules for storing null/empty values for fields not present in the object to be merged.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#unsetMissing(boolean)">unsetMissing(boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
+<dd>
+<div class="block">Applies the rules for storing null/empty values for fields no present in the object to be merged.</div>
+</dd>
 <dt><a href="dev/morphia/query/experimental/updates/UnsetOperator.html" title="class in dev.morphia.query.experimental.updates"><span class="typeNameLink">UnsetOperator</span></a> - Class in <a href="dev/morphia/query/experimental/updates/package-summary.html">dev.morphia.query.experimental.updates</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/experimental/updates/UnsetOperator.html#%3Cinit%3E(java.lang.String)">UnsetOperator(String)</a></span> - Constructor for class dev.morphia.query.experimental.updates.<a href="dev/morphia/query/experimental/updates/UnsetOperator.html" title="class in dev.morphia.query.experimental.updates">UnsetOperator</a></dt>

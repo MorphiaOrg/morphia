@@ -380,6 +380,32 @@ This can be changed by passing in a <code>ModifyOptions</code> reference to the 
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_merges"><a class="anchor" href="#_merges"></a>Merges</h3>
+<div class="paragraph">
+<p>A specialized form of an update is the <a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page"><code>merge()</code></a> operation.
+A common case in scenarios where multiple subsystems or applications share a database is where one part of the system might only have part of a larger entity. e.g., a
+<a href="https://en.wikipedia.org/wiki/Data_transfer_object">DTO</a> might only have a subset of an entity necessary to perform the duties of that particular service.
+Updating the database with the partial entities can be problematic because it forces the application developer to inspect an entity&#8217;s state and manually generate the correct set of update statements.
+Morphia 2.0 introduced the <code>merge()</code> method to help cover this case.
+Using <code>merge()</code>, a specific set of <code>$set</code> updates are issued to only save fields as defined on the DTO type itself (which, of course, must be annotated with <code>@Entity</code> like any other Morphia type).</p>
+</div>
+<div class="paragraph">
+<p>This is useful but limited.
+What happens to any null fields and empty Lists?
+Using <code>MapperOptions</code>, Morphia can be configured to not persist those fields such that they never end up in the database.
+In the above scenario, however, Morphia is only issuing a <code>$set</code> for the fields that should be persisted which leaves potentially outdated information in the database. (e.g., say a process removes the final item from a List in memory.  <code>merge()</code> would actually <strong>leave</strong> that last item in the database because an update would not be issued for that empty List.) In 2.2, a new value is added to the optional <a href="javadoc/dev/morphia/InsertOneOptions.html" class="page">InsertOneOptions</a> to account for this.</p>
+</div>
+<div class="paragraph">
+<p>Setting <a href="javadoc/dev/morphia/InsertOneOptions.html#unsetMissing(boolean)#" class="page">unsetMissing</a> to true, any property defined on an entity that isn&#8217;t getting updated via <code>$set</code> will have a <code>$unset</code> operator defined.
+This will result in null properties and empty Lists getting removed from documents in the database so that they will reflect the current state in memory.</p>
+</div>
+<div class="paragraph">
+<p>Regardless of whether this value is set, <code>merge()</code> will issue a <code>find()</code> for that entity and will return the updated form from the database.
+Without using <code>unsetMissing()</code>, this is useful for merging the in memory state with what&#8217;s in the database.
+With this value set, the two should be identical, of course.</p>
+</div>
+</div>
 </div>
 </div>
 </article>

@@ -375,9 +375,11 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>protected void</code></td>
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(dev.morphia.query.experimental.updates.UpdateOperator)">add</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;operator)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Adds a new operator to this update operation.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected com.mongodb.client.MongoCollection&lt;<a href="UpdateBase.html" title="type parameter in UpdateBase">T</a>&gt;</code></td>
@@ -433,6 +435,22 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="add(dev.morphia.query.experimental.updates.UpdateOperator)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>add</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;add​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;operator)</pre>
+<div class="block">Adds a new operator to this update operation.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>operator</code> - the new operator</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
 <a id="toDocument()">
 <!--   -->
 </a>
@@ -446,24 +464,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="add(dev.morphia.query.experimental.updates.UpdateOperator)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>add</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;add​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;operator)</pre>
-</li>
-</ul>
-<a id="getCollection()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getCollection</h4>
-<pre class="methodSignature">protected&nbsp;com.mongodb.client.MongoCollection&lt;<a href="UpdateBase.html" title="type parameter in UpdateBase">T</a>&gt;&nbsp;getCollection()</pre>
-</li>
-</ul>
 <a id="toString()">
 <!--   -->
 </a>
@@ -475,6 +475,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></dd>
 </dl>
+</li>
+</ul>
+<a id="getCollection()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCollection</h4>
+<pre class="methodSignature">protected&nbsp;com.mongodb.client.MongoCollection&lt;<a href="UpdateBase.html" title="type parameter in UpdateBase">T</a>&gt;&nbsp;getCollection()</pre>
 </li>
 </ul>
 <a id="getDatastore()">

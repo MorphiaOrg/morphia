@@ -1173,28 +1173,26 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(dev.morphia.int
 </dl>
 </li>
 </ul>
-<a id="merge(java.lang.Object,dev.morphia.InsertOneOptions)">
+<a id="insert(java.lang.Object,dev.morphia.InsertOneOptions)">
 <!--   -->
-</a><a id="merge(T,dev.morphia.InsertOneOptions)">
+</a><a id="insert(T,dev.morphia.InsertOneOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>merge</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;merge​(T&nbsp;entity,
-                   <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">Datastore</a></code></span></div>
-<div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
+<h4>insert</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;insert​(T&nbsp;entity,
+                       <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#insert(T,dev.morphia.InsertOneOptions)">Datastore</a></code></span></div>
+<div class="block">Inserts an entity in to the mapped collection.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dd><code><a href="Datastore.html#insert(T,dev.morphia.InsertOneOptions)">insert</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the type of the entity</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entity</code> - the entity to merge back in to the database</dd>
-<dd><code>options</code> - the options to apply</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new merged entity.  NOTE:  this is a database fetch.</dd>
+<dd><code>entity</code> - the entity to insert</dd>
+<dd><code>options</code> - the options to apply to the insert operation</dd>
 </dl>
 </li>
 </ul>
@@ -1390,29 +1388,6 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(dev.morphia.int
 </dl>
 </li>
 </ul>
-<a id="insert(java.lang.Object,dev.morphia.InsertOneOptions)">
-<!--   -->
-</a><a id="insert(T,dev.morphia.InsertOneOptions)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>insert</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;insert​(T&nbsp;entity,
-                       <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#insert(T,dev.morphia.InsertOneOptions)">Datastore</a></code></span></div>
-<div class="block">Inserts an entity in to the mapped collection.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#insert(T,dev.morphia.InsertOneOptions)">insert</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type of the entity</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entity</code> - the entity to insert</dd>
-<dd><code>options</code> - the options to apply to the insert operation</dd>
-</dl>
-</li>
-</ul>
 <a id="insert(java.util.List,dev.morphia.InsertManyOptions)">
 <!--   -->
 </a>
@@ -1431,6 +1406,31 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(dev.morphia.int
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>entities</code> - the entities to insert</dd>
 <dd><code>options</code> - the options to apply to the insert operation</dd>
+</dl>
+</li>
+</ul>
+<a id="merge(java.lang.Object,dev.morphia.InsertOneOptions)">
+<!--   -->
+</a><a id="merge(T,dev.morphia.InsertOneOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>merge</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;merge​(T&nbsp;entity,
+                   <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">Datastore</a></code></span></div>
+<div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the entity</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to merge back in to the database</dd>
+<dd><code>options</code> - the options to apply</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new merged entity.  NOTE:  this is a database fetch.</dd>
 </dl>
 </li>
 </ul>
