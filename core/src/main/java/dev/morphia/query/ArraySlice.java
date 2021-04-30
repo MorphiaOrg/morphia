@@ -22,8 +22,6 @@ import java.util.Arrays;
 
 /**
  * Defines array slicing options for query projections.
- *
- * @query.filter $slice
  */
 public class ArraySlice {
     private final Integer limit;
@@ -33,6 +31,7 @@ public class ArraySlice {
      * Specifies the number of array elements to return
      *
      * @param limit the number of array elements to return
+     * @query.filter $slice
      */
     public ArraySlice(int limit) {
         this.limit = limit;
@@ -41,8 +40,9 @@ public class ArraySlice {
     /**
      * Specifies the number of array elements to skip.
      *
-     * @param skip the number of array elements to skip
+     * @param skip  the number of array elements to skip
      * @param limit the number of array elements to return
+     * @query.filter $slice
      */
     public ArraySlice(int skip, int limit) {
         this.skip = skip;
