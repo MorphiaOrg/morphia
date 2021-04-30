@@ -4,9 +4,6 @@ import org.bson.Document;
 
 /**
  * Defines $meta expression object
- *
- * @aggregation.expression $meta
- * @query.filter $meta
  */
 public class Meta {
 
@@ -48,6 +45,9 @@ public class Meta {
     /**
      * @param field - the field to project meta data
      * @return instance of 'indexKey' Meta
+     * @aggregation.expression $meta
+     * @query.filter $meta
+     * @since 2.2
      */
     public static Meta indexKey(String field) {
         return new Meta("indexKey", field);
@@ -56,6 +56,9 @@ public class Meta {
     /**
      * @param field - the field to project meta data
      * @return instance of 'searchHighlights' Meta
+     * @aggregation.expression $meta
+     * @query.filter $meta
+     * @since 2.2
      */
     public static Meta searchHighlights(String field) {
         return new Meta("searchHighlights", field);
@@ -64,6 +67,9 @@ public class Meta {
     /**
      * @param field - the field to project meta data
      * @return instance of 'searchScore' Meta
+     * @aggregation.expression $meta
+     * @query.filter $meta
+     * @since 2.2
      */
     public static Meta searchScore(String field) {
         return new Meta("searchScore", field);
@@ -72,6 +78,9 @@ public class Meta {
     /**
      * @param field - the field to project meta data
      * @return instance of 'textScore' Meta
+     * @aggregation.expression $meta
+     * @query.filter $meta
+     * @since 2.2
      */
     public static Meta textScore(String field) {
         return new Meta("textScore", field);

@@ -7,6 +7,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.value
 /**
  * Defines helper fields for referencing system variables
  */
+@SuppressWarnings("unused")
 public final class SystemVariables {
     /**
      * A variable that returns the current timestamp value.
@@ -14,6 +15,8 @@ public final class SystemVariables {
      * <p>
      * CLUSTER_TIME returns the same value for all members of the deployment and remains the same throughout all stages of
      * the pipeline.
+     *
+     * @aggregation.expression $$CLUSTER_TIME
      */
     public static final Expression CLUSTER_TIME = value("$$CLUSTER_TIME");
     /**
@@ -22,23 +25,33 @@ public final class SystemVariables {
      * <p>
      * CURRENT is modifiable. However, since $<field> is equivalent to $$CURRENT.<field>, rebinding CURRENT changes the
      * meaning of $ accesses.
+     *
+     * @aggregation.expression $$CURRENT
      */
     public static final Expression CURRENT = value("$$CURRENT");
     /**
      * One of the allowed results of a $redact expression.
+     *
+     * @aggregation.expression $$DESCEND
      */
     public static final Expression DESCEND = value("$$DESCEND");
     /**
      * One of the allowed results of a $redact expression.
+     *
+     * @aggregation.expression $$KEEP
      */
     public static final Expression KEEP = value("$$KEEP");
     /**
      * A variable that returns the current datetime value. NOW returns the same value for all members of the deployment and remains
      * the same throughout all stages of the aggregation pipeline.
+     *
+     * @aggregation.expression $$NOW
      */
     public static final Expression NOW = value("$$NOW");
     /**
      * One of the allowed results of a $redact expression.
+     *
+     * @aggregation.expression $$PRUNE
      */
     public static final Expression PRUNE = value("$$PRUNE");
     /**
@@ -46,10 +59,14 @@ public final class SystemVariables {
      * set to the variable REMOVE is excluded from the output.
      * <p>
      * For an example of its usage, see Conditionally Exclude Fields.
+     *
+     * @aggregation.expression $$REMOVE
      */
     public static final Expression REMOVE = value("$$REMOVE");
     /**
      * References the root document, i.e. the top-level document, currently being processed in the aggregation pipeline stage.
+     *
+     * @aggregation.expression $$ROOT
      */
     public static final Expression ROOT = value("$$ROOT");
 
