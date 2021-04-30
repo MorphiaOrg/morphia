@@ -22,7 +22,8 @@ import java.util.Arrays;
 
 /**
  * Defines array slicing options for query projections.
- * @mongodb.driver.manual /reference/operator/projection/slice/ $slice
+ *
+ * @query.filter $slice
  */
 public class ArraySlice {
     private final Integer limit;
