@@ -22,6 +22,7 @@ import static org.bson.Document.parse;
  *
  * @since 2.0
  */
+@SuppressWarnings("unused")
 public final class Filters {
     private Filters() {
     }

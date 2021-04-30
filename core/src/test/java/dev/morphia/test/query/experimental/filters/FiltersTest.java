@@ -7,6 +7,7 @@ import com.mongodb.client.result.InsertManyResult;
 import dev.morphia.aggregation.experimental.expressions.ComparisonExpressions;
 import dev.morphia.aggregation.experimental.expressions.Miscellaneous;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.Meta;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
@@ -38,6 +39,7 @@ import static dev.morphia.query.experimental.filters.Filters.nin;
 import static dev.morphia.query.experimental.filters.Filters.nor;
 import static dev.morphia.query.experimental.filters.Filters.or;
 import static dev.morphia.query.experimental.filters.Filters.size;
+import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
@@ -45,6 +47,37 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 public class FiltersTest extends TestBase {
+    @Test
+    public void testMeta() {
+        MongoCollection<Document> articles = getDatabase().getCollection("articles");
+        articles.insertMany(List.of(
+            new Document("_id", 1).append("title", "cakes and ale"),
+            new Document("_id", 2).append("title", "more cakes"),
+            new Document("_id", 3).append("title", "bread"),
+            new Document("_id", 4).append("title", "some cakes"),
+            new Document("_id", 5).append("title", "two cakes to go"),
+            new Document("_id", 6).append("title", "pie")));
+        articles.createIndex(new Document("title", "text"));
+
+        FindOptions options = new FindOptions().logQuery();
+        lazyAssert(() -> getDs().getLoggedQuery(options),
+            () -> {
+                List<Document> list = getDs().find("articles", Document.class)
+                                             .disableValidation()
+                                             .filter(text("cake"))
+                                             .iterator(options.projection()
+                                                              .project(Meta.textScore("score")))
+                                             .toList();
+                assertEquals(list.size(), 4);
+                Document document = list.stream().filter(d -> {
+                    return d.get("_id").equals(4);
+                })
+                                        .findFirst()
+                                        .get();
+                assertEquals(document.get("score"), 1.0);
+            });
+
+    }
 
     @Test
     public void testAnd() {
