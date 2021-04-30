@@ -57,18 +57,15 @@ public class Filter {
      * @morphia.internal
      */
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        String path = path(mapper);
-        if (path != null) {
-            document(writer, path, () -> {
-                if (not) {
-                    document(writer, "$not", () -> {
-                        writeNamedValue(name, getValue(mapper), mapper, writer, context);
-                    });
-                } else {
+        document(writer, path(mapper), () -> {
+            if (not) {
+                document(writer, "$not", () -> {
                     writeNamedValue(name, getValue(mapper), mapper, writer, context);
-                }
-            });
-        }
+                });
+            } else {
+                writeNamedValue(name, getValue(mapper), mapper, writer, context);
+            }
+        });
     }
 
     /**
@@ -155,7 +152,6 @@ public class Filter {
         return format("%s %s %s", field, name, value);
     }
 
-    @Nullable
     protected String path(Mapper mapper) {
         return pathTarget(mapper).translatedPath();
     }
