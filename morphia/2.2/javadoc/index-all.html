@@ -4314,8 +4314,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/experimental/filters/Filter.html#getName()">getName()</a></span> - Method in class dev.morphia.query.experimental.filters.<a href="dev/morphia/query/experimental/filters/Filter.html" title="class in dev.morphia.query.experimental.filters">Filter</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.MetaDataKeyword.html#getName()">getName()</a></span> - Method in enum dev.morphia.query.<a href="dev/morphia/query/Meta.MetaDataKeyword.html" title="enum in dev.morphia.query">Meta.MetaDataKeyword</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/GeoNear.html#getNear()">getNear()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/GeoNear.html" title="class in dev.morphia.aggregation">GeoNear</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -5166,6 +5164,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">A helper class for dealing with index definitions</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/IndexHelper.html#%3Cinit%3E(dev.morphia.mapping.Mapper)">IndexHelper(Mapper)</a></span> - Constructor for class dev.morphia.annotations.<a href="dev/morphia/annotations/IndexHelper.html" title="class in dev.morphia.annotations">IndexHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#indexKey(java.lang.String)">indexKey(String)</a></span> - Static method in class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/ArrayExpressions.html#indexOfArray(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">indexOfArray(Expression, Expression)</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/ArrayExpressions.html" title="class in dev.morphia.aggregation.experimental.expressions">ArrayExpressions</a></dt>
 <dd>
@@ -6216,15 +6216,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#%3Cinit%3E(dev.morphia.query.Meta.MetaDataKeyword)">Meta(Meta.MetaDataKeyword)</a></span> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
 <dd>
-<div class="block">Specify the meta</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#%3Cinit%3E(dev.morphia.query.Meta.MetaDataKeyword,java.lang.String)">Meta(Meta.MetaDataKeyword, String)</a></span> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#%3Cinit%3E(java.lang.String,java.lang.String)">Meta(String, String)</a></span> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
+<dd>
+<div class="block">Specify the meta values to use</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/stages/Sort.Direction.html#META">META</a></span> - dev.morphia.aggregation.experimental.stages.<a href="dev/morphia/aggregation/experimental/stages/Sort.Direction.html" title="enum in dev.morphia.aggregation.experimental.stages">Sort.Direction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/Meta.MetaDataKeyword.html" title="enum in dev.morphia.query"><span class="typeNameLink">Meta.MetaDataKeyword</span></a> - Enum in <a href="dev/morphia/query/package-summary.html">dev.morphia.query</a></dt>
 <dd>
-<div class="block">Representing specified metadata keyword</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><a href="dev/morphia/aggregation/experimental/expressions/impls/MetaExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls"><span class="typeNameLink">MetaExpression</span></a> - Class in <a href="dev/morphia/aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></dt>
 <dd>&nbsp;</dd>
@@ -8210,6 +8216,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationComment">use <a href="dev/morphia/query/experimental/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#searchHighlights(java.lang.String)">searchHighlights(String)</a></span> - Static method in class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#searchScore(java.lang.String)">searchScore(String)</a></span> - Static method in class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateFromParts.html#second(int)">second(int)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateFromParts.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateFromParts</a></dt>
 <dd>
 <div class="block">Optional</div>
@@ -8895,10 +8905,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/TextBuilder.html#%3Cinit%3E()">TextBuilder()</a></span> - Constructor for class dev.morphia.annotations.<a href="dev/morphia/annotations/TextBuilder.html" title="class in dev.morphia.annotations">TextBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.MetaDataKeyword.html#textScore">textScore</a></span> - dev.morphia.query.<a href="dev/morphia/query/Meta.MetaDataKeyword.html" title="enum in dev.morphia.query">Meta.MetaDataKeyword</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#textScore()">textScore()</a></span> - Static method in class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
 <dd>
-<div class="block">factory method for textScore metaDataKeyword</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.html#textScore(java.lang.String)">textScore(String)</a></span> - Static method in class dev.morphia.query.<a href="dev/morphia/query/Meta.html" title="class in dev.morphia.query">Meta</a></dt>
 <dd>&nbsp;</dd>
@@ -9655,6 +9667,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.MetaDataKeyword.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum dev.morphia.query.<a href="dev/morphia/query/Meta.MetaDataKeyword.html" title="enum in dev.morphia.query">Meta.MetaDataKeyword</a></dt>
 <dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Type.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum dev.morphia.query.<a href="dev/morphia/query/Type.html" title="enum in dev.morphia.query">Type</a></dt>
@@ -9731,6 +9744,7 @@ the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Meta.MetaDataKeyword.html#values()">values()</a></span> - Static method in enum dev.morphia.query.<a href="dev/morphia/query/Meta.MetaDataKeyword.html" title="enum in dev.morphia.query">Meta.MetaDataKeyword</a></dt>
 <dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
 </dd>
