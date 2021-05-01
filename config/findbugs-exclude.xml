@@ -15,6 +15,9 @@
         </Not>
     </Match>
     <Match>
+        <Class name=".*Impl"/>
+    </Match>
+    <Match>
         <Class name="~.*\.*Test.*"/>
         <Not>
             <Bug code="IJU"/>
@@ -22,6 +25,10 @@
     </Match>
     <Match>
         <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="dev.morphia.query.internal.MorphiaCursor"/>
+        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
     </Match>
     <Match>
         <Class name="~.*\.*Test.*"/>

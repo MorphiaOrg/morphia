@@ -36,7 +36,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.geo.PlaceWithLegacyCoords;
 import dev.morphia.geo.model.City;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.query.MorphiaCursor;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
