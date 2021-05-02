@@ -43,7 +43,7 @@ import static java.lang.String.format;
  * @param <T> the type
  * @morphia.internal
  */
-public class MorphiaQuery<T> implements Query<T> {
+class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final Datastore datastore;
     private final Class<T> type;

@@ -79,6 +79,12 @@
         "class": "dev.morphia.mapping.InstanceCreatorFactoryImpl",
         "justification": "internal implementation class"
       }
+    ],
+    "visibilityReduced": [
+      {
+        "class": "dev.morphia.query.LegacyQuery",
+        "justification": "internal implementation class"
+      }
     ]
   },
   "field": {

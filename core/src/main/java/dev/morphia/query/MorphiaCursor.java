@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * @param <T> the original type being iterated
+ * @since 2.2
  */
 public class MorphiaCursor<T> implements MongoCursor<T> {
     private final MongoCursor<T> wrapped;

@@ -1,4 +1,4 @@
-package dev.morphia.query.legacy;
+package dev.morphia.query;
 
 
 import com.jayway.awaitility.Awaitility;
@@ -9,6 +9,7 @@ import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
+import dev.morphia.TestBase;
 import dev.morphia.TestDatastore.FacebookUser;
 import dev.morphia.TestDatastore.Keys;
 import dev.morphia.TestMapper.CustomId;
@@ -23,21 +24,12 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
-import dev.morphia.query.ArraySlice;
-import dev.morphia.query.CountOptions;
-import dev.morphia.query.DefaultQueryFactory;
-import dev.morphia.query.FindOptions;
-import dev.morphia.query.LegacyQuery;
-import dev.morphia.query.LegacyQueryFactory;
-import dev.morphia.query.MorphiaCursor;
-import dev.morphia.query.Query;
-import dev.morphia.query.QueryFactory;
-import dev.morphia.query.ValidationException;
 import dev.morphia.testmodel.Hotel;
 import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -79,7 +71,16 @@ import static org.junit.Assert.fail;
 
 
 @SuppressWarnings({"unchecked", "unused", "removal"})
-public class TestLegacyQuery extends LegacyTestBase {
+public class TestLegacyQuery extends TestBase {
+    @After
+    public void setDefaultQuery() {
+        getDs().setQueryFactory(new DefaultQueryFactory());
+    }
+
+    @Before
+    public void setLegacyQuery() {
+        getDs().setQueryFactory(new LegacyQueryFactory());
+    }
 
     @Test
     @Before

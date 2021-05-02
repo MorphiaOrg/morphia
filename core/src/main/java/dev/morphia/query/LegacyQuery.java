@@ -39,9 +39,10 @@ import static java.lang.String.format;
  * Implementation of Query
  *
  * @param <T> The type we will be querying for, and returning.
+ * @morphia.internal
  */
 @SuppressWarnings("removal")
-public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
+class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;
     private final Class<T> clazz;
