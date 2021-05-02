@@ -30,7 +30,7 @@ public class LookupCodec extends StageCodec<Lookup> {
                 writer.writeString("from", collection.getNamespace().getCollectionName());
             }
 
-            if (value.getPipeline().size() == 0) {
+            if (value.getPipeline() == null) {
                 writer.writeString("localField", value.getLocalField());
                 writer.writeString("foreignField", value.getForeignField());
             } else {

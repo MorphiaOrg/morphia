@@ -162,6 +162,7 @@ public class Lookup extends Stage {
      * @return the embeded pipeline
      * @morphia.internal
      */
+    @Nullable
     public List<Stage> getPipeline() {
         return pipeline;
     }
@@ -174,6 +175,7 @@ public class Lookup extends Stage {
      *
      * @param stages the stages of the embedded pipeline
      * @return this
+     * @since 2.2
      */
     public Lookup pipeline(Stage... stages) {
         pipeline = asList(stages);
