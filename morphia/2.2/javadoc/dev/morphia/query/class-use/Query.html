@@ -611,28 +611,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Uses of <a href="../Query.html" title="interface in dev.morphia.query">Query</a> in <a href="../package-summary.html">dev.morphia.query</a></h3>
 <table class="useSummary">
-<caption><span>Classes in <a href="../package-summary.html">dev.morphia.query</a> that implement <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Class</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a>&lt;T&gt;</span></code></th>
-<td class="colLast">
-<div class="block">Implementation of Query</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../MorphiaQuery.html" title="class in dev.morphia.query">MorphiaQuery</a>&lt;T&gt;</span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
 <caption><span>Methods in <a href="../package-summary.html">dev.morphia.query</a> that return <a href="../Query.html" title="interface in dev.morphia.query">Query</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -702,31 +680,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#disableValidation()">disableValidation</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaQuery.</span><code><span class="memberNameLink"><a href="../MorphiaQuery.html#disableValidation()">disableValidation</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#disableValidation()">disableValidation</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Turns off validation (for all calls made after)</div>
 </td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#enableValidation()">enableValidation</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaQuery.</span><code><span class="memberNameLink"><a href="../MorphiaQuery.html#enableValidation()">enableValidation</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
@@ -736,30 +694,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#filter(java.lang.String,java.lang.Object)">filter</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;condition,
-      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaQuery.</span><code><span class="memberNameLink"><a href="../MorphiaQuery.html#filter(dev.morphia.query.experimental.filters.Filter...)">filter</a></span>​(<a href="../experimental/filters/Filter.html" title="class in dev.morphia.query.experimental.filters">Filter</a>...&nbsp;additional)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaQuery.</span><code><span class="memberNameLink"><a href="../MorphiaQuery.html#filter(java.lang.String,java.lang.Object)">filter</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;condition,
-      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>default <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#filter(dev.morphia.query.experimental.filters.Filter...)">filter</a></span>​(<a href="../experimental/filters/Filter.html" title="class in dev.morphia.query.experimental.filters">Filter</a>...&nbsp;filters)</code></th>
 <td class="colLast">
 <div class="block">Adds filters to this query.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>default <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#filter(java.lang.String,java.lang.Object)">filter</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;condition,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
@@ -769,14 +710,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../UpdateBase.html" title="type parameter in UpdateBase">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">UpdateBase.</span><code><span class="memberNameLink"><a href="../UpdateBase.html#getQuery()">getQuery</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#retrieveKnownFields()">retrieveKnownFields</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -787,28 +723,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationComment">use <a href="../FindOptions.html#projection()"><code>FindOptions.projection()</code></a></div>
 </div>
 </td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#search(java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;search)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#search(java.lang.String,java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;search,
-      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaQuery.</span><code><span class="memberNameLink"><a href="../MorphiaQuery.html#search(java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;searchText)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaQuery.</span><code><span class="memberNameLink"><a href="../MorphiaQuery.html#search(java.lang.String,java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;searchText,
-      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</code></th>
-<td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
@@ -839,16 +753,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="col">Description</th>
 </tr>
 </tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#field(java.lang.String)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../MorphiaQuery.html" title="type parameter in MorphiaQuery">T</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaQuery.</span><code><span class="memberNameLink"><a href="../MorphiaQuery.html#field(java.lang.String)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr class="altColor">
 <td class="colFirst"><code>default <a href="../FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#field(java.lang.String)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
