@@ -344,12 +344,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>dev.morphia.internal.ReadConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code>, <code>dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code>, <code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
 </dl>
 <hr>
 <pre>public final class <span class="typeNameLabel">FindOptions</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;, dev.morphia.internal.ReadConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</pre>
+implements <a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;, <a href="../internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</pre>
 <div class="block">The options to apply to a find operation (also commonly referred to as a query).</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -780,8 +780,8 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <li class="blockList"><a id="methods.inherited.from.class.dev.morphia.internal.ReadConfigurable">
 <!--   -->
 </a>
-<h3>Methods inherited from interface&nbsp;dev.morphia.internal.ReadConfigurable</h3>
-<code>prepare</code></li>
+<h3>Methods inherited from interface&nbsp;dev.morphia.internal.<a href="../internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a></h3>
+<code><a href="../internal/ReadConfigurable.html#prepare(com.mongodb.client.MongoCollection)">prepare</a></code></li>
 </ul>
 </li>
 </ul>
@@ -885,7 +885,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <div class="block">Set the client session to use for the insert.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>clientSession</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/SessionConfigurable.html#clientSession(com.mongodb.client.ClientSession)">clientSession</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clientSession</code> - the client session</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -905,7 +905,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <div class="block">The client session to use for the insertion.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>clientSession</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/SessionConfigurable.html#clientSession()">clientSession</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the client session</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -1177,11 +1177,11 @@ public&nbsp;<a href="Projection.html" title="class in dev.morphia.query">Project
 <li class="blockList">
 <h4>getReadConcern</h4>
 <pre class="methodSignature">public&nbsp;com.mongodb.ReadConcern&nbsp;getReadConcern()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.ReadConfigurable</code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../internal/ReadConfigurable.html#getReadConcern()">ReadConfigurable</a></code></span></div>
 <div class="block">Gets the read concern</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getReadConcern</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.ReadConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/ReadConfigurable.html#getReadConcern()">getReadConcern</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the read concern</dd>
 </dl>
@@ -1196,7 +1196,7 @@ public&nbsp;<a href="Projection.html" title="class in dev.morphia.query">Project
 <pre class="methodSignature">public&nbsp;com.mongodb.ReadPreference&nbsp;getReadPreference()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getReadPreference</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.ReadConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/ReadConfigurable.html#getReadPreference()">getReadPreference</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the read preference</dd>
 </dl>
@@ -1209,11 +1209,11 @@ public&nbsp;<a href="Projection.html" title="class in dev.morphia.query">Project
 <li class="blockList">
 <h4>readConcern</h4>
 <pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readConcern​(com.mongodb.ReadConcern&nbsp;readConcern)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.ReadConfigurable</code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../internal/ReadConfigurable.html#readConcern(com.mongodb.ReadConcern)">ReadConfigurable</a></code></span></div>
 <div class="block">Sets the read concern to apply</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>readConcern</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.ReadConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/ReadConfigurable.html#readConcern(com.mongodb.ReadConcern)">readConcern</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>readConcern</code> - the read concern</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -1228,11 +1228,11 @@ public&nbsp;<a href="Projection.html" title="class in dev.morphia.query">Project
 <li class="blockList">
 <h4>readPreference</h4>
 <pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readPreference​(com.mongodb.ReadPreference&nbsp;readPreference)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.ReadConfigurable</code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../internal/ReadConfigurable.html#readPreference(com.mongodb.ReadPreference)">ReadConfigurable</a></code></span></div>
 <div class="block">Sets the read preference to apply</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>readPreference</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.ReadConfigurable&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/ReadConfigurable.html#readPreference(com.mongodb.ReadPreference)">readPreference</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a>&lt;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>readPreference</code> - the read preference</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

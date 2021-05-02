@@ -349,12 +349,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code>, <code>dev.morphia.internal.WriteConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code>, <code><a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">FindAndDeleteOptions</span>
 extends com.mongodb.client.model.FindOneAndDeleteOptions
-implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;, dev.morphia.internal.WriteConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</pre>
+implements <a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;, <a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</pre>
 <div class="block">Defines options to use for find and delete operations</div>
 </li>
 </ul>
@@ -483,8 +483,8 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOpt
 <li class="blockList"><a id="methods.inherited.from.class.dev.morphia.internal.WriteConfigurable">
 <!--   -->
 </a>
-<h3>Methods inherited from interface&nbsp;dev.morphia.internal.WriteConfigurable</h3>
-<code>getWriteConcern, prepare</code></li>
+<h3>Methods inherited from interface&nbsp;dev.morphia.internal.<a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a></h3>
+<code><a href="../internal/WriteConfigurable.html#getWriteConcern()">getWriteConcern</a>, <a href="../internal/WriteConfigurable.html#prepare(com.mongodb.client.MongoCollection)">prepare</a></code></li>
 </ul>
 </li>
 </ul>
@@ -528,11 +528,11 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOpt
 <li class="blockList">
 <h4>clientSession</h4>
 <pre class="methodSignature">public&nbsp;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&nbsp;clientSession​(com.mongodb.client.ClientSession&nbsp;clientSession)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.SessionConfigurable</code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../internal/SessionConfigurable.html#clientSession(com.mongodb.client.ClientSession)">SessionConfigurable</a></code></span></div>
 <div class="block">Set the client session to use for the insert.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>clientSession</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/SessionConfigurable.html#clientSession(com.mongodb.client.ClientSession)">clientSession</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clientSession</code> - the client session</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -547,11 +547,11 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOpt
 <li class="blockList">
 <h4>clientSession</h4>
 <pre class="methodSignature">public&nbsp;com.mongodb.client.ClientSession&nbsp;clientSession()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.SessionConfigurable</code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../internal/SessionConfigurable.html#clientSession()">SessionConfigurable</a></code></span></div>
 <div class="block">The client session to use for the insertion.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>clientSession</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/SessionConfigurable.html#clientSession()">clientSession</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the client session</dd>
 </dl>
@@ -694,7 +694,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOpt
 <div class="block">Sets the write concern</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>writeConcern</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.WriteConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/WriteConfigurable.html#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>writeConcern</code> - the write concern</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -710,11 +710,11 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindAndDeleteOpt
 <h4>writeConcern</h4>
 <pre class="methodSignature">@Nullable
 public&nbsp;com.mongodb.WriteConcern&nbsp;writeConcern()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.WriteConfigurable</code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../internal/WriteConfigurable.html#writeConcern()">WriteConfigurable</a></code></span></div>
 <div class="block">The write concern to use.  By default the write concern configured for the MongoCollection instance will be used.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>writeConcern</code>&nbsp;in interface&nbsp;<code>dev.morphia.internal.WriteConfigurable&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dd><code><a href="../internal/WriteConfigurable.html#writeConcern()">writeConcern</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the write concern to use</dd>
 </dl>
