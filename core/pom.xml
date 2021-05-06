@@ -20,9 +20,23 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
+                        <id>test-jar</id>
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>annotations</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>annotations</classifier>
+                            <includes>
+                                <include>**/annotations/*.class</include>
+                            </includes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
