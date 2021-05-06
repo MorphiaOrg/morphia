@@ -50,6 +50,23 @@ repositories {
 }
 ----
 
+== Annotations Only
+
+If you would like to import just the annotations that Morphia uses, you can simply add a new dependency to your project and use the classifer `annotations`.
+Using maven that would look like this:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependencies>
+    <dependency>
+        <groupId>dev.morphia.morphia</groupId>
+        <artifactId>morphia-core</artifactId>
+        <version>{version}</version>
+        <classifier>annotations</classifier>
+    </dependency>
+</dependencies>
+----
+
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
