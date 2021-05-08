@@ -1,6 +1,5 @@
 package dev.morphia;
 
-import com.antwerkz.bottlerocket.BottleRocket;
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
 import com.antwerkz.bottlerocket.clusters.SingleNode;
@@ -31,12 +30,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
-import static java.lang.String.format;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
 @SuppressWarnings("WeakerAccess")
@@ -71,7 +65,7 @@ public abstract class TestBase {
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-            Version version = mongodb != null ? Version.valueOf(mongodb) : BottleRocket.DEFAULT_VERSION;
+            Version version = Version.valueOf(mongodb);
             final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
                                          ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
                                          : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
@@ -102,10 +96,6 @@ public abstract class TestBase {
         return mongoClient;
     }
 
-    public boolean isReplicaSet() {
-        return runIsMaster().get("setName") != null;
-    }
-
     @Before
     public void setUp() {
         cleanup();
@@ -115,14 +105,6 @@ public abstract class TestBase {
     @After
     public void tearDown() {
         cleanup();
-    }
-
-    protected void assertDocumentEquals(Object expected, Object actual) {
-        assertDocumentEquals("", expected, actual);
-    }
-
-    protected void checkMinServerVersion(double version) {
-        assumeTrue(serverIsAtLeastVersion(version));
     }
 
     protected void cleanup() {
@@ -173,82 +155,8 @@ public abstract class TestBase {
         return mapper.getEntityModel(aClass);
     }
 
-    protected double getServerVersion() {
-        String version = (String) getMongoClient()
-                                      .getDatabase("admin")
-                                      .runCommand(new Document("serverStatus", 1))
-                                      .get("version");
-        return Double.parseDouble(version.substring(0, 3));
-    }
-
-    /**
-     * @param version must be a major version, e.g. 1.8, 2,0, 2.2
-     * @return true if server is at least specified version
-     */
-    protected boolean serverIsAtLeastVersion(double version) {
-        return getServerVersion() >= version;
-    }
-
     protected String toString(Document document) {
         return document.toJson(getMapper().getCodecRegistry().get(Document.class));
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void assertDocumentEquals(String path, Object expected, Object actual) {
-        assertSameNullity(path, expected, actual);
-        if (expected == null) {
-            return;
-        }
-        assertSameType(path, expected, actual);
-
-        if (expected instanceof Document) {
-            for (Entry<String, Object> entry : ((Document) expected).entrySet()) {
-                final String key = entry.getKey();
-                Object expectedValue = entry.getValue();
-                Object actualValue = ((Document) actual).get(key);
-                assertDocumentEquals(path + "." + key, expectedValue, actualValue);
-            }
-        } else if (expected instanceof List) {
-            List list = (List) expected;
-            List copy = new ArrayList<>((List) actual);
-
-            Object o;
-            for (int i = 0; i < list.size(); i++) {
-                o = list.get(i);
-                boolean found = false;
-                final Iterator other = copy.iterator();
-                while (!found && other.hasNext()) {
-                    try {
-                        String newPath = format("%s[%d]", path, i);
-                        assertDocumentEquals(newPath, o, other.next());
-                        other.remove();
-                        found = true;
-                    } catch (AssertionError ignore) {
-                    }
-                }
-                if (!found) {
-                    fail(format("mismatch found at %s", path));
-                }
-            }
-        } else {
-            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
-        }
-    }
-
-    private void assertSameNullity(String path, Object expected, Object actual) {
-        if (expected == null && actual != null
-            || actual == null && expected != null) {
-            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
-        }
-    }
-
-    private void assertSameType(String path, Object expected, Object actual) {
-        if (expected instanceof List && actual instanceof List) {
-            return;
-        }
-        if (!expected.getClass().equals(actual.getClass())) {
-            assertEquals(format("mismatch found at %s:%n%s", path, expected, actual), expected, actual);
-        }
     }
 
     private void download(URL url, File file) throws IOException {
@@ -282,32 +190,5 @@ public abstract class TestBase {
             e.printStackTrace();
         }
         assumeTrue("Failed to process media files", file.exists());
-    }
-
-    private Document runIsMaster() {
-        return mongoClient.getDatabase("admin")
-                          .runCommand(new Document("ismaster", 1));
-    }
-
-    protected void assertCapped(Class<?> type, Integer max, Integer size) {
-        Document result = getOptions(type);
-        assertTrue(result.getBoolean("capped"));
-        assertEquals(max, result.get("max"));
-        assertEquals(size, result.get("size"));
-    }
-
-    protected Document getOptions(Class<?> type) {
-        MongoCollection<?> collection = getMapper().getCollection(type);
-        Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
-                                                       .append("filter",
-                                                           new Document("name", collection.getNamespace().getCollectionName())));
-
-        Document cursor = (Document) result.get("cursor");
-        List<Document> firstBatch = cursor.getList("firstBatch", Document.class);
-        return firstBatch.size() > 0
-               ? (Document) firstBatch
-                                .get(0)
-                                .get("options")
-               : new Document();
     }
 }
