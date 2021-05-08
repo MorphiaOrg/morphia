@@ -108,35 +108,12 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-    public void fieldNaming() {
-        MapperOptions options = MapperOptions.builder()
-                                             .fieldNaming(NamingStrategy.snakeCase())
-                                             .build();
-        Datastore datastore1 = createDatastore(TestBase.TEST_DB_NAME, options);
-        List<EntityModel> map = datastore1.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        List<PropertyModel> fields = map.get(0).getProperties();
-        validateField(fields, "_id", "id");
-        validateField(fields, "embedded_values", "embeddedValues");
-
-        fields = map.get(1).getProperties();
-        validateField(fields, "_id", "id");
-        validateField(fields, "int_list", "intList");
-
-        options = MapperOptions.builder()
-                               .fieldNaming(NamingStrategy.kebabCase())
-                               .build();
-        final Datastore datastore2 = createDatastore(TestBase.TEST_DB_NAME, options);
-        map = datastore2.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        fields = map.get(0).getProperties();
-        validateField(fields, "_id", "id");
-        validateField(fields, "embedded-values", "embeddedValues");
-
-        fields = map.get(1).getProperties();
-        validateField(fields, "_id", "id");
-        validateField(fields, "int-list", "intList");
-
+    public void propertyNaming() {
+        verify(NamingStrategy.identity(), "embeddedValues", "intList");
+        verify(NamingStrategy.camelCase(), "embeddedValues", "intList");
+        verify(NamingStrategy.kebabCase(), "embedded-values", "int-list");
+        verify(NamingStrategy.lowerCase(), "embeddedvalues", "intlist");
+        verify(NamingStrategy.snakeCase(), "embedded_values", "int_list");
     }
 
     @Test
@@ -529,6 +506,18 @@ public class TestMapping extends TestBase {
     }
 
     @Test
+    public void testMapAsId() {
+        getMapper().map(MapAsId.class);
+
+        final MapAsId mai = new MapAsId();
+        mai.id.put("test", "string");
+        assertNotNull(getDs().save(mai));
+        assertNotNull(getDs().find(MapAsId.class)
+                             .filter(eq("_id", new Document("test", "string")))
+                             .first());
+    }
+
+    @Test
     public void testMapLike() {
         final ContainsMapLike ml = new ContainsMapLike();
         ml.m.put("first", "test");
@@ -695,6 +684,22 @@ public class TestMapping extends TestBase {
         assertNotNull(fields.stream().filter(f -> f.getMappedName().equals(mapped)
                                                   && f.getName().equals(java)),
             mapped);
+    }
+
+    private void verify(NamingStrategy strategy, String embeddedValues, String intList) {
+        withOptions(MapperOptions.builder()
+                                 .propertyNaming(strategy)
+                                 .build(), () -> {
+            List<EntityModel> map = getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
+
+            List<PropertyModel> fields = map.get(0).getProperties();
+            validateField(fields, "_id", "id");
+            validateField(fields, embeddedValues, "embeddedValues");
+
+            fields = map.get(1).getProperties();
+            validateField(fields, "_id", "id");
+            validateField(fields, intList, "intList");
+        });
     }
 
     public enum Enum1 {
@@ -910,6 +915,12 @@ public class TestMapping extends TestBase {
         }
     }
 
+    @Entity
+    private static class MapAsId {
+        @Id
+        private final Map<String, String> id = new HashMap<String, String>();
+    }
+
     @Entity("generic_arrays")
     private static class MyEntity {
         @Id
@@ -961,5 +972,4 @@ public class TestMapping extends TestBase {
         private String field;
         private Long number;
     }
-
 }
