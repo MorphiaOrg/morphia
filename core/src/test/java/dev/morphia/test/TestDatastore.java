@@ -21,14 +21,18 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
+import dev.morphia.test.models.Address;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.CurrentStatus;
 import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Grade;
+import dev.morphia.test.models.Hotel;
+import dev.morphia.test.models.Rectangle;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
@@ -77,6 +81,11 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    public void testCollectionNames() {
+        assertEquals(getMapper().getEntityModel(FacebookUser.class).getCollectionName(), "facebook_users");
+    }
+
+    @Test
     public void testDeleteWithCollation() {
         getDs().save(asList(new FacebookUser(1, "John Doe"),
             new FacebookUser(2, "john doe")));
@@ -114,6 +123,47 @@ public class TestDatastore extends TestBase {
     }
 
     @Test
+    public void testDoesNotExistAfterDelete() {
+        // given
+        long id = System.currentTimeMillis();
+        final long key = getDs().save(new FacebookUser(id, "user 1")).getId();
+
+        // when
+        getDs().find(FacebookUser.class).findAndDelete();
+
+        // then
+        assertNull(getDs().find(FacebookUser.class)
+                          .filter(eq("_id", key))
+                          .first(), "Shouldn't exist after delete");
+    }
+
+    @Test
+    public void testEmbedded() {
+        getDs().find(Hotel.class).findAndDelete();
+        final Hotel borg = new Hotel();
+        borg.setName("Hotel Borg");
+        borg.setStars(4);
+        borg.setTakesCreditCards(true);
+        borg.setStartDate(new Date());
+        borg.setType(Hotel.Type.LEISURE);
+        final Address address = new Address();
+        address.setStreet("Posthusstraeti 11");
+        address.setPostCode("101");
+        borg.setAddress(address);
+
+
+        getDs().save(borg);
+        assertEquals(1, getDs().find(Hotel.class).count());
+        assertNotNull(borg.getId());
+
+        final Hotel hotelLoaded = getDs().find(Hotel.class)
+                                         .filter(eq("_id", borg.getId()))
+                                         .first();
+        assertEquals(borg.getName(), hotelLoaded.getName());
+        assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
+    }
+
+    @Test
     public void testFindAndDeleteWithCollation() {
         getDs().save(asList(new FacebookUser(1, "John Doe"),
             new FacebookUser(2, "john doe")));
@@ -130,6 +180,13 @@ public class TestDatastore extends TestBase {
                                                                .build());
         assertNotNull(query.findAndDelete(options));
         assertNull(query.iterator().tryNext());
+    }
+
+    @Test
+    public void testFindAndDeleteWithNoQueryMatch() {
+        assertNull(getDs().find(FacebookUser.class)
+                          .filter(eq("username", "David S. Pumpkins"))
+                          .findAndDelete());
     }
 
     @Test
@@ -241,6 +298,13 @@ public class TestDatastore extends TestBase {
         assertEquals(result.username, "Ron Swanson");
         assertEquals(user.loginCount, 1);
         assertEquals(user.username, "Ron Swanson");
+    }
+
+    @Test
+    public void testIdUpdatedOnSave() {
+        final Rectangle rect = new Rectangle(10, 10);
+        getDs().save(rect);
+        assertNotNull(rect.getId());
     }
 
     @Test

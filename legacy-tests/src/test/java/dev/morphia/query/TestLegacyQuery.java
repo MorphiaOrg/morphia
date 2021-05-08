@@ -10,8 +10,6 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
-import dev.morphia.TestDatastore.FacebookUser;
-import dev.morphia.TestDatastore.Keys;
 import dev.morphia.TestMapper.CustomId;
 import dev.morphia.TestMapper.UsesCustomIdObject;
 import dev.morphia.annotations.CappedAt;
@@ -1423,6 +1421,29 @@ public class TestLegacyQuery extends TestBase {
         }
     }
 
+    @Entity("facebook_users")
+    public static class FacebookUser {
+        @Reference
+        private final List<FacebookUser> friends = new ArrayList<>();
+        public int loginCount;
+        @Id
+        private long id;
+        private String username;
+
+        public FacebookUser(long id, String name) {
+            this();
+            this.id = id;
+            username = name;
+        }
+
+        public FacebookUser() {
+        }
+
+        public long getId() {
+            return id;
+        }
+    }
+
     @Entity
     private static class GenericKeyValue<T> {
 
@@ -1485,6 +1506,35 @@ public class TestLegacyQuery extends TestBase {
          */
         @Indexed
         private ObjectId value;
+    }
+
+    @Entity
+    @SuppressWarnings({"UnusedDeclaration", "removal"})
+    public static class Keys {
+        @Id
+        private ObjectId id;
+        private List<Key<FacebookUser>> users;
+        private Key<Rectangle> rect;
+
+        private Keys() {
+        }
+
+        public Keys(Key<Rectangle> rectKey, List<Key<FacebookUser>> users) {
+            rect = rectKey;
+            this.users = users;
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public Key<Rectangle> getRect() {
+            return rect;
+        }
+
+        public List<Key<FacebookUser>> getUsers() {
+            return users;
+        }
     }
 
     @Entity
