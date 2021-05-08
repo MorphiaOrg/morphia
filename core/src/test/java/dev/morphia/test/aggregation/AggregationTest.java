@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package dev.morphia.aggregation;
+package dev.morphia.test.aggregation;
 
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.BucketGranularity;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
-import dev.morphia.TestBase;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
 import dev.morphia.aggregation.experimental.stages.Bucket;
@@ -33,19 +32,18 @@ import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.geo.PlaceWithLegacyCoords;
-import dev.morphia.geo.model.City;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
-import dev.morphia.testmodel.User;
+import dev.morphia.test.TestBase;
+import dev.morphia.test.models.User;
+import dev.morphia.test.models.geo.GeoCity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -71,9 +69,6 @@ import static dev.morphia.query.experimental.filters.Filters.gte;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class AggregationTest extends TestBase {
@@ -95,9 +90,9 @@ public class AggregationTest extends TestBase {
         Map<Object, List<Author>> authors = aggregate.toList()
                                                      .stream()
                                                      .collect(Collectors.groupingBy(a -> a.name));
-        Assert.assertEquals("Expecting two results", 2, authors.size());
-        Assert.assertEquals(authors.toString(), List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.get("Dante").get(0).books);
-        Assert.assertEquals(authors.toString(), List.of("The Odyssey", "Iliad"), authors.get("Homer").get(0).books);
+        Assert.assertEquals(authors.size(), 2, "Expecting two results");
+        Assert.assertEquals(authors.get("Dante").get(0).books, List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.toString());
+        Assert.assertEquals(authors.get("Homer").get(0).books, List.of("The Odyssey", "Iliad"), authors.toString());
     }
 
     @Test
@@ -116,23 +111,23 @@ public class AggregationTest extends TestBase {
                                                                              .outputField("count", sum(value(1))))
                                                        .execute(BooksBucketResult.class);
         BooksBucketResult result1 = aggregate.next();
-        assertEquals(result1.getId().min, 4);
-        assertEquals(result1.getId().max, 8);
-        assertEquals(result1.getCount(), 2);
-        assertEquals(result1.authors, singleton("Dante"));
+        Assert.assertEquals(result1.getId().min, 4);
+        Assert.assertEquals(result1.getId().max, 8);
+        Assert.assertEquals(result1.getCount(), 2);
+        Assert.assertEquals(result1.authors, singleton("Dante"));
 
         result1 = aggregate.next();
-        assertEquals(result1.getId().min, 8);
-        assertEquals(result1.getId().max, 32);
-        assertEquals(result1.getCount(), 1);
-        assertEquals(result1.authors, singleton("Homer"));
+        Assert.assertEquals(result1.getId().min, 8);
+        Assert.assertEquals(result1.getId().max, 32);
+        Assert.assertEquals(result1.getCount(), 1);
+        Assert.assertEquals(result1.authors, singleton("Homer"));
 
         result1 = aggregate.next();
-        assertEquals(result1.getId().min, 32);
-        assertEquals(result1.getId().max, 64);
-        assertEquals(result1.getCount(), 1);
-        assertEquals(result1.authors, singleton("Dante"));
-        assertFalse(aggregate.hasNext());
+        Assert.assertEquals(result1.getId().min, 32);
+        Assert.assertEquals(result1.getId().max, 64);
+        Assert.assertEquals(result1.getCount(), 1);
+        Assert.assertEquals(result1.authors, singleton("Dante"));
+        Assert.assertFalse(aggregate.hasNext());
 
     }
 
@@ -150,18 +145,18 @@ public class AggregationTest extends TestBase {
                                                                             .buckets(2))
                                                       .execute(BucketAutoResult.class);
         BucketAutoResult result1 = aggregate.next();
-        assertEquals(result1.id.min, 5);
-        assertEquals(result1.id.max, 21);
-        assertEquals(result1.count, 2);
+        Assert.assertEquals(result1.id.min, 5);
+        Assert.assertEquals(result1.id.max, 21);
+        Assert.assertEquals(result1.count, 2);
         result1 = aggregate.next();
-        assertEquals(result1.id.min, 21);
-        assertEquals(result1.id.max, 40);
-        assertEquals(result1.count, 2);
-        assertFalse(aggregate.hasNext());
+        Assert.assertEquals(result1.id.min, 21);
+        Assert.assertEquals(result1.id.max, 40);
+        Assert.assertEquals(result1.count, 2);
+        Assert.assertFalse(aggregate.hasNext());
 
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expectedExceptions = RuntimeException.class)
     public void testBucketWithBoundariesWithSizeLessThanTwo() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
@@ -195,16 +190,16 @@ public class AggregationTest extends TestBase {
                                                   .execute(BucketResult.class);
 
         BucketResult result2 = aggregate.next();
-        assertEquals(result2.id, Integer.valueOf(-1));
-        assertEquals(result2.count, 2);
+        Assert.assertEquals(result2.id, Integer.valueOf(-1));
+        Assert.assertEquals(result2.count, 2);
 
         BucketResult result1 = aggregate.next();
-        assertEquals(result1.id, Integer.valueOf(1));
-        assertEquals(result1.count, 3);
+        Assert.assertEquals(result1.id, Integer.valueOf(1));
+        Assert.assertEquals(result1.count, 3);
 
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expectedExceptions = RuntimeException.class)
     public void testBucketWithUnsortedBoundaries() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),
@@ -236,28 +231,28 @@ public class AggregationTest extends TestBase {
                                                                 .boundaries(value(1), value(5), value(12)))
                                                   .execute(BucketResult.class);
         BucketResult result1 = aggregate.next();
-        assertEquals(result1.id, Integer.valueOf(1));
-        assertEquals(result1.count, 3);
+        Assert.assertEquals(result1.id, Integer.valueOf(1));
+        Assert.assertEquals(result1.count, 3);
 
         BucketResult result2 = aggregate.next();
-        assertEquals(result2.id, Integer.valueOf(5));
-        assertEquals(result2.count, 2);
+        Assert.assertEquals(result2.id, Integer.valueOf(5));
+        Assert.assertEquals(result2.count, 2);
     }
 
     @Test
     public void testCollation() {
-        getDs().save(asList(new User("john doe", new Date()), new User("John Doe", new Date())));
+        getDs().save(asList(new User("john doe", LocalDate.now()), new User("John Doe", LocalDate.now())));
 
         Aggregation<User> pipeline = getDs().aggregate(User.class)
                                             .match(eq("name", "john doe"));
-        Assert.assertEquals(1, count(pipeline.execute(User.class)));
+        Assert.assertEquals(count(pipeline.execute(User.class)), 1);
 
-        Assert.assertEquals(2, count(pipeline.execute(User.class,
+        Assert.assertEquals(count(pipeline.execute(User.class,
             new dev.morphia.aggregation.experimental.AggregationOptions()
                 .collation(Collation.builder()
                                     .locale("en")
                                     .collationStrength(SECONDARY)
-                                    .build()))));
+                                    .build()))), 2);
     }
 
     @Test
@@ -277,8 +272,8 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testDateToString() throws ParseException {
-        Date joined = new SimpleDateFormat("yyyy-MM-dd z").parse("2016-05-01 UTC");
+    public void testDateToString() {
+        LocalDate joined = LocalDate.parse("2016-05-01 UTC", DateTimeFormatter.ofPattern("yyyy-MM-dd z"));
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
@@ -288,7 +283,7 @@ public class AggregationTest extends TestBase {
                                                                                    .date(field("joined"))));
 
         for (Iterator<StringDates> it = pipeline.execute(StringDates.class); it.hasNext(); ) {
-            assertEquals("2016-05-01", it.next().string);
+            Assert.assertEquals(it.next().string, "2016-05-01");
         }
     }
 
@@ -309,33 +304,33 @@ public class AggregationTest extends TestBase {
 
         CountResult result1 = aggregation.next();
         CountResult result2 = aggregation.next();
-        Assert.assertFalse("Expecting two results", aggregation.hasNext());
-        Assert.assertEquals("Dante", result1.getAuthor());
-        Assert.assertEquals(3, result1.getCount());
-        Assert.assertEquals("Homer", result2.getAuthor());
-        Assert.assertEquals(2, result2.getCount());
+        Assert.assertFalse(aggregation.hasNext(), "Expecting two results");
+        Assert.assertEquals(result1.getAuthor(), "Dante");
+        Assert.assertEquals(result1.getCount(), 3);
+        Assert.assertEquals(result2.getAuthor(), "Homer");
+        Assert.assertEquals(result2.getCount(), 2);
     }
 
     @Test
     public void testGeoNearWithGeoJson() {
         // given
         Point londonPoint = new Point(new Position(51.5286416, -0.1015987));
-        City london = new City("London", londonPoint);
+        GeoCity london = new GeoCity("London", londonPoint);
         getDs().save(london);
-        City manchester = new City("Manchester", new Point(new Position(53.4722454, -2.2235922)));
+        GeoCity manchester = new GeoCity("Manchester", new Point(new Position(53.4722454, -2.2235922)));
         getDs().save(manchester);
-        City sevilla = new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
+        GeoCity sevilla = new GeoCity("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
         getDs().save(sevilla);
 
         getDs().ensureIndexes();
 
         // when
-        Iterator<City> citiesOrderedByDistanceFromLondon = getDs().aggregate(City.class)
-                                                                  .geoNear(
-                                                                      to(londonPoint)
-                                                                          .distanceField("distance")
-                                                                          .spherical(true))
-                                                                  .execute(City.class);
+        Iterator<GeoCity> citiesOrderedByDistanceFromLondon = getDs().aggregate(GeoCity.class)
+                                                                     .geoNear(
+                                                                         to(londonPoint)
+                                                                             .distanceField("distance")
+                                                                             .spherical(true))
+                                                                     .execute(GeoCity.class);
 
         // then
         Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
@@ -346,54 +341,25 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
-    public void testGeoNearWithLegacyCoords() {
-        // given
-        double latitude = 51.5286416;
-        double longitude = -0.1015987;
-        PlaceWithLegacyCoords london = new PlaceWithLegacyCoords(new double[]{longitude, latitude}, "London");
-        getDs().save(london);
-        PlaceWithLegacyCoords manchester = new PlaceWithLegacyCoords(new double[]{-2.2235922, 53.4722454}, "Manchester");
-        getDs().save(manchester);
-        PlaceWithLegacyCoords sevilla = new PlaceWithLegacyCoords(new double[]{-5.9550582, 37.3753708}, "Sevilla");
-        getDs().save(sevilla);
-
-        getDs().ensureIndexes();
-
-        // when
-        Iterator<PlaceWithLegacyCoords> cities = getDs().aggregate(PlaceWithLegacyCoords.class)
-                                                        .geoNear(to(new double[]{latitude, longitude})
-                                                                     .distanceField("distance")
-                                                                     .spherical(false))
-                                                        .execute(PlaceWithLegacyCoords.class);
-
-        // then
-        Assert.assertTrue(cities.hasNext());
-        Assert.assertEquals(sevilla, cities.next());
-        Assert.assertEquals(london, cities.next());
-        Assert.assertEquals(manchester, cities.next());
-        Assert.assertFalse(cities.hasNext());
-    }
-
-    @Test
     public void testGeoNearWithSphericalGeometry() {
         // given
         double latitude = 51.5286416;
         double longitude = -0.1015987;
-        City london = new City("London", new Point(new Position(latitude, longitude)));
+        GeoCity london = new GeoCity("London", new Point(new Position(latitude, longitude)));
         getDs().save(london);
-        City manchester = new City("Manchester", new Point(new Position(53.4722454, -2.2235922)));
+        GeoCity manchester = new GeoCity("Manchester", new Point(new Position(53.4722454, -2.2235922)));
         getDs().save(manchester);
-        City sevilla = new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
+        GeoCity sevilla = new GeoCity("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
         getDs().save(sevilla);
 
         getDs().ensureIndexes();
 
         // when
-        Iterator<City> cities = getDs().aggregate(City.class)
-                                       .geoNear(to(new double[]{latitude, longitude})
-                                                    .distanceField("distance")
-                                                    .spherical(true))
-                                       .execute(City.class);
+        Iterator<GeoCity> cities = getDs().aggregate(GeoCity.class)
+                                          .geoNear(to(new double[]{latitude, longitude})
+                                                       .distanceField("distance")
+                                                       .spherical(true))
+                                          .execute(GeoCity.class);
 
         // then
         Assert.assertTrue(cities.hasNext());
@@ -419,7 +385,7 @@ public class AggregationTest extends TestBase {
             aggregate.next();
             count++;
         }
-        Assert.assertEquals(2, count);
+        Assert.assertEquals(count, 2);
     }
 
     /**
@@ -477,7 +443,7 @@ public class AggregationTest extends TestBase {
                           .field("copies", sum(field("copies"))))
                .out(Out.to("testAverage"));
         try (MongoCursor<Document> testAverage = getDatabase().getCollection("testAverage").find().iterator()) {
-            Assert.assertEquals(20, testAverage.next().get("copies"));
+            Assert.assertEquals(testAverage.next().get("copies"), 20);
         }
     }
 
@@ -493,9 +459,9 @@ public class AggregationTest extends TestBase {
                            .skip(2)
                            .execute(Book.class)
                            .next();
-        Assert.assertEquals("Eclogues", book.title);
-        Assert.assertEquals("Dante", book.author);
-        Assert.assertEquals(2, book.copies.intValue());
+        Assert.assertEquals(book.title, "Eclogues");
+        Assert.assertEquals(book.author, "Dante");
+        Assert.assertEquals(book.copies.intValue(), 2);
     }
 
     @Test
@@ -511,21 +477,21 @@ public class AggregationTest extends TestBase {
                                                        .sortByCount(field("author"))
                                                        .execute(SortByCountResult.class);
         SortByCountResult result1 = aggregate.next();
-        assertEquals(result1.id, "Dante");
-        assertEquals(result1.count, 3);
+        Assert.assertEquals(result1.id, "Dante");
+        Assert.assertEquals(result1.count, 3);
 
         SortByCountResult result2 = aggregate.next();
-        assertEquals(result2.id, "Homer");
-        assertEquals(result2.count, 2);
+        Assert.assertEquals(result2.id, "Homer");
+        Assert.assertEquals(result2.count, 2);
 
     }
 
     @Test
-    public void testUnwind() throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        getDs().save(asList(new User("jane", format.parse("2011-03-02"), "golf", "racquetball"),
-            new User("joe", format.parse("2012-07-02"), "tennis", "golf", "swimming"),
-            new User("john", format.parse("2012-07-02"))));
+    public void testUnwind() {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        getDs().save(asList(new User("jane", LocalDate.parse("2011-03-02", format), "golf", "racquetball"),
+            new User("joe", LocalDate.parse("2012-07-02", format), "tennis", "golf", "swimming"),
+            new User("john", LocalDate.parse("2012-07-02", format))));
 
         Iterator<User> aggregate = getDs().aggregate(User.class)
                                           .project(Projection.of()
@@ -539,27 +505,27 @@ public class AggregationTest extends TestBase {
             User user = aggregate.next();
             switch (count) {
                 case 0:
-                    Assert.assertEquals("jane", user.name);
-                    Assert.assertEquals("golf", user.likes.get(0));
+                    Assert.assertEquals(user.name, "jane");
+                    Assert.assertEquals(user.likes.get(0), "golf");
                     break;
                 case 1:
-                    Assert.assertEquals("jane", user.name);
-                    Assert.assertEquals("racquetball", user.likes.get(0));
+                    Assert.assertEquals(user.name, "jane");
+                    Assert.assertEquals(user.likes.get(0), "racquetball");
                     break;
                 case 2:
-                    Assert.assertEquals("joe", user.name);
-                    Assert.assertEquals("tennis", user.likes.get(0));
+                    Assert.assertEquals(user.name, "joe");
+                    Assert.assertEquals(user.likes.get(0), "tennis");
                     break;
                 case 3:
-                    Assert.assertEquals("joe", user.name);
-                    Assert.assertEquals("golf", user.likes.get(0));
+                    Assert.assertEquals(user.name, "joe");
+                    Assert.assertEquals(user.likes.get(0), "golf");
                     break;
                 case 4:
-                    Assert.assertEquals("joe", user.name);
-                    Assert.assertEquals("swimming", user.likes.get(0));
+                    Assert.assertEquals(user.name, "joe");
+                    Assert.assertEquals(user.likes.get(0), "swimming");
                     break;
                 default:
-                    fail("Should only find 5 elements");
+                    Assert.fail("Should only find 5 elements");
             }
             count++;
         }
@@ -577,31 +543,31 @@ public class AggregationTest extends TestBase {
             User user = aggregate.next();
             switch (count) {
                 case 0:
-                    Assert.assertEquals("jane", user.name);
-                    Assert.assertEquals("golf", user.likes.get(0));
+                    Assert.assertEquals(user.name, "jane");
+                    Assert.assertEquals(user.likes.get(0), "golf");
                     break;
                 case 1:
-                    Assert.assertEquals("jane", user.name);
-                    Assert.assertEquals("racquetball", user.likes.get(0));
+                    Assert.assertEquals(user.name, "jane");
+                    Assert.assertEquals(user.likes.get(0), "racquetball");
                     break;
                 case 2:
-                    Assert.assertEquals("joe", user.name);
-                    Assert.assertEquals("tennis", user.likes.get(0));
+                    Assert.assertEquals(user.name, "joe");
+                    Assert.assertEquals(user.likes.get(0), "tennis");
                     break;
                 case 3:
-                    Assert.assertEquals("joe", user.name);
-                    Assert.assertEquals("golf", user.likes.get(0));
+                    Assert.assertEquals(user.name, "joe");
+                    Assert.assertEquals(user.likes.get(0), "golf");
                     break;
                 case 4:
-                    Assert.assertEquals("joe", user.name);
-                    Assert.assertEquals("swimming", user.likes.get(0));
+                    Assert.assertEquals(user.name, "joe");
+                    Assert.assertEquals(user.likes.get(0), "swimming");
                     break;
                 case 5:
-                    Assert.assertEquals("john", user.name);
+                    Assert.assertEquals(user.name, "john");
                     Assert.assertNull(user.likes);
                     break;
                 default:
-                    fail("Should only find 6 elements");
+                    Assert.fail("Should only find 6 elements");
             }
             count++;
         }
@@ -609,12 +575,12 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testUserPreferencesPipeline() {
-        final MorphiaCursor<City> pipeline = getDs().aggregate(City.class)  /* the class is irrelevant for this test */
-                                                    .group(of(
-                                                        id("state"))
-                                                               .field("total_pop", sum(field("pop"))))
-                                                    .match(gte("total_pop", 10000000))
-                                                    .execute(City.class);
+        final MorphiaCursor<GeoCity> pipeline = getDs().aggregate(GeoCity.class)  /* the class is irrelevant for this test */
+                                                       .group(of(
+                                                           id("state"))
+                                                                  .field("total_pop", sum(field("pop"))))
+                                                       .match(gte("total_pop", 10000000))
+                                                       .execute(GeoCity.class);
         while (pipeline.hasNext()) {
             pipeline.next();
         }
@@ -624,7 +590,7 @@ public class AggregationTest extends TestBase {
         Document current = document;
         for (String step : path) {
             Object next = current.get(step);
-            Assert.assertNotNull(format("Could not find %s in \n%s", step, current), next);
+            Assert.assertNotNull(next, format("Could not find %s in \n%s", step, current));
             current = (Document) next;
         }
         return current;

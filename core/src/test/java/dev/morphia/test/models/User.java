@@ -30,6 +30,11 @@ public class User {
         this.likes = asList(likes);
     }
 
+    public User(String name, LocalDate joined) {
+        this.name = name;
+        this.joined = joined;
+    }
+
     public int getAge() {
         return age;
     }
