@@ -78,6 +78,10 @@ public abstract class TestBase {
         return datastore;
     }
 
+    public Mapper getMapper() {
+        return getDs().getMapper();
+    }
+
     @BeforeMethod
     public void installData() {
         File file = new File("zips.json");
@@ -100,16 +104,6 @@ public abstract class TestBase {
             e.printStackTrace();
         }
         assumeTrue(file.exists(), "Failed to process media files");
-    }
-
-    protected void reconfigure(MapperOptions options) {
-        mapperOptions = options;
-        database = null;
-        datastore = null;
-    }
-
-    public Mapper getMapper() {
-        return getDs().getMapper();
     }
 
     public boolean isReplicaSet() {
@@ -245,6 +239,21 @@ public abstract class TestBase {
 
     protected String toString(Document document) {
         return document.toJson(getMapper().getCodecRegistry().get(Document.class));
+    }
+
+    protected void withOptions(MapperOptions options, Runnable block) {
+        MapperOptions previousOptions = mapperOptions;
+        try {
+            mapperOptions = options;
+            database = null;
+            datastore = null;
+
+            block.run();
+        } finally {
+            mapperOptions = previousOptions;
+            database = null;
+            datastore = null;
+        }
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
