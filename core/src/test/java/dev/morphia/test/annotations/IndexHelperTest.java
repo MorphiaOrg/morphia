@@ -1,34 +1,34 @@
-/*
- * Copyright 2016 MongoDB, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package dev.morphia.annotations;
+package dev.morphia.test.annotations;
 
 import com.mongodb.client.MongoCollection;
-import dev.morphia.TestBase;
+import dev.morphia.annotations.Collation;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Field;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Text;
+import dev.morphia.annotations.builders.CollationBuilder;
+import dev.morphia.annotations.builders.FieldBuilder;
+import dev.morphia.annotations.builders.IndexBuilder;
+import dev.morphia.annotations.builders.IndexHelper;
+import dev.morphia.annotations.builders.IndexOptionsBuilder;
+import dev.morphia.annotations.builders.IndexedBuilder;
+import dev.morphia.annotations.builders.TextBuilder;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.ValidationException;
+import dev.morphia.test.TestBase;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,15 +41,15 @@ import static com.mongodb.client.model.CollationStrength.IDENTICAL;
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class IndexHelperTest extends TestBase {
     private final IndexHelper indexHelper = new IndexHelper(getMapper());
 
-    @Before
+    @BeforeMethod
     public void before() {
         getMapper().map(AbstractParent.class, IndexedClass.class, NestedClass.class, NestedClassImpl.class);
     }
@@ -87,10 +87,9 @@ public class IndexHelperTest extends TestBase {
                                                                  new FieldBuilder()
                                                                      .value("nest")
                                                                      .type(IndexType.DESC)));
-        assertEquals(new Document()
-                         .append("text", "text")
-                         .append("nest", -1),
-            keys);
+        assertEquals(keys, new Document()
+                               .append("text", "text")
+                               .append("nest", -1));
     }
 
     @Test
@@ -105,7 +104,7 @@ public class IndexHelperTest extends TestBase {
                                             .unique(true));
 
         Index index = indexHelper.convert(text, "search_field");
-        assertEquals("index_name", index.options().name());
+        assertEquals(index.options().name(), "index_name");
         assertTrue(index.options().background());
         assertTrue(index.options().sparse());
         assertTrue(index.options().unique());
@@ -130,25 +129,25 @@ public class IndexHelperTest extends TestBase {
             String name = document.get("name").toString();
             if (name.equals("latitude_1")) {
                 names.remove(name);
-                assertEquals(parse("{ 'latitude' : 1 }"), document.get("key"));
+                assertEquals(document.get("key"), parse("{ 'latitude' : 1 }"));
             } else if (name.equals("searchme")) {
                 names.remove(name);
-                assertEquals(parse("{ 'text' : 10 }"), document.get("weights"));
+                assertEquals(document.get("weights"), parse("{ 'text' : 10 }"));
             } else if (name.equals("indexName_1")) {
                 names.remove(name);
-                assertEquals(parse("{'indexName': 1 }"), document.get("key"));
+                assertEquals(document.get("key"), parse("{'indexName': 1 }"));
             } else {
                 if (!"_id_".equals(document.get("name"))) {
                     throw new MappingException("Found an index I wasn't expecting:  " + document);
                 }
             }
         }
-        Assert.assertTrue("Should be empty: " + names, names.isEmpty());
+        assertTrue(names.isEmpty(), "Should be empty: " + names);
 
         collection = getDatabase().getCollection(getMapper().getCollection(AbstractParent.class).getNamespace().getCollectionName());
         indexHelper.createIndex(collection, mapper.getEntityModel(AbstractParent.class));
         indexInfo = getIndexInfo(AbstractParent.class);
-        assertTrue("Shouldn't find any indexes: " + indexInfo, indexInfo.isEmpty());
+        assertTrue(indexInfo.isEmpty(), "Shouldn't find any indexes: " + indexInfo);
 
     }
 
@@ -156,19 +155,19 @@ public class IndexHelperTest extends TestBase {
     public void findField() {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        assertEquals("indexName", indexHelper.findField(model, new IndexOptionsBuilder(), "indexName"));
-        assertEquals("nest.name", indexHelper.findField(model, new IndexOptionsBuilder(), "nested.name"));
-        assertEquals("nest.name", indexHelper.findField(model, new IndexOptionsBuilder(), "nest.name"));
+        assertEquals(indexHelper.findField(model, new IndexOptionsBuilder(), "indexName"), "indexName");
+        assertEquals(indexHelper.findField(model, new IndexOptionsBuilder(), "nested.name"), "nest.name");
+        assertEquals(indexHelper.findField(model, new IndexOptionsBuilder(), "nest.name"), "nest.name");
 
         try {
-            assertEquals("nest.whatsit", indexHelper.findField(model, new IndexOptionsBuilder(), "nest.whatsit"));
+            assertEquals(indexHelper.findField(model, new IndexOptionsBuilder(), "nest.whatsit"), "nest.whatsit");
             fail("Should have failed on the bad index path");
         } catch (ValidationException e) {
             // alles ist gut
         }
-        assertEquals("nest.whatsit.nested.more.deeply.than.the.object.model",
-            indexHelper.findField(model, new IndexOptionsBuilder().disableValidation(true),
-                "nest.whatsit.nested.more.deeply.than.the.object.model"));
+        assertEquals(indexHelper.findField(model, new IndexOptionsBuilder().disableValidation(true),
+            "nest.whatsit.nested.more.deeply.than.the.object.model"),
+            "nest.whatsit.nested.more.deeply.than.the.object.model");
     }
 
     @Test
@@ -198,21 +197,21 @@ public class IndexHelperTest extends TestBase {
             if (document.get("name").equals("indexName")) {
                 checkIndex(document);
 
-                assertEquals("en", document.get("default_language"));
-                assertEquals("de", document.get("language_override"));
+                assertEquals(document.get("default_language"), "en");
+                assertEquals(document.get("language_override"), "de");
 
-                assertEquals(new Document()
-                                 .append("locale", "en")
-                                 .append("caseLevel", true)
-                                 .append("caseFirst", "upper")
-                                 .append("strength", 5)
-                                 .append("numericOrdering", true)
-                                 .append("alternate", "shifted")
-                                 .append("maxVariable", "space")
-                                 .append("backwards", true)
-                                 .append("normalization", true)
-                                 .append("version", "57.1"),
-                    document.get("collation"));
+                assertEquals(document.get("collation"),
+                    new Document()
+                        .append("locale", "en")
+                        .append("caseLevel", true)
+                        .append("caseFirst", "upper")
+                        .append("strength", 5)
+                        .append("numericOrdering", true)
+                        .append("alternate", "shifted")
+                        .append("maxVariable", "space")
+                        .append("backwards", true)
+                        .append("normalization", true)
+                        .append("version", "57.1"));
             }
         }
     }
@@ -221,13 +220,13 @@ public class IndexHelperTest extends TestBase {
     public void indexCollationConversion() {
         Collation collation = collation();
         com.mongodb.client.model.Collation driver = indexHelper.convert(collation);
-        assertEquals("en", driver.getLocale());
+        assertEquals(driver.getLocale(), "en");
         assertTrue(driver.getCaseLevel());
-        assertEquals(UPPER, driver.getCaseFirst());
-        assertEquals(IDENTICAL, driver.getStrength());
+        assertEquals(driver.getCaseFirst(), UPPER);
+        assertEquals(driver.getStrength(), IDENTICAL);
         assertTrue(driver.getNumericOrdering());
-        assertEquals(SHIFTED, driver.getAlternate());
-        assertEquals(SPACE, driver.getMaxVariable());
+        assertEquals(driver.getAlternate(), SHIFTED);
+        assertEquals(driver.getMaxVariable(), SPACE);
         assertTrue(driver.getNormalization());
         assertTrue(driver.getBackwards());
     }
@@ -245,13 +244,13 @@ public class IndexHelperTest extends TestBase {
                                                .sparse(true)
                                                .unique(true);
         com.mongodb.client.model.IndexOptions options = indexHelper.convert(indexOptions);
-        assertEquals("index_name", options.getName());
+        assertEquals(options.getName(), "index_name");
         assertTrue(options.isBackground());
         assertTrue(options.isUnique());
         assertTrue(options.isSparse());
-        assertEquals(Long.valueOf(42), options.getExpireAfter(TimeUnit.SECONDS));
-        assertEquals("en", options.getDefaultLanguage());
-        assertEquals("de", options.getLanguageOverride());
+        assertEquals(options.getExpireAfter(TimeUnit.SECONDS), Long.valueOf(42));
+        assertEquals(options.getDefaultLanguage(), "en");
+        assertEquals(options.getLanguageOverride(), "de");
         assertEquals(indexHelper.convert(indexOptions.collation()), options.getCollation());
 
         assertTrue(indexHelper.convert(indexOptions).isBackground());
@@ -298,7 +297,7 @@ public class IndexHelperTest extends TestBase {
                                                                 .unique(true));
 
         Index converted = indexHelper.convert(indexed, "oldstyle");
-        assertEquals("index_name", converted.options().name());
+        assertEquals(converted.options().name(), "index_name");
         assertTrue(converted.options().background());
         assertTrue(converted.options().sparse());
         assertTrue(converted.options().unique());
@@ -319,7 +318,7 @@ public class IndexHelperTest extends TestBase {
         findPartialIndex(Document.parse(text.options().partialFilter()));
     }
 
-    @Test(expected = MappingException.class)
+    @Test(expectedExceptions = MappingException.class)
     public void weightsOnNonTextIndex() {
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
@@ -349,15 +348,15 @@ public class IndexHelperTest extends TestBase {
         for (Document document : wildcard) {
             found |= document.get("name").equals("$**_text");
         }
-        assertTrue("Should have found the wildcard index", found);
+        assertTrue(found, "Should have found the wildcard index");
     }
 
     private void checkIndex(Document document) {
         assertTrue((Boolean) document.get("background"));
         assertTrue((Boolean) document.get("unique"));
         assertTrue((Boolean) document.get("sparse"));
-        assertEquals(42L, document.get("expireAfterSeconds"));
-        assertEquals(new Document("name", 1).append("text", -1), document.get("key"));
+        assertEquals(document.get("expireAfterSeconds"), 42L);
+        assertEquals(document.get("key"), new Document("name", 1).append("text", -1));
     }
 
     private Collation collation() {
@@ -377,7 +376,7 @@ public class IndexHelperTest extends TestBase {
         List<Document> indexInfo = getIndexInfo(IndexedClass.class);
         for (Document document : indexInfo) {
             if (!document.get("name").equals("_id_")) {
-                Assert.assertEquals(expected, document.get("partialFilterExpression"));
+                assertEquals(document.get("partialFilterExpression"), expected);
             }
         }
     }

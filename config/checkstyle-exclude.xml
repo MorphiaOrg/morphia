@@ -24,6 +24,7 @@
     <!--Do not check test classes -->
     <suppress checks="Javadoc*" files="QuickTour"/>
     <suppress checks="Javadoc*" files=".*test.*"/>
+    <suppress checks="Javadoc*" files=".*annotations.builders"/>
     <suppress checks="" files=".*internal.*"/>
     <suppress checks="" files=".*impls.*"/>
     <suppress checks="" files=".*codecs.*"/>

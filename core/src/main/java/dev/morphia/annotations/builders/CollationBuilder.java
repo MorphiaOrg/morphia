@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package dev.morphia.annotations;
+package dev.morphia.annotations.builders;
 
 import com.mongodb.client.model.CollationAlternate;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
+import dev.morphia.annotations.Collation;
 
 /**
  * @morphia.internal
@@ -75,47 +76,47 @@ public class CollationBuilder extends AnnotationBuilder<Collation> implements Co
         return get("strength");
     }
 
-    CollationBuilder backwards(boolean backwards) {
-        put("backwards", backwards);
-        return this;
-    }
-
-    CollationBuilder caseLevel(boolean caseLevel) {
-        put("caseLevel", caseLevel);
-        return this;
-    }
-
-    CollationBuilder locale(String locale) {
-        put("locale", locale);
-        return this;
-    }
-
-    CollationBuilder normalization(boolean normalization) {
-        put("normalization", normalization);
-        return this;
-    }
-
-    CollationBuilder numericOrdering(boolean numericOrdering) {
-        put("numericOrdering", numericOrdering);
-        return this;
-    }
-
-    CollationBuilder alternate(CollationAlternate alternate) {
+    public CollationBuilder alternate(CollationAlternate alternate) {
         put("alternate", alternate);
         return this;
     }
 
-    CollationBuilder caseFirst(CollationCaseFirst caseFirst) {
+    public CollationBuilder backwards(boolean backwards) {
+        put("backwards", backwards);
+        return this;
+    }
+
+    public CollationBuilder caseFirst(CollationCaseFirst caseFirst) {
         put("caseFirst", caseFirst);
         return this;
     }
 
-    CollationBuilder maxVariable(CollationMaxVariable maxVariable) {
+    public CollationBuilder caseLevel(boolean caseLevel) {
+        put("caseLevel", caseLevel);
+        return this;
+    }
+
+    public CollationBuilder locale(String locale) {
+        put("locale", locale);
+        return this;
+    }
+
+    public CollationBuilder maxVariable(CollationMaxVariable maxVariable) {
         put("maxVariable", maxVariable);
         return this;
     }
 
-    CollationBuilder strength(CollationStrength strength) {
+    public CollationBuilder normalization(boolean normalization) {
+        put("normalization", normalization);
+        return this;
+    }
+
+    public CollationBuilder numericOrdering(boolean numericOrdering) {
+        put("numericOrdering", numericOrdering);
+        return this;
+    }
+
+    public CollationBuilder strength(CollationStrength strength) {
         put("strength", strength);
         return this;
     }

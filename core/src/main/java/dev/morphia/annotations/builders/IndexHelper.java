@@ -1,23 +1,14 @@
-/*
- * Copyright 2016 MongoDB, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package dev.morphia.annotations;
+package dev.morphia.annotations.builders;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.Collation;
+import dev.morphia.annotations.Field;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.Text;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -43,6 +34,7 @@ import static java.util.Collections.singletonList;
  * A helper class for dealing with index definitions
  *
  * @morphia.internal
+ * @since 2.0
  */
 public final class IndexHelper {
     private static final Logger LOG = LoggerFactory.getLogger(IndexHelper.class);
@@ -124,7 +116,7 @@ public final class IndexHelper {
                    .fields(list);
     }
 
-    Document calculateKeys(EntityModel entityModel, Index index) {
+    public Document calculateKeys(EntityModel entityModel, Index index) {
         Document keys = new Document();
         for (Field field : index.fields()) {
             String path;
@@ -143,7 +135,7 @@ public final class IndexHelper {
     }
 
     @Nullable
-    Index convert(@Nullable Indexed indexed, String nameToStore) {
+    public Index convert(@Nullable Indexed indexed, String nameToStore) {
         return indexed == null
                ? null
                : new IndexBuilder()
@@ -154,7 +146,7 @@ public final class IndexHelper {
     }
 
     @Nullable
-    Index convert(@Nullable Text text, String nameToStore) {
+    public Index convert(@Nullable Text text, String nameToStore) {
         return text == null
                ? null
                : new IndexBuilder()
@@ -165,7 +157,7 @@ public final class IndexHelper {
                                                .weight(text.value())));
     }
 
-    com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
+    public com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
                                                                  .background(options.background())
                                                                  .sparse(options.sparse())
@@ -193,7 +185,7 @@ public final class IndexHelper {
         return indexOptions;
     }
 
-    com.mongodb.client.model.Collation convert(Collation collation) {
+    public com.mongodb.client.model.Collation convert(Collation collation) {
         return com.mongodb.client.model.Collation.builder()
                                                  .locale(collation.locale())
                                                  .backwards(collation.backwards())
@@ -220,7 +212,7 @@ public final class IndexHelper {
         }
     }
 
-    void createIndex(MongoCollection<?> collection, EntityModel entityModel, Index index) {
+    public void createIndex(MongoCollection<?> collection, EntityModel entityModel, Index index) {
         Document keys = calculateKeys(entityModel, index);
         com.mongodb.client.model.IndexOptions indexOptions = convert(index.options());
         calculateWeights(index, indexOptions);
@@ -228,7 +220,7 @@ public final class IndexHelper {
         collection.createIndex(keys, indexOptions);
     }
 
-    String findField(EntityModel entityModel, IndexOptions options, String path) {
+    public String findField(EntityModel entityModel, IndexOptions options, String path) {
         if (path.equals("$**")) {
             return path;
         }

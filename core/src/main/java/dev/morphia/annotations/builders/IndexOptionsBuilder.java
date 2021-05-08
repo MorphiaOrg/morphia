@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package dev.morphia.annotations;
+package dev.morphia.annotations.builders;
 
+import dev.morphia.annotations.Collation;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
 import org.bson.Document;
 
 import java.util.Map.Entry;
 
-class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements IndexOptions {
-    IndexOptionsBuilder() {
+/**
+ * @morphia.internal
+ * @since 2.0
+ */
+public class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements IndexOptions {
+    public IndexOptionsBuilder() {
     }
 
     IndexOptionsBuilder(IndexOptions original, String prefix) {
@@ -91,53 +99,53 @@ class IndexOptionsBuilder extends AnnotationBuilder<IndexOptions> implements Ind
         return get("collation");
     }
 
-    IndexOptionsBuilder background(boolean background) {
+    public IndexOptionsBuilder background(boolean background) {
         put("background", background);
         return this;
     }
 
-    IndexOptionsBuilder disableValidation(boolean disableValidation) {
+    public IndexOptionsBuilder collation(Collation collation) {
+        put("collation", collation);
+        return this;
+    }
+
+    public IndexOptionsBuilder disableValidation(boolean disableValidation) {
         put("disableValidation", disableValidation);
         return this;
     }
 
-    IndexOptionsBuilder expireAfterSeconds(int expireAfterSeconds) {
+    public IndexOptionsBuilder expireAfterSeconds(int expireAfterSeconds) {
         put("expireAfterSeconds", expireAfterSeconds);
         return this;
     }
 
-    IndexOptionsBuilder language(String language) {
+    public IndexOptionsBuilder language(String language) {
         put("language", language);
         return this;
     }
 
-    IndexOptionsBuilder languageOverride(String languageOverride) {
+    public IndexOptionsBuilder languageOverride(String languageOverride) {
         put("languageOverride", languageOverride);
         return this;
     }
 
-    IndexOptionsBuilder name(String name) {
+    public IndexOptionsBuilder name(String name) {
         put("name", name);
         return this;
     }
 
-    IndexOptionsBuilder sparse(boolean sparse) {
-        put("sparse", sparse);
-        return this;
-    }
-
-    IndexOptionsBuilder unique(boolean unique) {
-        put("unique", unique);
-        return this;
-    }
-
-    IndexOptionsBuilder partialFilter(String partialFilter) {
+    public IndexOptionsBuilder partialFilter(String partialFilter) {
         put("partialFilter", partialFilter);
         return this;
     }
 
-    IndexOptionsBuilder collation(Collation collation) {
-        put("collation", collation);
+    public IndexOptionsBuilder sparse(boolean sparse) {
+        put("sparse", sparse);
+        return this;
+    }
+
+    public IndexOptionsBuilder unique(boolean unique) {
+        put("unique", unique);
         return this;
     }
 

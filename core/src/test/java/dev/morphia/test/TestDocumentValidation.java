@@ -30,7 +30,7 @@ import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Validation;
-import dev.morphia.annotations.ValidationBuilder;
+import dev.morphia.annotations.builders.ValidationBuilder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;

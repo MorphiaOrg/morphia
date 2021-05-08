@@ -97,7 +97,7 @@
                 <configuration>
                     <failOnError>true</failOnError>
                     <!--                    <excludePackageNames>*.internal, dev.morphia.sofia</excludePackageNames>-->
-                    <excludePackageNames>dev.morphia.sofia</excludePackageNames>
+                    <excludePackageNames>dev.morphia.sofia,dev.morphia.annotations.builders</excludePackageNames>
                     <doclint>none</doclint>
                     <doctitle>Morphia ${project.version}</doctitle>
                     <windowtitle>Morphia</windowtitle>

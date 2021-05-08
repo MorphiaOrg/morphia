@@ -1,7 +1,7 @@
 package dev.morphia.annotations.experimental;
 
-import dev.morphia.annotations.AnnotationBuilder;
 import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.builders.AnnotationBuilder;
 
 /**
  * Creates a pseudo-instance of an {@code @Embedded} annotation.
