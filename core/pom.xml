@@ -25,19 +25,6 @@
                             <goal>test-jar</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>annotations</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>annotations</classifier>
-                            <includes>
-                                <include>**/annotations/*.class</include>
-                            </includes>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
