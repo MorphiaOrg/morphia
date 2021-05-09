@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Issues and Help :: Morphia Docs</title>
+    <title>Critter :: Morphia Docs</title>
     <meta name="generator" content="Antora 2.3.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="critter" data-version="4.0">
+<div class="nav-container" data-component="critter" data-version="4.2">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -75,10 +75,10 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="index.html">Getting Started</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
 </ul>
@@ -89,17 +89,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Critter</span>
-    <span class="version">4.0</span>
+    <span class="version">4.2-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Critter</span>
       <ul class="versions">
-        <li class="version">
-          <a href="../4.1/index.html">4.1-SNAPSHOT</a>
+        <li class="version is-current">
+          <a href="index.html">4.2-SNAPSHOT</a>
         </li>
-        <li class="version is-current is-latest">
-          <a href="index.html">4.0</a>
+        <li class="version is-latest">
+          <a href="../4.1/index.html">4.1</a>
         </li>
       </ul>
     </li>
@@ -140,50 +140,164 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Critter</a></li>
-    <li><a href="issues-help.html">Issues &amp; Support</a></li>
+    <li><a href="index.html">Getting Started</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">4.0</button>
+  <button class="version-menu-toggle" title="Show other versions of page">4.2-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version" href="../4.1/issues-help.html">4.1-SNAPSHOT</a>
-    <a class="version is-current" href="issues-help.html">4.0</a>
+    <a class="version is-current" href="index.html">4.2-SNAPSHOT</a>
+    <a class="version" href="../4.1/index.html">4.1</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/critter/edit/4.0.x/docs/modules/ROOT/pages/issues-help.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/critter/edit/master/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Issues and Help</h1>
-<div class="sect1">
-<h2>Bugs / Feature Requests</h2>
+<h1 class="page">Critter</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you think you’ve found a bug or want to see a new feature in critter, please open an issue on
-<a href="https://github.com/MorphiaOrg/critter/issues">github</a>. Please provide as much information as possible (including version numbers) about the
-issue type and how to reproduce it.  Ideally, if you can create a reproducer for the issue at hand, that would be even more helpful.  To
-help with this, please take a look at the <a href="https://github.com/MorphiaOrg/reproducer">reproducer</a> project.  This will help you set up a
-quick environment for reproducing your issue and providing a working example to examine.  This project can either be shared via a github
-repo on your account or perhaps attaching a zip of the project to the associated issue.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2>Pull Requests</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>We are happy to accept contributions to help improve critter.  We will guide user contributions to ensure they meet the standards of the
-codebase. Please ensure that any pull requests include documentation and tests.</p>
-</div>
-<div class="paragraph">
-<p>To get started check out the source and work on a branch:</p>
+<p>Critter will look at your source code and generate type safe criteria builders for
+each model object.  To use it, you simply need to add a plugin to your maven pom:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git clone https://github.com/MorphiaOrg/critter.git
-$ cd critter
-$ git checkout -b myNewFeature</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;dev.morphia.critter&lt;/groupId&gt;
+    &lt;artifactId&gt;critter-maven&lt;/artifactId&gt;
+    &lt;version&gt;4.2.0-SNAPSHOT&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;id&gt;critter&lt;/id&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;generate&lt;/goal&gt;
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+                &lt;force&gt;false&lt;/force&gt;
+                &lt;criteriaPackage&gt;com.bob.bar&lt;/criteriaPackage&gt;
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>This will generate your criteria classes in <code>target/generated-sources/critter</code> and add the directory as a source directory of your maven
+project.</p>
+</div>
+<div class="paragraph">
+<p>If you use gradle, you would configure your file like so (using the kotlin dsl):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">plugins {
+    id("dev.morphia.critter") version "4.2.0-SNAPSHOT"
+}
+
+
+tasks {
+    critter {
+        force = true
+        outputType = "java"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will generate your criteria classes in <code>build/generated-src/critter</code> and add the directory as a source directory of your gradle
+project.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">criteriaPackage</th>
+<th class="tableblock halign-left valign-top">If the <code>criteriaPackage</code> option is omitted, the code will be generated using the package of your entities with
+<code>.criteria</code> appended.  If a value is given, every criteria generated will live in the named package.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">force</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This defaults to false but if it&#8217;s set to true, critter will always regenerate your criteria classes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">outputType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This defaults to <code>kotlin</code> but also accepts <code>java</code> as well.  Setting this changes the language used in the generated
+criteria classes.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Critter requires Morphia 2.0.0 and is built for Java 11.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_difference_does_it_make"><a class="anchor" href="#_what_difference_does_it_make"></a>What difference does it make?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before critter, your criteria might look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Query&lt;Book&gt; query = ds.find(Book.class)
+    .filter(and(
+        eq("bookmark",bookmark),
+        eq("database",database)));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But using critter, it would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Query&lt;Book&gt; query = ds.find(Book.class)
+    .filter(and(
+        Person.bookmark().eq(bookmark),
+        Person.database().eq(database)));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice how bookmark() and database() methods were created based on the model object Book&#8217;s fields.  The comparison
+methods you&#8217;re familiar with from Morphia&#8217;s filters API are all there but now only take the type of the field itself.
+With this code in place if the model object changes, the code above runs the risk of failing to compile allowing you to
+catch model/query conflicts at compile time rather than waiting for things to fail at runtime (or in your tests if you&#8217;re
+lucky enough to have those).</p>
+</div>
+<div class="paragraph">
+<p>You can see a working example in the [tests](<a href="https://github.com/MorphiaOrg/critter/tree/master/tests" class="bare">https://github.com/MorphiaOrg/critter/tree/master/tests</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_idea_users"><a class="anchor" href="#_idea_users"></a>IDEA Users</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>IDEA users will need to enable the plugin registry in the maven configuration options for IDEA to pick up the plugin.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_issues_and_support"><a class="anchor" href="#_issues_and_support"></a>Issues and support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Please check <a href="issues-help.html" class="page">here</a> if you find an issue or need help.</p>
 </div>
 </div>
 </div>
