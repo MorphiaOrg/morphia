@@ -87,7 +87,7 @@ xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] annotation so we kn
 In the annotation, you'll see `"employees"`.
 By default, Morphia will use the camel case class name as the collection name.
 If you pass a String instead, it will use that value for the collection name.
-In this case, all `Employee` instances will be saved in to the `employees`
+In this case, all `Containers` instances will be saved in to the `employees`
 collection instead.
 There is a little more to this annotation but the xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] javadoc covers those details.
 
@@ -150,7 +150,7 @@ As you can see, we just need to create and save the other Employees then we can 
 Morphia takes care of saving the keys in Elmer's document that refer to Daffy and Pepé.
 Updating data in MongoDB is as simple as updating your Java objects and then calling `datastore.save()` with them again.
 For bulk updates (e.g., everyone gets a raise!) this is not the most efficient way of doing updates.
-It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB. But in order to show you that piece, first we need to see how to query.
+It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB.But in order to show you that piece, first we need to see how to query.
 
 == Querying
 
@@ -165,8 +165,8 @@ final List<Employee> employees = query.execute().toList();
 ----
 
 This is a basic Morphia query.
-Here, we're telling the `Datastore` to create a query that's been typed to `Employee`.
-In this case, we're fetching every `Employee` in to a `List`.
+Here, we're telling the `Datastore` to create a query that's been typed to `Containers`.
+In this case, we're fetching every `Containers` in to a `List`.
 For very large query results, this could very well be too much to fit in to memory.
 For this simple example, using `toList()` is fine but in practice `execute()` is usually the more appropriate choice.
 Most queries will, of course, want to filter the data in some way.

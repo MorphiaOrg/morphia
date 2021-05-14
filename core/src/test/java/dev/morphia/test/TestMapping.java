@@ -972,4 +972,13 @@ public class TestMapping extends TestBase {
         private String field;
         private Long number;
     }
+
+    @Entity
+    private static class Containers {
+        @Id
+        private ObjectId id;
+
+        private List<Float> floatList;
+        private List<Byte> byteList;
+    }
 }

@@ -67,9 +67,9 @@ import static dev.morphia.aggregation.experimental.stages.ReplaceWith.with;
 import static dev.morphia.aggregation.experimental.stages.Sort.on;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
+import static dev.morphia.query.experimental.filters.Filters.expr;
 import static dev.morphia.query.experimental.filters.Filters.gt;
 import static dev.morphia.query.experimental.filters.Filters.type;
-import static dev.morphia.query.experimental.filters.Filters.expr;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.bson.Document.parse;
@@ -908,7 +908,7 @@ public class TestAggregation extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    public static class Artwork {
+    private static class Artwork {
         @Id
         private ObjectId id;
         private Double price;
