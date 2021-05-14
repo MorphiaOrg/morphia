@@ -346,7 +346,7 @@ This class is annotated with the
 In the annotation, you&#8217;ll see <code>"employees"</code>.
 By default, Morphia will use the camel case class name as the collection name.
 If you pass a String instead, it will use that value for the collection name.
-In this case, all <code>Employee</code> instances will be saved in to the <code>employees</code>
+In this case, all <code>Containers</code> instances will be saved in to the <code>employees</code>
 collection instead.
 There is a little more to this annotation but the <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> javadoc covers those details.</p>
 </div>
@@ -428,7 +428,7 @@ datastore.save(elmer);</code></pre>
 Morphia takes care of saving the keys in Elmer&#8217;s document that refer to Daffy and Pepé.
 Updating data in MongoDB is as simple as updating your Java objects and then calling <code>datastore.save()</code> with them again.
 For bulk updates (e.g., everyone gets a raise!) this is not the most efficient way of doing updates.
-It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB. But in order to show you that piece, first we need to see how to query.</p>
+It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB.But in order to show you that piece, first we need to see how to query.</p>
 </div>
 </div>
 </div>
@@ -448,8 +448,8 @@ final List&lt;Employee&gt; employees = query.execute().toList();</code></pre>
 </div>
 <div class="paragraph">
 <p>This is a basic Morphia query.
-Here, we&#8217;re telling the <code>Datastore</code> to create a query that&#8217;s been typed to <code>Employee</code>.
-In this case, we&#8217;re fetching every <code>Employee</code> in to a <code>List</code>.
+Here, we&#8217;re telling the <code>Datastore</code> to create a query that&#8217;s been typed to <code>Containers</code>.
+In this case, we&#8217;re fetching every <code>Containers</code> in to a <code>List</code>.
 For very large query results, this could very well be too much to fit in to memory.
 For this simple example, using <code>toList()</code> is fine but in practice <code>execute()</code> is usually the more appropriate choice.
 Most queries will, of course, want to filter the data in some way.
