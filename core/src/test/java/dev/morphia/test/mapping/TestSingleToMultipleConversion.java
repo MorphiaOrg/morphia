@@ -1,13 +1,13 @@
-package dev.morphia;
-
+package dev.morphia.test.mapping;
 
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Set;
@@ -21,18 +21,18 @@ public class TestSingleToMultipleConversion extends TestBase {
         getDs().save(new HasSingleString());
         Assert.assertNotNull(getDs().find(HasSingleString.class).iterator(new FindOptions().limit(1))
                                     .next());
-        Assert.assertEquals(1, getDs().find(HasSingleString.class).count());
+        Assert.assertEquals(getDs().find(HasSingleString.class).count(), 1);
         final HasManyStringsArray hms = getDs().find(HasManyStringsArray.class).iterator(new FindOptions().limit(1))
                                                .next();
         Assert.assertNotNull(hms);
         Assert.assertNotNull(hms.strings);
-        Assert.assertEquals(1, hms.strings.length);
+        Assert.assertEquals(hms.strings.length, 1);
 
         final HasManyStringsList hms2 = getDs().find(HasManyStringsList.class).iterator(new FindOptions().limit(1))
                                                .next();
         Assert.assertNotNull(hms2);
         Assert.assertNotNull(hms2.strings);
-        Assert.assertEquals(1, hms2.strings.size());
+        Assert.assertEquals(hms2.strings.size(), 1);
     }
 
     @Test
@@ -40,30 +40,23 @@ public class TestSingleToMultipleConversion extends TestBase {
         getDs().save(new HasEmbeddedStringy());
         Assert.assertNotNull(getDs().find(HasEmbeddedStringy.class).iterator(new FindOptions().limit(1))
                                     .next());
-        Assert.assertEquals(1, getDs().find(HasEmbeddedStringy.class).count());
-        final HasEmbeddedStringyArray has = getDs().find(HasEmbeddedStringyArray.class).iterator(new FindOptions().limit(1))
-                                                   .next();
+        Assert.assertEquals(getDs().find(HasEmbeddedStringy.class).count(), 1);
+        final HasEmbeddedStringyArray has = getDs().find(HasEmbeddedStringyArray.class).first();
         Assert.assertNotNull(has);
         Assert.assertNotNull(has.hss);
-        Assert.assertEquals(1, has.hss.length);
+        Assert.assertEquals(has.hss.length, 1);
 
-        final HasEmbeddedStringySet has2 = getDs().find(HasEmbeddedStringySet.class).iterator(new FindOptions().limit(1))
-                                                  .next();
+        final HasEmbeddedStringySet has2 = getDs().find(HasEmbeddedStringySet.class).first();
         Assert.assertNotNull(has2);
         Assert.assertNotNull(has2.hss);
-        Assert.assertEquals(1, has2.hss.size());
-    }
-
-    @Entity
-    private static class HasString {
-        private final String s = "foo";
+        Assert.assertEquals(has2.hss.size(), 1);
     }
 
     @Entity(value = "B", useDiscriminator = false)
     private static class HasEmbeddedStringy {
+        private final HasString hs = new HasString();
         @Id
         private ObjectId id;
-        private final HasString hs = new HasString();
     }
 
     @Entity(value = "B", useDiscriminator = false)
@@ -83,13 +76,6 @@ public class TestSingleToMultipleConversion extends TestBase {
     }
 
     @Entity(value = "A", useDiscriminator = false)
-    private static class HasSingleString {
-        @Id
-        private ObjectId id;
-        private final String s = "foo";
-    }
-
-    @Entity(value = "A", useDiscriminator = false)
     private static class HasManyStringsArray {
         @Id
         private ObjectId id;
@@ -103,5 +89,17 @@ public class TestSingleToMultipleConversion extends TestBase {
         private ObjectId id;
         @AlsoLoad("s")
         private List<String> strings;
+    }
+
+    @Entity(value = "A", useDiscriminator = false)
+    private static class HasSingleString {
+        private final String s = "foo";
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class HasString {
+        private final String s = "foo";
     }
 }
