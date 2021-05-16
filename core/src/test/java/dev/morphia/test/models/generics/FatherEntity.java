@@ -1,15 +1,18 @@
 package dev.morphia.test.models.generics;
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
+@Entity
 public abstract class FatherEntity<T extends EmbeddedType> {
 
     @Id
     private final ObjectId id = new ObjectId();
     private List<? extends EmbeddedType> embeddedList;
+    private Another embedded;
 
     public FatherEntity() {
     }

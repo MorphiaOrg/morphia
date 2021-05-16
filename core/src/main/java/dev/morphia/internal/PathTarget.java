@@ -132,6 +132,11 @@ public class PathTarget {
         return position < segments.size();
     }
 
+    private void failValidation(String pathElement) {
+        resolved = true;
+        throw new ValidationException(Sofia.invalidPathTarget(translatedPath(), root.getType().getName(), pathElement));
+    }
+
     private void resolve() {
         context = this.root;
         position = 0;
@@ -150,7 +155,7 @@ public class PathTarget {
 
             if (property != null) {
                 if (hasNext() && property.isReference()) {
-                    failValidation();
+                    failValidation(segment);
                 }
                 translate(property.getMappedName());
                 if (property.isMap() && hasNext()) {
@@ -158,17 +163,12 @@ public class PathTarget {
                 }
             } else {
                 if (validateNames) {
-                    failValidation();
+                    failValidation(segment);
                 }
             }
         }
         target = property;
         resolved = true;
-    }
-
-    private void failValidation() {
-        resolved = true;
-        throw new ValidationException(Sofia.invalidPathTarget(translatedPath(), root.getType().getName()));
     }
 
     private void translate(String nameToStore) {
