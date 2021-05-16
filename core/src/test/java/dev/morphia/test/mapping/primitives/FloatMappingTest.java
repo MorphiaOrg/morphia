@@ -1,12 +1,12 @@
-package dev.morphia.mapping.primitives;
+package dev.morphia.test.mapping.primitives;
 
 
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,18 +35,18 @@ public class FloatMappingTest extends TestBase {
 
         Assert.assertNotNull(loaded.id);
 
-        Assert.assertArrayEquals(ent.listWrapperArray.get(0), loaded.listWrapperArray.get(0));
-        Assert.assertEquals(ent.listWrapper, loaded.listWrapper);
-        Assert.assertArrayEquals(ent.listPrimitiveArray.get(0), loaded.listPrimitiveArray.get(0), 0.0f);
+        Assert.assertEquals(loaded.listWrapperArray.get(0), ent.listWrapperArray.get(0));
+        Assert.assertEquals(loaded.listWrapper, ent.listWrapper);
+        Assert.assertEquals(loaded.listPrimitiveArray.get(0), ent.listPrimitiveArray.get(0), 0.0f);
 
-        Assert.assertEquals(ent.singlePrimitive, loaded.singlePrimitive, 0);
-        Assert.assertEquals(ent.singleWrapper, loaded.singleWrapper, 0);
+        Assert.assertEquals(loaded.singlePrimitive, ent.singlePrimitive, 0);
+        Assert.assertEquals(loaded.singleWrapper, ent.singleWrapper, 0);
 
-        Assert.assertArrayEquals(ent.primitiveArray, loaded.primitiveArray, 0.0f);
-        Assert.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
+        Assert.assertEquals(loaded.primitiveArray, ent.primitiveArray, 0.0f);
+        Assert.assertEquals(loaded.wrapperArray, ent.wrapperArray);
 
-        Assert.assertArrayEquals(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
-        Assert.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
+        Assert.assertEquals(loaded.nestedPrimitiveArray, ent.nestedPrimitiveArray);
+        Assert.assertEquals(loaded.nestedWrapperArray, ent.nestedWrapperArray);
     }
 
     @Entity

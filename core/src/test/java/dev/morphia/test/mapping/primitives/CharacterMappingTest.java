@@ -1,12 +1,12 @@
-package dev.morphia.mapping.primitives;
+package dev.morphia.test.mapping.primitives;
 
 
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,24 +34,24 @@ public class CharacterMappingTest extends TestBase {
                                          .filter(eq("_id", entity.id))
                                          .first();
         Assert.assertNotNull(loaded.id);
-        Assert.assertArrayEquals(entity.listWrapperArray.get(0), loaded.listWrapperArray.get(0));
-        Assert.assertArrayEquals(entity.listPrimitiveArray.get(0), loaded.listPrimitiveArray.get(0));
-        Assert.assertEquals(entity.listWrapper, loaded.listWrapper);
-        Assert.assertEquals(entity.singlePrimitive, loaded.singlePrimitive);
-        Assert.assertEquals(entity.singleWrapper, loaded.singleWrapper);
-        Assert.assertArrayEquals(entity.primitiveArray, loaded.primitiveArray);
-        Assert.assertArrayEquals(entity.wrapperArray, loaded.wrapperArray);
-        Assert.assertArrayEquals(entity.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
-        Assert.assertArrayEquals(entity.nestedWrapperArray, loaded.nestedWrapperArray);
+        Assert.assertEquals(loaded.listWrapperArray.get(0), entity.listWrapperArray.get(0));
+        Assert.assertEquals(loaded.listPrimitiveArray.get(0), entity.listPrimitiveArray.get(0));
+        Assert.assertEquals(loaded.listWrapper, entity.listWrapper);
+        Assert.assertEquals(loaded.singlePrimitive, entity.singlePrimitive);
+        Assert.assertEquals(loaded.singleWrapper, entity.singleWrapper);
+        Assert.assertEquals(loaded.primitiveArray, entity.primitiveArray);
+        Assert.assertEquals(loaded.wrapperArray, entity.wrapperArray);
+        Assert.assertEquals(loaded.nestedPrimitiveArray, entity.nestedPrimitiveArray);
+        Assert.assertEquals(loaded.nestedWrapperArray, entity.nestedWrapperArray);
     }
 
     @Entity
     public static class Characters {
-        @Id
-        private ObjectId id;
         private final List<Character[]> listWrapperArray = new ArrayList<>();
         private final List<char[]> listPrimitiveArray = new ArrayList<>();
         private final List<Character> listWrapper = new ArrayList<>();
+        @Id
+        private ObjectId id;
         private char singlePrimitive;
         private Character singleWrapper;
         private char[] primitiveArray;

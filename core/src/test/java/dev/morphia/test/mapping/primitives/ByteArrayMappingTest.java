@@ -1,12 +1,12 @@
-package dev.morphia.mapping.primitives;
+package dev.morphia.test.mapping.primitives;
 
 
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
@@ -15,16 +15,14 @@ public class ByteArrayMappingTest extends TestBase {
     public void testCharMapping() {
         getMapper().map(ContainsByteArray.class);
         final ContainsByteArray entity = new ContainsByteArray();
-        final Byte[] test = new Byte[]{6, 9, 1, -122};
-        entity.ba = test;
+        entity.ba = new Byte[]{6, 9, 1, -122};
         getDs().save(entity);
         final ContainsByteArray loaded = getDs().find(ContainsByteArray.class)
                                                 .filter(eq("_id", entity.id))
                                                 .first();
 
-        for (int i = 0; i < test.length; i++) {
-            final Byte c = test[i];
-            Assert.assertEquals(c, entity.ba[i]);
+        for (int i = 0; i < entity.ba.length; i++) {
+            Assert.assertEquals(loaded.ba[i], entity.ba[i]);
         }
         Assert.assertNotNull(loaded.id);
     }
