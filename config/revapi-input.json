@@ -150,6 +150,20 @@
         "justification": "only used if the user doesn't want a cap applied"
       }
     ],
+    "noLongerDefault": [
+      {
+        "old": "method <T> dev.morphia.query.Query<T> dev.morphia.AdvancedDatastore::createQuery(java.lang.Class<T>, org.bson.Document)",
+        "new": "method <T> dev.morphia.query.Query<T> dev.morphia.AdvancedDatastore::createQuery(java.lang.Class<T>, org.bson.Document)",
+        "justification": "internal implementation"
+      }
+    ],
+    "nowAbstract": [
+      {
+        "old": "method <T> dev.morphia.query.Query<T> dev.morphia.AdvancedDatastore::createQuery(java.lang.Class<T>, org.bson.Document)",
+        "new": "method <T> dev.morphia.query.Query<T> dev.morphia.AdvancedDatastore::createQuery(java.lang.Class<T>, org.bson.Document)",
+        "justification": "internal implementation"
+      }
+    ],
     "numberOfParametersChanged": [
       {
         "class": "dev.morphia.mapping.codec.*",
