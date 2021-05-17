@@ -238,7 +238,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":38,"i3":50,"i4":50,"i5":50,"i6":50,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":50,"i17":50,"i18":50,"i19":50,"i20":6,"i21":6,"i22":6,"i23":6,"i24":6,"i25":18,"i26":18,"i27":6,"i28":6,"i29":6,"i30":6,"i31":50,"i32":6,"i33":6,"i34":6,"i35":50,"i36":50,"i37":18,"i38":6,"i39":18,"i40":6,"i41":50,"i42":6,"i43":6,"i44":6,"i45":50,"i46":50,"i47":6,"i48":6};
+var data = {"i0":6,"i1":6,"i2":38,"i3":50,"i4":50,"i5":50,"i6":50,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":50,"i17":50,"i18":50,"i19":50,"i20":6,"i21":6,"i22":6,"i23":6,"i24":18,"i25":18,"i26":6,"i27":6,"i28":6,"i29":6,"i30":50,"i31":6,"i32":6,"i33":6,"i34":50,"i35":50,"i36":18,"i37":6,"i38":18,"i39":6,"i40":50,"i41":6,"i42":6,"i43":50,"i44":50,"i45":6,"i46":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -551,25 +551,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i24" class="altColor">
-<td class="colFirst"><code><a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQueryFactory()">getQueryFactory</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i25" class="rowColor">
 <td class="colFirst"><code>default com.mongodb.client.ClientSession</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSession()">getSession</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the session this datastore is attached to or null if none is attached.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List)">insert</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block">Inserts a List of entities in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List,dev.morphia.InsertManyOptions)">insert</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
       <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</code></th>
@@ -577,14 +572,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Inserts entities in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T)">insert</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Inserts an entity in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
       <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -592,14 +587,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Inserts an entity in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T)">merge</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T,com.mongodb.WriteConcern)">merge</a></span>​(T&nbsp;entity,
      com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -609,7 +604,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
      <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -617,21 +612,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(T)">queryByExample</a></span>​(T&nbsp;example)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refresh(T)">refresh</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Refreshes an existing entity to its current state in the database.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable)">save</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;T&gt;&nbsp;entities)</code></th>
 <td class="colLast">
@@ -640,7 +635,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable,dev.morphia.InsertOptions)">save</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;T&gt;&nbsp;entities,
     <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
@@ -650,14 +645,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.util.List)">save</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block">Saves the entities (Objects) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.util.List,dev.morphia.InsertManyOptions)">save</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
     <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</code></th>
@@ -665,14 +660,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Saves the entities (Objects) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T)">save</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Saves an entity (Object) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
     <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -680,7 +675,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Saves an entity (Object) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i41" class="rowColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,dev.morphia.InsertOptions)">save</a></span>​(T&nbsp;entity,
     <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
@@ -690,28 +685,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr id="i42" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQueryFactory(dev.morphia.query.QueryFactory)">setQueryFactory</a></span>​(<a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;queryFactory)</code></th>
-<td class="colLast">
-<div class="block">Replaces the current <a href="query/QueryFactory.html" title="interface in dev.morphia.query"><code>QueryFactory</code></a> with the given value.</div>
-</td>
-</tr>
-<tr id="i43" class="rowColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession()">startSession</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
-<tr id="i44" class="altColor">
+<tr id="i42" class="altColor">
 <td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession(com.mongodb.ClientSessionOptions)">startSession</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
-<tr id="i45" class="rowColor">
+<tr id="i43" class="rowColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
@@ -721,7 +709,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr id="i46" class="altColor">
+<tr id="i44" class="altColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
@@ -732,13 +720,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr id="i47" class="rowColor">
+<tr id="i45" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options,
                <a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i48" class="altColor">
+<tr id="i46" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(<a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -1244,37 +1232,6 @@ com.mongodb.client.ClientSession&nbsp;findSession​(<a href="internal/SessionCo
 <dd>the Mapper used by this Datastore</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.5</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
-<a id="getQueryFactory()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getQueryFactory</h4>
-<pre class="methodSignature"><a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;getQueryFactory()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the current <a href="query/QueryFactory.html" title="interface in dev.morphia.query"><code>QueryFactory</code></a>.</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="query/QueryFactory.html" title="interface in dev.morphia.query"><code>QueryFactory</code></a></dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
-<a id="setQueryFactory(dev.morphia.query.QueryFactory)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setQueryFactory</h4>
-<pre class="methodSignature">void&nbsp;setQueryFactory​(<a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;queryFactory)</pre>
-<div class="block">Replaces the current <a href="query/QueryFactory.html" title="interface in dev.morphia.query"><code>QueryFactory</code></a> with the given value.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>queryFactory</code> - the QueryFactory to use</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="query/QueryFactory.html" title="interface in dev.morphia.query"><code>QueryFactory</code></a></dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
