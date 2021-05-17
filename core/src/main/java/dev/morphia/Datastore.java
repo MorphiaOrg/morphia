@@ -20,7 +20,6 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
@@ -305,22 +304,6 @@ public interface Datastore {
      * @since 1.5
      */
     Mapper getMapper();
-
-    /**
-     * @return the current {@link QueryFactory}.
-     * @morphia.internal
-     * @see QueryFactory
-     */
-    QueryFactory getQueryFactory();
-
-    /**
-     * Replaces the current {@link QueryFactory} with the given value.
-     *
-     * @param queryFactory the QueryFactory to use
-     * @morphia.internal
-     * @see QueryFactory
-     */
-    void setQueryFactory(QueryFactory queryFactory);
 
     /**
      * Returns the session this datastore is attached to or null if none is attached.

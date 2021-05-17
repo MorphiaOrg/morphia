@@ -48,7 +48,16 @@ public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
     private static MongoClient mongoClient;
-    private MapperOptions mapperOptions = MapperOptions.DEFAULT;
+
+    private MapperOptions mapperOptions;
+
+    public TestBase() {
+        mapperOptions = MapperOptions.DEFAULT;
+    }
+
+    public TestBase(MapperOptions mapperOptions) {
+        this.mapperOptions = mapperOptions;
+    }
 
     private MongoDatabase database;
     private Datastore datastore;

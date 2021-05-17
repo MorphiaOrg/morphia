@@ -1,5 +1,6 @@
 package dev.morphia.test.indexes;
 
+import com.mongodb.MongoCommandException;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
@@ -12,6 +13,8 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Text;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.test.TestBase;
@@ -19,6 +22,7 @@ import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Date;
@@ -26,17 +30,23 @@ import java.util.List;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static dev.morphia.utils.IndexType.DESC;
+import static dev.morphia.utils.IndexType.TEXT;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
+    @Test(expectedExceptions = MongoCommandException.class)
+    public void shouldNotAllowMultipleTextIndexes() {
+        getMapper().map(MultipleTextIndexes.class);
+        getDs().ensureIndexes();
+    }
 
     @Test
     public void testExpireAfterClassAnnotation() {
         getMapper().map(ClassAnnotation.class);
-        getDs().ensureIndexes();
+        getDs().ensureIndexes(ClassAnnotation.class);
 
         getDs().save(new ClassAnnotation());
 
@@ -56,7 +66,7 @@ public class TestIndexes extends TestBase {
     @Test
     public void testIndexedField() {
         getMapper().map(HasExpiryField.class);
-        getDs().ensureIndexes();
+        getDs().ensureIndexes(HasExpiryField.class);
 
         getDs().save(new HasExpiryField());
 
@@ -120,6 +130,49 @@ public class TestIndexes extends TestBase {
             });
     }
 
+    @Test
+    public void testSingleAnnotation() {
+        getMapper().map(CompoundTextIndex.class);
+        getDs().ensureIndexes();
+
+        List<Document> indexInfo = getIndexInfo(CompoundTextIndex.class);
+        Assert.assertEquals(indexInfo.size(), 2);
+        boolean found = false;
+        for (Document document : indexInfo) {
+            if (document.get("name").equals("indexing_test")) {
+                found = true;
+                Assert.assertEquals(document.get("default_language"), "russian", document.toString());
+                Assert.assertEquals(document.get("language_override"), "nativeTongue", document.toString());
+                Assert.assertEquals(((Document) document.get("weights")).get("name"), 1, document.toString());
+                Assert.assertEquals(((Document) document.get("weights")).get("nick"), 10, document.toString());
+                Assert.assertEquals(((Document) document.get("key")).get("age"), 1, document.toString());
+            }
+        }
+        Assert.assertTrue(found);
+    }
+
+    @Test
+    public void testTextAnnotation() {
+        Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
+
+        getMapper().map(clazz);
+        getDs().ensureIndexes();
+
+        List<Document> indexInfo = getIndexInfo(clazz);
+        Assert.assertEquals(indexInfo.size(), 2, indexInfo.toString());
+        boolean found = false;
+        for (Document document : indexInfo) {
+            if (document.get("name").equals("single_annotation")) {
+                found = true;
+                Assert.assertEquals(document.get("default_language"), "english", document.toString());
+                Assert.assertEquals(document.get("language_override"), "nativeTongue", document.toString());
+                Assert.assertEquals(((Document) document.get("weights")).get("nickName"), 10, document.toString());
+            }
+        }
+        Assert.assertTrue(found, indexInfo.toString());
+
+    }
+
     private void assertBackground(List<Document> indexInfo) {
         for (Document document : indexInfo) {
             if (!document.getString("name").equals("_id_")) {
@@ -145,6 +198,21 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity
+    @Indexes(@Index(fields = {@Field(value = "name", type = TEXT),
+                              @Field(value = "nick", type = TEXT, weight = 10),
+                              @Field(value = "age")}, options = @IndexOptions(name = "indexing_test", language = "russian",
+        languageOverride = "nativeTongue")))
+    private static class CompoundTextIndex {
+        @Id
+        private ObjectId id;
+        private String name;
+        private Integer age;
+        @Property("nick")
+        private String nickName;
+        private String nativeTongue;
+    }
+
+    @Entity
     @Indexes(@Index(fields = {@Field("actor.actorObject.userId"), @Field(value = "actor.actorType", type = DESC)},
         options = @IndexOptions(disableValidation = true,
             partialFilter = "{ 'actor.actorObject.userId': { $exists: true }, 'actor.actorType': { $exists: true } }")))
@@ -166,6 +234,26 @@ public class TestIndexes extends TestBase {
         @Id
         private ObjectId id;
         private FeedEvent feedEvent;
+    }
+
+    @Entity
+    @Indexes({@Index(fields = @Field(value = "name", type = TEXT)),
+              @Index(fields = @Field(value = "nickName", type = TEXT))})
+    private static class MultipleTextIndexes {
+        @Id
+        private ObjectId id;
+        private String name;
+        private String nickName;
+    }
+
+    @Entity
+    private static class SingleFieldTextIndex {
+        @Id
+        private ObjectId id;
+        private String name;
+        @Text(value = 10, options = @IndexOptions(name = "single_annotation", languageOverride = "nativeTongue"))
+        private String nickName;
+
     }
 
     @Entity(useDiscriminator = false)

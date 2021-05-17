@@ -10,8 +10,6 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
 import dev.morphia.TestBase;
-import dev.morphia.TestMapper.CustomId;
-import dev.morphia.TestMapper.UsesCustomIdObject;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -20,6 +18,7 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.ReferenceTest.ChildId;
 import dev.morphia.mapping.ReferenceTest.Complex;
 import dev.morphia.testmodel.Hotel;
@@ -27,7 +26,6 @@ import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -70,14 +68,8 @@ import static org.junit.Assert.fail;
 
 @SuppressWarnings({"unchecked", "unused", "removal"})
 public class TestLegacyQuery extends TestBase {
-    @After
-    public void setDefaultQuery() {
-        getDs().setQueryFactory(new DefaultQueryFactory());
-    }
-
-    @Before
-    public void setLegacyQuery() {
-        getDs().setQueryFactory(new LegacyQueryFactory());
+    public TestLegacyQuery() {
+        super(MapperOptions.legacy().build());
     }
 
     @Test
@@ -393,42 +385,6 @@ public class TestLegacyQuery extends TestBase {
                                                   .execute().toList();
         assertEquals(1, keywords.size());
         assertEquals(oscar, keywords.get(0).keywords.get(0));
-    }
-
-    @Test
-    public void testComplexIdQuery() {
-        final CustomId cId = new CustomId();
-        cId.setId(new ObjectId());
-        cId.setType("banker");
-
-        final UsesCustomIdObject object = new UsesCustomIdObject();
-        object.setId(cId);
-        object.setText("hllo");
-        getDs().save(object);
-
-        assertNotNull(getDs().find(UsesCustomIdObject.class).filter("_id.type", "banker")
-                             .execute(new FindOptions().limit(1))
-                             .tryNext());
-
-        assertNotNull(getDs().find(UsesCustomIdObject.class).field("_id").hasAnyOf(singletonList(cId))
-                             .execute(new FindOptions().limit(1))
-                             .tryNext());
-    }
-
-    @Test
-    public void testComplexIdQueryWithRenamedField() {
-        final CustomId cId = new CustomId();
-        cId.setId(new ObjectId());
-        cId.setType("banker");
-
-        final UsesCustomIdObject object = new UsesCustomIdObject();
-        object.setId(cId);
-        object.setText("hllo");
-        getDs().save(object);
-
-        assertNotNull(getDs().find(UsesCustomIdObject.class).filter("_id.t", "banker")
-                             .execute(new FindOptions().limit(1))
-                             .tryNext());
     }
 
     @Test
@@ -970,32 +926,6 @@ public class TestLegacyQuery extends TestBase {
                                 .limit(1))
                    .next()
                 .scalars);
-    }
-
-    @Test
-    public void testQBE() {
-        final CustomId cId = new CustomId();
-        cId.setId(new ObjectId());
-        cId.setType("banker");
-
-        final UsesCustomIdObject object = new UsesCustomIdObject();
-        object.setId(cId);
-        object.setText("hllo");
-        getDs().save(object);
-        final UsesCustomIdObject loaded;
-
-        // Add back if/when query by example for embedded fields is supported (require dotting each field).
-        // CustomId exId = new CustomId();
-        // exId.type = cId.type;
-        // loaded = getDs().find(UsesCustomIdObject.class, "_id", exId).get();
-        // assertNotNull(loaded);
-
-        final UsesCustomIdObject ex = new UsesCustomIdObject();
-        ex.setText(object.getText());
-        loaded = getDs().queryByExample(ex)
-                        .execute(new FindOptions().limit(1))
-                        .next();
-        assertNotNull(loaded);
     }
 
     @Test

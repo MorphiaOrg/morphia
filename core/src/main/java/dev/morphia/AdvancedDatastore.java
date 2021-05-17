@@ -40,9 +40,7 @@ public interface AdvancedDatastore extends Datastore {
      * @return Query for the specified class type
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> Query<T> createQuery(Class<T> type, Document q) {
-        return getQueryFactory().createQuery(this, type, q);
-    }
+    <T> Query<T> createQuery(Class<T> type, Document q);
 
     /**
      * Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)

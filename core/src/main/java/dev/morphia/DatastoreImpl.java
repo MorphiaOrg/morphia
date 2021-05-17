@@ -65,7 +65,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final MongoClient mongoClient;
     private final Mapper mapper;
 
-    private QueryFactory queryFactory;
+    private final QueryFactory queryFactory;
 
     protected DatastoreImpl(MongoClient mongoClient, MapperOptions options, String dbName) {
         MongoDatabase database = mongoClient.getDatabase(dbName);
@@ -196,19 +196,18 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> Query<T> createQuery(Class<T> type, Document q) {
+        return queryFactory.createQuery(this, type, q);
+    }
+
+    @Override
     public <T> Query<T> find(Class<T> type) {
-        return getQueryFactory().createQuery(this, type);
+        return queryFactory.createQuery(this, type);
     }
 
     @Override
     public <T> Query<T> find(String collection, Class<T> type) {
-        return getQueryFactory().createQuery(this, collection, type);
-    }
-
-    @Override
-    public <T> Query<T> find(String collection) {
-        Class<T> type = mapper.getClassFromCollection(collection);
-        return getQueryFactory().createQuery(this, type);
+        return queryFactory.createQuery(this, collection, type);
     }
 
     @Override
@@ -278,16 +277,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public QueryFactory getQueryFactory() {
-        return queryFactory;
-    }
-
-    @Override
-    public void setQueryFactory(QueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
-    }
-
-    @Override
     public <T> T merge(T entity) {
         return merge(entity, new InsertOneOptions());
     }
@@ -298,9 +287,15 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> Query<T> find(String collection) {
+        Class<T> type = mapper.getClassFromCollection(collection);
+        return queryFactory.createQuery(this, type);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T> Query<T> queryByExample(T example) {
-        return getQueryFactory().createQuery(this, (Class<T>) example.getClass(), mapper.toDocument(example));
+        return queryFactory.createQuery(this, (Class<T>) example.getClass(), mapper.toDocument(example));
     }
 
     @Override

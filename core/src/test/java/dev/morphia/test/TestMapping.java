@@ -34,9 +34,13 @@ import dev.morphia.test.models.errors.ContainsXKeyMap;
 import dev.morphia.test.models.errors.OuterClass.NonStaticInnerClass;
 import dev.morphia.test.models.external.HoldsUnannotated;
 import dev.morphia.test.models.external.UnannotatedEmbedded;
+import dev.morphia.test.models.generics.Another;
+import dev.morphia.test.models.generics.Child;
+import dev.morphia.test.models.generics.EmbeddedType;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
@@ -119,6 +123,16 @@ public class TestMapping extends TestBase {
     @Test
     public void shouldSupportGenericArrays() {
         getMapper().map(MyEntity.class);
+    }
+
+    @Test
+    public void subTypes() {
+        getMapper().map(EmbeddedType.class, Another.class, Child.class);
+
+        Mapper mapper = getMapper();
+        List<EntityModel> subTypes = mapper.getEntityModel(EmbeddedType.class).getSubtypes();
+        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Another.class)));
+        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Child.class)));
     }
 
     @Test
@@ -702,7 +716,7 @@ public class TestMapping extends TestBase {
         });
     }
 
-    public enum Enum1 {
+    private enum Enum1 {
         A,
         B
     }
@@ -767,6 +781,15 @@ public class TestMapping extends TestBase {
             }
             return reference != null ? reference.equals(that.reference) : that.reference == null;
         }
+    }
+
+    @Entity
+    private static class Containers {
+        @Id
+        private ObjectId id;
+
+        private List<Float> floatList;
+        private List<Byte> byteList;
     }
 
     @Entity
@@ -971,14 +994,5 @@ public class TestMapping extends TestBase {
         private ObjectId id;
         private String field;
         private Long number;
-    }
-
-    @Entity
-    private static class Containers {
-        @Id
-        private ObjectId id;
-
-        private List<Float> floatList;
-        private List<Byte> byteList;
     }
 }

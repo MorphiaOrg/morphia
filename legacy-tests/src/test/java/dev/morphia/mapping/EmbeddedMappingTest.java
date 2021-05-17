@@ -190,7 +190,11 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
-    public static class NestedImpl implements Nested {
+    private static class AnotherNested implements Nested {
+        private Long value;
+    }
+
+    private static class NestedImpl implements Nested {
         private String field;
 
         public NestedImpl() {
@@ -221,16 +225,12 @@ public class EmbeddedMappingTest extends TestBase {
         }
     }
 
-    public static class AnotherNested implements Nested {
-        private Long value;
-    }
-
     @Entity
     @Indexes({
         @Index(fields = {@Field("nested.field.fail")},
             options = @IndexOptions(disableValidation = true, sparse = true))
-        })
-    public static class WithNested {
+    })
+    private static class WithNested {
         @Id
         private ObjectId id;
         private Nested nested;
@@ -263,7 +263,7 @@ public class EmbeddedMappingTest extends TestBase {
 
     @Entity
     @Indexes(@Index(fields = {@Field("nested.field.fail")}))
-    public static class WithNestedValidated {
+    private static class WithNestedValidated {
         @Id
         private ObjectId id;
         private Nested nested;

@@ -9,7 +9,6 @@ import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
@@ -28,7 +27,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assume.assumeTrue;
@@ -37,15 +35,21 @@ import static org.junit.Assume.assumeTrue;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    private static final MapperOptions mapperOptions = MapperOptions.DEFAULT;
+    private static MapperOptions mapperOptions = MapperOptions.DEFAULT;
     private static MongoClient mongoClient;
-
     private final MongoDatabase database;
     private final Datastore ds;
 
     protected TestBase() {
         this.ds = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
         this.database = getMongoClient().getDatabase(TEST_DB_NAME);
+        mapperOptions = MapperOptions.DEFAULT;
+    }
+
+    protected TestBase(MapperOptions option) {
+        this.ds = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
+        this.database = getMongoClient().getDatabase(TEST_DB_NAME);
+        mapperOptions = option;
     }
 
     static void startMongo() {
@@ -120,24 +124,6 @@ public abstract class TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         collection.deleteMany(new Document());
         collection.insertMany(list);
-    }
-
-    protected int count(MongoCursor<?> cursor) {
-        int count = 0;
-        while (cursor.hasNext()) {
-            cursor.next();
-            count++;
-        }
-        return count;
-    }
-
-    protected int count(Iterator<?> iterator) {
-        int count = 0;
-        while (iterator.hasNext()) {
-            count++;
-            iterator.next();
-        }
-        return count;
     }
 
     protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
