@@ -9,7 +9,7 @@
         <Root level="warn">
             <AppenderRef ref="Console"/>
         </Root>
-        <logger name="dev.morphia" level="warn">
+        <logger name="dev.morphia" level="trace">
             <AppenderRef ref="Console"/>
         </logger>
     </Loggers>

@@ -10,6 +10,7 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * Defines a query projection
@@ -181,5 +182,17 @@ public class Projection {
         this.meta = meta;
         validateProjections();
         return options;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Projection.class.getSimpleName() + "[", "]")
+                   .add("includes=" + includes)
+                   .add("excludes=" + excludes)
+                   .add("arrayField='" + arrayField + "'")
+                   .add("slice=" + slice)
+                   .add("meta=" + meta)
+                   .add("knownFields=" + knownFields)
+                   .toString();
     }
 }

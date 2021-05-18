@@ -439,8 +439,8 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
                    .add("returnKey=" + returnKey)
                    .add("showRecordId=" + showRecordId)
                    .add("readPreference=" + readPreference)
-                   .add("projection=" + projection)
                    .add("queryLogId='" + queryLogId + "'")
+                   .add("projection=" + projection)
                    .toString();
     }
 

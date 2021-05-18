@@ -42,6 +42,7 @@ import static java.lang.String.format;
  * @morphia.internal
  */
 @SuppressWarnings("removal")
+public
 class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;
@@ -437,7 +438,7 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         final Document query = this.toDocument();
 
         if (LOG.isTraceEnabled()) {
-            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, options));
+            LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query.toJson(), options));
         }
 
         if ((options.getCursorType() != null && options.getCursorType() != NonTailable)

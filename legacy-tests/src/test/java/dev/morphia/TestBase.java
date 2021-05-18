@@ -37,56 +37,29 @@ public abstract class TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
     private static MapperOptions mapperOptions = MapperOptions.DEFAULT;
     private static MongoClient mongoClient;
-    private final MongoDatabase database;
-    private final Datastore ds;
+    private MongoDatabase database;
+    private Datastore datastore;
 
     protected TestBase() {
-        this.ds = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
-        this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         mapperOptions = MapperOptions.DEFAULT;
     }
 
     protected TestBase(MapperOptions option) {
-        this.ds = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
-        this.database = getMongoClient().getDatabase(TEST_DB_NAME);
         mapperOptions = option;
     }
 
-    static void startMongo() {
-        String mongodb = System.getenv("MONGODB");
-        Builder builder = MongoClientSettings.builder();
-
-        try {
-            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
-        } catch (Exception ignored) {
-            // not a 4.0 driver
-        }
-
-        if (mongodb != null) {
-            File mongodbRoot = new File("target/mongo");
-            try {
-                FileUtils.deleteDirectory(mongodbRoot);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-            Version version = Version.valueOf(mongodb);
-            final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
-                                         ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
-                                         : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
-
-            cluster.start();
-            mongoClient = cluster.getClient(builder);
-        } else {
-            mongoClient = MongoClients.create(builder.build());
-        }
-    }
-
     public MongoDatabase getDatabase() {
+        if (database == null) {
+            database = getDs().getDatabase();
+        }
         return database;
     }
 
     public Datastore getDs() {
-        return ds;
+        if (datastore == null) {
+            datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME, mapperOptions);
+        }
+        return datastore;
     }
 
     public Mapper getMapper() {
@@ -120,18 +93,8 @@ public abstract class TestBase {
         });
     }
 
-    protected void insert(String collectionName, List<Document> list) {
-        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
-        collection.deleteMany(new Document());
-        collection.insertMany(list);
-    }
-
     protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
         return getDatabase().getCollection(getEntityModel(type).getCollectionName());
-    }
-
-    protected List<Document> getIndexInfo(Class<?> clazz) {
-        return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
 
     protected EntityModel getEntityModel(Class<?> aClass) {
@@ -139,6 +102,16 @@ public abstract class TestBase {
         mapper.map(aClass);
 
         return mapper.getEntityModel(aClass);
+    }
+
+    protected List<Document> getIndexInfo(Class<?> clazz) {
+        return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
+    }
+
+    protected void insert(String collectionName, List<Document> list) {
+        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
+        collection.deleteMany(new Document());
+        collection.insertMany(list);
     }
 
     protected String toString(Document document) {
@@ -176,5 +149,34 @@ public abstract class TestBase {
             e.printStackTrace();
         }
         assumeTrue("Failed to process media files", file.exists());
+    }
+
+    private void startMongo() {
+        String mongodb = System.getenv("MONGODB");
+        Builder builder = MongoClientSettings.builder();
+
+        try {
+            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
+        } catch (Exception ignored) {
+            // not a 4.0 driver
+        }
+
+        if (mongodb != null) {
+            File mongodbRoot = new File("target/mongo");
+            try {
+                FileUtils.deleteDirectory(mongodbRoot);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+            Version version = Version.valueOf(mongodb);
+            final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
+                                         ? new SingleNode(mongodbRoot, "morphia_test", version)
+                                         : new ReplicaSet(mongodbRoot, "morphia_test", version);
+
+            cluster.start();
+            mongoClient = cluster.getClient(builder);
+        } else {
+            mongoClient = MongoClients.create(builder.build());
+        }
     }
 }

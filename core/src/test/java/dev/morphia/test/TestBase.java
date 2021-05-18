@@ -19,6 +19,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
+import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,8 @@ public abstract class TestBase {
     private static MongoClient mongoClient;
 
     private MapperOptions mapperOptions;
+    private MongoDatabase database;
+    private Datastore datastore;
 
     public TestBase() {
         mapperOptions = MapperOptions.DEFAULT;
@@ -58,9 +61,6 @@ public abstract class TestBase {
     public TestBase(MapperOptions mapperOptions) {
         this.mapperOptions = mapperOptions;
     }
-
-    private MongoDatabase database;
-    private Datastore datastore;
 
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
         if (!condition) {
@@ -348,10 +348,16 @@ public abstract class TestBase {
         }
 
         if (mongodb != null) {
+            File mongodbRoot = new File("target/mongo");
+            try {
+                FileUtils.deleteDirectory(mongodbRoot);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
             Version version = Version.valueOf(mongodb);
             final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
-                                         ? new SingleNode(new File("target/mongo/"), "morphia_test", version)
-                                         : new ReplicaSet(new File("target/mongo/"), "morphia_test", version);
+                                         ? new SingleNode(mongodbRoot, "morphia_test", version)
+                                         : new ReplicaSet(mongodbRoot, "morphia_test", version);
 
             cluster.configure(c -> {
                 c.systemLog(s -> {
