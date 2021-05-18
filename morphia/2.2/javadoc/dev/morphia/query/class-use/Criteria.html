@@ -377,6 +377,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a>&lt;T&gt;</span></code></th>
+<td class="colLast">
+<div class="block">Implementation of Query</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../WhereCriteria.html" title="class in dev.morphia.query">WhereCriteria</a></span></code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -425,6 +432,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 &nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#add(dev.morphia.query.Criteria...)">add</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>default <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">CriteriaContainer.</span><code><span class="memberNameLink"><a href="../CriteriaContainer.html#and(dev.morphia.query.Criteria...)">and</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
@@ -432,12 +444,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Ands Criteria with this CriteriaContainer.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">CriteriaContainerImpl.</span><code><span class="memberNameLink"><a href="../CriteriaContainerImpl.html#and(dev.morphia.query.Criteria...)">and</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#and(dev.morphia.query.Criteria...)">and</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>default <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
@@ -462,13 +479,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 &nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#or(dev.morphia.query.Criteria...)">or</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>default <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#or(dev.morphia.query.Criteria...)">or</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">CriteriaContainer.</span><code><span class="memberNameLink"><a href="../CriteriaContainer.html#remove(dev.morphia.query.Criteria)">remove</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>&nbsp;criteria)</code></th>
 <td class="colLast">
@@ -476,12 +498,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Removes Criteria to this container</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">CriteriaContainerImpl.</span><code><span class="memberNameLink"><a href="../CriteriaContainerImpl.html#remove(dev.morphia.query.Criteria)">remove</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#remove(dev.morphia.query.Criteria)">remove</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>&nbsp;criteria)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>

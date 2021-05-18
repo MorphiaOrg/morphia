@@ -378,6 +378,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a>&lt;T&gt;</span></code></th>
+<td class="colLast">
+<div class="block">Implementation of Query</div>
+</td>
+</tr>
 </tbody>
 </table>
 <table class="useSummary">
@@ -404,13 +411,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 &nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#and(dev.morphia.query.Criteria...)">and</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>default <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#and(dev.morphia.query.Criteria...)">and</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>default <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">CriteriaContainer.</span><code><span class="memberNameLink"><a href="../CriteriaContainer.html#or(dev.morphia.query.Criteria...)">or</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
@@ -418,12 +430,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Ors Criteria with this CriteriaContainer.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">CriteriaContainerImpl.</span><code><span class="memberNameLink"><a href="../CriteriaContainerImpl.html#or(dev.morphia.query.Criteria...)">or</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#or(dev.morphia.query.Criteria...)">or</a></span>​(<a href="../Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>default <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
@@ -458,6 +475,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 &nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#criteria(java.lang.String)">criteria</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>default <a href="../FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#criteria(java.lang.String)">criteria</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
@@ -488,6 +510,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Used to add this Criteria to a CriteriaContainer</div>
 </td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../LegacyQuery.html#attach(dev.morphia.query.CriteriaContainer)">attach</a></span>​(<a href="../CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&nbsp;container)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
