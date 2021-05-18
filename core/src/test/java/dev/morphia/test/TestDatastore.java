@@ -1,10 +1,14 @@
 package dev.morphia.test;
 
+import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.InsertManyOptions;
+import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
@@ -28,6 +32,7 @@ import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
+import dev.morphia.test.models.TestEntity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
@@ -42,6 +47,7 @@ import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
 import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -49,6 +55,21 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
 public class TestDatastore extends TestBase {
+    @Test
+    public void testBulkInsert() {
+
+        MongoCollection collection = getMapper().getCollection(TestEntity.class);
+        this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+            new InsertManyOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
+        assertEquals(collection.countDocuments(), 5);
+
+        collection.drop();
+        this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+            new InsertManyOptions()
+                .writeConcern(WriteConcern.ACKNOWLEDGED));
+        assertEquals(collection.countDocuments(), 5);
+    }
+
     @Test
     public void testCappedEntity() {
         // given
@@ -153,7 +174,7 @@ public class TestDatastore extends TestBase {
 
 
         getDs().save(borg);
-        assertEquals(1, getDs().find(Hotel.class).count());
+        assertEquals(getDs().find(Hotel.class).count(), 1);
         assertNotNull(borg.getId());
 
         final Hotel hotelLoaded = getDs().find(Hotel.class)
@@ -305,6 +326,23 @@ public class TestDatastore extends TestBase {
         final Rectangle rect = new Rectangle(10, 10);
         getDs().save(rect);
         assertNotNull(rect.getId());
+    }
+
+    @Test
+    public void testInsert() {
+        MongoCollection collection = getMapper().getCollection(TestEntity.class);
+        this.getDs().insert(new TestEntity());
+        assertEquals(collection.countDocuments(), 1);
+        this.getDs().insert(new TestEntity(), new InsertOneOptions()
+                                                  .writeConcern(WriteConcern.ACKNOWLEDGED));
+        assertEquals(collection.countDocuments(), 2);
+    }
+
+    @Test
+    public void testInsertEmpty() {
+        this.getDs().insert(emptyList());
+        this.getDs().insert(emptyList(), new InsertManyOptions()
+                                             .writeConcern(WriteConcern.ACKNOWLEDGED));
     }
 
     @Test

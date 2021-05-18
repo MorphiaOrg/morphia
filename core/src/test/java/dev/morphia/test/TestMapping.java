@@ -40,6 +40,10 @@ import dev.morphia.test.models.generics.Another;
 import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.models.generics.EmbeddedType;
 import dev.morphia.test.models.methods.MethodMappedUser;
+import dev.morphia.test.models.versioned.AbstractVersionedBase;
+import dev.morphia.test.models.versioned.Versioned;
+import dev.morphia.test.models.versioned.VersionedChildEntity;
+import dev.morphia.test.models.versioned.subversioned.VersionedToo;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
@@ -55,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.experimental.filters.Filters.eq;
@@ -70,6 +75,44 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({"unchecked", "unchecked"})
 public class TestMapping extends TestBase {
+    @Test
+    public void shouldOnlyMapEntitiesInTheGivenPackage() {
+        withOptions(MapperOptions.builder(getMapper().getOptions())
+                                 .build(), () -> {
+            getMapper().mapPackageFromClass(Versioned.class);
+
+            // then
+            List<EntityModel> list = getMapper().getMappedEntities();
+            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                                               .collect(Collectors.toList());
+            assertEquals(classes.size(), 3);
+            assertTrue(classes.contains(AbstractVersionedBase.class));
+            assertTrue(classes.contains(Versioned.class));
+            assertTrue(classes.contains(VersionedChildEntity.class));
+        });
+    }
+
+    @Test
+    public void testSubPackagesMapping() {
+        // when
+        withOptions(MapperOptions.builder(getMapper().getOptions())
+                                 .mapSubPackages(true)
+                                 .build(), () -> {
+            getMapper().mapPackageFromClass(Versioned.class);
+
+            // then
+            List<EntityModel> list = getMapper().getMappedEntities();
+            assertEquals(list.size(), 4, list.toString());
+            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                                               .collect(Collectors.toList());
+            assertTrue(classes.contains(AbstractVersionedBase.class));
+            assertTrue(classes.contains(Versioned.class));
+            assertTrue(classes.contains(VersionedToo.class));
+            assertTrue(classes.contains(VersionedChildEntity.class));
+
+        });
+    }
+
     @Test
     public void childMapping() {
         List<EntityModel> list = getMapper().map(User.class, BannedUser.class);
