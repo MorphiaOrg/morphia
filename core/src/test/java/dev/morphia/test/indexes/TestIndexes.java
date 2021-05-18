@@ -17,6 +17,7 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.utils.IndexDirection;
@@ -124,6 +125,19 @@ public class TestIndexes extends TestBase {
     }
 
     @Test
+    public void testClassIndexInherit() {
+        getMapper().map(Shape.class, Circle.class);
+        final EntityModel entityModel = getMapper().getEntityModel(Circle.class);
+        assertNotNull(entityModel);
+
+        assertNotNull(entityModel.getAnnotation(Indexes.class));
+
+        getDs().ensureIndexes();
+
+        assertEquals(getIndexInfo(Circle.class).size(), 4);
+    }
+
+    @Test
     public void testExpireAfterClassAnnotation() {
         getMapper().map(ClassAnnotation.class);
         getDs().ensureIndexes(ClassAnnotation.class);
@@ -206,6 +220,13 @@ public class TestIndexes extends TestBase {
         datastore.ensureIndexes(TestWithHashedIndex.class);
         assertEquals(getIndexInfo(TestWithHashedIndex.class).size(), 2);
         assertHashed(getIndexInfo(TestWithHashedIndex.class));
+    }
+
+    @Test
+    public void testInheritedFieldIndex() {
+        getMapper().map(Shape.class, Circle.class);
+        getDs().ensureIndexes();
+        assertEquals(getIndexInfo(Circle.class).size(), 4);
     }
 
     @Test
@@ -310,6 +331,15 @@ public class TestIndexes extends TestBase {
         private boolean active;
     }
 
+    @Indexes(@Index(fields = @Field("radius")))
+    private static class Circle extends Shape {
+        private final double radius = 1;
+
+        Circle() {
+            description = "Circles are round and can be rolled along the ground.";
+        }
+    }
+
     @Entity
     private static class CircularEmbeddedEntity {
         @Id
@@ -400,6 +430,16 @@ public class TestIndexes extends TestBase {
 
         @Indexed(IndexDirection.GEO2DSPHERE)
         private Object location;
+    }
+
+    @Entity
+    @Indexes(@Index(fields = @Field("description")))
+    public abstract static class Shape {
+        @Id
+        ObjectId id;
+        String description;
+        @Indexed
+        String foo;
     }
 
     @Entity
