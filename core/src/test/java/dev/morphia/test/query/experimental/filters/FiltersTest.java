@@ -48,38 +48,6 @@ import static org.testng.Assert.assertTrue;
 
 public class FiltersTest extends TestBase {
     @Test
-    public void testMeta() {
-        MongoCollection<Document> articles = getDatabase().getCollection("articles");
-        articles.insertMany(List.of(
-            new Document("_id", 1).append("title", "cakes and ale"),
-            new Document("_id", 2).append("title", "more cakes"),
-            new Document("_id", 3).append("title", "bread"),
-            new Document("_id", 4).append("title", "some cakes"),
-            new Document("_id", 5).append("title", "two cakes to go"),
-            new Document("_id", 6).append("title", "pie")));
-        articles.createIndex(new Document("title", "text"));
-
-        FindOptions options = new FindOptions().logQuery();
-        lazyAssert(() -> getDs().getLoggedQuery(options),
-            () -> {
-                List<Document> list = getDs().find("articles", Document.class)
-                                             .disableValidation()
-                                             .filter(text("cake"))
-                                             .iterator(options.projection()
-                                                              .project(Meta.textScore("score")))
-                                             .toList();
-                assertEquals(list.size(), 4);
-                Document document = list.stream().filter(d -> {
-                    return d.get("_id").equals(4);
-                })
-                                        .findFirst()
-                                        .get();
-                assertEquals(document.get("score"), 1.0);
-            });
-
-    }
-
-    @Test
     public void testAnd() {
         getDs().find(Budget.class)
                .filter(and(lt("budget", 10000), gt("budget", 12)))
@@ -248,6 +216,38 @@ public class FiltersTest extends TestBase {
                                           .toList();
 
         Assert.assertFalse(inventory.isEmpty(), "Should find some matches");
+    }
+
+    @Test
+    public void testMeta() {
+        MongoCollection<Document> articles = getDatabase().getCollection("articles");
+        articles.insertMany(List.of(
+            new Document("_id", 1).append("title", "cakes and ale"),
+            new Document("_id", 2).append("title", "more cakes"),
+            new Document("_id", 3).append("title", "bread"),
+            new Document("_id", 4).append("title", "some cakes"),
+            new Document("_id", 5).append("title", "two cakes to go"),
+            new Document("_id", 6).append("title", "pie")));
+        articles.createIndex(new Document("title", "text"));
+
+        FindOptions options = new FindOptions().logQuery();
+        lazyAssert(() -> getDs().getLoggedQuery(options),
+            () -> {
+                List<Document> list = getDs().find("articles", Document.class)
+                                             .disableValidation()
+                                             .filter(text("cake"))
+                                             .iterator(options.projection()
+                                                              .project(Meta.textScore("score")))
+                                             .toList();
+                assertEquals(list.size(), 4);
+                Document document = list.stream().filter(d -> {
+                    return d.get("_id").equals(4);
+                })
+                                        .findFirst()
+                                        .get();
+                assertEquals(document.get("score"), 1.0);
+            });
+
     }
 
     @Test
