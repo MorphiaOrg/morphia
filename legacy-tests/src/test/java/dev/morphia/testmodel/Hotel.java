@@ -18,7 +18,6 @@ package dev.morphia.testmodel;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
-import dev.morphia.testutil.TestEntity;
 
 import java.util.Date;
 import java.util.HashSet;

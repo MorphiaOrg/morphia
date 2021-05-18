@@ -4,7 +4,7 @@ package dev.morphia.mapping.validation.classrules;
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.validation.ConstraintViolationException;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.junit.Test;
 
 

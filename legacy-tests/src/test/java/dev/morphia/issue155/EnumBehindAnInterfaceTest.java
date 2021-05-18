@@ -3,7 +3,7 @@ package dev.morphia.issue155;
 
 import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -2,7 +2,7 @@ package dev.morphia.mapping.lazy;
 
 
 import dev.morphia.annotations.Reference;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;

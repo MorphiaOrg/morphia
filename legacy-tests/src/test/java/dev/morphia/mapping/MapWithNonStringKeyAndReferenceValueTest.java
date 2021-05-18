@@ -3,7 +3,7 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.ProxyTestBase;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;

@@ -4,7 +4,6 @@ package dev.morphia.testmodel;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.testutil.TestEntity;
 
 import java.util.HashMap;
 import java.util.Map;

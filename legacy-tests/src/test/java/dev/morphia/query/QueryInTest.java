@@ -5,7 +5,7 @@ import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;

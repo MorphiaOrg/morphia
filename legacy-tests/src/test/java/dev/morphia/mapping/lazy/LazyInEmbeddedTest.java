@@ -7,7 +7,7 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;

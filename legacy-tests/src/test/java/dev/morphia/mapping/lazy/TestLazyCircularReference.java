@@ -4,7 +4,7 @@ package dev.morphia.mapping.lazy;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Assume;

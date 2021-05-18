@@ -12,7 +12,7 @@ import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.ProxyTestBase;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;

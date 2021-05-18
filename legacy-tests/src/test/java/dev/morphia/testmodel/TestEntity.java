@@ -12,7 +12,7 @@
  */
 
 
-package dev.morphia.testutil;
+package dev.morphia.testmodel;
 
 
 import dev.morphia.annotations.Entity;

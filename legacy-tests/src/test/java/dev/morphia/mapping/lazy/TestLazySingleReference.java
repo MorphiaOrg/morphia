@@ -3,7 +3,7 @@ package dev.morphia.mapping.lazy;
 
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Reference;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Assume;

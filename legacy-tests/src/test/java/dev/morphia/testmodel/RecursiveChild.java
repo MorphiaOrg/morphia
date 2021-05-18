@@ -17,7 +17,6 @@ package dev.morphia.testmodel;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Reference;
-import dev.morphia.testutil.TestEntity;
 
 
 @Entity("stuff")

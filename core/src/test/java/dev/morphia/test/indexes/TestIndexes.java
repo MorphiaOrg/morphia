@@ -43,6 +43,16 @@ import static org.testng.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
     @Test
+    public void indexTypefromValue() {
+        assertEquals(IndexType.fromValue(1), IndexType.ASC);
+        assertEquals(IndexType.fromValue(-1), IndexType.DESC);
+        assertEquals(IndexType.fromValue("2d"), IndexType.GEO2D);
+        assertEquals(IndexType.fromValue("2dsphere"), IndexType.GEO2DSPHERE);
+        assertEquals(IndexType.fromValue("hashed"), IndexType.HASHED);
+        assertEquals(IndexType.fromValue("text"), IndexType.TEXT);
+    }
+
+    @Test
     public void mutipleUniqueIndexed() {
         getMapper().map(UniqueIndexOnValue.class);
         getDs().ensureIndexes();

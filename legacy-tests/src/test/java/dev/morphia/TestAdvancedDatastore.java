@@ -18,7 +18,7 @@ package dev.morphia;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
-import dev.morphia.testutil.TestEntity;
+import dev.morphia.testmodel.TestEntity;
 import org.junit.Assert;
 import org.junit.Test;
 
