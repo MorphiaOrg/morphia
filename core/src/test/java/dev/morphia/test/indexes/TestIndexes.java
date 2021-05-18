@@ -19,6 +19,7 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.methods.MethodMappedUser;
+import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -29,18 +30,87 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
+import static dev.morphia.test.util.IndexMatcher.doesNotHaveIndexNamed;
+import static dev.morphia.test.util.IndexMatcher.hasIndexNamed;
 import static dev.morphia.utils.IndexType.DESC;
 import static dev.morphia.utils.IndexType.TEXT;
 import static org.bson.Document.parse;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
+    @Test
+    public void mutipleUniqueIndexed() {
+        getMapper().map(UniqueIndexOnValue.class);
+        getDs().ensureIndexes();
+        long value = 7L;
+
+        try {
+            final UniqueIndexOnValue entityWithUniqueName = new UniqueIndexOnValue();
+            entityWithUniqueName.setValue(value);
+            entityWithUniqueName.setUnique(1);
+            getDs().save(entityWithUniqueName);
+
+            final UniqueIndexOnValue entityWithSameName = new UniqueIndexOnValue();
+            entityWithSameName.setValue(value);
+            entityWithSameName.setUnique(2);
+            getDs().save(entityWithSameName);
+
+            Assert.fail("Should have gotten a duplicate key exception");
+        } catch (Exception ignored) {
+        }
+
+        value = 10L;
+        try {
+            final UniqueIndexOnValue first = new UniqueIndexOnValue();
+            first.setValue(1);
+            first.setUnique(value);
+            getDs().save(first);
+
+            final UniqueIndexOnValue second = new UniqueIndexOnValue();
+            second.setValue(2);
+            second.setUnique(value);
+            getDs().save(second);
+
+            Assert.fail("Should have gotten a duplicate key exception");
+        } catch (Exception ignored) {
+        }
+    }
+
     @Test(expectedExceptions = MongoCommandException.class)
     public void shouldNotAllowMultipleTextIndexes() {
         getMapper().map(MultipleTextIndexes.class);
         getDs().ensureIndexes();
+    }
+
+    @Test
+    public void testCanCreate2dSphereIndexes() {
+        // given
+        getMapper().map(Place.class);
+
+        // when
+        getDs().ensureIndexes(Place.class);
+
+        // then
+        List<Document> indexInfo = getIndexInfo(Place.class);
+        assertThat(indexInfo.size(), is(2));
+        assertThat(indexInfo, hasIndexNamed("location_2dsphere"));
+    }
+
+    @Test
+    public void testCanCreate2dSphereIndexesOnLegacyCoordinatePairs() {
+        // given
+        getMapper().map(LegacyPlace.class);
+
+        // when
+        getDs().ensureIndexes(LegacyPlace.class);
+
+        // then
+        List<Document> indexInfo = getIndexInfo(LegacyPlace.class);
+        assertThat(indexInfo, hasIndexNamed("location_2dsphere"));
     }
 
     @Test
@@ -82,6 +152,14 @@ public class TestIndexes extends TestBase {
         }
         assertNotNull(index);
         assertEquals(((Number) index.get("expireAfterSeconds")).intValue(), 5);
+    }
+
+    @Test
+    public void testIndexedRecursiveEntity() {
+        getMapper().getEntityModel(CircularEmbeddedEntity.class);
+        getMapper().getCollection(CircularEmbeddedEntity.class).drop();
+        getDs().ensureIndexes(CircularEmbeddedEntity.class);
+        assertThat(getIndexInfo(CircularEmbeddedEntity.class), hasIndexNamed("a_1"));
     }
 
     @Test
@@ -128,6 +206,24 @@ public class TestIndexes extends TestBase {
                 getDs().ensureIndexes(MethodMappedUser.class);
                 assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
             });
+    }
+
+    @Test
+    public void testMixedIndexes() {
+        getMapper().getEntityModel(Ad2.class);
+
+        assertThat(getIndexInfo(Ad2.class), doesNotHaveIndexNamed("active_1_lastMod_-1"));
+        getDs().ensureIndexes(Ad2.class);
+        assertThat(getIndexInfo(Ad2.class), hasIndexNamed("active_1_lastMod_-1"));
+        assertThat(getIndexInfo(Ad2.class), hasIndexNamed("lastMod_1"));
+    }
+
+    @Test
+    public void testNamedIndexEntity() {
+        getDs().getMapper().map(NamedIndexOnValue.class);
+        getDs().ensureIndexes(NamedIndexOnValue.class);
+
+        assertThat(getIndexInfo(NamedIndexOnValue.class), hasIndexNamed("value_ascending"));
     }
 
     @Test
@@ -190,6 +286,30 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity
+    @Indexes(@Index(fields = {@Field("active"), @Field(value = "lastModified", type = IndexType.DESC)},
+        options = @IndexOptions(unique = true)))
+    private static class Ad2 {
+        @Id
+        private long id;
+
+        @Indexed
+        @Property("lastMod")
+        private long lastModified;
+
+        @Indexed
+        private boolean active;
+    }
+
+    @Entity
+    private static class CircularEmbeddedEntity {
+        @Id
+        private final ObjectId id = new ObjectId();
+        private String name;
+        @Indexed
+        private CircularEmbeddedEntity a;
+    }
+
+    @Entity
     @Indexes(@Index(fields = @Field("offerExpiresAt"), options = @IndexOptions(expireAfterSeconds = 5)))
     private static class ClassAnnotation {
         private final Date offerExpiresAt = new Date();
@@ -237,6 +357,15 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity
+    private static class LegacyPlace {
+        @Id
+        private long id;
+
+        @Indexed(IndexDirection.GEO2DSPHERE)
+        private double[] location;
+    }
+
+    @Entity
     @Indexes({@Index(fields = @Field(value = "name", type = TEXT)),
               @Index(fields = @Field(value = "nickName", type = TEXT))})
     private static class MultipleTextIndexes {
@@ -244,6 +373,23 @@ public class TestIndexes extends TestBase {
         private ObjectId id;
         private String name;
         private String nickName;
+    }
+
+    @Entity
+    private static class NamedIndexOnValue {
+        @Indexed(options = @IndexOptions(name = "value_ascending"))
+        private final long value = 4;
+        @Id
+        private ObjectId id;
+    }
+
+    @Entity
+    private static class Place {
+        @Id
+        private long id;
+
+        @Indexed(IndexDirection.GEO2DSPHERE)
+        private Object location;
     }
 
     @Entity
@@ -290,4 +436,25 @@ public class TestIndexes extends TestBase {
 
     }
 
+    @Entity
+    private static class UniqueIndexOnValue {
+        @Id
+        private ObjectId id;
+
+        @Indexed(options = @IndexOptions(name = "l_ascending", unique = true))
+        private long value;
+
+        @Indexed(options = @IndexOptions(unique = true))
+        private long unique;
+
+        private String name;
+
+        public void setUnique(long value) {
+            this.unique = value;
+        }
+
+        public void setValue(long value) {
+            this.value = value;
+        }
+    }
 }

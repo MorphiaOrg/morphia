@@ -25,6 +25,8 @@ import dev.morphia.test.models.BlogImage;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.CityPopulation;
 import dev.morphia.test.models.Jpg;
+import dev.morphia.test.models.MappedInterface;
+import dev.morphia.test.models.MappedInterfaceImpl;
 import dev.morphia.test.models.Png;
 import dev.morphia.test.models.State;
 import dev.morphia.test.models.User;
@@ -74,6 +76,14 @@ public class TestMapping extends TestBase {
 
         assertEquals(list.get(0).getCollectionName(), "users");
         assertEquals(list.get(1).getCollectionName(), "banned");
+    }
+
+    @Test
+    public void subtypes() {
+        List<EntityModel> list = getMapper().map(MappedInterface.class, MappedInterfaceImpl.class, User.class, BannedUser.class);
+
+        assertEquals(list.get(0).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(0));
+        assertEquals(list.get(2).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(2));
     }
 
     @Test

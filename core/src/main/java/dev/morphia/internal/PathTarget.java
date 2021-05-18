@@ -178,23 +178,23 @@ public class PathTarget {
     @Nullable
     private PropertyModel resolveProperty(String segment) {
         if (context != null) {
-            PropertyModel mf = context.getProperty(segment);
-            if (mf == null) {
+            PropertyModel model = context.getProperty(segment);
+            if (model == null) {
                 Iterator<EntityModel> subTypes = context.getSubtypes().iterator();
-                while (mf == null && subTypes.hasNext()) {
+                while (model == null && subTypes.hasNext()) {
                     context = subTypes.next();
-                    mf = resolveProperty(segment);
+                    model = resolveProperty(segment);
                 }
             }
 
-            if (mf != null) {
+            if (model != null) {
                 try {
-                    context = mapper.getEntityModel(mf.getNormalizedType());
+                    context = mapper.getEntityModel(model.getNormalizedType());
                 } catch (NotMappableException ignored) {
                     context = null;
                 }
             }
-            return mf;
+            return model;
         } else {
             return null;
         }
