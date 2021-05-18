@@ -42,8 +42,7 @@ import static java.lang.String.format;
  * @morphia.internal
  */
 @SuppressWarnings("removal")
-public
-class LegacyQuery<T> implements CriteriaContainer, Query<T> {
+public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;
     private final Class<T> clazz;
@@ -51,12 +50,12 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private final String collectionName;
     private final MongoCollection<T> collection;
     private final EntityModel model;
+    private final CriteriaContainer compoundContainer;
     private boolean validateName = true;
     private boolean validateType = true;
     private Document baseQuery;
     @Deprecated
     private FindOptions options;
-    private final CriteriaContainer compoundContainer;
 
     /**
      * Creates a Query for the given type and collection
@@ -146,6 +145,15 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public T findAndDelete(FindAndDeleteOptions options) {
+        MongoCollection<T> mongoCollection = options.prepare(getCollection());
+        ClientSession session = datastore.findSession(options);
+        return session == null
+               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
+               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
+    }
+
+    @Override
     public DeleteResult delete(DeleteOptions options) {
         MongoCollection<T> collection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
@@ -172,15 +180,6 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         validateName = true;
         validateType = true;
         return this;
-    }
-
-    @Override
-    public T findAndDelete(FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.prepare(getCollection());
-        ClientSession session = datastore.findSession(options);
-        return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
     }
 
     /**
@@ -258,6 +257,11 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
+        return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
+    }
+
+    @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
@@ -284,11 +288,6 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
-    }
-
-    @Override
     public Query<T> retrieveKnownFields() {
         getOptions().projection().knownFields();
         return this;
@@ -307,23 +306,6 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return this;
     }
 
-    @Override
-    @Deprecated(since = "2.0", forRemoval = true)
-    public Update<T> update(UpdateOperations<T> operations) {
-        return new Update<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
-    }
-
-    /**
-     * @return the Mongo fields {@link Document}.
-     * @morphia.internal
-     */
-    @Nullable
-    public Document getFieldsObject() {
-        Projection projection = getOptions().getProjection();
-
-        return projection != null ? projection.map(mapper, clazz) : null;
-    }
-
     /**
      * @return the collection this query targets
      * @morphia.internal
@@ -332,13 +314,10 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return collection;
     }
 
-    /**
-     * @return the Mongo sort {@link Document}.
-     * @morphia.internal
-     */
-    @Nullable
-    public Document getSort() {
-        return options != null ? options.getSort() : null;
+    @Override
+    @Deprecated(since = "2.0", forRemoval = true)
+    public Update<T> update(UpdateOperations<T> operations) {
+        return new Update<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
     }
 
     /**
@@ -366,6 +345,26 @@ class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 new Document("$in", values));
         }
         return query;
+    }
+
+    /**
+     * @return the Mongo fields {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getFieldsObject() {
+        Projection projection = getOptions().getProjection();
+
+        return projection != null ? projection.map(mapper, clazz) : null;
+    }
+
+    /**
+     * @return the Mongo sort {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getSort() {
+        return options != null ? options.getSort() : null;
     }
 
     @Override
