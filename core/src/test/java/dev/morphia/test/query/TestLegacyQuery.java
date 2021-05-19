@@ -21,7 +21,6 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.LegacyQuery;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
@@ -363,6 +362,18 @@ public class TestLegacyQuery extends TestBase {
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 10, 0);
         assertEquals(r1.getHeight(), 10, 0);
+    }
+
+    @Test
+    public void testCriteriaContainers() {
+        withOptions(MapperOptions.DEFAULT, () -> {
+            assertThrows(UnsupportedOperationException.class, () -> {
+                check(getDs().find(User.class).disableValidation());
+            });
+        });
+        withOptions(MapperOptions.legacy().build(), () -> {
+            check(getDs().find(User.class).disableValidation());
+        });
     }
 
     @Test
@@ -1060,16 +1071,14 @@ public class TestLegacyQuery extends TestBase {
 
         query.and(query.criteria("fieldF").equal("f"));
 
-        final Document queryObject = query instanceof LegacyQuery
-                                     ? query.toDocument()
-                                     : query.toDocument();
+        final Document queryObject = query.toDocument();
 
         final Document parse = parse(
             "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
             + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\","
-            + "\"_t\": { \"$in\" : [ \"User\"]}}");
+            + "\"className\": { \"$in\" : [ \"dev.morphia.test.models.User\"]}}");
 
-        assertEquals(parse, queryObject);
+        assertEquals(queryObject, parse);
     }
 
     private int[] copy(int[] array, int start, int count) {

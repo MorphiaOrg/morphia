@@ -18,7 +18,6 @@ import dev.morphia.testmodel.Rectangle;
 import dev.morphia.testmodel.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,11 +30,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
-import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 
 @SuppressWarnings({"unchecked", "unused", "removal"})
@@ -73,32 +70,6 @@ public class TestLegacyQuery extends TestBase {
                                                   .execute().toList();
         assertEquals(1, keywords.size());
         assertEquals(oscar, keywords.get(0).keywords.get(0));
-    }
-
-    @Test
-    public void testComplexRangeQuery() {
-        getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
-
-        assertEquals(2, getDs().find(Rectangle.class)
-                               .filter("height >", 3)
-                               .filter("height <", 8)
-                               .count());
-        assertEquals(1, getDs().find(Rectangle.class)
-                               .filter("height >", 3)
-                               .filter("height <", 8)
-                               .filter("width", 10)
-                               .count());
-    }
-
-    @Test
-    public void testCriteriaContainers() {
-        try {
-            check(new DefaultQueryFactory().createQuery(getDs(), User.class).disableValidation());
-            fail("These operations are not supported on the modern query operation and should have failed.");
-        } catch (UnsupportedOperationException e) {
-            // success
-        }
-        check(new LegacyQueryFactory().createQuery(getDs(), User.class).disableValidation());
     }
 
     @Test
@@ -201,33 +172,6 @@ public class TestLegacyQuery extends TestBase {
         for (Key<T> tKey : list) {
             assertEquals(list.toString(), tKey, cursor.next());
         }
-    }
-
-    private void check(Query<User> query) {
-        query
-            .field("version").equal("latest")
-            .and(
-                query.or(
-                    query.criteria("fieldA").equal("a"),
-                    query.criteria("fieldB").equal("b")),
-                query.and(
-                    query.criteria("fieldC").equal("c"),
-                    query.or(
-                        query.criteria("fieldD").equal("d"),
-                        query.criteria("fieldE").equal("e"))));
-
-        query.and(query.criteria("fieldF").equal("f"));
-
-        final Document queryObject = query instanceof LegacyQuery
-                                     ? query.toDocument()
-                                     : query.toDocument();
-
-        final Document parse = parse(
-            "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
-            + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\","
-            + "\"_t\": { \"$in\" : [ \"User\"]}}");
-
-        Assert.assertEquals(parse, queryObject);
     }
 
     private int[] copy(int[] array, int start, int count) {
