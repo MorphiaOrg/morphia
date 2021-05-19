@@ -61,6 +61,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
@@ -301,6 +302,29 @@ public class TestLegacyQuery extends TestBase {
         q.execute(options)
          .toList();
         assertEquals(q.count(), 3, getDs().getLoggedQuery(options));
+    }
+
+    @Test
+    public void testCommentsShowUpInLogs() {
+        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
+
+        getDatabase().runCommand(new Document("profile", 2));
+        String expectedComment = "test comment";
+
+        getDs().find(Pic.class)
+               .execute(new FindOptions()
+                            .comment(expectedComment))
+               .toList();
+
+        MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
+        assertNotEquals(profileCollection.countDocuments(), 0);
+
+        Document query = new Document("op", "query")
+                             .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName())
+                             .append("command.comment", new Document("$exists", true));
+        Document profileRecord = profileCollection.find(query).first();
+
+        assertEquals(getCommentFromProfileRecord(profileRecord), expectedComment, profileRecord.toString());
     }
 
     @Test
@@ -1055,6 +1079,24 @@ public class TestLegacyQuery extends TestBase {
     private void dropProfileCollection() {
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
         profileCollection.drop();
+    }
+
+    private String getCommentFromProfileRecord(Document profileRecord) {
+        if (profileRecord.containsKey("command")) {
+            Document commandDocument = ((Document) profileRecord.get("command"));
+            if (commandDocument.containsKey("comment")) {
+                return (String) commandDocument.get("comment");
+            }
+        }
+        if (profileRecord.containsKey("query")) {
+            Document queryDocument = ((Document) profileRecord.get("query"));
+            if (queryDocument.containsKey("comment")) {
+                return (String) queryDocument.get("comment");
+            } else if (queryDocument.containsKey("$comment")) {
+                return (String) queryDocument.get("$comment");
+            }
+        }
+        return null;
     }
 
     private Query<Pic> getQuery(QueryFactory queryFactory) {

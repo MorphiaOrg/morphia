@@ -33,7 +33,6 @@ import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
 import static org.bson.Document.parse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -51,28 +50,6 @@ public class TestLegacyQuery extends TestBase {
         Assume.assumeTrue("Should be using a LegacyQuery.", getDs().find(User.class) instanceof LegacyQuery);
     }
 
-    @Test
-    public void testCommentsShowUpInLogs() {
-        getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
-
-        getDatabase().runCommand(new Document("profile", 2));
-        String expectedComment = "test comment";
-
-        getDs().find(Pic.class)
-               .execute(new FindOptions()
-                            .comment(expectedComment))
-               .toList();
-
-        MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
-        assertNotEquals(0, profileCollection.countDocuments());
-
-        Document query = new Document("op", "query")
-                             .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName())
-                             .append("command.comment", new Document("$exists", true));
-        Document profileRecord = profileCollection.find(query).first();
-
-        assertEquals(profileRecord.toString(), expectedComment, getCommentFromProfileRecord(profileRecord));
-    }
 
     @Test
     public void testComplexElemMatchQuery() {
@@ -262,23 +239,6 @@ public class TestLegacyQuery extends TestBase {
         profileCollection.drop();
     }
 
-    private String getCommentFromProfileRecord(Document profileRecord) {
-        if (profileRecord.containsKey("command")) {
-            Document commandDocument = ((Document) profileRecord.get("command"));
-            if (commandDocument.containsKey("comment")) {
-                return (String) commandDocument.get("comment");
-            }
-        }
-        if (profileRecord.containsKey("query")) {
-            Document queryDocument = ((Document) profileRecord.get("query"));
-            if (queryDocument.containsKey("comment")) {
-                return (String) queryDocument.get("comment");
-            } else if (queryDocument.containsKey("$comment")) {
-                return (String) queryDocument.get("$comment");
-            }
-        }
-        return null;
-    }
 
     private Query<Pic> getQuery(QueryFactory queryFactory) {
         return queryFactory.createQuery(getDs(), Pic.class);
