@@ -5,6 +5,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
+import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.experimental.EmbeddedBuilder;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.Mapper;
@@ -747,6 +748,24 @@ public class TestMapping extends TestBase {
         });
     }
 
+    @Test
+    public void transientFields() {
+        getMapper().map(HasTransientFields.class);
+        final HasTransientFields entity = new HasTransientFields();
+        entity.javaTransientString = "should not be persisted";
+        entity.morphiaTransientString = "should not be persisted";
+        entity.javaTransientInt = -1;
+        entity.morphiaTransientInt = -1;
+
+        getDs().save(entity);
+        Document document = getDocumentCollection(HasTransientFields.class).find().first();
+        String string = toString(document);
+        Assert.assertFalse(document.containsKey("morphiaTransientString"), string);
+        Assert.assertFalse(document.containsKey("morphiaTransientInt"), string);
+        Assert.assertFalse(document.containsKey("javaTransientString"), string);
+        Assert.assertFalse(document.containsKey("javaTransientInt"), string);
+    }
+
     protected void findFirst(Datastore datastore, Class<?> type, BlogImage expected) {
         Query<?> query = datastore.find(type);
         assertEquals(query.count(), 1, query.toString());
@@ -995,6 +1014,20 @@ public class TestMapping extends TestBase {
         HasFinalFieldId(long id) {
             this.id = id;
         }
+    }
+
+    @Entity
+    private static class HasTransientFields {
+        @Id
+        private ObjectId id;
+
+        private transient String javaTransientString;
+        private transient int javaTransientInt;
+        @Transient
+        private String morphiaTransientString;
+        @Transient
+        private int morphiaTransientInt;
+
     }
 
     @Entity
