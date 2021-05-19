@@ -327,6 +327,30 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Test
+    public void testComplexElemMatchQuery() {
+        Keyword oscar = new Keyword("Oscar", 42);
+        getDs().save(new PhotoWithKeywords(oscar, new Keyword("Jim", 12)));
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords")
+                          .elemMatch(getDs()
+                                         .find(Keyword.class)
+                                         .filter("keyword = ", "Oscar")
+                                         .filter("score = ", 12))
+                          .execute(new FindOptions().limit(1))
+                          .tryNext());
+
+        List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
+                                                  .field("keywords")
+                                                  .elemMatch(getDs()
+                                                                 .find(Keyword.class)
+                                                                 .filter("score > ", 20)
+                                                                 .filter("score < ", 100))
+                                                  .execute().toList();
+        assertEquals(keywords.size(), 1);
+        assertEquals(keywords.get(0).keywords.get(0), oscar);
+    }
+
+    @Test
     public void testComplexRangeQuery() {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
 
@@ -429,6 +453,73 @@ public class TestLegacyQuery extends TestBase {
                .delete(new DeleteOptions()
                            .multi(true));
         assertEquals(getDs().find(Rectangle.class).count(), 2);
+    }
+
+    @Test
+    public void testElemMatchQuery() {
+        getDs().save(asList(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah")));
+        assertNotNull(getDs().find(PhotoWithKeywords.class)
+                             .field("keywords").elemMatch(getDs().find(Keyword.class).filter("keyword", "Scott"))
+                             .execute(new FindOptions().limit(1))
+                             .tryNext());
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords").elemMatch(getDs().find(Keyword.class).filter("keyword", "Randy"))
+                          .execute(new FindOptions().limit(1))
+                          .tryNext());
+    }
+
+    @Test
+    public void testElemMatchVariants() {
+        final PhotoWithKeywords pwk1 = new PhotoWithKeywords();
+        final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Kevin");
+        final PhotoWithKeywords pwk3 = new PhotoWithKeywords("Scott", "Joe", "Sarah");
+        final PhotoWithKeywords pwk4 = new PhotoWithKeywords(new Keyword("Scott", 14));
+
+        Iterator<PhotoWithKeywords> iterator = getDs().save(asList(pwk1, pwk2, pwk3, pwk4)).iterator();
+        Key<PhotoWithKeywords> key1 = getMapper().getKey(iterator.next());
+        Key<PhotoWithKeywords> key2 = getMapper().getKey(iterator.next());
+        Key<PhotoWithKeywords> key3 = getMapper().getKey(iterator.next());
+        Key<PhotoWithKeywords> key4 = getMapper().getKey(iterator.next());
+
+        assertListEquals(asList(key3, key4), getDs().find(PhotoWithKeywords.class)
+                                                    .field("keywords")
+                                                    .elemMatch(getDs().find(Keyword.class)
+                                                                      .filter("keyword = ", "Scott"))
+                                                    .keys());
+
+        assertListEquals(asList(key3, key4), getDs().find(PhotoWithKeywords.class)
+                                                    .field("keywords")
+                                                    .elemMatch(getDs()
+                                                                   .find(Keyword.class)
+                                                                   .field("keyword").equal("Scott"))
+                                                    .keys());
+
+        assertListEquals(singletonList(key4), getDs().find(PhotoWithKeywords.class)
+                                                     .field("keywords")
+                                                     .elemMatch(getDs().find(Keyword.class)
+                                                                       .filter("score = ", 14))
+                                                     .keys());
+
+        assertListEquals(singletonList(key4), getDs().find(PhotoWithKeywords.class)
+                                                     .field("keywords")
+                                                     .elemMatch(getDs()
+                                                                    .find(Keyword.class)
+                                                                    .field("score").equal(14))
+                                                     .keys());
+
+        assertListEquals(asList(key1, key2), getDs().find(PhotoWithKeywords.class)
+                                                    .field("keywords")
+                                                    .not()
+                                                    .elemMatch(getDs().find(Keyword.class)
+                                                                      .filter("keyword = ", "Scott"))
+                                                    .keys());
+
+        assertListEquals(asList(key1, key2), getDs().find(PhotoWithKeywords.class)
+                                                    .field("keywords").not()
+                                                    .elemMatch(getDs()
+                                                                   .find(Keyword.class)
+                                                                   .field("keyword").equal("Scott"))
+                                                    .keys());
     }
 
     @Test
@@ -1048,6 +1139,35 @@ public class TestLegacyQuery extends TestBase {
         executorService.shutdownNow();
         assertTrue(found.size() >= 10);
         assertTrue(query.count() >= 10);
+    }
+
+    @Test
+    public void testThatElemMatchQueriesOnlyChecksRequiredFields() {
+        final PhotoWithKeywords pwk1 = new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona"));
+        final PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
+        pwk2.keywords.add(new Keyword("Scott", 14));
+
+        getDs().save(asList(pwk1, pwk2));
+
+        // In this case, we only want to match on the keyword field, not the
+        // score field, which shouldn't be included in the elemMatch query.
+
+        // As a result, the query in MongoDB should look like:
+        // find({ keywords: { $elemMatch: { keyword: "Scott" } } })
+
+        // NOT:
+        // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
+        assertNotNull(getDs().find(PhotoWithKeywords.class)
+                             .field("keywords").elemMatch(getDs().find(Keyword.class)
+                                                                 .filter("keyword", "Scott"))
+                             .execute(new FindOptions().limit(1))
+                             .tryNext());
+
+        assertNull(getDs().find(PhotoWithKeywords.class)
+                          .field("keywords").elemMatch(getDs().find(Keyword.class)
+                                                              .filter("keyword", "Randy"))
+                          .execute(new FindOptions().limit(1))
+                          .tryNext());
     }
 
     private <T> void assertListEquals(List<Key<T>> list, MongoCursor<?> cursor) {
