@@ -1,14 +1,15 @@
-package dev.morphia.mapping;
+package dev.morphia.test.mapping;
 
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperOptions;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,23 +17,19 @@ import java.util.List;
 import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static org.testng.Assert.assertEquals;
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
-public class EnumMappingTest extends TestBase {
+public class TestEnumMapping extends TestBase {
     @Test
     public void getMapOfEnum() {
         Class1 entity = new Class1();
-        entity.getMap().put("key", Foo.BAR);
+        entity.map.put("key", Foo.BAR);
         getDs().save(entity);
 
         getMapper().map(Class1.class);
 
-        entity = getDs().find(Class1.class).iterator(new FindOptions().limit(1)).tryNext();
-        final Map<String, Foo> map = entity.getMap();
-        Foo b = map.get("key");
-        Assert.assertNotNull(b);
+        entity = getDs().find(Class1.class).first();
+        Assert.assertNotNull(entity.map.get("key"));
     }
 
     @Test
@@ -45,7 +42,7 @@ public class EnumMappingTest extends TestBase {
         Customer loaded = getDs().find(Customer.class)
                                  .filter(eq("_id", customer.id))
                                  .first();
-        Assert.assertEquals(customer.map, loaded.map);
+        assertEquals(customer.map, loaded.map);
     }
 
     @Test
@@ -77,7 +74,7 @@ public class EnumMappingTest extends TestBase {
                                                  .filter(eq("_id", customer.id))
                                                  .first();
 
-        Assert.assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
+        assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
     }
 
     @Test
@@ -109,7 +106,7 @@ public class EnumMappingTest extends TestBase {
                                             .filter(eq("_id", customer.id))
                                             .first();
 
-        Assert.assertEquals(customer.mapWithList, loaded.mapWithList);
+        assertEquals(customer.mapWithList, loaded.mapWithList);
     }
 
     @Test
@@ -119,18 +116,18 @@ public class EnumMappingTest extends TestBase {
         getMapper().map(ContainsEnum.class);
 
         getDs().save(new ContainsEnum());
-        Assert.assertEquals(1, getDs().find(ContainsEnum.class).filter(eq("foo", Foo.BAR))
-                                      .count());
-        Assert.assertEquals(1, getDs().find(ContainsEnum.class).disableValidation().filter(eq("foo", Foo.BAR))
-                                      .count());
+        assertEquals(getDs().find(ContainsEnum.class).filter(eq("foo", Foo.BAR))
+                            .count(), 1);
+        assertEquals(getDs().find(ContainsEnum.class).disableValidation().filter(eq("foo", Foo.BAR))
+                            .count(), 1);
     }
 
-    enum Foo {
+    private enum Foo {
         BAR,
         BAZ
     }
 
-    public enum WebTemplateType {
+    private enum WebTemplateType {
         CrewContract("Contract"),
         CrewContractHeader("Contract Header");
 
@@ -147,25 +144,21 @@ public class EnumMappingTest extends TestBase {
     }
 
     @Entity("user")
-    public static class Class1 {
+    private static class Class1 {
         @Id
         private ObjectId id;
         private final Map<String, Foo> map = new HashMap<>();
-
-        public Map<String, Foo> getMap() {
-            return map;
-        }
     }
 
     @Entity
-    public static class ContainsEnum {
+    private static class ContainsEnum {
         @Id
         private ObjectId id;
         private final Foo foo = Foo.BAR;
     }
 
     @Entity(useDiscriminator = false)
-    public static class Customer {
+    private static class Customer {
         private final Map<WebTemplateType, WebTemplate> map = new HashMap<>();
         @Id
         private ObjectId id;
@@ -177,7 +170,7 @@ public class EnumMappingTest extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    public static class CustomerWithArrayList {
+    private static class CustomerWithArrayList {
         private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
             = new HashMap<>();
         @Id
@@ -189,7 +182,7 @@ public class EnumMappingTest extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    public static class CustomerWithList {
+    private static class CustomerWithList {
         private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
         @Id
         private ObjectId id;
@@ -200,7 +193,7 @@ public class EnumMappingTest extends TestBase {
     }
 
     @Entity
-    public static class WebTemplate {
+    private static class WebTemplate {
         private final ObjectId id = new ObjectId();
         private String templateName;
         private String content;

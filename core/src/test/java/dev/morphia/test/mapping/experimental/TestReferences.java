@@ -438,6 +438,91 @@ public class TestReferences extends TestBase {
         }
     }
 
+    @Test(groups = "references")
+    public void testReference() {
+        getMapper().map(CompoundIdEntity.class, CompoundId.class);
+
+        final CompoundIdEntity sibling = new CompoundIdEntity();
+        sibling.id = new CompoundId("sibling ID");
+        getDs().save(sibling);
+
+        final CompoundIdEntity entity = new CompoundIdEntity();
+        entity.id = new CompoundId("entity ID");
+        entity.e = "some value";
+        entity.sibling = sibling;
+        getDs().save(entity);
+
+        Assert.assertEquals(entity, getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first());
+    }
+
+    @Entity
+    private static class CompoundId {
+        private final ObjectId id = new ObjectId();
+        private String name;
+
+        CompoundId() {
+        }
+
+        CompoundId(String n) {
+            name = n;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id.hashCode();
+            result = 31 * result + name.hashCode();
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof CompoundId)) {
+                return false;
+            }
+            final CompoundId other = ((CompoundId) obj);
+            return other.id.equals(id) && other.name.equals(name);
+        }
+
+    }
+
+    @Entity
+    private static class CompoundIdEntity {
+        @Id
+        private CompoundId id;
+        private String e;
+        @Reference
+        private CompoundIdEntity sibling;
+
+        @Override
+        public int hashCode() {
+            int result = id.hashCode();
+            result = 31 * result + (e != null ? e.hashCode() : 0);
+            result = 31 * result + (sibling != null ? sibling.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final CompoundIdEntity that = (CompoundIdEntity) o;
+
+            if (!id.equals(that.id)) {
+                return false;
+            }
+            if (e != null ? !e.equals(that.e) : that.e != null) {
+                return false;
+            }
+            return !(sibling != null ? !sibling.equals(that.sibling) : that.sibling != null);
+
+        }
+    }
+
     @Embedded
     public static class ChildId {
         private String name;
