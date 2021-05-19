@@ -323,7 +323,7 @@ public abstract class TestBase {
         }
     }
 
-    private void cleanup() {
+    protected void cleanup() {
         database = null;
         datastore = null;
         MongoDatabase db = getDatabase();
