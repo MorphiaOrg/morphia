@@ -1,20 +1,17 @@
-package dev.morphia.mapping.validation.classrules;
+package dev.morphia.test.mapping.validation.classrules;
 
 
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class NonStaticInnerClassTest extends TestBase {
 
-    @Test(expected = MappingException.class)
+    @Test(expectedExceptions = MappingException.class)
     public void testInValidInnerClass() {
         getMapper().map(InValid.class);
     }
@@ -25,13 +22,13 @@ public class NonStaticInnerClassTest extends TestBase {
     }
 
     @Entity
-    static class Valid {
+    private static class Valid {
         @Id
         private ObjectId id;
     }
 
     @Entity
-    class InValid {
+    private class InValid {
         @Id
         private ObjectId id;
     }
