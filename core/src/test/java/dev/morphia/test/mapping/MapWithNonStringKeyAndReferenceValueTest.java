@@ -1,24 +1,23 @@
-package dev.morphia.mapping;
+package dev.morphia.test.mapping;
 
 
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.lazy.ProxyTestBase;
-import dev.morphia.testmodel.TestEntity;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import dev.morphia.test.mapping.lazy.ProxyTestBase;
+import dev.morphia.test.models.TestEntity;
+import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 
-@Category(Reference.class)
+@Test(groups = "references")
 public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
     @Test
     public void testMapKeyShouldBeInteger() {
@@ -36,18 +35,18 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         getDs().save(asList(ce1, ce2, pe));
 
         final ParentEntity fetched = getDs().find(ParentEntity.class).filter(eq("_id", pe.getId())).first();
-        Assert.assertNotNull(fetched);
-        Assert.assertNotNull(fetched.childMap);
-        Assert.assertEquals(2, fetched.childMap.size());
+        assertNotNull(fetched);
+        assertNotNull(fetched.childMap);
+        assertEquals(fetched.childMap.size(), 2);
         //it is really String without fixing the reference mapper
         //so ignore IDE's complains if any
         Set<Integer> set = fetched.childMap.keySet();
-        Assert.assertTrue(set.iterator().next() != null);
+        assertTrue(set.iterator().next() != null);
     }
 
     @Test
     public void testWithProxy() {
-        Assume.assumeTrue(proxyClassesPresent());
+        checkForProxyTypes();
 
         getMapper().map(ChildEntity.class, ParentEntity.class);
 
@@ -65,12 +64,12 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         final ParentEntity fetched = getDs().find(ParentEntity.class)
                                             .filter(eq("_id", pe.getId()))
                                             .first();
-        Assert.assertNotNull(fetched);
+        assertNotNull(fetched);
         assertIsProxy(fetched.lazyChildMap);
         assertNotFetched(fetched.lazyChildMap);
-        Assert.assertEquals(2, fetched.lazyChildMap.size());
+        assertEquals(fetched.lazyChildMap.size(), 2);
         assertNotFetched(fetched.lazyChildMap);
-        Assert.assertTrue(fetched.lazyChildMap.keySet().iterator().next() != null);
+        assertNotNull(fetched.lazyChildMap.keySet().iterator().next());
     }
 
     private static class ParentEntity extends TestEntity {

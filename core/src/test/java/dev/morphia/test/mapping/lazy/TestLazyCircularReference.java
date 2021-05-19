@@ -1,26 +1,21 @@
-package dev.morphia.mapping.lazy;
-
+package dev.morphia.test.mapping.lazy;
 
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
-import dev.morphia.testmodel.TestEntity;
+import dev.morphia.test.models.TestEntity;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.testng.annotations.Ignore;
+import org.testng.annotations.Test;
 
-import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;
+import static org.testng.Assert.assertEquals;
 
-@Category(Reference.class)
+@Test(groups = "references")
+@Ignore("references need caching")
 public class TestLazyCircularReference extends ProxyTestBase {
 
-    @Test
-    @Ignore("infinite loop in here somewhere")
     public void testCircularReferences() {
         RootEntity root = new RootEntity();
         ReferencedEntity first = new ReferencedEntity();
@@ -35,15 +30,13 @@ public class TestLazyCircularReference extends ProxyTestBase {
         getDs().save(asList(root, first, second));
 
         RootEntity rootEntity = getDs().find(RootEntity.class).iterator(new FindOptions().limit(1)).tryNext();
-        Assert.assertEquals(first.getId(), rootEntity.getR().getId());
-        Assert.assertEquals(second.getId(), rootEntity.getSecondReference().getId());
-        Assert.assertEquals(root.getId(), rootEntity.getR().getParent().getId());
+        assertEquals(first.getId(), rootEntity.getR().getId());
+        assertEquals(second.getId(), rootEntity.getSecondReference().getId());
+        assertEquals(root.getId(), rootEntity.getR().getParent().getId());
     }
 
-    @Test
-    @Ignore("infinite loop in here somewhere")
-    public final void testGetKeyWithoutFetching() {
-        Assume.assumeTrue(proxyClassesPresent());
+    public void testGetKeyWithoutFetching() {
+        checkForProxyTypes();
 
         RootEntity root = new RootEntity();
         final ReferencedEntity reference = new ReferencedEntity();
@@ -114,5 +107,4 @@ public class TestLazyCircularReference extends ProxyTestBase {
             this.parent = parent;
         }
     }
-
 }

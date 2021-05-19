@@ -44,7 +44,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.experimental.stages.Unwind.on;
-import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Arrays.asList;
@@ -524,10 +523,6 @@ public class TestReferences extends TestBase {
 
     private void assertNotFetched(Object e) {
         assertFalse(isFetched(e));
-    }
-
-    private void checkForProxyTypes() {
-        assumeTrue(proxyClassesPresent(), "Proxy classes are needed for this test");
     }
 
     private boolean isFetched(Object e) {

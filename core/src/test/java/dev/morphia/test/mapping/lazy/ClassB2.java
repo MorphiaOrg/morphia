@@ -1,20 +1,20 @@
-package dev.morphia.mapping.lazy;
+package dev.morphia.test.mapping.lazy;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
 @Entity
-public class B2 implements InterfaceB {
+public class ClassB2 implements InterfaceB {
     @Id
     ObjectId id;
 
     int age;
 
-    B2() {
+    ClassB2() {
     }
 
-    public B2(int age) {
+    public ClassB2(int age) {
         this.age = age;
     }
 
@@ -32,7 +32,7 @@ public class B2 implements InterfaceB {
             return false;
         }
 
-        final B2 b2 = (B2) o;
+        final ClassB2 b2 = (ClassB2) o;
 
         if (age != b2.age) {
             return false;

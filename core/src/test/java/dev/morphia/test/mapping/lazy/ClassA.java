@@ -1,4 +1,4 @@
-package dev.morphia.mapping.lazy;
+package dev.morphia.test.mapping.lazy;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;

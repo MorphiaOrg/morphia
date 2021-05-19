@@ -1,11 +1,10 @@
-package dev.morphia.mapping.lazy;
+package dev.morphia.test.mapping.lazy;
 
 
 import dev.morphia.annotations.Reference;
-import dev.morphia.testmodel.TestEntity;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
+import dev.morphia.test.models.TestEntity;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +12,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
 
@@ -22,7 +20,7 @@ public class TestReferenceCollection extends ProxyTestBase {
 
     @Test
     public void testOrderingPreserved() {
-        Assume.assumeTrue(proxyClassesPresent());
+        checkForProxyTypes();
 
         final Origin origin = new Origin();
         final Endpoint endpoint1 = new Endpoint();

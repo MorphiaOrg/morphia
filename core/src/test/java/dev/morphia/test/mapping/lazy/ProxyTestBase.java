@@ -1,16 +1,16 @@
-package dev.morphia.mapping.lazy;
+package dev.morphia.test.mapping.lazy;
 
-import dev.morphia.TestBase;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
-import org.junit.Assert;
+import dev.morphia.test.TestBase;
+import org.testng.Assert;
 
 public class ProxyTestBase extends TestBase {
-    protected void assertIsProxy(Object p) {
-        Assert.assertTrue("Should be a proxy: " + p.getClass(), p instanceof MorphiaProxy);
-    }
-
     protected void assertFetched(Object e) {
         Assert.assertTrue(isFetched(e));
+    }
+
+    protected void assertIsProxy(Object p) {
+        Assert.assertTrue(p instanceof MorphiaProxy, "Should be a proxy: " + p.getClass());
     }
 
     protected void assertNotFetched(Object e) {

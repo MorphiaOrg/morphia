@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -156,6 +157,10 @@ public abstract class TestBase {
         if (!condition) {
             throw new SkipException(message);
         }
+    }
+
+    protected void checkForProxyTypes() {
+        assumeTrue(proxyClassesPresent(), "Proxy classes are needed for this test");
     }
 
     protected void checkMinServerVersion(double version) {
