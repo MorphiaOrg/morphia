@@ -1,6 +1,7 @@
 package dev.morphia.test.mapping.lazy;
 
 import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.test.mapping.ProxyTestBase;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;

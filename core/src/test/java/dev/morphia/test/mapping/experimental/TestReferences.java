@@ -14,11 +14,10 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
-import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
-import dev.morphia.test.TestBase;
+import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.FacebookUser;
@@ -55,7 +54,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
-public class TestReferences extends TestBase {
+public class TestReferences extends ProxyTestBase {
 
     @Test
     public void maps() {
@@ -507,26 +506,6 @@ public class TestReferences extends TestBase {
                       .first();
         assertNotFetched(root.r);
         assertNotFetched(root.secondReference);
-    }
-
-    private MorphiaProxy asMorphiaProxy(Object e) {
-        return (MorphiaProxy) e;
-    }
-
-    private void assertFetched(Object e) {
-        assertTrue(isFetched(e));
-    }
-
-    private void assertIsProxy(Object p) {
-        assertTrue(p instanceof MorphiaProxy, "Should be a proxy: " + p.getClass());
-    }
-
-    private void assertNotFetched(Object e) {
-        assertFalse(isFetched(e));
-    }
-
-    private boolean isFetched(Object e) {
-        return asMorphiaProxy(e).isFetched();
     }
 
     private void testFirstDatastore(Datastore datastore) {

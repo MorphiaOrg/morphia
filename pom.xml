@@ -209,7 +209,6 @@
         <module>util</module>
         <module>core</module>
         <module>kotlin</module>
-        <module>legacy-tests</module>
         <!--        <module>no-proxy-deps-tests</module>-->
         <module>examples</module>
     </modules>

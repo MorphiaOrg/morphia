@@ -3,6 +3,7 @@ package dev.morphia.test.mapping.lazy;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Ignore;

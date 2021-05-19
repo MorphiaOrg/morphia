@@ -1,4 +1,4 @@
-package dev.morphia.test.mapping.lazy;
+package dev.morphia.test.mapping;
 
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.test.TestBase;

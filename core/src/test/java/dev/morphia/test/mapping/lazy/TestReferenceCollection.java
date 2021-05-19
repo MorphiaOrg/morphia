@@ -2,6 +2,7 @@ package dev.morphia.test.mapping.lazy;
 
 
 import dev.morphia.annotations.Reference;
+import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -1,20 +1,16 @@
-package dev.morphia.mapping;
+package dev.morphia.test.mapping;
 
-
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Reference;
-import dev.morphia.testmodel.TestEntity;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import dev.morphia.test.TestBase;
+import dev.morphia.test.models.TestEntity;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
-
-@Category(Reference.class)
-public class ReferencesInEmbeddedTest extends TestBase {
-    @Test
+@Test(groups = "references")
+public class TestReferencesInEmbedded extends TestBase {
     public void testLazyReferencesInEmbedded() {
         final Container container = new Container();
         container.name = "lazy";
@@ -24,29 +20,6 @@ public class ReferencesInEmbeddedTest extends TestBase {
 
         container.embed = new EmbedContainingReference();
         container.embed.lazyRef = referencedEntity;
-        getDs().save(container);
-
-        Assert.assertNotNull(getDs().find(Container.class)
-                                    .filter(eq("_id", container.getId()))
-                                    .first());
-    }
-
-    @Test
-    public void testMapping() {
-        getMapper().map(Container.class);
-        getMapper().map(ReferencedEntity.class);
-    }
-
-    @Test
-    public void testNonLazyReferencesInEmbedded() {
-        final Container container = new Container();
-        container.name = "nonLazy";
-        getDs().save(container);
-        final ReferencedEntity referencedEntity = new ReferencedEntity();
-        getDs().save(referencedEntity);
-
-        container.embed = new EmbedContainingReference();
-        container.embed.ref = referencedEntity;
         getDs().save(container);
 
         Assert.assertNotNull(getDs().find(Container.class)

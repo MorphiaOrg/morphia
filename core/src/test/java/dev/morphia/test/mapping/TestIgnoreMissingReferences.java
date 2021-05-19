@@ -1,24 +1,21 @@
-package dev.morphia.mapping;
+package dev.morphia.test.mapping;
 
-
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.testng.annotations.Test;
 
 import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
-
-@Category(Reference.class)
-public class ReferencesWIgnoreMissingTest extends TestBase {
-    @Test
+@Test(groups = "references")
+public class TestIgnoreMissingReferences extends TestBase {
     public void testMissingReference() {
         final Container c = new Container();
         c.refs = new StringHolder[]{new StringHolder(), new StringHolder()};
@@ -27,25 +24,25 @@ public class ReferencesWIgnoreMissingTest extends TestBase {
 
         Container reloadedContainer = getDs().find(Container.class).iterator(new FindOptions().limit(1))
                                              .tryNext();
-        Assert.assertNotNull(reloadedContainer);
-        Assert.assertNotNull(reloadedContainer.refs);
-        Assert.assertEquals(1, reloadedContainer.refs.length);
+        assertNotNull(reloadedContainer);
+        assertNotNull(reloadedContainer.refs);
+        assertEquals(reloadedContainer.refs.length, 1);
 
         reloadedContainer = getDs().find(Container.class)
                                    .filter(eq("_id", c.id))
                                    .first();
-        Assert.assertNotNull(reloadedContainer);
-        Assert.assertNotNull(reloadedContainer.refs);
-        Assert.assertEquals(1, reloadedContainer.refs.length);
+        assertNotNull(reloadedContainer);
+        assertNotNull(reloadedContainer.refs);
+        assertEquals(reloadedContainer.refs.length, 1);
 
         final List<Container> cs = getDs().find(Container.class).iterator().toList();
-        Assert.assertNotNull(cs);
-        Assert.assertEquals(1, cs.size());
+        assertNotNull(cs);
+        assertEquals(cs.size(), 1);
 
     }
 
     @Entity
-    static class Container {
+    private static class Container {
         @Id
         private ObjectId id;
         @Reference(ignoreMissing = true)
@@ -53,7 +50,7 @@ public class ReferencesWIgnoreMissingTest extends TestBase {
     }
 
     @Entity
-    static class StringHolder {
+    private static class StringHolder {
         @Id
         private final ObjectId id = new ObjectId();
     }
