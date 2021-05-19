@@ -1,23 +1,23 @@
-package dev.morphia.callbacks;
+package dev.morphia.test.callbacks;
 
 
 import com.mongodb.lang.NonNull;
 import dev.morphia.EntityInterceptor;
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.test.TestBase;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
-public class TestEntityInterceptorMoment extends TestBase {
+public class TestInterceptors extends TestBase {
 
     @Test
-    public void testGlobalEntityInterceptorWorksAfterEntityCallback() {
+    public void testGlobalInterceptor() {
         getMapper().map(E.class);
         getMapper().addInterceptor(new Interceptor());
 

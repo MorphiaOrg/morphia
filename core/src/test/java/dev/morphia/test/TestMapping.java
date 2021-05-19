@@ -16,6 +16,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
@@ -76,57 +77,11 @@ import static org.testng.Assert.fail;
 @SuppressWarnings({"unchecked", "unchecked"})
 public class TestMapping extends TestBase {
     @Test
-    public void shouldOnlyMapEntitiesInTheGivenPackage() {
-        withOptions(MapperOptions.builder(getMapper().getOptions())
-                                 .build(), () -> {
-            getMapper().mapPackageFromClass(Versioned.class);
-
-            // then
-            List<EntityModel> list = getMapper().getMappedEntities();
-            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
-                                               .collect(Collectors.toList());
-            assertEquals(classes.size(), 3);
-            assertTrue(classes.contains(AbstractVersionedBase.class));
-            assertTrue(classes.contains(Versioned.class));
-            assertTrue(classes.contains(VersionedChildEntity.class));
-        });
-    }
-
-    @Test
-    public void testSubPackagesMapping() {
-        // when
-        withOptions(MapperOptions.builder(getMapper().getOptions())
-                                 .mapSubPackages(true)
-                                 .build(), () -> {
-            getMapper().mapPackageFromClass(Versioned.class);
-
-            // then
-            List<EntityModel> list = getMapper().getMappedEntities();
-            assertEquals(list.size(), 4, list.toString());
-            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
-                                               .collect(Collectors.toList());
-            assertTrue(classes.contains(AbstractVersionedBase.class));
-            assertTrue(classes.contains(Versioned.class));
-            assertTrue(classes.contains(VersionedToo.class));
-            assertTrue(classes.contains(VersionedChildEntity.class));
-
-        });
-    }
-
-    @Test
     public void childMapping() {
         List<EntityModel> list = getMapper().map(User.class, BannedUser.class);
 
         assertEquals(list.get(0).getCollectionName(), "users");
         assertEquals(list.get(1).getCollectionName(), "banned");
-    }
-
-    @Test
-    public void subtypes() {
-        List<EntityModel> list = getMapper().map(MappedInterface.class, MappedInterfaceImpl.class, User.class, BannedUser.class);
-
-        assertEquals(list.get(0).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(0));
-        assertEquals(list.get(2).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(2));
     }
 
     @Test
@@ -164,6 +119,11 @@ public class TestMapping extends TestBase {
         assertEquals(instance, first);
     }
 
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public final void multipleIds() {
+        getMapper().map(TwoIds.class);
+    }
+
     @Test
     public void propertyNaming() {
         verify(NamingStrategy.identity(), "embeddedValues", "intList");
@@ -171,6 +131,23 @@ public class TestMapping extends TestBase {
         verify(NamingStrategy.kebabCase(), "embedded-values", "int-list");
         verify(NamingStrategy.lowerCase(), "embeddedvalues", "intlist");
         verify(NamingStrategy.snakeCase(), "embedded_values", "int_list");
+    }
+
+    @Test
+    public void shouldOnlyMapEntitiesInTheGivenPackage() {
+        withOptions(MapperOptions.builder(getMapper().getOptions())
+                                 .build(), () -> {
+            getMapper().mapPackageFromClass(Versioned.class);
+
+            // then
+            List<EntityModel> list = getMapper().getMappedEntities();
+            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                                               .collect(Collectors.toList());
+            assertEquals(classes.size(), 3);
+            assertTrue(classes.contains(AbstractVersionedBase.class));
+            assertTrue(classes.contains(Versioned.class));
+            assertTrue(classes.contains(VersionedChildEntity.class));
+        });
     }
 
     @Test
@@ -186,6 +163,14 @@ public class TestMapping extends TestBase {
         List<EntityModel> subTypes = mapper.getEntityModel(EmbeddedType.class).getSubtypes();
         Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Another.class)));
         Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Child.class)));
+    }
+
+    @Test
+    public void subtypes() {
+        List<EntityModel> list = getMapper().map(MappedInterface.class, MappedInterfaceImpl.class, User.class, BannedUser.class);
+
+        assertEquals(list.get(0).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(0));
+        assertEquals(list.get(2).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(2));
     }
 
     @Test
@@ -741,6 +726,27 @@ public class TestMapping extends TestBase {
         });
     }
 
+    @Test
+    public void testSubPackagesMapping() {
+        // when
+        withOptions(MapperOptions.builder(getMapper().getOptions())
+                                 .mapSubPackages(true)
+                                 .build(), () -> {
+            getMapper().mapPackageFromClass(Versioned.class);
+
+            // then
+            List<EntityModel> list = getMapper().getMappedEntities();
+            assertEquals(list.size(), 4, list.toString());
+            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                                               .collect(Collectors.toList());
+            assertTrue(classes.contains(AbstractVersionedBase.class));
+            assertTrue(classes.contains(Versioned.class));
+            assertTrue(classes.contains(VersionedToo.class));
+            assertTrue(classes.contains(VersionedChildEntity.class));
+
+        });
+    }
+
     protected void findFirst(Datastore datastore, Class<?> type, BlogImage expected) {
         Query<?> query = datastore.find(type);
         assertEquals(query.count(), 1, query.toString());
@@ -1040,6 +1046,14 @@ public class TestMapping extends TestBase {
     }
 
     private static class Super3<T extends Number> extends Super2<T> {
+    }
+
+    @Entity
+    public static class TwoIds {
+        @Id
+        private String extraId;
+        @Id
+        private String broken;
     }
 
     private static class UnannotatedEntity {

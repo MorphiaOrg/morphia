@@ -21,7 +21,7 @@ public class User {
     private ObjectId id;
     private LocalDate joined;
 
-    private User() {
+    public User() {
     }
 
     public User(String name, LocalDate joined, String... likes) {

@@ -4,6 +4,8 @@ import com.mongodb.MongoCommandException;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Entity;
@@ -89,6 +91,17 @@ public class TestIndexes extends TestBase {
             Assert.fail("Should have gotten a duplicate key exception");
         } catch (Exception ignored) {
         }
+    }
+
+    @Test(expectedExceptions = MongoCommandException.class)
+    public void shouldErrorWhenCreatingA2dIndexOnGeoJson() {
+        // given
+        Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
+        getDs().save(pointB);
+
+        // when
+        getDs().ensureIndexes();
+        //"location object expected, location array not in correct format", code : 13654
     }
 
     @Test(expectedExceptions = MongoCommandException.class)
@@ -430,6 +443,23 @@ public class TestIndexes extends TestBase {
 
         @Indexed(IndexDirection.GEO2DSPHERE)
         private Object location;
+    }
+
+    @Entity
+    private static final class Place2D {
+        @Id
+        private ObjectId id;
+        @Indexed(IndexDirection.GEO2D)
+        private Point location;
+        private String name;
+
+        private Place2D(Point location, String name) {
+            this.location = location;
+            this.name = name;
+        }
+
+        private Place2D() {
+        }
     }
 
     @Entity

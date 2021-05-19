@@ -8,6 +8,8 @@ import dev.morphia.aggregation.experimental.expressions.ComparisonExpressions;
 import dev.morphia.aggregation.experimental.expressions.Miscellaneous;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
+import dev.morphia.query.Query;
+import dev.morphia.query.Type;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
@@ -40,6 +42,7 @@ import static dev.morphia.query.experimental.filters.Filters.nor;
 import static dev.morphia.query.experimental.filters.Filters.or;
 import static dev.morphia.query.experimental.filters.Filters.size;
 import static dev.morphia.query.experimental.filters.Filters.text;
+import static dev.morphia.query.experimental.filters.Filters.type;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
@@ -55,6 +58,19 @@ public class FiltersTest extends TestBase {
         getDs().find(Budget.class)
                .filter(and(lte("budget", 10000), gte("budget", 12)))
                .iterator();
+    }
+
+    @Test
+    public void testType() {
+        User entity = new User();
+        entity.name = "first_name";
+        getDs().save(entity);
+
+        getMapper().map(User.class);
+
+        Query<User> query = getDs().find(User.class);
+        query.filter(type("name", Type.STRING));
+        Assert.assertTrue(query.count() > 0);
     }
 
     @Test

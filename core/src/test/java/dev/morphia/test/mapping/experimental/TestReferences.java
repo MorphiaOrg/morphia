@@ -7,6 +7,7 @@ import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
@@ -31,12 +32,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.experimental.stages.Unwind.on;
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.in;
+import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 public class TestReferences extends TestBase {
+
     @Test
     public void testAggregationLookups() {
         final Author author = new Author("Jane Austen");
@@ -143,6 +147,25 @@ public class TestReferences extends TestBase {
                                      .first();
         ((List<Object>) loaded.get("list"))
             .forEach(f -> assertEquals(f.getClass(), Long.class));
+    }
+
+    @Test
+    public void testInQueryAgainstReferences() {
+
+        Plan plan1 = getDs().save(new Plan("Trial 1"));
+        Plan plan2 = getDs().save(new Plan("Trial 2"));
+
+        getDs().save(new Org("Test Org1", plan1));
+        getDs().save(new Org("Test Org2", plan2));
+
+        long count = getDs().find(Org.class).filter(eq("name", "Test Org1")).count();
+        assertEquals(1, count);
+
+        count = getDs().find(Org.class).filter(in("plan", of(plan1))).count();
+        assertEquals(1, count);
+
+        count = getDs().find(Org.class).filter(in("plan", of(plan1, plan2))).count();
+        assertEquals(2, count);
     }
 
     @Test
@@ -401,5 +424,39 @@ public class TestReferences extends TestBase {
         @Id
         private ObjectId id;
         private String name;
+    }
+
+    @Entity(useDiscriminator = false)
+    private static class Org {
+        @Id
+        private ObjectId id;
+        @Property("name")
+        private String name;
+        @Reference("plan")
+        private Plan plan;
+
+        public Org(String name, Plan plan) {
+            this.name = name;
+            this.plan = plan;
+        }
+
+        public Org() {
+        }
+    }
+
+    @Entity(useDiscriminator = false)
+    private static class Plan {
+
+        @Id
+        private ObjectId id;
+        @Property("name")
+        private String name;
+
+        public Plan() {
+        }
+
+        public Plan(String name) {
+            this.name = name;
+        }
     }
 }
