@@ -1,24 +1,21 @@
-package dev.morphia.mapping;
+package dev.morphia.test.mapping;
 
-
-import dev.morphia.TestBase;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
-/**
- * @author ScottHernandez
- */
-public class URIMappingTest extends TestBase {
+public class TestUriMapping extends TestBase {
 
     @Test
     public void testURIField() throws URISyntaxException {
@@ -28,8 +25,8 @@ public class URIMappingTest extends TestBase {
         entity.uri = testURI;
         getDs().save(entity);
         final ContainsURI loaded = getDs().find(ContainsURI.class).iterator(new FindOptions().limit(1)).tryNext();
-        Assert.assertNotNull(loaded.uri);
-        Assert.assertEquals(testURI, loaded.uri);
+        assertNotNull(loaded.uri);
+        assertEquals(testURI, loaded.uri);
 
     }
 
@@ -41,9 +38,9 @@ public class URIMappingTest extends TestBase {
         entity.uris.put(testURI, "first");
         getDs().save(entity);
         final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).iterator(new FindOptions().limit(1)).tryNext();
-        Assert.assertNotNull(loaded.uris);
-        Assert.assertEquals(1, loaded.uris.size());
-        Assert.assertEquals(testURI, loaded.uris.keySet().iterator().next());
+        assertNotNull(loaded.uris);
+        assertEquals(loaded.uris.size(), 1);
+        assertEquals(testURI, loaded.uris.keySet().iterator().next());
 
     }
 
@@ -58,6 +55,6 @@ public class URIMappingTest extends TestBase {
     private static class ContainsURIKeyedMap {
         @Id
         private ObjectId id;
-        private final Map<URI, String> uris = new HashMap<URI, String>();
+        private final Map<URI, String> uris = new HashMap<>();
     }
 }

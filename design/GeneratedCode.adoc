@@ -2,7 +2,7 @@
 
 A lot of reflection is done every time a morphia application starts up.
 Quarkus has really highlighted how much can be gained by memoizing that work at build time.
-With that in mind here are a few places to consider generating code (initially via critter) in the 3 .x timeframe:
+With that in mind here are a few places to consider generating code (initially via critter) in the 3 .mapsOfStuff timeframe:
 
 . The codecs are the obvious place to start.
 So much reflection is done to read and write values from/to an entity.

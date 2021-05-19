@@ -35,6 +35,7 @@ import dev.morphia.query.experimental.updates.CurrentDateOperator.TypeSpecificat
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.Circle;
 import dev.morphia.test.models.Rectangle;
+import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.User;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
@@ -53,6 +54,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +96,58 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class TestUpdateOperations extends TestBase {
+    @Test
+    public void retainsClassName() {
+        final MapsOfStuff mapsOfStuff = new MapsOfStuff();
+
+        final Stuff1 stuff1 = new Stuff1();
+        stuff1.foo = "narf";
+        mapsOfStuff.map.put("k1", stuff1);
+
+        final Stuff2 stuff2 = new Stuff2();
+        stuff2.bar = "blarg";
+        mapsOfStuff.map.put("k2", stuff2);
+
+        getDs().save(mapsOfStuff);
+
+        final Query<MapsOfStuff> query = getDs().find(MapsOfStuff.class);
+        query.update(set("map.k2", stuff1))
+             .execute();
+
+
+        // fails due to type now missing
+        getDs().find(MapsOfStuff.class).iterator(new FindOptions().limit(1))
+               .next();
+    }
+
+    @Test
+    public void shouldUpdateAnArrayElement() {
+        // given
+        ObjectId parentId = new ObjectId();
+        String childName = "Bob";
+        String updatedLastName = "updatedLastName";
+
+        Parent parent = new Parent();
+        parent.id = parentId;
+        parent.children.add(new Child("Anthony", "Child"));
+        parent.children.add(new Child(childName, "originalLastName"));
+        getDs().save(parent);
+
+        // when
+        Query<Parent> query = getDs().find(Parent.class)
+                                     .filter(eq("_id", parentId),
+                                         eq("children.first", childName));
+        UpdateResult updateResult = query.update(set("children.$.last", updatedLastName))
+                                         .execute();
+
+        // then
+        assertThat(updateResult.getModifiedCount(), is(1L));
+        assertThat(getDs().find(Parent.class)
+                          .filter(eq("id", parentId)).iterator(new FindOptions().limit(1))
+                          .next()
+                       .children, hasItem(new Child(childName, updatedLastName)));
+    }
+
     @Test
     public void testAdd() {
         ContainsIntArray cIntArray = new ContainsIntArray();
@@ -139,34 +193,6 @@ public class TestUpdateOperations extends TestBase {
         //add dups [4,5]
         assertUpdated(query.update(push("values", newValues)).execute(), 1);
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 5, 4, 5}));
-    }
-
-    @Test
-    public void shouldUpdateAnArrayElement() {
-        // given
-        ObjectId parentId = new ObjectId();
-        String childName = "Bob";
-        String updatedLastName = "updatedLastName";
-
-        Parent parent = new Parent();
-        parent.id = parentId;
-        parent.children.add(new Child("Anthony", "Child"));
-        parent.children.add(new Child(childName, "originalLastName"));
-        getDs().save(parent);
-
-        // when
-        Query<Parent> query = getDs().find(Parent.class)
-                                     .filter(eq("_id", parentId),
-                                         eq("children.first", childName));
-        UpdateResult updateResult = query.update(set("children.$.last", updatedLastName))
-                                         .execute();
-
-        // then
-        assertThat(updateResult.getModifiedCount(), is(1L));
-        assertThat(getDs().find(Parent.class)
-                          .filter(eq("id", parentId)).iterator(new FindOptions().limit(1))
-                          .next()
-                       .children, hasItem(new Child(childName, updatedLastName)));
     }
 
     @Test
@@ -271,22 +297,6 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
-    public void testExistingUpdates() {
-        getDs().save(new Circle(100D));
-        getDs().save(new Circle(12D));
-        Query<Circle> circle = getDs().find(Circle.class);
-        assertUpdated(circle.update(inc("radius", 1D)).execute(), 1);
-
-        assertUpdated(circle.update(inc("radius")).execute(new UpdateOptions().multi(true)), 2);
-
-        //test possible data type change.
-        final Circle updatedCircle = circle.filter(eq("radius", 13)).iterator(new FindOptions().limit(1))
-                                           .next();
-        assertThat(updatedCircle, is(notNullValue()));
-        MatcherAssert.assertThat(updatedCircle.getRadius(), is(13D));
-    }
-
-    @Test
     public void testElemMatchUpdate() {
         // setUp
         Object id = getDs().save(new ContainsIntArray()).id;
@@ -306,6 +316,22 @@ public class TestUpdateOperations extends TestBase {
         assertThat(getDs().find(ContainsIntArray.class)
                           .filter(eq("_id", id))
                           .first().values, arrayContaining(1, 5, 3));
+    }
+
+    @Test
+    public void testExistingUpdates() {
+        getDs().save(new Circle(100D));
+        getDs().save(new Circle(12D));
+        Query<Circle> circle = getDs().find(Circle.class);
+        assertUpdated(circle.update(inc("radius", 1D)).execute(), 1);
+
+        assertUpdated(circle.update(inc("radius")).execute(new UpdateOptions().multi(true)), 2);
+
+        //test possible data type change.
+        final Circle updatedCircle = circle.filter(eq("radius", 13)).iterator(new FindOptions().limit(1))
+                                           .next();
+        assertThat(updatedCircle, is(notNullValue()));
+        MatcherAssert.assertThat(updatedCircle.getRadius(), is(13D));
     }
 
     @Test
@@ -388,6 +414,14 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
+    public void testInsertUpdate() {
+        assertInserted(getDs().find(Circle.class)
+                              .filter(eq("radius", 0))
+                              .update(inc("radius", 1D))
+                              .execute(new UpdateOptions().upsert(true)));
+    }
+
+    @Test
     public void testInsertWithRef() {
         final Pic pic = new Pic();
         pic.setName("fist");
@@ -416,14 +450,6 @@ public class TestUpdateOperations extends TestBase {
         MatcherAssert.assertThat(cp.getPic(), is(notNullValue()));
         MatcherAssert.assertThat(cp.getPic().getName(), is(notNullValue()));
         MatcherAssert.assertThat(cp.getPic().getName(), is("fist"));
-    }
-
-    @Test
-    public void testInsertUpdate() {
-        assertInserted(getDs().find(Circle.class)
-                              .filter(eq("radius", 0))
-                              .update(inc("radius", 1D))
-                              .execute(new UpdateOptions().upsert(true)));
     }
 
     @Test
@@ -560,6 +586,13 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
+    public void testPlaceholderOperators() {
+        new PathTarget(getMapper(), DumbColl.class, "fromArray.$").translatedPath();
+        new PathTarget(getMapper(), DumbColl.class, "fromArray.$[]").translatedPath();
+        new PathTarget(getMapper(), DumbColl.class, "fromArray.$[element]").translatedPath();
+    }
+
+    @Test
     public void testPull() {
         DumbColl dumbColl = new DumbColl("ID");
         dumbColl.fromArray = List.of(new DumbArrayElement("something"), new DumbArrayElement("something else"));
@@ -579,10 +612,26 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
-    public void testPlaceholderOperators() {
-        new PathTarget(getMapper(), DumbColl.class, "fromArray.$").translatedPath();
-        new PathTarget(getMapper(), DumbColl.class, "fromArray.$[]").translatedPath();
-        new PathTarget(getMapper(), DumbColl.class, "fromArray.$[element]").translatedPath();
+    public void testPullsWithNoData() {
+        DumbColl dumbColl = new DumbColl("ID");
+        dumbColl.fromArray = singletonList(new DumbArrayElement("something"));
+        DumbColl dumbColl2 = new DumbColl("ID2");
+        dumbColl2.fromArray = singletonList(new DumbArrayElement("something"));
+        getDs().save(asList(dumbColl, dumbColl2));
+
+        getDs().find(DumbColl.class)
+               .filter(regex("opaqueId")
+                           .pattern("ID")
+                           .caseInsensitive())
+               .update(pull("fromArray", Filters.eq("whereId", "not there")))
+               .execute();
+
+        getDs().find(DumbColl.class)
+               .filter(regex("opaqueId")
+                           .pattern("ID")
+                           .caseInsensitive())
+               .update(pullAll("fromArray", List.of(new DumbArrayElement("something"))))
+               .execute();
     }
 
     @Test
@@ -675,29 +724,6 @@ public class TestUpdateOperations extends TestBase {
                                          .first();
         Assert.assertNull(document.getString("opaqueId"));
         assertNotNull(document.getString("anythingElse"));
-    }
-
-    @Test
-    public void testPullsWithNoData() {
-        DumbColl dumbColl = new DumbColl("ID");
-        dumbColl.fromArray = singletonList(new DumbArrayElement("something"));
-        DumbColl dumbColl2 = new DumbColl("ID2");
-        dumbColl2.fromArray = singletonList(new DumbArrayElement("something"));
-        getDs().save(asList(dumbColl, dumbColl2));
-
-        getDs().find(DumbColl.class)
-               .filter(regex("opaqueId")
-                           .pattern("ID")
-                           .caseInsensitive())
-               .update(pull("fromArray", Filters.eq("whereId", "not there")))
-               .execute();
-
-        getDs().find(DumbColl.class)
-               .filter(regex("opaqueId")
-                           .pattern("ID")
-                           .caseInsensitive())
-               .update(pullAll("fromArray", List.of(new DumbArrayElement("something"))))
-               .execute();
     }
 
     @Test
@@ -1237,10 +1263,26 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Entity
+    public static class MapsOfStuff {
+        private final Map<String, TestEntity> map = new HashMap<>();
+        @Id
+        private ObjectId id;
+
+    }
+
+    @Entity
     private static final class Parent {
         private final Set<Child> children = new HashSet<>();
         @Id
         private ObjectId id;
+    }
+
+    public static class Stuff1 extends TestEntity {
+        private String foo;
+    }
+
+    public static class Stuff2 extends TestEntity {
+        private String bar;
     }
 
 }

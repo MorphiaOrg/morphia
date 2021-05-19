@@ -12,18 +12,18 @@ _(Last updated:  27 Dec 2018)_
 
 # 1.4.0
 
-The [1.4.0 release](https://github.com/MorphiaOrg/morphia/releases/tag/r1.4.0) was largely a bookkeeping release.  With the move to the 
-community organization, Morphia could no longer live under the same package structure.  The primary goal of 1.4.0 was to update the 
-package names and the maven coordinates.  This release should be mostly identical to 1.3.2.  No further updates are planned for 1.4.x.  
-Any such updates should be released as part of the 1.5.x cycle.
+The [1.4.0 release](https://github.com/MorphiaOrg/morphia/releases/tag/r1.4.0) was largely a bookkeeping release. With the move to the
+community organization, Morphia could no longer live under the same package structure. The primary goal of 1.4.0 was to update the package
+names and the maven coordinates. This release should be mostly identical to 1.3.2. No further updates are planned for 1.4.mapsOfStuff.  
+Any such updates should be released as part of the 1.5.mapsOfStuff cycle.
 
 # 1.5.0
 
-1.5.0 will be the first significant release of Morphia in some time.  It will contain both bug fixes and API updates.  If 1.4.0 was the 
-transition release to the community project, 1.5.0 can be considered the transition point to the 2.0.x cycle.  As such many changes are 
-planned to help users transition to 2.0.0 with as little fuss as possible.  Many changes will also help slim down Morphia's API to 
-reduce both the burden of learning Morphia's capabilities and the burden of maintaining and updating the API going forward.  These 
-details and more are laid out below:
+1.5.0 will be the first significant release of Morphia in some time. It will contain both bug fixes and API updates. If 1.4.0 was the
+transition release to the community project, 1.5.0 can be considered the transition point to the 2.0.mapsOfStuff cycle. As such many changes
+are planned to help users transition to 2.0.0 with as little fuss as possible. Many changes will also help slim down Morphia's API to reduce
+both the burden of learning Morphia's capabilities and the burden of maintaining and updating the API going forward. These details and more
+are laid out below:
 
 * **Deprecating much of Datastore.**  Over the years many convenience methods have been added to Datastore to make certain operations 
 slightly easier.  This profusion of methods have made adding overloads for things like WriteConcern and ReadPreference awkward.  We're 
