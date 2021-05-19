@@ -9,11 +9,14 @@ import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Author;
@@ -24,7 +27,7 @@ import dev.morphia.test.models.methods.MethodMappedFriend;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.experimental.stages.Unwind.on;
+import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Arrays.asList;
@@ -49,9 +53,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 public class TestReferences extends TestBase {
+
     @Test
     public void maps() {
         Ref ref = new Ref("refId");
@@ -63,16 +69,16 @@ public class TestReferences extends TestBase {
         getDs().save(sets);
 
         // this query throws a NullPointerException
-        Assert.assertNotNull(getDs().find(Sets.class)
-                                    .filter(eq("refs", ref))
-                                    .first());
+        assertNotNull(getDs().find(Sets.class)
+                             .filter(eq("refs", ref))
+                             .first());
 
         final MapOfSet map = new MapOfSet();
         map.strings = new HashMap<>();
         map.strings.put("name", new TreeSet<>(asList("one", "two", "three")));
         getDs().save(map);
         final MapOfSet first = getDs().find(MapOfSet.class).first();
-        Assert.assertEquals(map, first);
+        assertEquals(map, first);
     }
 
     @Test
@@ -128,7 +134,7 @@ public class TestReferences extends TestBase {
                                 .execute(Book.class)
                                 .next();
         assertTrue(foundBook.author.isResolved());
-        Assert.assertEquals(author, foundBook.author.get());
+        assertEquals(author, foundBook.author.get());
     }
 
     @Test
@@ -148,92 +154,39 @@ public class TestReferences extends TestBase {
     }
 
     @Test
-    public void testFetchKeys() {
-        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-            new Complex(new ChildId("JD", 26), "Dorian"),
-            new Complex(new ChildId("Carla", 29), "Espinosa"));
-        getDs().save(list);
+    public final void testCallIdGetterWithoutFetching() {
+        checkForProxyTypes();
 
-        MongoCursor<Key<Complex>> keys = getDs().find(Complex.class).keys();
-        assertTrue(keys.hasNext());
-        assertEquals(keys.next().getId(), list.get(0).getId());
-        assertEquals(keys.next().getId(), list.get(1).getId());
-        assertEquals(keys.next().getId(), list.get(2).getId());
-        assertFalse(keys.hasNext());
-    }
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+        getDs().save(reference);
+        ObjectId id = reference.getId();
 
-    @Test
-    public void testFindByEntityReference() {
-        final Ref ref = new Ref("refId");
-        getDs().save(ref);
+        root.r = reference;
+        reference.setFoo("bar");
+        getDs().save(root);
 
-        final Container container = new Container();
-        container.singleRef = ref;
-        getDs().save(container);
+        root = getDs().find(RootEntity.class)
+                      .filter(eq("_id", root.getId()))
+                      .first();
 
-        Assert.assertNotNull(getDs().find(Container.class)
-                                    .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
-                                    .next());
-    }
+        final ReferencedEntity p = root.r;
 
-    @Test
-    public void testInQueryAgainstReferences() {
+        assertIsProxy(p);
+        assertNotFetched(p);
 
-        Plan plan1 = getDs().save(new Plan("Trial 1"));
-        Plan plan2 = getDs().save(new Plan("Trial 2"));
+        ObjectId idFromProxy = p.getId();
+        assertEquals(id, idFromProxy);
 
-        getDs().save(new Org("Test Org1", plan1));
-        getDs().save(new Org("Test Org2", plan2));
+        // Since getId() is annotated with @IdGetter, it should not cause the
+        // referenced entity to be fetched
+        assertNotFetched(p);
 
-        long count = getDs().find(Org.class).filter(eq("name", "Test Org1")).count();
-        assertEquals(count, 1);
+        p.getFoo();
 
-        count = getDs().find(Org.class).filter(in("plan", of(plan1))).count();
-        assertEquals(count, 1);
+        // Calling getFoo() should have caused the referenced entity to be fetched
+        assertFetched(p);
 
-        count = getDs().find(Org.class).filter(in("plan", of(plan1, plan2))).count();
-        assertEquals(count, 2);
-    }
-
-    @Test
-    public final void testMultiDimArrayPersistence() {
-        MultiDimArrayOfReferences a = new MultiDimArrayOfReferences();
-        final Ref ref1 = new Ref();
-        final Ref ref2 = new Ref();
-
-        a.arrays = new Ref[][][]{
-            new Ref[][]{
-                new Ref[]{ref1, ref2}
-            }
-        };
-        a.lists = List.of(List.of(List.of(ref1), List.of(ref2)));
-        getDs().save(asList(ref2, ref1, a));
-
-        assertEquals(a, getDs().find(MultiDimArrayOfReferences.class)
-                               .filter(eq("_id", a.getId()))
-                               .first());
-    }
-
-    @Test
-    public void testReferencesWithoutMapping() {
-        Child child1 = new Child();
-        getDs().save(child1);
-
-        Parent parent1 = new Parent();
-        parent1.children.add(child1);
-        getDs().save(parent1);
-
-        List<Parent> parentList = getDs().find(Parent.class).iterator().toList();
-        Assert.assertEquals(parentList.size(), 1);
-
-        withOptions(MapperOptions.DEFAULT, () -> {
-            Assert.assertEquals(getDs().find(Parent.class).iterator().toList().size(), 1);
-        });
-    }
-
-    private static class ArrayOfReferences extends TestEntity {
-        @Reference
-        private final Ref[] refs = new Ref[2];
     }
 
     @Test
@@ -272,6 +225,62 @@ public class TestReferences extends TestBase {
     }
 
     @Test
+    public void testFetchKeys() {
+        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
+            new Complex(new ChildId("JD", 26), "Dorian"),
+            new Complex(new ChildId("Carla", 29), "Espinosa"));
+        getDs().save(list);
+
+        MongoCursor<Key<Complex>> keys = getDs().find(Complex.class).keys();
+        assertTrue(keys.hasNext());
+        assertEquals(keys.next().getId(), list.get(0).getId());
+        assertEquals(keys.next().getId(), list.get(1).getId());
+        assertEquals(keys.next().getId(), list.get(2).getId());
+        assertFalse(keys.hasNext());
+    }
+
+    @Test
+    public void testFindByEntityReference() {
+        final Ref ref = new Ref("refId");
+        getDs().save(ref);
+
+        final Container container = new Container();
+        container.singleRef = ref;
+        getDs().save(container);
+
+        assertNotNull(getDs().find(Container.class)
+                             .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
+                             .next());
+    }
+
+    @Test
+    public final void testGetKeyWithoutFetching() {
+        checkForProxyTypes();
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+
+        root.r = reference;
+        reference.setFoo("bar");
+
+        final ObjectId id = getDs().save(reference).getId();
+        getDs().save(root);
+
+        RootEntity loaded = getDs().find(RootEntity.class)
+                                   .filter(eq("_id", root.getId()))
+                                   .first();
+
+        final ReferencedEntity p = loaded.r;
+
+        assertIsProxy(p);
+        assertNotFetched(p);
+        p.getFoo();
+        // should be fetched now.
+        assertFetched(p);
+
+    }
+
+    @Test
     public void testIdOnly() {
         getMapper().map(List.of(HasIdOnly.class, FacebookUser.class));
 
@@ -288,11 +297,23 @@ public class TestReferences extends TestBase {
             .forEach(f -> assertEquals(f.getClass(), Long.class));
     }
 
-    @Entity(value = "children", useDiscriminator = false)
-    private static class Child {
-        @Id
-        private ObjectId id;
+    @Test
+    public void testInQueryAgainstReferences() {
 
+        Plan plan1 = getDs().save(new Plan("Trial 1"));
+        Plan plan2 = getDs().save(new Plan("Trial 2"));
+
+        getDs().save(new Org("Test Org1", plan1));
+        getDs().save(new Org("Test Org2", plan2));
+
+        long count = getDs().find(Org.class).filter(eq("name", "Test Org1")).count();
+        assertEquals(count, 1);
+
+        count = getDs().find(Org.class).filter(in("plan", of(plan1))).count();
+        assertEquals(count, 1);
+
+        count = getDs().find(Org.class).filter(in("plan", of(plan1, plan2))).count();
+        assertEquals(count, 2);
     }
 
     @Test
@@ -316,6 +337,56 @@ public class TestReferences extends TestBase {
         assertEquals(loaded.getFriend(), friend);
         assertEquals(loaded.getFriends().get().get(0), friend);
         assertEquals(loaded, user);
+    }
+
+    @Test(expectedExceptions = ReferenceException.class)
+    public void testMissingRef() {
+        final Source source = new Source();
+        source.setTarget(new Target());
+
+        getDs().save(source);
+
+        getDs().find(Source.class).iterator().toList();
+    }
+
+    @Test(expectedExceptions = ReferenceException.class)
+    public void testMissingRefLazy() {
+        final Source e = new Source();
+        e.setLazy(new Target());
+
+        getDs().save(e);
+        Source source = getDs().find(Source.class).first();
+        assertNull(source.getLazy().getFoo());
+    }
+
+    @Test(expectedExceptions = ReferenceException.class)
+    public void testMissingRefLazyIgnoreMissing() {
+        final Source e = new Source();
+        e.setIgnoreMissing(new Target());
+
+        getDs().save(e); // does not fail due to pre-initialized Ids
+
+        Source source = getDs().find(Source.class).first();
+        source.getIgnoreMissing().getFoo();
+    }
+
+    @Test
+    public final void testMultiDimArrayPersistence() {
+        MultiDimArrayOfReferences a = new MultiDimArrayOfReferences();
+        final Ref ref1 = new Ref();
+        final Ref ref2 = new Ref();
+
+        a.arrays = new Ref[][][]{
+            new Ref[][]{
+                new Ref[]{ref1, ref2}
+            }
+        };
+        a.lists = List.of(List.of(List.of(ref1), List.of(ref2)));
+        getDs().save(asList(ref2, ref1, a));
+
+        assertEquals(a, getDs().find(MultiDimArrayOfReferences.class)
+                               .filter(eq("_id", a.getId()))
+                               .first());
     }
 
     @Test
@@ -345,6 +416,124 @@ public class TestReferences extends TestBase {
         }
     }
 
+    @Test(groups = "references")
+    public void testReference() {
+        getMapper().map(CompoundIdEntity.class, CompoundId.class);
+
+        final CompoundIdEntity sibling = new CompoundIdEntity();
+        sibling.id = new CompoundId("sibling ID");
+        getDs().save(sibling);
+
+        final CompoundIdEntity entity = new CompoundIdEntity();
+        entity.id = new CompoundId("entity ID");
+        entity.e = "some value";
+        entity.sibling = sibling;
+        getDs().save(entity);
+
+        assertEquals(entity, getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first());
+    }
+
+    @Test
+    public void testReferencesWithoutMapping() {
+        Child child1 = new Child();
+        getDs().save(child1);
+
+        Parent parent1 = new Parent();
+        parent1.children.add(child1);
+        getDs().save(parent1);
+
+        List<Parent> parentList = getDs().find(Parent.class).iterator().toList();
+        assertEquals(parentList.size(), 1);
+
+        withOptions(MapperOptions.DEFAULT, () -> {
+            assertEquals(getDs().find(Parent.class).iterator().toList().size(), 1);
+        });
+    }
+
+    @Test
+    @Ignore("entity caching needs to be implemented")
+    public final void testSameProxy() {
+        checkForProxyTypes();
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+
+        root.r = reference;
+        root.secondReference = reference;
+        reference.setFoo("bar");
+
+        getDs().save(reference);
+        getDs().save(root);
+
+        root = getDs().find(RootEntity.class)
+                      .filter(eq("_id", root.getId()))
+                      .first();
+        assertSame(root.r, root.secondReference);
+    }
+
+    @Test
+    public final void testShortcutInterface() {
+        checkForProxyTypes();
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity reference = new ReferencedEntity();
+        final ReferencedEntity second = new ReferencedEntity();
+
+        root.r = reference;
+        root.secondReference = second;
+        reference.setFoo("bar");
+
+        getDs().save(second);
+        getDs().save(reference);
+        getDs().save(root);
+
+        root = getDs().find(RootEntity.class)
+                      .filter(eq("_id", root.getId()))
+                      .first();
+
+        ReferencedEntity referenced = root.r;
+
+        assertIsProxy(referenced);
+        assertNotFetched(referenced);
+        assertNotFetched(root.secondReference);
+        referenced.getFoo();
+        // should be fetched now.
+        assertFetched(referenced);
+        assertNotFetched(root.secondReference);
+        root.secondReference.getFoo();
+        assertFetched(root.secondReference);
+
+        root = getDs().find(RootEntity.class)
+                      .filter(eq("_id", root.getId()))
+                      .first();
+        assertNotFetched(root.r);
+        assertNotFetched(root.secondReference);
+    }
+
+    private MorphiaProxy asMorphiaProxy(Object e) {
+        return (MorphiaProxy) e;
+    }
+
+    private void assertFetched(Object e) {
+        assertTrue(isFetched(e));
+    }
+
+    private void assertIsProxy(Object p) {
+        assertTrue(p instanceof MorphiaProxy, "Should be a proxy: " + p.getClass());
+    }
+
+    private void assertNotFetched(Object e) {
+        assertFalse(isFetched(e));
+    }
+
+    private void checkForProxyTypes() {
+        assumeTrue(proxyClassesPresent(), "Proxy classes are needed for this test");
+    }
+
+    private boolean isFetched(Object e) {
+        return asMorphiaProxy(e).isFetched();
+    }
+
     private void testFirstDatastore(Datastore datastore) {
         final FacebookUser user = datastore.find(FacebookUser.class).filter(eq("id", 1)).first();
         assertNotNull(user);
@@ -368,159 +557,16 @@ public class TestReferences extends TestBase {
         assertEquals(db2FoundUser.friends.get(0).id, 4, "Should find the right friend");
     }
 
-    @Entity
-    private static class Container {
+    private static class ArrayOfReferences extends TestEntity {
+        @Reference
+        private final Ref[] refs = new Ref[2];
+    }
+
+    @Entity(value = "children", useDiscriminator = false)
+    private static class Child {
         @Id
         private ObjectId id;
 
-        @Reference(idOnly = true)
-        private Ref singleRef;
-
-        @Reference(idOnly = true, lazy = true)
-        private Ref lazySingleRef;
-
-        @Reference(idOnly = true)
-        private List<Ref> collectionRef;
-
-        @Reference(idOnly = true, lazy = true)
-        private List<Ref> lazyCollectionRef;
-
-        @Reference(idOnly = true)
-        private LinkedHashMap<Integer, Ref> mapRef;
-
-        @Reference(idOnly = true, lazy = true)
-        private LinkedHashMap<Integer, Ref> lazyMapRef;
-
-        /* required by morphia */
-        Container() {
-        }
-
-        Container(List<Ref> refs) {
-            singleRef = refs.get(0);
-            lazySingleRef = refs.get(0);
-            collectionRef = refs;
-            lazyCollectionRef = refs;
-            mapRef = new LinkedHashMap<>();
-            lazyMapRef = new LinkedHashMap<>();
-
-            for (int i = 0; i < refs.size(); i++) {
-                mapRef.put(i, refs.get(i));
-                lazyMapRef.put(i, refs.get(i));
-            }
-        }
-
-        List<Ref> getCollectionRef() {
-            return collectionRef;
-        }
-
-        ObjectId getId() {
-            return id;
-        }
-
-        List<Ref> getLazyCollectionRef() {
-            return lazyCollectionRef;
-        }
-
-        LinkedHashMap<Integer, Ref> getLazyMapRef() {
-            return lazyMapRef;
-        }
-
-        Ref getLazySingleRef() {
-            return lazySingleRef;
-        }
-
-        LinkedHashMap<Integer, Ref> getMapRef() {
-            return mapRef;
-        }
-
-        Ref getSingleRef() {
-            return singleRef;
-        }
-    }
-
-    @Test(groups = "references")
-    public void testReference() {
-        getMapper().map(CompoundIdEntity.class, CompoundId.class);
-
-        final CompoundIdEntity sibling = new CompoundIdEntity();
-        sibling.id = new CompoundId("sibling ID");
-        getDs().save(sibling);
-
-        final CompoundIdEntity entity = new CompoundIdEntity();
-        entity.id = new CompoundId("entity ID");
-        entity.e = "some value";
-        entity.sibling = sibling;
-        getDs().save(entity);
-
-        Assert.assertEquals(entity, getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first());
-    }
-
-    @Entity
-    private static class CompoundId {
-        private final ObjectId id = new ObjectId();
-        private String name;
-
-        CompoundId() {
-        }
-
-        CompoundId(String n) {
-            name = n;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id.hashCode();
-            result = 31 * result + name.hashCode();
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (!(obj instanceof CompoundId)) {
-                return false;
-            }
-            final CompoundId other = ((CompoundId) obj);
-            return other.id.equals(id) && other.name.equals(name);
-        }
-
-    }
-
-    @Entity
-    private static class CompoundIdEntity {
-        @Id
-        private CompoundId id;
-        private String e;
-        @Reference
-        private CompoundIdEntity sibling;
-
-        @Override
-        public int hashCode() {
-            int result = id.hashCode();
-            result = 31 * result + (e != null ? e.hashCode() : 0);
-            result = 31 * result + (sibling != null ? sibling.hashCode() : 0);
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            final CompoundIdEntity that = (CompoundIdEntity) o;
-
-            if (!id.equals(that.id)) {
-                return false;
-            }
-            if (e != null ? !e.equals(that.e) : that.e != null) {
-                return false;
-            }
-            return !(sibling != null ? !sibling.equals(that.sibling) : that.sibling != null);
-
-        }
     }
 
     @Embedded
@@ -699,6 +745,144 @@ public class TestReferences extends TestBase {
         }
     }
 
+    @Entity
+    private static class CompoundId {
+        private final ObjectId id = new ObjectId();
+        private String name;
+
+        CompoundId() {
+        }
+
+        CompoundId(String n) {
+            name = n;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id.hashCode();
+            result = 31 * result + name.hashCode();
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof CompoundId)) {
+                return false;
+            }
+            final CompoundId other = ((CompoundId) obj);
+            return other.id.equals(id) && other.name.equals(name);
+        }
+
+    }
+
+    @Entity
+    private static class CompoundIdEntity {
+        @Id
+        private CompoundId id;
+        private String e;
+        @Reference
+        private CompoundIdEntity sibling;
+
+        @Override
+        public int hashCode() {
+            int result = id.hashCode();
+            result = 31 * result + (e != null ? e.hashCode() : 0);
+            result = 31 * result + (sibling != null ? sibling.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final CompoundIdEntity that = (CompoundIdEntity) o;
+
+            if (!id.equals(that.id)) {
+                return false;
+            }
+            if (e != null ? !e.equals(that.e) : that.e != null) {
+                return false;
+            }
+            return !(sibling != null ? !sibling.equals(that.sibling) : that.sibling != null);
+
+        }
+    }
+
+    @Entity
+    private static class Container {
+        @Id
+        private ObjectId id;
+
+        @Reference(idOnly = true)
+        private Ref singleRef;
+
+        @Reference(idOnly = true, lazy = true)
+        private Ref lazySingleRef;
+
+        @Reference(idOnly = true)
+        private List<Ref> collectionRef;
+
+        @Reference(idOnly = true, lazy = true)
+        private List<Ref> lazyCollectionRef;
+
+        @Reference(idOnly = true)
+        private LinkedHashMap<Integer, Ref> mapRef;
+
+        @Reference(idOnly = true, lazy = true)
+        private LinkedHashMap<Integer, Ref> lazyMapRef;
+
+        /* required by morphia */
+        Container() {
+        }
+
+        Container(List<Ref> refs) {
+            singleRef = refs.get(0);
+            lazySingleRef = refs.get(0);
+            collectionRef = refs;
+            lazyCollectionRef = refs;
+            mapRef = new LinkedHashMap<>();
+            lazyMapRef = new LinkedHashMap<>();
+
+            for (int i = 0; i < refs.size(); i++) {
+                mapRef.put(i, refs.get(i));
+                lazyMapRef.put(i, refs.get(i));
+            }
+        }
+
+        List<Ref> getCollectionRef() {
+            return collectionRef;
+        }
+
+        ObjectId getId() {
+            return id;
+        }
+
+        List<Ref> getLazyCollectionRef() {
+            return lazyCollectionRef;
+        }
+
+        LinkedHashMap<Integer, Ref> getLazyMapRef() {
+            return lazyMapRef;
+        }
+
+        Ref getLazySingleRef() {
+            return lazySingleRef;
+        }
+
+        LinkedHashMap<Integer, Ref> getMapRef() {
+            return mapRef;
+        }
+
+        Ref getSingleRef() {
+            return singleRef;
+        }
+    }
+
     @Entity(value = "as", useDiscriminator = false)
     private static class HasIdOnly {
         @Reference(idOnly = true)
@@ -740,40 +924,6 @@ public class TestReferences extends TestBase {
         }
     }
 
-    @Entity(useDiscriminator = false)
-    private static class Org {
-        @Id
-        private ObjectId id;
-        @Property("name")
-        private String name;
-        @Reference("plan")
-        private Plan plan;
-
-        public Org(String name, Plan plan) {
-            this.name = name;
-            this.plan = plan;
-        }
-
-        public Org() {
-        }
-    }
-
-    @Entity(useDiscriminator = false)
-    private static class Plan {
-
-        @Id
-        private ObjectId id;
-        @Property("name")
-        private String name;
-
-        public Plan() {
-        }
-
-        public Plan(String name) {
-            this.name = name;
-        }
-    }
-
     private static class MultiDimArrayOfReferences extends TestEntity {
         @Reference(idOnly = true)
         private Ref[][][] arrays;
@@ -804,6 +954,24 @@ public class TestReferences extends TestBase {
         }
     }
 
+    @Entity(useDiscriminator = false)
+    private static class Org {
+        @Id
+        private ObjectId id;
+        @Property("name")
+        private String name;
+        @Reference("plan")
+        private Plan plan;
+
+        public Org(String name, Plan plan) {
+            this.name = name;
+            this.plan = plan;
+        }
+
+        public Org() {
+        }
+    }
+
     @Entity(value = "parents", useDiscriminator = false)
     private static class Parent {
 
@@ -812,6 +980,22 @@ public class TestReferences extends TestBase {
         @Id
         private ObjectId id;
 
+    }
+
+    @Entity(useDiscriminator = false)
+    private static class Plan {
+
+        @Id
+        private ObjectId id;
+        @Property("name")
+        private String name;
+
+        public Plan() {
+        }
+
+        public Plan(String name) {
+            this.name = name;
+        }
     }
 
     @Entity
@@ -859,6 +1043,51 @@ public class TestReferences extends TestBase {
         }
     }
 
+    public static class ReferencedEntity extends TestEntity {
+        private String foo;
+
+        public String getFoo() {
+            return foo;
+        }
+
+        public void setFoo(String string) {
+            foo = string;
+        }
+
+        @Override
+        @IdGetter
+        public ObjectId getId() {
+            return super.getId();
+        }
+
+        @Override
+        public int hashCode() {
+            return getFoo() != null ? getFoo().hashCode() : 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ReferencedEntity)) {
+                return false;
+            }
+
+            final ReferencedEntity that = (ReferencedEntity) o;
+
+            return getFoo() != null ? getFoo().equals(that.getFoo()) : that.getFoo() == null;
+        }
+    }
+
+    private static class RootEntity extends TestEntity {
+        @Reference(lazy = true)
+        private ReferencedEntity r;
+        @Reference(lazy = true)
+        private ReferencedEntity secondReference;
+
+    }
+
     @Entity("sets")
     public static class Sets {
         @Id
@@ -868,4 +1097,62 @@ public class TestReferences extends TestBase {
         private Set<Ref> refs;
     }
 
+    @Entity
+    static class Source {
+        @Id
+        private final ObjectId id = new ObjectId();
+        @Reference
+        private Target target;
+        @Reference(lazy = true)
+        private Target lazy;
+        @Reference(lazy = true, ignoreMissing = true)
+        private Target ignoreMissing;
+
+        public Target getIgnoreMissing() {
+            return ignoreMissing;
+        }
+
+        public void setIgnoreMissing(Target ignoreMissing) {
+            this.ignoreMissing = ignoreMissing;
+        }
+
+        public Target getLazy() {
+            return lazy;
+        }
+
+        public void setLazy(Target lazy) {
+            this.lazy = lazy;
+        }
+
+        public Target getTarget() {
+            return target;
+        }
+
+        public void setTarget(Target target) {
+            this.target = target;
+        }
+    }
+
+    @Entity
+    public static class Target {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String foo = "bar";
+
+        public String getFoo() {
+            return foo;
+        }
+
+        public void setFoo(String foo) {
+            this.foo = foo;
+        }
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+    }
 }
