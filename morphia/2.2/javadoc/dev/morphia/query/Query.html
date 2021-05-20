@@ -238,7 +238,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":18,"i12":6,"i13":50,"i14":18,"i15":50,"i16":50,"i17":50,"i18":18,"i19":6,"i20":6,"i21":6,"i22":6,"i23":18,"i24":6,"i25":38,"i26":38,"i27":6,"i28":50,"i29":50,"i30":50,"i31":38,"i32":38,"i33":18,"i34":18,"i35":6,"i36":6,"i37":50};
+var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":18,"i12":6,"i13":50,"i14":18,"i15":50,"i16":50,"i17":50,"i18":18,"i19":6,"i20":6,"i21":6,"i22":6,"i23":18,"i24":6,"i25":38,"i26":38,"i27":6,"i28":50,"i29":50,"i30":50,"i31":38,"i32":38,"i33":18,"i34":18,"i35":6,"i36":6,"i37":50,"i38":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -648,6 +648,13 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>&nbsp;</div>
+</td>
+</tr>
+<tr id="i38" class="altColor">
+<td class="colFirst"><code>default <a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(java.util.List)">update</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&gt;&nbsp;updates)</code></th>
+<td class="colLast">
+<div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
 </tbody></table>
@@ -1375,6 +1382,22 @@ default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the document form of this query</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="update(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>update</h4>
+<pre class="methodSignature">default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;update​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&gt;&nbsp;updates)</pre>
+<div class="block">Creates an update operation based on this query</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>updates</code> - lists the set of updates to apply</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the update operation</dd>
+</dl>
 </li>
 </ul>
 <a id="update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
