@@ -41,7 +41,9 @@ public class Lookup extends Stage {
      *
      * @param from the type to use for determining the target collection
      * @return the new stage
+     * @deprecated use {@link #lookup(Class)}
      */
+    @Deprecated(forRemoval = true)
     public static Lookup from(Class<?> from) {
         return new Lookup(from);
     }
@@ -51,8 +53,32 @@ public class Lookup extends Stage {
      *
      * @param from the target collection
      * @return the new stage
+     * @deprecated use {@link #lookup(String)}
      */
+    @Deprecated(forRemoval = true)
     public static Lookup from(String from) {
+        return new Lookup(from);
+    }
+
+    /**
+     * Creates a new stage using the target collection for the mapped type
+     *
+     * @param from the type to use for determining the target collection
+     * @return the new stage
+     * @since 2.2
+     */
+    public static Lookup lookup(Class<?> from) {
+        return new Lookup(from);
+    }
+
+    /**
+     * Creates a new stage using the target collection
+     *
+     * @param from the target collection
+     * @return the new stage
+     * @since 2.2
+     */
+    public static Lookup lookup(String from) {
         return new Lookup(from);
     }
 
@@ -125,6 +151,15 @@ public class Lookup extends Stage {
     }
 
     /**
+     * @return the embeded pipeline
+     * @morphia.internal
+     */
+    @Nullable
+    public List<Stage> getPipeline() {
+        return pipeline;
+    }
+
+    /**
      * @return the embeded pipeline's variables
      * @morphia.internal
      */
@@ -156,15 +191,6 @@ public class Lookup extends Stage {
     public Lookup localField(String localField) {
         this.localField = localField;
         return this;
-    }
-
-    /**
-     * @return the embeded pipeline
-     * @morphia.internal
-     */
-    @Nullable
-    public List<Stage> getPipeline() {
-        return pipeline;
     }
 
     /**

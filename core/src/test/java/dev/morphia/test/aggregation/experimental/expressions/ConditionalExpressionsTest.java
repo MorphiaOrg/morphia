@@ -25,7 +25,7 @@ public class ConditionalExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 3, 'name' : 'James Torrelio', 'scores' : [ 91, 84, 97 ] }")));
 
         List<Document> actual = getDs().aggregate("grades")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("name")
                                                           .include("summary", switchExpression()
                                                                                   .branch(gte(avg(field("scores")), value(80)),

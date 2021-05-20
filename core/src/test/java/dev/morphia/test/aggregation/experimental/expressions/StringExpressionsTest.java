@@ -118,7 +118,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
             parse("{ _id: 3, name: 'café' }")));
 
         List<Document> actual = getDs().aggregate("myCollection")
-                                       .addFields(AddFields.of()
+                                       .addFields(AddFields.addFields()
                                                            .field("resultObject",
                                                                replaceAll(field("name"), literal("Cafe"), literal("CAFE"))))
                                        .execute(Document.class)
@@ -142,7 +142,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'item' : 'blue paint with green paintbrush' }")));
 
         List<Document> actual = getDs().aggregate("myCollection")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("item",
                                                               replaceOne(field("$item"), literal("blue paint"),
                                                                   literal("red paint"))))

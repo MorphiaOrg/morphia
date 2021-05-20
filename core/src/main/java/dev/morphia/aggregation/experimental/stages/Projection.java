@@ -30,8 +30,20 @@ public class Projection extends Stage {
      * Creates a new stage
      *
      * @return the new stage
+     * @deprecated use {@link #project()}
      */
+    @Deprecated(forRemoval = true)
     public static Projection of() {
+        return new Projection();
+    }
+
+    /**
+     * Creates a new stage
+     *
+     * @return the new stage
+     * @since 2.2
+     */
+    public static Projection project() {
         return new Projection();
     }
 

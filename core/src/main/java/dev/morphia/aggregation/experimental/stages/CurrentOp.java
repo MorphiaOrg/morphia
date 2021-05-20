@@ -21,7 +21,19 @@ public class CurrentOp extends Stage {
      * Creates a new stage
      *
      * @return the new stage
+     * @since 2.2
      */
+    public static CurrentOp currentOp() {
+        return new CurrentOp();
+    }
+
+    /**
+     * Creates a new stage
+     *
+     * @return the new stage
+     * @deprecated user {@link #currentOp()}
+     */
+    @Deprecated(forRemoval = true)
     public static CurrentOp of() {
         return new CurrentOp();
     }

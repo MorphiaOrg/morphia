@@ -18,8 +18,21 @@ public class Sample extends Stage {
      *
      * @param size the sample size
      * @return the new stage
+     * @deprecated use {@link #sample(long)}
      */
+    @Deprecated(forRemoval = true)
     public static Sample of(long size) {
+        return new Sample(size);
+    }
+
+    /**
+     * Creates a new stage with the given sample size.
+     *
+     * @param size the sample size
+     * @return the new stage
+     * @since 2.2
+     */
+    public static Sample sample(long size) {
         return new Sample(size);
     }
 

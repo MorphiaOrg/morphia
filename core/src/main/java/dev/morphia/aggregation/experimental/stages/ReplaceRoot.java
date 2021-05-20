@@ -30,7 +30,31 @@ public class ReplaceRoot extends Stage {
      * Creates a new stage
      *
      * @return the new stage
+     * @since 2.2
      */
+    public static ReplaceRoot replaceRoot() {
+        return new ReplaceRoot();
+    }
+
+    /**
+     * Creates a new stage to replace the root with the given expression.  This expression must evaluate to a document.  No further
+     * fields can be added to this stage.
+     *
+     * @param expression the document expression
+     * @return the new stage
+     * @since 2.2
+     */
+    public static ReplaceRoot replaceRoot(Expression expression) {
+        return new ReplaceRoot(expression);
+    }
+
+    /**
+     * Creates a new stage
+     *
+     * @return the new stage
+     * @deprecated use {@link #replaceRoot()}
+     */
+    @Deprecated(forRemoval = true)
     public static ReplaceRoot with() {
         return new ReplaceRoot();
     }
@@ -41,7 +65,9 @@ public class ReplaceRoot extends Stage {
      *
      * @param expression the document expression
      * @return the new stage
+     * @deprecated use {@link #replaceRoot(Expression)}
      */
+    @Deprecated(forRemoval = true)
     public static ReplaceRoot with(Expression expression) {
         return new ReplaceRoot(expression);
     }

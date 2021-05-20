@@ -29,7 +29,19 @@ public class AutoBucket extends Stage {
      * Creates a new auto bucket
      *
      * @return the new bucket
+     * @since 2.2
      */
+    public static AutoBucket autoBucket() {
+        return new AutoBucket();
+    }
+
+    /**
+     * Creates a new auto bucket
+     *
+     * @return the new bucket
+     * @deprecated use {@link #autoBucket()}
+     */
+    @Deprecated(forRemoval = true)
     public static AutoBucket of() {
         return new AutoBucket();
     }

@@ -40,7 +40,7 @@ import static dev.morphia.aggregation.experimental.expressions.DateExpressions.w
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
-import static dev.morphia.aggregation.experimental.stages.Projection.of;
+import static dev.morphia.aggregation.experimental.stages.Projection.project;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 
@@ -51,7 +51,7 @@ public class TestDateExpression extends ExpressionsTestBase {
             parse("{\"_id\" : 1,\"item\" : \"abc\",\"price\" : 10,\"quantity\" : 2,\"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")\n}")));
         Aggregation<Sales> pipeline = getDs()
                                           .aggregate(Sales.class)
-                                          .project(of()
+                                          .project(project()
                                                        .include("year", year(field("date")))
                                                        .include("month", month(field("date")))
                                                        .include("day", dayOfMonth(field("date")))
@@ -82,7 +82,7 @@ public class TestDateExpression extends ExpressionsTestBase {
         Document result =
             getDs()
                 .aggregate(Sales.class)
-                .project(of()
+                .project(project()
                              .include("date", dateFromParts()
                                                   .year(2017)
                                                   .month(2)
@@ -120,9 +120,9 @@ public class TestDateExpression extends ExpressionsTestBase {
         insert("logmessages", list);
 
         List<Document> result = getDs().aggregate(LogMessage.class)
-                                       .project(of().include("date", dateFromString()
-                                                                         .dateString(field("date"))
-                                                                         .timeZone("America/New_York")))
+                                       .project(project().include("date", dateFromString()
+                                                                              .dateString(field("date"))
+                                                                              .timeZone("America/New_York")))
                                        .execute(Document.class)
                                        .toList();
         assertEquals(result, List.of(
@@ -134,9 +134,9 @@ public class TestDateExpression extends ExpressionsTestBase {
 
 
         result = getDs().aggregate(LogMessage.class)
-                        .project(of().include("date", dateFromString()
-                                                          .dateString(field("date"))
-                                                          .timeZone(field("timezone"))))
+                        .project(project().include("date", dateFromString()
+                                                               .dateString(field("date"))
+                                                               .timeZone(field("timezone"))))
                         .execute(Document.class)
                         .toList();
 
@@ -155,7 +155,7 @@ public class TestDateExpression extends ExpressionsTestBase {
             .insertOne(parse("{'_id': 2, 'item': 'abc', 'price': 10, 'quantity': 2, 'date': ISODate('2017-01-01T01:29:09.123Z')}"));
 
         Document parts = getDs().aggregate(User.class)
-                                .project(of()
+                                .project(project()
                                              .include("date", dateToParts(field("date")))
                                              .include("date_iso", dateToParts(field("date"))
                                                                       .iso8601(true))
@@ -176,7 +176,7 @@ public class TestDateExpression extends ExpressionsTestBase {
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
-                                         .project(of().include("string",
+                                         .project(project().include("string",
                                              dateToString()
                                                  .format("%Y-%m-%d")
                                                  .date(field("joined"))));
@@ -217,9 +217,9 @@ public class TestDateExpression extends ExpressionsTestBase {
             parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
 
         List<Document> result = getDs().aggregate(Order.class)
-                                       .addFields(AddFields.of()
+                                       .addFields(AddFields.addFields()
                                                            .field("convertedDate", toDate(field("order_date"))))
-                                       .sort(Sort.on()
+                                       .sort(Sort.sort()
                                                  .ascending("convertedDate"))
                                        .execute(Document.class)
                                        .toList();

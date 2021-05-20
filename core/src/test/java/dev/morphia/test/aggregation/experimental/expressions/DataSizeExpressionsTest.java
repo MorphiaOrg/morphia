@@ -28,7 +28,7 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
             parse("{ _id: 5, name: 'empty.jpg', binary: new BinData(0, '') }")));
 
         List<Document> documents = getDs().aggregate("images")
-                                          .project(Projection.of()
+                                          .project(Projection.project()
                                                              .include("name", field("name"))
                                                              .include("imageSize", binarySize(field("binary"))))
                                           .execute(Document.class)
@@ -56,7 +56,7 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
                   + "'project_id': 3, 'project_name': 'Update Home Page', 'notes': 'Need to scope this project.' } }")));
 
         List<Document> list = getDs().aggregate("employees")
-                                     .project(Projection.of()
+                                     .project(Projection.project()
                                                         .include("name")
                                                         .include("object_size", bsonSize(SystemVariables.ROOT)))
                                      .execute(Document.class)

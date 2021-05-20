@@ -18,7 +18,19 @@ public class CollectionStats extends Stage {
      * Creates a new collStats stage
      *
      * @return the new stage
+     * @since 2.2
      */
+    public static CollectionStats collStats() {
+        return new CollectionStats();
+    }
+
+    /**
+     * Creates a new collStats stage
+     *
+     * @return the new stage
+     * @deprecated use {@link #collStats()}
+     */
+    @Deprecated(forRemoval = true)
     public static CollectionStats with() {
         return new CollectionStats();
     }

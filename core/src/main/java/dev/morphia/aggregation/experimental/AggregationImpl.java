@@ -156,13 +156,13 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> indexStats() {
-        stages.add(IndexStats.of());
+        stages.add(IndexStats.indexStats());
         return this;
     }
 
     @Override
     public Aggregation<T> limit(long limit) {
-        stages.add(Limit.of(limit));
+        stages.add(Limit.limit(limit));
         return this;
     }
 
@@ -174,7 +174,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> match(Filter... filters) {
-        stages.add(Match.on(filters));
+        stages.add(Match.match(filters));
         return this;
     }
 
@@ -211,7 +211,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> planCacheStats() {
-        stages.add(PlanCacheStats.of());
+        stages.add(PlanCacheStats.planCacheStats());
         return this;
     }
 
@@ -241,13 +241,13 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> sample(long sample) {
-        stages.add(Sample.of(sample));
+        stages.add(Sample.sample(sample));
         return this;
     }
 
     @Override
     public Aggregation<T> skip(long skip) {
-        stages.add(Skip.of(skip));
+        stages.add(Skip.skip(skip));
         return this;
     }
 
@@ -259,7 +259,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> sortByCount(Expression sort) {
-        stages.add(SortByCount.on(sort));
+        stages.add(SortByCount.sortByCount(sort));
         return this;
     }
 

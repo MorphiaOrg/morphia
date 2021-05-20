@@ -20,7 +20,20 @@ public class Match extends Stage {
      *
      * @param filters the filters to apply
      * @return this
+     * @since 2.2
      */
+    public static Match match(Filter... filters) {
+        return new Match(filters);
+    }
+
+    /**
+     * Creates the new stage using the filters for matching
+     *
+     * @param filters the filters to apply
+     * @return this
+     * @deprecated use {@link #match(Filter...)}
+     */
+    @Deprecated(forRemoval = true)
     public static Match on(Filter... filters) {
         return new Match(filters);
     }

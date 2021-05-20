@@ -24,7 +24,7 @@ import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.t
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toLong;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.toObjectId;
 import static dev.morphia.aggregation.experimental.expressions.TypeExpressions.type;
-import static dev.morphia.aggregation.experimental.stages.AddFields.of;
+import static dev.morphia.aggregation.experimental.stages.AddFields.addFields;
 import static org.bson.Document.parse;
 
 public class TypeExpressionsTest extends ExpressionsTestBase {
@@ -49,7 +49,7 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 2, 'reading' : 'slowly' }")));
 
         List<Document> actual = getDs().aggregate("examples")
-                                       .addFields(of()
+                                       .addFields(addFields()
                                                       .field("isNumber", isNumber(field("reading")))
                                                       .field("hasType", type(field("reading"))))
                                        .execute(Document.class)

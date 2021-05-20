@@ -33,7 +33,19 @@ public class Bucket extends Stage {
      * Creates a new bucket stage
      *
      * @return the new stage
+     * @since 2.2
      */
+    public static Bucket bucket() {
+        return new Bucket();
+    }
+
+    /**
+     * Creates a new bucket stage
+     *
+     * @return the new stage
+     * @deprecated use {@link #bucket()}
+     */
+    @Deprecated(forRemoval = true)
     public static Bucket of() {
         return new Bucket();
     }

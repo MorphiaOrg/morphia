@@ -27,7 +27,7 @@ public class ExpressionsTest extends ExpressionsTestBase {
 
         List<Document> actual = getDs().aggregate("articles")
                                        .match(text("cake"))
-                                       .group(Group.of(Group.id(meta()))
+                                       .group(Group.group(Group.id(meta()))
                                                    .field("count", sum(value(1))))
                                        .execute(Document.class)
                                        .toList();

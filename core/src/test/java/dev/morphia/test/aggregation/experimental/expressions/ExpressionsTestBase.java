@@ -36,7 +36,7 @@ public class ExpressionsTestBase extends TestBase {
         assertDocumentEquals(actual, expected);
 
         Document test = getDs().aggregate(User.class)
-                               .project(Projection.of()
+                               .project(Projection.project()
                                                   .include("test", value))
                                .execute(Document.class)
                                .next();

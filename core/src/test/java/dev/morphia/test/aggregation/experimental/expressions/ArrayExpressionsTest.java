@@ -44,7 +44,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{'_id' : 3, 'item' : 'ABC3', dimensions: [['l', 25], ['l', 'cm'], ['l', 50]]}")));
 
         List<Document> actual = getDs().aggregate("inventory")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("item")
                                                           .include("dimensions", arrayToObject(field("dimensions"))))
                                        .execute(Document.class)
@@ -106,7 +106,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
                 parse("{ _id: 3, quizzes: [ 3, 8, 9 ] }")));
 
         List<Document> actual = getDs().aggregate("grades")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("adjustedGrades",
                                                               map(field("quizzes"), add(value("$$grade"), value(2)))
                                                                   .as("grade")))
@@ -152,7 +152,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
                 parse("{ '_id' : 4, 'name' : 'ty' }")));
 
         List<Document> actual = getDs().aggregate("users")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("name")
                                                           .include("reverseFavorites", reverseArray(field("favorites"))))
                                        .execute(Document.class)
@@ -177,7 +177,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 5, 'item' : 'ZZZ2', 'description' : 'product 5 - colors is string', colors: 'blue,red' }")));
 
         List<Document> actual = getDs().aggregate("inventory")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("item")
                                                           .include("numberOfColors",
                                                               condition(isArray(field("$colors")), size(field("$colors")),
@@ -204,7 +204,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 4, 'name' : 'ty', favorites: [ 'ice cream' ] }")));
 
         List<Document> actual = getDs().aggregate("users")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("name")
                                                           .include("threeFavorites", slice(field("favorites"), 3)))
                                        .execute(Document.class)
@@ -224,7 +224,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
             parse("{ matrix: [[8, 7], [7, 6], [5, 4]] }")));
 
         List<Document> actual = getDs().aggregate("matrices")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .suppressId()
                                                           .include("transposed", zip(
                                                               elementAt(field("matrix"), value(0)),

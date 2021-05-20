@@ -20,8 +20,21 @@ public class SortByCount extends Stage {
      *
      * @param expression the expression
      * @return this
+     * @deprecated use {@link #sortByCount(Expression)}
      */
+    @Deprecated(forRemoval = true)
     public static SortByCount on(Expression expression) {
+        return new SortByCount(expression);
+    }
+
+    /**
+     * Creates a new stage grouping by the given expression.
+     *
+     * @param expression the expression
+     * @return this
+     * @since 2.2
+     */
+    public static SortByCount sortByCount(Expression expression) {
         return new SortByCount(expression);
     }
 

@@ -12,6 +12,7 @@ import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Bucket;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
+import dev.morphia.aggregation.experimental.stages.GeoNear;
 import dev.morphia.aggregation.experimental.stages.GraphLookup;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
@@ -46,7 +47,6 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.D
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.NOW;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.PRUNE;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.ROOT;
-import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
 import static org.bson.Document.parse;
@@ -58,7 +58,7 @@ public class CodecStructureTest extends TestBase {
     public void testBucket() {
         evaluate(parse("{ $bucket: { groupBy: '$price', boundaries: [  0, 150, 200, 300, 400 ], default: 'Other', output: { 'count': { "
                        + "$sum: 1 },'titles': { $push: '$title' } } } }"),
-            Bucket.of()
+            Bucket.bucket()
                   .groupBy(field("price"))
                   .boundaries(value(0), value(150), value(200), value(300), value(400))
                   .defaultValue("Other")
@@ -67,19 +67,9 @@ public class CodecStructureTest extends TestBase {
     }
 
     @Test
-    public void testGeoNear() {
-        evaluate(parse("{ $geoNear: { near: { type: 'Point', coordinates: [ -73.98142 , 40.71782 ] }, key: 'location', distanceField: "
-                       + "'dist.calculated', query: { 'category': 'Parks' } } }"),
-            to(new Point(new Position(-73.98142, 40.71782)))
-                .key("location")
-                .distanceField("dist.calculated")
-                .query(eq("category", "Parks")));
-    }
-
-    @Test
     public void testCollectionStats() {
         evaluate(parse("{ $collStats: { latencyStats: { histograms: true }, storageStats: { scale: 42 }, count: {} } }"),
-            CollectionStats.with()
+            CollectionStats.collStats()
                            .histogram(true)
                            .scale(42)
                            .count(true));
@@ -89,38 +79,42 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testCurrentOp() {
         evaluate(parse("{ $currentOp: { allUsers: true, idleConnections: true, idleCursors: true, idleSessions: true, localOps: true } }"),
-            CurrentOp.of()
+            CurrentOp.currentOp()
                      .allUsers(true)
                      .idleConnections(true)
                      .idleCursors(true)
                      .idleSessions(true)
                      .localOps(true));
         evaluate(parse("{ $currentOp: { idleConnections: true, idleCursors: true, idleSessions: true, localOps: true } }"),
-            CurrentOp.of()
+            CurrentOp.currentOp()
                      .idleConnections(true)
                      .idleCursors(true)
                      .idleSessions(true)
                      .localOps(true));
         evaluate(parse("{ $currentOp: { idleCursors: true, idleSessions: true, localOps: true } }"),
-            CurrentOp.of()
+            CurrentOp.currentOp()
                      .idleCursors(true)
                      .idleSessions(true)
                      .localOps(true));
         evaluate(parse("{ $currentOp: { idleSessions: true, localOps: true } }"),
-            CurrentOp.of()
+            CurrentOp.currentOp()
                      .idleSessions(true)
                      .localOps(true));
         evaluate(parse("{ $currentOp: { localOps: true } }"),
-            CurrentOp.of()
+            CurrentOp.currentOp()
                      .localOps(true));
         evaluate(parse("{ $currentOp: {  } }"),
-            CurrentOp.of());
+            CurrentOp.currentOp());
     }
 
     @Test
-    public void testMatch() {
-        evaluate(parse("{ $match: { price: { $exists: true } } }"),
-            Match.on(exists("price")));
+    public void testGeoNear() {
+        evaluate(parse("{ $geoNear: { near: { type: 'Point', coordinates: [ -73.98142 , 40.71782 ] }, key: 'location', distanceField: "
+                       + "'dist.calculated', query: { 'category': 'Parks' } } }"),
+            GeoNear.geoNear(new Point(new Position(-73.98142, 40.71782)))
+                   .key("location")
+                   .distanceField("dist.calculated")
+                   .query(eq("category", "Parks")));
     }
 
     @Test
@@ -128,11 +122,17 @@ public class CodecStructureTest extends TestBase {
         Document document = parse("{$graphLookup: {from: 'employees',startWith: '$reportsTo',connectFromField: 'reportsTo',"
                                   + "connectToField: 'name',as: 'reportingHierarchy' }}");
         evaluate(document,
-            GraphLookup.from("employees")
+            GraphLookup.graphLookup("employees")
                        .startWith(field("reportsTo"))
                        .connectFromField("reportsTo")
                        .connectToField("name")
                        .as("reportingHierarchy"));
+    }
+
+    @Test
+    public void testMatch() {
+        evaluate(parse("{ $match: { price: { $exists: true } } }"),
+            Match.match(exists("price")));
     }
 
     @Test
@@ -142,18 +142,6 @@ public class CodecStructureTest extends TestBase {
                                   .target(field("name"))
                                   .field("_id", field("_id"))
                                   .field("missingName", value(true)));
-    }
-
-    @Test
-    public void testSample() {
-        DocumentWriter writer = new DocumentWriter();
-        getMapper().getCodecRegistry()
-                   .get(Sample.class)
-                   .encode(writer, Sample.of(15L), EncoderContext.builder().build());
-        Document actual = writer.getDocument();
-        assertEquals(writer.getDocsLevel(), 0);
-        assertEquals(writer.getArraysLevel(), 0);
-        assertEquals(((Document) actual.get("$sample")).getLong("size").longValue(), 15L);
     }
 
     @Test
@@ -172,10 +160,19 @@ public class CodecStructureTest extends TestBase {
             Merge.into("monthlytotals")
                  .on("_id")
                  .whenMatched(List.of(
-                     AddFields.of()
+                     AddFields.addFields()
                               .field("thumbsup", add(field("thumbsup"), value("$$new.thumbsup")))
                               .field("thumbsdown", add(field("$thumbsdown"), value("$$new.thumbsdown")))))
                  .whenNotMatched(WhenNotMatched.INSERT));
+    }
+
+    @Test
+    public void testRedact() {
+        evaluate(parse("{ $redact: { $cond: [ { $gt: [ { $size: { $setIntersection: [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] }, "
+                       + "'$$DESCEND', '$$PRUNE']}}"),
+            Redact.redact(condition(
+                gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
+                DESCEND, PRUNE)));
     }
 
     @Test
@@ -199,22 +196,13 @@ public class CodecStructureTest extends TestBase {
     }
 
     @Test
-    public void testRedact() {
-        evaluate(parse("{ $redact: { $cond: [ { $gt: [ { $size: { $setIntersection: [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] }, "
-                       + "'$$DESCEND', '$$PRUNE']}}"),
-            Redact.on(condition(
-                gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
-                DESCEND, PRUNE)));
-    }
-
-    @Test
     public void testReplaceWith() {
         evaluate(parse("{ $replaceWith: \"$grades\" }"),
-            ReplaceWith.with(field("grades")));
+            ReplaceWith.replaceWith(field("grades")));
 
         evaluate(parse("{ $replaceWith: { _id: '$_id', item: '$item', amount: { $multiply: [ '$price', '$quantity']}, status: 'Complete', "
                        + "asofDate: '$$NOW' } }"),
-            ReplaceWith.with()
+            ReplaceWith.replaceWith()
                        .field("_id", field("_id"))
                        .field("item", field("item"))
                        .field("amount", MathExpressions.multiply(field("price"), field("quantity")))
@@ -224,11 +212,23 @@ public class CodecStructureTest extends TestBase {
     }
 
     @Test
+    public void testSample() {
+        DocumentWriter writer = new DocumentWriter();
+        getMapper().getCodecRegistry()
+                   .get(Sample.class)
+                   .encode(writer, Sample.sample(15L), EncoderContext.builder().build());
+        Document actual = writer.getDocument();
+        assertEquals(writer.getDocsLevel(), 0);
+        assertEquals(writer.getArraysLevel(), 0);
+        assertEquals(((Document) actual.get("$sample")).getLong("size").longValue(), 15L);
+    }
+
+    @Test
     public void testSkip() {
         DocumentWriter writer = new DocumentWriter();
         getMapper().getCodecRegistry()
                    .get(Skip.class)
-                   .encode(writer, Skip.of(15L), EncoderContext.builder().build());
+                   .encode(writer, Skip.skip(15L), EncoderContext.builder().build());
         Document actual = writer.getDocument();
         assertEquals(writer.getDocsLevel(), 0);
         assertEquals(writer.getArraysLevel(), 0);
@@ -251,22 +251,22 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testSortByCount() {
         evaluate(parse("{ $sortByCount: \"$tags\" }"),
-            SortByCount.on(field("tags")));
+            SortByCount.sortByCount(field("tags")));
     }
 
     @Test
     public void testUnset() {
         evaluate(parse("{ $unset:  'single' }"),
-            Unset.fields("single"));
+            Unset.unset("single"));
 
         evaluate(parse("{ $unset:  [\"more\", \"than\", \"one\"] }"),
-            Unset.fields("more", "than", "one"));
+            Unset.unset("more", "than", "one"));
     }
 
     @Test
     public void testUnwind() {
         evaluate(parse("{ $unwind : \"$sizes\" }"),
-            Unwind.on("sizes"));
+            Unwind.unwind("sizes"));
     }
 
 }

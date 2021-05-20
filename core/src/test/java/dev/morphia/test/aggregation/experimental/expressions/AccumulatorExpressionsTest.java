@@ -27,7 +27,6 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.field
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
-import static dev.morphia.aggregation.experimental.stages.Group.of;
 import static java.util.List.of;
 import static org.bson.Document.parse;
 
@@ -42,18 +41,18 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 7000, 'title' : 'The Odyssey', 'author' : 'Homer', 'copies' : 10 }"),
             parse("{ '_id' : 7020, 'title' : 'Iliad', 'author' : 'Homer', 'copies' : 10 }")));
         List<Document> group = getDs().aggregate("books")
-                                      .group(of(id(field("author")))
-                                                 .field("avgCopies",
-                                                     accumulator(
-                                                         "function() {\n"
-                                                         + "   return { count: 0, sum: 0 }\n"
-                                                         + "}",
-                                                         "function(state, numCopies) {\n"
-                                                         + "   return {\n"
-                                                         + "       count: state.count + 1,\n"
-                                                         + "       sum: state.sum + numCopies\n"
-                                                         + "   }\n"
-                                                         + "}",
+                                      .group(Group.group(id(field("author")))
+                                                  .field("avgCopies",
+                                                      accumulator(
+                                                          "function() {\n"
+                                                          + "   return { count: 0, sum: 0 }\n"
+                                                          + "}",
+                                                          "function(state, numCopies) {\n"
+                                                          + "   return {\n"
+                                                          + "       count: state.count + 1,\n"
+                                                          + "       sum: state.sum + numCopies\n"
+                                                          + "   }\n"
+                                                          + "}",
                                                          of(field("copies")),
                                                          "function(state1, state2) {\n"
                                                          + "   return {\n"
@@ -77,10 +76,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         regularDataSet();
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id()
-                                                     .field("day", dayOfYear(field("date")))
-                                                     .field("year", year(field("date"))))
-                                                  .field("itemsSold", addToSet(field("item"))))
+                                       .group(Group.group(id()
+                                                              .field("day", dayOfYear(field("date")))
+                                                              .field("year", year(field("date"))))
+                                                   .field("itemsSold", addToSet(field("item"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -95,10 +94,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         regularDataSet();
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id("item"))
-                                                  .field("avgAmount", avg(multiply(
-                                                      field("price"), field("quantity"))))
-                                                  .field("avgQuantity", avg(field("quantity"))))
+                                       .group(Group.group(id("item"))
+                                                   .field("avgAmount", avg(multiply(
+                                                       field("price"), field("quantity"))))
+                                                   .field("avgQuantity", avg(field("quantity"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -113,10 +112,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         largerDataSet();
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .sort(Sort.on()
+                                       .sort(Sort.sort()
                                                  .ascending("item", "date"))
-                                       .group(of(id("item"))
-                                                  .field("firstSalesDate", first(field("date"))))
+                                       .group(Group.group(id("item"))
+                                                   .field("firstSalesDate", first(field("date"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -135,7 +134,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ _id: 3, name: 'Mrs. Eppie Delta ', scores: [ 9, 8, 8 ] }")));
 
         List<Document> actual = getDs().aggregate("players")
-                                       .addFields(AddFields.of()
+                                       .addFields(AddFields.addFields()
                                                            .field("isFound", function("function(name) {\n"
                                                                                       + "  return hex_md5(name) == "
                                                                                       + "\"15b0a220baa16331e8d80e15367677ad\"\n"
@@ -163,10 +162,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         largerDataSet();
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .sort(Sort.on()
+                                       .sort(Sort.sort()
                                                  .ascending("item", "date"))
-                                       .group(of(id("item"))
-                                                  .field("lastSalesDate", last(field("date"))))
+                                       .group(Group.group(id("item"))
+                                                   .field("lastSalesDate", last(field("date"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -181,10 +180,10 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         regularDataSet();
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id("item"))
-                                                  .field("avgAmount", avg(multiply(
-                                                      field("price"), field("quantity"))))
-                                                  .field("avgQuantity", avg(field("quantity"))))
+                                       .group(Group.group(id("item"))
+                                                   .field("avgAmount", avg(multiply(
+                                                       field("price"), field("quantity"))))
+                                                   .field("avgQuantity", avg(field("quantity"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -199,9 +198,9 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         regularDataSet();
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id("item"))
-                                                  .field("minQuantity", min(field("quantity")))
-                                                  .field("avgQuantity", avg(field("quantity"))))
+                                       .group(Group.group(id("item"))
+                                                   .field("minQuantity", min(field("quantity")))
+                                                   .field("avgQuantity", avg(field("quantity"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -216,12 +215,12 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         largerDataSet();
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id()
-                                                     .field("day", dayOfYear(field("date")))
-                                                     .field("year", year(field("date"))))
-                                                  .field("itemsSold", push()
-                                                                          .field("item", field("item"))
-                                                                          .field("quantity", field("quantity"))))
+                                       .group(Group.group(id()
+                                                              .field("day", dayOfYear(field("date")))
+                                                              .field("year", year(field("date"))))
+                                                   .field("itemsSold", push()
+                                                                           .field("item", field("item"))
+                                                                           .field("quantity", field("quantity"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -244,8 +243,8 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
             parse("{ '_id' : 6, 'name' : 'ty', 'quiz' : 2, 'score' : 82 }  }")));
 
         List<Document> actual = getDs().aggregate("users")
-                                       .group(of(id("quiz"))
-                                                  .field("stdDev", stdDevPop(field("score"))))
+                                       .group(Group.group(id("quiz"))
+                                                   .field("stdDev", stdDevPop(field("score"))))
                                        .execute(Document.class)
                                        .toList();
 
@@ -260,7 +259,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
         getDs().save(new User("", LocalDate.now()));
         getDs().aggregate(User.class)
                .sample(100)
-               .group(Group.of()
+               .group(Group.group()
                            .field("ageStdDev", stdDevSamp(field("age"))))
                .execute(Document.class)
                .toList();
@@ -270,11 +269,11 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     public void testSum() {
         regularDataSet();
         List<Document> actual = getDs().aggregate("sales")
-                                       .group(of(id()
-                                                     .field("day", dayOfYear(field("date")))
-                                                     .field("year", year(field("date"))))
-                                                  .field("totalAmount", sum(multiply(field("quantity"), field("price"))))
-                                                  .field("count", sum(value(1))))
+                                       .group(Group.group(id()
+                                                              .field("day", dayOfYear(field("date")))
+                                                              .field("year", year(field("date"))))
+                                                   .field("totalAmount", sum(multiply(field("quantity"), field("price"))))
+                                                   .field("count", sum(value(1))))
                                        .execute(Document.class)
                                        .toList();
 

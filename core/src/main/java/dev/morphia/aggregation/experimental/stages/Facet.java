@@ -30,7 +30,19 @@ public class Facet extends Stage {
      * Creates a new facet stage
      *
      * @return the new stage
+     * @since 2.2
      */
+    public static Facet facet() {
+        return new Facet();
+    }
+
+    /**
+     * Creates a new facet stage
+     *
+     * @return the new stage
+     * @deprecated use {@link #facet()}
+     */
+    @Deprecated(forRemoval = true)
     public static Facet of() {
         return new Facet();
     }

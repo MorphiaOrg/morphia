@@ -23,8 +23,20 @@ public class Sort extends Stage {
      * Creates a sort stage.
      *
      * @return the new stage
+     * @deprecated use {@link #sort()}
      */
+    @Deprecated(forRemoval = true)
     public static Sort on() {
+        return new Sort();
+    }
+
+    /**
+     * Creates a sort stage.
+     *
+     * @return the new stage
+     * @since 2.2
+     */
+    public static Sort sort() {
         return new Sort();
     }
 

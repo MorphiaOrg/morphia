@@ -3,8 +3,6 @@ package dev.morphia.test.aggregation;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
-import dev.morphia.aggregation.experimental.stages.Projection;
-import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
@@ -23,8 +21,10 @@ import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpres
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.last;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
-import static dev.morphia.aggregation.experimental.stages.Group.of;
+import static dev.morphia.aggregation.experimental.stages.Projection.project;
+import static dev.morphia.aggregation.experimental.stages.Sort.sort;
 import static dev.morphia.query.experimental.filters.Filters.gte;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -42,10 +42,10 @@ public class ZipCodeDataSetTest extends TestBase {
     @Test
     public void averageCitySizeByState() {
         Aggregation pipeline = getDs().aggregate(City.class)
-                                      .group(of(id().field("state")
-                                                    .field("city"))
+                                      .group(group(id().field("state")
+                                                       .field("city"))
                                                  .field("pop", sum(field("pop"))))
-                                      .group(of(
+                                      .group(group(
                                           id("_id.state"))
                                                  .field("avgCityPop", avg(field("pop"))));
         validate(pipeline.execute(Population.class), "MN", 5372);
@@ -56,7 +56,7 @@ public class ZipCodeDataSetTest extends TestBase {
     public void populationsAbove10M() {
         Aggregation pipeline
             = getDs().aggregate(City.class)
-                     .group(of(id("state"))
+                     .group(group(id("state"))
                                 .field("totalPop", sum(field("pop"))))
                      .match(gte("totalPop", 10000000));
 
@@ -70,31 +70,30 @@ public class ZipCodeDataSetTest extends TestBase {
 
         Aggregation pipeline = getDs().aggregate(City.class)
 
-                                      .group(of(id().field("state")
-                                                    .field("city"))
+                                      .group(group(id().field("state")
+                                                       .field("city"))
                                                  .field("pop", sum(field("pop"))))
 
-                                      .sort(Sort.on().ascending("pop"))
+                                      .sort(sort().ascending("pop"))
 
-                                      .group(of(
+                                      .group(group(
                                           id("_id.state"))
                                                  .field("biggestCity", last(field("_id.city")))
                                                  .field("biggestPop", last(field("pop")))
                                                  .field("smallestCity", first(field("_id.city")))
                                                  .field("smallestPop", first(field("pop"))))
 
-                                      .project(
-                                          Projection.of()
-                                                    .exclude("_id")
-                                                    .include("state", field("_id"))
-                                                    .include("biggestCity",
-                                                        Expressions.of()
-                                                                   .field("name", field("biggestCity"))
-                                                                   .field("pop", field("biggestPop")))
-                                                    .include("smallestCity",
-                                                        Expressions.of()
-                                                                   .field("name", field("smallestCity"))
-                                                                   .field("pop", field("smallestPop"))));
+                                      .project(project()
+                                                   .exclude("_id")
+                                                   .include("state", field("_id"))
+                                                   .include("biggestCity",
+                                                       Expressions.of()
+                                                                  .field("name", field("biggestCity"))
+                                                                  .field("pop", field("biggestPop")))
+                                                   .include("smallestCity",
+                                                       Expressions.of()
+                                                                  .field("name", field("smallestCity"))
+                                                                  .field("pop", field("smallestPop"))));
 
         try (MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class)) {
             Map<String, State> states = new HashMap<>();

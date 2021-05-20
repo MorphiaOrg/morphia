@@ -21,10 +21,22 @@ public class AddFields extends Stage {
     }
 
     /**
+     * Creates a new AddFields stage
+     *
+     * @return the new stage
+     * @since 2.2
+     */
+    public static AddFields addFields() {
+        return new AddFields();
+    }
+
+    /**
      * Creates a new AddFields stage to bind field
      *
      * @return the new stage
+     * @deprecated use {@link #addFields()}
      */
+    @Deprecated(forRemoval = true)
     public static AddFields of() {
         return new AddFields();
     }

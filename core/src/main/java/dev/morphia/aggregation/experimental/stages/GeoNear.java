@@ -39,7 +39,31 @@ public class GeoNear extends Stage {
      *
      * @param point the center point
      * @return the new stage
+     * @since 2.2
      */
+    public static GeoNear geoNear(Point point) {
+        return new GeoNear(point);
+    }
+
+    /**
+     * Creates a new geoNear stage
+     *
+     * @param coordinates the center point coordinates
+     * @return the new stage
+     * @since 2.2
+     */
+    public static GeoNear geoNear(double[] coordinates) {
+        return new GeoNear(coordinates);
+    }
+
+    /**
+     * Creates a new geoNear stage
+     *
+     * @param point the center point
+     * @return the new stage
+     * @deprecated user {@link #geoNear(Point)}
+     */
+    @Deprecated(forRemoval = true)
     public static GeoNear to(Point point) {
         return new GeoNear(point);
     }
@@ -49,7 +73,9 @@ public class GeoNear extends Stage {
      *
      * @param coordinates the center point coordinates
      * @return the new stage
+     * @deprecated use {@link #geoNear(double[])}
      */
+    @Deprecated(forRemoval = true)
     public static GeoNear to(double[] coordinates) {
         return new GeoNear(coordinates);
     }

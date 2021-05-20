@@ -22,7 +22,7 @@ public class VariableExpressionsTest extends ExpressionsTestBase {
             parse("{ _id: 2, price: 10, tax: 0.25, applyDiscount: false }")));
 
         List<Document> actual = getDs().aggregate("sales")
-                                       .project(Projection.of()
+                                       .project(Projection.project()
                                                           .include("finalTotal",
                                                               let(multiply(value("$$total"), value("$$discounted")))
                                                                   .variable("total", add(field("price"), field("tax")))

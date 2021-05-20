@@ -33,7 +33,31 @@ public class ReplaceWith extends Stage {
      * Creates a new stage
      *
      * @return the new stage
+     * @since 2.2
      */
+    public static ReplaceWith replaceWith() {
+        return new ReplaceWith();
+    }
+
+    /**
+     * Creates a new stage to replace the root with the given expression.  This expression must evaluate to a document.  No further
+     * fields can be added to this stage.
+     *
+     * @param expression the document expression
+     * @return the new stage
+     * @since 2.2
+     */
+    public static ReplaceWith replaceWith(Expression expression) {
+        return new ReplaceWith(expression);
+    }
+
+    /**
+     * Creates a new stage
+     *
+     * @return the new stage
+     * @deprecated use {@link #replaceWith()}
+     */
+    @Deprecated(forRemoval = true)
     public static ReplaceWith with() {
         return new ReplaceWith();
     }
@@ -44,7 +68,9 @@ public class ReplaceWith extends Stage {
      *
      * @param expression the document expression
      * @return the new stage
+     * @deprecated use {@link #replaceWith(Expression)}
      */
+    @Deprecated(forRemoval = true)
     public static ReplaceWith with(Expression expression) {
         return new ReplaceWith(expression);
     }

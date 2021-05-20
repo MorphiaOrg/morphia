@@ -22,13 +22,7 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import dev.morphia.aggregation.experimental.Aggregation;
-import dev.morphia.aggregation.experimental.stages.AutoBucket;
-import dev.morphia.aggregation.experimental.stages.Bucket;
-import dev.morphia.aggregation.experimental.stages.Lookup;
-import dev.morphia.aggregation.experimental.stages.Out;
-import dev.morphia.aggregation.experimental.stages.Projection;
-import dev.morphia.aggregation.experimental.stages.Sort;
-import dev.morphia.aggregation.experimental.stages.Unwind;
+import dev.morphia.aggregation.experimental.AggregationOptions;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -60,15 +54,23 @@ import static dev.morphia.aggregation.experimental.expressions.DateExpressions.m
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
-import static dev.morphia.aggregation.experimental.stages.GeoNear.to;
+import static dev.morphia.aggregation.experimental.stages.AutoBucket.autoBucket;
+import static dev.morphia.aggregation.experimental.stages.Bucket.bucket;
+import static dev.morphia.aggregation.experimental.stages.GeoNear.geoNear;
+import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
-import static dev.morphia.aggregation.experimental.stages.Group.of;
+import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
+import static dev.morphia.aggregation.experimental.stages.Out.to;
+import static dev.morphia.aggregation.experimental.stages.Projection.project;
+import static dev.morphia.aggregation.experimental.stages.Sort.sort;
+import static dev.morphia.aggregation.experimental.stages.Unwind.unwind;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.gte;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static java.util.List.of;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class AggregationTest extends TestBase {
@@ -82,17 +84,17 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10)));
 
         MorphiaCursor<Author> aggregate = getDs().aggregate(Book.class)
-                                                 .group(of(id("author"))
+                                                 .group(group(id("author"))
                                                             .field("books", push(field("title"))))
-                                                 .sort(Sort.on().ascending("name"))
+                                                 .sort(sort().ascending("name"))
                                                  .execute(Author.class);
 
         Map<Object, List<Author>> authors = aggregate.toList()
                                                      .stream()
                                                      .collect(Collectors.groupingBy(a -> a.name));
         Assert.assertEquals(authors.size(), 2, "Expecting two results");
-        Assert.assertEquals(authors.get("Dante").get(0).books, List.of("The Banquet", "Divine Comedy", "Eclogues"), authors.toString());
-        Assert.assertEquals(authors.get("Homer").get(0).books, List.of("The Odyssey", "Iliad"), authors.toString());
+        Assert.assertEquals(authors.get("Dante").get(0).books, of("The Banquet", "Divine Comedy", "Eclogues"), authors.toString());
+        Assert.assertEquals(authors.get("Homer").get(0).books, of("The Odyssey", "Iliad"), authors.toString());
     }
 
     @Test
@@ -103,12 +105,12 @@ public class AggregationTest extends TestBase {
             new Book("The Odyssey", "Homer", 21)));
 
         Iterator<BooksBucketResult> aggregate = getDs().aggregate(Book.class)
-                                                       .autoBucket(AutoBucket.of()
-                                                                             .groupBy(field("copies"))
-                                                                             .buckets(3)
-                                                                             .granularity(BucketGranularity.POWERSOF2)
-                                                                             .outputField("authors", addToSet(field("author")))
-                                                                             .outputField("count", sum(value(1))))
+                                                       .autoBucket(autoBucket()
+                                                                       .groupBy(field("copies"))
+                                                                       .buckets(3)
+                                                                       .granularity(BucketGranularity.POWERSOF2)
+                                                                       .outputField("authors", addToSet(field("author")))
+                                                                       .outputField("count", sum(value(1))))
                                                        .execute(BooksBucketResult.class);
         BooksBucketResult result1 = aggregate.next();
         Assert.assertEquals(result1.getId().min, 4);
@@ -140,9 +142,9 @@ public class AggregationTest extends TestBase {
             new Book("The Odyssey", "Homer", 21)));
 
         Iterator<BucketAutoResult> aggregate = getDs().aggregate(Book.class)
-                                                      .autoBucket(AutoBucket.of()
-                                                                            .groupBy(field("copies"))
-                                                                            .buckets(2))
+                                                      .autoBucket(autoBucket()
+                                                                      .groupBy(field("copies"))
+                                                                      .buckets(2))
                                                       .execute(BucketAutoResult.class);
         BucketAutoResult result1 = aggregate.next();
         Assert.assertEquals(result1.id.min, 5);
@@ -165,10 +167,10 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10)));
 
         getDs().aggregate(Book.class)
-               .bucket(Bucket.of()
-                             .groupBy(field("copies"))
-                             .boundaries(value(10))
-                             .outputField("count", sum(value(1))))
+               .bucket(bucket()
+                           .groupBy(field("copies"))
+                           .boundaries(value(10))
+                           .outputField("count", sum(value(1))))
                .execute(BucketResult.class);
     }
 
@@ -182,11 +184,11 @@ public class AggregationTest extends TestBase {
 
 
         Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
-                                                  .bucket(Bucket.of()
-                                                                .groupBy(field("copies"))
-                                                                .boundaries(value(1), value(5), value(10))
-                                                                .defaultValue(-1)
-                                                                .outputField("count", sum(value(1))))
+                                                  .bucket(bucket()
+                                                              .groupBy(field("copies"))
+                                                              .boundaries(value(1), value(5), value(10))
+                                                              .defaultValue(-1)
+                                                              .outputField("count", sum(value(1))))
                                                   .execute(BucketResult.class);
 
         BucketResult result2 = aggregate.next();
@@ -208,11 +210,11 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10)));
 
         Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
-                                                  .bucket(Bucket.of()
-                                                                .groupBy(field("copies"))
-                                                                .boundaries(value(5), value(1), value(10))
-                                                                .defaultValue("test")
-                                                                .outputField("count", sum(value(1))))
+                                                  .bucket(bucket()
+                                                              .groupBy(field("copies"))
+                                                              .boundaries(value(5), value(1), value(10))
+                                                              .defaultValue("test")
+                                                              .outputField("count", sum(value(1))))
                                                   .execute(BucketResult.class);
 
     }
@@ -226,9 +228,9 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10)));
 
         Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
-                                                  .bucket(Bucket.of()
-                                                                .groupBy(field("copies"))
-                                                                .boundaries(value(1), value(5), value(12)))
+                                                  .bucket(bucket()
+                                                              .groupBy(field("copies"))
+                                                              .boundaries(value(1), value(5), value(12)))
                                                   .execute(BucketResult.class);
         BucketResult result1 = aggregate.next();
         Assert.assertEquals(result1.id, Integer.valueOf(1));
@@ -248,18 +250,17 @@ public class AggregationTest extends TestBase {
         Assert.assertEquals(count(pipeline.execute(User.class)), 1);
 
         Assert.assertEquals(count(pipeline.execute(User.class,
-            new dev.morphia.aggregation.experimental.AggregationOptions()
-                .collation(Collation.builder()
-                                    .locale("en")
-                                    .collationStrength(SECONDARY)
-                                    .build()))), 2);
+            new AggregationOptions().collation(Collation.builder()
+                                                        .locale("en")
+                                                        .collationStrength(SECONDARY)
+                                                        .build()))), 2);
     }
 
     @Test
     public void testDateAggregation() {
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
-                                         .group(of(
+                                         .group(group(
                                              id()
                                                  .field("month", month(field("date")))
                                                  .field("year", year(field("date"))))
@@ -277,10 +278,10 @@ public class AggregationTest extends TestBase {
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)
-                                         .project(Projection.of()
-                                                            .include("string", dateToString()
-                                                                                   .format("%Y-%m-%d")
-                                                                                   .date(field("joined"))));
+                                         .project(project()
+                                                      .include("string", dateToString()
+                                                                             .format("%Y-%m-%d")
+                                                                             .date(field("joined"))));
 
         for (Iterator<StringDates> it = pipeline.execute(StringDates.class); it.hasNext(); ) {
             Assert.assertEquals(it.next().string, "2016-05-01");
@@ -296,9 +297,9 @@ public class AggregationTest extends TestBase {
             new Book("Iliad", "Homer", 10)));
 
         Iterator<CountResult> aggregation = getDs().aggregate(Book.class)
-                                                   .group(of(id("author"))
+                                                   .group(group(id("author"))
                                                               .field("count", sum(value(1))))
-                                                   .sort(Sort.on()
+                                                   .sort(sort()
                                                              .ascending("_id"))
                                                    .execute(CountResult.class);
 
@@ -325,19 +326,18 @@ public class AggregationTest extends TestBase {
         getDs().ensureIndexes();
 
         // when
-        Iterator<GeoCity> citiesOrderedByDistanceFromLondon = getDs().aggregate(GeoCity.class)
-                                                                     .geoNear(
-                                                                         to(londonPoint)
-                                                                             .distanceField("distance")
-                                                                             .spherical(true))
-                                                                     .execute(GeoCity.class);
+        Iterator<GeoCity> cities = getDs().aggregate(GeoCity.class)
+                                          .geoNear(geoNear(londonPoint)
+                                                       .distanceField("distance")
+                                                       .spherical(true))
+                                          .execute(GeoCity.class);
 
         // then
-        Assert.assertTrue(citiesOrderedByDistanceFromLondon.hasNext());
-        Assert.assertEquals(london, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(manchester, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertEquals(sevilla, citiesOrderedByDistanceFromLondon.next());
-        Assert.assertFalse(citiesOrderedByDistanceFromLondon.hasNext());
+        Assert.assertTrue(cities.hasNext());
+        Assert.assertEquals(london, cities.next());
+        Assert.assertEquals(manchester, cities.next());
+        Assert.assertEquals(sevilla, cities.next());
+        Assert.assertFalse(cities.hasNext());
     }
 
     @Test
@@ -356,7 +356,7 @@ public class AggregationTest extends TestBase {
 
         // when
         Iterator<GeoCity> cities = getDs().aggregate(GeoCity.class)
-                                          .geoNear(to(new double[]{latitude, longitude})
+                                          .geoNear(geoNear(new double[]{latitude, longitude})
                                                        .distanceField("distance")
                                                        .spherical(true))
                                           .execute(GeoCity.class);
@@ -405,13 +405,13 @@ public class AggregationTest extends TestBase {
         getDs().save(inventories);
 
         getDs().aggregate(Order.class)
-               .lookup(Lookup.from("inventory")
-                             .localField("item")
-                             .foreignField("sku")
-                             .as("inventoryDocs"))
-               .out(Out.to(Lookedup.class));
-        List<Order> lookups = getDs().find("lookups", Order.class).iterator(new FindOptions()
-                                                                                .sort(ascending("_id")))
+               .lookup(lookup("inventory")
+                           .localField("item")
+                           .foreignField("sku")
+                           .as("inventoryDocs"))
+               .out(to(Lookedup.class));
+        List<Order> lookups = getDs().find("lookups", Order.class)
+                                     .iterator(new FindOptions().sort(ascending("_id")))
                                      .toList();
         Assert.assertEquals(inventories.get(0), lookups.get(0).inventoryDocs.get(0));
         Assert.assertEquals(inventories.get(3), lookups.get(1).inventoryDocs.get(0));
@@ -423,7 +423,7 @@ public class AggregationTest extends TestBase {
     public void testNullGroupId() {
         getDs()
             .aggregate(User.class)
-            .group(of()
+            .group(group()
                        .field("count", sum(value(1))))
             .execute(User.class);
 
@@ -439,9 +439,9 @@ public class AggregationTest extends TestBase {
 
         getDs().aggregate(Book.class)
                .match(eq("author", "Homer"))
-               .group(of(id("author"))
+               .group(group(id("author"))
                           .field("copies", sum(field("copies"))))
-               .out(Out.to("testAverage"));
+               .out(to("testAverage"));
         try (MongoCursor<Document> testAverage = getDatabase().getCollection("testAverage").find().iterator()) {
             Assert.assertEquals(testAverage.next().get("copies"), 20);
         }
@@ -494,11 +494,11 @@ public class AggregationTest extends TestBase {
             new User("john", LocalDate.parse("2012-07-02", format))));
 
         Iterator<User> aggregate = getDs().aggregate(User.class)
-                                          .project(Projection.of()
-                                                             .include("name")
-                                                             .include("joined")
-                                                             .include("likes"))
-                                          .unwind(Unwind.on("likes"))
+                                          .project(project()
+                                                       .include("name")
+                                                       .include("joined")
+                                                       .include("likes"))
+                                          .unwind(unwind("likes"))
                                           .execute(User.class);
         int count = 0;
         while (aggregate.hasNext()) {
@@ -531,12 +531,12 @@ public class AggregationTest extends TestBase {
         }
 
         aggregate = getDs().aggregate(User.class)
-                           .project(Projection.of()
-                                              .include("name")
-                                              .include("joined")
-                                              .include("likes"))
-                           .unwind(Unwind.on("likes")
-                                         .preserveNullAndEmptyArrays(true))
+                           .project(project()
+                                        .include("name")
+                                        .include("joined")
+                                        .include("likes"))
+                           .unwind(unwind("likes")
+                                       .preserveNullAndEmptyArrays(true))
                            .execute(User.class);
         count = 0;
         while (aggregate.hasNext()) {
@@ -576,7 +576,7 @@ public class AggregationTest extends TestBase {
     @Test
     public void testUserPreferencesPipeline() {
         final MorphiaCursor<GeoCity> pipeline = getDs().aggregate(GeoCity.class)  /* the class is irrelevant for this test */
-                                                       .group(of(
+                                                       .group(group(
                                                            id("state"))
                                                                   .field("total_pop", sum(field("pop"))))
                                                        .match(gte("total_pop", 10000000))

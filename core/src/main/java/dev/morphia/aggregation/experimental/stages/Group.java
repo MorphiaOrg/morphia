@@ -28,6 +28,36 @@ public class Group extends Stage {
     }
 
     /**
+     * Creates a group stage with an ID definition
+     *
+     * @param id the group ID
+     * @return the new stage
+     * @since 2.2
+     */
+    public static Group group(GroupId id) {
+        return new Group(id);
+    }
+
+    /**
+     * Creates a group stage with no ID definition
+     *
+     * @return the new stage
+     * @since 2.2
+     */
+    public static Group group() {
+        return new Group();
+    }
+
+    /**
+     * Creates an unnamed group ID
+     *
+     * @return the new groupID
+     */
+    public static GroupId id() {
+        return new GroupId();
+    }
+
+    /**
      * Creates a named group ID
      *
      * @param name the id name
@@ -48,20 +78,13 @@ public class Group extends Stage {
     }
 
     /**
-     * Creates an unnamed group ID
-     *
-     * @return the new groupID
-     */
-    public static GroupId id() {
-        return new GroupId();
-    }
-
-    /**
      * Creates a group stage with an ID definition
      *
      * @param id the group ID
      * @return the new stage
+     * @deprecated use {@link #group(GroupId)}
      */
+    @Deprecated(forRemoval = true)
     public static Group of(GroupId id) {
         return new Group(id);
     }
@@ -70,7 +93,9 @@ public class Group extends Stage {
      * Creates a group stage with no ID definition
      *
      * @return the new stage
+     * @deprecated user {@link #group()}
      */
+    @Deprecated(forRemoval = true)
     public static Group of() {
         return new Group();
     }

@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.experimental;
 
-import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.experimental.MorphiaReference;
@@ -16,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static dev.morphia.aggregation.experimental.stages.Unwind.on;
+import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
+import static dev.morphia.aggregation.experimental.stages.Unwind.unwind;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -92,14 +92,14 @@ public class MorphiaReferenceTest extends TestBase {
 
         getDs().save(author);
         Object document = getDs().aggregate(Author.class)
-                                 .lookup(Lookup.from(Book.class)
-                                               .as("set")
-                                               .foreignField("_id")
-                                               .localField("set"))
-                                 .lookup(Lookup.from(Book.class)
-                                               .as("list")
-                                               .foreignField("_id")
-                                               .localField("list"))
+                                 .lookup(lookup(Book.class)
+                                             .as("set")
+                                             .foreignField("_id")
+                                             .localField("set"))
+                                 .lookup(lookup(Book.class)
+                                             .as("list")
+                                             .foreignField("_id")
+                                             .localField("list"))
                                  //  TODO how to fetch the values from a nested document for cross-referencing?
                                  //                                   .lookup(Lookup.from(Book.class)
                                  //                                                 .as("map")
@@ -110,11 +110,11 @@ public class MorphiaReferenceTest extends TestBase {
 
         final Author loaded = (Author) document;
         Book foundBook = getDs().aggregate(Book.class)
-                                .lookup(Lookup.from(Author.class)
-                                              .as("author")
-                                              .foreignField("_id")
-                                              .localField("author"))
-                                .unwind(on("author"))
+                                .lookup(lookup(Author.class)
+                                            .as("author")
+                                            .foreignField("_id")
+                                            .localField("author"))
+                                .unwind(unwind("author"))
                                 .execute(Book.class)
                                 .next();
         assertTrue(foundBook.author.isResolved());

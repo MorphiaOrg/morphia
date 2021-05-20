@@ -5,7 +5,6 @@ import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.aggregation.experimental.Aggregation;
-import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -42,7 +41,8 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.morphia.Morphia.createDatastore;
-import static dev.morphia.aggregation.experimental.stages.Unwind.on;
+import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
+import static dev.morphia.aggregation.experimental.stages.Unwind.unwind;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Arrays.asList;
@@ -99,14 +99,14 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(author);
 
         Aggregation<Author> aggregation = getDs().aggregate(Author.class)
-                                                 .lookup(Lookup.from(Book.class)
-                                                               .as("set")
-                                                               .foreignField("_id")
-                                                               .localField("set"))
-                                                 .lookup(Lookup.from(Book.class)
-                                                               .as("list")
-                                                               .foreignField("_id")
-                                                               .localField("list"));
+                                                 .lookup(lookup(Book.class)
+                                                             .as("set")
+                                                             .foreignField("_id")
+                                                             .localField("set"))
+                                                 .lookup(lookup(Book.class)
+                                                             .as("list")
+                                                             .foreignField("_id")
+                                                             .localField("list"));
 
         final Author loaded = aggregation
                                   //  TODO how to fetch the values from a nested document for cross-referencing?
@@ -124,11 +124,11 @@ public class TestReferences extends ProxyTestBase {
         //        validateMap(map, loaded);
 
         Book foundBook = getDs().aggregate(Book.class)
-                                .lookup(Lookup.from(Author.class)
-                                              .as("author")
-                                              .foreignField("_id")
-                                              .localField("author"))
-                                .unwind(on("author"))
+                                .lookup(lookup(Author.class)
+                                            .as("author")
+                                            .foreignField("_id")
+                                            .localField("author"))
+                                .unwind(unwind("author"))
                                 .execute(Book.class)
                                 .next();
         assertTrue(foundBook.author.isResolved());
