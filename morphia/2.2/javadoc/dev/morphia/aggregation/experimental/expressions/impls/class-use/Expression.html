@@ -3094,14 +3094,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>static <a href="../../../stages/Redact.html" title="class in dev.morphia.aggregation.experimental.stages">Redact</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Redact.</span><code><span class="memberNameLink"><a href="../../../stages/Redact.html#on(dev.morphia.aggregation.experimental.expressions.impls.Expression)">on</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">
-<div class="block">Creates a redaction stage with the given expression</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="../../../stages/Redact.html#redact(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>Redact.redact(Expression)</code></a></div>
+</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../stages/SortByCount.html" title="class in dev.morphia.aggregation.experimental.stages">SortByCount</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SortByCount.</span><code><span class="memberNameLink"><a href="../../../stages/SortByCount.html#on(dev.morphia.aggregation.experimental.expressions.impls.Expression)">on</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">
-<div class="block">Creates a new stage grouping by the given expression.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="../../../stages/SortByCount.html#sortByCount(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>SortByCount.sortByCount(Expression)</code></a></div>
+</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -3121,6 +3125,34 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../stages/Redact.html" title="class in dev.morphia.aggregation.experimental.stages">Redact</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Redact.</span><code><span class="memberNameLink"><a href="../../../stages/Redact.html#redact(dev.morphia.aggregation.experimental.expressions.impls.Expression)">redact</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colLast">
+<div class="block">Creates a redaction stage with the given expression</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceRoot.</span><code><span class="memberNameLink"><a href="../../../stages/ReplaceRoot.html#replaceRoot(dev.morphia.aggregation.experimental.expressions.impls.Expression)">replaceRoot</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colLast">
+<div class="block">Creates a new stage to replace the root with the given expression.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../stages/ReplaceWith.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceWith</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceWith.</span><code><span class="memberNameLink"><a href="../../../stages/ReplaceWith.html#replaceWith(dev.morphia.aggregation.experimental.expressions.impls.Expression)">replaceWith</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colLast">
+<div class="block">Creates a new stage to replace the root with the given expression.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../stages/SortByCount.html" title="class in dev.morphia.aggregation.experimental.stages">SortByCount</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SortByCount.</span><code><span class="memberNameLink"><a href="../../../stages/SortByCount.html#sortByCount(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sortByCount</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colLast">
+<div class="block">Creates a new stage grouping by the given expression.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../stages/GraphLookup.html" title="class in dev.morphia.aggregation.experimental.stages">GraphLookup</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">GraphLookup.</span><code><span class="memberNameLink"><a href="../../../stages/GraphLookup.html#startWith(dev.morphia.aggregation.experimental.expressions.impls.Expression)">startWith</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startWith)</code></th>
 <td class="colLast">
@@ -3131,14 +3163,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>static <a href="../../../stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceRoot.</span><code><span class="memberNameLink"><a href="../../../stages/ReplaceRoot.html#with(dev.morphia.aggregation.experimental.expressions.impls.Expression)">with</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">
-<div class="block">Creates a new stage to replace the root with the given expression.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="../../../stages/ReplaceRoot.html#replaceRoot(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>ReplaceRoot.replaceRoot(Expression)</code></a></div>
+</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../stages/ReplaceWith.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceWith</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceWith.</span><code><span class="memberNameLink"><a href="../../../stages/ReplaceWith.html#with(dev.morphia.aggregation.experimental.expressions.impls.Expression)">with</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">
-<div class="block">Creates a new stage to replace the root with the given expression.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="../../../stages/ReplaceWith.html#replaceWith(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>ReplaceWith.replaceWith(Expression)</code></a></div>
+</div>
 </td>
 </tr>
 </tbody>

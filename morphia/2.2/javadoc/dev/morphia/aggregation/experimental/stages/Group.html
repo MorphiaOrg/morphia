@@ -238,8 +238,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":41,"i10":41};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -418,7 +418,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -450,38 +450,56 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>static <a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group()">group</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Creates a group stage with no ID definition</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static <a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group(dev.morphia.aggregation.experimental.stages.Group.GroupId)">group</a></span>​(<a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a>&nbsp;id)</code></th>
+<td class="colLast">
+<div class="block">Creates a group stage with an ID definition</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#id()">id</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Creates an unnamed group ID</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#id(dev.morphia.aggregation.experimental.expressions.impls.Expression)">id</a></span>​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;name)</code></th>
 <td class="colLast">
 <div class="block">Creates a named group ID</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#id(java.lang.String)">id</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">
 <div class="block">Creates a named group ID</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#of()">of</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Creates a group stage with no ID definition</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">user <a href="#group()"><code>group()</code></a></div>
+</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#of(dev.morphia.aggregation.experimental.stages.Group.GroupId)">of</a></span>​(<a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a>&nbsp;id)</code></th>
 <td class="colLast">
-<div class="block">Creates a group stage with an ID definition</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#group(dev.morphia.aggregation.experimental.stages.Group.GroupId)"><code>group(GroupId)</code></a></div>
+</div>
 </td>
 </tr>
 </tbody></table>
@@ -543,6 +561,54 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="group(dev.morphia.aggregation.experimental.stages.Group.GroupId)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>group</h4>
+<pre class="methodSignature">public static&nbsp;<a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a>&nbsp;group​(<a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a>&nbsp;id)</pre>
+<div class="block">Creates a group stage with an ID definition</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>id</code> - the group ID</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
+<a id="group()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>group</h4>
+<pre class="methodSignature">public static&nbsp;<a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a>&nbsp;group()</pre>
+<div class="block">Creates a group stage with no ID definition</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
+<a id="id()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>id</h4>
+<pre class="methodSignature">public static&nbsp;<a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a>&nbsp;id()</pre>
+<div class="block">Creates an unnamed group ID</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new groupID</dd>
+</dl>
+</li>
+</ul>
 <a id="id(java.lang.String)">
 <!--   -->
 </a>
@@ -575,27 +641,17 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 </dl>
 </li>
 </ul>
-<a id="id()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>id</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a>&nbsp;id()</pre>
-<div class="block">Creates an unnamed group ID</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new groupID</dd>
-</dl>
-</li>
-</ul>
 <a id="of(dev.morphia.aggregation.experimental.stages.Group.GroupId)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>of</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a>&nbsp;of​(<a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a>&nbsp;id)</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public static&nbsp;<a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a>&nbsp;of​(<a href="Group.GroupId.html" title="class in dev.morphia.aggregation.experimental.stages">Group.GroupId</a>&nbsp;id)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#group(dev.morphia.aggregation.experimental.stages.Group.GroupId)"><code>group(GroupId)</code></a></div>
+</div>
 <div class="block">Creates a group stage with an ID definition</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -611,7 +667,11 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <ul class="blockList">
 <li class="blockList">
 <h4>of</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a>&nbsp;of()</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public static&nbsp;<a href="Group.html" title="class in dev.morphia.aggregation.experimental.stages">Group</a>&nbsp;of()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">user <a href="#group()"><code>group()</code></a></div>
+</div>
 <div class="block">Creates a group stage with no ID definition</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

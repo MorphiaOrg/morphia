@@ -238,8 +238,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":41,"i1":10,"i2":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -388,7 +388,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -399,13 +399,23 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fields(java.lang.String,java.lang.String...)">fields</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;names)</code></th>
 <td class="colLast">
-<div class="block">Creates a new stage with the given fields</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#unset(java.lang.String,java.lang.String...)"><code>unset(String, String...)</code></a></div>
+</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFields()">getFields</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="Unset.html" title="class in dev.morphia.aggregation.experimental.stages">Unset</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unset(java.lang.String,java.lang.String...)">unset</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;names)</code></th>
+<td class="colLast">
+<div class="block">Creates a new stage with the given fields</div>
+</td>
 </tr>
 </tbody></table>
 <ul class="blockList">
@@ -463,8 +473,12 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <ul class="blockList">
 <li class="blockList">
 <h4>fields</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Unset.html" title="class in dev.morphia.aggregation.experimental.stages">Unset</a>&nbsp;fields​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public static&nbsp;<a href="Unset.html" title="class in dev.morphia.aggregation.experimental.stages">Unset</a>&nbsp;fields​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;names)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#unset(java.lang.String,java.lang.String...)"><code>unset(String, String...)</code></a></div>
+</div>
 <div class="block">Creates a new stage with the given fields</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -472,6 +486,26 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <dd><code>names</code> - the others</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="unset(java.lang.String,java.lang.String...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unset</h4>
+<pre class="methodSignature">public static&nbsp;<a href="Unset.html" title="class in dev.morphia.aggregation.experimental.stages">Unset</a>&nbsp;unset​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;names)</pre>
+<div class="block">Creates a new stage with the given fields</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>name</code> - the first field</dd>
+<dd><code>names</code> - the others</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
 </dl>
 </li>
 </ul>

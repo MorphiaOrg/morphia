@@ -238,8 +238,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":41};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -388,53 +388,62 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collStats()">collStats</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Creates a new collStats stage</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#count(boolean)">count</a></span>​(boolean&nbsp;count)</code></th>
 <td class="colLast">
 <div class="block">Adds the total number of documents in the collection to the return document.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount()">getCount</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getHistogram()">getHistogram</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getScale()">getScale</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#histogram(boolean)">histogram</a></span>​(boolean&nbsp;histogram)</code></th>
 <td class="colLast">
 <div class="block">Adds latency histogram information to the embedded documents in latencyStats if true.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#scale(java.lang.Integer)">scale</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&nbsp;scale)</code></th>
 <td class="colLast">
 <div class="block">Specify the scale factor (i.e.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#with()">with</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Creates a new collStats stage</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#collStats()"><code>collStats()</code></a></div>
+</div>
 </td>
 </tr>
 </tbody></table>
@@ -487,13 +496,33 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="collStats()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collStats</h4>
+<pre class="methodSignature">public static&nbsp;<a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a>&nbsp;collStats()</pre>
+<div class="block">Creates a new collStats stage</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
 <a id="with()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>with</h4>
-<pre class="methodSignature">public static&nbsp;<a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a>&nbsp;with()</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public static&nbsp;<a href="CollectionStats.html" title="class in dev.morphia.aggregation.experimental.stages">CollectionStats</a>&nbsp;with()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#collStats()"><code>collStats()</code></a></div>
+</div>
 <div class="block">Creates a new collStats stage</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

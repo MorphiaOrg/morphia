@@ -238,8 +238,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":9,"i5":41,"i6":41};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -394,7 +394,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -420,16 +420,34 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#with()">with</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replaceRoot()">replaceRoot</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Creates a new stage</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#with(dev.morphia.aggregation.experimental.expressions.impls.Expression)">with</a></span>​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replaceRoot(dev.morphia.aggregation.experimental.expressions.impls.Expression)">replaceRoot</a></span>​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">
 <div class="block">Creates a new stage to replace the root with the given expression.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static <a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#with()">with</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#replaceRoot()"><code>replaceRoot()</code></a></div>
+</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>static <a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#with(dev.morphia.aggregation.experimental.expressions.impls.Expression)">with</a></span>​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#replaceRoot(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>replaceRoot(Expression)</code></a></div>
+</div>
 </td>
 </tr>
 </tbody></table>
@@ -491,13 +509,52 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="replaceRoot()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>replaceRoot</h4>
+<pre class="methodSignature">public static&nbsp;<a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a>&nbsp;replaceRoot()</pre>
+<div class="block">Creates a new stage</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
+<a id="replaceRoot(dev.morphia.aggregation.experimental.expressions.impls.Expression)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>replaceRoot</h4>
+<pre class="methodSignature">public static&nbsp;<a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a>&nbsp;replaceRoot​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</pre>
+<div class="block">Creates a new stage to replace the root with the given expression.  This expression must evaluate to a document.  No further
+ fields can be added to this stage.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>expression</code> - the document expression</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
 <a id="with()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>with</h4>
-<pre class="methodSignature">public static&nbsp;<a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a>&nbsp;with()</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public static&nbsp;<a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a>&nbsp;with()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#replaceRoot()"><code>replaceRoot()</code></a></div>
+</div>
 <div class="block">Creates a new stage</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -511,7 +568,11 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <ul class="blockList">
 <li class="blockList">
 <h4>with</h4>
-<pre class="methodSignature">public static&nbsp;<a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a>&nbsp;with​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public static&nbsp;<a href="ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a>&nbsp;with​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#replaceRoot(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>replaceRoot(Expression)</code></a></div>
+</div>
 <div class="block">Creates a new stage to replace the root with the given expression.  This expression must evaluate to a document.  No further
  fields can be added to this stage.</div>
 <dl>

@@ -238,8 +238,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":9,"i1":10,"i2":10,"i3":41};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -392,13 +392,20 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="AddFields.html" title="class in dev.morphia.aggregation.experimental.stages">AddFields</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addFields()">addFields</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Creates a new AddFields stage</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="AddFields.html" title="class in dev.morphia.aggregation.experimental.stages">AddFields</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#field(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
      <a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
@@ -406,16 +413,18 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <div class="block">Add a field to the stage</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DocumentExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDocument()">getDocument</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="AddFields.html" title="class in dev.morphia.aggregation.experimental.stages">AddFields</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#of()">of</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Creates a new AddFields stage to bind field</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#addFields()"><code>addFields()</code></a></div>
+</div>
 </td>
 </tr>
 </tbody></table>
@@ -468,13 +477,33 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.experimenta
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="addFields()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addFields</h4>
+<pre class="methodSignature">public static&nbsp;<a href="AddFields.html" title="class in dev.morphia.aggregation.experimental.stages">AddFields</a>&nbsp;addFields()</pre>
+<div class="block">Creates a new AddFields stage</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
+</dl>
+</li>
+</ul>
 <a id="of()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>of</h4>
-<pre class="methodSignature">public static&nbsp;<a href="AddFields.html" title="class in dev.morphia.aggregation.experimental.stages">AddFields</a>&nbsp;of()</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+public static&nbsp;<a href="AddFields.html" title="class in dev.morphia.aggregation.experimental.stages">AddFields</a>&nbsp;of()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#addFields()"><code>addFields()</code></a></div>
+</div>
 <div class="block">Creates a new AddFields stage to bind field</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
