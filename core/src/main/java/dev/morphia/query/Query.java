@@ -12,6 +12,7 @@ import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -418,6 +419,21 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @morphia.internal
      */
     Document toDocument();
+
+    /**
+     * Creates an update operation based on this query
+     *
+     * @param updates lists the set of updates to apply
+     * @return the update operation
+     */
+    default Update<T> update(List<UpdateOperator> updates) {
+        if (updates.isEmpty()) {
+            throw new IllegalArgumentException(Sofia.atLeastOneUpdateRequired());
+        }
+        var first = updates.get(0);
+        var others = updates.subList(1, updates.size()).toArray(new UpdateOperator[0]);
+        return update(first, others);
+    }
 
     /**
      * Creates an update operation based on this query

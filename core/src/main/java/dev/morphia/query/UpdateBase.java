@@ -68,6 +68,7 @@ public abstract class UpdateBase<T> {
      * Adds a new operator to this update operation.
      *
      * @param operator the new operator
+     * @morphia.internal
      * @since 2.2
      */
     public void add(UpdateOperator operator) {

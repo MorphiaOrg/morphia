@@ -85,6 +85,7 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
 import static dev.morphia.query.experimental.updates.UpdateOperators.xor;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -94,6 +95,7 @@ import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.hasItem;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertThrows;
 
 public class TestUpdateOperations extends TestBase {
     @Test
@@ -883,6 +885,21 @@ public class TestUpdateOperations extends TestBase {
         assertThat(cpk.name, is(cpk3.name));
         assertThat(cpk3.pic, is(notNullValue()));
         MatcherAssert.assertThat(pic, CoreMatchers.is(cpk3.pic.get()));
+    }
+
+    @Test
+    public void testUpdateList() {
+        getMapper().map(Stuff1.class);
+
+        getDs().find(Stuff1.class)
+               .update(List.of(set("foo", "update1")))
+               .execute();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            getDs().find(Stuff1.class)
+                   .update(emptyList())
+                   .execute();
+        });
     }
 
     @Test
