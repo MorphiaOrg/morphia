@@ -39,7 +39,7 @@
     <ruleset-ref path='rulesets/groovyism.xml'>
         <exclude name="ExplicitCallToCompareToMethod"/>
      </ruleset-ref>
-    <ruleset-ref path='rulesets/junit.xml'/>
+    <ruleset-ref path='rulesets/testng.xml'/>
     <ruleset-ref path='rulesets/logging.xml'/>
     <ruleset-ref path='rulesets/naming.xml'>
         <exclude name='MethodName'/>

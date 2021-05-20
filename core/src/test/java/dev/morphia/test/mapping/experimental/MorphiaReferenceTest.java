@@ -19,7 +19,7 @@ import java.util.Set;
 import static dev.morphia.aggregation.experimental.stages.Unwind.on;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertTrue;
 
 public class MorphiaReferenceTest extends TestBase {
     @Test
@@ -74,7 +74,7 @@ public class MorphiaReferenceTest extends TestBase {
         assertEquals(set1.size(), set.size());
 
         for (Book book : set) {
-            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
+            assertTrue(set1.contains(book), "Looking for " + book + " in " + set1);
         }
 
         assertTrue(loaded.set.isResolved());
@@ -117,20 +117,20 @@ public class MorphiaReferenceTest extends TestBase {
                                 .unwind(on("author"))
                                 .execute(Book.class)
                                 .next();
-        Assert.assertTrue(foundBook.author.isResolved());
+        assertTrue(foundBook.author.isResolved());
         assertEquals(author, foundBook.author.get());
 
-        Assert.assertTrue(loaded.set.isResolved());
+        assertTrue(loaded.set.isResolved());
         final Set<Book> set1 = loaded.getSet();
         assertEquals(set.size(), set1.size());
         for (Book book1 : set) {
-            assertTrue("Looking for " + book1 + " in " + set1, set1.contains(book1));
+            assertTrue(set1.contains(book1), "Looking for " + book1 + " in " + set1);
         }
 
-        Assert.assertTrue(loaded.list.isResolved());
+        assertTrue(loaded.list.isResolved());
         assertEquals(list, loaded.getList());
         for (Book book1 : list) {
-            assertTrue("Looking for " + book1 + " in " + list, list.contains(book1));
+            assertTrue(list.contains(book1), "Looking for " + book1 + " in " + list);
         }
         assertTrue(loaded.list.isResolved());
         //        validateMap(map, loaded);
@@ -201,13 +201,13 @@ public class MorphiaReferenceTest extends TestBase {
     }
 
     protected void validateSet(Set<Book> set, Author loaded) {
-        Assert.assertTrue(loaded.set.isResolved());
+        assertTrue(loaded.set.isResolved());
         final Set<Book> set1 = loaded.getSet();
 
         assertEquals(set.size(), set1.size());
 
         for (Book book : set) {
-            assertTrue("Looking for " + book + " in " + set1, set1.contains(book));
+            assertTrue(set1.contains(book), "Looking for " + book + " in " + set1);
         }
 
         assertTrue(loaded.set.isResolved());
