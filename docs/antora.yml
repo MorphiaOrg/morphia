@@ -1,12 +1,11 @@
 name: morphia
 title: Morphia
 version: 2.2
-prerelease: -SNAPSHOT
 
 nav:
   - modules/ROOT/nav.adoc
 
 asciidoc:
   attributes:
-    version: 2.2.0-SNAPSHOT
+    version: 2.2.0
     srcRef: https://github.com/MorphiaOrg/morphia/blob/master
