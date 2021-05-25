@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: Morphia Docs</title>
+    <meta name="generator" content="Antora 2.3.3">
+<link rel="stylesheet" href="../../_/css/site.css">
+<link rel="stylesheet" href="../../_/css/morphia.css">
+
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="2.3">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Getting Started</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migrating.html">Migrating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Features</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="kotlin.html">Kotlin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="queries.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="querying-old.html">Querying (Legacy)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="updates.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="deletes.html">Deleting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="aggregations.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="textSearches.html">Text Search</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text"><em>Support</em></span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">2.3-SNAPSHOT</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version">
+          <a href="../../critter/4.2/index.html">4.2-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../critter/4.1/index.html">4.1</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">2.3-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../2.2/index.html">2.2</a>
+        </li>
+        <li class="version">
+          <a href="../2.1/index.html">2.1</a>
+        </li>
+        <li class="version">
+          <a href="../2.0/index.html">2.0</a>
+        </li>
+        <li class="version">
+          <a href="../1.6/index.html">1.6</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Morphia</a></li>
+    <li>Features</li>
+    <li><a href="references.html">References</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
+  <div class="version-menu">
+    <a class="version is-current" href="references.html">2.3-SNAPSHOT</a>
+    <a class="version" href="../2.2/references.html">2.2</a>
+    <a class="version" href="../2.1/references.html">2.1</a>
+    <a class="version" href="../2.0/references.html">2.0</a>
+    <a class="version" href="../1.6/references.html">1.6</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/references.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<div class="sect1">
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
+However not every data model or application can adhere to this philosophy in its entirety.
+As such, MongoDB supports
+<a href="http://docs.mongodb.org/manual/reference/database-references/">database references</a>.Morphia supports two styles of defining references:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>the <a href="javadoc/dev/morphia/annotations/Reference.html" class="page"><code>@Reference</code></a> annotation</p>
+</li>
+<li>
+<p>an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html" class="page"><code>MorphiaReference</code></a>.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
+<div class="paragraph">
+<p>The annotation based approach is the traditional approach.
+The <a href="javadoc/dev/morphia/annotations/Reference.html" class="page"><code>@Reference</code></a> can be applied to any property whose type is a mappable Entity type.
+When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
+The referenced types are stored according to the mapping information configured by their
+<a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> annotations.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It can be helpful to think of references as a foreign key like you would find in a relational database.
+It&#8217;s important to note, however, that MongoDB does not enforce any notion of referential integrity with these keys.
+Those remote documents may or may not actually exist and you will have to tailor your application (and configure Morphia as we&#8217;ll see in a moment) to deal with those missing documents.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The annotation provides a number of options to help tailor Morphia&#8217;s behavior to your liking.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>idOnly</code>&#8201;&#8212;&#8201;<em>defaults to false</em> When <code>true</code>, only the value of the ID field is stored in the enclosing documents.
+If the referenced entity type has no subclasses, setting this can help save disk space and network traffic.
+If there <strong>are</strong> subtypes, this setting may be overridden automatically so that type information can properly stored.</p>
+</li>
+<li>
+<p><code>ignoreMissing</code> <em>defaults to false</em> When <code>true</code>, references that can not be loaded are simply ignored.
+Otherwise an exception is thrown whenever the reference load is attempted.</p>
+</li>
+<li>
+<p><code>lazy</code> <em>defaults to false</em> When <code>true</code> the referenced entity will not be fetched until the property is explicitly referenced.
+Otherwise the referenced entity (or entities) are loaded as part of the query load cycle of the enclosing entity.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A <code>String</code> may be passed to the annotation to define the document field name to be stored in the database.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_wrapper_type"><a class="anchor" href="#_using_the_wrapper_type"></a>Using the wrapper type</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This API is experimental.
+Its implementation and API subject to change based on user feedback.
+However, users are encouraged to experiment with the API and provide as much feedback as possible both positive and negative as this will likely be the approach used going forward.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>An alternative to the traditional annotation-based approach is the
+<a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html" class="page"><code>MorphiaReference</code></a> wrapper.
+This type can not be instantiated directly.
+Instead a <code>wrap()</code> method is provided that will construct the proper type and track the necessary state.
+Currently, four different types of values are supported by <code>wrap()</code>: a reference to a single entity, a List of references to entities, a Set, and a Map.  <code>wrap()</code>
+will determine how best to handle the type passed and create the appropriate structures internally.
+This is how this type might be used in practice:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private class Author {
+    @Id
+    private ObjectId id;
+    private String name;
+    private MorphiaReference&lt;List&lt;Book&gt;&gt; list;
+    private MorphiaReference&lt;Set&lt;Book&gt;&gt; set;
+    private MorphiaReference&lt;Map&lt;String, Book&gt;&gt; map;
+
+    public Author() { }
+
+    public List&lt;Book&gt; getList() {
+        return list.get();
+    }
+
+    public void setList( List&lt;Book&gt; list) {
+        this.list = MorphiaReference.wrap(list);
+    }
+
+    public Set&lt;Book&gt; getSet() {
+        return set.get();
+    }
+
+    public void setSet( Set&lt;Book&gt; set) {
+        this.set = MorphiaReference.wrap(set);
+    }
+
+    public Map&lt;String, Book&gt; getMap() {
+        return map.get();
+    }
+
+    public void setMap( Map&lt;String, Book&gt; map) {
+        this.map = MorphiaReference.wrap(map);
+    }
+}
+
+private class Book {
+    @Id
+    private ObjectId id;
+    private String name;
+    private MorphiaReference&lt;Author&gt; author;
+
+    public Book() { }
+
+    public Author getAuthor() {
+        return author.get();
+    }
+
+    public void setAuthor( Author author) {
+        this.author = MorphiaReference.wrap(author);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see we have 3 different references from <code>Author</code> to <code>Book</code> and one in the opposite direction.
+It would also be good to note that the public API of those two classes don&#8217;t expose the <code>MorphiaReference</code> externally.
+This is, of course, a stylistic choice but is the encouraged approach as it avoids leaking out implementation and mapping details outside of your model.</p>
+</div>
+<div class="paragraph">
+<p><code>setList()</code> accepts a <code>List&lt;Book&gt;</code> and stores them as references to <code>Book</code> instances stored in the collection as defined by the mapping metadata for <code>Book</code>.
+Because these references point to the mapped collection name for the type, we can get away with storing only the <code>_id</code> fields for each book.
+This gives us data in the database that looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">&gt; db.Author.find().pretty()
+{
+	"_id" : ObjectId("5c3e99276a44c77dfc1b5dbd"),
+	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
+	"name" : "Jane Austen",
+	"list" : [
+		ObjectId("5c3e99276a44c77dfc1b5dbe"),
+		ObjectId("5c3e99276a44c77dfc1b5dbf"),
+		ObjectId("5c3e99276a44c77dfc1b5dc0"),
+		ObjectId("5c3e99276a44c77dfc1b5dc1"),
+		ObjectId("5c3e99276a44c77dfc1b5dc2")
+	]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, we only need to store the ID values because the collection is already known elsewhere.
+However, sometimes we need to refer to documents stored in different collections.
+For example, if the generic type of the reference is a parent interface or class, we sometimes need to store extra information.
+For these cases, we store the references as full <code>DBRef</code> instances so we can track the appropriate collection for each reference.
+Using this version, we get data in the database that looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">&gt; db.jane.find().pretty()
+{
+	"_id" : ObjectId("5c3e99c06a44c77e5a9b5701"),
+	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
+	"name" : "Jane Austen",
+	"list" : [
+		DBRef("books", ObjectId("5c3e99c06a44c77e5a9b5702")),
+		DBRef("books", ObjectId("5c3e99c16a44c77e5a9b5703")),
+		DBRef("books", ObjectId("5c3e99c16a44c77e5a9b5704")),
+		DBRef("books", ObjectId("5c3e99c16a44c77e5a9b5705")),
+		DBRef("books", ObjectId("5c3e99c16a44c77e5a9b5706"))
+	]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In both cases, we have a document field called <code>list</code> but as you can see in the second case, we&#8217;re not storing just the <code>_id</code> values but
+<code>DBRef</code> instances storing both the collection name, "books" in this case, and <code>ObjectId</code> values from the Books.
+This lets the wrapper properly reconstitute these references when you&#8217;re ready to use them.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Before we go too much further, it&#8217;s important to point that, regardless of the type of the references, they are fetched lazily.
+So if you have multiple fields with referenced entities, they will not be fetched until you call <code>get()</code> on the <code>MorphiaReference</code>.
+If the type is a <code>Collection</code> or a <code>Map</code>, all the referenced entities are fetched and loaded via a single query if possible.
+This saves on server round trips but does raise the risk of potential <code>OutOfMemoryError</code> problems if you load too many objects in to memory this way.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A <code>Set</code> of references will look no different in the database than the <code>List</code> does.
+However, a <code>Map</code> of references are slightly more complicated.
+A <code>Map</code> might look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">&gt; db.Author.find().pretty()
+{
+	"_id" : ObjectId("5c3e9cad6a44c77fa8f38f58"),
+	"className" : "dev.morphia.mapping.experimental.MorphiaReferenceTest$Author",
+	"name" : "Jane Austen",
+	"map" : {
+		"Sense and Sensibility " : ObjectId("5c3e9cad6a44c77fa8f38f59"),
+		"Pride and Prejudice" : ObjectId("5c3e9cad6a44c77fa8f38f5a"),
+		"Mansfield Park" : ObjectId("5c3e9cad6a44c77fa8f38f5b"),
+		"Emma" : ObjectId("5c3e9cad6a44c77fa8f38f5c"),
+		"Northanger Abbey" : ObjectId("5c3e9cad6a44c77fa8f38f5d")
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>References to single entities will follow the same pattern with regards to the <code>_id</code> values vs <code>DBRef</code> entries.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Currently there is no support for configuring the <code>ignoreMissing</code> parameter as there is via the annotation.
+The wrapper will silently drop missing ID values or return null depending on the type of the reference.
+Depending on the response to this feature in general consideration can be given to adding such functionality in the future.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2021
+</footer>
+-->
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
