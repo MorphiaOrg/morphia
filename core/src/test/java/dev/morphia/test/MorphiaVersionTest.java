@@ -1,7 +1,7 @@
 package dev.morphia.test;
 
 import com.github.zafarkhaja.semver.Version;
-import dev.morphia.MorphiaVersion22;
+import dev.morphia.MorphiaVersion23;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.testng.annotations.Test;
@@ -20,6 +20,6 @@ public class MorphiaVersionTest {
         Version version = Version.valueOf(model.getVersion());
         String minorVersion = format("%s%s", version.getMajorVersion(), version.getMinorVersion());
         //noinspection MisorderedAssertEqualsArguments
-        assertEquals(MorphiaVersion22.class.getSimpleName().replaceAll("\\D", ""), minorVersion);
+        assertEquals(MorphiaVersion23.class.getSimpleName().replaceAll("\\D", ""), minorVersion);
     }
 }
