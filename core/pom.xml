@@ -42,8 +42,8 @@
                 </executions>
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
-                    <docsUrl>https://morphia.dev/morphia/2.2</docsUrl>
-                    <javadocUrl>https://morphia.dev/morphia/2.2/javadoc</javadocUrl>
+                    <docsUrl>https://morphia.dev/morphia/2.3</docsUrl>
+                    <javadocUrl>https://morphia.dev/morphia/2.3/javadoc</javadocUrl>
                 </configuration>
             </plugin>
             <plugin>
