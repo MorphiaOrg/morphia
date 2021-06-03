@@ -69,7 +69,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                 return constructor;
             }
         }
-        throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
+        throw new IllegalStateException("No suitable constructor");
     }
 
     /**
