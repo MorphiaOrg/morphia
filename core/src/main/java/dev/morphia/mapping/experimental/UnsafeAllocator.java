@@ -28,6 +28,9 @@ import java.lang.reflect.Modifier;
  * @author Joel Leitch
  * @author Jesse Wilson
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+        value = "REC_CATCH_EXCEPTION",
+        justification = "Unsafe")
 public abstract class UnsafeAllocator {
     public abstract <T> T newInstance(Class<T> c) throws Exception;
 
