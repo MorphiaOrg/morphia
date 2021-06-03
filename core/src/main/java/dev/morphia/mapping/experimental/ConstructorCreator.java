@@ -33,9 +33,6 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public ConstructorCreator(EntityModel model, Constructor<?> constructor) {
         this.model = model;
         this.constructor = constructor;
-        if (this.constructor == null) {
-            throw new MappingException(Sofia.noSuitableConstructor(model.getType()));
-        }
         this.constructor.setAccessible(true);
 
         final Parameter[] constructorParameters = this.constructor.getParameters();
