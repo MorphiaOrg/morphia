@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.experimental.ConstructorCreator;
+import dev.morphia.mapping.experimental.UnsafeConstructorCreator;
 import dev.morphia.sofia.Sofia;
 
 import java.lang.reflect.Constructor;
@@ -30,14 +31,17 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
             if (!model.getType().isInterface()) {
                 try {
                     Constructor<?> constructor = model.getType().getDeclaredConstructor();
-                    creator = () -> {
-                        return new NoArgCreator(constructor);
-                    };
+                    creator = () -> new NoArgCreator(constructor);
                 } catch (NoSuchMethodException e) {
-                    Constructor<?> constructor = ConstructorCreator.getFullConstructor(model);
-                    creator = () -> {
-                        return new ConstructorCreator(model, constructor);
-                    };
+                    try {
+                        Constructor<?> constructor = ConstructorCreator.getFullConstructor(model);
+                        creator = () -> {
+                            return new ConstructorCreator(model, constructor);
+                        };
+                    } catch (MappingException e1) {
+                        MorphiaInstanceCreator unsafeConstructorCreator = new UnsafeConstructorCreator(model);
+                        creator = () -> unsafeConstructorCreator;
+                    }
                 }
             } else {
                 throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
