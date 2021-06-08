@@ -271,6 +271,7 @@ public abstract class TestBase {
 
     private void cleanup() {
         MongoDatabase db = getDatabase();
+        db.runCommand(new Document("profile", 0).append("slowms", 0));
         db.listCollectionNames().forEach(s -> {
             if (!s.equals("zipcodes")) {
                 db.getCollection(s).drop();

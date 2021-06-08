@@ -907,6 +907,16 @@ public class TestUpdateOps extends TestBase {
         Assert.assertEquals(16, first.val);
     }
 
+    @Test
+    public void testUpdateMap() {
+        getMapper().map(TestMapWithEnumKey.class);
+        final Map<TestEnum, EmbeddedObjTest> map =
+            Map.of(TestEnum.ANYVAL, new EmbeddedObjTest("name", "value"));
+        getDs().find(TestMapWithEnumKey.class)
+               .update(set("map", map))
+               .execute();
+    }
+
     private void assertInserted(UpdateResult res) {
         assertNotNull(res.getUpsertedId());
         assertEquals(0, res.getModifiedCount());
@@ -1179,4 +1189,32 @@ public class TestUpdateOps extends TestBase {
         private ObjectId id;
     }
 
+    private enum TestEnum {
+        ANYVAL,
+        ANOTHERVAL
+    }
+
+    @Embedded
+    private static class EmbeddedObjTest {
+        private String name;
+        private String value;
+
+        public EmbeddedObjTest() {
+        }
+
+        public EmbeddedObjTest(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
+
+    @Entity
+    private static class TestMapWithEnumKey {
+
+        @Id
+        private ObjectId id;
+
+        private Map<TestEnum, EmbeddedObjTest> map;
+
+    }
 }
