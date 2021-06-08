@@ -11,6 +11,10 @@ import java.util.Map.Entry;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
+/**
+ * @morphia.internal
+ * @since 2.1.7
+ */
 public class MorphiaMapCodec extends MapCodec {
 
     private final Mapper mapper;
@@ -21,7 +25,6 @@ public class MorphiaMapCodec extends MapCodec {
 
     @Override
     public void encode(BsonWriter writer, Map map, EncoderContext encoderContext) {
-        System.out.println("******************** MorphiaMapCodec.encode");
         document(writer, () -> {
             for (Entry<?, ?> entry : ((Map<?, ?>) map).entrySet()) {
                 final Object key = entry.getKey();
