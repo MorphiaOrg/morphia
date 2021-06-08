@@ -2,7 +2,6 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.mapping.Mapper;
 import org.bson.codecs.Codec;
-import org.bson.codecs.MapCodec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
@@ -33,7 +32,6 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new MorphiaLocalTimeCodec());
         addCodec(new ClassCodec());
         addCodec(new CenterCodec());
-        addCodec(new HashMapCodec());
         addCodec(new KeyCodec(mapper));
         addCodec(new LocaleCodec());
         addCodec(new ObjectCodec(mapper));
@@ -70,12 +68,4 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
             return null;
         }
     }
-
-    private static class HashMapCodec extends MapCodec {
-        @Override
-        public Class<Map<String, Object>> getEncoderClass() {
-            return (Class<Map<String, Object>>) ((Class<?>) HashMap.class);
-        }
-    }
-
 }
