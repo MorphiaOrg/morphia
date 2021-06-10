@@ -32,7 +32,7 @@ public class DiscriminantLifecycleTest extends TestBase {
         Child saved = (Child) getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
         Assert.assertTrue(childClass.isInstance(saved));
         Assert.assertTrue(saved.getAudited());
-        Assert.assertEquals("embedded", saved.getEmbed().embeddedValue);
+        Assert.assertEquals(saved.getEmbed().embeddedValue, "embedded");
     }
 
     @Test(expectedExceptions = CodecConfigurationException.class, dataProvider = "classes")
@@ -56,14 +56,14 @@ public class DiscriminantLifecycleTest extends TestBase {
         return getDatabase().getCollection("entity").insertOne(entity).getInsertedId().asObjectId().getValue();
     }
 
-    interface Child {
+    private interface Child {
         boolean getAudited();
 
         Embed getEmbed();
     }
 
     @Entity(value = "entity")
-    static class BaseEntity {
+    private static class BaseEntity {
         @Id
         ObjectId id;
         @Transient
@@ -71,7 +71,7 @@ public class DiscriminantLifecycleTest extends TestBase {
     }
 
     @Entity(value = "entity")
-    static class BaseLifecycleEntity {
+    private static class BaseLifecycleEntity {
         @Id
         ObjectId id;
         @Transient
@@ -79,12 +79,11 @@ public class DiscriminantLifecycleTest extends TestBase {
 
         @PostLoad
         void audit() {
-            // audit entity
             audited = true;
         }
     }
 
-    static class ChildEntity extends BaseEntity implements Child {
+    private static class ChildEntity extends BaseEntity implements Child {
         Embed embed;
 
         @Override
@@ -98,28 +97,35 @@ public class DiscriminantLifecycleTest extends TestBase {
         }
     }
 
-    static class ChildLifecycleEntity extends BaseLifecycleEntity implements Child {
+    private static class ChildLifecycleEntity extends BaseLifecycleEntity implements Child {
         Embed embed;
+        @Transient
+        boolean childAudit;
 
         @Override
         public boolean getAudited() {
-            return audited;
+            return childAudit;
         }
 
         @Override
         public Embed getEmbed() {
             return embed;
+        }
+
+        @PostLoad
+        void audit() {
+            childAudit = true;
         }
     }
 
     @Entity
-    static class Embed {
+    private static class Embed {
         String embeddedValue;
         @Id
         private ObjectId id;
     }
 
-    static class NonEntity implements Child {
+    private static class NonEntity implements Child {
         Embed embed;
 
         @Override
