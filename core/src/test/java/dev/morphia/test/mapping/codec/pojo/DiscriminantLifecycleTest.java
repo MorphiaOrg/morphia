@@ -113,7 +113,7 @@ public class DiscriminantLifecycleTest extends TestBase {
         }
 
         @PostLoad
-        void audit() {
+        void childAudit() {
             childAudit = true;
         }
     }
