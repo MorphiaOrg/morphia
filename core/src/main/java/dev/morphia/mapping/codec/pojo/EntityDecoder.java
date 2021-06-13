@@ -32,23 +32,22 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     @Override
     public Object decode(BsonReader reader, DecoderContext decoderContext) {
         Object entity;
-        if (morphiaCodec.getEntityModel().hasLifecycle(PreLoad.class)
-            || morphiaCodec.getEntityModel().hasLifecycle(PostLoad.class)
-            || morphiaCodec.getMapper().hasInterceptors()) {
-            entity = decodeWithLifecycle(reader, decoderContext);
+        EntityModel entityModel = morphiaCodec.getEntityModel();
+        if (!decoderContext.hasCheckedDiscriminator()) {
+            entity = getCodecFromDocument(reader, entityModel.useDiscriminator(), entityModel.getDiscriminatorKey(),
+                morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
+                         .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
         } else {
-            EntityModel classModel = morphiaCodec.getEntityModel();
-            if (decoderContext.hasCheckedDiscriminator()) {
-                MorphiaInstanceCreator instanceCreator = getInstanceCreator(classModel);
-                decodeProperties(reader, decoderContext, instanceCreator, classModel);
-                return instanceCreator.getInstance();
+            if (entityModel.hasLifecycle(PreLoad.class)
+                || entityModel.hasLifecycle(PostLoad.class)
+                || morphiaCodec.getMapper().hasInterceptors()) {
+                entity = decodeWithLifecycle(reader, decoderContext);
             } else {
-                entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
-                    morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
-                             .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
+                MorphiaInstanceCreator instanceCreator = getInstanceCreator(entityModel);
+                decodeProperties(reader, decoderContext, instanceCreator, entityModel);
+                entity = instanceCreator.getInstance();
             }
         }
-
         return entity;
     }
 

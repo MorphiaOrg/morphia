@@ -4,6 +4,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.codec.pojo.ClassMethodPair;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.test.TestBase;
 import org.bson.Document;
@@ -12,6 +14,13 @@ import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * asserts some common behaviour between entities with or without lifecycle
@@ -27,12 +36,39 @@ public class DiscriminantLifecycleTest extends TestBase {
     }
 
     @Test(dataProvider = "classes")
-    public void testCorrectEntity(Class<?> baseClass, Class<?> childClass) {
+    public void testCorrectEntity(Class<?> baseClass, Class<? extends Child> childClass) {
+        getMapper().map(baseClass, childClass);
         ObjectId id = saveChildEntity(childClass);
         Child saved = (Child) getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
         Assert.assertTrue(childClass.isInstance(saved));
         Assert.assertTrue(saved.getAudited());
-        Assert.assertEquals(saved.getEmbed().embeddedValue, "embedded");
+        Assert.assertTrue(saved.getBaseAudited());
+        assertEquals(saved.getEmbed().embeddedValue, "embedded");
+    }
+
+    @Test
+    public void testFoundAllMethods() {
+        EntityModel model = getMapper().map(BaseLifecycleEntity.class).get(0);
+
+        Map<Class<? extends Annotation>, List<ClassMethodPair>> methods = model.getLifecycleMethods();
+        assertEquals(methods.size(), 1);
+        List<ClassMethodPair> list = methods.get(PostLoad.class);
+        assertNotNull(list);
+        assertEquals(list.size(), 1);
+
+        ClassMethodPair pair = list.get(0);
+        assertEquals(pair.getMethod().getName(), "audit");
+
+        model = getMapper().map(ChildLifecycleEntity.class).get(0);
+
+        methods = model.getLifecycleMethods();
+        assertEquals(methods.size(), 1);
+        list = methods.get(PostLoad.class);
+        assertNotNull(list);
+        assertEquals(list.size(), 2);
+
+        assertEquals(list.get(0).getMethod().getName(), "audit");
+        assertEquals(list.get(1).getMethod().getName(), "childAudit");
     }
 
     @Test(expectedExceptions = CodecConfigurationException.class, dataProvider = "classes")
@@ -58,6 +94,8 @@ public class DiscriminantLifecycleTest extends TestBase {
 
     private interface Child {
         boolean getAudited();
+
+        boolean getBaseAudited();
 
         Embed getEmbed();
     }
@@ -92,6 +130,11 @@ public class DiscriminantLifecycleTest extends TestBase {
         }
 
         @Override
+        public boolean getBaseAudited() {
+            return audited;
+        }
+
+        @Override
         public Embed getEmbed() {
             return embed;
         }
@@ -105,6 +148,11 @@ public class DiscriminantLifecycleTest extends TestBase {
         @Override
         public boolean getAudited() {
             return childAudit;
+        }
+
+        @Override
+        public boolean getBaseAudited() {
+            return audited;
         }
 
         @Override
@@ -127,6 +175,11 @@ public class DiscriminantLifecycleTest extends TestBase {
 
     private static class NonEntity implements Child {
         Embed embed;
+
+        @Override
+        public boolean getBaseAudited() {
+            return true;
+        }
 
         @Override
         public boolean getAudited() {
