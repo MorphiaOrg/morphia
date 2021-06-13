@@ -69,7 +69,11 @@ public class ClassMethodPair {
 
     }
 
-    Method getMethod() {
+    /**
+     * @return ---
+     * @morphia.internal
+     */
+    public Method getMethod() {
         return method;
     }
 
