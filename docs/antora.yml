@@ -8,5 +8,5 @@ nav:
 
 asciidoc:
   attributes:
-    version: 2.1.6
+    version: 2.1.7
     srcRef: https://github.com/MorphiaOrg/morphia/blob/2.1.x
