@@ -12,7 +12,6 @@ jobs:
       matrix:
         java: [ 11, 15 ]
         mongo: [ 4.4.4, 4.2.13, 4.0.23, 3.6.23 ]
-        driver: [ 4.2.2, 4.1.0, 4.0.0 ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.java }}
@@ -30,11 +29,11 @@ jobs:
       - name: Run Tests
         env:
           MONGODB: ${{ matrix.mongo }}
-        run: mvn surefire:test -Ddriver.version=${{ matrix.driver }}
+        run: mvn surefire:test
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}-${{matrix.driver}}
+          name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}
           path: |
             core/target/**/*.log
             core/target/**/*.err
