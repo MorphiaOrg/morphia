@@ -18,6 +18,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.UpdateOptions;
+import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
@@ -903,6 +904,16 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
+    public void testUpdateMap() {
+        getMapper().map(TestMapWithEnumKey.class);
+        final Map<TestEnum, EmbeddedObjTest> map =
+            Map.of(TestEnum.ANYVAL, new EmbeddedObjTest("name", "value"));
+        getDs().find(TestMapWithEnumKey.class)
+               .update(set("map", map))
+               .execute();
+    }
+
+    @Test
     public void testUpdateRef() {
         final ContainsPic cp = new ContainsPic();
         cp.setName("cp one");
@@ -1068,6 +1079,11 @@ public class TestUpdateOperations extends TestBase {
         }
     }
 
+    private enum TestEnum {
+        ANYVAL,
+        ANOTHERVAL
+    }
+
     @Entity
     private static final class Child {
         private String first;
@@ -1154,6 +1170,20 @@ public class TestUpdateOperations extends TestBase {
 
         private DumbColl(String opaqueId) {
             this.opaqueId = opaqueId;
+        }
+    }
+
+    @Embedded
+    private static class EmbeddedObjTest {
+        private String name;
+        private String value;
+
+        public EmbeddedObjTest() {
+        }
+
+        public EmbeddedObjTest(String name, String value) {
+            this.name = name;
+            this.value = value;
         }
     }
 
@@ -1281,17 +1311,17 @@ public class TestUpdateOperations extends TestBase {
 
     @Entity
     public static class MapsOfStuff {
-        private final Map<String, TestEntity> map = new HashMap<>();
         @Id
         private ObjectId id;
+        private final Map<String, TestEntity> map = new HashMap<>();
 
     }
 
     @Entity
     private static final class Parent {
-        private final Set<Child> children = new HashSet<>();
         @Id
         private ObjectId id;
+        private final Set<Child> children = new HashSet<>();
     }
 
     public static class Stuff1 extends TestEntity {
@@ -1302,4 +1332,11 @@ public class TestUpdateOperations extends TestBase {
         private String bar;
     }
 
+    @Entity
+    private static class TestMapWithEnumKey {
+        @Id
+        private ObjectId id;
+        private Map<TestEnum, EmbeddedObjTest> map;
+
+    }
 }

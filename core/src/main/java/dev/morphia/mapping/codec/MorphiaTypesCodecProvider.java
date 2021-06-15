@@ -6,6 +6,7 @@ import org.bson.codecs.MapCodec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         this.mapper = mapper;
 
         addCodec(new MorphiaDateCodec(mapper));
+        addCodec(new MorphiaMapCodec(mapper));
         addCodec(new MorphiaLocalDateTimeCodec(mapper));
         addCodec(new MorphiaLocalTimeCodec());
         addCodec(new ClassCodec());
@@ -58,6 +60,8 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         Codec<T> codec = (Codec<T>) codecs.get(clazz);
         if (codec != null) {
             return codec;
+        } else if (AbstractMap.class.isAssignableFrom(clazz)) {
+            return (Codec<T>) get(Map.class, registry);
         } else if (clazz.isArray() && !clazz.getComponentType().equals(byte.class)) {
             return (Codec<T>) new ArrayCodec(mapper, clazz);
         } else {
