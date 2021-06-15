@@ -11,6 +11,13 @@ import java.util.Map.Entry;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
+/**
+ * Maps Map subtypes to/from the database.  This is mostly a pass-through to the driver codec except for the encoding, non-String types
+ * are converted to Strings if possible.
+ *
+ * @morphia.internal
+ * @since 2.1.7
+ */
 public class MorphiaMapCodec extends MapCodec {
 
     private final Mapper mapper;
