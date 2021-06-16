@@ -32,6 +32,12 @@
     ]
   },
   "class": {
+    "added": [
+      {
+        "new": "class dev.morphia.mapping.codec.MorphiaMapCodec",
+        "justification": "internal implementation"
+      }
+    ],
     "externalClassExposedInAPI": [
       {
         "class": "com.mongodb.*",
