@@ -88,13 +88,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     }
 
     /**
-     * @return the encoder
-     */
-    public EntityEncoder getEncoder() {
-        return encoder;
-    }
-
-    /**
      * Sets the encoder
      *
      * @param encoder the encoder
