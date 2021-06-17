@@ -31,6 +31,7 @@ import dev.morphia.test.models.MappedInterface;
 import dev.morphia.test.models.MappedInterfaceImpl;
 import dev.morphia.test.models.Png;
 import dev.morphia.test.models.State;
+import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.User;
 import dev.morphia.test.models.errors.ContainsDocument;
 import dev.morphia.test.models.errors.ContainsMapLike;
@@ -246,6 +247,23 @@ public class TestMapping extends TestBase {
                                                 .first();
         assertEquals(new String(loaded.bytes), new String((new ContainsByteArray()).bytes));
         assertNotNull(loaded.id);
+    }
+
+    @Test
+    public void testArrayOfNulls() {
+        getMapper().map(ObjectArray.class);
+
+        ObjectArray entity = new ObjectArray();
+        entity.array = new ContainsCollection[10];
+        entity.typedArray = new Integer[10];
+        entity.byteArray = new Byte[10];
+        getDs().save(entity);
+    }
+
+    private static class ObjectArray extends TestEntity {
+        private ContainsCollection[] array;
+        private Integer[] typedArray;
+        private Byte[] byteArray;
     }
 
     @Test
