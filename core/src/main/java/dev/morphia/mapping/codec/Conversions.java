@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static java.lang.Boolean.FALSE;
@@ -85,6 +86,7 @@ public final class Conversions {
         register(String.class, Float.class, Float::parseFloat);
         register(String.class, Short.class, Short::parseShort);
         register(String.class, URI.class, str -> URI.create(str.replace("%46", ".")));
+        register(String.class, UUID.class, UUID::fromString);
     }
 
     /**
