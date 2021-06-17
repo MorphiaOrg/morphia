@@ -29,7 +29,12 @@ class TypedArrayCodec implements Codec {
         writer.writeStartArray();
         int length = Array.getLength(value);
         for (int i = 0; i < length; i++) {
-            getCodec().encode(writer, Array.get(value, i), encoderContext);
+            Object element = Array.get(value, i);
+            if (element == null) {
+                writer.writeNull();
+            } else {
+                getCodec().encode(writer, element, encoderContext);
+            }
         }
         writer.writeEndArray();
     }
