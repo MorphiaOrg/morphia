@@ -36,6 +36,14 @@
       {
         "new": "class dev.morphia.mapping.codec.MorphiaMapCodec",
         "justification": "internal implementation"
+      },
+      {
+        "new": "class dev.morphia.mapping.experimental.UnsafeAllocator",
+        "justification": "internal implementation"
+      },
+      {
+        "new": "class dev.morphia.mapping.experimental.UnsafeConstructorCreator",
+        "justification": "internal implementation"
       }
     ],
     "externalClassExposedInAPI": [
