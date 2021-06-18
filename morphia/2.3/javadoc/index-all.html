@@ -1772,6 +1772,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#%3Cinit%3E()">CountOptions()</a></span> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/UnsafeAllocator.html#create()">create()</a></span> - Static method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/UnsafeAllocator.html" title="class in dev.morphia.mapping.experimental">UnsafeAllocator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/InstanceCreatorFactory.html#create()">create()</a></span> - Method in interface dev.morphia.mapping.<a href="dev/morphia/mapping/InstanceCreatorFactory.html" title="interface in dev.morphia.mapping">InstanceCreatorFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/InstanceCreatorFactoryImpl.html#create()">create()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/InstanceCreatorFactoryImpl.html" title="class in dev.morphia.mapping">InstanceCreatorFactoryImpl</a></dt>
@@ -4180,6 +4182,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/InstanceCreator.html#getInstance()">getInstance()</a></span> - Method in interface dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/InstanceCreator.html" title="interface in dev.morphia.mapping.codec">InstanceCreator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/ConstructorCreator.html#getInstance()">getInstance()</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/ConstructorCreator.html" title="class in dev.morphia.mapping.experimental">ConstructorCreator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/UnsafeConstructorCreator.html#getInstance()">getInstance()</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/UnsafeConstructorCreator.html" title="class in dev.morphia.mapping.experimental">UnsafeConstructorCreator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/NoArgCreator.html#getInstance()">getInstance()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/NoArgCreator.html" title="class in dev.morphia.mapping">NoArgCreator</a></dt>
 <dd>&nbsp;</dd>
@@ -6848,6 +6852,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns geospatial objects in proximity to a point on a sphere.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/UnsafeAllocator.html#newInstance(java.lang.Class)">newInstance(Class&lt;T&gt;)</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/UnsafeAllocator.html" title="class in dev.morphia.mapping.experimental">UnsafeAllocator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/TypeData.html#newInstance(java.lang.reflect.Field)">newInstance(Field)</a></span> - Static method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a></dt>
 <dd>
 <div class="block">Creates a TypeData reflecting the type of the given field.</div>
@@ -8431,6 +8437,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/ConstructorCreator.html#set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">set(Object, PropertyModel)</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/ConstructorCreator.html" title="class in dev.morphia.mapping.experimental">ConstructorCreator</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/UnsafeConstructorCreator.html#set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">set(Object, PropertyModel)</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/UnsafeConstructorCreator.html" title="class in dev.morphia.mapping.experimental">UnsafeConstructorCreator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/NoArgCreator.html#set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">set(Object, PropertyModel)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/NoArgCreator.html" title="class in dev.morphia.mapping">NoArgCreator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/ArrayFieldAccessor.html#set(java.lang.Object,java.lang.Object)">set(Object, Object)</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/ArrayFieldAccessor.html" title="class in dev.morphia.mapping.codec">ArrayFieldAccessor</a></dt>
@@ -9492,6 +9500,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Deprecated.</div>
 </dd>
+<dt><a href="dev/morphia/mapping/experimental/UnsafeAllocator.html" title="class in dev.morphia.mapping.experimental"><span class="typeNameLink">UnsafeAllocator</span></a> - Class in <a href="dev/morphia/mapping/experimental/package-summary.html">dev.morphia.mapping.experimental</a></dt>
+<dd>
+<div class="block">Do sneaky things to allocate objects without invoking their constructors.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/UnsafeAllocator.html#%3Cinit%3E()">UnsafeAllocator()</a></span> - Constructor for class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/UnsafeAllocator.html" title="class in dev.morphia.mapping.experimental">UnsafeAllocator</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/mapping/experimental/UnsafeConstructorCreator.html" title="class in dev.morphia.mapping.experimental"><span class="typeNameLink">UnsafeConstructorCreator</span></a> - Class in <a href="dev/morphia/mapping/experimental/package-summary.html">dev.morphia.mapping.experimental</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/UnsafeConstructorCreator.html#%3Cinit%3E(dev.morphia.mapping.codec.pojo.EntityModel)">UnsafeConstructorCreator(EntityModel)</a></span> - Constructor for class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/UnsafeConstructorCreator.html" title="class in dev.morphia.mapping.experimental">UnsafeConstructorCreator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/Aggregation.html#unset(dev.morphia.aggregation.experimental.stages.Unset)">unset(Unset)</a></span> - Method in interface dev.morphia.aggregation.experimental.<a href="dev/morphia/aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a></dt>
 <dd>
 <div class="block">Removes/excludes fields from documents.</div>
