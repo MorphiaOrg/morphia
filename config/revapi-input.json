@@ -12,6 +12,12 @@
     ]
   },
   "class": {
+    "externalClassExposedInAPI": [
+      {
+        "package": "org.bson.codecs",
+        "justification": "it's driver code"
+      }
+    ],
     "noLongerImplementsInterface": [
       {
         "package": "dev.morphia.mapping.codec.pojo",
