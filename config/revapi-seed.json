@@ -1,2 +1,14 @@
-[
-]
+{
+  "extension": "revapi.differences",
+  "configuration": {
+    "ignore": true,
+    "excludes": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ],
+    "differences": [
+    ]
+  }
+}

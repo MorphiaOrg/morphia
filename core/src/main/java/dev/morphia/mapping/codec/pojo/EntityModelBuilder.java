@@ -35,19 +35,30 @@ import java.util.stream.Collectors;
 public class EntityModelBuilder {
     private final Datastore datastore;
     private final List<PropertyModelBuilder> propertyModels = new ArrayList<>();
-    private final Class<?> type;
+    private final List<EntityModel> interfaceModels = new ArrayList<>();
     private final Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<>();
     private final Set<Class<?>> classes = new LinkedHashSet<>();
     private final Set<Class<?>> interfaces = new LinkedHashSet<>();
     private final Set<Annotation> annotations = new LinkedHashSet<>();
+    private final Map<String, Map<String, Type>> parameterization = new LinkedHashMap<>();
+    private Class<?> type;
     private boolean discriminatorEnabled;
     private String discriminator;
     private String discriminatorKey;
     private String idPropertyName;
     private String versionPropertyName;
-    private final List<EntityModel> interfaceModels;
     private EntityModel superclass;
-    private final Map<String, Map<String, Type>> parameterization;
+
+    /**
+     * Creates a baseline builder for customized model building
+     *
+     * @param datastore the datastore to use
+     * @since 2.3
+     */
+    public EntityModelBuilder(Datastore datastore) {
+        this.datastore = datastore;
+    }
+
     /**
      * Create a builder
      *
@@ -59,7 +70,7 @@ public class EntityModelBuilder {
         this.type = type;
 
         buildHierarchy(this.type);
-        parameterization = findParameterization(type);
+        parameterization.putAll(findParameterization(type));
         propagateTypes();
 
         if (type.getSuperclass() != null) {
@@ -69,16 +80,16 @@ public class EntityModelBuilder {
             }
         }
 
-        this.interfaceModels = interfaces.stream()
-                                         .map(i -> {
-                                             try {
-                                                 return datastore.getMapper().getEntityModel(i);
-                                             } catch (NotMappableException ignored) {
-                                                 return null;
-                                             }
-                                         })
-                                         .filter(Objects::nonNull)
-                                         .collect(Collectors.toList());
+        interfaces.stream()
+                  .map(i -> {
+                      try {
+                          return datastore.getMapper().getEntityModel(i);
+                      } catch (NotMappableException ignored) {
+                          return null;
+                      }
+                  })
+                  .filter(Objects::nonNull)
+                  .collect(Collectors.toCollection(() -> interfaceModels));
 
     }
 
@@ -102,6 +113,18 @@ public class EntityModelBuilder {
     /**
      * Adds a property to the model
      *
+     * @param builder the new builder to add
+     * @return the new PropertyModelBuilder
+     * @since 2.3
+     */
+    public PropertyModelBuilder addProperty(PropertyModelBuilder builder) {
+        propertyModels.add(builder);
+        return builder;
+    }
+
+    /**
+     * Adds a property to the model
+     *
      * @return the new PropertyModelBuilder
      */
     public PropertyModelBuilder addProperty() {
@@ -111,50 +134,22 @@ public class EntityModelBuilder {
     }
 
     /**
-     * @return the parent class hierarchy
-     * @since 2.2
-     */
-    public Set<Class<?>> classHierarchy() {
-        return classes;
-    }
-
-    private Map<String, Map<String, Type>> findParameterization(Class<?> type) {
-        if (type.getSuperclass() == null) {
-            return new LinkedHashMap<>();
-        }
-        Map<String, Map<String, Type>> parentMap = findParameterization(type.getSuperclass());
-        Map<String, Type> typeMap = mapArguments(type.getSuperclass(), type.getGenericSuperclass());
-
-        parentMap.put(type.getSuperclass().getName(), typeMap);
-        return parentMap;
-    }
-
-    /**
-     * @param type the annotation class
-     * @param <A>  the annotation type
-     * @return the annotation or null if it doesn't exist
-     */
-    @SuppressWarnings("unchecked")
-    @Nullable
-    public <A extends Annotation> A getAnnotation(Class<A> type) {
-        return (A) annotationsMap.get(type);
-    }
-
-    private Set<Class<?>> findParentClasses(Class<?> type) {
-        Set<Class<?>> classes = new LinkedHashSet<>();
-        while (type != null && !type.isEnum() && !type.equals(Object.class)) {
-            classes.add(type);
-            annotations.addAll(Set.of(type.getAnnotations()));
-            type = type.getSuperclass();
-        }
-        return classes;
-    }
-
-    /**
      * @return the annotation on this model
      */
     public Set<Annotation> annotations() {
         return annotations;
+    }
+
+    /**
+     * Adds an annotation
+     *
+     * @param type the annotation to add
+     * @return this
+     * @since 2.3
+     */
+    public EntityModelBuilder annotation(Annotation type) {
+        annotations.add(type);
+        return this;
     }
 
     /**
@@ -175,6 +170,14 @@ public class EntityModelBuilder {
         }
 
         return new EntityModel(this);
+    }
+
+    /**
+     * @return the parent class hierarchy
+     * @since 2.2
+     */
+    public Set<Class<?>> classHierarchy() {
+        return classes;
     }
 
     /**
@@ -225,6 +228,31 @@ public class EntityModelBuilder {
     }
 
     /**
+     * @param type the annotation class
+     * @param <A>  the annotation type
+     * @return the annotation or null if it doesn't exist
+     */
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
+        return (A) annotationsMap.get(type);
+    }
+
+    public TypeData<?> getTypeData(Class<?> type, TypeData<?> suggested, Type genericType) {
+
+        if (genericType instanceof TypeVariable) {
+            Map<String, Type> map = parameterization.get(type.getName());
+            if (map != null) {
+                Type mapped = map.get(((TypeVariable<?>) genericType).getName());
+                if (mapped instanceof Class) {
+                    suggested = TypeData.newInstance(genericType, (Class<?>) mapped);
+                }
+            }
+        }
+        return suggested;
+    }
+
+    /**
      * @return the name of the id property
      */
     @Nullable
@@ -244,6 +272,33 @@ public class EntityModelBuilder {
     }
 
     /**
+     * @param type the annotation class
+     * @return the annotation if it exists
+     */
+    public boolean hasAnnotation(Class<? extends Annotation> type) {
+        for (Annotation annotation : annotations) {
+            if (type.equals(annotation.annotationType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return the interfaces implemented by this model or its super types
+     */
+    public List<EntityModel> interfaces() {
+        return interfaceModels;
+    }
+
+    /**
+     * @return true if the discriminator is enabled
+     */
+    public boolean isDiscriminatorEnabled() {
+        return discriminatorEnabled;
+    }
+
+    /**
      * @return the super class of this type or null
      */
     @Nullable
@@ -256,21 +311,8 @@ public class EntityModelBuilder {
      *
      * @return the type
      */
-    public Class<?> getType() {
+    public Class<?> type() {
         return type;
-    }
-
-    /**
-     * @param type the annotation class
-     * @return the annotation if it exists
-     */
-    public boolean hasAnnotation(Class<? extends Annotation> type) {
-        for (Annotation annotation : annotations) {
-            if (type.equals(annotation.annotationType())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -295,6 +337,18 @@ public class EntityModelBuilder {
     }
 
     /**
+     * Sets the type of this model
+     *
+     * @param type the type
+     * @return this
+     * @since 2.3
+     */
+    public EntityModelBuilder type(Class<?> type) {
+        this.type = type;
+        return this;
+    }
+
+    /**
      * @return the name of the version property
      */
     @Nullable
@@ -311,35 +365,6 @@ public class EntityModelBuilder {
     public EntityModelBuilder versionPropertyName(String name) {
         this.versionPropertyName = name;
         return this;
-    }
-
-    /**
-     * @return the interfaces implemented by this model or its super types
-     */
-    public List<EntityModel> interfaces() {
-        return interfaceModels;
-    }
-
-    /**
-     * @return true if the discriminator is enabled
-     */
-    public boolean isDiscriminatorEnabled() {
-        return discriminatorEnabled;
-    }
-
-    private Map<String, Type> mapArguments(@Nullable Class<?> type, Type typeSignature) {
-        Map<String, Type> map = new HashMap<>();
-        if (type != null && typeSignature instanceof ParameterizedType) {
-            TypeVariable<?>[] typeParameters = type.getTypeParameters();
-            if (typeParameters.length != 0) {
-                Type[] arguments = ((ParameterizedType) typeSignature).getActualTypeArguments();
-                for (int i = 0; i < typeParameters.length; i++) {
-                    TypeVariable<?> typeParameter = typeParameters[i];
-                    map.put(typeParameter.getName(), arguments[i]);
-                }
-            }
-        }
-        return map;
     }
 
     protected Map<Class<? extends Annotation>, Annotation> annotationsMap() {
@@ -377,6 +402,41 @@ public class EntityModelBuilder {
         return list;
     }
 
+    private Map<String, Map<String, Type>> findParameterization(Class<?> type) {
+        if (type.getSuperclass() == null) {
+            return new LinkedHashMap<>();
+        }
+        Map<String, Map<String, Type>> parentMap = findParameterization(type.getSuperclass());
+        Map<String, Type> typeMap = mapArguments(type.getSuperclass(), type.getGenericSuperclass());
+
+        parentMap.put(type.getSuperclass().getName(), typeMap);
+        return parentMap;
+    }
+
+    private Set<Class<?>> findParentClasses(Class<?> type) {
+        Set<Class<?>> classes = new LinkedHashSet<>();
+        while (type != null && !type.isEnum() && !type.equals(Object.class)) {
+            classes.add(type);
+            annotations.addAll(Set.of(type.getAnnotations()));
+            type = type.getSuperclass();
+        }
+        return classes;
+    }
+
+    private Map<String, Type> mapArguments(@Nullable Class<?> type, Type typeSignature) {
+        Map<String, Type> map = new HashMap<>();
+        if (type != null && typeSignature instanceof ParameterizedType) {
+            TypeVariable<?>[] typeParameters = type.getTypeParameters();
+            if (typeParameters.length != 0) {
+                Type[] arguments = ((ParameterizedType) typeSignature).getActualTypeArguments();
+                for (int i = 0; i < typeParameters.length; i++) {
+                    TypeVariable<?> typeParameter = typeParameters[i];
+                    map.put(typeParameter.getName(), arguments[i]);
+                }
+            }
+        }
+        return map;
+    }
 
     private void propagateTypes() {
         List<Map<String, Type>> parameters = new ArrayList<>(parameterization.values());
@@ -394,20 +454,6 @@ public class EntityModelBuilder {
                 }
             }
         }
-    }
-
-    public TypeData<?> getTypeData(Class<?> type, TypeData<?> suggested, Type genericType) {
-
-        if (genericType instanceof TypeVariable) {
-            Map<String, Type> map = parameterization.get(type.getName());
-            if (map != null) {
-                Type mapped = map.get(((TypeVariable<?>) genericType).getName());
-                if (mapped instanceof Class) {
-                    suggested = TypeData.newInstance(genericType, (Class<?>) mapped);
-                }
-            }
-        }
-        return suggested;
     }
 
 }

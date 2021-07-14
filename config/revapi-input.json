@@ -1,6 +1,36 @@
 {
+  "annotation": {
+    "added": [
+      {
+        "package": "dev.morphia.mapping.codec",
+        "justification": "internal package"
+      },
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ]
+  },
   "class": {
+    "noLongerImplementsInterface": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      },
+      {
+        "interface": "dev.morphia.mapping.codec.InstanceCreator",
+        "justification": "internal class replaced with MorphiaInstanceCreator"
+      }
+    ],
     "nonPublicPartOfAPI": [
+      {
+        "package": "dev.morphia.mapping.codec",
+        "justification": "internal api"
+      },
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal api"
+      },
       {
         "package": "dev.morphia.mapping.codec.reader",
         "justification": "internal api"
@@ -8,25 +38,69 @@
       {
         "package": "dev.morphia.mapping.codec.writer",
         "justification": "internal api"
-      },
-      {
-        "classQualifiedName": "dev.morphia.mapping.codec.pojo.EntityEncoder",
-        "justification": "internal api"
       }
     ],
     "removed": [
       {
         "classQualifiedName": "dev.morphia.MorphiaVersion22",
         "justification": "version marker"
+      },
+      {
+        "interface": "dev.morphia.mapping.codec.InstanceCreator",
+        "justification": "internal class replaced with MorphiaInstanceCreator"
+      }
+    ],
+    "superTypeTypeParametersChanged": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ]
+  },
+  "generics": {
+    "elementNowParameterized": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ],
+    "formalTypeParameterAdded": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ],
+    "formalTypeParameterRemoved": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
       }
     ]
   },
   "method": {
+    "numberOfParametersChanged": [
+      {
+        "classQualifiedName": "dev.morphia.mapping.codec.pojo.PropertyModelBuilder",
+        "methodName": "discoverMappedName",
+        "justification": "internal method"
+      }
+    ],
+    "parameterTypeParameterChanged": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ],
     "removed": [
       {
-        "classQualifiedName": "dev.morphia.mapping.codec.pojo.MorphiaCodec",
-        "methodName": "getEncoder",
-        "justification": "internal class.  unused method"
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ],
+    "returnTypeTypeParametersChanged": [
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
       }
     ]
   }

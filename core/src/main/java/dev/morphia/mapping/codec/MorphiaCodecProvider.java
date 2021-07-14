@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
@@ -51,6 +52,7 @@ public class MorphiaCodecProvider implements CodecProvider {
         providers.forEach(propertyCodecProviders::add);
     }
 
+    @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public <T> Codec<T> get(Class<T> type, CodecRegistry registry) {
@@ -59,7 +61,7 @@ public class MorphiaCodecProvider implements CodecProvider {
             EntityModel model = mapper.getEntityModel(type);
             codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry);
             if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasInterceptors()) {
-                codec.setEncoder(new LifecycleEncoder(codec));
+                codec.setEncoder(new LifecycleEncoder<>(codec));
             }
             if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasInterceptors()) {
                 codec.setDecoder(new LifecycleDecoder(codec));
@@ -93,7 +95,7 @@ public class MorphiaCodecProvider implements CodecProvider {
                             }
 
                             @Override
-                            public void set(Object value, PropertyModel model) {
+                            public void set(@Nullable Object value, PropertyModel model) {
                                 model.getAccessor().set(entity, value);
                             }
                         };
@@ -103,4 +105,19 @@ public class MorphiaCodecProvider implements CodecProvider {
         };
     }
 
+    protected Map<Class<?>, Codec<?>> getCodecs() {
+        return codecs;
+    }
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
+
+    protected Mapper getMapper() {
+        return mapper;
+    }
+
+    protected List<PropertyCodecProvider> getPropertyCodecProviders() {
+        return propertyCodecProviders;
+    }
 }

@@ -14,20 +14,22 @@ import java.util.Map;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 /**
+ * @param <T> the entity type
  * @morphia.internal
  * @since 2.0
  */
-class EntityEncoder implements org.bson.codecs.Encoder<Object> {
+public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     public static final ObjectIdGenerator OBJECT_ID_GENERATOR = new ObjectIdGenerator();
-    private final MorphiaCodec morphiaCodec;
+    private final MorphiaCodec<T> morphiaCodec;
     private IdGenerator idGenerator;
 
-    protected EntityEncoder(MorphiaCodec morphiaCodec) {
+    protected EntityEncoder(MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
     }
 
     @Override
-    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = morphiaCodec.getEntityModel();
         if (areEquivalentTypes(value.getClass(), model.getType())) {
             document(writer, () -> {
@@ -48,13 +50,13 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
             });
         } else {
             morphiaCodec.getRegistry()
-                        .get((Class<? super Object>) value.getClass())
+                        .get((Class) value.getClass())
                         .encode(writer, value, encoderContext);
         }
     }
 
     @Override
-    public Class<Object> getEncoderClass() {
+    public Class<T> getEncoderClass() {
         return morphiaCodec.getEncoderClass();
     }
 
@@ -62,11 +64,7 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
         writer.writeString(model.getDiscriminatorKey(), model.getDiscriminator());
     }
 
-    protected MorphiaCodec getMorphiaCodec() {
-        return morphiaCodec;
-    }
-
-    private <S, V> boolean areEquivalentTypes(Class<S> t1, Class<V> t2) {
+    protected <S, V> boolean areEquivalentTypes(Class<S> t1, Class<V> t2) {
         return t1.equals(t2)
                || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
@@ -74,18 +72,28 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
 
     protected void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext, @Nullable PropertyModel idModel) {
         if (idModel != null) {
-            IdGenerator generator = getIdGenerator();
-            if (generator == null) {
-                encodeValue(writer, encoderContext, idModel, idModel.getAccessor().get(instance));
-            } else {
-                Object id = idModel.getAccessor().get(instance);
-                if (id == null && encoderContext.isEncodingCollectibleDocument()) {
+            Object id = idModel.getAccessor().get(instance);
+            if (id == null && encoderContext.isEncodingCollectibleDocument()) {
+                IdGenerator generator = getIdGenerator();
+                if (generator != null) {
                     id = generator.generate();
                     idModel.getAccessor().set(instance, id);
                 }
-                encodeValue(writer, encoderContext, idModel, id);
+            }
+            encodeValue(writer, encoderContext, idModel, id);
+        }
+    }
+
+    @Nullable
+    protected IdGenerator getIdGenerator() {
+        if (idGenerator == null) {
+            PropertyModel idModel = morphiaCodec.getEntityModel().getIdProperty();
+            if (idModel != null && idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
+                idGenerator = OBJECT_ID_GENERATOR;
             }
         }
+
+        return idGenerator;
     }
 
     protected void encodeValue(BsonWriter writer, EncoderContext encoderContext, PropertyModel model, @Nullable Object value) {
@@ -104,15 +112,7 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
         }
     }
 
-    @Nullable
-    private IdGenerator getIdGenerator() {
-        if (idGenerator == null) {
-            PropertyModel idModel = morphiaCodec.getEntityModel().getIdProperty();
-            if (idModel != null && idModel.getNormalizedType().isAssignableFrom(ObjectId.class)) {
-                idGenerator = OBJECT_ID_GENERATOR;
-            }
-        }
-
-        return idGenerator;
+    protected MorphiaCodec<T> getMorphiaCodec() {
+        return morphiaCodec;
     }
 }

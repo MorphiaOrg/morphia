@@ -67,7 +67,7 @@ public class EntityModel {
      * @param builder the builder to pull values from
      */
     EntityModel(EntityModelBuilder builder) {
-        type = builder.getType();
+        type = builder.type();
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
         }
@@ -357,7 +357,7 @@ public class EntityModel {
         return getType().isInterface();
     }
 
-    protected boolean useDiscriminator() {
+    public boolean useDiscriminator() {
         return discriminatorEnabled;
     }
 

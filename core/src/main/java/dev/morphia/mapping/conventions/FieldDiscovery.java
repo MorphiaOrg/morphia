@@ -15,20 +15,22 @@ public class FieldDiscovery implements MorphiaConvention {
 
     @Override
     public void apply(Datastore datastore, EntityModelBuilder builder) {
-        List<Class<?>> list = new ArrayList<>(List.of(builder.getType()));
-        list.addAll(builder.classHierarchy());
+        if (builder.propertyModels().isEmpty()) {
+            List<Class<?>> list = new ArrayList<>(List.of(builder.type()));
+            list.addAll(builder.classHierarchy());
 
-        for (Class<?> type : list) {
-            for (Field field : type.getDeclaredFields()) {
+            for (Class<?> type : list) {
+                for (Field field : type.getDeclaredFields()) {
 
-                TypeData<?> typeData = builder.getTypeData(type, TypeData.newInstance(field), field.getGenericType());
-                builder.addProperty()
-                       .name(field.getName())
-                       .typeData(typeData)
-                       .annotations(List.of(field.getDeclaredAnnotations()))
-                       .accessor(getAccessor(field, typeData))
-                       .modifiers(field.getModifiers())
-                       .discoverMappedName(datastore.getMapper().getOptions());
+                    TypeData<?> typeData = builder.getTypeData(type, TypeData.newInstance(field), field.getGenericType());
+                    builder.addProperty()
+                           .name(field.getName())
+                           .typeData(typeData)
+                           .annotations(List.of(field.getDeclaredAnnotations()))
+                           .accessor(getAccessor(field, typeData))
+                           .modifiers(field.getModifiers())
+                           .discoverMappedName();
+                }
             }
         }
     }

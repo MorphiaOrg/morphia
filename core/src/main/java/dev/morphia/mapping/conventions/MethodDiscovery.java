@@ -17,19 +17,18 @@ import java.util.stream.Collectors;
 
 public class MethodDiscovery implements MorphiaConvention {
     private EntityModelBuilder entityModelBuilder;
-    private Datastore datastore;
 
     @Override
     public void apply(Datastore datastore, EntityModelBuilder builder) {
-        this.datastore = datastore;
-        this.entityModelBuilder = builder;
+        if (builder.propertyModels().isEmpty()) {
+            this.entityModelBuilder = builder;
 
-        List<Class<?>> list = new ArrayList<>(List.of(builder.getType()));
-        list.addAll(builder.classHierarchy());
-        for (Class<?> type : list) {
-            processMethods(type);
+            List<Class<?>> list = new ArrayList<>(List.of(builder.type()));
+            list.addAll(builder.classHierarchy());
+            for (Class<?> type : list) {
+                processMethods(type);
+            }
         }
-
     }
 
     private List<Annotation> discoverAnnotations(Method getter, Method setter) {
@@ -72,7 +71,7 @@ public class MethodDiscovery implements MorphiaConvention {
                                   .accessor(new MethodAccessor(methods.getter, methods.setter))
                                   .annotations(discoverAnnotations(methods.getter, methods.setter))
                                   .typeData(typeData)
-                                  .discoverMappedName(datastore.getMapper().getOptions());
+                                  .discoverMappedName();
             }
         }
     }

@@ -39,8 +39,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
-    private EntityEncoder encoder;
-    private EntityDecoder decoder;
+    private EntityEncoder<T> encoder;
+    private EntityDecoder<T> decoder;
 
     /**
      * Creates a new codec
@@ -62,13 +62,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         this.propertyCodecRegistry = new PropertyCodecRegistryImpl(this, registry, propertyCodecProviders);
         idProperty = model.getIdProperty();
         specializePropertyCodecs();
-        encoder = new EntityEncoder(this);
-        decoder = new EntityDecoder(this);
     }
 
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
-        return (T) getDecoder().decode(reader, decoderContext);
+        return getDecoder().decode(reader, decoderContext);
     }
 
     @Override
@@ -87,42 +85,44 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return entityModel;
     }
 
+    @Override
+    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
+        getEncoder().encode(writer, value, encoderContext);
+    }
+
+    @Override
+    public Class<T> getEncoderClass() {
+        return (Class<T>) getEntityModel().getType();
+    }
+
+    public DiscriminatorLookup getDiscriminatorLookup() {
+        return discriminatorLookup;
+    }
+
+    /**
+     * @return the encoder
+     * @since 2.3
+     */
+    public EntityEncoder<T> getEncoder() {
+        if (encoder == null) {
+            encoder = new EntityEncoder<>(this);
+        }
+        return encoder;
+    }
+
     /**
      * Sets the encoder
      *
      * @param encoder the encoder
      * @return this
      */
-    public MorphiaCodec<T> setEncoder(EntityEncoder encoder) {
+    public MorphiaCodec<T> setEncoder(EntityEncoder<T> encoder) {
         this.encoder = encoder;
         return this;
     }
 
-    /**
-     * @return the decoder
-     */
-    protected EntityDecoder getDecoder() {
-        return decoder;
-    }
-
-    /**
-     * Sets the decoder
-     *
-     * @param decoder the decoder
-     */
-    public void setDecoder(EntityDecoder decoder) {
-        this.decoder = decoder;
-    }
-
-    @Override
-    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
-        encoder.encode(writer, value, encoderContext);
-    }
-
-    @Override
-    @SuppressWarnings("rawtypes")
-    public Class getEncoderClass() {
-        return getEntityModel().getType();
+    public CodecRegistry getRegistry() {
+        return registry;
     }
 
     @Override
@@ -157,12 +157,23 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return mapper;
     }
 
-    DiscriminatorLookup getDiscriminatorLookup() {
-        return discriminatorLookup;
+    /**
+     * @return the decoder
+     */
+    protected EntityDecoder<T> getDecoder() {
+        if (decoder == null) {
+            decoder = new EntityDecoder<>(this);
+        }
+        return decoder;
     }
 
-    CodecRegistry getRegistry() {
-        return registry;
+    /**
+     * Sets the decoder
+     *
+     * @param decoder the decoder
+     */
+    public void setDecoder(EntityDecoder<T> decoder) {
+        this.decoder = decoder;
     }
 
 }

@@ -60,22 +60,15 @@ public final class PropertyModelBuilder {
         this.datastore = datastore;
     }
 
-    public PropertyModelBuilder discoverMappedName(MapperOptions options) {
-        Property property = getAnnotation(Property.class);
-        Reference reference = getAnnotation(Reference.class);
-        Version version = getAnnotation(Version.class);
-
-        if (hasAnnotation(Id.class)) {
-            mappedName("_id");
-        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(property.value());
-        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(reference.value());
-        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(version.value());
-        } else {
-            mappedName(options.getFieldNaming().apply(name()));
-        }
+    /**
+     * Adds an annotation
+     *
+     * @param annotation the annotation
+     * @return this
+     * @since 2.3
+     */
+    public PropertyModelBuilder annotation(Annotation annotation) {
+        this.annotations.add(notNull("annotation", annotation));
         return this;
     }
 
@@ -112,6 +105,26 @@ public final class PropertyModelBuilder {
      */
     public List<String> alternateNames() {
         return alternateNames;
+    }
+
+    public PropertyModelBuilder discoverMappedName() {
+        MapperOptions options = datastore.getMapper().getOptions();
+        Property property = getAnnotation(Property.class);
+        Reference reference = getAnnotation(Reference.class);
+        Version version = getAnnotation(Version.class);
+
+        if (hasAnnotation(Id.class)) {
+            mappedName("_id");
+        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(property.value());
+        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(reference.value());
+        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(version.value());
+        } else {
+            mappedName(options.getFieldNaming().apply(name()));
+        }
+        return this;
     }
 
     /**

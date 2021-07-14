@@ -54,7 +54,21 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
     private final Class<T> type;
     private final List<TypeData<?>> typeParameters;
 
-    TypeData(Class<T> type, List<TypeData<?>> typeParameters) {
+    /**
+     * Creates a new TypeData with the concrete type and type parameters around it.
+     * <p>
+     * e.g., List&lt;Address&gt; would be
+     *
+     * <pre>
+     * <code>
+     * new TypeData(Address.class, TypeData.builder(List.class).build())
+     * </code>
+     * </pre>
+     *
+     * @param type
+     * @param typeParameters
+     */
+    public TypeData(Class<T> type, List<TypeData<?>> typeParameters) {
         this.type = boxType(type);
         this.typeParameters = typeParameters;
     }

@@ -15,25 +15,27 @@ import org.bson.codecs.configuration.CodecRegistry;
 import static dev.morphia.mapping.codec.Conversions.convert;
 
 /**
+ * @param <T> the entity type
  * @morphia.internal
  * @since 2.0
  */
-public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
-    private final MorphiaCodec<?> morphiaCodec;
+public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
+    private final MorphiaCodec<T> morphiaCodec;
     private final EntityModel classModel;
 
-    protected EntityDecoder(MorphiaCodec<?> morphiaCodec) {
+    protected EntityDecoder(MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
         classModel = morphiaCodec.getEntityModel();
     }
 
     @Override
-    public Object decode(BsonReader reader, DecoderContext decoderContext) {
-        Object entity;
+    @SuppressWarnings("unchecked")
+    public T decode(BsonReader reader, DecoderContext decoderContext) {
+        T entity;
         if (decoderContext.hasCheckedDiscriminator()) {
             MorphiaInstanceCreator instanceCreator = getInstanceCreator();
             decodeProperties(reader, decoderContext, instanceCreator, classModel);
-            return instanceCreator.getInstance();
+            return (T) instanceCreator.getInstance();
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
                 morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
@@ -83,17 +85,17 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
         reader.readEndDocument();
     }
 
-    protected Codec<?> getCodecFromDocument(BsonReader reader, boolean useDiscriminator, String discriminatorKey,
+    protected Codec<T> getCodecFromDocument(BsonReader reader, boolean useDiscriminator, String discriminatorKey,
                                             CodecRegistry registry, DiscriminatorLookup discriminatorLookup,
-                                            Codec<?> defaultCodec) {
-        Codec<?> codec = null;
+                                            Codec<T> defaultCodec) {
+        Codec<T> codec = null;
         if (useDiscriminator) {
             BsonReaderMark mark = reader.getMark();
             try {
                 reader.readStartDocument();
                 while (codec == null && reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                     if (discriminatorKey.equals(reader.readName())) {
-                        codec = registry.get(discriminatorLookup.lookup(reader.readString()));
+                        codec = (Codec<T>) registry.get(discriminatorLookup.lookup(reader.readString()));
                     } else {
                         reader.skipValue();
                     }
@@ -108,7 +110,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
         return codec != null ? codec : defaultCodec;
     }
 
-    protected MorphiaCodec<?> getMorphiaCodec() {
+    protected MorphiaCodec<T> getMorphiaCodec() {
         return morphiaCodec;
     }
 }
