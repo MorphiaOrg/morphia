@@ -32,23 +32,25 @@ import static java.util.Arrays.asList;
 
 @Mojo(name = "morphia-annotations", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class AnnotationBuilders extends AbstractMojo {
-    private final File generated = new File("target/generated-sources/morphia-annotations/");
+    @Parameter(defaultValue = "${project}", required = true, readonly = true)
+    private MavenProject project;
+
+    private JavaClassSource builder;
+    private JavaAnnotationSource source;
+    private File generated;
     private final FileFilter filter = pathname -> pathname.getName().endsWith(".java")
                                                   && !pathname.getName().endsWith("Handler.java")
                                                   && !pathname.getName().endsWith("Helper.java")
                                                   && !pathname.getName().equals("package-info.java");
-    @Parameter(defaultValue = "${project}", required = true, readonly = true)
-    private MavenProject project;
-    private JavaClassSource builder;
-    private JavaAnnotationSource source;
 
     @Override
     @SuppressWarnings("ConstantConditions")
     public void execute() throws MojoExecutionException {
         List<File> files = new ArrayList<>();
+        generated = new File(project.getBasedir() + "/target/generated-sources/morphia-annotations/");
 
-        files.addAll(find("src/main/java/dev/morphia/annotations"));
-        files.addAll(find("src/main/java/dev/morphia/annotations/experimental"));
+        files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations"));
+        files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations/experimental"));
         project.addCompileSourceRoot(generated.getAbsolutePath());
 
         for (File file : files) {
