@@ -47,6 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
+import static dev.morphia.annotations.builders.EmbeddedBuilder.embeddedBuilder;
 import static dev.morphia.sofia.Sofia.entityOrEmbedded;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
@@ -489,7 +490,7 @@ public class Mapper {
 
         if (model == null) {
             if (annotation == null) {
-                annotation = (A) EmbeddedBuilder.builder().build();
+                annotation = (A) embeddedBuilder().build();
             }
             model = register(createEntityModel(type, annotation));
         }

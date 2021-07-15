@@ -12,12 +12,6 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
-import dev.morphia.annotations.builders.CollationBuilder;
-import dev.morphia.annotations.builders.FieldBuilder;
-import dev.morphia.annotations.builders.IndexBuilder;
-import dev.morphia.annotations.builders.IndexOptionsBuilder;
-import dev.morphia.annotations.builders.IndexedBuilder;
-import dev.morphia.annotations.builders.TextBuilder;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -40,6 +34,12 @@ import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static com.mongodb.client.model.CollationCaseFirst.UPPER;
 import static com.mongodb.client.model.CollationMaxVariable.SPACE;
 import static com.mongodb.client.model.CollationStrength.IDENTICAL;
+import static dev.morphia.annotations.builders.CollationBuilder.collationBuilder;
+import static dev.morphia.annotations.builders.FieldBuilder.fieldBuilder;
+import static dev.morphia.annotations.builders.IndexBuilder.indexBuilder;
+import static dev.morphia.annotations.builders.IndexOptionsBuilder.indexOptionsBuilder;
+import static dev.morphia.annotations.builders.IndexedBuilder.indexedBuilder;
+import static dev.morphia.annotations.builders.TextBuilder.textBuilder;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
@@ -53,17 +53,17 @@ public class IndexHelperTest extends TestBase {
     @Test
     public void calculateBadKeys() {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
-        Index index = IndexBuilder.builder()
-                                  .fields(new Field[]{FieldBuilder.builder()
-                                                                  .value("texting")
-                                                                  .type(IndexType.TEXT)
-                                                                  .weight(1)
-                                                          .build(),
-                                                      FieldBuilder.builder()
-                                                                  .value("nest")
-                                                                  .type(IndexType.DESC)
-                                                          .build()})
-                                  .build();
+        Index index = indexBuilder()
+                          .fields(new Field[]{fieldBuilder()
+                                                  .value("texting")
+                                                  .type(IndexType.TEXT)
+                                                  .weight(1)
+                                                  .build(),
+                                              fieldBuilder()
+                                                  .value("nest")
+                                                  .type(IndexType.DESC)
+                                                  .build()})
+                          .build();
         try {
             getIndexHelper().calculateKeys(model, index);
             fail("Validation should have failed on the bad key");
@@ -71,35 +71,35 @@ public class IndexHelperTest extends TestBase {
             // all good
         }
 
-        index = IndexBuilder.builder()
-                            .fields(new Field[]{FieldBuilder.builder()
-                                                            .value("texting")
-                                                            .type(IndexType.TEXT)
-                                                            .weight(1)
-                                                    .build(),
-                                                FieldBuilder.builder()
-                                                            .value("nest")
-                                                            .type(IndexType.DESC)
-                                                    .build()})
-                            .options(IndexOptionsBuilder.builder().disableValidation(true).build())
-                            .build();
+        index = indexBuilder()
+                    .fields(new Field[]{fieldBuilder()
+                                            .value("texting")
+                                            .type(IndexType.TEXT)
+                                            .weight(1)
+                                            .build(),
+                                        fieldBuilder()
+                                            .value("nest")
+                                            .type(IndexType.DESC)
+                                            .build()})
+                    .options(indexOptionsBuilder().disableValidation(true).build())
+                    .build();
         getIndexHelper().calculateKeys(model, index);
     }
 
     @Test
     public void calculateKeys() {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
-        Document keys = getIndexHelper().calculateKeys(model, IndexBuilder.builder()
-                                                                          .fields(new Field[]{FieldBuilder.builder()
-                                                                                                          .value("text")
-                                                                                                          .type(IndexType.TEXT)
-                                                                                                          .weight(1)
-                                                                                                  .build(),
-                                                                                              FieldBuilder.builder()
-                                                                                                          .value("nest")
-                                                                                                          .type(IndexType.DESC)
-                                                                                                  .build()})
-                                                                          .build());
+        Document keys = getIndexHelper().calculateKeys(model, indexBuilder()
+                                                                  .fields(new Field[]{fieldBuilder()
+                                                                                          .value("text")
+                                                                                          .type(IndexType.TEXT)
+                                                                                          .weight(1)
+                                                                                          .build(),
+                                                                                      fieldBuilder()
+                                                                                          .value("nest")
+                                                                                          .type(IndexType.DESC)
+                                                                                          .build()})
+                                                                  .build());
         assertEquals(keys, new Document()
                                .append("text", "text")
                                .append("nest", -1));
@@ -107,27 +107,27 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void convertTextIndex() {
-        Text text = TextBuilder.builder()
-                               .value(4)
-                               .options(IndexOptionsBuilder.builder()
-                                                           .name("index_name")
-                                                           .background(true)
-                                                           .expireAfterSeconds(42)
-                                                           .sparse(true)
-                                                           .unique(true)
-                                                           .build())
-                               .build();
+        Text text = textBuilder()
+                        .value(4)
+                        .options(indexOptionsBuilder()
+                                     .name("index_name")
+                                     .background(true)
+                                     .expireAfterSeconds(42)
+                                     .sparse(true)
+                                     .unique(true)
+                                     .build())
+                        .build();
 
         Index index = getIndexHelper().convert(text, "search_field");
         assertEquals(index.options().name(), "index_name");
         assertTrue(index.options().background());
         assertTrue(index.options().sparse());
         assertTrue(index.options().unique());
-        assertEquals(FieldBuilder.builder()
-                                 .value("search_field")
-                                 .type(IndexType.TEXT)
-                                 .weight(4)
-                                 .build(),
+        assertEquals(fieldBuilder()
+                         .value("search_field")
+                         .type(IndexType.TEXT)
+                         .weight(4)
+                         .build(),
             index.fields()[0]);
 
     }
@@ -172,7 +172,7 @@ public class IndexHelperTest extends TestBase {
         getMapper().map(MappedInterface.class, MappedInterfaceImpl.class, AbstractParent.class, IndexedClass.class);
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        IndexOptions options = IndexOptionsBuilder.builder().build();
+        IndexOptions options = indexOptionsBuilder().build();
         assertEquals(getIndexHelper().findField(model, options, "indexName"), "indexName");
         assertEquals(getIndexHelper().findField(model, options, "nested.name"), "nest.name");
         assertEquals(getIndexHelper().findField(model, options, "nest.name"), "nest.name");
@@ -183,7 +183,7 @@ public class IndexHelperTest extends TestBase {
         } catch (ValidationException e) {
             // alles ist gut
         }
-        assertEquals(getIndexHelper().findField(model, IndexOptionsBuilder.builder().disableValidation(true).build(),
+        assertEquals(getIndexHelper().findField(model, indexOptionsBuilder().disableValidation(true).build(),
             "nest.whatsit.nested.more.deeply.than.the.object.model"),
             "nest.whatsit.nested.more.deeply.than.the.object.model");
     }
@@ -200,26 +200,26 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        IndexOptions options = IndexOptionsBuilder.builder()
-                                                  .name("index_name")
-                                                  .background(true)
-                                                  .collation(collation())
-                                                  .disableValidation(true)
-                                                  .language("en")
-                                                  .languageOverride("de")
-                                                  .sparse(true)
-                                                  .unique(true)
-                                                  .build();
-        Index index = IndexBuilder.builder()
-                                  .fields(new Field[]{FieldBuilder.builder()
-                                                                  .value("indexName")
-                                                          .build(),
-                                                      FieldBuilder.builder()
-                                                                  .value("text")
-                                                                  .type(IndexType.DESC)
-                                                          .build()})
-                                  .options(options)
-                                  .build();
+        IndexOptions options = indexOptionsBuilder()
+                                   .name("index_name")
+                                   .background(true)
+                                   .collation(collation())
+                                   .disableValidation(true)
+                                   .language("en")
+                                   .languageOverride("de")
+                                   .sparse(true)
+                                   .unique(true)
+                                   .build();
+        Index index = indexBuilder()
+                          .fields(new Field[]{fieldBuilder()
+                                                  .value("indexName")
+                                                  .build(),
+                                              fieldBuilder()
+                                                  .value("text")
+                                                  .type(IndexType.DESC)
+                                                  .build()})
+                          .options(options)
+                          .build();
         getIndexHelper().createIndex(collection, model, index);
         List<Document> indexInfo = getIndexInfo(IndexedClass.class);
         for (Document document : indexInfo) {
@@ -284,12 +284,12 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        Index index = IndexBuilder.builder()
-                                  .fields(new Field[]{FieldBuilder.builder().value("text").build()})
-                                  .options(IndexOptionsBuilder.builder()
-                                                              .partialFilter("{ name : { $gt : 13 } }")
-                                                              .build())
-                                  .build();
+        Index index = indexBuilder()
+                          .fields(new Field[]{fieldBuilder().value("text").build()})
+                          .options(indexOptionsBuilder()
+                                       .partialFilter("{ name : { $gt : 13 } }")
+                                       .build())
+                          .build();
 
         getIndexHelper().createIndex(collection, model, index);
         findPartialIndex(Document.parse(index.options().partialFilter()));
@@ -300,11 +300,11 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        Indexed indexed = IndexedBuilder.builder()
-                                        .options(IndexOptionsBuilder.builder()
-                                                                    .partialFilter("{ name : { $gt : 13 } }")
-                                                                    .build())
-                                        .build();
+        Indexed indexed = indexedBuilder()
+                              .options(indexOptionsBuilder()
+                                           .partialFilter("{ name : { $gt : 13 } }")
+                                           .build())
+                              .build();
 
         getIndexHelper().createIndex(collection, model, getIndexHelper().convert(indexed, "text"));
         findPartialIndex(Document.parse(indexed.options().partialFilter()));
@@ -312,22 +312,22 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void normalizeIndexed() {
-        Indexed indexed = IndexedBuilder.builder()
-                                        .value(IndexDirection.DESC)
-                                        .options(IndexOptionsBuilder.builder().name("index_name")
-                                                                    .background(true)
-                                                                    .expireAfterSeconds(42)
-                                                                    .sparse(true)
-                                                                    .unique(true)
-                                                                    .build())
-                                        .build();
+        Indexed indexed = indexedBuilder()
+                              .value(IndexDirection.DESC)
+                              .options(indexOptionsBuilder().name("index_name")
+                                                            .background(true)
+                                                            .expireAfterSeconds(42)
+                                                            .sparse(true)
+                                                            .unique(true)
+                                                            .build())
+                              .build();
 
         Index converted = getIndexHelper().convert(indexed, "oldstyle");
         assertEquals(converted.options().name(), "index_name");
         assertTrue(converted.options().background());
         assertTrue(converted.options().sparse());
         assertTrue(converted.options().unique());
-        assertEquals(FieldBuilder.builder().value("oldstyle").type(IndexType.DESC).build(), converted.fields()[0]);
+        assertEquals(fieldBuilder().value("oldstyle").type(IndexType.DESC).build(), converted.fields()[0]);
     }
 
     @Test
@@ -335,12 +335,12 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection("indexes");
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        Text text = TextBuilder.builder()
-                               .value(4)
-                               .options(IndexOptionsBuilder.builder()
-                                                           .partialFilter("{ name : { $gt : 13 } }")
-                                                           .build())
-                               .build();
+        Text text = textBuilder()
+                        .value(4)
+                        .options(indexOptionsBuilder()
+                                     .partialFilter("{ name : { $gt : 13 } }")
+                                     .build())
+                        .build();
 
         getIndexHelper().createIndex(collection, model, getIndexHelper().convert(text, "text"));
         findPartialIndex(Document.parse(text.options().partialFilter()));
@@ -351,12 +351,12 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        Index index = IndexBuilder.builder()
-                                  .fields(new Field[]{FieldBuilder.builder()
-                                                                  .value("name")
-                                                                  .weight(10)
-                                                          .build()})
-                                  .build();
+        Index index = indexBuilder()
+                          .fields(new Field[]{fieldBuilder()
+                                                  .value("name")
+                                                  .weight(10)
+                                                  .build()})
+                          .build();
 
         getIndexHelper().createIndex(indexes, model, index);
     }
@@ -366,12 +366,12 @@ public class IndexHelperTest extends TestBase {
         MongoCollection<Document> indexes = getDatabase().getCollection("indexes");
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
-        Index index = IndexBuilder.builder()
-                                  .fields(new Field[]{FieldBuilder.builder()
-                                                                  .value("$**")
-                                                                  .type(IndexType.TEXT)
-                                                          .build()})
-                                  .build();
+        Index index = indexBuilder()
+                          .fields(new Field[]{fieldBuilder()
+                                                  .value("$**")
+                                                  .type(IndexType.TEXT)
+                                                  .build()})
+                          .build();
 
         getIndexHelper().createIndex(indexes, model, index);
 
@@ -384,17 +384,17 @@ public class IndexHelperTest extends TestBase {
     }
 
     private IndexOptions buildOptions(boolean background) {
-        IndexOptions indexOptions = IndexOptionsBuilder.builder()
-                                                       .name("index_name")
-                                                       .background(background)
-                                                       .collation(collation())
-                                                       .disableValidation(true)
-                                                       .expireAfterSeconds(42)
-                                                       .language("en")
-                                                       .languageOverride("de")
-                                                       .sparse(true)
-                                                       .unique(true)
-                                                       .build();
+        IndexOptions indexOptions = indexOptionsBuilder()
+                                        .name("index_name")
+                                        .background(background)
+                                        .collation(collation())
+                                        .disableValidation(true)
+                                        .expireAfterSeconds(42)
+                                        .language("en")
+                                        .languageOverride("de")
+                                        .sparse(true)
+                                        .unique(true)
+                                        .build();
         return indexOptions;
     }
 
@@ -412,17 +412,17 @@ public class IndexHelperTest extends TestBase {
     }
 
     private Collation collation() {
-        return CollationBuilder.builder()
-                               .alternate(SHIFTED)
-                               .backwards(true)
-                               .caseFirst(UPPER)
-                               .caseLevel(true)
-                               .locale("en")
-                               .maxVariable(SPACE)
-                               .normalization(true)
-                               .numericOrdering(true)
-                               .strength(IDENTICAL)
-                               .build();
+        return collationBuilder()
+                   .alternate(SHIFTED)
+                   .backwards(true)
+                   .caseFirst(UPPER)
+                   .caseLevel(true)
+                   .locale("en")
+                   .maxVariable(SPACE)
+                   .normalization(true)
+                   .numericOrdering(true)
+                   .strength(IDENTICAL)
+                   .build();
     }
 
     private void findPartialIndex(Document expected) {

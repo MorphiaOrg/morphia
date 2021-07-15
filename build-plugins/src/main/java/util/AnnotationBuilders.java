@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -83,11 +84,15 @@ public class AnnotationBuilders extends AbstractMojo {
         return morphiaAnnotation;
     }
 
+    private String builderMethodName(String input) {
+        return input.substring(0, 1).toLowerCase(Locale.getDefault()) + input.substring(1) + "Builder";
+    }
+
     private void copyBuilder(JavaAnnotationSource source, List<AnnotationElementSource> elements) {
         MethodSource<JavaClassSource> copier = builder.addMethod()
                                                       .setPublic()
                                                       .setStatic(true)
-                                                      .setName("builder")
+                                                      .setName(builderMethodName(source.getName()))
                                                       .setReturnType(builder.getName())
                                                       .setBody(format("return new %s();", builder.getName()));
         copier.addParameter(source.getName(), "source");
@@ -128,7 +133,7 @@ public class AnnotationBuilders extends AbstractMojo {
         builder.addMethod()
                .setPublic()
                .setStatic(true)
-               .setName("builder")
+               .setName(builderMethodName(source.getName()))
                .setReturnType(builder.getName())
                .setBody(format("return new %s();", builder.getName()));
 
@@ -234,7 +239,7 @@ public class AnnotationBuilders extends AbstractMojo {
                 String literal = defaultValue.getLiteral();
                 var annot = defaultValue.getAnnotation();
                 if (annot != null) {
-                    literal = annot.getName() + "Builder.builder().build()";
+                    literal = format("%sBuilder.%s().build()", annot.getName(), builderMethodName(annot.getName()));
                 } else if (literal != null && element.getType().isArray()) {
                     literal = format("new %s%s", element.getType().getName(), literal);
                 }

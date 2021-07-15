@@ -2,8 +2,6 @@ package dev.morphia.annotations;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.builders.FieldBuilder;
-import dev.morphia.annotations.builders.IndexBuilder;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -21,7 +19,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static dev.morphia.annotations.builders.FieldBuilder.builder;
+import static dev.morphia.annotations.builders.FieldBuilder.fieldBuilder;
+import static dev.morphia.annotations.builders.IndexBuilder.indexBuilder;
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.util.Collections.emptyList;
 
@@ -44,71 +43,6 @@ public final class IndexHelper {
         this.mapper = mapper;
     }
 
-    private void calculateWeights(Index index, com.mongodb.client.model.IndexOptions indexOptions) {
-        Document weights = new Document();
-        for (Field field : index.fields()) {
-            if (field.weight() != -1) {
-                if (field.type() != IndexType.TEXT) {
-                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
-                }
-                weights.put(field.value(), field.weight());
-            }
-        }
-        if (!weights.isEmpty()) {
-            indexOptions.weights(weights);
-        }
-    }
-
-    private List<Index> collectFieldIndexes(EntityModel entityModel) {
-        List<Index> list = entityModel.getProperties(Indexed.class).stream()
-                                      .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
-                                      .collect(Collectors.toList());
-
-        list.addAll(entityModel.getProperties(Text.class).stream()
-                               .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
-                               .collect(Collectors.toList()));
-
-        return list;
-    }
-
-    private List<Index> collectIndexes(EntityModel entityModel, List<EntityModel> parentModels) {
-        if (parentModels.contains(entityModel) || entityModel.getEmbeddedAnnotation() != null && parentModels.isEmpty()) {
-            return emptyList();
-        }
-
-        List<Index> indexes = collectTopLevelIndexes(entityModel);
-        indexes.addAll(collectFieldIndexes(entityModel));
-
-        return indexes;
-    }
-
-    @Nullable
-    public Index convert(@Nullable Indexed indexed, String nameToStore) {
-        return indexed == null
-               ? null
-               : IndexBuilder.builder()
-                             .options(indexed.options())
-                             .fields(new Field[]{FieldBuilder.builder()
-                                                             .value(nameToStore)
-                                                             .type(fromValue(indexed.value().toIndexValue()))
-                                                     .build()})
-                             .build();
-    }
-
-    @Nullable
-    public Index convert(@Nullable Text text, String nameToStore) {
-        return text == null
-               ? null
-               : IndexBuilder.builder()
-                             .options(text.options())
-                             .fields(new Field[]{FieldBuilder.builder()
-                                                             .value(nameToStore)
-                                                             .type(IndexType.TEXT)
-                                                             .weight(text.value())
-                                                     .build()})
-                             .build();
-    }
-
     public Document calculateKeys(EntityModel entityModel, Index index) {
         Document keys = new Document();
         for (Field field : index.fields()) {
@@ -127,35 +61,31 @@ public final class IndexHelper {
         return keys;
     }
 
-    private List<Index> collectTopLevelIndexes(EntityModel entityModel) {
-        List<Index> list = new ArrayList<>();
-        final Indexes indexes = entityModel.getAnnotation(Indexes.class);
-        if (indexes != null) {
-            for (Index index : indexes.value()) {
-                List<Field> fields = new ArrayList<>();
-                for (Field field : index.fields()) {
-                    fields.add(builder()
-                                   .value(findField(entityModel, index.options(), field.value()))
-                                   .type(field.type())
-                                   .weight(field.weight())
-                                   .build());
-                }
-
-                list.add(replaceFields(index, fields));
-            }
-        }
-        EntityModel superClass = entityModel.getSuperClass();
-        if (superClass != null) {
-            list.addAll(collectTopLevelIndexes(superClass));
-        }
-
-        return list;
+    @Nullable
+    public Index convert(@Nullable Text text, String nameToStore) {
+        return text == null
+               ? null
+               : indexBuilder()
+                     .options(text.options())
+                     .fields(new Field[]{fieldBuilder()
+                                             .value(nameToStore)
+                                             .type(IndexType.TEXT)
+                                             .weight(text.value())
+                                             .build()})
+                     .build();
     }
 
-    private Index replaceFields(Index original, List<Field> list) {
-        return dev.morphia.annotations.builders.IndexBuilder.builder(original)
-                                                            .fields(list.toArray(new Field[0]))
-                                                            .build();
+    @Nullable
+    public Index convert(@Nullable Indexed indexed, String nameToStore) {
+        return indexed == null
+               ? null
+               : indexBuilder()
+                     .options(indexed.options())
+                     .fields(new Field[]{fieldBuilder()
+                                             .value(nameToStore)
+                                             .type(fromValue(indexed.value().toIndexValue()))
+                                             .build()})
+                     .build();
     }
 
     public com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
@@ -227,5 +157,74 @@ public final class IndexHelper {
         }
 
         return new PathTarget(mapper, entityModel, path, !options.disableValidation()).translatedPath();
+    }
+
+    private void calculateWeights(Index index, com.mongodb.client.model.IndexOptions indexOptions) {
+        Document weights = new Document();
+        for (Field field : index.fields()) {
+            if (field.weight() != -1) {
+                if (field.type() != IndexType.TEXT) {
+                    throw new MappingException("Weight values only apply to text indexes: " + Arrays.toString(index.fields()));
+                }
+                weights.put(field.value(), field.weight());
+            }
+        }
+        if (!weights.isEmpty()) {
+            indexOptions.weights(weights);
+        }
+    }
+
+    private List<Index> collectFieldIndexes(EntityModel entityModel) {
+        List<Index> list = entityModel.getProperties(Indexed.class).stream()
+                                      .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
+                                      .collect(Collectors.toList());
+
+        list.addAll(entityModel.getProperties(Text.class).stream()
+                               .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
+                               .collect(Collectors.toList()));
+
+        return list;
+    }
+
+    private List<Index> collectIndexes(EntityModel entityModel, List<EntityModel> parentModels) {
+        if (parentModels.contains(entityModel) || entityModel.getEmbeddedAnnotation() != null && parentModels.isEmpty()) {
+            return emptyList();
+        }
+
+        List<Index> indexes = collectTopLevelIndexes(entityModel);
+        indexes.addAll(collectFieldIndexes(entityModel));
+
+        return indexes;
+    }
+
+    private List<Index> collectTopLevelIndexes(EntityModel entityModel) {
+        List<Index> list = new ArrayList<>();
+        final Indexes indexes = entityModel.getAnnotation(Indexes.class);
+        if (indexes != null) {
+            for (Index index : indexes.value()) {
+                List<Field> fields = new ArrayList<>();
+                for (Field field : index.fields()) {
+                    fields.add(fieldBuilder()
+                                   .value(findField(entityModel, index.options(), field.value()))
+                                   .type(field.type())
+                                   .weight(field.weight())
+                                   .build());
+                }
+
+                list.add(replaceFields(index, fields));
+            }
+        }
+        EntityModel superClass = entityModel.getSuperClass();
+        if (superClass != null) {
+            list.addAll(collectTopLevelIndexes(superClass));
+        }
+
+        return list;
+    }
+
+    private Index replaceFields(Index original, List<Field> list) {
+        return indexBuilder(original)
+                   .fields(list.toArray(new Field[0]))
+                   .build();
     }
 }
