@@ -242,6 +242,12 @@
     catch(err) {
     }
 //-->
+var data = {"i0":6,"i1":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../";
 var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
@@ -307,7 +313,7 @@ loadScripts(document, 'script');</script>
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a id="skip.navbar.top">
@@ -333,16 +339,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
-<dt>All Superinterfaces:</dt>
-<dd><code><a href="InstanceCreator.html" title="interface in dev.morphia.mapping.codec">InstanceCreator</a></code></dd>
-</dl>
-<dl>
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="../experimental/ConstructorCreator.html" title="class in dev.morphia.mapping.experimental">ConstructorCreator</a></code>, <code><a href="../NoArgCreator.html" title="class in dev.morphia.mapping">NoArgCreator</a></code>, <code><a href="../experimental/UnsafeConstructorCreator.html" title="class in dev.morphia.mapping.experimental">UnsafeConstructorCreator</a></code></dd>
 </dl>
 <hr>
-<pre>public interface <span class="typeNameLabel">MorphiaInstanceCreator</span>
-extends <a href="InstanceCreator.html" title="interface in dev.morphia.mapping.codec">InstanceCreator</a></pre>
+<pre>public interface <span class="typeNameLabel">MorphiaInstanceCreator</span></pre>
 <div class="block">Marker interface for creators</div>
 <dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
@@ -358,12 +359,72 @@ extends <a href="InstanceCreator.html" title="interface in dev.morphia.mapping.c
 <!--   -->
 </a>
 <h3>Method Summary</h3>
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstance()">getInstance</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">set</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
+   <a href="pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;model)</code></th>
+<td class="colLast">
+<div class="block">Sets a value for the given FieldModel</div>
+</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</div>
+<div class="details">
 <ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.dev.morphia.mapping.codec.InstanceCreator">
+<li class="blockList">
+<!-- ============ METHOD DETAIL ========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="method.detail">
 <!--   -->
 </a>
-<h3>Methods inherited from interface&nbsp;dev.morphia.mapping.codec.<a href="InstanceCreator.html" title="interface in dev.morphia.mapping.codec">InstanceCreator</a></h3>
-<code><a href="InstanceCreator.html#getInstance()">getInstance</a>, <a href="InstanceCreator.html#set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">set</a></code></li>
+<h3>Method Detail</h3>
+<a id="getInstance()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getInstance</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getInstance()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new class instance.</dd>
+</dl>
+</li>
+</ul>
+<a id="set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>set</h4>
+<pre class="methodSignature">void&nbsp;set​(@Nullable
+         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
+         <a href="pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;model)</pre>
+<div class="block">Sets a value for the given FieldModel</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - the value</dd>
+<dd><code>model</code> - the model</dd>
+</dl>
+</li>
 </ul>
 </li>
 </ul>
@@ -426,7 +487,7 @@ extends <a href="InstanceCreator.html" title="interface in dev.morphia.mapping.c
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a id="skip.navbar.bottom">

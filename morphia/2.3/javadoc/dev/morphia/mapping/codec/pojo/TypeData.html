@@ -306,13 +306,13 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -392,6 +392,30 @@ implements org.bson.codecs.pojo.TypeWithTypeParameters&lt;T&gt;</pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="TypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">TypeData.Builder</a>&lt;<a href="TypeData.Builder.html" title="type parameter in TypeData.Builder">T</a>&gt;</span></code></th>
 <td class="colLast">
 <div class="block">A builder for TypeData</div>
+</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</section>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.Class,java.util.List)">TypeData</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="TypeData.html" title="type parameter in TypeData">T</a>&gt;&nbsp;type,
+        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;?&gt;&gt;&nbsp;typeParameters)</code></th>
+<td class="colLast">
+<div class="block">Creates a new TypeData with the concrete type and type parameters around it.</div>
 </td>
 </tr>
 </tbody></table>
@@ -490,6 +514,39 @@ implements org.bson.codecs.pojo.TypeWithTypeParameters&lt;T&gt;</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a id="<init>(java.lang.Class,java.util.List)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>TypeData</h4>
+<pre>public&nbsp;TypeData​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="TypeData.html" title="type parameter in TypeData">T</a>&gt;&nbsp;type,
+                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;?&gt;&gt;&nbsp;typeParameters)</pre>
+<div class="block">Creates a new TypeData with the concrete type and type parameters around it.
+ <p>
+ e.g., List&lt;Address&gt; would be
+
+ </p><pre> <code>
+ new TypeData(Address.class, TypeData.builder(List.class).build())
+ </code>
+ </pre></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>type</code> - </dd>
+<dd><code>typeParameters</code> - </dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section role="region">
 <ul class="blockList">
@@ -708,13 +765,13 @@ implements org.bson.codecs.pojo.TypeWithTypeParameters&lt;T&gt;</pre>
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

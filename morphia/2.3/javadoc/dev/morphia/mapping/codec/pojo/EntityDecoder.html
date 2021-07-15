@@ -332,14 +332,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.mapping.codec.pojo</a></div>
-<h2 title="Class EntityDecoder" class="title">Class EntityDecoder</h2>
+<h2 title="Class EntityDecoder" class="title">Class EntityDecoder&lt;T&gt;</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.mapping.codec.pojo.EntityDecoder</li>
+<li>dev.morphia.mapping.codec.pojo.EntityDecoder&lt;T&gt;</li>
 </ul>
 </li>
 </ul>
@@ -347,17 +347,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the entity type</dd>
+</dl>
+<dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
+<dd><code>org.bson.codecs.Decoder&lt;T&gt;</code></dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
 <dd><code><a href="LifecycleDecoder.html" title="class in dev.morphia.mapping.codec.pojo">LifecycleDecoder</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">EntityDecoder</span>
+<pre>public class <span class="typeNameLabel">EntityDecoder&lt;T&gt;</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</pre>
+implements org.bson.codecs.Decoder&lt;T&gt;</pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
@@ -384,7 +388,7 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">EntityDecoder</a></span>​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;&nbsp;morphiaCodec)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">EntityDecoder</a></span>​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;&nbsp;morphiaCodec)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -406,7 +410,7 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
+<td class="colFirst"><code><a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode</a></span>​(org.bson.BsonReader&nbsp;reader,
       org.bson.codecs.DecoderContext&nbsp;decoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -428,13 +432,13 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>protected org.bson.codecs.Codec&lt;?&gt;</code></td>
+<td class="colFirst"><code>protected org.bson.codecs.Codec&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodecFromDocument(org.bson.BsonReader,boolean,java.lang.String,org.bson.codecs.configuration.CodecRegistry,dev.morphia.mapping.DiscriminatorLookup,org.bson.codecs.Codec)">getCodecFromDocument</a></span>​(org.bson.BsonReader&nbsp;reader,
                     boolean&nbsp;useDiscriminator,
                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;discriminatorKey,
                     org.bson.codecs.configuration.CodecRegistry&nbsp;registry,
                     <a href="../../DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a>&nbsp;discriminatorLookup,
-                    org.bson.codecs.Codec&lt;?&gt;&nbsp;defaultCodec)</code></th>
+                    org.bson.codecs.Codec&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;&nbsp;defaultCodec)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
@@ -443,7 +447,7 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>protected <a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;</code></td>
+<td class="colFirst"><code>protected <a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMorphiaCodec()">getMorphiaCodec</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -477,7 +481,7 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 <ul class="blockListLast">
 <li class="blockList">
 <h4>EntityDecoder</h4>
-<pre>protected&nbsp;EntityDecoder​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;&nbsp;morphiaCodec)</pre>
+<pre>protected&nbsp;EntityDecoder​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;&nbsp;morphiaCodec)</pre>
 </li>
 </ul>
 </li>
@@ -496,11 +500,11 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 <ul class="blockList">
 <li class="blockList">
 <h4>decode</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;decode​(org.bson.BsonReader&nbsp;reader,
-                     org.bson.codecs.DecoderContext&nbsp;decoderContext)</pre>
+<pre class="methodSignature">public&nbsp;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&nbsp;decode​(org.bson.BsonReader&nbsp;reader,
+                org.bson.codecs.DecoderContext&nbsp;decoderContext)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>decode</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
+<dd><code>decode</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Decoder&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -544,12 +548,12 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 <ul class="blockList">
 <li class="blockList">
 <h4>getCodecFromDocument</h4>
-<pre class="methodSignature">protected&nbsp;org.bson.codecs.Codec&lt;?&gt;&nbsp;getCodecFromDocument​(org.bson.BsonReader&nbsp;reader,
+<pre class="methodSignature">protected&nbsp;org.bson.codecs.Codec&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;&nbsp;getCodecFromDocument​(org.bson.BsonReader&nbsp;reader,
                                                         boolean&nbsp;useDiscriminator,
                                                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;discriminatorKey,
                                                         org.bson.codecs.configuration.CodecRegistry&nbsp;registry,
                                                         <a href="../../DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a>&nbsp;discriminatorLookup,
-                                                        org.bson.codecs.Codec&lt;?&gt;&nbsp;defaultCodec)</pre>
+                                                        org.bson.codecs.Codec&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;&nbsp;defaultCodec)</pre>
 </li>
 </ul>
 <a id="getMorphiaCodec()">
@@ -558,7 +562,7 @@ implements org.bson.codecs.Decoder&lt;<a href="https://docs.oracle.com/en/java/j
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getMorphiaCodec</h4>
-<pre class="methodSignature">protected&nbsp;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;?&gt;&nbsp;getMorphiaCodec()</pre>
+<pre class="methodSignature">protected&nbsp;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="EntityDecoder.html" title="type parameter in EntityDecoder">T</a>&gt;&nbsp;getMorphiaCodec()</pre>
 </li>
 </ul>
 </li>

@@ -299,7 +299,7 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">
@@ -343,29 +343,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="annotation.type.required.element.summary">
-<!--   -->
-</a>
-<h3>Required Element Summary</h3>
-<table class="memberSummary">
-<caption><span>Required Elements</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Required Element</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locale()">locale</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-</section>
 <!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -409,21 +386,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locale()">locale</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>com.mongodb.client.model.CollationMaxVariable</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxVariable()">maxVariable</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#normalization()">normalization</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#numericOrdering()">numericOrdering</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>com.mongodb.client.model.CollationStrength</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#strength()">strength</a></span></code></th>
 <td class="colLast">&nbsp;</td>
@@ -445,28 +427,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Element Detail</h3>
-<a id="locale()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>locale</h4>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;locale</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the locale</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="http://userguide.icu-project.org/locale">ICU User Guide - Locale</a></dd>
-</dl>
-</li>
-</ul>
-</li>
-</ul>
-</section>
-<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="backwards()">
+<a id="backwards()">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -504,6 +465,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt>Default:</dt>
 <dd>false</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="locale()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>locale</h4>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;locale</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the locale</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="http://userguide.icu-project.org/locale">ICU User Guide - Locale</a></dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
 </dl>
 </li>
 </ul>
@@ -694,7 +679,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">

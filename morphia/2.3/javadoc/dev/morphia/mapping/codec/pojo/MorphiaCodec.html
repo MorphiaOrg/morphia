@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -423,8 +423,8 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">encode</a></span>​(org.bson.BsonWriter&nbsp;writer,
-      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(org.bson.BsonWriter,T,org.bson.codecs.EncoderContext)">encode</a></span>​(org.bson.BsonWriter&nbsp;writer,
+      <a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&nbsp;value,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -434,40 +434,55 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>protected <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></code></td>
+<td class="colFirst"><code>protected <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDecoder()">getDecoder</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="../../DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDiscriminatorLookup()">getDiscriminatorLookup</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>org.bson.BsonValue</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDocumentId(java.lang.Object)">getDocumentId</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;document)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a></code></td>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code><a href="EntityEncoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityEncoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoder()">getEncoder</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEntityModel()">getEntityModel</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMapper()">getMapper</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>org.bson.codecs.configuration.CodecRegistry</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRegistry()">getRegistry</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDecoder(dev.morphia.mapping.codec.pojo.EntityDecoder)">setDecoder</a></span>​(<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&nbsp;decoder)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDecoder(dev.morphia.mapping.codec.pojo.EntityDecoder)">setDecoder</a></span>​(<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;decoder)</code></th>
 <td class="colLast">
 <div class="block">Sets the decoder</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setEncoder(dev.morphia.mapping.codec.pojo.EntityEncoder)">setEncoder</a></span>​(dev.morphia.mapping.codec.pojo.EntityEncoder&nbsp;encoder)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setEncoder(dev.morphia.mapping.codec.pojo.EntityEncoder)">setEncoder</a></span>​(<a href="EntityEncoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityEncoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;encoder)</code></th>
 <td class="colLast">
 <div class="block">Sets the encoder</div>
 </td>
@@ -568,57 +583,16 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 </dl>
 </li>
 </ul>
-<a id="setEncoder(dev.morphia.mapping.codec.pojo.EntityEncoder)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setEncoder</h4>
-<pre class="methodSignature">public&nbsp;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;setEncoder​(dev.morphia.mapping.codec.pojo.EntityEncoder&nbsp;encoder)</pre>
-<div class="block">Sets the encoder</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>encoder</code> - the encoder</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-</dl>
-</li>
-</ul>
-<a id="getDecoder()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getDecoder</h4>
-<pre class="methodSignature">protected&nbsp;<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&nbsp;getDecoder()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the decoder</dd>
-</dl>
-</li>
-</ul>
-<a id="setDecoder(dev.morphia.mapping.codec.pojo.EntityDecoder)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setDecoder</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setDecoder​(<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&nbsp;decoder)</pre>
-<div class="block">Sets the decoder</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>decoder</code> - the decoder</dd>
-</dl>
-</li>
-</ul>
 <a id="encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">
+<!--   -->
+</a><a id="encode(org.bson.BsonWriter,T,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;encode​(org.bson.BsonWriter&nbsp;writer,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
+                   <a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&nbsp;value,
                    org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -632,11 +606,60 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getEncoderClass</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;getEncoderClass()</pre>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;getEncoderClass()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getEncoderClass</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Encoder&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
 </dl>
+</li>
+</ul>
+<a id="getDiscriminatorLookup()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDiscriminatorLookup</h4>
+<pre class="methodSignature">public&nbsp;<a href="../../DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a>&nbsp;getDiscriminatorLookup()</pre>
+</li>
+</ul>
+<a id="getEncoder()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getEncoder</h4>
+<pre class="methodSignature">public&nbsp;<a href="EntityEncoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityEncoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;getEncoder()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the encoder</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+</dl>
+</li>
+</ul>
+<a id="setEncoder(dev.morphia.mapping.codec.pojo.EntityEncoder)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setEncoder</h4>
+<pre class="methodSignature">public&nbsp;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;setEncoder​(<a href="EntityEncoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityEncoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;encoder)</pre>
+<div class="block">Sets the encoder</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>encoder</code> - the encoder</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="getRegistry()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRegistry</h4>
+<pre class="methodSignature">public&nbsp;org.bson.codecs.configuration.CodecRegistry&nbsp;getRegistry()</pre>
 </li>
 </ul>
 <a id="generateIdIfAbsentFromDocument(java.lang.Object)">
@@ -668,13 +691,40 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 <a id="getMapper()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getMapper</h4>
 <pre class="methodSignature">public&nbsp;<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the mapper being used</dd>
+</dl>
+</li>
+</ul>
+<a id="getDecoder()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDecoder</h4>
+<pre class="methodSignature">protected&nbsp;<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;getDecoder()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the decoder</dd>
+</dl>
+</li>
+</ul>
+<a id="setDecoder(dev.morphia.mapping.codec.pojo.EntityDecoder)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setDecoder</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setDecoder​(<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;decoder)</pre>
+<div class="block">Sets the decoder</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>decoder</code> - the decoder</dd>
 </dl>
 </li>
 </ul>
