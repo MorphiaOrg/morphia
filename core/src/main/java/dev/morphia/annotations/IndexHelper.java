@@ -1,14 +1,9 @@
-package dev.morphia.annotations.builders;
+package dev.morphia.annotations;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.Collation;
-import dev.morphia.annotations.Field;
-import dev.morphia.annotations.Index;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.Indexes;
-import dev.morphia.annotations.Text;
+import dev.morphia.annotations.builders.FieldBuilder;
+import dev.morphia.annotations.builders.IndexBuilder;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -26,9 +21,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static dev.morphia.annotations.builders.FieldBuilder.builder;
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 /**
  * A helper class for dealing with index definitions
@@ -87,33 +82,31 @@ public final class IndexHelper {
         return indexes;
     }
 
-    private List<Index> collectTopLevelIndexes(EntityModel entityModel) {
-        List<Index> list = new ArrayList<>();
-        final Indexes indexes = entityModel.getAnnotation(Indexes.class);
-        if (indexes != null) {
-            for (Index index : indexes.value()) {
-                List<Field> fields = new ArrayList<>();
-                for (Field field : index.fields()) {
-                    fields.add(new FieldBuilder()
-                                   .value(findField(entityModel, index.options(), field.value()))
-                                   .type(field.type())
-                                   .weight(field.weight()));
-                }
-
-                list.add(replaceFields(index, fields));
-            }
-        }
-        EntityModel superClass = entityModel.getSuperClass();
-        if (superClass != null) {
-            list.addAll(collectTopLevelIndexes(superClass));
-        }
-
-        return list;
+    @Nullable
+    public Index convert(@Nullable Indexed indexed, String nameToStore) {
+        return indexed == null
+               ? null
+               : IndexBuilder.builder()
+                             .options(indexed.options())
+                             .fields(new Field[]{FieldBuilder.builder()
+                                                             .value(nameToStore)
+                                                             .type(fromValue(indexed.value().toIndexValue()))
+                                                     .build()})
+                             .build();
     }
 
-    private Index replaceFields(Index original, List<Field> list) {
-        return new IndexBuilder(original)
-                   .fields(list);
+    @Nullable
+    public Index convert(@Nullable Text text, String nameToStore) {
+        return text == null
+               ? null
+               : IndexBuilder.builder()
+                             .options(text.options())
+                             .fields(new Field[]{FieldBuilder.builder()
+                                                             .value(nameToStore)
+                                                             .type(IndexType.TEXT)
+                                                             .weight(text.value())
+                                                     .build()})
+                             .build();
     }
 
     public Document calculateKeys(EntityModel entityModel, Index index) {
@@ -134,27 +127,35 @@ public final class IndexHelper {
         return keys;
     }
 
-    @Nullable
-    public Index convert(@Nullable Indexed indexed, String nameToStore) {
-        return indexed == null
-               ? null
-               : new IndexBuilder()
-                     .options(indexed.options())
-                     .fields(singletonList(new FieldBuilder()
-                                               .value(nameToStore)
-                                               .type(fromValue(indexed.value().toIndexValue()))));
+    private List<Index> collectTopLevelIndexes(EntityModel entityModel) {
+        List<Index> list = new ArrayList<>();
+        final Indexes indexes = entityModel.getAnnotation(Indexes.class);
+        if (indexes != null) {
+            for (Index index : indexes.value()) {
+                List<Field> fields = new ArrayList<>();
+                for (Field field : index.fields()) {
+                    fields.add(builder()
+                                   .value(findField(entityModel, index.options(), field.value()))
+                                   .type(field.type())
+                                   .weight(field.weight())
+                                   .build());
+                }
+
+                list.add(replaceFields(index, fields));
+            }
+        }
+        EntityModel superClass = entityModel.getSuperClass();
+        if (superClass != null) {
+            list.addAll(collectTopLevelIndexes(superClass));
+        }
+
+        return list;
     }
 
-    @Nullable
-    public Index convert(@Nullable Text text, String nameToStore) {
-        return text == null
-               ? null
-               : new IndexBuilder()
-                     .options(text.options())
-                     .fields(singletonList(new FieldBuilder()
-                                               .value(nameToStore)
-                                               .type(IndexType.TEXT)
-                                               .weight(text.value())));
+    private Index replaceFields(Index original, List<Field> list) {
+        return dev.morphia.annotations.builders.IndexBuilder.builder(original)
+                                                            .fields(list.toArray(new Field[0]))
+                                                            .build();
     }
 
     public com.mongodb.client.model.IndexOptions convert(IndexOptions options) {

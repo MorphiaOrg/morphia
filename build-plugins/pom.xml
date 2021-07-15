@@ -97,5 +97,16 @@
             <version>${revapi.maven.plugin.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.jboss.forge.roaster</groupId>
+            <artifactId>roaster-api</artifactId>
+            <version>${roaster.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.forge.roaster</groupId>
+            <artifactId>roaster-jdt</artifactId>
+            <version>${roaster.version}</version>
+        </dependency>
     </dependencies>
 </project>

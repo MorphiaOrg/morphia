@@ -15,6 +15,21 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>build-plugins</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>morphia-annotations</id>
+                        <goals>
+                            <goal>morphia-annotations</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>

@@ -42,10 +42,9 @@ public @interface Collation {
 
     /**
      * @return the locale
-     *
      * @see <a href="http://userguide.icu-project.org/locale">ICU User Guide - Locale</a>
      */
-    String locale();
+    String locale() default "";
 
     /**
      * @return the normalization value.  If true, normalizes text into Unicode NFD.

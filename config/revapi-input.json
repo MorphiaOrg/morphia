@@ -20,12 +20,22 @@
     ],
     "noLongerImplementsInterface": [
       {
+        "package": "dev.morphia.annotations.builders",
+        "justification": "internal package"
+      },
+      {
         "package": "dev.morphia.mapping.codec.pojo",
         "justification": "internal package"
       },
       {
         "interface": "dev.morphia.mapping.codec.InstanceCreator",
         "justification": "internal class replaced with MorphiaInstanceCreator"
+      }
+    ],
+    "noLongerInheritsFromClass": [
+      {
+        "package": "dev.morphia.annotations.builders",
+        "justification": "internal package"
       }
     ],
     "nonPublicPartOfAPI": [
@@ -44,6 +54,12 @@
       {
         "package": "dev.morphia.mapping.codec.writer",
         "justification": "internal api"
+      }
+    ],
+    "nowFinal": [
+      {
+        "package": "dev.morphia.annotations.builders",
+        "justification": "internal package"
       }
     ],
     "removed": [
@@ -99,6 +115,10 @@
     ],
     "removed": [
       {
+        "package": "dev.morphia.annotations.builders",
+        "justification": "internal package"
+      },
+      {
         "package": "dev.morphia.mapping.codec.pojo",
         "justification": "internal package"
       }
@@ -106,6 +126,12 @@
     "returnTypeTypeParametersChanged": [
       {
         "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
+      }
+    ],
+    "visibilityReduced": [
+      {
+        "package": "dev.morphia.annotations.builders",
         "justification": "internal package"
       }
     ]

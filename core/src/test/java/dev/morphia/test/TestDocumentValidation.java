@@ -326,8 +326,9 @@ public class TestDocumentValidation extends TestBase {
     }
 
     private void updateValidation(EntityModel model, ValidationLevel level, ValidationAction action) {
-        ((DatastoreImpl) getDs()).enableValidation(model, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
-                                                                                 .level(level)
-                                                                                 .action(action));
+        ((DatastoreImpl) getDs()).enableValidation(model, ValidationBuilder.builder().value("{ jelly : { $ne : 'rhubarb' } }")
+                                                                           .level(level)
+                                                                           .action(action)
+                                                                           .build());
     }
 }

@@ -10,7 +10,7 @@ import dev.morphia.Key;
 import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.experimental.EmbeddedBuilder;
+import dev.morphia.annotations.builders.EmbeddedBuilder;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
@@ -489,7 +489,7 @@ public class Mapper {
 
         if (model == null) {
             if (annotation == null) {
-                annotation = (A) EmbeddedBuilder.builder();
+                annotation = (A) EmbeddedBuilder.builder().build();
             }
             model = register(createEntityModel(type, annotation));
         }

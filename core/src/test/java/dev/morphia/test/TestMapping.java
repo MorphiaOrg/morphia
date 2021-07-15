@@ -6,7 +6,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Transient;
-import dev.morphia.annotations.experimental.EmbeddedBuilder;
+import dev.morphia.annotations.builders.EmbeddedBuilder;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
@@ -348,7 +348,7 @@ public class TestMapping extends TestBase {
         assertTrue(getDs().getMapper().isMapped(HoldsUnannotated.class));
         assertFalse(getDs().getMapper().isMapped(UnannotatedEmbedded.class),
             "Should not be able to map unannotated classes with mapPackage");
-        assertNotNull(getDs().getMapper().mapExternal(EmbeddedBuilder.builder(), UnannotatedEmbedded.class),
+        assertNotNull(getDs().getMapper().mapExternal(EmbeddedBuilder.builder().build(), UnannotatedEmbedded.class),
             "Should be able to map explicitly passed class references");
         HoldsUnannotated holdsUnannotated = new HoldsUnannotated();
         holdsUnannotated.embedded = new UnannotatedEmbedded();
