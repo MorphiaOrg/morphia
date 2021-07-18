@@ -31,6 +31,7 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.lang.annotation.Annotation;
@@ -79,7 +80,7 @@ public class Mapper {
 
     private final MorphiaCodecProvider morphiaCodecProvider;
     private final Datastore datastore;
-    private final CodecRegistry codecRegistry;
+    private CodecRegistry codecRegistry;
 
     /**
      * Creates a Mapper with the given options.
@@ -367,6 +368,25 @@ public class Mapper {
     }
 
     /**
+     * Imports models defined externally.  Any models imported via this process will replace any models previously mapped if the models
+     * should conflict on an entity's type.
+     *
+     * @param importer the model importer to use
+     * @return the imported models
+     * @morphia.experimental
+     * @since 2.3
+     */
+    public List<EntityModel> importModels(EntityModelImporter importer) {
+        List<EntityModel> models = importer.importModels(datastore);
+        for (EntityModel model : models) {
+            register(model);
+        }
+
+        importer.importCodecProvider(datastore);
+        return models;
+    }
+
+    /**
      * Sets the options this Mapper should use
      *
      * @param options the options to use
@@ -406,20 +426,15 @@ public class Mapper {
     }
 
     /**
-     * Imports models defined externally.  Any models imported via this process will replace any models previously mapped if the models
-     * should conflict on an entity's type.
+     * Adds a new codec mapper to the registry
      *
-     * @param importer the model importer to use
-     * @return the imported models
+     * @param codecProvider the new provider
+     * @morphia.internal
      * @morphia.experimental
      * @since 2.3
      */
-    public List<EntityModel> importModels(EntityModelImporter importer) {
-        List<EntityModel> models = importer.importModels(datastore);
-        for (EntityModel model : models) {
-            register(model);
-        }
-        return models;
+    public void register(CodecProvider codecProvider) {
+        codecRegistry = fromProviders(codecProvider, codecRegistry);
     }
 
     /**

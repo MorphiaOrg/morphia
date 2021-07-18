@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.bson.assertions.Assertions.notNull;
 
@@ -47,7 +46,7 @@ public final class PropertyModelBuilder {
     private final Datastore datastore;
     private final List<String> alternateNames = new ArrayList<>();
     private PropertyAccessor<? super Object> accessor;
-    private List<Annotation> annotations = emptyList();
+    private List<Annotation> annotations = new ArrayList<>();
     private Boolean discriminatorEnabled;
     private EntityModel owner;
     private String mappedName;

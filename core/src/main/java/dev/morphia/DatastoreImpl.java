@@ -61,19 +61,19 @@ import static org.bson.Document.parse;
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
-    private final MongoDatabase database;
+    private MongoDatabase database;
     private final MongoClient mongoClient;
     private final Mapper mapper;
 
     private final QueryFactory queryFactory;
 
     protected DatastoreImpl(MongoClient mongoClient, MapperOptions options, String dbName) {
-        MongoDatabase database = mongoClient.getDatabase(dbName);
+        this.database = mongoClient.getDatabase(dbName);
         this.mapper = new Mapper(this, database.getCodecRegistry(), options);
-        this.database = database.withCodecRegistry(mapper.getCodecRegistry());
         this.mongoClient = mongoClient;
-
         this.queryFactory = options.getQueryFactory();
+
+        updateDatabaseWithRegistry();
     }
 
     /**
@@ -92,6 +92,13 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mongoClient = mongoClient;
         this.mapper = mapper;
         this.queryFactory = queryFactory;
+
+        updateDatabaseWithRegistry();
+    }
+
+    @Override
+    public void updateDatabaseWithRegistry() {
+        this.database = database.withCodecRegistry(mapper.getCodecRegistry());
     }
 
     @Override
