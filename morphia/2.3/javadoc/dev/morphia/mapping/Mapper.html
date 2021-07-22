@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":42,"i15":42,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":42,"i30":10,"i31":42,"i32":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":42,"i15":42,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":42,"i31":10,"i32":42,"i33":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -613,6 +613,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#register(org.bson.codecs.configuration.CodecProvider)">register</a></span>​(org.bson.codecs.configuration.CodecProvider&nbsp;codecProvider)</code></th>
+<td class="colLast">
+<div class="block">Adds a new codec mapper to the registry</div>
+</td>
+</tr>
+<tr id="i30" class="altColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOptions(dev.morphia.mapping.MapperOptions)">setOptions</a></span>​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -620,21 +627,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>org.bson.Document</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDocument(java.lang.Object)">toDocument</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Converts an entity (POJO) to a Document.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateCollection(dev.morphia.Key)">updateCollection</a></span>​(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateQueryWithDiscriminators(dev.morphia.mapping.codec.pojo.EntityModel,org.bson.Document)">updateQueryWithDiscriminators</a></span>​(<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,
                              org.bson.Document&nbsp;query)</code></th>
@@ -1024,6 +1031,25 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Ke
 </dl>
 </li>
 </ul>
+<a id="importModels(dev.morphia.mapping.codec.pojo.experimental.EntityModelImporter)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>importModels</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;importModels​(<a href="codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental">EntityModelImporter</a>&nbsp;importer)</pre>
+<div class="block">Imports models defined externally.  Any models imported via this process will replace any models previously mapped if the models
+ should conflict on an entity's type.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>importer</code> - the model importer to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the imported models</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</li>
+</ul>
 <a id="setOptions(dev.morphia.mapping.MapperOptions)">
 <!--   -->
 </a>
@@ -1073,23 +1099,20 @@ public&nbsp;com.mongodb.WriteConcern&nbsp;getWriteConcern​(<a href="https://do
 </dl>
 </li>
 </ul>
-<a id="importModels(dev.morphia.mapping.codec.pojo.experimental.EntityModelImporter)">
+<a id="register(org.bson.codecs.configuration.CodecProvider)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>importModels</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;importModels​(<a href="codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental">EntityModelImporter</a>&nbsp;importer)</pre>
-<div class="block">Imports models defined externally.  Any models imported via this process will replace any models previously mapped if the models
- should conflict on an entity's type.</div>
+<h4>register</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;register​(org.bson.codecs.configuration.CodecProvider&nbsp;codecProvider)</pre>
+<div class="block">Adds a new codec mapper to the registry</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>importer</code> - the model importer to use</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the imported models</dd>
+<dd><code>codecProvider</code> - the new provider</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
 </li>
 </ul>
 <a id="isMappable(java.lang.Class)">
