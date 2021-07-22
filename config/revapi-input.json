@@ -14,7 +14,7 @@
   "class": {
     "externalClassExposedInAPI": [
       {
-        "package": "org.bson.codecs",
+        "package": "org.bson.codecs.*",
         "justification": "it's driver code"
       }
     ],
