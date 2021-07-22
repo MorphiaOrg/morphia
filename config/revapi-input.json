@@ -16,8 +16,7 @@
       {
         "package": "org.bson.codecs",
         "justification": "it's driver code"
-      }
-      .
+      },
       {
         "package": "org.bson.codecs.configuration",
         "justification": "it's driver code"
