@@ -332,17 +332,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.mapping.codec.pojo</a></div>
-<h2 title="Class LifecycleDecoder" class="title">Class LifecycleDecoder</h2>
+<h2 title="Class LifecycleDecoder" class="title">Class LifecycleDecoder&lt;T&gt;</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li><a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">dev.morphia.mapping.codec.pojo.EntityDecoder</a></li>
+<li><a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">dev.morphia.mapping.codec.pojo.EntityDecoder</a>&lt;T&gt;</li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.mapping.codec.pojo.LifecycleDecoder</li>
+<li>dev.morphia.mapping.codec.pojo.LifecycleDecoder&lt;T&gt;</li>
 </ul>
 </li>
 </ul>
@@ -352,12 +352,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type</dd>
+</dl>
+<dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>org.bson.codecs.Decoder</code></dd>
+<dd><code>org.bson.codecs.Decoder&lt;T&gt;</code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">LifecycleDecoder</span>
-extends <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></pre>
+<pre>public class <span class="typeNameLabel">LifecycleDecoder&lt;T&gt;</span>
+extends <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&lt;T&gt;</pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.2</dd>
@@ -382,7 +386,7 @@ extends <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.p
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">LifecycleDecoder</a></span>​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&nbsp;codec)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.MorphiaCodec)">LifecycleDecoder</a></span>​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="LifecycleDecoder.html" title="type parameter in LifecycleDecoder">T</a>&gt;&nbsp;codec)</code></th>
 <td class="colLast">
 <div class="block">creates the decoder</div>
 </td>
@@ -406,7 +410,7 @@ extends <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.p
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
+<td class="colFirst"><code><a href="LifecycleDecoder.html" title="type parameter in LifecycleDecoder">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode</a></span>​(org.bson.BsonReader&nbsp;reader,
       org.bson.codecs.DecoderContext&nbsp;decoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -448,11 +452,9 @@ extends <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.p
 <ul class="blockListLast">
 <li class="blockList">
 <h4>LifecycleDecoder</h4>
-<pre>public&nbsp;LifecycleDecoder​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;T&gt;&nbsp;codec)</pre>
+<pre>public&nbsp;LifecycleDecoder​(<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="LifecycleDecoder.html" title="type parameter in LifecycleDecoder">T</a>&gt;&nbsp;codec)</pre>
 <div class="block">creates the decoder</div>
 <dl>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>codec</code> - the codec</dd>
 </dl>
@@ -474,13 +476,13 @@ extends <a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.p
 <ul class="blockListLast">
 <li class="blockList">
 <h4>decode</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;decode​(org.bson.BsonReader&nbsp;reader,
-                     org.bson.codecs.DecoderContext&nbsp;decoderContext)</pre>
+<pre class="methodSignature">public&nbsp;<a href="LifecycleDecoder.html" title="type parameter in LifecycleDecoder">T</a>&nbsp;decode​(org.bson.BsonReader&nbsp;reader,
+                org.bson.codecs.DecoderContext&nbsp;decoderContext)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>decode</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Decoder</code></dd>
+<dd><code>decode</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Decoder&lt;<a href="LifecycleDecoder.html" title="type parameter in LifecycleDecoder">T</a>&gt;</code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="EntityDecoder.html#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode</a></code>&nbsp;in class&nbsp;<code><a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></code></dd>
+<dd><code><a href="EntityDecoder.html#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode</a></code>&nbsp;in class&nbsp;<code><a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&lt;<a href="LifecycleDecoder.html" title="type parameter in LifecycleDecoder">T</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
