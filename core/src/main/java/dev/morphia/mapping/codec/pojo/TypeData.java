@@ -28,7 +28,6 @@ import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.String.format;
 import static org.bson.assertions.Assertions.notNull;
@@ -41,15 +40,6 @@ import static org.bson.assertions.Assertions.notNull;
  * @since 2.0
  */
 public class TypeData<T> implements TypeWithTypeParameters<T> {
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_CLASS_MAP = Map.of(
-        boolean.class, Boolean.class,
-        byte.class, Byte.class,
-        char.class, Character.class,
-        double.class, Double.class,
-        float.class, Float.class,
-        int.class, Integer.class,
-        long.class, Long.class,
-        short.class, Short.class);
 
     private final Class<T> type;
     private final List<TypeData<?>> typeParameters;
@@ -65,11 +55,11 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      * </code>
      * </pre>
      *
-     * @param type
-     * @param typeParameters
+     * @param type the type
+     * @param typeParameters the parameters
      */
     public TypeData(Class<T> type, List<TypeData<?>> typeParameters) {
-        this.type = boxType(type);
+        this.type = type;
         this.typeParameters = typeParameters;
     }
 
@@ -232,19 +222,6 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      */
     public TypeData<?> withType(Class<?> concreteClass) {
         return new TypeData<>(concreteClass, new ArrayList<>(typeParameters));
-    }
-
-    @SuppressWarnings("unchecked")
-    private <S> Class<S> boxType(Class<S> clazz) {
-        if (clazz.isPrimitive()) {
-            return (Class<S>) PRIMITIVE_CLASS_MAP.get(clazz);
-        } else {
-            return clazz;
-        }
-    }
-
-    boolean isAssignableFrom(Class<?> cls) {
-        return type.isAssignableFrom(boxType(cls));
     }
 
     /**

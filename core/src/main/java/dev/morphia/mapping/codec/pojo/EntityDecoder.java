@@ -8,6 +8,7 @@ import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonType;
 import org.bson.codecs.Codec;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -19,7 +20,7 @@ import static dev.morphia.mapping.codec.Conversions.convert;
  * @morphia.internal
  * @since 2.0
  */
-public class EntityDecoder<T> implements org.bson.codecs.Decoder<T> {
+public class EntityDecoder<T> implements Decoder<T> {
     private final MorphiaCodec<T> morphiaCodec;
     private final EntityModel classModel;
 

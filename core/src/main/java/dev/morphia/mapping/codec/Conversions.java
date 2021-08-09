@@ -43,10 +43,22 @@ public final class Conversions {
         register(Instant.class, long.class, Instant::toEpochMilli);
 
         register(Double.class, Long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
+        register(double.class, Long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
+        register(Double.class, long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
+        register(double.class, long.class, Double::longValue, "Converting a double value to a long.  Possible loss of precision.");
         register(Double.class, Integer.class, Double::intValue, "Converting a double value to an int.  Possible loss of precision.");
+        register(double.class, Integer.class, Double::intValue, "Converting a double value to an int.  Possible loss of precision.");
+        register(Double.class, int.class, Double::intValue, "Converting a double value to an int.  Possible loss of precision.");
+        register(double.class, int.class, Double::intValue, "Converting a double value to an int.  Possible loss of precision.");
         register(Double.class, Float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
+        register(double.class, Float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
+        register(Double.class, float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
+        register(double.class, float.class, Double::floatValue, "Converting a double value to a float.  Possible loss of precision.");
 
         register(Integer.class, Byte.class, Integer::byteValue);
+        register(int.class, Byte.class, Integer::byteValue);
+        register(Integer.class, byte.class, Integer::byteValue);
+        register(int.class, byte.class, Integer::byteValue);
 
         register(Long.class, Double.class, Long::doubleValue);
         register(Long.class, Float.class, Long::floatValue);

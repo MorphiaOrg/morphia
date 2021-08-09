@@ -1,35 +1,35 @@
 package dev.morphia.mapping.codec.pojo;
 
-import static java.lang.String.format;
-
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.reader.DocumentReader;
+import static java.lang.String.format;
 
 /**
+ * @param <T> the type
  * @morphia.internal
  * @since 2.2
  */
-public class LifecycleDecoder extends EntityDecoder {
+public class LifecycleDecoder<T> extends EntityDecoder<T> {
     /**
      * creates the decoder
      *
      * @param codec the codec
-     * @param <T>   the type
      */
-    public <T> LifecycleDecoder(MorphiaCodec<T> codec) {
+    public LifecycleDecoder(MorphiaCodec<T> codec) {
         super(codec);
     }
 
     @Override
-    public Object decode(BsonReader reader, DecoderContext decoderContext) {
+    @SuppressWarnings("unchecked")
+    public T decode(BsonReader reader, DecoderContext decoderContext) {
         Document document = getMorphiaCodec().getRegistry().get(Document.class).decode(reader, decoderContext);
         EntityModel model = getMorphiaCodec().getEntityModel();
         if (model.useDiscriminator()) {
@@ -46,7 +46,7 @@ public class LifecycleDecoder extends EntityDecoder {
             }
         }
         final MorphiaInstanceCreator instanceCreator = model.getInstanceCreator();
-        Object entity = instanceCreator.getInstance();
+        T entity = (T) instanceCreator.getInstance();
         model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getMapper());
         decodeProperties(new DocumentReader(document), decoderContext, instanceCreator, model);
         model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getMapper());

@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import com.mongodb.client.model.Filters;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
@@ -398,19 +399,18 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalFieldNotPersisted() {
-        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                                             .ignoreFinals(true)
-                                             .build();
-        final Datastore datastore = createDatastore(getMongoClient(), getDatabase().getName(), options);
-
-        getMapper().map(ContainsFinalField.class);
-        final ObjectId savedKey = datastore.save(new ContainsFinalField("blah")).id;
-        final ContainsFinalField loaded = datastore.find(ContainsFinalField.class)
-                                                   .filter(eq("_id", savedKey))
-                                                   .first();
-        assertNotNull(loaded);
-        assertNotNull(loaded.name);
-        assertEquals(loaded.name, "foo");
+        withOptions(MapperOptions.builder(getMapper().getOptions())
+                                 .ignoreFinals(true)
+                                 .build(), () -> {
+            getMapper().map(ContainsFinalField.class);
+            final ObjectId savedKey = getDs().save(new ContainsFinalField("blah")).id;
+            final Document loaded = getDs().getMapper().getCollection(ContainsFinalField.class)
+                                           .withDocumentClass(Document.class)
+                                           .find(Filters.eq("_id", savedKey))
+                                           .first();
+            assertNotNull(loaded);
+            assertNull(loaded.get("name"));
+        });
     }
 
     @Test

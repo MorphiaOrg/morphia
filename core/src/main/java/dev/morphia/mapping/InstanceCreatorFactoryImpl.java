@@ -3,8 +3,9 @@ package dev.morphia.mapping;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.experimental.ConstructorCreator;
-import dev.morphia.mapping.experimental.UnsafeConstructorCreator;
 import dev.morphia.sofia.Sofia;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.function.Supplier;
@@ -13,6 +14,8 @@ import java.util.function.Supplier;
  * @morphia.internal
  */
 public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(InstanceCreatorFactoryImpl.class);
+
     private final EntityModel model;
     private Supplier<MorphiaInstanceCreator> creator;
 
@@ -29,21 +32,28 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     public MorphiaInstanceCreator create() {
         if (creator == null) {
             if (!model.getType().isInterface()) {
-                try {
-                    Constructor<?> constructor = model.getType().getDeclaredConstructor();
-                    creator = () -> new NoArgCreator(constructor);
-                } catch (NoSuchMethodException e) {
+                Constructor<?> constructor = ConstructorCreator.bestConstructor(model);
+                if (constructor != null) {
+                    creator = () -> new ConstructorCreator(model, constructor);
+                } else {
+                    LOG.info("using old creator approach: " + model.getType().getName());
                     try {
-                        Constructor<?> constructor = ConstructorCreator.getFullConstructor(model);
-                        creator = () -> {
-                            return new ConstructorCreator(model, constructor);
-                        };
-                    } catch (MappingException e1) {
-                        MorphiaInstanceCreator unsafeConstructorCreator = new UnsafeConstructorCreator(model);
-                        creator = () -> unsafeConstructorCreator;
+                        Constructor<?> declared = model.getType().getDeclaredConstructor();
+                        creator = () -> new NoArgCreator(declared);
+                    } catch (NoSuchMethodException e) {
+                        try {
+                            Constructor<?> full = ConstructorCreator.getFullConstructor(model);
+                            creator = () -> new ConstructorCreator(model, full);
+                        } catch (MappingException ignored) {
+                            //                            MorphiaInstanceCreator unsafeConstructorCreator = new UnsafeConstructorCreator
+                            //                            (model);
+                            //                            creator = () -> unsafeConstructorCreator;
+                        }
                     }
                 }
-            } else {
+            }
+
+            if (creator == null) {
                 throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
             }
         }

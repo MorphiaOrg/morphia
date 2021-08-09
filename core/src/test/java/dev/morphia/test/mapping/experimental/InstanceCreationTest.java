@@ -31,7 +31,6 @@ public class InstanceCreationTest extends TestBase {
 
     @Entity
     private static class Author extends BaseEntity {
-
         public Author(String name) {
             this.name = name;
         }
