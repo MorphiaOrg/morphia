@@ -1,6 +1,10 @@
 package dev.morphia.mapping.experimental;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
@@ -21,6 +25,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import static java.lang.Integer.compare;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 /**
@@ -77,14 +82,28 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         model.getProperties()
              .forEach(it -> propertyMap.put(it.getName(), it.getType()));
 
-        var constructors = model.getType().getDeclaredConstructors();
+        var constructors = asList(model.getType().getDeclaredConstructors());
 
-        return stream(constructors)
-            .filter(it -> stream(it.getParameters())
-                .allMatch(param -> Objects.equals(propertyMap.get(getParameterName(param)), param.getType())))
-            .sorted((o1, o2) -> compare(o2.getParameterCount(), o1.getParameterCount()))
-            .findFirst()
-            .orElse(null);
+        if (hasLifecycleEvents(model)) {
+            return constructors.stream()
+                               .filter(it -> it.getParameters().length == 0)
+                               .findFirst()
+                               .orElseThrow(() -> new IllegalStateException("A type with lifecycle events must have a no-arg constructor"));
+        }
+
+        return constructors.stream()
+                           .filter(it -> stream(it.getParameters())
+                               .allMatch(param -> Objects.equals(propertyMap.get(getParameterName(param)), param.getType())))
+                           .sorted((o1, o2) -> compare(o2.getParameterCount(), o1.getParameterCount()))
+                           .findFirst()
+                           .orElse(null);
+    }
+
+    private static boolean hasLifecycleEvents(EntityModel model) {
+        return model.hasLifecycle(PreLoad.class)
+               || model.hasLifecycle(PostLoad.class)
+               || model.hasLifecycle(PrePersist.class)
+               || model.hasLifecycle(PostPersist.class);
     }
 
     @Override

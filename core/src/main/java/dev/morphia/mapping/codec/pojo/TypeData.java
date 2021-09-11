@@ -1,25 +1,10 @@
-/*
- * Copyright 2008-present MongoDB, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -28,6 +13,7 @@ import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 
 import static java.lang.String.format;
 import static org.bson.assertions.Assertions.notNull;
@@ -39,10 +25,12 @@ import static org.bson.assertions.Assertions.notNull;
  * @morphia.internal
  * @since 2.0
  */
+@SuppressWarnings("unchecked")
 public class TypeData<T> implements TypeWithTypeParameters<T> {
 
     private final Class<T> type;
     private final List<TypeData<?>> typeParameters;
+    private boolean array;
 
     /**
      * Creates a new TypeData with the concrete type and type parameters around it.
@@ -75,10 +63,10 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static <T> TypeData<?> getTypeData(Type type) {
+    private static TypeData<?> getTypeData(Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) type;
-            TypeData.Builder paramBuilder = TypeData.builder((Class) pType.getRawType());
+            Builder paramBuilder = TypeData.builder((Class) pType.getRawType());
             for (Type argType : pType.getActualTypeArguments()) {
                 paramBuilder.addTypeParameter(getTypeData(argType));
             }
@@ -89,11 +77,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
             Type[] bounds = upperBounds != null
                             ? upperBounds
                             : wildcardType.getLowerBounds();
-            WildCardTypeData.Builder wildCard = WildCardTypeData.builder(upperBounds != null);
-            for (Type bound : bounds) {
-                wildCard.addTypeParameter(getTypeData(bound));
-            }
-            return wildCard.build();
+            return WildCardTypeData.builder(getTypeData(bounds[0]), upperBounds != null).build();
         } else if (type instanceof TypeVariable) {
             return TypeData.builder(Object.class).build();
         } else if (type instanceof Class) {
@@ -102,9 +86,14 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
                 builder.addTypeParameter(getTypeData(typeParameter));
             }
             return builder.build();
+        } else if (type instanceof GenericArrayType) {
+            GenericArrayType arrayType = (GenericArrayType) type;
+            TypeData<?> typeData = getTypeData(arrayType.getGenericComponentType());
+            typeData.setArray(true);
+            return typeData;
         }
 
-        throw new UnsupportedOperationException(Sofia.unhandledTypeData(type.getTypeName()));
+        throw new UnsupportedOperationException(Sofia.unhandledTypeData(type.getClass()));
     }
 
     private static String nestedTypeParameters(List<TypeData<?>> typeParameters) {
@@ -131,7 +120,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      * @return the new TypeData information
      */
     public static TypeData<?> newInstance(Field field) {
-        return newInstance(field.getGenericType(), field.getType());
+        return newInstance(field.getGenericType());
     }
 
     /**
@@ -141,19 +130,19 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      * @return the new TypeData information
      */
     public static TypeData<?> newInstance(Method method) {
-        return newInstance(method.getGenericReturnType(), method.getReturnType());
+        return newInstance(method.getGenericReturnType());
     }
 
     /**
      * Creates a TypeData reflecting the given generic type and class.
      *
      * @param genericType the type to analyze
-     * @param clazz       the class to analyze
      * @param <T>         the type of the new TypeData instance
      * @return the new TypeData information
      */
-    public static <T> TypeData<T> newInstance(Type genericType, Class<T> clazz) {
-        TypeData.Builder<T> builder = TypeData.builder(clazz);
+    public static <T> TypeData<T> newInstance(Type genericType) {
+        /*
+          TypeData.Builder<T> builder = TypeData.builder(clazz);
         if (genericType instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) genericType;
             for (Type argType : pType.getActualTypeArguments()) {
@@ -161,6 +150,12 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
             }
         }
         return builder.build();
+         */
+        return (TypeData<T>) getTypeData(genericType);
+    }
+
+    public boolean getArray() {
+        return array;
     }
 
     /**
@@ -203,6 +198,29 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         return getTypeParameters().equals(that.getTypeParameters());
     }
 
+    public boolean isArray() {
+        return array;
+    }
+
+    public void setArray(boolean array) {
+        this.array = array;
+    }
+
+    @Override
+    public String toString() {
+        String value = type.getSimpleName();
+        if (!typeParameters.isEmpty()) {
+            StringJoiner joiner = new StringJoiner(", ", "<", ">");
+            typeParameters.forEach(t -> {
+                joiner.add(t.toString());
+            });
+            value += joiner;
+        }
+
+        return value;
+    }
+
+/*
     @Override
     public String toString() {
         String typeParams = typeParameters.isEmpty() ? ""
@@ -212,6 +230,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
                + typeParams
                + "}";
     }
+*/
 
     /**
      * Creates a new TypeData with an updated type
@@ -254,6 +273,20 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
          */
         public TypeData<T> build() {
             return new TypeData<>(type, Collections.unmodifiableList(typeParameters));
+        }
+
+        @Override
+        public String toString() {
+            String value = type.getSimpleName();
+            if (!typeParameters.isEmpty()) {
+                StringJoiner joiner = new StringJoiner(", ", "<", ">");
+                typeParameters.forEach(t -> {
+                    joiner.add(t.toString());
+                });
+                value += joiner;
+            }
+
+            return value;
         }
     }
 }

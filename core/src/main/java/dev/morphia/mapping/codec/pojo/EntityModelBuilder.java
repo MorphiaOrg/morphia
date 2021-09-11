@@ -69,16 +69,17 @@ public class EntityModelBuilder {
         this.datastore = datastore;
         this.type = type;
 
-        buildHierarchy(this.type);
-        parameterization.putAll(findParameterization(type));
-        propagateTypes();
-
         if (type.getSuperclass() != null) {
             try {
                 this.superclass = datastore.getMapper().getEntityModel(type.getSuperclass());
             } catch (NotMappableException ignored) {
             }
         }
+
+        buildHierarchy(this.type);
+        parameterization.putAll(findParameterization(type));
+        propagateTypes();
+
 
         interfaces.stream()
                   .map(i -> {
@@ -244,8 +245,8 @@ public class EntityModelBuilder {
             Map<String, Type> map = parameterization.get(type.getName());
             if (map != null) {
                 Type mapped = map.get(((TypeVariable<?>) genericType).getName());
-                if (mapped instanceof Class) {
-                    suggested = TypeData.newInstance(genericType, (Class<?>) mapped);
+                if (mapped != null) {
+                    suggested = TypeData.newInstance(mapped);
                 }
             }
         }

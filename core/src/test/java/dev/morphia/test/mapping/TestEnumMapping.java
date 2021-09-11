@@ -111,8 +111,6 @@ public class TestEnumMapping extends TestBase {
 
     @Test
     public void testEnumMapping() {
-        getDs().getDatabase().drop();
-
         getMapper().map(ContainsEnum.class);
 
         getDs().save(new ContainsEnum());
