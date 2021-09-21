@@ -115,6 +115,10 @@
         "classQualifiedName": "dev.morphia.mapping.codec.pojo.PropertyModelBuilder",
         "methodName": "discoverMappedName",
         "justification": "internal method"
+      },
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal types"
       }
     ],
     "parameterTypeParameterChanged": [
