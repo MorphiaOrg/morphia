@@ -92,7 +92,6 @@ public abstract class TestBase {
         return getDs().getMapper();
     }
 
-    @BeforeMethod
     public void installData() {
         File file = new File("zips.json");
         try {
