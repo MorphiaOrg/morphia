@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -348,7 +348,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>Enclosing class:</dt>
-<dd><a href="WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></dd>
+<dd><a href="WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a>&lt;<a href="WildCardTypeData.html" title="type parameter in WildCardTypeData">T</a>&gt;</dd>
 </dl>
 <hr>
 <pre>public static class <span class="typeNameLabel">WildCardTypeData.Builder</span>
@@ -374,7 +374,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(boolean)">Builder</a></span>​(boolean&nbsp;upperBound)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.codec.pojo.TypeData,boolean)">Builder</a></span>​(<a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&nbsp;bound,
+       boolean&nbsp;upperBound)</code></th>
 <td class="colLast">
 <div class="block">Creates a builder</div>
 </td>
@@ -398,13 +399,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>&lt;S&gt;&nbsp;<a href="WildCardTypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData.Builder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addTypeParameter(dev.morphia.mapping.codec.pojo.TypeData)">addTypeParameter</a></span>​(<a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;S&gt;&nbsp;typeParameter)</code></th>
-<td class="colLast">
-<div class="block">Adds a type parameter</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#build()">build</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -433,16 +427,18 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(boolean)">
+<a id="<init>(dev.morphia.mapping.codec.pojo.TypeData,boolean)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>Builder</h4>
-<pre>public&nbsp;Builder​(boolean&nbsp;upperBound)</pre>
+<pre>public&nbsp;Builder​(<a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&nbsp;bound,
+               boolean&nbsp;upperBound)</pre>
 <div class="block">Creates a builder</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>bound</code> - </dd>
 <dd><code>upperBound</code> - true if the type parameters represent an upper bound</dd>
 </dl>
 </li>
@@ -457,24 +453,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="addTypeParameter(dev.morphia.mapping.codec.pojo.TypeData)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>addTypeParameter</h4>
-<pre class="methodSignature">public&nbsp;&lt;S&gt;&nbsp;<a href="WildCardTypeData.Builder.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData.Builder</a>&nbsp;addTypeParameter​(<a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;S&gt;&nbsp;typeParameter)</pre>
-<div class="block">Adds a type parameter</div>
-<dl>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>S</code> - the type of the type parameter</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>typeParameter</code> - the type parameter</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-</dl>
-</li>
-</ul>
 <a id="build()">
 <!--   -->
 </a>
