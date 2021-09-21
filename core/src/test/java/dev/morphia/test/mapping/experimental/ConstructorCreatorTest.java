@@ -1,4 +1,4 @@
-package dev.morphia.mapping.experimental;
+package dev.morphia.test.mapping.experimental;
 
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Embedded;
@@ -13,6 +13,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.experimental.ConstructorCreator;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
@@ -222,6 +223,9 @@ class Invoice {
     private transient boolean preLoad;
     private transient boolean prePersist;
     private transient boolean postPersist;
+
+    public Invoice() {
+    }
 
     public Invoice(LocalDateTime orderDate, Person person, Address addresses, Item... items) {
         this.orderDate = orderDate.withNano(0);

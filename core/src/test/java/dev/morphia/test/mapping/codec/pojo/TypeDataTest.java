@@ -1,5 +1,6 @@
-package dev.morphia.mapping.codec.pojo;
+package dev.morphia.test.mapping.codec.pojo;
 
+import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.test.TestBase;
 import org.testng.Assert;
 import org.testng.annotations.Test;
