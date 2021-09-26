@@ -30,7 +30,7 @@ However, outside of tests this isn't usually enough.
 There are two other items you might pass in as well: a `MongoClient` reference to use when connecting to the database and a `MapperOptions`
 reference to configure how the mapping is done.
 
-With the second line we're telling Morphia to look at every class in the package we've given and find every class annotated with xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] (which we'll cover shortly) or xref:javadoc:dev/morphia/annotations/Embedded.html#[`@Embedded`] and registoer the mapping metadata we've put on our classes.
+With the second line we're telling Morphia to look at every class in the package we've given and find every class annotated with xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] (which we'll cover shortly) or xref:javadoc:dev/morphia/annotations/Embedded.html#[`@Embedded`] and register the mapping metadata we've put on our classes.
 This method can be called multiple times to cover all your entities wherever they might live in your application.
 
 == Mapping Options
@@ -89,7 +89,8 @@ By default, Morphia will use the camel case class name as the collection name.
 If you pass a String instead, it will use that value for the collection name.
 In this case, all `Containers` instances will be saved in to the `employees`
 collection instead.
-There is a little more to this annotation but the xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] javadoc covers those details.
+There is a little more to this annotation but the xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] javadoc covers those details .  xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] should be used on any type you want Morphia to map including embedded types.
+Embedded types are not required to have an xref:javadoc:dev/morphia/annotations/Id.html#[`@Id`] annotated field.
 
 The xref:javadoc:dev/morphia/annotations/Indexes.html#[`@Indexes`] annotation lists which indexes Morphia should create.
 In this instance, we're defining an index named `salary` on the field salary with the default ordering of ascending.
@@ -161,14 +162,16 @@ As with everything else, `Datastore` is where we start:
 [source,java]
 ----
 final Query<Employee> query = datastore.find(Employee.class);
-final List<Employee> employees = query.execute().toList();
+final List<Employee> employees = query.iterator().toList();
 ----
 
 This is a basic Morphia query.
-Here, we're telling the `Datastore` to create a query that's been typed to `Containers`.
-In this case, we're fetching every `Containers` in to a `List`.
+Here, we're telling the `Datastore` to create a query that's been typed to `Employee`.
+In this case, we're fetching every `Employee` in to a `List`.
 For very large query results, this could very well be too much to fit in to memory.
-For this simple example, using `toList()` is fine but in practice `execute()` is usually the more appropriate choice.
+For this simple example, using `toList()` is fine but in practice `iterator()` is usually the more appropriate choice.
+In those cases, rather than calling `iterator()` directly, it's sufficient to simply iterate a `Query` using a for loop and let the magic of `Iterable`
+do it's thing.
 Most queries will, of course, want to filter the data in some way.
 Here's how to do that:
 
@@ -176,7 +179,7 @@ Here's how to do that:
 ----
 underpaid = datastore.createQuery(Employee.class)
                      .filter(Filters.lte("salary", 30000))
-                     .execute()
+                     .iterator()
                      .toList();
 ----
 
