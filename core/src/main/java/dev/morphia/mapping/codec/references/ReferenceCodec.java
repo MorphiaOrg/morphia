@@ -25,9 +25,11 @@ import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.QueryException;
 import dev.morphia.sofia.Sofia;
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.dynamic.DynamicType.Loaded;
+import net.bytebuddy.description.ByteCodeElement;
+import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
+import net.bytebuddy.matcher.ElementMatcher.Junction;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -49,6 +51,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static java.lang.String.format;
 
 /**
  * @morphia.internal
@@ -269,27 +272,40 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     private <T> T createProxy(MorphiaReference<?> reference) {
         ReferenceProxy referenceProxy = new ReferenceProxy(reference);
+        PropertyModel propertyModel = getPropertyModel();
         try {
-            Class<?> type = getPropertyModel().getType();
-            String name = (type.getPackageName().startsWith("java") ? type.getSimpleName() : type.getName()) + "$$Proxy";
-            return ((Loaded<T>) new ByteBuddy()
-                                    .subclass(type)
-                                    .implement(MorphiaProxy.class)
-                                    .name(name)
+            Class<?> type = propertyModel.getType();
+            Builder<?> builder = new ByteBuddy()
+                .subclass(type)
+                .implement(MorphiaProxy.class)
+                .name(format("%s$%s$$ReferenceProxy", propertyModel.getEntityModel().getName(), propertyModel.getName(),
+                    type.getName()));
 
-                                    .invokable(ElementMatchers.isDeclaredBy(type))
-                                    .intercept(InvocationHandlerAdapter.of(referenceProxy))
+            Junction<ByteCodeElement> matcher = ElementMatchers.isDeclaredBy(type);
+            if (!type.isInterface()) {
+                type = type.getSuperclass();
+                while (type != null && !type.equals(Object.class)) {
+                    matcher = matcher.or(ElementMatchers.isDeclaredBy(type));
+                    type = type.getSuperclass();
+                }
+            }
 
-                                    .method(ElementMatchers.isDeclaredBy(MorphiaProxy.class))
-                                    .intercept(InvocationHandlerAdapter.of(referenceProxy))
+            return (T) builder
+                .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
+                .intercept(InvocationHandlerAdapter.of(referenceProxy))
 
-                                    .make()
-                                    .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER))
-                       .getLoaded()
-                       .getDeclaredConstructor()
-                       .newInstance();
+                .make()
+
+                .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
+                .getLoaded()
+
+                .getDeclaredConstructor()
+                .newInstance();
         } catch (ReflectiveOperationException | IllegalArgumentException e) {
             throw new MappingException(e.getMessage(), e);
+        } catch (java.lang.SecurityException e) {
+            System.out.println("getPropertyModel().getType() = " + propertyModel.getType());
+            throw e;
         }
     }
 
