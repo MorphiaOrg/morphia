@@ -9,9 +9,12 @@ import dev.morphia.sofia.Sofia;
 
 import java.util.Set;
 
+/**
+ * Checks to ensure that an Entity has an @Id field.
+ */
 public class NoId implements ClassConstraint {
     @Override
-    public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
+    public void check(Mapper mapper, MappedClass mc, Set<ConstraintViolation> ve) {
         if (mc.getIdField() == null && mc.getEntityAnnotation() != null) {
             ve.add(new ConstraintViolation(Level.FATAL, mc, getClass(), Sofia.noIdFieldFound(mc.getType().getName())));
         }
