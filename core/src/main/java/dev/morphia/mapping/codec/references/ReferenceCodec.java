@@ -303,9 +303,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 .newInstance();
         } catch (ReflectiveOperationException | IllegalArgumentException e) {
             throw new MappingException(e.getMessage(), e);
-        } catch (java.lang.SecurityException e) {
-            System.out.println("getPropertyModel().getType() = " + propertyModel.getType());
-            throw e;
         }
     }
 
