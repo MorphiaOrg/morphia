@@ -315,7 +315,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             Junction<ByteCodeElement> matcher = ElementMatchers.isDeclaredBy(type);
             type = type.getSuperclass();
             while (!type.equals(Object.class)) {
-                matcher.or(ElementMatchers.isDeclaredBy(type));
+                matcher = matcher.or(ElementMatchers.isDeclaredBy(type));
                 type = type.getSuperclass();
             }
 
