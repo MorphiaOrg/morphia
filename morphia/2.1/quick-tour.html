@@ -252,7 +252,7 @@ There are two other items you might pass in as well: a <code>MongoClient</code> 
 reference to configure how the mapping is done.</p>
 </div>
 <div class="paragraph">
-<p>With the second line we&#8217;re telling Morphia to look at every class in the package we&#8217;ve given and find every class annotated with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> (which we&#8217;ll cover shortly) or <a href="javadoc/dev/morphia/annotations/Embedded.html" class="page"><code>@Embedded</code></a> and registoer the mapping metadata we&#8217;ve put on our classes.
+<p>With the second line we&#8217;re telling Morphia to look at every class in the package we&#8217;ve given and find every class annotated with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page"><code>@Entity</code></a> (which we&#8217;ll cover shortly) or <a href="javadoc/dev/morphia/annotations/Embedded.html" class="page"><code>@Embedded</code></a> and register the mapping metadata we&#8217;ve put on our classes.
 This method can be called multiple times to cover all your entities wherever they might live in your application.</p>
 </div>
 </div>
@@ -266,7 +266,8 @@ There are a number of items to configure here but for now we 'll just cover two.
 For a discussion of the remainder, please see the <a href="configuration.html" class="page">configuration guide</a>.
 The two most common elements to configure are probably <code>storeEmpties</code> and <code>storeNulls</code>.
 By default Morphia will not store empty <code>List</code> or
-<code>Map</code> values nor will it store null values in to MongoDB. If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
+<code>Map</code> values nor will it store null values in to MongoDB.
+If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
 There are a few other options to configure on
 <code>MappingOptions</code>, but we&#8217;ll not be covering them here.</p>
 </div>
@@ -409,7 +410,7 @@ datastore.save(elmer);</code></pre>
 Morphia takes care of saving the keys in Elmer&#8217;s document that refer to Daffy and Pepé.
 Updating data in MongoDB is as simple as updating your Java objects and then calling <code>datastore.save()</code> with them again.
 For bulk updates (e.g., everyone gets a raise!) this is not the most efficient way of doing updates.
-It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB. But in order to show you that piece, first we need to see how to query.</p>
+It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB.But in order to show you that piece, first we need to see how to query.</p>
 </div>
 </div>
 </div>
@@ -424,7 +425,7 @@ As with everything else, <code>Datastore</code> is where we start:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">final Query&lt;Employee&gt; query = datastore.find(Employee.class);
-final List&lt;Employee&gt; employees = query.execute().toList();</code></pre>
+final List&lt;Employee&gt; employees = query.iterator().toList();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -432,8 +433,9 @@ final List&lt;Employee&gt; employees = query.execute().toList();</code></pre>
 Here, we&#8217;re telling the <code>Datastore</code> to create a query that&#8217;s been typed to <code>Employee</code>.
 In this case, we&#8217;re fetching every <code>Employee</code> in to a <code>List</code>.
 For very large query results, this could very well be too much to fit in to memory.
-For this simple example, using <code>toList()</code> is fine but in practice <code>execute()</code> is usually the more appropriate choice.
-Most queries will, of course, want to filter the data in some way.
+For this simple example, using <code>toList()</code> is fine but in practice <code>iterator()</code> is usually the more appropriate choice.
+In those cases, rather than calling <code>iterator()</code> directly, it&#8217;s sufficient to simply iterate a <code>Query</code> using a for loop and let the magic of <code>Iterable</code>
+do its thing.Most queries will, of course, want to filter the data in some way.
 Here&#8217;s how to do that:</p>
 </div>
 <div class="listingblock">
