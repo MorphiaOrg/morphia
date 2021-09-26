@@ -171,7 +171,7 @@ In this case, we're fetching every `Employee` in to a `List`.
 For very large query results, this could very well be too much to fit in to memory.
 For this simple example, using `toList()` is fine but in practice `iterator()` is usually the more appropriate choice.
 In those cases, rather than calling `iterator()` directly, it's sufficient to simply iterate a `Query` using a for loop and let the magic of `Iterable`
-do it's thing.
+do its thing.
 Most queries will, of course, want to filter the data in some way.
 Here's how to do that:
 
