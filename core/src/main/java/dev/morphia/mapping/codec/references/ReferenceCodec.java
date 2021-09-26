@@ -25,9 +25,12 @@ import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.QueryException;
 import dev.morphia.sofia.Sofia;
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.ByteCodeElement;
+import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.dynamic.DynamicType.Loaded;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
+import net.bytebuddy.matcher.ElementMatcher.Junction;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -267,7 +270,14 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
     }
 
-    private <T> T createProxy(MorphiaReference<?> reference) {
+    private Object createProxy(MorphiaReference<?> reference) {
+        return
+//            createProxy2(reference)
+            createProxy3(reference)
+        ;
+    }
+
+    private <T> T createProxy2(MorphiaReference<?> reference) {
         ReferenceProxy referenceProxy = new ReferenceProxy(reference);
         try {
             Class<?> type = getPropertyModel().getType();
@@ -288,6 +298,38 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                        .getLoaded()
                        .getDeclaredConstructor()
                        .newInstance();
+        } catch (ReflectiveOperationException | IllegalArgumentException e) {
+            throw new MappingException(e.getMessage(), e);
+        }
+    }
+
+    private Object createProxy3(MorphiaReference<?> reference) {
+        ReferenceProxy referenceProxy = new ReferenceProxy(reference);
+        try {
+            Class<?> type = getPropertyModel().getType();
+            Builder<?> builder = new ByteBuddy()
+                .subclass(type)
+                .implement(MorphiaProxy.class)
+                .name(type.getName() + "$$ReferenceProxy");
+
+            Junction<ByteCodeElement> matcher = ElementMatchers.isDeclaredBy(type);
+            type = type.getSuperclass();
+            while (!type.equals(Object.class)) {
+                matcher.or(ElementMatchers.isDeclaredBy(type));
+                type = type.getSuperclass();
+            }
+
+            return builder
+                .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
+                .intercept(InvocationHandlerAdapter.of(referenceProxy))
+
+                .make()
+
+                .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
+                .getLoaded()
+
+                .getDeclaredConstructor()
+                .newInstance();
         } catch (ReflectiveOperationException | IllegalArgumentException e) {
             throw new MappingException(e.getMessage(), e);
         }

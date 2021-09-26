@@ -8,6 +8,7 @@ import dev.morphia.sofia.Sofia;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -51,6 +52,7 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     }
 
     private Object invoke(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
+        System.out.println("method = " + method + ", args = " + Arrays.deepToString(args));
         if (method.getDeclaringClass().isAssignableFrom(getClass())) {
             return method.invoke(this, args);
         } else {

@@ -54,6 +54,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
+@SuppressWarnings({"MismatchedReadAndWriteOfArray", "unchecked", "removal"})
 public class TestReferences extends ProxyTestBase {
 
     @Test
@@ -508,6 +509,86 @@ public class TestReferences extends ProxyTestBase {
         assertNotFetched(root.secondReference);
     }
 
+    @Test
+    public void testLazyWithParent() {
+        Datastore datastore = getDs();
+        datastore.getMapper().map(Entity1.class, Entity2.class, EntityBase.class);
+
+        Entity1 entity1 = new Entity1("entity1");
+        datastore.save(List.of(entity1, new Entity2("entity2", entity1)));
+
+        var entities = datastore.find(Entity2.class).iterator().toList();
+
+        assertNotNull(entities.get(0));
+        Entity1 reference = entities.get(0).getReference();
+        assertNotNull(reference);
+//        System.out.println("reference = " + reference);
+        assertEquals(reference.getName(), "entity1", "name should cause a fetch");
+        assertNotNull(reference.getId(), "ID shouldn't be null");
+    }
+
+    @Entity
+    public static class Entity1 extends EntityBase {
+        private String name;
+
+        public Entity1() {
+        }
+
+        public Entity1(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity
+    public static class Entity2 extends EntityBase {
+        private String anotherName;
+
+        public Entity2() {
+        }
+
+        public Entity2(String anotherName, Entity1 reference) {
+            this.anotherName = anotherName;
+            this.reference = reference;
+        }
+
+        @Reference(idOnly = true, lazy = true)
+        private Entity1 reference;
+
+        public String getAnotherName() {
+            return anotherName;
+        }
+
+        public void setAnotherName(String anotherName) {
+            this.anotherName = anotherName;
+        }
+
+        public Entity1 getReference() {
+            return reference;
+        }
+
+        public void setReference(Entity1 reference) {
+            this.reference = reference;
+        }
+    }
+
+    @Entity
+    public static abstract class EntityBase {
+        @Id
+        protected ObjectId id;
+
+        @IdGetter
+        public ObjectId getId() {
+            return id;
+        }
+    }
     private void testFirstDatastore(Datastore datastore) {
         final FacebookUser user = datastore.find(FacebookUser.class).filter(eq("id", 1)).first();
         assertNotNull(user);
