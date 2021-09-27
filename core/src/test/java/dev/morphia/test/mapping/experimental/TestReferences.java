@@ -315,6 +315,23 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Test
+    public void testLazyWithParent() {
+        Datastore datastore = getDs();
+        datastore.getMapper().map(Entity1.class, Entity2.class, EntityBase.class);
+
+        Entity1 entity1 = new Entity1("entity1");
+        datastore.save(List.of(entity1, new Entity2("entity2", entity1)));
+
+        var entities = datastore.find(Entity2.class).iterator().toList();
+
+        assertNotNull(entities.get(0));
+        Entity1 reference = entities.get(0).getReference();
+        assertNotNull(reference);
+        assertEquals(reference.getName(), "entity1", "name should cause a fetch");
+        assertNotNull(reference.getId(), "ID shouldn't be null");
+    }
+
+    @Test
     public void testMethodMapping() {
         Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
             MapperOptions.builder()
@@ -854,6 +871,68 @@ public class TestReferences extends ProxyTestBase {
 
         Ref getSingleRef() {
             return singleRef;
+        }
+    }
+
+    @Entity
+    public static class Entity1 extends EntityBase {
+        private String name;
+
+        public Entity1() {
+        }
+
+        public Entity1(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity
+    public static class Entity2 extends EntityBase {
+        private String anotherName;
+        @Reference(idOnly = true, lazy = true)
+        private Entity1 reference;
+
+        public Entity2() {
+        }
+
+        public Entity2(String anotherName, Entity1 reference) {
+            this.anotherName = anotherName;
+            this.reference = reference;
+        }
+
+        public String getAnotherName() {
+            return anotherName;
+        }
+
+        public void setAnotherName(String anotherName) {
+            this.anotherName = anotherName;
+        }
+
+        public Entity1 getReference() {
+            return reference;
+        }
+
+        public void setReference(Entity1 reference) {
+            this.reference = reference;
+        }
+    }
+
+    @Entity
+    public static abstract class EntityBase {
+        @Id
+        protected ObjectId id;
+
+        @IdGetter
+        public ObjectId getId() {
+            return id;
         }
     }
 
